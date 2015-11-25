@@ -1,314 +1,149 @@
 # NativeScript Firebase plugin
 
-The leading realtime database.
+The leading realtime database. [Docs here.](https://www.firebase.com/docs/)
 
-Android SDK downloaded from: https://www.firebase.com/docs/android/api/
-
-emulation commands:
-
-tns emulate ios --device iPhone-6s
-
-**TODO all below.**
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<img src="screenshots/ios-demoapp-slice.png" width="375px" height="196px" />
+[![YouTube demo, 41 sec](screenshots/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
 
 ### Use when
-* you want full map styling capability to match the uses of your app (example: downplaying highways for a running app),
-* you want a platform independent map implementation,
-* you care about performance so you don't want a web based solution,
-* you want an open source map implementation that you can tweak yourself,
-* you want to leverage Mapbox's backend to visualize massive geo data sets,
-* you want advanced analytics about your app's users.
+* you need to store JSON data in the cloud,
+* you want to sync that data to other devices and platforms,
+* you want to update clients at the moment the data changes (think chat and multiplayer games).
 
 ## Prerequisites
 NativeScript 1.3.0 (`tns --version`) is required for smooth installation, so please upgrade if you need to.
 
-You need a Mapbox API access token (they have a free Starter plan!), so [sign up with Mapbox](https://www.mapbox.com/signup/).
-Once you've registered go to your Account > Apps > New token. The 'Default Secret Token' is what you'll need.
+Head on over to firebase.com and sign up for a free account.
+Your first 'Firebase' will be automatically created and made available via a URL
+like https://resplendent-fire-4211.firebaseio.com/.
 
 ## Installation
 From the command prompt go to your app's root folder and execute:
 ```
-tns plugin add nativescript-mapbox
+tns plugin add nativescript-firebase
 ```
 
 ## Usage
 
-If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-mapbox-demo).
+If you want a quickstart, [clone our demo app (the one in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-firebase-demo).
 And here's the comprehensive list of supported functions:
 
-### function: show
+### init
 ```js
-  var mapbox = require("nativescript-mapbox");
+  var firebase = require("nativescript-firebase");
 
-  mapbox.show({
-    accessToken: 'YOUR_API_ACCESS_TOKEN', // see 'Prerequisites' above
-    style: 'emerald', // light|dark|emerald|satellite|streets , default 'streets'
-    margins: {
-      left: 40, // default 0
-      right: 40, // default 0
-      top: 450, // default 0
-      bottom: 40 // default 0
-    },
-    center: { // optional without a default
-      lat: 52.3702160,
-      lng: 4.8951680
-    },
-    zoomLevel: 9.25, // 0-20, default 0
-    showUserLocation: true, // default false - requires location permissions on Android which you can remove from AndroidManifest.xml if you don't need them
-    hideAttribution: false, // default false, Mapbox requires this default if you're on a free plan
-    hideLogo: false, // default false, Mapbox requires this default if you're on a free plan
-    hideCompass: false, // default false
-    disableRotation: false, // default false
-    disableScroll: false, // default false
-    disableZoom: false, // default false
-    markers: [ // optional without a default
-      {
-        'lat': 52.3732160, // mandatory
-        'lng': 4.8941680, // mandatory
-        'title': 'Nice location', // recommended to pass in
-        'subtitle': 'Really really nice location' // one line is available on iOS, multiple on Android
-      }
-    ]
+  firebase.init({
+    url: 'https://resplendent-fire-4211.firebaseio.com'
   }).then(
-      function(result) {
-        console.log("Mapbox show done");
+      function (result) {
+        console.log("firebase.init done");
       },
-      function(error) {
-        console.log("mapbox show error: " + error);
+      function (error) {
+        console.log("firebase.init error: " + error);
       }
-  )
+  );
 ```
 
-### function: hide
-All further examples assume `mapbox` has been required.
+All further examples assume `firebase` has been required.
 Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
-```js
-  mapbox.hide()
-```
 
-### function: addMarkers
-```js
-  mapbox.addMarkers([
-    {
-      'lat': 52.3602160, // mandatory
-      'lng': 4.8891680, // mandatory
-      'title': 'One-line title here', // no popup unless set
-      'subtitle': 'Infamous subtitle!'
-    },
-    {
-      ..
-    }
-  ])
-```
+### setValue
+Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`.
+If you want to add data to a known path use this, otherwise use `push` (see below).
 
-### function: setCenter
-```js
-  mapbox.setCenter(
-      {
-        lat: 52.3602160, // mandatory
-        lng: 4.8891680, // mandatory
-        animated: false // default true
-      }
-  )
-```
-
-### function: getCenter
-Here the promise callback makes sense, so adding it to the example:
-```js
-  mapbox.getCenter().then(
-      function(result) {
-        console.log("Mapbox getCenter done, result: " + JSON.stringify(result));
-      },
-      function(error) {
-        console.log("mapbox getCenter error: " + error);
-      }
-  )
-```
-
-### function: setZoomLevel
-```js
-  mapbox.setZoomLevel(
-      {
-        level: 6.5, // mandatory, 0-20
-        animated: true // default true
-      }
-  )
-```
-
-### function: getZoomLevel
-```js
-  mapbox.getZoomLevel().then(
-      function(result) {
-        console.log("Mapbox getZoomLevel done, result: " + JSON.stringify(result));
-      },
-      function(error) {
-        console.log("mapbox getZoomLevel error: " + error);
-      }
-  )
-```
-
-### function: addPolygon
-Draw a shape (like a line/route, or star). Just connect the dots like we did as a child. The first person to tweet a snowman drawn with this function gets a T-shirt.
-```js
-  // this is a boring triangle drawn near Amsterdam Central Station
-  mapbox.addPolygon({
-    points: [
-      {
-        'lat': 52.3832160, // mandatory
-        'lng': 4.8991680 // mandatory
-      },
-      {
-        'lat': 52.3632160,
-        'lng': 4.9011680
-      },
-      {
-        'lat': 52.3932160,
-        'lng': 4.8911680
-      }
-    ]
-  })
-```
-
-### function: hasFineLocationPermission / requestFineLocationPermission
-On Android 6 you need to request permission to be able to show the user's position on the map at runtime when targeting API level 23+.
-Even if the `uses-permission` tag for `ACCESS_FINE_LOCATION` is present in `AndroidManifest.xml`.
-
-Note that `hasFineLocationPermission` will return true when:
-* You're running this on iOS, or
-* You're targeting an API level lower than 23, or
-* You're using Android < 6, or
-* You've already granted permission.
+The plugin will take care of serializing JSON data to native data structures.
 
 ```js
-  mapbox.hasFineLocationPermission().then(
-      function(granted) {
-        // if this is 'false' you probably want to call 'requestFineLocationPermission' now
-        console.log("Has Location Permission? " + result);
-      }
+
+  // to store a JSON object
+  firebase.setValue(
+      '/companies',
+      {'foo':'bar'}
   );
 
-  // if no permission was granted previously this wil open a user consent screen
-  mapbox.requestFineLocationPermission().then(
-      function() {
-        console.log("Location permission requested");
+  // to store an array of JSON objects
+  firebase.setValue(
+      '/companies',
+      [
+        {name: 'Telerik'},
+        {name: 'Google'}
+      ]
+  );
+```
+
+### push
+This function will store a JSON object at path `<Firebase URL>/push/users/<Generated Key>`
+
+```js
+  firebase.push(
+      '/users',
+      {
+        'first': 'Eddy',
+        'last': 'Verbruggen',
+        'birthYear': 1977,
+        'isMale': true,
+        'address': {
+          'street': 'foostreet',
+          'number': 123
+        }
       }
   );
 ```
 
-Note that the `show` function will also check for permission if you passed in `showUserLocation : true`.
-If you didn't request permission before showing the map, and permission was needed, then
-the location is not drawn on the map and the plugin will log an error to the console.
+### addChildEventListener
+To listen for changes in your database you can pass in a listener callback function.
+You get to control which path inside you database you want to listen to, by default it's `/` which is the entire database.
+
+The plugin will take care of serializing native data structures to JSON data.
+
+```js
+  var onChildEvent = function(result) {
+    console.log("Event type: " + result.type);
+    console.log("Key: " + result.key);
+    console.log("Value: " + JSON.stringify(result.value));
+  };
+
+  // listen to changes in the /users path
+  firebase.addChildEventListener(onChildEvent, "/users");
+```
+
+### addValueEventListener
+The difference with `addChildEventListener` is [explained here](https://www.firebase.com/docs/ios/guide/retrieving-data.html).
+The link is for the iOS SDK, but it's the same for Android.
+
+```js
+  var onValueEvent = function(result) {
+    console.log("Event type: " + result.type);
+    console.log("Key: " + result.key);
+    console.log("Value: " + JSON.stringify(result.value));
+  };
+
+  // listen to changes in the /companies path
+  firebase.addValueEventListener(onValueEvent, "/companies");
+```
+
+### remove
+You can remove the entire database content by passing in '/' as param,
+but if you only want to wipe everything at '/users', do this:
+
+```js
+  firebase.remove("/users");
+```
+
+
+## Pro tips
+
+### See what's happening
+It's kinda cool to manipulate data while using multiple devices or your device and the Firebase Dashboard. You will instantly see the update on the other end.
+The Firebase Dashboard can be reached by simply loading your Firebase URL in a web browser.
+
+### Testing your app in the emulator
+
+`tns emulate ios --device iPhone-6s`
+
+`tns emulate android --geny "Nexus 6_23"`
+
+or start a geny emulator first and do: `tns run android`
+
+
+## Credits
+The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).

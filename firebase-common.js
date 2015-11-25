@@ -1,3 +1,5 @@
-var Firebase = {};
+var firebase = {};
 
-module.exports = Firebase;
+firebase.instance = null;
+
+module.exports = firebase;
