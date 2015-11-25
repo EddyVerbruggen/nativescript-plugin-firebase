@@ -1,6 +1,7 @@
 # NativeScript Firebase plugin
 
-The leading realtime database. [Docs here.](https://www.firebase.com/docs/)
+![Firebase logo](screenshots/firebase.png)The leading realtime database. [Docs here.](https://www.firebase.com/docs/)
+
 
 If you can spare 41 seconds, please check this video of the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
 [![YouTube demo, 41 sec](screenshots/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
