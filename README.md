@@ -1,6 +1,8 @@
-# NativeScript <img src="screenshots/firebase.png" width="154px" height="43px" alt="Firebase" /> plugin
+# NativeScript Firebase plugin
 
+<img src="screenshots/firebase.png" width="154px" height="43px" alt="Firebase" />
 The leading realtime database. [Docs here.](https://www.firebase.com/docs/)
+
 
 
 If you can spare 41 seconds, please check this video of the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
