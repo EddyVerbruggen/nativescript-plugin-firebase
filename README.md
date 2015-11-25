@@ -2,7 +2,7 @@
 
 The leading realtime database. [Docs here.](https://www.firebase.com/docs/)
 
-If you can spare 41 seconds, please check this video of the [demo app](https://github.com/EddyVerbruggen/nativescript-firebase-demo) in action:
+If you can spare 41 seconds, please check this video of the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
 [![YouTube demo, 41 sec](screenshots/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
 
 ### Use when
@@ -20,17 +20,17 @@ like https://resplendent-fire-4211.firebaseio.com/.
 ## Installation
 From the command prompt go to your app's root folder and execute:
 ```
-tns plugin add nativescript-firebase
+tns plugin add nativescript-plugin-firebase
 ```
 
 ## Usage
 
-If you want a quickstart, [clone our demo app (the one in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-firebase-demo).
+If you want a quickstart, [clone our demo app (the one in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
 And here's the comprehensive list of supported functions:
 
 ### init
 ```js
-  var firebase = require("nativescript-firebase");
+  var firebase = require("nativescript-plugin-firebase");
 
   firebase.init({
     url: 'https://resplendent-fire-4211.firebaseio.com'
