@@ -51,7 +51,7 @@ All further examples assume `firebase` has been required.
 Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
 
 ### setValue
-Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`.
+Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`).
 If you want to add data to a known path use this, otherwise use `push` (see below).
 
 The plugin will take care of serializing JSON data to native data structures.
@@ -75,7 +75,7 @@ The plugin will take care of serializing JSON data to native data structures.
 ```
 
 ### push
-This function will store a JSON object at path `<Firebase URL>/push/users/<Generated Key>`
+This function will store a JSON object at path `<Firebase URL>/users/<Generated Key>`
 
 ```js
   firebase.push(
