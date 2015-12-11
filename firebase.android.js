@@ -92,7 +92,32 @@ firebase.init = function (arg) {
       instance = new Firebase(arg.url);
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.store: " + ex);
+      console.log("Error in firebase.init: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+// TODO
+firebase.login = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var authorizer = new com.firebase.client.Firebase.AuthResultHandler({
+        onAuthenticated: function (authData) {
+          resolve(authData);
+        },
+        onAuthenticationError: function (firebaseError) {
+          reject({
+            error: firebaseError,
+            errorMessage: firebaseError.message
+          });
+        }
+      });
+
+      instance.authAnonymously(authorizer);
+    } catch (ex) {
+      console.log("Error in firebase.login: " + ex);
       reject(ex);
     }
   });
@@ -101,22 +126,22 @@ firebase.init = function (arg) {
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).addChildEventListener(new com.firebase.client.ChildEventListener({
-            onChildAdded: function (snapshot, previousChildKey) {
-              updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
-            },
-            onChildRemoved: function (snapshot) {
-              updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
-            },
-            onChildChanged: function (snapshot, previousChildKey) {
-              updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
-            },
-            onChildMoved: function (snapshot, previousChildKey) {
-              updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
-            }
-          })
-      );
-      resolve();
+      var listener = new com.firebase.client.ChildEventListener({
+        onChildAdded: function (snapshot, previousChildKey) {
+          updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
+        },
+        onChildRemoved: function (snapshot) {
+          updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
+        },
+        onChildChanged: function (snapshot, previousChildKey) {
+          updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
+        },
+        onChildMoved: function (snapshot, previousChildKey) {
+          updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
+        }
+      });
+      instance.child(path).addChildEventListener(listener);
+      resolve(listener);
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
       reject(ex);
@@ -127,22 +152,34 @@ firebase.addChildEventListener = function (updateCallback, path) {
 firebase.addValueEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      var ValueEventListener = com.firebase.client.ValueEventListener;
-      instance.child(path).addValueEventListener(new ValueEventListener({
-            onDataChange: function (snapshot) {
-              updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
-            },
-            onCancelled: function (firebaseError) {
-              updateCallback({
-                error: firebaseError,
-                errorMessage: firebaseError.message
-              });
-            }
-          })
-      );
+      var listener = new com.firebase.client.ValueEventListener({
+        onDataChange: function (snapshot) {
+          updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+        },
+        onCancelled: function (firebaseError) {
+          updateCallback({
+            error: firebaseError,
+            errorMessage: firebaseError.message
+          });
+        }
+      });
+      instance.child(path).addValueEventListener(listener);
+      resolve(listener);
+    } catch (ex) {
+      console.log("Error in firebase.addValueEventListener: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.removeEventListener = function (listener, path) {
+  return new Promise(function (resolve, reject) {
+    try {
+      console.log("Removing at path " + path + ": " + listener);
+      instance.child(path).removeEventListener(listener);
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.store: " + ex);
+      console.log("Error in firebase.removeEventListener: " + ex);
       reject(ex);
     }
   });

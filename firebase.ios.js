@@ -88,6 +88,23 @@ firebase.init = function (arg) {
   });
 };
 
+firebase.login = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      instance.authAnonymouslyWithCompletionBlock(function(error, result) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    } catch (ex) {
+      console.log("Error in firebase.login: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.addValueEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
