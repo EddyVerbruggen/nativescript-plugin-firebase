@@ -11,6 +11,7 @@ If you can spare 41 seconds, please check this video of the [demo app](https://g
 ### Use when
 * you need to store JSON data in the cloud,
 * you want to sync that data to other devices and platforms,
+* you want to optionally protect that data by having users log in,
 * you want to update clients at the moment the data changes (think chat and multiplayer games).
 
 ## Prerequisites
@@ -38,7 +39,7 @@ And here's the comprehensive list of supported functions:
   firebase.init({
     url: 'https://resplendent-fire-4211.firebaseio.com'
   }).then(
-      function (result) {
+      function (instance) {
         console.log("firebase.init done");
       },
       function (error) {
@@ -133,6 +134,54 @@ but if you only want to wipe everything at '/users', do this:
   firebase.remove("/users");
 ```
 
+### login
+v 1.1.0 of this plugin adds the capability to log your users in. Either anonymously or by email and password.
+You need to add support for those features in your Firebase instance at the 'Login & Auth' tab.
+
+You can expect more login mechanisms to be added in the future.
+
+#### Anonymous login
+```js
+  firebase.login({
+    // note that you need to enable anonymous login in your firebase instance
+    type: firebase.loginType.ANONYMOUS
+  }).then(
+      function (result) {
+        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
+        JSON.stringify(result);
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  )
+};
+```
+
+#### Password login
+```js
+  firebase.login({
+      // note that you need to enable email-password login in your firebase instance
+    type: firebase.loginType.PASSWORD,
+    email: 'useraccount@provider.com',
+    password: 'theirpassword'
+  }).then(
+      function (result) {
+        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
+        JSON.stringify(result);
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  )
+};
+```
+
+### logout
+Shouldn't be more complicated than:
+
+```js
+  firebase.logout();
+```
 
 ## Pro tips
 
