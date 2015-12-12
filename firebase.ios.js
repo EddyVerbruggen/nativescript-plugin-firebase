@@ -41,6 +41,62 @@ firebase.toJsObject = function(objCObj) {
   return node;
 };
 
+firebase.getCallbackData = function(type, snapshot) {
+  return {
+    type: type,
+    key: snapshot.key,
+    value: firebase.toJsObject(snapshot.value)
+  }
+};
+
+firebase.init = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      instance = new Firebase(arg.url);
+      resolve(instance);
+    } catch (ex) {
+      console.log("Error in firebase.init: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.login = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var onCompletion = function(error, authData) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve({
+            uid: authData.uid,
+            provider: authData.provider,
+            expiresAtUnixEpochSeconds: authData.expires,
+            profileImageURL: authData.providerData["profileImageURL"],
+            token: authData.token
+          });
+        }
+      };
+
+      var type = arg.type;
+      if (type === firebase.loginType.ANONYMOUS) {
+        instance.authAnonymouslyWithCompletionBlock(onCompletion);
+      } else if (type === firebase.loginType.PASSWORD) {
+        if (!arg.email || !arg.password) {
+          reject("Auth type emailandpassword requires an email and password argument");
+        } else {
+          instance.authUserPasswordWithCompletionBlock(arg.email, arg.password, onCompletion);          
+        }
+      } else {
+        reject ("Unsupported auth type: " + type);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.login: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
@@ -68,43 +124,6 @@ firebase.addChildEventListener = function (updateCallback, path) {
   });
 };
 
-firebase.getCallbackData = function(type, snapshot) {
-  return {
-    type: type,
-    key: snapshot.key,
-    value: firebase.toJsObject(snapshot.value)
-  }
-};
-
-firebase.init = function (arg) {
-  return new Promise(function (resolve, reject) {
-    try {
-      instance = new Firebase(arg.url);
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.init: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.login = function (arg) {
-  return new Promise(function (resolve, reject) {
-    try {
-      instance.authAnonymouslyWithCompletionBlock(function(error, result) {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      });
-    } catch (ex) {
-      console.log("Error in firebase.login: " + ex);
-      reject(ex);
-    }
-  });
-};
-
 firebase.addValueEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
@@ -119,8 +138,7 @@ firebase.addValueEventListener = function (updateCallback, path) {
           },
           function (firebaseError) {
             updateCallback({
-              error: firebaseError,
-              errorMessage: firebaseError.localizedDescription
+              error: firebaseError.localizedDescription
             });
           });
       resolve();

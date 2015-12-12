@@ -90,7 +90,7 @@ firebase.init = function (arg) {
       var Firebase = com.firebase.client.Firebase;
       Firebase.setAndroidContext(appModule.android.context);
       instance = new Firebase(arg.url);
-      resolve();
+      resolve(instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
@@ -98,24 +98,36 @@ firebase.init = function (arg) {
   });
 };
 
-// TODO
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-
       var authorizer = new com.firebase.client.Firebase.AuthResultHandler({
         onAuthenticated: function (authData) {
-          resolve(authData);
+          resolve({
+            uid: authData.getUid(),
+            provider: authData.getProvider(),
+            expiresAtUnixEpochSeconds: authData.getExpires(),
+            profileImageURL: authData.getProviderData().get("profileImageURL"),
+            token: authData.getToken()
+          });
         },
         onAuthenticationError: function (firebaseError) {
-          reject({
-            error: firebaseError,
-            errorMessage: firebaseError.message
-          });
+          reject(firebaseError.getMessage());
         }
       });
 
-      instance.authAnonymously(authorizer);
+      var type = arg.type;
+      if (type === firebase.loginType.ANONYMOUS) {
+        instance.authAnonymously(authorizer);
+      } else if (type === firebase.loginType.PASSWORD) {
+        if (!arg.email || !arg.password) {
+          reject("Auth type emailandpassword requires an email and password argument");
+        } else {
+          instance.authWithPassword(arg.email, arg.password, authorizer);          
+        }
+      } else {
+        reject ("Unsupported auth type: " + type);
+      }
     } catch (ex) {
       console.log("Error in firebase.login: " + ex);
       reject(ex);
@@ -141,7 +153,7 @@ firebase.addChildEventListener = function (updateCallback, path) {
         }
       });
       instance.child(path).addChildEventListener(listener);
-      resolve(listener);
+      resolve();
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
       reject(ex);
@@ -158,13 +170,12 @@ firebase.addValueEventListener = function (updateCallback, path) {
         },
         onCancelled: function (firebaseError) {
           updateCallback({
-            error: firebaseError,
-            errorMessage: firebaseError.message
+            error: firebaseError.getMessage()
           });
         }
       });
       instance.child(path).addValueEventListener(listener);
-      resolve(listener);
+      resolve();
     } catch (ex) {
       console.log("Error in firebase.addValueEventListener: " + ex);
       reject(ex);
