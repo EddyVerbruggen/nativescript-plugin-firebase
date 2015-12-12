@@ -154,7 +154,6 @@ You can expect more login mechanisms to be added in the future.
         console.log(errorMessage);
       }
   )
-};
 ```
 
 #### Password login
@@ -173,7 +172,6 @@ You can expect more login mechanisms to be added in the future.
         console.log(errorMessage);
       }
   )
-};
 ```
 
 ### logout
