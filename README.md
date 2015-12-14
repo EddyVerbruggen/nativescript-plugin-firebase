@@ -174,7 +174,7 @@ You can expect more login mechanisms to be added in the future.
   )
 ```
 
-#### Creating an Password account
+#### Creating a Password account
 ```js
   firebase.createUser({
     email: 'eddyverbruggen@gmail.com',
