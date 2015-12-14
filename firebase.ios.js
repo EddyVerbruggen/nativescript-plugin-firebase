@@ -97,6 +97,29 @@ firebase.login = function (arg) {
   });
 };
 
+firebase.createUser = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var onCompletion = function(error, authData) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(firebase.toJsObject(authData).uid);
+        }
+      };
+
+      if (!arg.email || !arg.password) {
+        reject("Creating a user requires an email and password argument");
+      } else {
+        instance.createUserPasswordWithValueCompletionBlock(arg.email, arg.password, onCompletion);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.createUser: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {

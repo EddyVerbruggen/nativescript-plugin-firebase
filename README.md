@@ -174,6 +174,29 @@ You can expect more login mechanisms to be added in the future.
   )
 ```
 
+#### Creating an Password account
+```js
+  firebase.createUser({
+    email: 'eddyverbruggen@gmail.com',
+    password: 'firebase'
+  }).then(
+      function (uid) {
+        dialogs.alert({
+          title: "User created",
+          message: "uid: " + uid,
+          okButtonText: "Nice!"
+        })
+      },
+      function (errorMessage) {
+        dialogs.alert({
+          title: "No user created",
+          message: errorMessage,
+          okButtonText: "OK, got it"
+        })
+      }
+  )
+```
+
 ### logout
 Shouldn't be more complicated than:
 
