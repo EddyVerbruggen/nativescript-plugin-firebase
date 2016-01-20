@@ -23,6 +23,9 @@ firebase.toJsObject = function(objCObj) {
       var val = objCObj.valueForKey(key);
 
       switch (types.getClass(val)) {
+        case 'NSMutableArray':
+          node[key] = firebase.toJsObject(val);
+          break;
         case 'NSMutableDictionary':
           node[key] = firebase.toJsObject(val);
           break;
