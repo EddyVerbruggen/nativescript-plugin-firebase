@@ -19,7 +19,7 @@ NativeScript 1.3.0 (`tns --version`) is required for smooth installation, so ple
 
 Head on over to firebase.com and sign up for a free account.
 Your first 'Firebase' will be automatically created and made available via a URL
-like https://resplendent-fire-4211.firebaseio.com/.
+like `https://resplendent-fire-4211.firebaseio.com/`.
 
 ## Installation
 From the command prompt go to your app's root folder and execute:
@@ -69,8 +69,8 @@ The plugin will take care of serializing JSON data to native data structures.
   firebase.setValue(
       '/companies',
       [
-        {name: 'Telerik'},
-        {name: 'Google'}
+        {name: 'Telerik', country: 'Bulgaria'},
+        {name: 'Google', country: 'USA'}
       ]
   );
 ```
@@ -93,6 +93,49 @@ This function will store a JSON object at path `<Firebase URL>/users/<Generated 
       }
   );
 ```
+
+### query
+Firebase supports querying data and this plugin does too, since v2.0.0.
+
+Let's say we have the structure as defined at `setValue`, then use this query to retrieve the companies in country 'Bulgaria':
+
+```js
+    var onQueryEvent = function(result) {
+        // note that the query returns 1 match at a time
+        // in the order specified in the query
+        if (!result.error) {
+            console.log("Event type: " + result.type);
+            console.log("Key: " + result.key);
+            console.log("Value: " + JSON.stringify(result.value));
+        }
+    };
+
+    firebase.query(
+        onQueryEvent,
+        "/companies",
+        {
+            // order by company.country
+            orderBy: {
+                type: firebase.QueryOrderByType.CHILD,
+                value: 'country' // mandatory when type is 'child'
+            },
+            // but only companies named 'Telerik'
+            // (this range relates to the orderBy clause)
+            range: {
+                type: firebase.QueryRangeType.EQUAL_TO,
+                value: 'Bulgaria'
+            },
+            // only the first 2 matches
+            // (note that there's only 1 in this case anyway)
+            limit: {
+                type: firebase.QueryLimitType.LAST,
+                value: 2
+            }
+        }
+    );
+```
+
+For supported values of the orderBy/range/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
 
 ### addChildEventListener
 To listen for changes in your database you can pass in a listener callback function.
@@ -217,6 +260,10 @@ The Firebase Dashboard can be reached by simply loading your Firebase URL in a w
 `tns emulate android --geny "Nexus 6_23"`
 
 or start a geny emulator first and do: `tns run android`
+
+## Future work
+- Add support for `removeEventListener`.
+- Possibly add more login mechanisms.
 
 
 ## Credits

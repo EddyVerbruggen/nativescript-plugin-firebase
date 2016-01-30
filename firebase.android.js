@@ -5,7 +5,7 @@ firebase.toHashMap = function(obj) {
   var node = new java.util.HashMap();
   for (var property in obj) {
     if (obj.hasOwnProperty(property)) {
-      if (obj[property] != null) {
+      if (obj[property] !== null) {
         switch (typeof obj[property]) {
           case 'object':
             node.put(property, firebase.toHashMap(obj[property], node));
@@ -30,7 +30,7 @@ firebase.toHashMap = function(obj) {
 };
 
 firebase.toJsObject = function(javaObj) {
-  if (javaObj == null || typeof javaObj != "object") {
+  if (javaObj === null || typeof javaObj != "object") {
     return javaObj;
   }
 
@@ -38,11 +38,9 @@ firebase.toJsObject = function(javaObj) {
   switch (javaObj.getClass().getName()) {
     case 'java.lang.Boolean':
       return Boolean(String(javaObj));
-      break;
     case 'java.lang.Long':
     case 'java.lang.Double':
       return Number(String(javaObj));
-      break;
     case 'java.util.ArrayList':
       node = [];
       for (var i = 0; i < javaObj.size(); i++) {
@@ -53,7 +51,7 @@ firebase.toJsObject = function(javaObj) {
       node = {};
       var iterator = javaObj.entrySet().iterator();
       while (iterator.hasNext()) {
-        item = iterator.next();
+        var item = iterator.next();
         switch (item.getClass().getName()) {
           case 'java.util.HashMap$HashMapEntry':
             node[item.getKey()] = firebase.toJsObject(item.getValue());
@@ -81,7 +79,7 @@ firebase.getCallbackData = function(type, snapshot) {
     type: type,
     key: snapshot.getKey(),
     value: firebase.toJsObject(snapshot.getValue())
-  }
+  };
 };
 
 firebase.init = function (arg) {
@@ -117,9 +115,10 @@ firebase.login = function (arg) {
       });
 
       var type = arg.type;
-      if (type === firebase.loginType.ANONYMOUS) {
+
+      if (type === firebase.LoginType.ANONYMOUS) {
         instance.authAnonymously(authorizer);
-      } else if (type === firebase.loginType.PASSWORD) {
+      } else if (type === firebase.LoginType.PASSWORD) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
@@ -160,24 +159,28 @@ firebase.createUser = function (arg) {
   });
 };
 
+firebase._addObservers = function(to, updateCallback) {
+  var listener = new com.firebase.client.ChildEventListener({
+    onChildAdded: function (snapshot, previousChildKey) {
+      updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
+    },
+    onChildRemoved: function (snapshot) {
+      updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
+    },
+    onChildChanged: function (snapshot, previousChildKey) {
+      updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
+    },
+    onChildMoved: function (snapshot, previousChildKey) {
+      updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
+    }
+  });
+  to.addChildEventListener(listener);
+};
+
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      var listener = new com.firebase.client.ChildEventListener({
-        onChildAdded: function (snapshot, previousChildKey) {
-          updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
-        },
-        onChildRemoved: function (snapshot) {
-          updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
-        },
-        onChildChanged: function (snapshot, previousChildKey) {
-          updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
-        },
-        onChildMoved: function (snapshot, previousChildKey) {
-          updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
-        }
-      });
-      instance.child(path).addChildEventListener(listener);
+      firebase._addObservers(instance.child(path), updateCallback);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
@@ -240,6 +243,72 @@ firebase.setValue = function (path, val) {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.query = function (updateCallback, path, options) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var query;
+      
+      // orderBy
+      if (options.orderBy.type === firebase.QueryOrderByType.KEY) {
+        query = instance.child(path).orderByKey();
+      } else if (options.orderBy.type === firebase.QueryOrderByType.VALUE) {
+        query = instance.child(path).orderByValue();
+      } else if (options.orderBy.type === firebase.QueryOrderByType.PRIORITY) {
+        query = instance.child(path).orderByPriority();
+      } else if (options.orderBy.type === firebase.QueryOrderByType.CHILD) {
+        if (!options.orderBy.value) {
+          reject("When orderBy.type is 'child' you must set orderBy.value as well.");
+          return;
+        }
+        query = instance.child(path).orderByChild(options.orderBy.value);
+      } else {
+        reject("Invalid orderBy.type, use constants like firebase.QueryOrderByType.VALUE");
+        return;
+      }
+
+      // range
+      if (options.range && options.range.type) {
+        if (!options.range.value) {
+          reject("Please set range.value");
+          return;
+        }
+        if (options.range.type === firebase.QueryRangeType.START_AT) {
+          query = query.startAt(options.range.value);
+        } else if (options.range.type === firebase.QueryRangeType.END_AT) {
+          query = query.endAt(options.range.value);
+        } else if (options.range.type === firebase.QueryRangeType.EQUAL_TO) {
+          query = query.equalTo(options.range.value);
+        } else {
+          reject("Invalid range.type, use constants like firebase.QueryRangeType.START_AT");
+          return;
+        }
+      }
+
+      // limit
+      if (options.limit && options.limit.type) {
+        if (!options.limit.value) {
+          reject("Please set limit.value");
+          return;
+        }
+        if (options.limit.type === firebase.QueryLimitType.FIRST) {
+          query = query.limitToFirst(options.limit.value);
+        } else if (options.limit.type === firebase.QueryLimitType.LAST) {
+          query = query.limitToLast(options.limit.value);
+        } else {
+          reject("Invalid limit.type, use constants like firebase.QueryLimitType.FIRST");
+          return;
+        }
+      }
+      
+      firebase._addObservers(query, updateCallback);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.query: " + ex);
       reject(ex);
     }
   });
