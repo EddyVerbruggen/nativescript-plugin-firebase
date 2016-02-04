@@ -187,7 +187,7 @@ You can expect more login mechanisms to be added in the future.
 ```js
   firebase.login({
     // note that you need to enable anonymous login in your firebase instance
-    type: firebase.loginType.ANONYMOUS
+    type: firebase.LoginType.ANONYMOUS
   }).then(
       function (result) {
         // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
@@ -203,7 +203,7 @@ You can expect more login mechanisms to be added in the future.
 ```js
   firebase.login({
       // note that you need to enable email-password login in your firebase instance
-    type: firebase.loginType.PASSWORD,
+    type: firebase.LoginType.PASSWORD,
     email: 'useraccount@provider.com',
     password: 'theirpassword'
   }).then(
