@@ -114,6 +114,9 @@ Let's say we have the structure as defined at `setValue`, then use this query to
         onQueryEvent,
         "/companies",
         {
+            // set this to true if you want to check if the value exists or just want the event to fire once
+            // default false, so it listens continuously
+            singleEvent: true,
             // order by company.country
             orderBy: {
                 type: firebase.QueryOrderByType.CHILD,
