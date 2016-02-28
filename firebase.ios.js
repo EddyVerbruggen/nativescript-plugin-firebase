@@ -268,7 +268,13 @@ firebase.query = function (updateCallback, path, options) {
         }
       }
 
-      firebase._addObservers(query, updateCallback);
+      if (options.singleEvent) {
+        query.observeSingleEventOfTypeWithBlock(FEventType.FEventTypeValue, function (snapshot) {
+          updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+        });
+      } else {
+        firebase._addObservers(query, updateCallback);
+      }
       resolve();
     } catch (ex) {
       console.log("Error in firebase.query: " + ex);

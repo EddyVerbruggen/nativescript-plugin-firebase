@@ -41,6 +41,14 @@ declare module "nativescript-plugin-firebase" {
         type: QueryLimitType;
         value: number;
       };
+
+      /**
+       * Set this to true if you don't want to listen for any future updates,
+       * but just want to retrieve the current value.
+       * You can also use this to check if certain data is in the database.
+       * Default false.
+       */
+      singleEvent?: boolean;
     }
 
     /**
@@ -70,7 +78,7 @@ declare module "nativescript-plugin-firebase" {
       email: string;
       password: string;
     }
-    
+
     /**
      * The returned object in the callback handlers
      * of the addChildEventListener and addValueEventListener functions.

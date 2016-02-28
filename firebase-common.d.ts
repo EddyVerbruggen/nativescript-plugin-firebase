@@ -13,7 +13,7 @@ declare module "nativescript-plugin-firebase" {
        */
       PASSWORD
     }
-    
+
     /**
      * The allowed values for QueryOptions.orderBy.type.
      */
@@ -21,7 +21,7 @@ declare module "nativescript-plugin-firebase" {
       KEY,
       VALUE,
       CHILD,
-      PRIORITY    
+      PRIORITY
     }
 
     /**
@@ -30,7 +30,7 @@ declare module "nativescript-plugin-firebase" {
     enum QueryRangeType {
       START_AT,
       END_AT,
-      EQUAL_TO   
+      EQUAL_TO
     }
 
     /**
