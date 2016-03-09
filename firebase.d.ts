@@ -91,11 +91,11 @@ declare module "nativescript-plugin-firebase" {
 
     export function init(options : InitOptions): Promise<any>;
     export function login(options : LoginOptions): Promise<LoginResult>;
-    export function createUser(options : CreateUserOptions): string;
-    export function push(path: string, value: any): void;
-    export function setValue(path: string, value: any): void;
-    export function remove(path: string): void;
-    export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): void;
-    export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): void;
-    export function addValueEventListener(onValueEvent: (data: FBData) => void, path: string): void;
+    export function createUser(options: CreateUserOptions): Promise<any>;
+    export function push(path: string, value: any): Promise<any>;
+    export function setValue(path: string, value: any): Promise<any>;
+    export function remove(path: string): Promise<any>;
+    export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
+    export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<any>;
+    export function addValueEventListener(onValueEvent: (data: FBData) => void, path: string): Promise<any>;
 }
