@@ -140,7 +140,9 @@ firebase.createUser = function (arg) {
       var valueResultHandler = new com.firebase.client.Firebase.ValueResultHandler({
         onSuccess: function (authData) {
           console.log("--- created: " + authData);
-          resolve(firebase.toJsObject(authData).uid);
+          resolve({
+            key: firebase.toJsObject(authData).uid
+          });
         },
         onError: function (firebaseError) {
           reject(firebaseError.getMessage());

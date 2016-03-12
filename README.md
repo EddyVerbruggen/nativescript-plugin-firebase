@@ -91,6 +91,10 @@ This function will store a JSON object at path `<Firebase URL>/users/<Generated 
           'number': 123
         }
       }
+  }).then(
+      function (result) {
+        console.log("created key: " + result.key);
+      }
   );
 ```
 
@@ -226,10 +230,10 @@ You can expect more login mechanisms to be added in the future.
     email: 'eddyverbruggen@gmail.com',
     password: 'firebase'
   }).then(
-      function (uid) {
+      function (result) {
         dialogs.alert({
           title: "User created",
-          message: "uid: " + uid,
+          message: "userid: " + result.key,
           okButtonText: "Nice!"
         })
       },

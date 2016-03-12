@@ -72,6 +72,20 @@ declare module "nativescript-plugin-firebase" {
     }
 
     /**
+     * The returned object from the push function.
+     */
+    export interface PushResult {
+      key: string;
+    }
+
+    /**
+     * The returned object from the createUser function.
+     */
+    export interface CreateUserResult {
+      key: string;
+    }
+
+    /**
      * The options object passed into the createUser function.
      */
     export interface CreateUserOptions {
@@ -89,10 +103,10 @@ declare module "nativescript-plugin-firebase" {
       value: any;
     }
 
-    export function init(options : InitOptions): Promise<any>;
-    export function login(options : LoginOptions): Promise<LoginResult>;
-    export function createUser(options: CreateUserOptions): Promise<any>;
-    export function push(path: string, value: any): Promise<any>;
+    export function init(options: InitOptions): Promise<any>;
+    export function login(options: LoginOptions): Promise<LoginResult>;
+    export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
+    export function push(path: string, value: any): Promise<PushResult>;
     export function setValue(path: string, value: any): Promise<any>;
     export function remove(path: string): Promise<any>;
     export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
