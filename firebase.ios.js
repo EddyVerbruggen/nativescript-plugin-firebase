@@ -182,8 +182,11 @@ firebase.addValueEventListener = function (updateCallback, path) {
 firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.childByAppendingPath(path).childByAutoId().setValue(val);
-      resolve();
+      var ref = instance.childByAppendingPath(path).childByAutoId();
+      ref.setValue(val);
+      resolve({
+        key: ref.key
+      });
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
       reject(ex);
