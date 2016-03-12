@@ -227,8 +227,11 @@ firebase.removeEventListener = function (listener, path) {
 firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).push().setValue(firebase.toHashMap(val));
-      resolve();
+      var pushInstance = instance.child(path).push();
+      pushInstance.setValue(firebase.toHashMap(val));
+      resolve({
+        key: pushInstance.getKey()
+      });
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
       reject(ex);
