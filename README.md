@@ -91,7 +91,7 @@ This function will store a JSON object at path `<Firebase URL>/users/<Generated 
           'number': 123
         }
       }
-  }).then(
+  ).then(
       function (result) {
         console.log("created key: " + result.key);
       }
