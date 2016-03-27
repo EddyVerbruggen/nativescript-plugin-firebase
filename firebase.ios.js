@@ -114,7 +114,7 @@ firebase.resetPassword = function (arg) {
       if (!arg.email) {
         reject("Resetting a password requires an email argument");
       } else {
-        instance.resetPasswordWithValueCompletionBlock(arg.email, onCompletion);
+        instance.resetPasswordForUserWithCompletionBlock(arg.email, onCompletion);
       }
     } catch (ex) {
       console.log("Error in firebase.resetPassword: " + ex);
