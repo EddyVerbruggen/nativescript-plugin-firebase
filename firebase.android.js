@@ -134,6 +134,30 @@ firebase.login = function (arg) {
   });
 };
 
+firebase.resetPassword = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var resultHandler = new com.firebase.client.Firebase.ResultHandler({
+        onSuccess: function () {
+          resolve();
+        },
+        onError: function (firebaseError) {
+          reject(firebaseError.getMessage());
+        }
+      });
+
+      if (!arg.email) {
+        reject("Resetting a password requires an email argument");
+      } else {
+        instance.resetPassword(arg.email, resultHandler);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.resetPassword: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.createUser = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
