@@ -247,6 +247,21 @@ You can expect more login mechanisms to be added in the future.
   )
 ```
 
+#### Resetting a password
+```js
+  firebase.resetPassword({
+    email: 'useraccount@provider.com'
+  }).then(
+      function () {
+        // called when password reset was successful,
+        // you ccould now prompt the user to check his email
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  )
+```
+
 ### logout
 Shouldn't be more complicated than:
 
