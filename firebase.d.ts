@@ -94,6 +94,13 @@ declare module "nativescript-plugin-firebase" {
     }
 
     /**
+     * The options object passed into the resetPassword function.
+     */
+    export interface ResetPasswordOptions {
+      email: string;
+    }
+
+    /**
      * The returned object in the callback handlers
      * of the addChildEventListener and addValueEventListener functions.
      */
@@ -106,6 +113,7 @@ declare module "nativescript-plugin-firebase" {
     export function init(options: InitOptions): Promise<any>;
     export function login(options: LoginOptions): Promise<LoginResult>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
+    export function resetPassword(options: ResetPasswordOptions): Promise<any>;
     export function push(path: string, value: any): Promise<PushResult>;
     export function setValue(path: string, value: any): Promise<any>;
     export function remove(path: string): Promise<any>;
