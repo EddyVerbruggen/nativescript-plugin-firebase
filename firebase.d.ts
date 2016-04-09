@@ -116,6 +116,7 @@ declare module "nativescript-plugin-firebase" {
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;
     export function push(path: string, value: any): Promise<PushResult>;
     export function setValue(path: string, value: any): Promise<any>;
+    export function update(path: string, value: any): Promise<any>;
     export function remove(path: string): Promise<any>;
     export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
     export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<any>;
