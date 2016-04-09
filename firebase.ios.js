@@ -231,6 +231,18 @@ firebase.setValue = function (path, val) {
   });
 };
 
+firebase.update = function (path, val) {
+    return new Promise(function (resolve, reject) {
+        try {
+            instance.childByAppendingPath(path).updateChildValues(val);
+            resolve();
+        } catch (ex) {
+            console.log("Error in firebase.update: " + ex);
+            reject(ex);
+        }
+    });
+};
+
 firebase.query = function (updateCallback, path, options) {
   return new Promise(function (resolve, reject) {
     try {
