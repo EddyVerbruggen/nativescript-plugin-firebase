@@ -144,6 +144,16 @@ Let's say we have the structure as defined at `setValue`, then use this query to
 
 For supported values of the orderBy/range/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
 
+### update
+Changes the values of the keys specified in the dictionary without overwriting other keys at this location.
+
+```js
+  firebase.update(
+      '/companies',
+      {'foo':'baz'}
+  );
+```
+
 ### addChildEventListener
 To listen for changes in your database you can pass in a listener callback function.
 You get to control which path inside you database you want to listen to, by default it's `/` which is the entire database.
