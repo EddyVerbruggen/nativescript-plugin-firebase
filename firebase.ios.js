@@ -55,9 +55,9 @@ firebase.getCallbackData = function(type, snapshot) {
 firebase.init = function(arg) {
     return new Promise(function(resolve, reject) {
         try {
-            if(arg.persist){
+            if (arg.persist) {
                 Firebase.defaultConfig().persistenceEnabled = true
-            }
+            }           
             instance = new Firebase(arg.url);
             resolve(instance);
         } catch (ex) {

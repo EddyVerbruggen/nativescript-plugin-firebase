@@ -87,7 +87,7 @@ firebase.init = function(arg) {
         try {
             var Firebase = com.firebase.client.Firebase;
             Firebase.setAndroidContext(appModule.android.context);
-            if (arg.persist) {
+            if (arg.persist && !Firebase.getDefaultConfig().isPersistenceEnabled()) {
                 Firebase.getDefaultConfig().setPersistenceEnabled(true);
             }
             instance = new Firebase(arg.url);
