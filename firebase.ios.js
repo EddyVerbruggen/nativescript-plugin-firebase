@@ -33,7 +33,7 @@ firebase.toJsObject = function(objCObj) {
           node[key] = String(val);
           break;
         case 'Boolean':
-          node[key] = Boolean(String(val));
+          node[key] = val;
           break;
         case 'Number':
           node[key] = Number(String(val));
