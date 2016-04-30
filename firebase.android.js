@@ -158,6 +158,30 @@ firebase.resetPassword = function (arg) {
   });
 };
 
+firebase.changePassword = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var resultHandler = new com.firebase.client.Firebase.ResultHandler({
+        onSuccess: function () {
+          resolve();
+        },
+        onError: function (firebaseError) {
+          reject(firebaseError.getMessage());
+        }
+      });
+
+      if (!arg.email || !arg.oldPassword || !arg.newPassword) {
+        reject("Changing a password requires an email and an oldPassword and a newPassword arguments");
+      } else {
+        instance.changePassword(arg.email, arg.oldPassword, arg.newPassword, resultHandler);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.changePassword: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.createUser = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
