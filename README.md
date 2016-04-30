@@ -280,7 +280,7 @@ You can expect more login mechanisms to be added in the future.
     newPassword: 'myNewPassword'
   }).then(
       function () {
-        // called when password change was successful,
+        // called when password change was successful
       },
       function (errorMessage) {
         console.log(errorMessage);
