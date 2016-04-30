@@ -110,10 +110,20 @@ declare module "nativescript-plugin-firebase" {
       value: any;
     }
 
+    /**
+     * The options object passed into the changePassword function.
+     */
+    export interface ChangePasswordOptions {
+      email: string;
+      oldPassword: string;
+      newPassword: string
+    }
+
     export function init(options: InitOptions): Promise<any>;
     export function login(options: LoginOptions): Promise<LoginResult>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;
+    export function changePassword(options: ChangePasswordOptions): Promise<any>;
     export function push(path: string, value: any): Promise<PushResult>;
     export function setValue(path: string, value: any): Promise<any>;
     export function update(path: string, value: any): Promise<any>;
