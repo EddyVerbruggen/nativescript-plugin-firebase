@@ -37,7 +37,8 @@ And here's the comprehensive list of supported functions:
   var firebase = require("nativescript-plugin-firebase");
 
   firebase.init({
-    url: 'https://resplendent-fire-4211.firebaseio.com'
+    url: 'https://resplendent-fire-4211.firebaseio.com',
+    persist: true // Allow disk persistence. Default false.
   }).then(
       function (instance) {
         console.log("firebase.init done");

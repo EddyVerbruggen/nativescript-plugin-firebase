@@ -9,6 +9,10 @@ declare module "nativescript-plugin-firebase" {
        * The endpoint of your firebase instance.
        */
       url: string;
+      /**
+       * Allow disk persistence. Default false.
+       */
+      persist?: boolean;
     }
 
     /**
