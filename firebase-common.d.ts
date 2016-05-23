@@ -40,9 +40,4 @@ declare module "nativescript-plugin-firebase" {
       FIRST,
       LAST
     }
-
-    /**
-     * Logout of the Firebase instance you previously logged in to.
-     */
-    function logout(): void;
 }
