@@ -1,0 +1,18 @@
+
+android {
+    productFlavors {
+        "fireb" {
+            dimension "fireb"
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+  compile "com.google.firebase:firebase-database:9.0.0"
+  compile "com.google.firebase:firebase-auth:9.0.0"
+}
