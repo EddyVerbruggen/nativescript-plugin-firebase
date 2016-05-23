@@ -15,11 +15,13 @@ If you can spare 41 seconds, please check this video of the [demo app](https://g
 * you want to update clients at the moment the data changes (think chat and multiplayer games).
 
 ## Prerequisites
-NativeScript 1.3.0 (`tns --version`) is required for smooth installation, so please upgrade if you need to.
+Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
+Your first 'Firebase' will be automatically created and made available via a URL like `https://n-plugin-test.firebaseio.com`.
 
-Head on over to firebase.com and sign up for a free account.
-Your first 'Firebase' will be automatically created and made available via a URL
-like `https://resplendent-fire-4211.firebaseio.com/`.
+Open your Firebase project at the Google console and click 'Add app' to add an iOS and / or Android app.
+Follow the steps (make sure the bundle id is the same as your nativescript.id in `package.json` and you'll be able to download:
+* `GoogleService-Info.plist` which you'll add to your NativeScript project at `app/App_Resources/iOS/GoogleService-Info.plist`
+* `google-services.json` which you'll add to your NativeScript project at `platforms/android/google-services.json`
 
 ## Installation
 From the command prompt go to your app's root folder and execute:
@@ -37,7 +39,6 @@ And here's the comprehensive list of supported functions:
   var firebase = require("nativescript-plugin-firebase");
 
   firebase.init({
-    url: 'https://resplendent-fire-4211.firebaseio.com',
     persist: true // Allow disk persistence. Default false.
   }).then(
       function (instance) {
@@ -304,7 +305,7 @@ The Firebase Dashboard can be reached by simply loading your Firebase URL in a w
 
 ### Testing your app in the emulator
 
-`tns emulate ios --device iPhone-6s`
+`tns emulate ios --device "iPhone 6s"`
 
 `tns emulate android --geny "Nexus 6_23"`
 

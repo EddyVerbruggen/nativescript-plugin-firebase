@@ -55,10 +55,16 @@ firebase.getCallbackData = function(type, snapshot) {
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
+      // this requires you to download GoogleService-Info.plist and
+      // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
+      FIRApp.configure();
+
       if (arg.persist) {
-        Firebase.defaultConfig().persistenceEnabled = true;
+        FIRDatabase.database().persistenceEnabled = true;
       }
-      instance = new Firebase(arg.url);
+      
+      instance = FIRDatabase.database().reference();
+
       resolve(instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
@@ -67,34 +73,57 @@ firebase.init = function (arg) {
   });
 };
 
+firebase.logout = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      FIRAuth.auth().signOut(null);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.logout: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      var onCompletion = function(error, authData) {
+      var onCompletion = function(user, error) {
         if (error) {
           reject(error.localizedDescription);
         } else {
+          console.log(user);
+          console.log(JSON.stringify(user));
+          console.log(firebase.toJsObject(user));
+
           resolve({
-            uid: authData.uid,
-            provider: authData.provider,
-            expiresAtUnixEpochSeconds: authData.expires,
-            profileImageURL: authData.providerData.objectForKey("profileImageURL"),
-            token: authData.token
+            uid: user.uid,
+            provider: user.providerID,
+            profileImageURL: user.photoURL,
+            email: user.email,
+            name: user.displayName
+            // expiresAtUnixEpochSeconds: user.expires,
+            // token: user.token
           });
         }
       };
 
-      var type = arg.type;
-      if (type === firebase.LoginType.ANONYMOUS) {
-        instance.authAnonymouslyWithCompletionBlock(onCompletion);
-      } else if (type === firebase.LoginType.PASSWORD) {
+      var fAuth = FIRAuth.auth();
+      if (fAuth === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      if (arg.type === firebase.LoginType.ANONYMOUS) {
+        fAuth.signInAnonymouslyWithCompletion(onCompletion);
+      } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
-          instance.authUserPasswordWithCompletionBlock(arg.email, arg.password, onCompletion);          
+          fAuth.signInWithEmailPasswordCompletion(arg.email, arg.password, onCompletion);
         }
       } else {
-        reject ("Unsupported auth type: " + type);
+        reject ("Unsupported auth type: " + arg.type);
       }
     } catch (ex) {
       console.log("Error in firebase.login: " + ex);
@@ -117,7 +146,7 @@ firebase.resetPassword = function (arg) {
       if (!arg.email) {
         reject("Resetting a password requires an email argument");
       } else {
-        instance.resetPasswordForUserWithCompletionBlock(arg.email, onCompletion);
+        FIRAuth.auth().sendPasswordResetWithEmailCompletion(arg.email, onCompletion);
       }
     } catch (ex) {
       console.log("Error in firebase.resetPassword: " + ex);
@@ -140,7 +169,12 @@ firebase.changePassword = function (arg) {
       if (!arg.email || !arg.oldPassword || !arg.newPassword) {
         reject("Changing a password requires an email and an oldPassword and a newPassword arguments");
       } else {
-        instance.changePasswordForUserFromOldToNewWithCompletionBlock(arg.email, arg.oldPassword, arg.newPassword, onCompletion);
+        var user = FIRAuth.auth().currentUser;
+        if (user === null) {
+          reject("Please log the user in first");
+        } else {
+          user.updatePasswordCompletion(arg.newPassword, onCompletion);
+        }
       }
     } catch (ex) {
       console.log("Error in firebase.changePassword: " + ex);
@@ -152,12 +186,12 @@ firebase.changePassword = function (arg) {
 firebase.createUser = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      var onCompletion = function(error, authData) {
+      var onCompletion = function(user, error) {
         if (error) {
           reject(error.localizedDescription);
         } else {
           resolve({
-            key: firebase.toJsObject(authData).uid
+            key: user.uid // firebase.toJsObject(authData).uid
           });
         }
       };
@@ -165,7 +199,8 @@ firebase.createUser = function (arg) {
       if (!arg.email || !arg.password) {
         reject("Creating a user requires an email and password argument");
       } else {
-        instance.createUserPasswordWithValueCompletionBlock(arg.email, arg.password, onCompletion);
+        // instance.createUserPasswordWithValueCompletionBlock(arg.email, arg.password, onCompletion);
+        FIRAuth.auth().createUserWithEmailPasswordCompletion(arg.email, arg.password, onCompletion);
       }
     } catch (ex) {
       console.log("Error in firebase.createUser: " + ex);
@@ -175,16 +210,16 @@ firebase.createUser = function (arg) {
 };
 
 firebase._addObservers = function(to, updateCallback) {
-  to.observeEventTypeWithBlock(FEventType.FEventTypeChildAdded, function (snapshot) {
+  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildAdded, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
   });
-  to.observeEventTypeWithBlock(FEventType.FEventTypeChildRemoved, function (snapshot) {
+  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildRemoved, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
   });
-  to.observeEventTypeWithBlock(FEventType.FEventTypeChildChanged, function (snapshot) {
+  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildChanged, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
   });
-  to.observeEventTypeWithBlock(FEventType.FEventTypeChildMoved, function (snapshot) {
+  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildMoved, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
   });
 };
@@ -213,7 +248,7 @@ firebase.addValueEventListener = function (updateCallback, path) {
         where = instance.childByAppendingPath(path);
       }
       where.observeEventTypeWithBlockWithCancelBlock(
-          FEventType.FEventTypeValue,
+          FIRDataEventType.FIRDataEventTypeValue,
           function (snapshot) {
             updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
           },
@@ -335,7 +370,7 @@ firebase.query = function (updateCallback, path, options) {
       }
 
       if (options.singleEvent) {
-        query.observeSingleEventOfTypeWithBlock(FEventType.FEventTypeValue, function (snapshot) {
+        query.observeSingleEventOfTypeWithBlock(FIRDataEventType.FIRDataEventTypeValue, function (snapshot) {
           updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
         });
       } else {
