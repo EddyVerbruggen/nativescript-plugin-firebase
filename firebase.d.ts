@@ -125,6 +125,7 @@ declare module "nativescript-plugin-firebase" {
 
     export function init(options: InitOptions): Promise<any>;
     export function login(options: LoginOptions): Promise<LoginResult>;
+    export function logout(): Promise<any>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;
     export function changePassword(options: ChangePasswordOptions): Promise<any>;

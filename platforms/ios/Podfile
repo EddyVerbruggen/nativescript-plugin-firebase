@@ -1,1 +1,2 @@
-pod 'Firebase', '~> 2.5.1'
+pod 'Firebase/Database', '~> 3.2.0'
+pod 'Firebase/Auth', '~> 3.2.0'
