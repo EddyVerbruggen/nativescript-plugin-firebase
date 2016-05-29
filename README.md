@@ -29,6 +29,17 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-plugin-firebase
 ```
 
+### Android
+- Open `platforms/android/build.gradle`
+- Near the top there's a dependencies section, add `classpath "com.google.gms:google-services:3.0.0"` so it becomes something like:
+```
+  dependencies {
+    classpath "com.android.tools.build:gradle:1.5.0"
+    classpath "com.google.gms:google-services:3.0.0"
+  }
+```
+- Add the very bottom of the same file add `apply plugin: "com.google.gms.google-services"`
+
 ## Usage
 
 If you want a quickstart, [clone our demo app (the one in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
