@@ -30,7 +30,22 @@ tns plugin add nativescript-plugin-firebase
 ```
 
 ### Android
-- Open `platforms/android/build.gradle`
+[Installpackages Google Play Services and Google Repository in your Android SDK Manager](http://stackoverflow.com/a/37310513)
+
+#### Open `app/App_Resources/Android/app.gradle`
+- Add `applicationId "com.example.app"` to the `defaultConfig` node (change the id to the same as in your app's `package.json`), so it becomes:
+
+```
+android {
+    ...
+    defaultConfig {
+        applicationId "com.example.app"
+        ...
+    }
+}
+```
+
+#### Open `platforms/android/build.gradle`
 - Near the top there's a dependencies section, add `classpath "com.google.gms:google-services:3.0.0"` so it becomes something like:
 ```
   dependencies {
