@@ -323,6 +323,17 @@ Shouldn't be more complicated than:
   firebase.logout();
 ```
 
+## Known issues
+On Android you could run into an error like this:
+
+```
+com.android.dex.DexIndexOverflowException: method ID not in..
+```
+
+Congrats, you ran into [this issue](https://github.com/NativeScript/android-runtime/issues/344)
+which can be solved by adding `multiDexEnabled true` to your `build.gradle`.
+See the linked issue for details.
+
 ## Pro tips
 
 ### See what's happening
