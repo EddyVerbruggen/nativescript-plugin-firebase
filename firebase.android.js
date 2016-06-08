@@ -157,8 +157,8 @@ firebase.login = function (arg) {
               // TODO add these properties, see https://firebase.google.com/docs/auth/android/manage-users#get_a_users_profile
               // provider: authData.getProvider(),
               // expiresAtUnixEpochSeconds: authData.getExpires(),
-              profileImageURL: user.getPhotoUrl()
-              // token: user.getToken() // can be used to auth with a backend server
+              profileImageURL: user.getPhotoUrl(),
+              token: user.getToken() // can be used to auth with a backend server
             });
           } else {
             // reject("Logging in the user failed");            
@@ -189,6 +189,21 @@ firebase.login = function (arg) {
             }
           });
           firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+        }
+      } else if (arg.type === firebase.LoginType.CUSTOM) {
+        if (!arg.token) {
+          reject("Auth type custom requires a token argument");
+        } else {
+          var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+            onComplete: function (task) {
+              if (!task.isSuccessful()) {
+                reject("Logging in the user failed");            
+              } else {
+                // the AuthStateListener.onAuthStateChanged callback will resolve the promise
+              }
+            }
+          });
+          firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
         }
       } else {
         reject ("Unsupported auth type: " + arg.type);

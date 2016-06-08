@@ -2,7 +2,8 @@ var firebase = {};
 
 firebase.LoginType = {
   ANONYMOUS: "anonymous",
-  PASSWORD: "password"
+  PASSWORD: "password",
+  CUSTOM: "custome"
 };
 
 firebase.QueryOrderByType = {
