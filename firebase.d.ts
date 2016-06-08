@@ -62,6 +62,11 @@ declare module "nativescript-plugin-firebase" {
       type: LoginType;
       email?: string;
       password?: string;
+      /**
+       * Use with LoginType.CUSTOM
+       * See: https://firebase.google.com/docs/auth/server
+       */
+      token?: string;
     }
 
     /**
