@@ -331,8 +331,21 @@ com.android.dex.DexIndexOverflowException: method ID not in..
 ```
 
 Congrats, you ran into [this issue](https://github.com/NativeScript/android-runtime/issues/344)
-which can be solved by adding `multiDexEnabled true` to your `build.gradle`.
-See the linked issue for details.
+which can be solved by adding `multiDexEnabled true` to your `app/App_Resources/Android/app.gradle`
+so it becomes somehthing like this:
+
+```
+android {  
+  defaultConfig {  
+    applicationId "my.package.id"
+    multiDexEnabled true
+    generatedDensities = []
+  }  
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }  
+}
+```
 
 ## Pro tips
 
