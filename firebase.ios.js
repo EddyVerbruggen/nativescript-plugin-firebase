@@ -105,6 +105,11 @@ firebase.login = function (arg) {
             // expiresAtUnixEpochSeconds: user.expires,
             token: user.token
           });
+
+          firebase.notifyAuthStateListeners({
+            loggedIn: true,
+            user: user
+          });
         }
       };
 
@@ -123,10 +128,20 @@ firebase.login = function (arg) {
           fAuth.signInWithEmailPasswordCompletion(arg.email, arg.password, onCompletion);
         }
       } else if (arg.type === firebase.LoginType.CUSTOM) {
-        if (!arg.token) {
-          reject("Auth type custom requires a token argument");
-        } else {
+        if (!arg.token && !arg.tokenProviderFn) {
+          reject("Auth type custom requires a token or a tokenProviderFn argument");
+        } else if (arg.token) {
           fAuth.signInWithCustomToken(arg.token, onCompletion);
+        }  else if (arg.tokenProviderFn) {
+          arg.tokenProviderFn()
+            .then(
+              function (token) {
+                firebaseAuth.signInWithCustomToken(arg.token, onCompletion);
+              },
+              function (error) {
+                reject(error);
+              }
+            )
         }
       } else {
         reject ("Unsupported auth type: " + arg.type);
