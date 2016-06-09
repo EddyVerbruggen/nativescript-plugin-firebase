@@ -82,6 +82,8 @@ firebase.getCallbackData = function(type, snapshot) {
   };
 };
 
+firebase.authStateListener = null;
+
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -94,6 +96,21 @@ firebase.init = function (arg) {
       instance = fDatabase.getInstance().getReference();
       // it is however still possible to pass the URL programmatically (which we'll do for now):
       // instance = fDatabase.getInstance().getReferenceFromUrl(arg.url);
+
+      // Listen to auth state changes
+      if (!firebase.authStateListener) {
+        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+          onAuthStateChanged: function (fbAuth) {
+            var user = fbAuth.getCurrentUser();
+            firebase.notifyAuthStateListeners({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          }
+        });
+        var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+        firebaseAuth.addAuthStateListener(firebase.authStateListener);
+      }
 
       resolve(instance);
     } catch (ex) {
@@ -115,42 +132,29 @@ firebase.logout = function (arg) {
   });
 };
 
-firebase.authStateListener = null;
+function toLoginResult(user) {
+  return user && {
+      uid: user.getUid(),
+      name: user.getDisplayName(),
+      email: user.getEmail(),
+      // TODO add these properties, see https://firebase.google.com/docs/auth/android/manage-users#get_a_users_profile
+      // provider: authData.getProvider(),
+      // expiresAtUnixEpochSeconds: authData.getExpires(),
+      profileImageURL: user.getPhotoUrl()
+    };
+}
 
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-
-      if (firebase.authStateListener === null) {
-        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-          onAuthStateChanged: function (fbAuth) {
-            var user = fbAuth.getCurrentUser();
-            firebase.notifyAuthStateListeners({
-              loggedIn: user !== null,
-              user: user
-            });
-          }
-        });
-        firebaseAuth.addAuthStateListener(firebase.authStateListener);
-      }
-
       var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
         onComplete: function (task) {
           if (!task.isSuccessful()) {
             reject("Logging in the user failed");            
           } else {
             var user = task.getResult().getUser();
-            resolve({
-              uid: user.getUid(),
-              name: user.getDisplayName(),
-              email: user.getEmail(),
-              // TODO add these properties, see https://firebase.google.com/docs/auth/android/manage-users#get_a_users_profile
-              // provider: authData.getProvider(),
-              // expiresAtUnixEpochSeconds: authData.getExpires(),
-              profileImageURL: user.getPhotoUrl(),
-              //token: user.getToken() // can be used to auth with a backend server
-            });
+            resolve(toLoginResult(user));
           }
         }
       });

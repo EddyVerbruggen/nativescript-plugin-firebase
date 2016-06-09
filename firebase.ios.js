@@ -52,6 +52,8 @@ firebase.getCallbackData = function(type, snapshot) {
   };
 };
 
+firebase.authStateListener = null;
+
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -64,6 +66,17 @@ firebase.init = function (arg) {
       }
       
       instance = FIRDatabase.database().reference();
+
+      // Listen to auth state changes
+      if (!firebase.authStateListener) {
+        firebase.authStateListener = function(auth, user) {
+          firebase.notifyAuthStateListeners({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+        };
+        FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
+      }
 
       resolve(instance);
     } catch (ex) {
@@ -85,6 +98,16 @@ firebase.logout = function (arg) {
   });
 };
 
+function toLoginResult(user) {
+  return user && {
+      uid: user.uid,
+      provider: user.providerID,
+      profileImageURL: user.photoURL,
+      email: user.email,
+      name: user.displayName
+    };
+}
+
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -96,15 +119,7 @@ firebase.login = function (arg) {
           console.log(JSON.stringify(user));
           console.log(firebase.toJsObject(user));
 
-          resolve({
-            uid: user.uid,
-            provider: user.providerID,
-            profileImageURL: user.photoURL,
-            email: user.email,
-            name: user.displayName,
-            // expiresAtUnixEpochSeconds: user.expires,
-            //token: user.token
-          });
+          resolve(toLoginResult(user));
 
           firebase.notifyAuthStateListeners({
             loggedIn: true,
