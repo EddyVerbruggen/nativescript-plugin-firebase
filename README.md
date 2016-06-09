@@ -223,10 +223,49 @@ but if you only want to wipe everything at '/users', do this:
 ```
 
 ### login
-v 1.1.0 of this plugin adds the capability to log your users in. Either anonymously or by email and password.
+v 1.1.0 of this plugin adds the capability to log your users in, either
+
+* anonymously,
+
+* by email and password or
+
+* using a custom token.
+
 You need to add support for those features in your Firebase instance at the 'Login & Auth' tab.
 
 You can expect more login mechanisms to be added in the future.
+
+#### Listening to auth state changes
+As stated [here](https://firebase.google.com/docs/auth/ios/manage-users#get_the_currently_signed-in_user)
+
+> The recommended way to get the current user is by setting a listener on the Auth object
+
+To listen to auth state changes you can register a listener like this:
+
+```js
+	var listener = {
+    onAuthStateChanged: function(data) {
+      console.log(data.loggedIn ? "Logged in to firebase" : "Logged out from firebase");
+      if (data.loggedIn) {
+        console.log("User info", data.user);
+      }
+    },
+    thisArg: this
+  };
+
+  firebase.addAuthStateListener(listener);
+```
+
+To stop listening to auth state changed:
+
+```js
+  firebase.removeAuthStateListener(listener);
+```
+
+To check if already listening to auth state changes
+```js
+  firebase.removeAuthStateListener(listener);
+```
 
 #### Anonymous login
 ```js
