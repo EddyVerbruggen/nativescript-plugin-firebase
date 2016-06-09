@@ -120,36 +120,27 @@ firebase.authStateListener = null;
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      /*
-      var authorizer = new com.google.firebase.database.DatabaseReference.AuthResultHandler({
-        onAuthenticated: function (authData) {
-          resolve({
-            uid: authData.getUid(),
-            provider: authData.getProvider(),
-            expiresAtUnixEpochSeconds: authData.getExpires(),
-            profileImageURL: authData.getProviderData().get("profileImageURL"),
-            token: authData.getToken()
-          });
-        },
-        onAuthenticationError: function (databaseError) {
-          reject(databaseError.getMessage());
-        }
-      });
-      */
-
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
-      if (firebase.authStateListener !== null) {
-        firebaseAuth.removeAuthStateListener(firebase.authStateListener);
+      if (firebase.authStateListener === null) {
+        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+          onAuthStateChanged: function (fbAuth) {
+            var user = fbAuth.getCurrentUser();
+            firebase.notifyAuthStateListeners({
+              loggedIn: user !== null,
+              user: user
+            });
+          }
+        });
+        firebaseAuth.addAuthStateListener(firebase.authStateListener);
       }
 
-      firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-        onAuthStateChanged: function (fbAuth) {
-          console.log("--- auth state changed: " + fbAuth);
-          var user = fbAuth.getCurrentUser();
-          console.log("--- user: " + user);
-          if (user !== null) {
-            // signed in
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          if (!task.isSuccessful()) {
+            reject("Logging in the user failed");            
+          } else {
+            var user = task.getResult().getUser();
             resolve({
               uid: user.getUid(),
               name: user.getDisplayName(),
@@ -160,13 +151,9 @@ firebase.login = function (arg) {
               profileImageURL: user.getPhotoUrl(),
               token: user.getToken() // can be used to auth with a backend server
             });
-          } else {
-            // reject("Logging in the user failed");            
           }
         }
       });
-
-      firebaseAuth.addAuthStateListener(firebase.authStateListener);
 
       if (arg.type === firebase.LoginType.ANONYMOUS) {
         var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
@@ -179,31 +166,23 @@ firebase.login = function (arg) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
-          var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
-            onComplete: function (task) {
-              if (!task.isSuccessful()) {
-                reject("Logging in the user failed");            
-              } else {
-                // the AuthStateListener.onAuthStateChanged callback will resolve the promise
-              }
-            }
-          });
           firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
         }
       } else if (arg.type === firebase.LoginType.CUSTOM) {
-        if (!arg.token) {
-          reject("Auth type custom requires a token argument");
-        } else {
-          var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
-            onComplete: function (task) {
-              if (!task.isSuccessful()) {
-                reject("Logging in the user failed");            
-              } else {
-                // the AuthStateListener.onAuthStateChanged callback will resolve the promise
-              }
-            }
-          });
+        if (!arg.token && !arg.tokenProviderFn) {
+          reject("Auth type custom requires a token or a tokenProviderFn argument");
+        } else if (arg.token) {
           firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+        } else if (arg.tokenProviderFn) {
+          arg.tokenProviderFn()
+            .then(
+              function (token) {
+                firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+              },
+              function (error) {
+                reject(error);
+              }
+            )
         }
       } else {
         reject ("Unsupported auth type: " + arg.type);

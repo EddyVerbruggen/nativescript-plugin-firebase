@@ -63,10 +63,17 @@ declare module "nativescript-plugin-firebase" {
       email?: string;
       password?: string;
       /**
+       * The JSON Web Token (JWT) to use for authentication.
        * Use with LoginType.CUSTOM
        * See: https://firebase.google.com/docs/auth/server
        */
       token?: string;
+      /**
+       * A function that returns a promise with the  JSON Web Token (JWT) to use for authentication.
+       * Use with LoginType.CUSTOM
+       * See: https://firebase.google.com/docs/auth/server
+       */
+      tokenProviderFn?: () => Promise<String>;
     }
 
     /**
@@ -128,6 +135,16 @@ declare module "nativescript-plugin-firebase" {
       newPassword: string
     }
 
+    export interface AuthStateData {
+      loggedIn?: boolean;
+      user?: LoginResult;
+    }
+
+    export interface AuthStateChangeListener {
+      onAuthStateChanged: (data: AuthStateData) => void;
+      thisArg?: any;
+    }
+
     export function init(options: InitOptions): Promise<any>;
     export function login(options: LoginOptions): Promise<LoginResult>;
     export function logout(): Promise<any>;
@@ -141,4 +158,7 @@ declare module "nativescript-plugin-firebase" {
     export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
     export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<any>;
     export function addValueEventListener(onValueEvent: (data: FBData) => void, path: string): Promise<any>;
+    export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
+    export function removeAuthStateListener(listener: AuthStateChangeListener): boolean;
+    export function hasAuthStateListener(listener: AuthStateChangeListener): boolean;
 }
