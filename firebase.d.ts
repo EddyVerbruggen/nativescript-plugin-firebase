@@ -1,4 +1,5 @@
 /// <reference path="firebase-common.d.ts"/>
+/// <reference path="es6-promise.d.ts"/>
 declare module "nativescript-plugin-firebase" {
 
     /**
