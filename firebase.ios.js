@@ -103,7 +103,7 @@ firebase.login = function (arg) {
             email: user.email,
             name: user.displayName,
             // expiresAtUnixEpochSeconds: user.expires,
-            token: user.token
+            //token: user.token
           });
 
           firebase.notifyAuthStateListeners({

@@ -149,7 +149,7 @@ firebase.login = function (arg) {
               // provider: authData.getProvider(),
               // expiresAtUnixEpochSeconds: authData.getExpires(),
               profileImageURL: user.getPhotoUrl(),
-              token: user.getToken() // can be used to auth with a backend server
+              //token: user.getToken() // can be used to auth with a backend server
             });
           }
         }
