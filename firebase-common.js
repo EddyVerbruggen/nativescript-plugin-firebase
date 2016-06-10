@@ -3,7 +3,8 @@ var firebase = {};
 firebase.LoginType = {
   ANONYMOUS: "anonymous",
   PASSWORD: "password",
-  CUSTOM: "custom"
+  CUSTOM: "custom",
+  FACEBOOK: "facebook"
 };
 
 firebase.QueryOrderByType = {
@@ -46,7 +47,7 @@ firebase.removeAuthStateListener = function(listener) {
 
 firebase.hasAuthStateListener = function(listener) {
   return firebase.authStateListeners.indexOf(listener) >= 0;
-}
+};
 
 firebase.notifyAuthStateListeners = function(data) {
   firebase.authStateListeners.forEach(function (listener) {
@@ -60,6 +61,6 @@ firebase.notifyAuthStateListeners = function(data) {
       console.error("Firebase AuthStateListener failed to trigger", listener, ex);
     }
   });
-}
+};
 
 module.exports = firebase;

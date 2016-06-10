@@ -120,6 +120,49 @@ firebase.init = function (arg) {
   });
 };
 
+firebase.getCurrentUser = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var user = firebaseAuth.getCurrentUser();
+      console.log("getCurrentUser: " + user);
+      if (user !== null) {
+        resolve({
+          uid: user.getUid(),
+          name: user.getDisplayName(),
+          email: user.getEmail(),
+          // TODO add these properties, see https://firebase.google.com/docs/auth/android/manage-users#get_a_users_profile
+          // provider: authData.getProvider(),
+          // expiresAtUnixEpochSeconds: authData.getExpires(),
+          profileImageURL: user.getPhotoUrl()
+          // token: user.getToken() // can be used to auth with a backend server
+          /* 
+          TODO sync with these iOS properties:
+          uid: user.uid,
+          anonymous: user.anonymous,
+          provider: user.providerID,
+          profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          name: user.displayName,
+          refreshToken: user.refreshToken,
+          */
+        });
+      } else {
+        reject();
+      }
+    } catch (ex) {
+      console.log("Error in firebase.getCurrentUser: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.logout = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -141,23 +184,35 @@ function toLoginResult(user) {
       // provider: authData.getProvider(),
       // expiresAtUnixEpochSeconds: authData.getExpires(),
       profileImageURL: user.getPhotoUrl()
-    };
+     // token: user.getToken() // can be used to auth with a backend server
+   };
 }
+
+firebase.authStateListener = null;
 
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
-        onComplete: function (task) {
-          if (!task.isSuccessful()) {
-            reject("Logging in the user failed");            
-          } else {
-            var user = task.getResult().getUser();
+
+      if (firebase.authStateListener !== null) {
+        firebaseAuth.removeAuthStateListener(firebase.authStateListener);
+      }
+
+      firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+        onAuthStateChanged: function (fbAuth) {
+          console.log("--- auth state changed: " + fbAuth);
+          var user = fbAuth.getCurrentUser();
+          console.log("--- user: " + user);
+          if (user !== null) {
             resolve(toLoginResult(user));
+          } else {
+            // reject("Logging in the user failed");            
           }
         }
       });
+
+      firebaseAuth.addAuthStateListener(firebase.authStateListener);
 
       if (arg.type === firebase.LoginType.ANONYMOUS) {
         var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
@@ -170,6 +225,15 @@ firebase.login = function (arg) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
+          var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+            onComplete: function (task) {
+              if (!task.isSuccessful()) {
+                reject("Logging in the user failed");            
+              } else {
+                // the AuthStateListener.onAuthStateChanged callback will resolve the promise
+              }
+            }
+          });
           firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
         }
       } else if (arg.type === firebase.LoginType.CUSTOM) {
@@ -188,6 +252,10 @@ firebase.login = function (arg) {
               }
             )
         }
+
+      } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        // TODO see https://firebase.google.com/docs/auth/android/facebook-login#authenticate_with_firebase
+
       } else {
         reject ("Unsupported auth type: " + arg.type);
       }

@@ -16,7 +16,10 @@
   "keywords": [
     "NativeScript",
     "Firebase",
-    "Database"
+    "Database",
+    "Authentication",
+    "Facebook",
+    "Google"
   ],
   "author": "Telerik / Eddy Verbruggen <eddyverbruggen@gmail.com>",
   "license": {
