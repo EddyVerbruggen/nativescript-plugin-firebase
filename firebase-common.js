@@ -2,7 +2,8 @@ var firebase = {};
 
 firebase.LoginType = {
   ANONYMOUS: "anonymous",
-  PASSWORD: "password"
+  PASSWORD: "password",
+  CUSTOM: "custom"
 };
 
 firebase.QueryOrderByType = {
@@ -24,5 +25,41 @@ firebase.QueryRangeType = {
 };
 
 firebase.instance = null;
+
+firebase.authStateListeners = [];
+
+firebase.addAuthStateListener = function(listener) {
+  if (firebase.authStateListeners.indexOf(listener) === -1) {
+    firebase.authStateListeners.push(listener);
+  }
+  return true;
+};
+    
+firebase.removeAuthStateListener = function(listener) {
+  var index = firebase.authStateListeners.indexOf(listener);
+  if (index >= 0) {
+    firebase.authStateListeners.splice(index, 1);
+  } else {
+    return false;
+  }
+};
+
+firebase.hasAuthStateListener = function(listener) {
+  return firebase.authStateListeners.indexOf(listener) >= 0;
+}
+
+firebase.notifyAuthStateListeners = function(data) {
+  firebase.authStateListeners.forEach(function (listener) {
+    try {
+      if (listener.thisArg) {
+        listener.onAuthStateChanged.apply(thisArg, data);
+      } else {
+        listener.onAuthStateChanged(data);
+      }
+    } catch (ex) {
+      console.error("Firebase AuthStateListener failed to trigger", listener, ex);
+    }
+  });
+}
 
 module.exports = firebase;
