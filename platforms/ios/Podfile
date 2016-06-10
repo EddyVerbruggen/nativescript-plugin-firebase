@@ -1,2 +1,9 @@
 pod 'Firebase/Database', '~> 3.2.0'
 pod 'Firebase/Auth', '~> 3.2.0'
+
+# required for Facebook Auth
+pod 'FBSDKCoreKit'
+pod 'FBSDKLoginKit'
+
+# required for Google Auth
+#pod 'GoogleSignIn'

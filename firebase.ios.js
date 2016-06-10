@@ -1,5 +1,6 @@
 var firebase = require("./firebase-common");
 var types = require("utils/types");
+var frame = require("ui/frame");
 
 firebase.toJsObject = function(objCObj) {
   if (objCObj === null || typeof objCObj != "object") {
@@ -78,9 +79,44 @@ firebase.init = function (arg) {
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
       }
 
+      // TODO only if Facebook is available.. perhaps check for the class to exist?
+      FBSDKAppEvents.activateApp();
+
       resolve(instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getCurrentUser = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var fAuth = FIRAuth.auth();
+      if (fAuth === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var user = fAuth.currentUser;
+      console.log("getCurrentUser: " + user);
+      if (user) {
+        resolve({
+          uid: user.uid,
+          anonymous: user.anonymous,
+          provider: user.providerID,
+          profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          name: user.displayName,
+          refreshToken: user.refreshToken,
+        });
+      } else {
+        reject();
+      }
+    } catch (ex) {
+      console.log("Error in firebase.getCurrentUser: " + ex);
       reject(ex);
     }
   });
@@ -101,10 +137,13 @@ firebase.logout = function (arg) {
 function toLoginResult(user) {
   return user && {
       uid: user.uid,
+      anonymous: user.anonymous,
       provider: user.providerID,
-      profileImageURL: user.photoURL,
+      profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
       email: user.email,
-      name: user.displayName
+      emailVerified: user.emailVerified,
+      name: user.displayName,
+      refreshToken: user.refreshToken,
     };
 }
 
@@ -115,10 +154,6 @@ firebase.login = function (arg) {
         if (error) {
           reject(error.localizedDescription);
         } else {
-          console.log(user);
-          console.log(JSON.stringify(user));
-          console.log(firebase.toJsObject(user));
-
           resolve(toLoginResult(user));
 
           firebase.notifyAuthStateListeners({
@@ -158,6 +193,51 @@ firebase.login = function (arg) {
               }
             )
         }
+
+      } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        var onFacebookCompletion = function(fbSDKLoginManagerLoginResult, error) {
+          if (error) {
+            console.log("FB login error " + error);
+            reject(error.localizedDescription);
+          } else if (fbSDKLoginManagerLoginResult.isCancelled) {
+            reject("login cancelled");
+          } else {
+            console.log("fAuth.currentUser 2: " + fAuth.currentUser);
+
+            // headless facebook auth
+            // var fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(fbSDKLoginManagerLoginResult.token.tokenString);
+            var fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString);
+            console.log("fIRAuthCredential: " + fIRAuthCredential);
+
+            console.log("fAuth.currentUser 3: " + fAuth.currentUser);
+            if (fAuth.currentUser) {
+              // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
+              var onCompletionLink = function (user, error) {
+                if (error) {
+                  // ignore, as this one was probably already linked, so just return the user
+                  log("--- linking error: " + error.localizedDescription);
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+                } else {
+                  onCompletion(user);
+                }
+              };
+              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+
+            } else {
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+            }
+          }
+        };
+
+        // this requires you to set the appid and customurlscheme in app_resources/.plist
+        var fbSDKLoginManager = FBSDKLoginManager.new();
+        //fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
+
+        fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
+            ["public_profile", "email"],
+            null, // the viewcontroller param can be null since by default topmost is taken
+            onFacebookCompletion);
+
       } else {
         reject ("Unsupported auth type: " + arg.type);
       }

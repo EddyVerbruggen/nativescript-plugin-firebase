@@ -17,7 +17,11 @@ declare module "nativescript-plugin-firebase" {
        * or the tokenProviderFn function that returns a promise to provide the token.
        * See: https://firebase.google.com/docs/auth/server
        */
-      CUSTOM
+      CUSTOM,
+      /**
+       * This requires you to setup Facebook Auth in the Firebase console.
+       */
+      FACEBOOK
     }
 
     /**
