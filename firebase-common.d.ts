@@ -19,7 +19,10 @@ declare module "nativescript-plugin-firebase" {
        */
       CUSTOM,
       /**
-       * This requires you to setup Facebook Auth in the Firebase console.
+       * This requires you to setup Facebook Auth in the Firebase console,
+       * as well as uncommenting the SDK includes in include.gradle (Android) and Podfile (iOS).
+       * 
+       * Note that this works well on iOS, but Android is work in progress.
        */
       FACEBOOK
     }

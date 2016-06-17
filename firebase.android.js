@@ -88,7 +88,6 @@ firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var fDatabase = com.google.firebase.database.FirebaseDatabase;
-      // console.log("fDatabase: " + fDatabase);
       if (arg.persist) {
         fDatabase.getInstance().setPersistenceEnabled(true);
       }
@@ -97,10 +96,27 @@ firebase.init = function (arg) {
       // it is however still possible to pass the URL programmatically (which we'll do for now):
       // instance = fDatabase.getInstance().getReferenceFromUrl(arg.url);
 
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+
+      if (arg.onAuthStateChanged) {
+        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+          onAuthStateChanged: function (fbAuth) {
+            console.log("--------- auth change (1), user: " + user);
+            var user = fbAuth.getCurrentUser();
+            arg.onAuthStateChanged({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          }
+        });
+        firebaseAuth.addAuthStateListener(firebase.authStateListener);
+      }
+
       // Listen to auth state changes
       if (!firebase.authStateListener) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
+            console.log("--------- auth change (2), user: " + user);
             var user = fbAuth.getCurrentUser();
             firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
@@ -108,7 +124,6 @@ firebase.init = function (arg) {
             });
           }
         });
-        var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
         firebaseAuth.addAuthStateListener(firebase.authStateListener);
       }
 
@@ -136,22 +151,7 @@ firebase.getCurrentUser = function (arg) {
           uid: user.getUid(),
           name: user.getDisplayName(),
           email: user.getEmail(),
-          // TODO add these properties, see https://firebase.google.com/docs/auth/android/manage-users#get_a_users_profile
-          // provider: authData.getProvider(),
-          // expiresAtUnixEpochSeconds: authData.getExpires(),
           profileImageURL: user.getPhotoUrl()
-          // token: user.getToken() // can be used to auth with a backend server
-          /* 
-          TODO sync with these iOS properties:
-          uid: user.uid,
-          anonymous: user.anonymous,
-          provider: user.providerID,
-          profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
-          email: user.email,
-          emailVerified: user.emailVerified,
-          name: user.displayName,
-          refreshToken: user.refreshToken,
-          */
         });
       } else {
         reject();
@@ -176,64 +176,55 @@ firebase.logout = function (arg) {
 };
 
 function toLoginResult(user) {
-  return user && {
+  if (user === null) {
+    return false;
+  }
+  /*
+  var providerData = user.getProviderData();
+  for (var i = 0; i < providerData.size(); i++) {
+    var info = providerData.get(i);
+    console.log("--- userInfo - provider: " + info.getProviderId());
+  }
+  */
+
+  return {
       uid: user.getUid(),
       name: user.getDisplayName(),
       email: user.getEmail(),
-      // TODO add these properties, see https://firebase.google.com/docs/auth/android/manage-users#get_a_users_profile
-      // provider: authData.getProvider(),
       // expiresAtUnixEpochSeconds: authData.getExpires(),
       profileImageURL: user.getPhotoUrl()
      // token: user.getToken() // can be used to auth with a backend server
    };
 }
 
-firebase.authStateListener = null;
-
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-
-      if (firebase.authStateListener !== null) {
-        firebaseAuth.removeAuthStateListener(firebase.authStateListener);
-      }
-
-      firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-        onAuthStateChanged: function (fbAuth) {
-          console.log("--- auth state changed: " + fbAuth);
-          var user = fbAuth.getCurrentUser();
-          console.log("--- user: " + user);
-          if (user !== null) {
-            resolve(toLoginResult(user));
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          // alert("login task: " + task.isSuccessful());
+          if (!task.isSuccessful()) {
+            reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           } else {
-            // reject("Logging in the user failed");            
+            var user = task.getResult().getUser();
+            resolve(toLoginResult(user));
           }
         }
       });
 
-      firebaseAuth.addAuthStateListener(firebase.authStateListener);
-
       if (arg.type === firebase.LoginType.ANONYMOUS) {
-        var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-          onFailure: function (throwable) {
-            reject("Anonymous login failed with message: " + throwable.getMessage());
-          }
-        });
-        firebaseAuth.signInAnonymously().addOnFailureListener(onFailureListener);
+        // var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+          // onFailure: function (throwable) {
+            // reject("Anonymous login failed with message: " + throwable.getMessage());
+          // }
+        // });
+        // firebaseAuth.signInAnonymously().addOnFailureListener(onFailureListener);
+        firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
       } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
-          var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
-            onComplete: function (task) {
-              if (!task.isSuccessful()) {
-                reject("Logging in the user failed");            
-              } else {
-                // the AuthStateListener.onAuthStateChanged callback will resolve the promise
-              }
-            }
-          });
           firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
         }
       } else if (arg.type === firebase.LoginType.CUSTOM) {
@@ -250,11 +241,32 @@ firebase.login = function (arg) {
               function (error) {
                 reject(error);
               }
-            )
+            );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        if (typeof(com.facebook) === "undefined") {
+          reject("Facebook SDK not installed - see Podfile");
+          return;
+        }
+
         // TODO see https://firebase.google.com/docs/auth/android/facebook-login#authenticate_with_firebase
+        var fbLoginManager = com.facebook.login.LoginManager.getInstance();
+        var callbackManager = com.facebook.CallbackManager.Factory.create();
+
+        fbLoginManager.registerCallback(
+          callbackManager,
+          new com.facebook.FacebookCallback({
+            onSuccess: function (loginResult) {
+              console.log("------------- fb callback");
+              console.log("------------- fb loginResult " + loginResult);
+            }
+          })
+        );
+
+        var permissions = ["public_profile", "email"];
+        var activity = appModule.android.foregroundActivity;
+        fbLoginManager.logInWithReadPermissions(foregroundActivity, permissions);
 
       } else {
         reject ("Unsupported auth type: " + arg.type);
@@ -315,7 +327,7 @@ firebase.changePassword = function (arg) {
         var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
         
         if (user === null) {
-          reject("Please log the user in first");
+          reject("no current user");
         } else {
           user.updatePassword(arg.newPassword).addOnCompleteListener(onCompleteListener);          
         }
@@ -337,36 +349,48 @@ firebase.createUser = function (arg) {
 
         var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
           onComplete: function (task) {
+            // see https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth#public-methods
             if (!task.isSuccessful()) {
-              reject("Creating a user failed");            
+              reject("Creating a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
             } else {
-              // the AuthStateListener.onAuthStateChanged callback will resolve the promise
+              var user = task.getResult().getUser();
+              resolve(toLoginResult(user));
             }
           }
         });
-
-        if (firebase.authStateListener !== null) {
-          firebaseAuth.removeAuthStateListener(firebase.authStateListener);
-        }
-
-        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-          onAuthStateChanged: function (fbAuth) {
-            console.log("--- auth state changed: " + fbAuth);
-            var user = fbAuth.getCurrentUser();
-            if (user !== null) {
-              // signed in
-              resolve({
-                key: user.getUid()
-              });
-            }
-          }
-        });
-
-        firebaseAuth.addAuthStateListener(firebase.authStateListener);
         firebaseAuth.createUserWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
       }
     } catch (ex) {
       console.log("Error in firebase.createUser: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.deleteUser = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var user = firebaseAuth.getCurrentUser();
+
+      if (user === null) {
+        reject("no current user");
+        return;
+      }
+
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          if (!task.isSuccessful()) {
+            reject("Deleting a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            resolve();
+          }
+        }
+      });
+
+      user.delete().addOnCompleteListener(onCompleteListener);
+    } catch (ex) {
+      console.log("Error in firebase.deleteUser: " + ex);
       reject(ex);
     }
   });
