@@ -425,6 +425,10 @@ android {
 }
 ```
 
+Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which will be solved by
+placing `google-services.json` to `platforms/android/google-services.json` (see above).
+
+
 ## Pro tips
 
 ### See what's happening
