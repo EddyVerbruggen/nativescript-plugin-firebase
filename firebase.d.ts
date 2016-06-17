@@ -1,5 +1,4 @@
 /// <reference path="firebase-common.d.ts"/>
-/// <reference path="es6-promise.d.ts"/>
 declare module "nativescript-plugin-firebase" {
 
     /**
@@ -14,6 +13,10 @@ declare module "nativescript-plugin-firebase" {
        * Allow disk persistence. Default false.
        */
       persist?: boolean;
+      /**
+       * Get notified when fi the user is logged in.
+       */
+      onAuthStateChange?: AuthStateChangeListener
     }
 
     /**
@@ -150,6 +153,7 @@ declare module "nativescript-plugin-firebase" {
     export function login(options: LoginOptions): Promise<LoginResult>;
     export function logout(): Promise<any>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
+    export function deleteUser(): Promise<any>;
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;
     export function changePassword(options: ChangePasswordOptions): Promise<any>;
     export function push(path: string, value: any): Promise<PushResult>;

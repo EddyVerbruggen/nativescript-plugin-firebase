@@ -68,9 +68,21 @@ firebase.init = function (arg) {
       
       instance = FIRDatabase.database().reference();
 
+      if (arg.onAuthStateChanged) {
+        firebase.authStateListener = function(auth, user) {
+          console.log("--------- auth change 1, user: " + user);
+          arg.onAuthStateChanged({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+          });
+        };
+        FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
+      }
+
       // Listen to auth state changes
       if (!firebase.authStateListener) {
         firebase.authStateListener = function(auth, user) {
+          console.log("--------- auth change 2, user: " + user);
           firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -79,8 +91,10 @@ firebase.init = function (arg) {
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
       }
 
-      // TODO only if Facebook is available.. perhaps check for the class to exist?
-      FBSDKAppEvents.activateApp();
+      // TODO can we move the stuff from app.js to here?
+      if (typeof(FBSDKAppEvents) !== "undefined") {
+        FBSDKAppEvents.activateApp();
+      }
 
       resolve(instance);
     } catch (ex) {
@@ -104,13 +118,13 @@ firebase.getCurrentUser = function (arg) {
       if (user) {
         resolve({
           uid: user.uid,
-          anonymous: user.anonymous,
-          provider: user.providerID,
+          // anonymous: user.anonymous,
+          // provider: user.providerID,
           profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
           email: user.email,
           emailVerified: user.emailVerified,
           name: user.displayName,
-          refreshToken: user.refreshToken,
+          refreshToken: user.refreshToken
         });
       } else {
         reject();
@@ -137,8 +151,8 @@ firebase.logout = function (arg) {
 function toLoginResult(user) {
   return user && {
       uid: user.uid,
-      anonymous: user.anonymous,
-      provider: user.providerID,
+      // anonymous: user.anonymous,
+      // provider: user.providerID,
       profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
       email: user.email,
       emailVerified: user.emailVerified,
@@ -191,10 +205,15 @@ firebase.login = function (arg) {
               function (error) {
                 reject(error);
               }
-            )
+            );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        if (typeof(FBSDKLoginManager) === "undefined") {
+          reject("Facebook SDK not installed - see Podfile");
+          return;
+        }
+        
         var onFacebookCompletion = function(fbSDKLoginManagerLoginResult, error) {
           if (error) {
             console.log("FB login error " + error);
@@ -234,7 +253,7 @@ firebase.login = function (arg) {
         //fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-            ["public_profile", "email"],
+            ["public_profile", "email"], // TODO allow user to pass this in
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
 
@@ -287,7 +306,7 @@ firebase.changePassword = function (arg) {
       } else {
         var user = FIRAuth.auth().currentUser;
         if (user === null) {
-          reject("Please log the user in first");
+          reject("no current user");
         } else {
           user.updatePasswordCompletion(arg.newPassword, onCompletion);
         }
@@ -320,6 +339,31 @@ firebase.createUser = function (arg) {
       }
     } catch (ex) {
       console.log("Error in firebase.createUser: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.deleteUser = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var user = FIRAuth.auth().currentUser;
+      if (user === null) {
+        reject("no current user");
+        return;
+      }
+
+      var onCompletion = function(user, error) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      };
+
+      user.deleteWithCompletion(onCompletion);
+    } catch (ex) {
+      console.log("Error in firebase.deleteUser: " + ex);
       reject(ex);
     }
   });

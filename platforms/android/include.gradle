@@ -13,7 +13,13 @@ repositories {
 }
 
 dependencies {
-  compile "com.google.firebase:firebase-database:9.0.0"
-  compile "com.google.firebase:firebase-auth:9.0.0"
-  compile "com.google.android.gms:play-services:9.0.0"
+    // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
+    compile "com.google.firebase:firebase-database:9.0.0"
+    compile "com.google.firebase:firebase-auth:9.0.0"
+
+    // for reading google-services.json and configuration
+    compile "com.google.android.gms:play-services:9.0.0"
+
+    // Uncomment if you need Facebook Authentication
+//   compile "com.facebook.android:facebook-android-sdk:4.+"
 }
