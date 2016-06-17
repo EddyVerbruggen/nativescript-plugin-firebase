@@ -426,7 +426,8 @@ android {
 ```
 
 Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which will be solved by
-placing `google-services.json` to `platforms/android/google-services.json` (see above).
+placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
+the changes to `build.gradle` which are mentioned above as well.
 
 
 ## Pro tips
