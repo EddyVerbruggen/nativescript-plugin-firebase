@@ -1,6 +1,9 @@
 pod 'Firebase/Database', '~> 3.2.0'
 pod 'Firebase/Auth', '~> 3.2.0'
 
+# Uncomment if you want to use 'Remote Config'
+#pod 'Firebase/RemoteConfig', '~> 3.2.0'
+
 # Uncomment if you need Facebook Authentication
 #pod 'FBSDKCoreKit'
 #pod 'FBSDKLoginKit'

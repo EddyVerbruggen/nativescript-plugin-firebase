@@ -85,6 +85,27 @@ And here's the comprehensive list of supported functions:
 All further examples assume `firebase` has been required.
 Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
 
+### getRemoteConfig
+Since plugin version 3.2.0 you can retrieve 'Remote Config' properties.
+This feature lets you configure parameters in your Firebase instance like these:
+
+<img src="screenshots/remote-config" width="500px" height="482px" alt="Remote Config"/>
+
+Using this function you can retrieve the current values of the remote properties
+so you can change app behavior on the fly easily (feature toggles for instance).
+
+```js
+  firebase.getRemoteConfig({
+    cacheExpirationSeconds: 600, // 10 minutes, default is 12 hours.. set to a lower value during dev
+    keys: ["holiday_promo_enabled", "coupons_left", "foo", "double_test", "int_test"]
+  }).then(
+      function (result) {
+        console.log("Remote Config last fetched at " + result.lastFetch);
+        console.log("Remote Config: " + JSON.stringify(result.properties));
+      }
+  );
+```
+
 ### setValue
 Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`).
 If you want to add data to a known path use this, otherwise use `push` (see below).
@@ -401,9 +422,11 @@ Shouldn't be more complicated than:
   firebase.logout();
 ```
 
-## Known issues
-On Android you could run into an error like this:
+## Known issues (all Android)
+On Android you could run into an errors like these:
 
+
+#### DexIndexOverflowException
 ```
 com.android.dex.DexIndexOverflowException: method ID not in..
 ```
@@ -425,10 +448,18 @@ android {
 }
 ```
 
+#### FirebaseApp with name [DEFAULT] doesn't exist
 Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which will be solved by
 placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
 the changes to `build.gradle` which are mentioned above as well.
 
+#### Could not find com.google...
+And there's this one: "Could not find com.google.firebase:firebase-auth:9.0.2". That means
+making sure you have the latest Google Repository bits installed.
+Just run `android` from a command prompt and install any pending updates.
+
+#### Found play-services:9.0.0, but version 9.0.2 is needed..
+Update your Android bits like the issue above and reinstall the android platform in your project.
 
 ## Pro tips
 

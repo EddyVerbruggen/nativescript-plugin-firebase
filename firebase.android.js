@@ -87,14 +87,19 @@ firebase.authStateListener = null;
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
+      if (firebase.instance !== null) {
+        reject("You already ran init");
+        return;
+      }
+
       var fDatabase = com.google.firebase.database.FirebaseDatabase;
       if (arg.persist) {
         fDatabase.getInstance().setPersistenceEnabled(true);
       }
       // the URL is picked up from google-services.json, so you can use it like this:
-      instance = fDatabase.getInstance().getReference();
+      firebase.instance = fDatabase.getInstance().getReference();
       // it is however still possible to pass the URL programmatically (which we'll do for now):
-      // instance = fDatabase.getInstance().getReferenceFromUrl(arg.url);
+      // firebase.instance = fDatabase.getInstance().getReferenceFromUrl(arg.url);
 
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
@@ -127,9 +132,83 @@ firebase.init = function (arg) {
         firebaseAuth.addAuthStateListener(firebase.authStateListener);
       }
 
-      resolve(instance);
+      resolve(firebase.instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getRemoteConfig = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(com.google.firebase.remoteconfig) === "undefined") {
+        reject("Uncomment firebase-config in the plugin's include.gradle first");
+        return;
+      }
+
+      if (arg.keys === undefined) {
+        reject("Argument 'keys' is missing");
+        return;
+      }
+
+      // Get a Remote Config object instance
+      firebaseRemoteConfig = com.google.firebase.remoteconfig.FirebaseRemoteConfig.getInstance();
+
+      // Enable developer mode to allow for frequent refreshes of the cache
+      var remoteConfigSettings = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
+          .setDeveloperModeEnabled(arg.developerMode || false)
+          .build();
+      firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
+
+      var returnMethod = function (throttled) {
+        firebaseRemoteConfig.activateFetched();
+
+        var lastFetchTime = firebaseRemoteConfig.getInfo().getFetchTimeMillis();
+        var lastFetch = new Date(lastFetchTime);
+
+        var result = {
+          lastFetch: lastFetch,
+          throttled: throttled,
+          properties: {}
+        };
+
+        for (var k in arg.keys) {
+          var key = arg.keys[k];
+          var value = firebaseRemoteConfig.getString(key);
+          // we could have the user pass in the type but this seems easier to use
+          result.properties[key] = firebase.strongTypeify(value);
+        }
+
+        resolve(result);
+      };
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function() {
+          returnMethod(false);
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          console.log("--- onFailureListener: " + exception);
+          if (exception == "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
+            returnMethod(true);
+          } else {
+            reject("Retrieving remote config data failed. " + exception);
+          }
+        }
+      });
+
+      // default 12 hours, just like the SDK does
+      var expirationDuration = arg.cacheExpirationSeconds || 43200;
+
+      firebaseRemoteConfig.fetch(expirationDuration)
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+    } catch (ex) {
+      console.log("Error in firebase.getRemoteConfig: " + ex);
       reject(ex);
     }
   });
@@ -138,7 +217,7 @@ firebase.init = function (arg) {
 firebase.getCurrentUser = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (instance === null) {
+      if (firebase.instance === null) {
         reject("Run init() first!");
         return;
       }
@@ -180,21 +259,21 @@ function toLoginResult(user) {
     return false;
   }
   /*
-  var providerData = user.getProviderData();
-  for (var i = 0; i < providerData.size(); i++) {
-    var info = providerData.get(i);
-    console.log("--- userInfo - provider: " + info.getProviderId());
-  }
-  */
+   var providerData = user.getProviderData();
+   for (var i = 0; i < providerData.size(); i++) {
+   var info = providerData.get(i);
+   console.log("--- userInfo - provider: " + info.getProviderId());
+   }
+   */
 
   return {
-      uid: user.getUid(),
-      name: user.getDisplayName(),
-      email: user.getEmail(),
-      // expiresAtUnixEpochSeconds: authData.getExpires(),
-      profileImageURL: user.getPhotoUrl()
-     // token: user.getToken() // can be used to auth with a backend server
-   };
+    uid: user.getUid(),
+    name: user.getDisplayName(),
+    email: user.getEmail(),
+    // expiresAtUnixEpochSeconds: authData.getExpires(),
+    profileImageURL: user.getPhotoUrl()
+    // token: user.getToken() // can be used to auth with a backend server
+  };
 }
 
 firebase.login = function (arg) {
@@ -215,9 +294,9 @@ firebase.login = function (arg) {
 
       if (arg.type === firebase.LoginType.ANONYMOUS) {
         // var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-          // onFailure: function (throwable) {
-            // reject("Anonymous login failed with message: " + throwable.getMessage());
-          // }
+        // onFailure: function (throwable) {
+        // reject("Anonymous login failed with message: " + throwable.getMessage());
+        // }
         // });
         // firebaseAuth.signInAnonymously().addOnFailureListener(onFailureListener);
         firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
@@ -234,14 +313,14 @@ firebase.login = function (arg) {
           firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
         } else if (arg.tokenProviderFn) {
           arg.tokenProviderFn()
-            .then(
-              function (token) {
-                firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
-              },
-              function (error) {
-                reject(error);
-              }
-            );
+              .then(
+                  function (token) {
+                    firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+                  },
+                  function (error) {
+                    reject(error);
+                  }
+              );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
@@ -255,13 +334,13 @@ firebase.login = function (arg) {
         var callbackManager = com.facebook.CallbackManager.Factory.create();
 
         fbLoginManager.registerCallback(
-          callbackManager,
-          new com.facebook.FacebookCallback({
-            onSuccess: function (loginResult) {
-              console.log("------------- fb callback");
-              console.log("------------- fb loginResult " + loginResult);
-            }
-          })
+            callbackManager,
+            new com.facebook.FacebookCallback({
+              onSuccess: function (loginResult) {
+                console.log("------------- fb callback");
+                console.log("------------- fb loginResult " + loginResult);
+              }
+            })
         );
 
         var permissions = ["public_profile", "email"];
@@ -297,7 +376,7 @@ firebase.resetPassword = function (arg) {
         });
 
         var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-        firebaseAuth.sendPasswordResetEmail(arg.email).addOnCompleteListener(onCompleteListener);          
+        firebaseAuth.sendPasswordResetEmail(arg.email).addOnCompleteListener(onCompleteListener);
       }
     } catch (ex) {
       console.log("Error in firebase.resetPassword: " + ex);
@@ -325,11 +404,11 @@ firebase.changePassword = function (arg) {
         });
 
         var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-        
+
         if (user === null) {
           reject("no current user");
         } else {
-          user.updatePassword(arg.newPassword).addOnCompleteListener(onCompleteListener);          
+          user.updatePassword(arg.newPassword).addOnCompleteListener(onCompleteListener);
         }
       }
     } catch (ex) {
@@ -417,7 +496,7 @@ firebase._addObservers = function(to, updateCallback) {
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      firebase._addObservers(instance.child(path), updateCallback);
+      firebase._addObservers(firebase.instance.child(path), updateCallback);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
@@ -439,7 +518,7 @@ firebase.addValueEventListener = function (updateCallback, path) {
           });
         }
       });
-      instance.child(path).addValueEventListener(listener);
+      firebase.instance.child(path).addValueEventListener(listener);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addValueEventListener: " + ex);
@@ -452,7 +531,7 @@ firebase.removeEventListener = function (listener, path) {
   return new Promise(function (resolve, reject) {
     try {
       console.log("Removing at path " + path + ": " + listener);
-      instance.child(path).removeEventListener(listener);
+      firebase.instance.child(path).removeEventListener(listener);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.removeEventListener: " + ex);
@@ -464,7 +543,7 @@ firebase.removeEventListener = function (listener, path) {
 firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      var pushInstance = instance.child(path).push();
+      var pushInstance = firebase.instance.child(path).push();
       pushInstance.setValue(firebase.toHashMap(val));
       resolve({
         key: pushInstance.getKey()
@@ -479,7 +558,7 @@ firebase.push = function (path, val) {
 firebase.setValue = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).setValue(firebase.toHashMap(val));
+      firebase.instance.child(path).setValue(firebase.toHashMap(val));
       resolve();
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
@@ -491,7 +570,7 @@ firebase.setValue = function (path, val) {
 firebase.update = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).updateChildren(firebase.toHashMap(val));
+      firebase.instance.child(path).updateChildren(firebase.toHashMap(val));
       resolve();
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
@@ -504,20 +583,20 @@ firebase.query = function (updateCallback, path, options) {
   return new Promise(function (resolve, reject) {
     try {
       var query;
-      
+
       // orderBy
       if (options.orderBy.type === firebase.QueryOrderByType.KEY) {
-        query = instance.child(path).orderByKey();
+        query = firebase.instance.child(path).orderByKey();
       } else if (options.orderBy.type === firebase.QueryOrderByType.VALUE) {
-        query = instance.child(path).orderByValue();
+        query = firebase.instance.child(path).orderByValue();
       } else if (options.orderBy.type === firebase.QueryOrderByType.PRIORITY) {
-        query = instance.child(path).orderByPriority();
+        query = firebase.instance.child(path).orderByPriority();
       } else if (options.orderBy.type === firebase.QueryOrderByType.CHILD) {
         if (!options.orderBy.value) {
           reject("When orderBy.type is 'child' you must set orderBy.value as well.");
           return;
         }
-        query = instance.child(path).orderByChild(options.orderBy.value);
+        query = firebase.instance.child(path).orderByChild(options.orderBy.value);
       } else {
         reject("Invalid orderBy.type, use constants like firebase.QueryOrderByType.VALUE");
         return;
@@ -556,7 +635,7 @@ firebase.query = function (updateCallback, path, options) {
           return;
         }
       }
-      
+
       if (options.singleEvent) {
         var listener = new com.google.firebase.database.ValueEventListener({
           onDataChange: function (snapshot) {
@@ -583,7 +662,7 @@ firebase.query = function (updateCallback, path, options) {
 firebase.remove = function (path) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).setValue(null);
+      firebase.instance.child(path).setValue(null);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
