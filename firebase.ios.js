@@ -58,6 +58,12 @@ firebase.authStateListener = null;
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
+      if (firebase.instance !== null) {
+        // if we would run 'FIRApp.configure()' again the app would crash, so: 
+        reject("You already ran init");
+        return;
+      }
+
       // this requires you to download GoogleService-Info.plist and
       // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
       FIRApp.configure();
@@ -66,7 +72,7 @@ firebase.init = function (arg) {
         FIRDatabase.database().persistenceEnabled = true;
       }
       
-      instance = FIRDatabase.database().reference();
+      firebase.instance = FIRDatabase.database().reference();
 
       if (arg.onAuthStateChanged) {
         firebase.authStateListener = function(auth, user) {
@@ -96,9 +102,67 @@ firebase.init = function (arg) {
         FBSDKAppEvents.activateApp();
       }
 
-      resolve(instance);
+      resolve(firebase.instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getRemoteConfig = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(FIRRemoteConfig) === "undefined") {
+        reject("Uncomment RemoteConfig in the plugin's Podfile first");
+        return;
+      }
+
+      if (arg.keys === undefined) {
+        reject("Argument 'keys' is missing");
+        return;
+      }
+
+      // Get a Remote Config object instance
+      firebaseRemoteConfig = FIRRemoteConfig.remoteConfig();
+
+      // Enable developer mode to allow for frequent refreshes of the cache
+      var remoteConfigSettings = FIRRemoteConfigSettings.new();
+      remoteConfigSettings.developerModeEnabled = arg.developerMode || false;
+      firebaseRemoteConfig.configSettings = remoteConfigSettings;
+
+      var onCompletion = function(remoteConfigFetchStatus, error) {
+
+        if (remoteConfigFetchStatus == FIRRemoteConfigFetchStatusSuccess ||
+            remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled) {
+          
+          var activated = firebaseRemoteConfig.activateFetched();
+
+          var result = {
+            lastFetch: firebaseRemoteConfig.lastFetchTime,
+            throttled: remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled,
+            properties: {}
+          };
+
+          for (var k in arg.keys) {
+            var key = arg.keys[k];
+            var value = firebaseRemoteConfig.configValueForKey(key).stringValue;
+            // we could have the user pass in the type but this seems easier to use
+            result.properties[key] = firebase.strongTypeify(value);
+          }
+          resolve(result);
+
+        } else {
+          reject(error.localizedDescription);
+        }
+      };
+
+      // default 12 hours, just like the SDK does
+      var expirationDuration = arg.cacheExpirationSeconds || 43200;
+
+      firebaseRemoteConfig.fetchWithExpirationDurationCompletionHandler(expirationDuration, onCompletion);
+    } catch (ex) {
+      console.log("Error in firebase.getRemoteConfig: " + ex);
       reject(ex);
     }
   });
@@ -124,7 +188,7 @@ firebase.getCurrentUser = function (arg) {
           email: user.email,
           emailVerified: user.emailVerified,
           name: user.displayName,
-          refreshToken: user.refreshToken
+          refreshToken: user.refreshToken,
         });
       } else {
         reject();
@@ -387,9 +451,9 @@ firebase._addObservers = function(to, updateCallback) {
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      var where = instance;
+      var where = firebase.instance;
       if (path !== undefined) {
-        where = instance.childByAppendingPath(path);
+        where = firebase.instance.childByAppendingPath(path);
       }
       firebase._addObservers(where, updateCallback);
       resolve();
@@ -403,9 +467,9 @@ firebase.addChildEventListener = function (updateCallback, path) {
 firebase.addValueEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      var where = instance;
+      var where = firebase.instance;
       if (path !== undefined) {
-        where = instance.childByAppendingPath(path);
+        where = firebase.instance.childByAppendingPath(path);
       }
       where.observeEventTypeWithBlockWithCancelBlock(
           FIRDataEventType.FIRDataEventTypeValue,
@@ -428,7 +492,7 @@ firebase.addValueEventListener = function (updateCallback, path) {
 firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      var ref = instance.childByAppendingPath(path).childByAutoId();
+      var ref = firebase.instance.childByAppendingPath(path).childByAutoId();
       ref.setValue(val);
       resolve({
         key: ref.key
@@ -443,7 +507,7 @@ firebase.push = function (path, val) {
 firebase.setValue = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.childByAppendingPath(path).setValue(val);
+      firebase.instance.childByAppendingPath(path).setValue(val);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
@@ -455,7 +519,7 @@ firebase.setValue = function (path, val) {
 firebase.update = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.childByAppendingPath(path).updateChildValues(val);
+      firebase.instance.childByAppendingPath(path).updateChildValues(val);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
@@ -468,9 +532,9 @@ firebase.query = function (updateCallback, path, options) {
   return new Promise(function (resolve, reject) {
     try {
 
-      var where = instance;
+      var where = firebase.instance;
       if (path !== undefined) {
-        where = instance.childByAppendingPath(path);
+        where = firebase.instance.childByAppendingPath(path);
       }
 
       var query;
@@ -547,7 +611,7 @@ firebase.query = function (updateCallback, path, options) {
 firebase.remove = function (path) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.childByAppendingPath(path).setValue(null);
+      firebase.instance.childByAppendingPath(path).setValue(null);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);

@@ -149,9 +149,48 @@ declare module "nativescript-plugin-firebase" {
       thisArg?: any;
     }
 
+    export interface GetRemoteConfigOptions {
+      /**
+       * The number of seconds before retrieving fresh state from the server.
+       * Default 12 hours.
+       */
+      cacheExpirationSeconds?: number;
+      /**
+       * The configuration keys to retrieve for your app.
+       * Specify as: ["feature_enabled", "coupons_left", ..]
+       */
+      keys: Array<string>;
+    }
+
+    /**
+     * The returned object from the getRemoteConfig function.
+     */
+    export interface GetRemoteConfigResult {
+      /**
+       * The date the data was last refreshed from the server.
+       * Should honor the 'cacheExpirationSeconds' you passed in previously.
+       */
+      lastFetch: Date;
+      /**
+       * At least on iOS the result may be throttled when retrieved from the server.
+       * Even when the cache has expired. And it's just FYI really.
+       */
+      throttled: boolean;
+      /**
+       * A JS Object with properties and values.
+       * If you previously requested keys ["foo", "is_enabled"] then this will be like:
+       *   properties: {
+       *     foo: "bar",
+       *     is_enabled: true
+       *   }
+       */
+      properties: Object;
+    }
+
     export function init(options: InitOptions): Promise<any>;
     export function login(options: LoginOptions): Promise<LoginResult>;
     export function logout(): Promise<any>;
+    export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
     export function deleteUser(): Promise<any>;
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;

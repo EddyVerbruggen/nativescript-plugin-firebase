@@ -27,6 +27,8 @@ firebase.QueryRangeType = {
 
 firebase.instance = null;
 
+firebase.firebaseRemoteConfig = null;
+
 firebase.authStateListeners = [];
 
 firebase.addAuthStateListener = function(listener) {
@@ -61,6 +63,19 @@ firebase.notifyAuthStateListeners = function(data) {
       console.error("Firebase AuthStateListener failed to trigger", listener, ex);
     }
   });
+};
+
+firebase.strongTypeify = function (value) {
+  if (value === "true") {
+    value = true;
+  } else if (value === "false") {
+    value = false;
+  } else if (parseFloat(value) == value) {
+    value = parseFloat(value);
+  } else if (parseInt(value) == value) {
+    value = parseInt(value);
+  }
+  return value;
 };
 
 module.exports = firebase;
