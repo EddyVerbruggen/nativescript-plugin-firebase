@@ -89,7 +89,7 @@ Also, all functions support promises, but we're leaving out the `.then()` stuff 
 Since plugin version 3.2.0 you can retrieve 'Remote Config' properties.
 This feature lets you configure parameters in your Firebase instance like these:
 
-<img src="screenshots/remote-config" width="500px" height="482px" alt="Remote Config"/>
+<img src="screenshots/remote-config.png" width="500px" height="482px" alt="Remote Config"/>
 
 Using this function you can retrieve the current values of the remote properties
 so you can change app behavior on the fly easily (feature toggles for instance).
