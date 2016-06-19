@@ -96,12 +96,25 @@ so you can change app behavior on the fly easily (feature toggles for instance).
 
 ```js
   firebase.getRemoteConfig({
+    developerMode: false, // play with this boolean to get more frequent updates during development
     cacheExpirationSeconds: 600, // 10 minutes, default is 12 hours.. set to a lower value during dev
-    keys: ["holiday_promo_enabled", "coupons_left", "foo", "double_test", "int_test"]
+    properties: [{
+      key: "holiday_promo_enabled",
+      default: false
+    },
+    {
+      key: "coupons_left",
+      default: 100
+    },
+    {
+      key: "double_or_nothing",
+      default: 9.99
+    }]
   }).then(
       function (result) {
         console.log("Remote Config last fetched at " + result.lastFetch);
         console.log("Remote Config: " + JSON.stringify(result.properties));
+        console.log("Remote Config property 'coupons_left': " + result.properties.coupons_left);
       }
   );
 ```

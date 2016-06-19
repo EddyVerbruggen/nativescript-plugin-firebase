@@ -118,8 +118,8 @@ firebase.getRemoteConfig = function (arg) {
         return;
       }
 
-      if (arg.keys === undefined) {
-        reject("Argument 'keys' is missing");
+      if (arg.properties === undefined) {
+        reject("Argument 'properties' is missing");
         return;
       }
 
@@ -130,6 +130,18 @@ firebase.getRemoteConfig = function (arg) {
       var remoteConfigSettings = FIRRemoteConfigSettings.new();
       remoteConfigSettings.developerModeEnabled = arg.developerMode || false;
       firebaseRemoteConfig.configSettings = remoteConfigSettings;
+
+      var defaults = firebase.getRemoteConfigDefaults(arg.properties);
+
+      var dic = NSMutableDictionary.new();
+      for (var p in arg.properties) {
+        var prop = arg.properties[p];
+        var key = prop.key;
+        if (prop.default !== undefined) {
+          dic.setObjectForKey(prop.default, prop.key);
+        }
+      }
+      firebaseRemoteConfig.setDefaults(dic);
 
       var onCompletion = function(remoteConfigFetchStatus, error) {
 
@@ -144,8 +156,9 @@ firebase.getRemoteConfig = function (arg) {
             properties: {}
           };
 
-          for (var k in arg.keys) {
-            var key = arg.keys[k];
+          for (var p in arg.properties) {
+            var prop = arg.properties[p];
+            var key = prop.key;
             var value = firebaseRemoteConfig.configValueForKey(key).stringValue;
             // we could have the user pass in the type but this seems easier to use
             result.properties[key] = firebase.strongTypeify(value);

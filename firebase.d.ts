@@ -149,17 +149,31 @@ declare module "nativescript-plugin-firebase" {
       thisArg?: any;
     }
 
+    export interface RemoteConfigProperty {
+      key: string;
+      default: any;
+    }
+
     export interface GetRemoteConfigOptions {
+      /**
+       * Fetch new results from the server more often.
+       * Default false.
+       */
+      developerMode?: boolean;
       /**
        * The number of seconds before retrieving fresh state from the server.
        * Default 12 hours.
        */
       cacheExpirationSeconds?: number;
       /**
-       * The configuration keys to retrieve for your app.
-       * Specify as: ["feature_enabled", "coupons_left", ..]
+       * The configuration properties to retrieve for your app. Specify as:
+       *  properties: [{
+       *    key: "holiday_promo_enabled",
+       *    default: false
+       *  }, ..]
        */
       keys: Array<string>;
+      properties: Array<RemoteConfigProperty>
     }
 
     /**
@@ -172,7 +186,7 @@ declare module "nativescript-plugin-firebase" {
        */
       lastFetch: Date;
       /**
-       * At least on iOS the result may be throttled when retrieved from the server.
+       * The result may be throttled when retrieved from the server.
        * Even when the cache has expired. And it's just FYI really.
        */
       throttled: boolean;
