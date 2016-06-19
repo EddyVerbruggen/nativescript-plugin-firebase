@@ -140,6 +140,17 @@ firebase.init = function (arg) {
   });
 };
 
+firebase.getRemoteConfigDefaults = function (properties) {
+  var defaults = {};
+  for (var p in properties) {
+    var prop = properties[p];
+    if (prop.default !== undefined) {
+      defaults[prop.key] = prop.default;
+    }
+  }
+  return defaults;
+};
+
 firebase.getRemoteConfig = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -148,8 +159,8 @@ firebase.getRemoteConfig = function (arg) {
         return;
       }
 
-      if (arg.keys === undefined) {
-        reject("Argument 'keys' is missing");
+      if (arg.properties === undefined) {
+        reject("Argument 'properties' is missing");
         return;
       }
 
@@ -158,9 +169,12 @@ firebase.getRemoteConfig = function (arg) {
 
       // Enable developer mode to allow for frequent refreshes of the cache
       var remoteConfigSettings = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
-          .setDeveloperModeEnabled(arg.developerMode || false)
-          .build();
+        .setDeveloperModeEnabled(arg.developerMode || false)
+        .build();
       firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
+
+      var defaults = firebase.getRemoteConfigDefaults(arg.properties);      
+      firebaseRemoteConfig.setDefaults(firebase.toHashMap(defaults));
 
       var returnMethod = function (throttled) {
         firebaseRemoteConfig.activateFetched();
@@ -174,8 +188,9 @@ firebase.getRemoteConfig = function (arg) {
           properties: {}
         };
 
-        for (var k in arg.keys) {
-          var key = arg.keys[k];
+        for (var p in arg.properties) {
+          var prop = arg.properties[p];
+          var key = prop.key;
           var value = firebaseRemoteConfig.getString(key);
           // we could have the user pass in the type but this seems easier to use
           result.properties[key] = firebase.strongTypeify(value);
@@ -259,12 +274,12 @@ function toLoginResult(user) {
     return false;
   }
   /*
-   var providerData = user.getProviderData();
-   for (var i = 0; i < providerData.size(); i++) {
-   var info = providerData.get(i);
-   console.log("--- userInfo - provider: " + info.getProviderId());
-   }
-   */
+  var providerData = user.getProviderData();
+  for (var i = 0; i < providerData.size(); i++) {
+    var info = providerData.get(i);
+    console.log("--- userInfo - provider: " + info.getProviderId());
+  }
+  */
 
   return {
     uid: user.getUid(),
