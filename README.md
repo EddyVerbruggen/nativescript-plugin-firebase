@@ -119,6 +119,10 @@ so you can change app behavior on the fly easily (feature toggles for instance).
   );
 ```
 
+To enable support for Remote Config you need to manually adjust
+[Podfile](platforms/ios/Podfile) and [include.gradle](platforms/android/include.gradle).
+Just uncomment the relevant lines (one for each platform) to add the SDK's to your app.
+
 ### setValue
 Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`).
 If you want to add data to a known path use this, otherwise use `push` (see below).
