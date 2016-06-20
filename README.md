@@ -397,6 +397,29 @@ On iOS this is rock solid, but on Android it's work in progress. If you want to 
   )
 ```
 
+#### Creating a Password account
+```js
+  firebase.createUser({
+    email: 'eddyverbruggen@gmail.com',
+    password: 'firebase'
+  }).then(
+      function (result) {
+        dialogs.alert({
+          title: "User created",
+          message: "userid: " + result.key,
+          okButtonText: "Nice!"
+        })
+      },
+      function (errorMessage) {
+        dialogs.alert({
+          title: "No user created",
+          message: errorMessage,
+          okButtonText: "OK, got it"
+        })
+      }
+  )
+```
+
 ### Resetting a password
 ```js
   firebase.resetPassword({
