@@ -131,8 +131,6 @@ firebase.getRemoteConfig = function (arg) {
       remoteConfigSettings.developerModeEnabled = arg.developerMode || false;
       firebaseRemoteConfig.configSettings = remoteConfigSettings;
 
-      var defaults = firebase.getRemoteConfigDefaults(arg.properties);
-
       var dic = NSMutableDictionary.new();
       for (var p in arg.properties) {
         var prop = arg.properties[p];
