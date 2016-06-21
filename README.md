@@ -401,6 +401,8 @@ On iOS this is rock solid, but on Android it's work in progress. If you want to 
   )
 ```
 
+And also, add [this bit to `app.js`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/master/Firebase/app/app.js#L5-L34) to give control back to your app after Facebook's auth UI finished.
+
 #### Creating a Password account
 ```js
   firebase.createUser({
