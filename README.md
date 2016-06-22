@@ -490,6 +490,26 @@ android {
 }
 ```
 
+#### java.lang.OutOfMemoryError: GC overhead limit exceeded
+
+Increase the Java Max Heap Size like this (the bit at the end):
+
+```
+android {  
+  defaultConfig {  
+    applicationId "my.package.id"
+    multiDexEnabled true
+    generatedDensities = []
+  }
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }
+  dexOptions {
+    javaMaxHeapSize "4g"
+  }
+}
+```
+
 #### FirebaseApp with name [DEFAULT] doesn't exist
 Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which will be solved by
 placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
