@@ -11,7 +11,7 @@ Since this is the most likely feature you'll use with this plugin it has already
 ## Functions
 
 ### init
-You can optionally pass `persist` to the `init` function to make Firebase save data to the local disc so it will work in offline scenario's. Default `false`.
+You can optionally pass `persist` to the [`init` function](../README.md#init) to make Firebase save data to the local disc so it will work in offline scenario's. Default `false`.
 
 ```js
   firebase.init({
