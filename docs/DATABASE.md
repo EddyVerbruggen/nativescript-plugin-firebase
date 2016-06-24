@@ -11,25 +11,13 @@ Since this is the most likely feature you'll use with this plugin it has already
 ## Functions
 
 ### init
-Optionally you can pass `persist` to the `init` function to make Firebase save data to the local disc so it will work in offline scenario's. Defaul false.
+You can optionally pass `persist` to the `init` function to make Firebase save data to the local disc so it will work in offline scenario's. Default `false`.
 
 ```js
-  var firebase = require("nativescript-plugin-firebase");
-
   firebase.init({
     persist: true
-  }).then(
-      function (instance) {
-        console.log("firebase.init done");
-      },
-      function (error) {
-        console.log("firebase.init error: " + error);
-      }
-  );
+  });
 ```
-
-All further examples assume `firebase` has been required.
-Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
 
 ### setValue
 Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`).
