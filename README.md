@@ -1,36 +1,40 @@
 # NativeScript Firebase plugin
 
-<img src="screenshots/firebase.png" width="154px" height="43px" alt="Firebase"/><br/>
-The leading realtime app platform (Database, Auth & Hosting). [Docs here.](https://www.firebase.com/docs/)
+<img src="docs/images/firebase.png" width="154px" height="43px" alt="Firebase"/><br/>
+Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
 
 
-If you can spare 41 seconds, please check this video of the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
-[![YouTube demo, 41 sec](screenshots/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
+If you can spare 41 seconds, check this plugin's [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
+[![YouTube demo, 41 sec](docs/images/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
 
 ### Use when
 * you need to store JSON data in the cloud,
 * you want to sync that data to other devices and platforms,
 * you want to optionally protect that data by having users log in,
-* you want to update clients at the moment the data changes (think chat and multiplayer games).
+* you want to update clients at the moment the data changes (think chat and multiplayer games),
+* you want an easy way to remotely configure app features,
+* you want push notifications.
 
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
-Your first 'Firebase' will be automatically created and made available via a URL like `https://n-plugin-test.firebaseio.com`.
+Your first 'Firebase' will be automatically created and made available via an URL like `https://n-plugin-test.firebaseio.com`.
 
-Open your Firebase project at the Google console and click 'Add app' to add an iOS and / or Android app.
-Follow the steps (make sure the bundle id is the same as your nativescript.id in `package.json` and you'll be able to download:
-* `GoogleService-Info.plist` which you'll add to your NativeScript project at `app/App_Resources/iOS/GoogleService-Info.plist`
-* `google-services.json` which you'll add to your NativeScript project at `platforms/android/google-services.json`
+Open your Firebase project at the Google console and click 'Add app' to add an iOS and / or Android app. Follow the steps (make sure the bundle id is the same as your `nativescript.id` in `package.json` and you'll be able to download:
+
+* iOS: `GoogleService-Info.plist` which you'll add to your NativeScript project at `app/App_Resources/iOS/GoogleService-Info.plist`
+
+* Android: `google-services.json` which you'll add to your NativeScript project at `platforms/android/google-services.json`
 
 ## Installation
 From the command prompt go to your app's root folder and execute:
+
 ```
 tns plugin add nativescript-plugin-firebase
 ```
 
 ### Android
-[Install packages 'Google Play Services' and 'Google Repository' in your Android SDK Manager](http://stackoverflow.com/a/37310513)
+Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
 #### Open `app/App_Resources/Android/app.gradle`
 - Add `applicationId "com.example.app"` to the `defaultConfig` node (change the id to the same as in your app's `package.json`), so it becomes:
@@ -57,21 +61,22 @@ android {
 
 ## Usage
 
-If you want a quickstart, [clone our demo app (the one in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
-And here's the comprehensive list of supported functions:
+If you want a quickstart, [clone our demo app (an older version is used in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
+
+For readability the supported features have been moved to their own README's:
+
+* [Database](docs/DATABASE.md)
+* [Authentication](docs/AUTHENTICATION.md)
+* [Remote Config](docs/REMOTECONFIG.md)
+* (Push) Notifications (work in progress)
+
 
 ### init
 ```js
   var firebase = require("nativescript-plugin-firebase");
 
   firebase.init({
-    persist: true, // Allow disk persistence. Default false.
-    onAuthStateChanged: function(data) { // optional but useful to immediately re-logon the user when he re-visits your app
-      console.log(data.loggedIn ? "Logged in to firebase" : "Logged out from firebase");
-      if (data.loggedIn) {
-        console.log("user's email address: " + (data.user.email ? data.user.email : "N/A"));
-      }
-    }
+    // optionally pass in properties for datbase and authentication
   }).then(
       function (instance) {
         console.log("firebase.init done");
@@ -83,390 +88,11 @@ And here's the comprehensive list of supported functions:
 ```
 
 All further examples assume `firebase` has been required.
+
 Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
 
-### getRemoteConfig
-Since plugin version 3.2.0 you can retrieve 'Remote Config' properties.
-This feature lets you configure parameters in your Firebase instance like these:
 
-<img src="screenshots/remote-config.png" width="500px" height="482px" alt="Remote Config"/>
-
-Using this function you can retrieve the current values of the remote properties
-so you can change app behavior on the fly easily (feature toggles for instance).
-
-```js
-  firebase.getRemoteConfig({
-    developerMode: false, // play with this boolean to get more frequent updates during development
-    cacheExpirationSeconds: 600, // 10 minutes, default is 12 hours.. set to a lower value during dev
-    properties: [{
-      key: "holiday_promo_enabled",
-      default: false
-    },
-    {
-      key: "coupons_left",
-      default: 100
-    },
-    {
-      key: "double_or_nothing",
-      default: 9.99
-    }]
-  }).then(
-      function (result) {
-        console.log("Remote Config last fetched at " + result.lastFetch);
-        console.log("Remote Config: " + JSON.stringify(result.properties));
-        console.log("Remote Config property 'coupons_left': " + result.properties.coupons_left);
-      }
-  );
-```
-
-To enable support for Remote Config you need to manually adjust
-[Podfile](platforms/ios/Podfile) and [include.gradle](platforms/android/include.gradle).
-Just uncomment the relevant lines (one for each platform) to add the SDK's to your app.
-
-### setValue
-Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`).
-If you want to add data to a known path use this, otherwise use `push` (see below).
-
-The plugin will take care of serializing JSON data to native data structures.
-
-```js
-
-  // to store a JSON object
-  firebase.setValue(
-      '/companies',
-      {'foo':'bar'}
-  );
-
-  // to store an array of JSON objects
-  firebase.setValue(
-      '/companies',
-      [
-        {name: 'Telerik', country: 'Bulgaria'},
-        {name: 'Google', country: 'USA'}
-      ]
-  );
-```
-
-### push
-This function will store a JSON object at path `<Firebase URL>/users/<Generated Key>`
-
-```js
-  firebase.push(
-      '/users',
-      {
-        'first': 'Eddy',
-        'last': 'Verbruggen',
-        'birthYear': 1977,
-        'isMale': true,
-        'address': {
-          'street': 'foostreet',
-          'number': 123
-        }
-      }
-  ).then(
-      function (result) {
-        console.log("created key: " + result.key);
-      }
-  );
-```
-
-### query
-Firebase supports querying data and this plugin does too, since v2.0.0.
-
-Let's say we have the structure as defined at `setValue`, then use this query to retrieve the companies in country 'Bulgaria':
-
-```js
-    var onQueryEvent = function(result) {
-        // note that the query returns 1 match at a time
-        // in the order specified in the query
-        if (!result.error) {
-            console.log("Event type: " + result.type);
-            console.log("Key: " + result.key);
-            console.log("Value: " + JSON.stringify(result.value));
-        }
-    };
-
-    firebase.query(
-        onQueryEvent,
-        "/companies",
-        {
-            // set this to true if you want to check if the value exists or just want the event to fire once
-            // default false, so it listens continuously
-            singleEvent: true,
-            // order by company.country
-            orderBy: {
-                type: firebase.QueryOrderByType.CHILD,
-                value: 'country' // mandatory when type is 'child'
-            },
-            // but only companies named 'Telerik'
-            // (this range relates to the orderBy clause)
-            range: {
-                type: firebase.QueryRangeType.EQUAL_TO,
-                value: 'Bulgaria'
-            },
-            // only the first 2 matches
-            // (note that there's only 1 in this case anyway)
-            limit: {
-                type: firebase.QueryLimitType.LAST,
-                value: 2
-            }
-        }
-    );
-```
-
-For supported values of the orderBy/range/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
-
-### update
-Changes the values of the keys specified in the dictionary without overwriting other keys at this location.
-
-```js
-  firebase.update(
-      '/companies',
-      {'foo':'baz'}
-  );
-```
-
-### addChildEventListener
-To listen for changes in your database you can pass in a listener callback function.
-You get to control which path inside you database you want to listen to, by default it's `/` which is the entire database.
-
-The plugin will take care of serializing native data structures to JSON data.
-
-```js
-  var onChildEvent = function(result) {
-    console.log("Event type: " + result.type);
-    console.log("Key: " + result.key);
-    console.log("Value: " + JSON.stringify(result.value));
-  };
-
-  // listen to changes in the /users path
-  firebase.addChildEventListener(onChildEvent, "/users");
-```
-
-### addValueEventListener
-The difference with `addChildEventListener` is [explained here](https://www.firebase.com/docs/ios/guide/retrieving-data.html).
-The link is for the iOS SDK, but it's the same for Android.
-
-```js
-  var onValueEvent = function(result) {
-    console.log("Event type: " + result.type);
-    console.log("Key: " + result.key);
-    console.log("Value: " + JSON.stringify(result.value));
-  };
-
-  // listen to changes in the /companies path
-  firebase.addValueEventListener(onValueEvent, "/companies");
-```
-
-### remove
-You can remove the entire database content by passing in '/' as param,
-but if you only want to wipe everything at '/users', do this:
-
-```js
-  firebase.remove("/users");
-```
-
-### login
-v 1.1.0 of this plugin adds the capability to log your users in, either
-
-- anonymously,
-- by email and password, or
-- using a custom token,
-- using Facebook (experimental)
-
-You need to add support for those features in your Firebase instance at the 'Login & Auth' tab.
-
-You can expect more login mechanisms to be added in the future.
-
-#### Listening to auth state changes
-As stated [here](https://firebase.google.com/docs/auth/ios/manage-users#get_the_currently_signed-in_user)
-
-> The recommended way to get the current user is by setting a listener on the Auth object
-
-To listen to auth state changes you can register a listener like this (you may have done this already during `init` (see above):
-
-```js
-	var listener = {
-    onAuthStateChanged: function(data) {
-      console.log(data.loggedIn ? "Logged in to firebase" : "Logged out from firebase");
-      if (data.loggedIn) {
-        console.log("User info", data.user);
-      }
-    },
-    thisArg: this
-  };
-
-  firebase.addAuthStateListener(listener);
-```
-
-To stop listening to auth state changed:
-
-```js
-  firebase.removeAuthStateListener(listener);
-```
-
-To check if already listening to auth state changes
-
-```js
-  hasAuthStateListener(listener);
-```
-
-#### Anonymous login
-```js
-  firebase.login({
-    // note that you need to enable anonymous login in your firebase instance
-    type: firebase.LoginType.ANONYMOUS
-  }).then(
-      function (result) {
-        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-#### Password login
-```js
-  firebase.login({
-      // note that you need to enable email-password login in your firebase instance
-    type: firebase.LoginType.PASSWORD,
-    email: 'useraccount@provider.com',
-    password: 'theirpassword'
-  }).then(
-      function (result) {
-        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-#### Custom login
-Use this login type to authenticate against firebase using a token generated by your own backend server.
-See these [instructions on how to generate the authentication token](https://firebase.google.com/docs/auth/server).
-
-```js
-  firebase.login({
-      // note that you need to generate the login token in your existing backend server
-    type: firebase.LoginType.CUSTOM,
-    token: token
-  }).then(
-      function (result) {
-        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-#### Custom login
-Use this login type to authenticate against firebase using a token generated by your own backend server.
-See these [instructions on how to generate the authentication token](https://firebase.google.com/docs/auth/server).
-
-```js
-  firebase.login({
-      // note that you need to generate the login token in your existing backend server
-    type: firebase.LoginType.CUSTOM,
-    token: token
-  }).then(
-      function (result) {
-        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-#### Facebook login
-On iOS this is rock solid, but on Android it's work in progress. If you want to use it for iOS open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the Facebook line (you can't miss it).
-
-```js
-  firebase.login({
-    type: firebase.LoginType.FACEBOOK
-  }).then(
-      function (result) {
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-And also, add [this bit to `app.js`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/master/Firebase/app/app.js#L5-L34) to give control back to your app after Facebook's auth UI finished.
-
-#### Creating a Password account
-```js
-  firebase.createUser({
-    email: 'eddyverbruggen@gmail.com',
-    password: 'firebase'
-  }).then(
-      function (result) {
-        dialogs.alert({
-          title: "User created",
-          message: "userid: " + result.key,
-          okButtonText: "Nice!"
-        })
-      },
-      function (errorMessage) {
-        dialogs.alert({
-          title: "No user created",
-          message: errorMessage,
-          okButtonText: "OK, got it"
-        })
-      }
-  )
-```
-
-### Resetting a password
-```js
-  firebase.resetPassword({
-    email: 'useraccount@provider.com'
-  }).then(
-      function () {
-        // called when password reset was successful,
-        // you could now prompt the user to check his email
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-### Changing a password
-```js
-  firebase.changePassword({
-    email: 'useraccount@provider.com',
-    oldPassword: 'myOldPassword',
-    newPassword: 'myNewPassword'
-  }).then(
-      function () {
-        // called when password change was successful
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-### logout
-Shouldn't be more complicated than:
-
-```js
-  firebase.logout();
-```
-
-## Known issues (all Android)
-On Android you could run into an errors like these:
-
+## Known issues on Android
 
 #### DexIndexOverflowException
 ```
@@ -523,24 +149,10 @@ Just run `android` from a command prompt and install any pending updates.
 #### Found play-services:9.0.0, but version 9.0.2 is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
-## Pro tips
-
-### See what's happening
-It's kinda cool to manipulate data while using multiple devices or your device and the Firebase Dashboard. You will instantly see the update on the other end.
-The Firebase Dashboard can be reached by simply loading your Firebase URL in a web browser.
-
-### Testing your app in the emulator
-
-`tns emulate ios --device "iPhone 6s"`
-
-`tns emulate android --geny "Nexus 6_23"`
-
-or start a geny emulator first and do: `tns run android`
-
 ## Future work
-- Add support for `removeEventListener`.
-- Possibly add more login mechanisms.
-- Add other Firebase 3.x SDK features (there's already a few feature requests in the GitHub issue tracker.
+- Add support for `removeEventListener`
+- Possibly add more login mechanisms
+- Add other Firebase 3.x SDK features (there's already a few feature requests in the GitHub issue tracker
 
 ## Credits
 The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).
