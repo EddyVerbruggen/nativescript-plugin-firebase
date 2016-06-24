@@ -9,7 +9,7 @@ If you can spare 41 seconds, check this plugin's [demo app](https://github.com/E
 [![YouTube demo, 41 sec](docs/images/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
 
 ### Use when
-* you need to store JSON data in the cloud,
+* you need to store JSON data in the cloud (but don't want to loose data when the device is offline),
 * you want to sync that data to other devices and platforms,
 * you want to optionally protect that data by having users log in,
 * you want to update clients at the moment the data changes (think chat and multiplayer games),
@@ -83,12 +83,14 @@ All further examples assume `firebase` has been required.
 
 Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
 
+## Features
 For readability the supported features have been moved to their own README's:
 
-* [Database](docs/DATABASE.md)
+* [Realtime Database](docs/DATABASE.md)
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
 * (Push) Notifications (work in progress)
+
 
 
 ## Known issues on Android
