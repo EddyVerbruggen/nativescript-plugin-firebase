@@ -63,14 +63,6 @@ android {
 
 If you want a quickstart, [clone our demo app (an older version is used in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
 
-For readability the supported features have been moved to their own README's:
-
-* [Database](docs/DATABASE.md)
-* [Authentication](docs/AUTHENTICATION.md)
-* [Remote Config](docs/REMOTECONFIG.md)
-* (Push) Notifications (work in progress)
-
-
 ### init
 ```js
   var firebase = require("nativescript-plugin-firebase");
@@ -90,6 +82,13 @@ For readability the supported features have been moved to their own README's:
 All further examples assume `firebase` has been required.
 
 Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
+
+For readability the supported features have been moved to their own README's:
+
+* [Database](docs/DATABASE.md)
+* [Authentication](docs/AUTHENTICATION.md)
+* [Remote Config](docs/REMOTECONFIG.md)
+* (Push) Notifications (work in progress)
 
 
 ## Known issues on Android

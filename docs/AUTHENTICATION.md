@@ -1,7 +1,7 @@
 <table>
-<tr style="border:none">
-<td style="border:none; padding:0"><img src="images/firebase.png" width="154px" height="43px" alt="Firebase"/></td>
-<td style="border:none; padding:4">Authentication</td>
+<tr>
+<td><img src="images/firebase.png" width="154px" height="43px" alt="Firebase"/></td>
+<td>Authentication</td>
 </tr>
 </table>
 
