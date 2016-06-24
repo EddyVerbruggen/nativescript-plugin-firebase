@@ -6,6 +6,11 @@
 </table>
 
 ## Enabling Remote Config
+Since plugin version 3.2.0 you can retrieve _Remote Config_ properties.
+This feature lets you configure parameters in your Firebase instance like these:
+
+<img src="images/remote-config.png" width="500px" height="482px" alt="Remote Config"/>
+
 To enable support for Remote Config you need to manually adjust
 [Podfile](platforms/ios/Podfile) and [include.gradle](platforms/android/include.gradle).
 
@@ -14,14 +19,7 @@ Just uncomment the relevant lines (one for each platform) to add the SDK's to yo
 ## Functions
 
 ### getRemoteConfig
-Since plugin version 3.2.0 you can retrieve _Remote Config_ properties.
-This feature lets you configure parameters in your Firebase instance like these:
-
-<img src="images/remote-config.png" width="500px" height="482px" alt="Remote Config"/>
-
-Using this function you can retrieve the current values of the remote properties
-so you can change app behavior on the fly easily (feature toggles for instance).
-
+Using this function you can retrieve the current values of the remote properties so you can change app behavior on the fly easily (feature toggles for instance).
 
 ```js
   firebase.getRemoteConfig({
