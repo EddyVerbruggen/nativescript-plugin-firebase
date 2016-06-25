@@ -20,8 +20,11 @@ dependencies {
   // for reading google-services.json and configuration
   compile "com.google.android.gms:play-services:9.0.2"
 
-  // Uncommend if you want to use 'Remote Config'
+  // Uncomment if you want to use 'Remote Config'
 //  compile "com.google.firebase:firebase-config:9.0.2"
+
+  // Uncomment if you want FCM (Firebase Cloud Messaging)
+//  compile "com.google.firebase:firebase-messaging:9.0.2"
 
   // Uncomment if you need Facebook Authentication
 //   compile "com.facebook.android:facebook-android-sdk:4.+"
