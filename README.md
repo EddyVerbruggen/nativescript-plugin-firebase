@@ -68,7 +68,8 @@ If you want a quickstart, [clone our demo app (an older version is used in the Y
   var firebase = require("nativescript-plugin-firebase");
 
   firebase.init({
-    // optionally pass in properties for datbase and authentication
+    // Optionally pass in properties for database, authentication and cloud messaging,
+    // see their respective docs.
   }).then(
       function (instance) {
         console.log("firebase.init done");
