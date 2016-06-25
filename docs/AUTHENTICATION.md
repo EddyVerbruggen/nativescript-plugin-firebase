@@ -189,8 +189,14 @@ Don't forget to enable Facebook login in your firebase instance.
   )
 ```
 
-And also, add [this bit to `app.js`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/master/Firebase/app/app.js#L5-L34) to give control back to your app after Facebook's auth UI finished.
+#### Start-up wiring
+We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
 
+```js
+var firebase = require("nativescript-plugin-firebase");
+```
+
+_Note that if you previously added some other code for this plugin to `app.js` you can now go ahead and remove it._
 
 ### logout
 Shouldn't be more complicated than:

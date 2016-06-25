@@ -132,9 +132,38 @@ firebase.init = function (arg) {
         firebaseAuth.addAuthStateListener(firebase.authStateListener);
       }
 
+      // Firebase notifications (FCM)
+      if (typeof(com.google.firebase.messaging) !== "undefined") {
+        console.log("--- has messaging!");
+        // TODO see iOS:
+        // firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
+        if (arg.onMessageReceivedCallback !== undefined) {
+          console.log("--- adding messaging callback!");
+          firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+        }
+      }
+
       resolve(firebase.instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.addOnMessageReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(com.google.firebase.messaging) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
+      firebase._receivedNotificationCallback = callback;
+      firebase._processPendingNotifications();
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
       reject(ex);
     }
   });
@@ -340,7 +369,7 @@ firebase.login = function (arg) {
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
         if (typeof(com.facebook) === "undefined") {
-          reject("Facebook SDK not installed - see Podfile");
+          reject("Facebook SDK not installed - see gradle config");
           return;
         }
 

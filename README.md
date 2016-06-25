@@ -89,8 +89,7 @@ For readability the supported features have been moved to their own README's:
 * [Realtime Database](docs/DATABASE.md)
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
-* (Push) Notifications (work in progress)
-
+* [Cloud Messaging](docs/MESSAGING.md)
 
 
 ## Known issues on Android

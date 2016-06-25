@@ -201,10 +201,31 @@ declare module "nativescript-plugin-firebase" {
       properties: Object;
     }
 
+    /**
+     * The returned object in the callback handler of the addOnMessageReceivedCallback function.
+     * Note that any custom data you send from your server will be available as
+     * key/value properties on the Message object.
+     */
+    export interface Message {
+      /**
+       * The main text shown in the notificiation.
+       */
+      body: string;
+      /**
+       * Optional title, shown above the body in the notification.
+       */
+      title?: string;
+      /**
+       * iOS badge number
+       */
+      badge?: number;
+    }
+
     export function init(options: InitOptions): Promise<any>;
     export function login(options: LoginOptions): Promise<LoginResult>;
     export function logout(): Promise<any>;
     export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
+    export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) => void): Promise<any>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
     export function deleteUser(): Promise<any>;
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;

@@ -1,6 +1,156 @@
 var firebase = require("./firebase-common");
+var application = require("application");
 var types = require("utils/types");
 var frame = require("ui/frame");
+
+firebase._messagingConnected = null;
+
+firebase._addObserver = function (eventName, callback) {
+  return NSNotificationCenter.defaultCenter().addObserverForNameObjectQueueUsingBlock(eventName, null, NSOperationQueue.mainQueue(), callback);
+};
+
+firebase.addAppDelegateMethods = function(appDelegate) {
+
+  // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things 
+  appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
+    // Firebase Facebook authentication
+    if (typeof(FBSDKApplicationDelegate) !== "undefined") {
+      FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions);
+    }
+    return true;
+  };
+
+  // there's no notification event to hook into for this one, so using the appDelegate
+  appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
+    if (typeof(FBSDKApplicationDelegate) !== "undefined") {
+        return FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
+    } else {
+        return false;
+    }
+  };
+
+  // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
+  if (typeof(FIRMessaging) !== "undefined") { 
+     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (application, userInfo, completionHandler) {
+      completionHandler(UIBackgroundFetchResultNewData);
+      var userInfoJSON = firebase.toJsObject(userInfo);
+
+      if (application.applicationState === UIApplicationState.UIApplicationStateActive) {
+        // foreground
+        if (firebase._receivedNotificationCallback !== null) {
+          firebase._receivedNotificationCallback(userInfoJSON);
+        } else {
+          firebase._pendingNotifications.push(userInfoJSON);
+        }
+      } else {
+        // background
+        firebase._pendingNotifications.push(userInfoJSON); 
+      }
+    };
+  }
+};
+
+firebase.addOnMessageReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(FIRMessaging) === "undefined") {
+        reject("Enable FIRMessaging in Podfile first");
+        return;
+      }
+
+      firebase._receivedNotificationCallback = callback;
+      firebase._processPendingNotifications();
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase._processPendingNotifications = function() {
+  if (firebase._receivedNotificationCallback !== null) {
+    for (var p in firebase._pendingNotifications) {
+      var userInfoJSON = firebase._pendingNotifications[p];
+      console.log("Received a push notification with title: " + userInfoJSON.aps.alert.title);
+      // move the most relevant properties so it's according to the TS definition and aligned with Android
+      userInfoJSON.title = userInfoJSON.aps.alert.title;
+      userInfoJSON.body = userInfoJSON.aps.alert.body;
+      userInfoJSON.badge = userInfoJSON.aps.badge;
+      firebase._receivedNotificationCallback(userInfoJSON);
+    }
+    firebase._pendingNotifications = [];
+    firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
+    UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
+  }
+};
+
+// rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
+(function () {
+
+  if (typeof(FIRMessaging) !== "undefined") {
+
+    firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
+      var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
+      var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
+      var application = appNotification.object;
+      application.registerForRemoteNotifications();
+      application.registerUserNotificationSettings(notificationSettings);
+    });
+
+    firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
+      firebase._processPendingNotifications();
+    });
+
+    firebase._addObserver(UIApplicationDidBecomeActiveNotification, function (appNotification) {
+      firebase._processPendingNotifications();
+    });
+
+    firebase._addObserver(UIApplicationDidEnterBackgroundNotification, function (appNotification) {
+      // Firebase notifications (FCM)
+      if (firebase._messagingConnected) {
+        FIRMessaging.messaging().disconnect();
+      }
+    });
+
+    firebase._addObserver(UIApplicationWillEnterForegroundNotification, function (appNotification) {
+      // Firebase notifications (FCM)
+      if (firebase._messagingConnected !== null) {
+        FIRMessaging.messaging().connectWithCompletion(function(error) {
+          if (error !== null) {
+            console.log("Firebase was unable to connect to FCM. Error: " + error);
+          } else {
+            firebase._messagingConnected = true;
+          }
+        });
+      }
+    });
+  }
+
+  if (application.ios.delegate !== undefined) {
+    // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
+    firebase.addAppDelegateMethods(application.ios.delegate);
+  } else {
+    var __extends = this.__extends || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        function __() { this.constructor = d; }
+        __.prototype = b.prototype;
+        d.prototype = new __();
+    };
+    
+    var appDelegate = (function (_super) {
+        __extends(appDelegate, _super);
+        function appDelegate() {
+            _super.apply(this, arguments);
+        }
+        firebase.addAppDelegateMethods(appDelegate);
+        appDelegate.ObjCProtocols = [UIApplicationDelegate];
+        return appDelegate;
+    })(UIResponder);
+    application.ios.delegate = appDelegate;
+  }
+})();
+
 
 firebase.toJsObject = function(objCObj) {
   if (objCObj === null || typeof objCObj != "object") {
@@ -76,7 +226,6 @@ firebase.init = function (arg) {
 
       if (arg.onAuthStateChanged) {
         firebase.authStateListener = function(auth, user) {
-          console.log("--------- auth change 1, user: " + user);
           arg.onAuthStateChanged({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -88,7 +237,6 @@ firebase.init = function (arg) {
       // Listen to auth state changes
       if (!firebase.authStateListener) {
         firebase.authStateListener = function(auth, user) {
-          console.log("--------- auth change 2, user: " + user);
           firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -97,15 +245,39 @@ firebase.init = function (arg) {
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
       }
 
-      // TODO can we move the stuff from app.js to here?
       if (typeof(FBSDKAppEvents) !== "undefined") {
         FBSDKAppEvents.activateApp();
+      }
+
+      // Firebase notifications (FCM)
+      if (typeof(FIRMessaging) !== "undefined") {
+        firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
+        if (arg.onMessageReceivedCallback !== undefined) {
+          firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+        }
       }
 
       resolve(firebase.instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
+    }
+  });
+};
+
+firebase._onTokenRefreshNotification = function (notification) {
+  var token = FIRInstanceID.instanceID().token();
+  if (token === null) {
+    return;
+  }
+
+  console.log("Firebase FCM token received: " + token);
+  FIRMessaging.messaging().connectWithCompletion(function(error) {
+    if (error !== null) {
+      // this is not fatal at all but still would like to know how often this happens
+      console.log("Firebase was unable to connect to FCM. Error: " + error);
+    } else {
+      firebase._messagingConnected = true;
     }
   });
 };
@@ -189,7 +361,6 @@ firebase.getCurrentUser = function (arg) {
       }
 
       var user = fAuth.currentUser;
-      console.log("getCurrentUser: " + user);
       if (user) {
         resolve({
           uid: user.uid,
@@ -291,19 +462,14 @@ firebase.login = function (arg) {
         
         var onFacebookCompletion = function(fbSDKLoginManagerLoginResult, error) {
           if (error) {
-            console.log("FB login error " + error);
+            console.log("Facebook login error " + error);
             reject(error.localizedDescription);
           } else if (fbSDKLoginManagerLoginResult.isCancelled) {
             reject("login cancelled");
           } else {
-            console.log("fAuth.currentUser 2: " + fAuth.currentUser);
-
             // headless facebook auth
             // var fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(fbSDKLoginManagerLoginResult.token.tokenString);
             var fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString);
-            console.log("fIRAuthCredential: " + fIRAuthCredential);
-
-            console.log("fAuth.currentUser 3: " + fAuth.currentUser);
             if (fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
               var onCompletionLink = function (user, error) {
@@ -577,7 +743,6 @@ firebase.query = function (updateCallback, path, options) {
         if (options.range.type === firebase.QueryRangeType.START_AT) {
           query = query.queryStartingAtValue(options.range.value);
         } else if (options.range.type === firebase.QueryRangeType.END_AT) {
-          console.log("----- ending at: " + options.range.value);
           query = query.queryEndingAtValue(options.range.value);
         } else if (options.range.type === firebase.QueryRangeType.EQUAL_TO) {
           query = query.queryEqualToValue(options.range.value);
@@ -596,7 +761,6 @@ firebase.query = function (updateCallback, path, options) {
         if (options.limit.type === firebase.QueryLimitType.FIRST) {
           query = query.queryLimitedToFirst(options.limit.value);
         } else if (options.limit.type === firebase.QueryLimitType.LAST) {
-          console.log("---- LAST");
           query = query.queryLimitedToLast(options.limit.value);
         } else {
           reject("Invalid limit.type, use constants like firebase.queryOptions.limitType.FIRST");
