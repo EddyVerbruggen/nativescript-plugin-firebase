@@ -33,6 +33,16 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-plugin-firebase
 ```
 
+### Start-up wiring
+We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
+
+```js
+var firebase = require("nativescript-plugin-firebase");
+```
+
+_Note that if you previously (before plugin version 3.3.0) added some other code for this plugin to `app.js` you can now go ahead and remove it._
+
+
 ### Android
 Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 

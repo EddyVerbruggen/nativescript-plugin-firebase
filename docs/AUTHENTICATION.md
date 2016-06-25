@@ -189,15 +189,6 @@ Don't forget to enable Facebook login in your firebase instance.
   )
 ```
 
-#### Start-up wiring
-We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
-
-```js
-var firebase = require("nativescript-plugin-firebase");
-```
-
-_Note that if you previously added some other code for this plugin to `app.js` you can now go ahead and remove it._
-
 ### logout
 Shouldn't be more complicated than:
 
