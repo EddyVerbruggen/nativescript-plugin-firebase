@@ -203,20 +203,27 @@ declare module "nativescript-plugin-firebase" {
 
     /**
      * The returned object in the callback handler of the addOnMessageReceivedCallback function.
+     * 
      * Note that any custom data you send from your server will be available as
      * key/value properties on the Message object.
      */
     export interface Message {
       /**
-       * The main text shown in the notificiation.
+       * Indicated whether or not the notification was received while the app was in the foreground.
        */
-      body: string;
+      foreground: boolean;
+      /**
+       * The main text shown in the notificiation.
+       * Not available on Android when the notification was received in the background.
+       */
+      body?: string;
       /**
        * Optional title, shown above the body in the notification.
+       * Not available on Android when the notification was received in the background.
        */
       title?: string;
       /**
-       * iOS badge number
+       * iOS badge count, as sent from the server.
        */
       badge?: number;
     }
@@ -226,6 +233,7 @@ declare module "nativescript-plugin-firebase" {
     export function logout(): Promise<any>;
     export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
     export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) => void): Promise<any>;
+    export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
     export function deleteUser(): Promise<any>;
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;

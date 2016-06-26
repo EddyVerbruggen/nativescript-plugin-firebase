@@ -13,12 +13,12 @@ repositories {
 }
 
 dependencies {
-    // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
+  // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
   compile "com.google.firebase:firebase-database:9.0.2"
   compile "com.google.firebase:firebase-auth:9.0.2"
 
   // for reading google-services.json and configuration
-  compile "com.google.android.gms:play-services:9.0.2"
+  compile "com.google.android.gms:play-services-base:9.0.2"
 
   // Uncomment if you want to use 'Remote Config'
 //  compile "com.google.firebase:firebase-config:9.0.2"

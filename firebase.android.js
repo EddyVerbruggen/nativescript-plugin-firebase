@@ -1,6 +1,41 @@
 var appModule = require("application");
 var firebase = require("./firebase-common");
 
+firebase._launchNotification = null;
+
+(function() {
+  if (typeof(com.google.firebase.messaging) === "undefined") {
+    return;
+  }
+  appModule.onLaunch = function(intent) {
+    var extras = intent.getExtras();
+    if (extras !== null) {
+      var result = {
+        foreground: false
+      };
+
+      var iterator = extras.keySet().iterator();
+      while (iterator.hasNext()) {
+        var key = iterator.next();
+        if (key !== "from" && key !== "collapse_key") {
+          result[key] = extras.get(key);
+        }
+      }
+
+      // in case this was a cold start we don't have the _receivedNotificationCallback yet
+      if (firebase._receivedNotificationCallback === null) {
+        firebase._launchNotification = result;
+      } else {
+        // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
+        setTimeout(function() {
+          firebase._receivedNotificationCallback(result);
+        });
+      }
+    }
+  };
+
+})();
+
 firebase.toHashMap = function(obj) {
   var node = new java.util.HashMap();
   for (var property in obj) {
@@ -134,12 +169,11 @@ firebase.init = function (arg) {
 
       // Firebase notifications (FCM)
       if (typeof(com.google.firebase.messaging) !== "undefined") {
-        console.log("--- has messaging!");
-        // TODO see iOS:
-        // firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
         if (arg.onMessageReceivedCallback !== undefined) {
-          console.log("--- adding messaging callback!");
           firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+        }
+        if (arg.onPushTokenReceivedCallback !== undefined) {
+          firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
       }
 
@@ -160,10 +194,49 @@ firebase.addOnMessageReceivedCallback = function (callback) {
       }
 
       firebase._receivedNotificationCallback = callback;
-      firebase._processPendingNotifications();
+
+      org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
+          new org.nativescript.plugins.firebase.FirebasePluginListener({
+            success: function(notification) {
+              console.log("---------- received notification: " + notification);
+              callback(JSON.parse(notification));
+            }
+          })
+      );
+
+      // if the app was launched from a notification, process it now
+      if (firebase._launchNotification !== null) {
+        callback(firebase._launchNotification);
+        firebase._launchNotification = null;
+      }
+
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.addOnPushTokenReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(com.google.firebase.messaging) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
+      org.nativescript.plugins.firebase.FirebasePlugin.setOnPushTokenReceivedCallback(
+          new org.nativescript.plugins.firebase.FirebasePluginListener({
+            success: function(token) {
+              callback(token);
+            }
+          })
+      );
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnPushTokenReceivedCallback: " + ex);
       reject(ex);
     }
   });
@@ -180,6 +253,13 @@ firebase.getRemoteConfigDefaults = function (properties) {
   return defaults;
 };
 
+firebase._isGooglePlayServicesAvailable = function () {
+  var context = appModule.android.foregroundActivity;
+  var playServiceStatusSuccess = com.google.android.gms.common.ConnectionResult.SUCCESS; // 0
+  var playServicesStatus = com.google.android.gms.common.GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
+  return playServicesStatus === playServiceStatusSuccess;
+};
+
 firebase.getRemoteConfig = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -190,6 +270,11 @@ firebase.getRemoteConfig = function (arg) {
 
       if (arg.properties === undefined) {
         reject("Argument 'properties' is missing");
+        return;
+      }
+
+      if (!firebase._isGooglePlayServicesAvailable()) {
+        reject("Google Play services is required for this feature, but not available on this device");
         return;
       }
 
@@ -236,7 +321,6 @@ firebase.getRemoteConfig = function (arg) {
 
       var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
         onFailure: function (exception) {
-          console.log("--- onFailureListener: " + exception);
           if (exception == "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
             returnMethod(true);
           } else {
@@ -323,6 +407,11 @@ function toLoginResult(user) {
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
+      if (!firebase._isGooglePlayServicesAvailable()) {
+        reject("Google Play services is required for this feature, but not available on this device");
+        return;
+      }
+
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
         onComplete: function (task) {
