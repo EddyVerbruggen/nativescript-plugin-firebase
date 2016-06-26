@@ -26,14 +26,9 @@ firebase.QueryRangeType = {
 };
 
 firebase.instance = null;
-
 firebase.firebaseRemoteConfig = null;
-
 firebase.authStateListeners = [];
-
 firebase._receivedNotificationCallback = null;
-
-firebase._pendingNotifications = [];
 
 firebase.addAuthStateListener = function(listener) {
   if (firebase.authStateListeners.indexOf(listener) === -1) {

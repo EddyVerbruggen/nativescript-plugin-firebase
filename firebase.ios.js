@@ -4,6 +4,8 @@ var types = require("utils/types");
 var frame = require("ui/frame");
 
 firebase._messagingConnected = null;
+firebase._pendingNotifications = [];
+firebase._receivedPushTokenCallback = null;
 
 firebase._addObserver = function (eventName, callback) {
   return NSNotificationCenter.defaultCenter().addObserverForNameObjectQueueUsingBlock(eventName, null, NSOperationQueue.mainQueue(), callback);
@@ -36,14 +38,15 @@ firebase.addAppDelegateMethods = function(appDelegate) {
       var userInfoJSON = firebase.toJsObject(userInfo);
 
       if (application.applicationState === UIApplicationState.UIApplicationStateActive) {
-        // foreground
         if (firebase._receivedNotificationCallback !== null) {
+          userInfoJSON.foreground = true;
           firebase._receivedNotificationCallback(userInfoJSON);
         } else {
+          userInfoJSON.foreground = false;
           firebase._pendingNotifications.push(userInfoJSON);
         }
       } else {
-        // background
+        userInfoJSON.foreground = false;
         firebase._pendingNotifications.push(userInfoJSON); 
       }
     };
@@ -63,6 +66,23 @@ firebase.addOnMessageReceivedCallback = function (callback) {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.addOnPushTokenReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(FIRMessaging) === "undefined") {
+        reject("Enable FIRMessaging in Podfile first");
+        return;
+      }
+
+      firebase._receivedPushTokenCallback = callback;
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnPushTokenReceivedCallback: " + ex);
       reject(ex);
     }
   });
@@ -252,8 +272,13 @@ firebase.init = function (arg) {
       // Firebase notifications (FCM)
       if (typeof(FIRMessaging) !== "undefined") {
         firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
+        
         if (arg.onMessageReceivedCallback !== undefined) {
           firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+        }
+        
+        if (arg.onPushTokenReceivedCallback !== undefined) {
+          firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
       }
 
@@ -272,6 +297,11 @@ firebase._onTokenRefreshNotification = function (notification) {
   }
 
   console.log("Firebase FCM token received: " + token);
+
+  if (firebase._receivedPushTokenCallback) {
+    firebase._receivedPushTokenCallback(token);
+  }
+
   FIRMessaging.messaging().connectWithCompletion(function(error) {
     if (error !== null) {
       // this is not fatal at all but still would like to know how often this happens
