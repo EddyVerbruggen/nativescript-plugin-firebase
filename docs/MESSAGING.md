@@ -89,6 +89,6 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 ```
 
 * SERVER_KEY: see below
-* DEVICE_TOKEN: the on you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`
+* DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
