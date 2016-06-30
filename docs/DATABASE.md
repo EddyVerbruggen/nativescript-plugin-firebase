@@ -5,6 +5,9 @@
 </tr>
 </table>
 
+If you can spare 41 seconds, check (an older version of) this plugin's [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
+[![YouTube demo, 41 sec](docs/images/yt-thumb-database.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
+
 ## Enabling the database features
 Since this is the most likely feature you'll use with this plugin it has already been properly configured to interact with the database, so nothing to do here on top of the stuff in the main readme.
 
