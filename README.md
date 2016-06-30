@@ -49,13 +49,13 @@ Then open `references.d.ts` in the root of your project and add this line to get
 Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
 #### Open `app/App_Resources/Android/app.gradle`
-- Add `applicationId "com.example.app"` to the `defaultConfig` node (change the id to the same as in your app's `package.json`), so it becomes:
+- If there's no `applicationId = "__PACKAGE__"` yet please add it to the `defaultConfig` node so it becomes:
 
 ```
 android {
     ...
     defaultConfig {
-        applicationId "com.example.app"
+        applicationId = "__PACKAGE__"  
         ...
     }
 }
@@ -145,7 +145,7 @@ so it becomes something like this:
 ```
 android {  
   defaultConfig {  
-    applicationId "my.package.id"
+    applicationId = "__PACKAGE__"  
     multiDexEnabled true
     generatedDensities = []
   }  
@@ -162,7 +162,7 @@ Increase the Java Max Heap Size like this (the bit at the end):
 ```
 android {  
   defaultConfig {  
-    applicationId "my.package.id"
+    applicationId = "__PACKAGE__"  
     multiDexEnabled true
     generatedDensities = []
   }
