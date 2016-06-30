@@ -49,13 +49,13 @@ Then open `references.d.ts` in the root of your project and add this line to get
 Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
 #### Open `app/App_Resources/Android/app.gradle`
-- If there's no `applicationId = "__PACKAGE__"` yet please add it to the `defaultConfig` node so it becomes:
+- If there's no `applicationId` yet please add it to the `defaultConfig` node so it becomes:
 
 ```
 android {
     ...
     defaultConfig {
-        applicationId = "__PACKAGE__"  
+        applicationId = "your.package.name"  
         ...
     }
 }
