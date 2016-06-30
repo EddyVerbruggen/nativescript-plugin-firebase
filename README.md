@@ -3,11 +3,6 @@
 <img src="docs/images/firebase.png" width="154px" height="43px" alt="Firebase"/><br/>
 Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
-
-
-If you can spare 41 seconds, check this plugin's [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
-[![YouTube demo, 41 sec](docs/images/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
-
 ### Use when
 * you need to store JSON data in the cloud (but don't want to loose data when the device is offline),
 * you want to sync that data to other devices and platforms,
@@ -27,6 +22,11 @@ Open your Firebase project at the Google console and click 'Add app' to add an i
 * Android: `google-services.json` which you'll add to your NativeScript project at `platforms/android/google-services.json`
 
 ## Installation
+If you rather watch a video explaining the steps then check out this step-by-step guide - you'll also learn how to
+add iOS and Android support to the Firebase console and how to integrate anonymous authentication:
+[![YouTube demo](docs/images/yt-thumb-setup.png)](https://youtu.be/IextEpoIzwE "YouTube demo")
+
+
 From the command prompt go to your app's root folder and execute:
 
 ```
@@ -73,7 +73,7 @@ android {
 
 ## Usage
 
-If you want a quickstart, [clone our demo app (an older version is used in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
+If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
 
 ### Start-up wiring
 We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
