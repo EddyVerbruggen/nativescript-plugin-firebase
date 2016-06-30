@@ -33,6 +33,18 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-plugin-firebase
 ```
 
+And do yourself a favor by adding TypeScript support to your nativeScript app:
+
+```
+tns install typescript
+```
+
+Then open `references.d.ts` in the root of your project and add this line to get autocompletion and type-checking for this plugin:
+
+```
+/// <reference path="./node_modules/nativescript-plugin-firebase/firebase.d.ts" />
+```
+
 ### Android
 Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
@@ -66,32 +78,39 @@ If you want a quickstart, [clone our demo app (an older version is used in the Y
 ### Start-up wiring
 We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
 
+##### JavaScript
 ```js
 var firebase = require("nativescript-plugin-firebase");
+
+firebase.init({
+  // Optionally pass in properties for database, authentication and cloud messaging,
+  // see their respective docs.
+}).then(
+    function (instance) {
+      console.log("firebase.init done");
+    },
+    function (error) {
+      console.log("firebase.init error: " + error);
+    }
+);
 ```
 
-_Note that if you previously (before plugin version 3.3.0) added some other code for this plugin to `app.js` you can now go ahead and remove it._
-
-### init
+#### TypeScript
 ```js
-  var firebase = require("nativescript-plugin-firebase");
+import firebase = require("nativescript-plugin-firebase");
 
-  firebase.init({
-    // Optionally pass in properties for database, authentication and cloud messaging,
-    // see their respective docs.
-  }).then(
-      function (instance) {
-        console.log("firebase.init done");
-      },
-      function (error) {
-        console.log("firebase.init error: " + error);
-      }
-  );
+firebase.init({
+  // Optionally pass in properties for database, authentication and cloud messaging,
+  // see their respective docs.
+}).then(
+  (instance) => {
+    console.log("firebase.init done");
+  },
+  (error) => {
+    console.log("firebase.init error: " + error);
+  }
+);
 ```
-
-All further examples assume `firebase` has been required.
-
-Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
 
 ## Features
 For readability the supported features have been moved to their own README's:
@@ -101,6 +120,16 @@ For readability the supported features have been moved to their own README's:
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Cloud Messaging](docs/MESSAGING.md)
 
+
+## Known issues on iOS
+On the simulator you may see this message if you have more than one app with the Firebase SDK ever installed:
+
+```
+[FirebaseDatabase] Authentication failed: invalid_token (Invalid claim 'aud' in auth token.)
+```
+
+This is [a known issue in the Firebase SDK](http://stackoverflow.com/questions/37857131/swift-firebase-database-invalid-token-error).
+I always use a real device to avoid this problem.
 
 ## Known issues on Android
 
