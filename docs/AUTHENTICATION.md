@@ -63,18 +63,31 @@ If - for some reason - you want more control over the listener you can use these
 ### Anonymous login
 Don't forget to enable anonymous login in your firebase instance.
 
+##### JavaScript
 ```js
   firebase.login({
     type: firebase.LoginType.ANONYMOUS
   }).then(
       function (result) {
-        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
+        // the result object has these properties ('undefined', depending on the login type):
+        // uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
         JSON.stringify(result);
       },
       function (errorMessage) {
         console.log(errorMessage);
       }
   )
+```
+
+##### TypeScript
+```js
+  firebase.login({
+      type: firebase.LoginType.ANONYMOUS
+  }).then((user) => {
+      alert("User uid: " + user.uid);
+  }, (error) => {
+      alert("Trouble in paradise: " + error);
+  });
 ```
 
 ### Email-Password login
