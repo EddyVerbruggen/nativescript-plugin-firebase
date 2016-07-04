@@ -244,6 +244,19 @@ firebase.init = function (arg) {
       
       firebase.instance = FIRDatabase.database().reference();
 
+      if (arg.iOSEmulatorFlush) {
+        try {
+          // Attempt to sign out before initializing, useful in case previous 
+          // project token is cached which leads to following type of error:
+          // "[FirebaseDatabase] Authentication failed: invalid_token ..."
+          console.log('Attempting to sign out of Firebase before init');
+          FIRAuth.auth().signOut();
+          console.log('Sign out of Firebase successful');
+        } catch(signOutErr) {
+          console.log('Sign out of Firebase error: ' + signOutErr);
+        }
+      }
+
       if (arg.onAuthStateChanged) {
         firebase.authStateListener = function(auth, user) {
           arg.onAuthStateChanged({
