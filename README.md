@@ -126,10 +126,19 @@ On the simulator you may see this message if you have more than one app with the
 
 ```
 [FirebaseDatabase] Authentication failed: invalid_token (Invalid claim 'aud' in auth token.)
+or
+[FirebaseDatabase] Authentication failed: invalid_token (audience was project 'firegroceries-904d0' but should have been project 'your-firebase-project')
 ```
 
 This is [a known issue in the Firebase SDK](http://stackoverflow.com/questions/37857131/swift-firebase-database-invalid-token-error).
-I always use a real device to avoid this problem.
+I always use a real device to avoid this problem, but you can pass an 'iOSSimulatorFlush' option to init.
+```
+firebase.init({
+  // Optionally pass in properties for database, authentication and cloud messaging,
+  // see their respective docs and 'iOSSimulatorFlush' to flush token before init.
+  iOSSimulatorFlush: true
+}).then()
+```
 
 ## Known issues on Android
 
