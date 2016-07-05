@@ -12,7 +12,13 @@ declare module "nativescript-plugin-firebase" {
       /**
        * Get notified when fi the user is logged in.
        */
-      onAuthStateChange?: AuthStateChangeListener
+      onAuthStateChange?: AuthStateChangeListener;
+      /**
+       * Attempt to sign out before initializing, useful in case previous
+       * project token is cached which leads to following type of error:
+       *   "[FirebaseDatabase] Authentication failed: invalid_token ..."
+       */
+      iOSEmulatorFlush?: boolean;
     }
 
     /**
