@@ -17,6 +17,7 @@ declare module "nativescript-plugin-firebase" {
        * Attempt to sign out before initializing, useful in case previous
        * project token is cached which leads to following type of error:
        *   "[FirebaseDatabase] Authentication failed: invalid_token ..."
+       * Default false.
        */
       iOSEmulatorFlush?: boolean;
     }
