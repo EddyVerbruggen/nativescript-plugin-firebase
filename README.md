@@ -1,6 +1,6 @@
 # NativeScript Firebase plugin
 
-<img src="docs/images/firebase.png" width="116px" height="32px" alt="Firebase"/><br/>
+<img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
 ## Features
