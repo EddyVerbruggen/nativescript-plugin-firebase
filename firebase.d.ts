@@ -6,9 +6,19 @@ declare module "nativescript-plugin-firebase" {
      */
     export interface InitOptions {
       /**
-       * The endpoint of your firebase instance.
+       * Allow disk persistence. Default false.
        */
-      url: string;
+      persist?: boolean;
+      /**
+       * Get notified when fi the user is logged in.
+       */
+      onAuthStateChange?: AuthStateChangeListener;
+      /**
+       * Attempt to sign out before initializing, useful in case previous
+       * project token is cached which leads to following type of error:
+       *   "[FirebaseDatabase] Authentication failed: invalid_token ..."
+       */
+      iOSEmulatorFlush?: boolean;
     }
 
     /**
@@ -58,6 +68,18 @@ declare module "nativescript-plugin-firebase" {
       type: LoginType;
       email?: string;
       password?: string;
+      /**
+       * The JSON Web Token (JWT) to use for authentication.
+       * Use with LoginType.CUSTOM
+       * See: https://firebase.google.com/docs/auth/server
+       */
+      token?: string;
+      /**
+       * A function that returns a promise with the  JSON Web Token (JWT) to use for authentication.
+       * Use with LoginType.CUSTOM
+       * See: https://firebase.google.com/docs/auth/server
+       */
+      tokenProviderFn?: () => Promise<String>;
     }
 
     /**
@@ -119,9 +141,103 @@ declare module "nativescript-plugin-firebase" {
       newPassword: string
     }
 
+    export interface AuthStateData {
+      loggedIn?: boolean;
+      user?: LoginResult;
+    }
+
+    export interface AuthStateChangeListener {
+      onAuthStateChanged: (data: AuthStateData) => void;
+      thisArg?: any;
+    }
+
+    export interface RemoteConfigProperty {
+      key: string;
+      default: any;
+    }
+
+    export interface GetRemoteConfigOptions {
+      /**
+       * Fetch new results from the server more often.
+       * Default false.
+       */
+      developerMode?: boolean;
+      /**
+       * The number of seconds before retrieving fresh state from the server.
+       * Default 12 hours.
+       */
+      cacheExpirationSeconds?: number;
+      /**
+       * The configuration properties to retrieve for your app. Specify as:
+       *  properties: [{
+       *    key: "holiday_promo_enabled",
+       *    default: false
+       *  }, ..]
+       */
+      keys: Array<string>;
+      properties: Array<RemoteConfigProperty>
+    }
+
+    /**
+     * The returned object from the getRemoteConfig function.
+     */
+    export interface GetRemoteConfigResult {
+      /**
+       * The date the data was last refreshed from the server.
+       * Should honor the 'cacheExpirationSeconds' you passed in previously.
+       */
+      lastFetch: Date;
+      /**
+       * The result may be throttled when retrieved from the server.
+       * Even when the cache has expired. And it's just FYI really.
+       */
+      throttled: boolean;
+      /**
+       * A JS Object with properties and values.
+       * If you previously requested keys ["foo", "is_enabled"] then this will be like:
+       *   properties: {
+       *     foo: "bar",
+       *     is_enabled: true
+       *   }
+       */
+      properties: Object;
+    }
+
+    /**
+     * The returned object in the callback handler of the addOnMessageReceivedCallback function.
+     * 
+     * Note that any custom data you send from your server will be available as
+     * key/value properties on the Message object.
+     */
+    export interface Message {
+      /**
+       * Indicated whether or not the notification was received while the app was in the foreground.
+       */
+      foreground: boolean;
+      /**
+       * The main text shown in the notificiation.
+       * Not available on Android when the notification was received in the background.
+       */
+      body?: string;
+      /**
+       * Optional title, shown above the body in the notification.
+       * Not available on Android when the notification was received in the background.
+       */
+      title?: string;
+      /**
+       * iOS badge count, as sent from the server.
+       */
+      badge?: number;
+    }
+
     export function init(options: InitOptions): Promise<any>;
     export function login(options: LoginOptions): Promise<LoginResult>;
+    export function logout(): Promise<any>;
+    export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
+    export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) => void): Promise<any>;
+    export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
+    export function deleteUser(): Promise<any>;
     export function resetPassword(options: ResetPasswordOptions): Promise<any>;
     export function changePassword(options: ChangePasswordOptions): Promise<any>;
     export function push(path: string, value: any): Promise<PushResult>;
@@ -131,4 +247,7 @@ declare module "nativescript-plugin-firebase" {
     export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
     export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<any>;
     export function addValueEventListener(onValueEvent: (data: FBData) => void, path: string): Promise<any>;
+    export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
+    export function removeAuthStateListener(listener: AuthStateChangeListener): boolean;
+    export function hasAuthStateListener(listener: AuthStateChangeListener): boolean;
 }
