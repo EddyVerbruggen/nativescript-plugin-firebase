@@ -10,9 +10,9 @@ declare module "nativescript-plugin-firebase" {
        */
       persist?: boolean;
       /**
-       * Get notified when fi the user is logged in.
+       * Get notified when the user is logged in.
        */
-      onAuthStateChange?: AuthStateChangeListener;
+      onAuthStateChanged?: (data: AuthStateData) => void;
       /**
        * Attempt to sign out before initializing, useful in case previous
        * project token is cached which leads to following type of error:
