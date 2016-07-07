@@ -1,13 +1,8 @@
-<table>
-<tr>
-<td><img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/></td>
-<td>Changelog</td>
-</tr>
-</table>
+<img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
-Click the version numbers for full changelogs or just satisfy your curiosity by looking at the highlights.
+## 3.4.0 (2016, July 7)
 
-## [3.4.0]((https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.3.0...3.4.0)) (2016, July 7)
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.3.0...3.4.0)
 
 ### SDK versions
 If version numbers changed clean your platform folders to avoid build errors.
@@ -22,7 +17,10 @@ If version numbers changed clean your platform folders to avoid build errors.
 ### Fixes
 - [#69](#69) Fix `onAuthStateChanged` feature on `init`
 
-## [3.3.0]((https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.2.0...3.3.0)) (2016, June 26)
+
+## 3.3.0 (2016, June 26)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.2.0...3.3.0)
 
 ### SDK versions
 If version numbers changed clean your platform folders to avoid build errors.
@@ -34,8 +32,9 @@ If version numbers changed clean your platform folders to avoid build errors.
 - [#54](#54) FCM Messaging / Push Notifications ([docs](docs/MESSAGING.md))
 
 
+## 3.2.0 (2016, June 19)
 
-## [3.2.0]((https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.1.0...3.2.0)) (2016, June 19)
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.1.0...3.2.0)
 
 ### SDK versions
 If version numbers changed clean your platform folders to avoid build errors.
@@ -46,7 +45,10 @@ If version numbers changed clean your platform folders to avoid build errors.
 ### New
 - [#56](#56) Remote Config ([docs](docs/REMOTECONFIG.md))
 
-## [3.1.0]((https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.0.0...3.1.0)) (2016, June 17)
+
+## 3.1.0 (2016, June 17)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.0.0...3.1.0)
 
 ### SDK versions
 If version numbers changed clean your platform folders to avoid build errors.
@@ -58,7 +60,9 @@ If version numbers changed clean your platform folders to avoid build errors.
 - [#49](#49) Custom Authentication ([docs](docs/AUTHENTICATION.md#custom-login))
 
 
-## [3.0.0]((https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/2.1.8...3.0.0)) (2016, May 26)
+## 3.0.0 (2016, May 26)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/2.1.8...3.0.0)
 
 ### SDK versions
 If version numbers changed clean your platform folders to avoid build errors.
