@@ -1,4 +1,5 @@
 var appModule = require("application");
+var fs = require("file-system");
 var firebase = require("./firebase-common");
 
 firebase._launchNotification = null;
@@ -142,7 +143,6 @@ firebase.init = function (arg) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
             var user = fbAuth.getCurrentUser();
-            console.log("--------- auth change (1), user: " + user);
             arg.onAuthStateChanged({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -157,7 +157,6 @@ firebase.init = function (arg) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
             var user = fbAuth.getCurrentUser();
-            console.log("--------- auth change (2), user: " + user);
             firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -176,6 +175,15 @@ firebase.init = function (arg) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
       }
+
+      // Firebase storage
+      if (arg.storageBucket) {
+        if (typeof(com.google.firebase.storage) === "undefined") {
+          reject("Uncomment firebase-storage in the plugin's include.gradle first");
+          return;
+        }
+        firebase.storage = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.storageBucket);
+      } 
 
       resolve(firebase.instance);
     } catch (ex) {
@@ -198,7 +206,6 @@ firebase.addOnMessageReceivedCallback = function (callback) {
       org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
           new org.nativescript.plugins.firebase.FirebasePluginListener({
             success: function(notification) {
-              console.log("---------- received notification: " + notification);
               callback(JSON.parse(notification));
             }
           })
@@ -799,6 +806,203 @@ firebase.remove = function (path) {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.uploadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(com.google.firebase.storage) === "undefined") {
+        reject("Uncomment firebase-storage in the plugin's include.gradle first");
+        return;
+      }
+
+      if (!arg.remoteFullPath) {
+        reject("remoteFullPath is mandatory");
+        return;
+      }
+
+      var storageRef = firebase.storage;
+
+      if (arg.bucket) {
+        storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function(uploadTaskSnapshot) {
+          var metadata = uploadTaskSnapshot.getMetadata();
+          resolve({
+            name: metadata.getName(),
+            contentType: metadata.getContentType(),
+            created: new Date(metadata.getCreationTimeMillis()),
+            updated: new Date(metadata.getUpdatedTimeMillis()),
+            bucket: metadata.getBucket(),
+            size: metadata.getSizeBytes(),
+            url: metadata.getDownloadUrl().toString(),
+          });
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          console.log("--- upload failed");
+          reject("Upload failed. " + exception);
+        }
+      });
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+
+        var error;
+        var contents = arg.localFile.readSync(function(e) { error = e; });
+
+        if (error) {
+          reject("Error reading file " + arg.localFile + ": " + error);
+          return;
+        }
+
+        var uploadDataTask = storageReference.putBytes(contents)
+            .addOnFailureListener(onFailureListener)
+            .addOnSuccessListener(onSuccessListener);
+
+      } else if (arg.localFullPath) {
+
+        if (!fs.File.exists(arg.localFullPath)) {
+          reject("File does not exist: " + arg.localFullPath);
+          return;
+        }
+
+        // TODO there's prolly a more efficient way to get the file obj.. .android perhaps?
+        var localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFullPath));
+        var uploadFileTask = storageReference.putFile(localFileUrl)
+            .addOnFailureListener(onFailureListener)
+            .addOnSuccessListener(onSuccessListener);
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+    } catch (ex) {
+      console.log("Error in firebase.uploadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.downloadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(com.google.firebase.storage) === "undefined") {
+        reject("Uncomment firebase-storage in the plugin's include.gradle first");
+        return;
+      }
+
+      if (!arg.remoteFullPath) {
+        reject("remoteFullPath is mandatory");
+        return;
+      }
+
+      var storageRef = firebase.storage;
+
+      if (arg.bucket) {
+        storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function(downloadTaskSnapshot) {
+          resolve();
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          reject("Download failed. " + exception);
+        }
+      });
+
+      var localFilePath;
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+        localFilePath = arg.localFile.path;
+
+      } else if (arg.localFullPath) {
+        localFilePath = arg.localFullPath;
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+      var file = new java.io.File(localFilePath);
+
+      storageReference.getFile(file)
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.downloadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getDownloadUrl = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(com.google.firebase.storage) === "undefined") {
+        reject("Uncomment firebase-storage in the plugin's include.gradle first");
+        return;
+      }
+
+      if (!arg.remoteFullPath) {
+        reject("remoteFullPath is mandatory");
+        return;
+      }
+
+      var storageRef = firebase.storage;
+
+      if (arg.bucket) {
+        storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function(uri) {
+          console.log("uri: " + uri);
+          resolve(uri);
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          reject(exception);
+        }
+      });
+
+      storageReference.getDownloadUrl()
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.getDownloadUrl: " + ex);
       reject(ex);
     }
   });

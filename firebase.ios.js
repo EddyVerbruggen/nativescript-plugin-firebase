@@ -1,4 +1,5 @@
 var firebase = require("./firebase-common");
+var fs = require("file-system");
 var application = require("application");
 var types = require("utils/types");
 var frame = require("ui/frame");
@@ -294,6 +295,15 @@ firebase.init = function (arg) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
       }
+
+      // Firebase storage
+      if (arg.storageBucket) {
+        if (typeof(FIRStorage) === "undefined") {
+          reject("Uncomment Storage in the plugin's Podfile first");
+          return;
+        }
+        firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
+      } 
 
       resolve(firebase.instance);
     } catch (ex) {
@@ -833,6 +843,174 @@ firebase.remove = function (path) {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.uploadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(metadata, error) {
+        if (error !== null) {
+          reject(error.localizedDescription);
+        } else {
+          resolve({
+            name: metadata.name,
+            url: metadata.downloadURL.absoluteURL,
+            contentType: metadata.contentType,
+            created: metadata.timeCreated,
+            updated: metadata.updated,
+            bucket: metadata.bucket,
+            size: metadata.size
+          });
+        }
+      };
+
+      if (typeof(FIRStorage) === "undefined") {
+        reject("Uncomment Storage in the plugin's Podfile first");
+        return;
+      }
+
+      if (!arg.remoteFullPath) {
+        reject("remoteFullPath is mandatory");
+        return;
+      }
+
+      var storageRef = firebase.storage;
+
+      if (arg.bucket) {
+        storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
+      }
+
+      var fIRStorageReference = storageRef.child(arg.remoteFullPath);
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+
+        var error;
+        var contents = arg.localFile.readSync(function(e) { error = e; });
+
+        if (error) {
+          alert("Error reading file " + arg.localFile + ": " + error);
+          return;
+        }
+
+        var fIRStorageUploadDataTask = fIRStorageReference.putDataMetadataCompletion(contents, null, onCompletion);
+
+      } else if (arg.localFullPath) {
+        var localFileUrl = NSURL.fileURLWithPath(arg.localFullPath);
+        var fIRStorageUploadFileTask = fIRStorageReference.putFileMetadataCompletion(localFileUrl, null, onCompletion);
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+    } catch (ex) {
+      console.log("Error in firebase.uploadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.downloadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(url, error) {
+        if (error !== null) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(url.absoluteURL);
+        }
+      };
+
+      if (typeof(FIRStorage) === "undefined") {
+        reject("Uncomment Storage in the plugin's Podfile first");
+        return;
+      }
+
+      if (!arg.remoteFullPath) {
+        reject("remoteFullPath is mandatory");
+        return;
+      }
+
+      var storageRef = firebase.storage;
+
+      if (arg.bucket) {
+        storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
+      }
+
+      var fIRStorageReference = storageRef.child(arg.remoteFullPath);
+
+      var localFilePath;
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+        localFilePath = arg.localFile.path;
+
+      } else if (arg.localFullPath) {
+        localFilePath = arg.localFullPath;
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+      // Create local filesystem URL
+      var localFileUrl = NSURL.fileURLWithPath(localFilePath);
+
+      var fIRStorageDownloadTask = fIRStorageReference.writeToFileCompletion(localFileUrl, onCompletion);
+
+    } catch (ex) {
+      console.log("Error in firebase.downloadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getDownloadUrl = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(url, error) {
+        if (error !== null) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(url.absoluteURL);
+        }
+      };
+
+      if (typeof(FIRStorage) === "undefined") {
+        reject("Uncomment Storage in the plugin's Podfile first");
+        return;
+      }
+
+      if (!arg.remoteFullPath) {
+        reject("remoteFullPath is mandatory");
+        return;
+      }
+
+      var storageRef = firebase.storage;
+
+      if (arg.bucket) {
+        storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
+      }
+
+      var fIRStorageReference = storageRef.child(arg.remoteFullPath);
+
+      fIRStorageReference.downloadURLWithCompletion(onCompletion);
+
+    } catch (ex) {
+      console.log("Error in firebase.getDownloadUrl: " + ex);
       reject(ex);
     }
   });
