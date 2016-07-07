@@ -1,6 +1,6 @@
 <table>
 <tr>
-<td><img src="docs/images/firebase.png" width="116px" height="32px" alt="Firebase"/></td>
+<td><img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/></td>
 <td>Changelog</td>
 </tr>
 </table>
