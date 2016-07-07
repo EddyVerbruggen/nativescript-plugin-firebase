@@ -1,1 +1,12 @@
-pod 'Firebase', '~> 2.5.1'
+pod 'Firebase/Database', '~> 3.2'
+pod 'Firebase/Auth', '~> 3.2'
+
+# Uncomment if you want to use 'Remote Config'
+#pod 'Firebase/RemoteConfig', '~> 3.2'
+
+# Uncomment if you want FCM (Firebase Cloud Messaging)
+#pod 'Firebase/Messaging', '~> 3.2'
+
+# Uncomment if you want Facebook Authentication
+#pod 'FBSDKCoreKit'
+#pod 'FBSDKLoginKit'

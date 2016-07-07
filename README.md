@@ -1,318 +1,206 @@
 # NativeScript Firebase plugin
 
-<img src="screenshots/firebase.png" width="154px" height="43px" alt="Firebase"/><br/>
-The leading realtime app platform (Database, Auth & Hosting). [Docs here.](https://www.firebase.com/docs/)
-
-
-
-If you can spare 41 seconds, please check this video of the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
-[![YouTube demo, 41 sec](screenshots/yt-thumb.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
+<img src="docs/images/firebase.png" width="154px" height="43px" alt="Firebase"/><br/>
+Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
 ### Use when
-* you need to store JSON data in the cloud,
+* you need to store JSON data in the cloud (but don't want to loose data when the device is offline),
 * you want to sync that data to other devices and platforms,
 * you want to optionally protect that data by having users log in,
-* you want to update clients at the moment the data changes (think chat and multiplayer games).
+* you want to update clients at the moment the data changes (think chat and multiplayer games),
+* you want an easy way to remotely configure app features,
+* you want push notifications.
 
 ## Prerequisites
-NativeScript 1.3.0 (`tns --version`) is required for smooth installation, so please upgrade if you need to.
+Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
+Your first 'Firebase' will be automatically created and made available via an URL like `https://n-plugin-test.firebaseio.com`.
 
-Head on over to firebase.com and sign up for a free account.
-Your first 'Firebase' will be automatically created and made available via a URL
-like `https://resplendent-fire-4211.firebaseio.com/`.
+Open your Firebase project at the Google console and click 'Add app' to add an iOS and / or Android app. Follow the steps (make sure the bundle id is the same as your `nativescript.id` in `package.json` and you'll be able to download:
+
+* iOS: `GoogleService-Info.plist` which you'll add to your NativeScript project at `app/App_Resources/iOS/GoogleService-Info.plist`
+
+* Android: `google-services.json` which you'll add to your NativeScript project at `platforms/android/google-services.json`
 
 ## Installation
+If you rather watch a video explaining the steps then check out this step-by-step guide - you'll also learn how to
+add iOS and Android support to the Firebase console and how to integrate anonymous authentication:
+[![YouTube demo](docs/images/yt-thumb-setup.png)](https://youtu.be/IextEpoIzwE "YouTube demo")
+
+
 From the command prompt go to your app's root folder and execute:
+
 ```
 tns plugin add nativescript-plugin-firebase
 ```
 
+And do yourself a favor by adding TypeScript support to your nativeScript app:
+
+```
+tns install typescript
+```
+
+Then open `references.d.ts` in the root of your project and add this line to get autocompletion and type-checking for this plugin:
+
+```
+/// <reference path="./node_modules/nativescript-plugin-firebase/firebase.d.ts" />
+```
+
+### Android
+Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
+
+#### Open `app/App_Resources/Android/app.gradle`
+- If there's no `applicationId` yet please add it to the `defaultConfig` node so it becomes:
+
+```
+android {
+    ...
+    defaultConfig {
+        applicationId = "your.package.name"  
+        ...
+    }
+}
+```
+
+#### Open `platforms/android/build.gradle`
+- Near the top there's a dependencies section, add `classpath "com.google.gms:google-services:3.0.0"` so it becomes something like:
+```
+  dependencies {
+    classpath "com.android.tools.build:gradle:1.5.0"
+    classpath "com.google.gms:google-services:3.0.0"
+  }
+```
+- Add the very bottom of the same file add `apply plugin: "com.google.gms.google-services"`
+
 ## Usage
 
-If you want a quickstart, [clone our demo app (the one in the YouTube video)](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
-And here's the comprehensive list of supported functions:
+If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
 
-### init
+### Start-up wiring
+We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
+
+##### JavaScript
 ```js
-  var firebase = require("nativescript-plugin-firebase");
+var firebase = require("nativescript-plugin-firebase");
 
-  firebase.init({
-    url: 'https://resplendent-fire-4211.firebaseio.com'
-  }).then(
-      function (instance) {
-        console.log("firebase.init done");
-      },
-      function (error) {
-        console.log("firebase.init error: " + error);
-      }
-  );
+firebase.init({
+  // Optionally pass in properties for database, authentication and cloud messaging,
+  // see their respective docs.
+}).then(
+    function (instance) {
+      console.log("firebase.init done");
+    },
+    function (error) {
+      console.log("firebase.init error: " + error);
+    }
+);
 ```
 
-All further examples assume `firebase` has been required.
-Also, all functions support promises, but we're leaving out the `.then()` stuff for brevity where it doesn't add value.
-
-### setValue
-Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`).
-If you want to add data to a known path use this, otherwise use `push` (see below).
-
-The plugin will take care of serializing JSON data to native data structures.
-
+#### TypeScript
 ```js
+import firebase = require("nativescript-plugin-firebase");
 
-  // to store a JSON object
-  firebase.setValue(
-      '/companies',
-      {'foo':'bar'}
-  );
-
-  // to store an array of JSON objects
-  firebase.setValue(
-      '/companies',
-      [
-        {name: 'Telerik', country: 'Bulgaria'},
-        {name: 'Google', country: 'USA'}
-      ]
-  );
+firebase.init({
+  // Optionally pass in properties for database, authentication and cloud messaging,
+  // see their respective docs.
+}).then(
+  (instance) => {
+    console.log("firebase.init done");
+  },
+  (error) => {
+    console.log("firebase.init error: " + error);
+  }
+);
 ```
 
-### push
-This function will store a JSON object at path `<Firebase URL>/users/<Generated Key>`
+## Features
+For readability the supported features have been moved to their own README's:
 
-```js
-  firebase.push(
-      '/users',
-      {
-        'first': 'Eddy',
-        'last': 'Verbruggen',
-        'birthYear': 1977,
-        'isMale': true,
-        'address': {
-          'street': 'foostreet',
-          'number': 123
-        }
-      }
-  ).then(
-      function (result) {
-        console.log("created key: " + result.key);
-      }
-  );
+* [Realtime Database](docs/DATABASE.md)
+* [Authentication](docs/AUTHENTICATION.md)
+* [Remote Config](docs/REMOTECONFIG.md)
+* [Cloud Messaging](docs/MESSAGING.md)
+
+
+## Known issues on iOS
+On the simulator you may see this message if you have more than one app with the Firebase SDK ever installed:
+
+```
+[FirebaseDatabase] Authentication failed: invalid_token (Invalid claim 'aud' in auth token.)
+or
+[FirebaseDatabase] Authentication failed: invalid_token (audience was project 'firegroceries-904d0' but should have been project 'your-firebase-project')
 ```
 
-### query
-Firebase supports querying data and this plugin does too, since v2.0.0.
-
-Let's say we have the structure as defined at `setValue`, then use this query to retrieve the companies in country 'Bulgaria':
-
-```js
-    var onQueryEvent = function(result) {
-        // note that the query returns 1 match at a time
-        // in the order specified in the query
-        if (!result.error) {
-            console.log("Event type: " + result.type);
-            console.log("Key: " + result.key);
-            console.log("Value: " + JSON.stringify(result.value));
-        }
-    };
-
-    firebase.query(
-        onQueryEvent,
-        "/companies",
-        {
-            // set this to true if you want to check if the value exists or just want the event to fire once
-            // default false, so it listens continuously
-            singleEvent: true,
-            // order by company.country
-            orderBy: {
-                type: firebase.QueryOrderByType.CHILD,
-                value: 'country' // mandatory when type is 'child'
-            },
-            // but only companies named 'Telerik'
-            // (this range relates to the orderBy clause)
-            range: {
-                type: firebase.QueryRangeType.EQUAL_TO,
-                value: 'Bulgaria'
-            },
-            // only the first 2 matches
-            // (note that there's only 1 in this case anyway)
-            limit: {
-                type: firebase.QueryLimitType.LAST,
-                value: 2
-            }
-        }
-    );
+This is [a known issue in the Firebase SDK](http://stackoverflow.com/questions/37857131/swift-firebase-database-invalid-token-error).
+I always use a real device to avoid this problem, but you can pass an 'iOSEmulatorFlush' option to init.
+```
+firebase.init({
+  // Optionally pass in properties for database, authentication and cloud messaging,
+  // see their respective docs and 'iOSEmulatorFlush' to flush token before init.
+  iOSEmulatorFlush: true
+}).then()
 ```
 
-For supported values of the orderBy/range/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
+## Known issues on Android
 
-### update
-Changes the values of the keys specified in the dictionary without overwriting other keys at this location.
-
-```js
-  firebase.update(
-      '/companies',
-      {'foo':'baz'}
-  );
+#### DexIndexOverflowException
+```
+com.android.dex.DexIndexOverflowException: method ID not in..
 ```
 
-### addChildEventListener
-To listen for changes in your database you can pass in a listener callback function.
-You get to control which path inside you database you want to listen to, by default it's `/` which is the entire database.
+Congrats, you ran into [this issue](https://github.com/NativeScript/android-runtime/issues/344)
+which can be solved by adding `multiDexEnabled true` to your `app/App_Resources/Android/app.gradle`
+so it becomes something like this:
 
-The plugin will take care of serializing native data structures to JSON data.
-
-```js
-  var onChildEvent = function(result) {
-    console.log("Event type: " + result.type);
-    console.log("Key: " + result.key);
-    console.log("Value: " + JSON.stringify(result.value));
-  };
-
-  // listen to changes in the /users path
-  firebase.addChildEventListener(onChildEvent, "/users");
+```
+android {  
+  defaultConfig {  
+    applicationId = "__PACKAGE__"  
+    multiDexEnabled true
+    generatedDensities = []
+  }  
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }  
+}
 ```
 
-### addValueEventListener
-The difference with `addChildEventListener` is [explained here](https://www.firebase.com/docs/ios/guide/retrieving-data.html).
-The link is for the iOS SDK, but it's the same for Android.
+#### java.lang.OutOfMemoryError: GC overhead limit exceeded
 
-```js
-  var onValueEvent = function(result) {
-    console.log("Event type: " + result.type);
-    console.log("Key: " + result.key);
-    console.log("Value: " + JSON.stringify(result.value));
-  };
+Increase the Java Max Heap Size like this (the bit at the end):
 
-  // listen to changes in the /companies path
-  firebase.addValueEventListener(onValueEvent, "/companies");
+```
+android {  
+  defaultConfig {  
+    applicationId = "__PACKAGE__"  
+    multiDexEnabled true
+    generatedDensities = []
+  }
+  aaptOptions {  
+    additionalParameters "--no-version-vectors"  
+  }
+  dexOptions {
+    javaMaxHeapSize "4g"
+  }
+}
 ```
 
-### remove
-You can remove the entire database content by passing in '/' as param,
-but if you only want to wipe everything at '/users', do this:
+#### FirebaseApp with name [DEFAULT] doesn't exist
+Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which will be solved by
+placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
+the changes to `build.gradle` which are mentioned above as well.
 
-```js
-  firebase.remove("/users");
-```
+#### Could not find com.google...
+And there's this one: "Could not find com.google.firebase:firebase-auth:9.0.2". That means
+making sure you have the latest Google Repository bits installed.
+Just run `android` from a command prompt and install any pending updates.
 
-### login
-v 1.1.0 of this plugin adds the capability to log your users in. Either anonymously or by email and password.
-You need to add support for those features in your Firebase instance at the 'Login & Auth' tab.
-
-You can expect more login mechanisms to be added in the future.
-
-#### Anonymous login
-```js
-  firebase.login({
-    // note that you need to enable anonymous login in your firebase instance
-    type: firebase.LoginType.ANONYMOUS
-  }).then(
-      function (result) {
-        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-#### Password login
-```js
-  firebase.login({
-      // note that you need to enable email-password login in your firebase instance
-    type: firebase.LoginType.PASSWORD,
-    email: 'useraccount@provider.com',
-    password: 'theirpassword'
-  }).then(
-      function (result) {
-        // the result object has these properties: uid, provider, expiresAtUnixEpochSeconds, profileImageURL, token
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-#### Creating a Password account
-```js
-  firebase.createUser({
-    email: 'eddyverbruggen@gmail.com',
-    password: 'firebase'
-  }).then(
-      function (result) {
-        dialogs.alert({
-          title: "User created",
-          message: "userid: " + result.key,
-          okButtonText: "Nice!"
-        })
-      },
-      function (errorMessage) {
-        dialogs.alert({
-          title: "No user created",
-          message: errorMessage,
-          okButtonText: "OK, got it"
-        })
-      }
-  )
-```
-
-#### Resetting a password
-```js
-  firebase.resetPassword({
-    email: 'useraccount@provider.com'
-  }).then(
-      function () {
-        // called when password reset was successful,
-        // you could now prompt the user to check his email
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-#### Changing a password
-```js
-  firebase.changePassword({
-    email: 'useraccount@provider.com',
-    oldPassword: 'myOldPassword',
-    newPassword: 'myNewPassword'
-  }).then(
-      function () {
-        // called when password change was successful,
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  )
-```
-
-### logout
-Shouldn't be more complicated than:
-
-```js
-  firebase.logout();
-```
-
-## Pro tips
-
-### See what's happening
-It's kinda cool to manipulate data while using multiple devices or your device and the Firebase Dashboard. You will instantly see the update on the other end.
-The Firebase Dashboard can be reached by simply loading your Firebase URL in a web browser.
-
-### Testing your app in the emulator
-
-`tns emulate ios --device iPhone-6s`
-
-`tns emulate android --geny "Nexus 6_23"`
-
-or start a geny emulator first and do: `tns run android`
+#### Found play-services:9.0.0, but version 9.0.2 is needed..
+Update your Android bits like the issue above and reinstall the android platform in your project.
 
 ## Future work
-- Add support for `removeEventListener`.
-- Possibly add more login mechanisms.
-
+- Add support for `removeEventListener`
+- Possibly add more login mechanisms
+- Add other Firebase 3.x SDK features (there's already a few feature requests in the GitHub issue tracker
 
 ## Credits
 The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).

@@ -1,6 +1,41 @@
 var appModule = require("application");
 var firebase = require("./firebase-common");
 
+firebase._launchNotification = null;
+
+(function() {
+  if (typeof(com.google.firebase.messaging) === "undefined") {
+    return;
+  }
+  appModule.onLaunch = function(intent) {
+    var extras = intent.getExtras();
+    if (extras !== null) {
+      var result = {
+        foreground: false
+      };
+
+      var iterator = extras.keySet().iterator();
+      while (iterator.hasNext()) {
+        var key = iterator.next();
+        if (key !== "from" && key !== "collapse_key") {
+          result[key] = extras.get(key);
+        }
+      }
+
+      // in case this was a cold start we don't have the _receivedNotificationCallback yet
+      if (firebase._receivedNotificationCallback === null) {
+        firebase._launchNotification = result;
+      } else {
+        // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
+        setTimeout(function() {
+          firebase._receivedNotificationCallback(result);
+        });
+      }
+    }
+  };
+
+})();
+
 firebase.toHashMap = function(obj) {
   var node = new java.util.HashMap();
   for (var property in obj) {
@@ -82,13 +117,67 @@ firebase.getCallbackData = function(type, snapshot) {
   };
 };
 
+firebase.authStateListener = null;
+
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      var Firebase = com.firebase.client.Firebase;
-      Firebase.setAndroidContext(appModule.android.context);
-      instance = new Firebase(arg.url);
-      resolve(instance);
+      if (firebase.instance !== null) {
+        reject("You already ran init");
+        return;
+      }
+
+      var fDatabase = com.google.firebase.database.FirebaseDatabase;
+      if (arg.persist) {
+        fDatabase.getInstance().setPersistenceEnabled(true);
+      }
+      // the URL is picked up from google-services.json, so you can use it like this:
+      firebase.instance = fDatabase.getInstance().getReference();
+      // it is however still possible to pass the URL programmatically (which we'll do for now):
+      // firebase.instance = fDatabase.getInstance().getReferenceFromUrl(arg.url);
+
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+
+      if (arg.onAuthStateChanged) {
+        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+          onAuthStateChanged: function (fbAuth) {
+            console.log("--------- auth change (1), user: " + user);
+            var user = fbAuth.getCurrentUser();
+            arg.onAuthStateChanged({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          }
+        });
+        firebaseAuth.addAuthStateListener(firebase.authStateListener);
+      }
+
+      // Listen to auth state changes
+      if (!firebase.authStateListener) {
+        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+          onAuthStateChanged: function (fbAuth) {
+            console.log("--------- auth change (2), user: " + user);
+            var user = fbAuth.getCurrentUser();
+            firebase.notifyAuthStateListeners({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          }
+        });
+        firebaseAuth.addAuthStateListener(firebase.authStateListener);
+      }
+
+      // Firebase notifications (FCM)
+      if (typeof(com.google.firebase.messaging) !== "undefined") {
+        if (arg.onMessageReceivedCallback !== undefined) {
+          firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+        }
+        if (arg.onPushTokenReceivedCallback !== undefined) {
+          firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
+        }
+      }
+
+      resolve(firebase.instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
@@ -96,36 +185,303 @@ firebase.init = function (arg) {
   });
 };
 
-firebase.login = function (arg) {
+firebase.addOnMessageReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
     try {
-      var authorizer = new com.firebase.client.Firebase.AuthResultHandler({
-        onAuthenticated: function (authData) {
-          resolve({
-            uid: authData.getUid(),
-            provider: authData.getProvider(),
-            expiresAtUnixEpochSeconds: authData.getExpires(),
-            profileImageURL: authData.getProviderData().get("profileImageURL"),
-            token: authData.getToken()
-          });
-        },
-        onAuthenticationError: function (firebaseError) {
-          reject(firebaseError.getMessage());
+      if (typeof(com.google.firebase.messaging) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
+      firebase._receivedNotificationCallback = callback;
+
+      org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
+          new org.nativescript.plugins.firebase.FirebasePluginListener({
+            success: function(notification) {
+              console.log("---------- received notification: " + notification);
+              callback(JSON.parse(notification));
+            }
+          })
+      );
+
+      // if the app was launched from a notification, process it now
+      if (firebase._launchNotification !== null) {
+        callback(firebase._launchNotification);
+        firebase._launchNotification = null;
+      }
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.addOnPushTokenReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(com.google.firebase.messaging) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
+      org.nativescript.plugins.firebase.FirebasePlugin.setOnPushTokenReceivedCallback(
+          new org.nativescript.plugins.firebase.FirebasePluginListener({
+            success: function(token) {
+              callback(token);
+            }
+          })
+      );
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnPushTokenReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getRemoteConfigDefaults = function (properties) {
+  var defaults = {};
+  for (var p in properties) {
+    var prop = properties[p];
+    if (prop.default !== undefined) {
+      defaults[prop.key] = prop.default;
+    }
+  }
+  return defaults;
+};
+
+firebase._isGooglePlayServicesAvailable = function () {
+  var context = appModule.android.foregroundActivity;
+  var playServiceStatusSuccess = com.google.android.gms.common.ConnectionResult.SUCCESS; // 0
+  var playServicesStatus = com.google.android.gms.common.GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
+  return playServicesStatus === playServiceStatusSuccess;
+};
+
+firebase.getRemoteConfig = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(com.google.firebase.remoteconfig) === "undefined") {
+        reject("Uncomment firebase-config in the plugin's include.gradle first");
+        return;
+      }
+
+      if (arg.properties === undefined) {
+        reject("Argument 'properties' is missing");
+        return;
+      }
+
+      if (!firebase._isGooglePlayServicesAvailable()) {
+        reject("Google Play services is required for this feature, but not available on this device");
+        return;
+      }
+
+      // Get a Remote Config object instance
+      firebaseRemoteConfig = com.google.firebase.remoteconfig.FirebaseRemoteConfig.getInstance();
+
+      // Enable developer mode to allow for frequent refreshes of the cache
+      var remoteConfigSettings = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
+        .setDeveloperModeEnabled(arg.developerMode || false)
+        .build();
+      firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
+
+      var defaults = firebase.getRemoteConfigDefaults(arg.properties);      
+      firebaseRemoteConfig.setDefaults(firebase.toHashMap(defaults));
+
+      var returnMethod = function (throttled) {
+        firebaseRemoteConfig.activateFetched();
+
+        var lastFetchTime = firebaseRemoteConfig.getInfo().getFetchTimeMillis();
+        var lastFetch = new Date(lastFetchTime);
+
+        var result = {
+          lastFetch: lastFetch,
+          throttled: throttled,
+          properties: {}
+        };
+
+        for (var p in arg.properties) {
+          var prop = arg.properties[p];
+          var key = prop.key;
+          var value = firebaseRemoteConfig.getString(key);
+          // we could have the user pass in the type but this seems easier to use
+          result.properties[key] = firebase.strongTypeify(value);
+        }
+
+        resolve(result);
+      };
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function() {
+          returnMethod(false);
         }
       });
 
-      var type = arg.type;
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          if (exception == "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
+            returnMethod(true);
+          } else {
+            reject("Retrieving remote config data failed. " + exception);
+          }
+        }
+      });
 
-      if (type === firebase.LoginType.ANONYMOUS) {
-        instance.authAnonymously(authorizer);
-      } else if (type === firebase.LoginType.PASSWORD) {
+      // default 12 hours, just like the SDK does
+      var expirationDuration = arg.cacheExpirationSeconds || 43200;
+
+      firebaseRemoteConfig.fetch(expirationDuration)
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+    } catch (ex) {
+      console.log("Error in firebase.getRemoteConfig: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getCurrentUser = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var user = firebaseAuth.getCurrentUser();
+      console.log("getCurrentUser: " + user);
+      if (user !== null) {
+        resolve({
+          uid: user.getUid(),
+          name: user.getDisplayName(),
+          email: user.getEmail(),
+          profileImageURL: user.getPhotoUrl()
+        });
+      } else {
+        reject();
+      }
+    } catch (ex) {
+      console.log("Error in firebase.getCurrentUser: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.logout = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.logout: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+function toLoginResult(user) {
+  if (user === null) {
+    return false;
+  }
+  /*
+  var providerData = user.getProviderData();
+  for (var i = 0; i < providerData.size(); i++) {
+    var info = providerData.get(i);
+    console.log("--- userInfo - provider: " + info.getProviderId());
+  }
+  */
+
+  return {
+    uid: user.getUid(),
+    name: user.getDisplayName(),
+    email: user.getEmail(),
+    // expiresAtUnixEpochSeconds: authData.getExpires(),
+    profileImageURL: user.getPhotoUrl()
+    // token: user.getToken() // can be used to auth with a backend server
+  };
+}
+
+firebase.login = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (!firebase._isGooglePlayServicesAvailable()) {
+        reject("Google Play services is required for this feature, but not available on this device");
+        return;
+      }
+
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          // alert("login task: " + task.isSuccessful());
+          if (!task.isSuccessful()) {
+            reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            var user = task.getResult().getUser();
+            resolve(toLoginResult(user));
+          }
+        }
+      });
+
+      if (arg.type === firebase.LoginType.ANONYMOUS) {
+        // var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        // onFailure: function (throwable) {
+        // reject("Anonymous login failed with message: " + throwable.getMessage());
+        // }
+        // });
+        // firebaseAuth.signInAnonymously().addOnFailureListener(onFailureListener);
+        firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
+      } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
-          instance.authWithPassword(arg.email, arg.password, authorizer);          
+          firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
         }
+      } else if (arg.type === firebase.LoginType.CUSTOM) {
+        if (!arg.token && !arg.tokenProviderFn) {
+          reject("Auth type custom requires a token or a tokenProviderFn argument");
+        } else if (arg.token) {
+          firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+        } else if (arg.tokenProviderFn) {
+          arg.tokenProviderFn()
+              .then(
+                  function (token) {
+                    firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+                  },
+                  function (error) {
+                    reject(error);
+                  }
+              );
+        }
+
+      } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        if (typeof(com.facebook) === "undefined") {
+          reject("Facebook SDK not installed - see gradle config");
+          return;
+        }
+
+        // TODO see https://firebase.google.com/docs/auth/android/facebook-login#authenticate_with_firebase
+        var fbLoginManager = com.facebook.login.LoginManager.getInstance();
+        var callbackManager = com.facebook.CallbackManager.Factory.create();
+
+        fbLoginManager.registerCallback(
+            callbackManager,
+            new com.facebook.FacebookCallback({
+              onSuccess: function (loginResult) {
+                console.log("------------- fb callback");
+                console.log("------------- fb loginResult " + loginResult);
+              }
+            })
+        );
+
+        var permissions = ["public_profile", "email"];
+        var activity = appModule.android.foregroundActivity;
+        fbLoginManager.logInWithReadPermissions(foregroundActivity, permissions);
+
       } else {
-        reject ("Unsupported auth type: " + type);
+        reject ("Unsupported auth type: " + arg.type);
       }
     } catch (ex) {
       console.log("Error in firebase.login: " + ex);
@@ -137,19 +493,23 @@ firebase.login = function (arg) {
 firebase.resetPassword = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      var resultHandler = new com.firebase.client.Firebase.ResultHandler({
-        onSuccess: function () {
-          resolve();
-        },
-        onError: function (firebaseError) {
-          reject(firebaseError.getMessage());
-        }
-      });
-
       if (!arg.email) {
         reject("Resetting a password requires an email argument");
       } else {
-        instance.resetPassword(arg.email, resultHandler);
+        var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: function (task) {
+            console.log("--- reset pwd: " + task);
+            if (task.isSuccessful()) {
+              resolve();
+            } else {
+              // TODO extract error
+              reject("Sending password reset email failed");
+            }
+          }
+        });
+
+        var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+        firebaseAuth.sendPasswordResetEmail(arg.email).addOnCompleteListener(onCompleteListener);
       }
     } catch (ex) {
       console.log("Error in firebase.resetPassword: " + ex);
@@ -161,19 +521,28 @@ firebase.resetPassword = function (arg) {
 firebase.changePassword = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      var resultHandler = new com.firebase.client.Firebase.ResultHandler({
-        onSuccess: function () {
-          resolve();
-        },
-        onError: function (firebaseError) {
-          reject(firebaseError.getMessage());
-        }
-      });
-
       if (!arg.email || !arg.oldPassword || !arg.newPassword) {
         reject("Changing a password requires an email and an oldPassword and a newPassword arguments");
       } else {
-        instance.changePassword(arg.email, arg.oldPassword, arg.newPassword, resultHandler);
+        var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: function (task) {
+            console.log("--- changed pwd: " + task);
+            if (task.isSuccessful()) {
+              resolve();
+            } else {
+              // TODO extract error
+              reject("Updating password failed");
+            }
+          }
+        });
+
+        var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user === null) {
+          reject("no current user");
+        } else {
+          user.updatePassword(arg.newPassword).addOnCompleteListener(onCompleteListener);
+        }
       }
     } catch (ex) {
       console.log("Error in firebase.changePassword: " + ex);
@@ -185,22 +554,23 @@ firebase.changePassword = function (arg) {
 firebase.createUser = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      var valueResultHandler = new com.firebase.client.Firebase.ValueResultHandler({
-        onSuccess: function (authData) {
-          console.log("--- created: " + authData);
-          resolve({
-            key: firebase.toJsObject(authData).uid
-          });
-        },
-        onError: function (firebaseError) {
-          reject(firebaseError.getMessage());
-        }
-      });
-
       if (!arg.email || !arg.password) {
         reject("Creating a user requires an email and password argument");
       } else {
-        instance.createUser(arg.email, arg.password, valueResultHandler);
+        var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+
+        var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: function (task) {
+            // see https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth#public-methods
+            if (!task.isSuccessful()) {
+              reject("Creating a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            } else {
+              var user = task.getResult().getUser();
+              resolve(toLoginResult(user));
+            }
+          }
+        });
+        firebaseAuth.createUserWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
       }
     } catch (ex) {
       console.log("Error in firebase.createUser: " + ex);
@@ -209,8 +579,37 @@ firebase.createUser = function (arg) {
   });
 };
 
+firebase.deleteUser = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var user = firebaseAuth.getCurrentUser();
+
+      if (user === null) {
+        reject("no current user");
+        return;
+      }
+
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          if (!task.isSuccessful()) {
+            reject("Deleting a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            resolve();
+          }
+        }
+      });
+
+      user.delete().addOnCompleteListener(onCompleteListener);
+    } catch (ex) {
+      console.log("Error in firebase.deleteUser: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase._addObservers = function(to, updateCallback) {
-  var listener = new com.firebase.client.ChildEventListener({
+  var listener = new com.google.firebase.database.ChildEventListener({
     onChildAdded: function (snapshot, previousChildKey) {
       updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
     },
@@ -230,7 +629,7 @@ firebase._addObservers = function(to, updateCallback) {
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      firebase._addObservers(instance.child(path), updateCallback);
+      firebase._addObservers(firebase.instance.child(path), updateCallback);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
@@ -242,17 +641,17 @@ firebase.addChildEventListener = function (updateCallback, path) {
 firebase.addValueEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      var listener = new com.firebase.client.ValueEventListener({
+      var listener = new com.google.firebase.database.ValueEventListener({
         onDataChange: function (snapshot) {
           updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
         },
-        onCancelled: function (firebaseError) {
+        onCancelled: function (databaseError) {
           updateCallback({
-            error: firebaseError.getMessage()
+            error: databaseError.getMessage()
           });
         }
       });
-      instance.child(path).addValueEventListener(listener);
+      firebase.instance.child(path).addValueEventListener(listener);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addValueEventListener: " + ex);
@@ -265,7 +664,7 @@ firebase.removeEventListener = function (listener, path) {
   return new Promise(function (resolve, reject) {
     try {
       console.log("Removing at path " + path + ": " + listener);
-      instance.child(path).removeEventListener(listener);
+      firebase.instance.child(path).removeEventListener(listener);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.removeEventListener: " + ex);
@@ -277,7 +676,7 @@ firebase.removeEventListener = function (listener, path) {
 firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      var pushInstance = instance.child(path).push();
+      var pushInstance = firebase.instance.child(path).push();
       pushInstance.setValue(firebase.toHashMap(val));
       resolve({
         key: pushInstance.getKey()
@@ -292,7 +691,7 @@ firebase.push = function (path, val) {
 firebase.setValue = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).setValue(firebase.toHashMap(val));
+      firebase.instance.child(path).setValue(firebase.toHashMap(val));
       resolve();
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
@@ -304,7 +703,7 @@ firebase.setValue = function (path, val) {
 firebase.update = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).updateChildren(firebase.toHashMap(val));
+      firebase.instance.child(path).updateChildren(firebase.toHashMap(val));
       resolve();
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
@@ -317,20 +716,20 @@ firebase.query = function (updateCallback, path, options) {
   return new Promise(function (resolve, reject) {
     try {
       var query;
-      
+
       // orderBy
       if (options.orderBy.type === firebase.QueryOrderByType.KEY) {
-        query = instance.child(path).orderByKey();
+        query = firebase.instance.child(path).orderByKey();
       } else if (options.orderBy.type === firebase.QueryOrderByType.VALUE) {
-        query = instance.child(path).orderByValue();
+        query = firebase.instance.child(path).orderByValue();
       } else if (options.orderBy.type === firebase.QueryOrderByType.PRIORITY) {
-        query = instance.child(path).orderByPriority();
+        query = firebase.instance.child(path).orderByPriority();
       } else if (options.orderBy.type === firebase.QueryOrderByType.CHILD) {
         if (!options.orderBy.value) {
           reject("When orderBy.type is 'child' you must set orderBy.value as well.");
           return;
         }
-        query = instance.child(path).orderByChild(options.orderBy.value);
+        query = firebase.instance.child(path).orderByChild(options.orderBy.value);
       } else {
         reject("Invalid orderBy.type, use constants like firebase.QueryOrderByType.VALUE");
         return;
@@ -369,15 +768,15 @@ firebase.query = function (updateCallback, path, options) {
           return;
         }
       }
-      
+
       if (options.singleEvent) {
-        var listener = new com.firebase.client.ValueEventListener({
+        var listener = new com.google.firebase.database.ValueEventListener({
           onDataChange: function (snapshot) {
             updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
           },
-          onCancelled: function (firebaseError) {
+          onCancelled: function (databaseError) {
             updateCallback({
-              error: firebaseError.getMessage()
+              error: databaseError.getMessage()
             });
           }
         });
@@ -396,7 +795,7 @@ firebase.query = function (updateCallback, path, options) {
 firebase.remove = function (path) {
   return new Promise(function (resolve, reject) {
     try {
-      instance.child(path).setValue(null);
+      firebase.instance.child(path).setValue(null);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
