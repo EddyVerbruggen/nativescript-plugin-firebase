@@ -1,9 +1,4 @@
-<table>
-<tr>
-<td><img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/></td>
-<td>Remote Config</td>
-</tr>
-</table>
+<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 ## Enabling Remote Config
 Since plugin version 3.2.0 you can retrieve _Remote Config_ properties.

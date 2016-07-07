@@ -1,9 +1,4 @@
-<table>
-<tr>
-<td><img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/></td>
-<td>Cloud Messaging</td>
-</tr>
-</table>
+<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 ## Enabling Firebase Cloud Messaging (FCM)
 Version 3.3.0 of this plugin added FCM support (which is the successor of GCM).
