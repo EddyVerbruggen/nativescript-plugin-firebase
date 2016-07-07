@@ -1,9 +1,4 @@
-<table>
-<tr>
-<td><img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/></td>
-<td>Authentication</td>
-</tr>
-</table>
+<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 ## Enabling Authentication
 Version 1.1.0 of this plugin added the capability to log your users in, either

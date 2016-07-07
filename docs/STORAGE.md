@@ -1,4 +1,3 @@
-# :fire: Storage
 <img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 ## Enabling Storage
