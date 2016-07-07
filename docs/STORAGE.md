@@ -1,9 +1,5 @@
-<table>
-<tr>
-<td><img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/></td>
-<td>Storage</td>
-</tr>
-</table>
+# :fire: Storage
+<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 ## Enabling Storage
 Since plugin version 3.4.0 you can use Firebase _Storage_ features.
