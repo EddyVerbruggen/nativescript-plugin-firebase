@@ -141,8 +141,8 @@ firebase.init = function (arg) {
       if (arg.onAuthStateChanged) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
-            console.log("--------- auth change (1), user: " + user);
             var user = fbAuth.getCurrentUser();
+            console.log("--------- auth change (1), user: " + user);
             arg.onAuthStateChanged({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -156,8 +156,8 @@ firebase.init = function (arg) {
       if (!firebase.authStateListener) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
-            console.log("--------- auth change (2), user: " + user);
             var user = fbAuth.getCurrentUser();
+            console.log("--------- auth change (2), user: " + user);
             firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
               user: toLoginResult(user)
