@@ -1,6 +1,6 @@
 <table>
 <tr>
-<td><img src="images/firebase.png" width="154px" height="43px" alt="Firebase"/></td>
+<td><img src="images/firebase.png" width="116px" height="32px" alt="Firebase"/></td>
 <td>Cloud Messaging</td>
 </tr>
 </table>

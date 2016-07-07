@@ -20,6 +20,12 @@ declare module "nativescript-plugin-firebase" {
        * Default false.
        */
       iOSEmulatorFlush?: boolean;
+      /**
+       * For Firebase Storage you can pass in something like 'gs://n-plugin-test.appspot.com'
+       * here so we can cache it. Otherwise pass in the 'bucket' param when using Storage features.
+       * Can be found in the firebase console.
+       */
+      storageBucket?: string;
     }
 
     /**
@@ -206,7 +212,7 @@ declare module "nativescript-plugin-firebase" {
 
     /**
      * The returned object in the callback handler of the addOnMessageReceivedCallback function.
-     * 
+     *
      * Note that any custom data you send from your server will be available as
      * key/value properties on the Message object.
      */
@@ -231,16 +237,77 @@ declare module "nativescript-plugin-firebase" {
       badge?: number;
     }
 
+    /**
+     * Use either the 'localFile' or 'localFullPath' param to upload a file.
+     */
+    export interface UploadFileOptions {
+      /**
+       * If you didn't pass 'storageBucket' during init() you will need to do it now.
+       * Takes the form of 'gs://n-plugin-test.appspot.com' and can be found in the Firebase console.
+       */
+      bucket?: string;
+      /**
+       * The full path of the file in your Firebase storage (folders will be created)
+       * Example: 'uploads/images/telerik-logo-uploaded.png'
+       */
+      remoteFullPath: string;
+      /**
+       * Option 1: a file-system module File object
+       * Example:
+       *   var fs = require("file-system");
+       *   fs.File.fromPath("path-to-the-file")
+       */
+      localFile?: any;
+      /**
+       * Option 2: a full file path (ignored if 'localFile' is set)
+       */
+      localFullPath?: string
+    }
+
+    export interface UploadFileResult {
+
+    }
+
+    export interface DownloadFileOptions {
+      /**
+       * If you didn't pass 'storageBucket' during init() you will need to do it now.
+       * Takes the form of 'gs://n-plugin-test.appspot.com' and can be found in the Firebase console.
+       */
+      bucket?: string;
+      /**
+       * The full path of an existing file in your Firebase storage
+       * Example: 'uploads/images/telerik-logo-uploaded.png'
+       */
+      remoteFullPath: string;
+      /**
+       * Option 1: a file-system module File object
+       * Example:
+       *   var fs = require("file-system");
+       *   fs.File.fromPath("path-to-the-file")
+       */
+      localFile?: any;
+      /**
+       * Option 2: a full file path (ignored if 'localFile' is set)
+       */
+      localFullPath?: string
+    }
+
+    export interface GetDownloadUrlOptions {
+      /**
+       * If you didn't pass 'storageBucket' during init() you will need to do it now.
+       * Takes the form of 'gs://n-plugin-test.appspot.com' and can be found in the Firebase console.
+       */
+      bucket?: string;
+      /**
+       * The full path of an existing file in your Firebase storage
+       * Example: 'uploads/images/telerik-logo-uploaded.png'
+       */
+      remoteFullPath: string;
+    }
+
     export function init(options: InitOptions): Promise<any>;
-    export function login(options: LoginOptions): Promise<LoginResult>;
-    export function logout(): Promise<any>;
-    export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
-    export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) => void): Promise<any>;
-    export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
-    export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
-    export function deleteUser(): Promise<any>;
-    export function resetPassword(options: ResetPasswordOptions): Promise<any>;
-    export function changePassword(options: ChangePasswordOptions): Promise<any>;
+
+    // Database
     export function push(path: string, value: any): Promise<PushResult>;
     export function setValue(path: string, value: any): Promise<any>;
     export function update(path: string, value: any): Promise<any>;
@@ -248,7 +315,27 @@ declare module "nativescript-plugin-firebase" {
     export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
     export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<any>;
     export function addValueEventListener(onValueEvent: (data: FBData) => void, path: string): Promise<any>;
+
+    // Auth
+    export function login(options: LoginOptions): Promise<LoginResult>;
+    export function logout(): Promise<any>;
+    export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
+    export function deleteUser(): Promise<any>;
+    export function resetPassword(options: ResetPasswordOptions): Promise<any>;
+    export function changePassword(options: ChangePasswordOptions): Promise<any>;
     export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
     export function removeAuthStateListener(listener: AuthStateChangeListener): boolean;
     export function hasAuthStateListener(listener: AuthStateChangeListener): boolean;
+
+    // FCM
+    export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) => void): Promise<any>;
+    export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
+
+    // remote config
+    export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
+
+    // storage
+    export function uploadFile(options: UploadFileOptions): Promise<UploadFileResult>;
+    export function downloadFile(options: DownloadFileOptions): Promise<any>;
+    export function getDownloadUrl(options: GetDownloadUrlOptions): Promise<string>;
 }

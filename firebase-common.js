@@ -26,6 +26,7 @@ firebase.QueryRangeType = {
 };
 
 firebase.instance = null;
+firebase.storage = null;
 firebase.firebaseRemoteConfig = null;
 firebase.authStateListeners = [];
 firebase._receivedNotificationCallback = null;
