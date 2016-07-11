@@ -94,6 +94,7 @@ declare module "nativescript-plugin-firebase" {
      */
     export interface LoginResult {
       uid: string;
+      email?: string;
       provider: LoginType;
       expiresAtUnixEpochSeconds: number;
       profileImageURL?: string;
