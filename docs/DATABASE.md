@@ -159,3 +159,24 @@ but if you only want to wipe everything at `/users`, do this:
 ```js
   firebase.remove("/users");
 ```
+
+### keepInSync
+The Firebase Realtime Database synchronizes and stores a local copy of the data for active listeners (see the methods above). In addition, you can keep specific locations in sync.
+
+The client will automatically download the data at these locations and keep it in sync even if the reference has no active listeners.
+
+```js
+  firebase.keepInSync(
+    "/users", // which path in your Firebase needs to be kept in sync?
+    true      // set to false to disable this feature again
+  ).then(
+    function () {
+      console.log("firebase.keepInSync is ON for /users");
+    },
+    function (error) {
+      console.log("firebase.keepInSync error: " + error);
+    }
+  );
+```
+
+By default, 10MB of previously synced data will be cached. If the cache outgrows its configured size, the Firebase Realtime Database will purge data that has been used least recently. Data that is kept in sync, will not be purged from the cache. _(From the official doc for [iOS](https://firebase.google.com/docs/database/ios/offline-capabilities) and [Android](https://firebase.google.com/docs/database/android/offline-capabilities))._

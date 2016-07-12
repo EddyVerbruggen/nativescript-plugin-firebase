@@ -678,6 +678,19 @@ firebase._addObservers = function(to, updateCallback) {
   });
 };
 
+firebase.keepInSync = function (path, switchOn) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var where = firebase.instance.childByAppendingPath(path);
+      where.keepSynced(switchOn);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.keepInSync: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
