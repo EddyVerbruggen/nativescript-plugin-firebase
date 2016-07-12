@@ -316,6 +316,10 @@ declare module "nativescript-plugin-firebase" {
     export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
     export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<any>;
     export function addValueEventListener(onValueEvent: (data: FBData) => void, path: string): Promise<any>;
+    /**
+     * Tells the client to keep its local cache in sync with the server automatically.
+     */
+    export function keepInSync(path: string, switchOn: boolean): Promise<any>;
 
     // Auth
     export function login(options: LoginOptions): Promise<User>;

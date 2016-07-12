@@ -634,6 +634,19 @@ firebase.deleteUser = function (arg) {
   });
 };
 
+firebase.keepInSync = function (path, switchOn) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var where = firebase.instance.child(path);
+      where.keepSynced(switchOn);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.keepInSync: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase._addObservers = function(to, updateCallback) {
   var listener = new com.google.firebase.database.ChildEventListener({
     onChildAdded: function (snapshot, previousChildKey) {
