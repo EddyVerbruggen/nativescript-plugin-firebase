@@ -92,7 +92,7 @@ declare module "nativescript-plugin-firebase" {
     /**
      * The returned object from the login function.
      */
-    export interface LoginResult {
+    export interface User {
       uid: string;
       email?: string;
       provider: LoginType;
@@ -151,7 +151,7 @@ declare module "nativescript-plugin-firebase" {
 
     export interface AuthStateData {
       loggedIn?: boolean;
-      user?: LoginResult;
+      user?: User;
     }
 
     export interface AuthStateChangeListener {
@@ -318,7 +318,7 @@ declare module "nativescript-plugin-firebase" {
     export function addValueEventListener(onValueEvent: (data: FBData) => void, path: string): Promise<any>;
 
     // Auth
-    export function login(options: LoginOptions): Promise<LoginResult>;
+    export function login(options: LoginOptions): Promise<User>;
     export function logout(): Promise<any>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
     export function deleteUser(): Promise<any>;
@@ -327,6 +327,7 @@ declare module "nativescript-plugin-firebase" {
     export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
     export function removeAuthStateListener(listener: AuthStateChangeListener): boolean;
     export function hasAuthStateListener(listener: AuthStateChangeListener): boolean;
+    export function getCurrentUser(): Promise<User>;
 
     // FCM
     export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) => void): Promise<any>;
