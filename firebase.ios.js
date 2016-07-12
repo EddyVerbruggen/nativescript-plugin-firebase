@@ -423,7 +423,7 @@ firebase.getCurrentUser = function (arg) {
           email: user.email,
           emailVerified: user.emailVerified,
           name: user.displayName,
-          refreshToken: user.refreshToken,
+          refreshToken: user.refreshToken
         });
       } else {
         reject();
