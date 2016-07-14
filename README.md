@@ -11,7 +11,8 @@ For readability the supported features have been moved to their own README's:
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Cloud Messaging](docs/MESSAGING.md)
-* [Storage ](docs/STORAGE.md)
+* [Storage](docs/STORAGE.md)
+* [Crash Reporting](docs/CRASHREPORTING.md)
 
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.

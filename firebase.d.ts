@@ -344,4 +344,7 @@ declare module "nativescript-plugin-firebase" {
     export function uploadFile(options: UploadFileOptions): Promise<UploadFileResult>;
     export function downloadFile(options: DownloadFileOptions): Promise<any>;
     export function getDownloadUrl(options: GetDownloadUrlOptions): Promise<string>;
+
+    // crash logging
+    // export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;
 }

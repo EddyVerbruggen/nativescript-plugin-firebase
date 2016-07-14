@@ -1,5 +1,26 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.4.2 (2016, July 14)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.0...3.4.2)
+
+### SDK versions
+If version numbers changed clean your platform folders to avoid build errors.
+
+- iOS: 3.3.x
+- Android: 9.2.0
+
+### New
+- [#61](#61) Added `keepInSync` for enhanced offline support.
+- [#65](#65) Crash Reporting, which is automatically enabled for you.
+
+### Fixes
+- [#68](#68) Fix an issue where you'd log in on Android before `application.start()`.
+- [#70](#70) Added a TypeScript definition for `getCurrentUser()`.
+- [#71](#71) Added a TypeScript definition for LoginResult.email.
+
+
+
 ## 3.4.0 (2016, July 7)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.3.0...3.4.0)

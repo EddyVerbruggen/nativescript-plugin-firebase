@@ -1040,4 +1040,29 @@ firebase.getDownloadUrl = function (arg) {
   });
 };
 
+/*
+firebase.sendCrashLog = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(com.google.firebase.crash) === "undefined") {
+        reject("Make sure firebase-crash is in the plugin's include.gradle");
+        return;
+      }
+
+      if (!arg.log) {
+        reject("The mandatory 'log' argument is missing");
+        return;
+      }
+
+      com.google.firebase.crash.FirebaseCrash.log(arg.log);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.sendCrashLog: " + ex);
+      reject(ex);
+    }
+  });
+};
+*/
+
 module.exports = firebase;
