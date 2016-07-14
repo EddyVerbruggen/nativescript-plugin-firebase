@@ -1,5 +1,6 @@
 
 pod 'Firebase', '~> 3.3.0'
+pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
 # Uncomment if you want to enable Remote Config
