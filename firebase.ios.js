@@ -423,7 +423,7 @@ firebase.getCurrentUser = function (arg) {
           email: user.email,
           emailVerified: user.emailVerified,
           name: user.displayName,
-          refreshToken: user.refreshToken
+          refreshToken: user.refreshToken,
         });
       } else {
         reject();
@@ -462,6 +462,7 @@ function toLoginResult(user) {
 
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
+
     try {
       var onCompletion = function(user, error) {
         if (error) {
@@ -1028,5 +1029,35 @@ firebase.getDownloadUrl = function (arg) {
     }
   });
 };
+
+/* disabled since FIRCrashLog is always undefined
+firebase.sendCrashLog = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(FIRCrashLog) === "undefined") {
+        reject("Make sure 'Firebase/Crash' is in the plugin's Podfile");
+        return;
+      }
+
+      if (!arg.log) {
+        reject("The mandatory 'log' argument is missing");
+        return;
+      }
+
+      if (showInConsole) {
+        FIRCrashNSLog(arg.log);
+      } else {
+        FIRCrashLog(arg.log);
+      }
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.sendCrashLog: " + ex);
+      reject(ex);
+    }
+  });
+};
+*/
 
 module.exports = firebase;

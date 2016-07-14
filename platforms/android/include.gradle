@@ -17,6 +17,7 @@ dependencies {
     compile "com.google.firebase:firebase-core:9.2.0"
     compile "com.google.firebase:firebase-database:9.2.0"
     compile "com.google.firebase:firebase-auth:9.2.0"
+    compile "com.google.firebase:firebase-crash:9.2.0"
 
     // for reading google-services.json and configuration
     compile "com.google.android.gms:play-services-base:9.2.0"
