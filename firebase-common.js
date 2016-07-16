@@ -55,7 +55,7 @@ firebase.notifyAuthStateListeners = function(data) {
   firebase.authStateListeners.forEach(function (listener) {
     try {
       if (listener.thisArg) {
-        listener.onAuthStateChanged.apply(thisArg, data);
+        listener.onAuthStateChanged.call(listener.thisArg, data);
       } else {
         listener.onAuthStateChanged(data);
       }
