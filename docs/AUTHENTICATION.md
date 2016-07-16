@@ -217,7 +217,7 @@ Then add the following lines to your code and check for setup instructions for y
    			android:name="com.tns.NativeScriptActivity"
    			..>
    ```
-3. Create a file `app\App_Resources\Android\facebooklogin.xml` and add this (replace the id):
+3. Create a file `app\App_Resources\Android\values\facebooklogin.xml` and add this (replace the id):
 
    ```xml
    <?xml version='1.0' encoding='utf-8'?>
