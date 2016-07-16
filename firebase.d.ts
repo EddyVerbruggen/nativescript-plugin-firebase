@@ -95,10 +95,11 @@ declare module "nativescript-plugin-firebase" {
     export interface User {
       uid: string;
       email?: string;
-      provider: LoginType;
-      expiresAtUnixEpochSeconds: number;
+      name?:string;
+      provider?: LoginType;
+      expiresAtUnixEpochSeconds?: number;
       profileImageURL?: string;
-      token: string;
+      token?: string;
     }
 
     /**
