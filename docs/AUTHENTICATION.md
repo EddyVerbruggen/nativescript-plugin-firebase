@@ -204,7 +204,19 @@ Then add the following lines to your code and check for setup instructions for y
 #### Android
 
 1. Uncomment the facebook SDK in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
-2. Add `<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>` to the `manifest/application tag` in `app\App_Resources\Android\AndroidManifest.xml`
+2. Add `<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>` to the `manifest/application tag` in `app\App_Resources\Android\AndroidManifest.xml`, so it becomes similar to this:
+
+   ```xml
+   	<application
+   		android:name="com.tns.NativeScriptApplication"
+   		..>
+   		
+   		<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+   
+   		<activity
+   			android:name="com.tns.NativeScriptActivity"
+   			..>
+   ```
 3. Create a file `app\App_Resources\Android\facebooklogin.xml` and add this (replace the id):
 
    ```xml
