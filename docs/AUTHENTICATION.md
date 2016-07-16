@@ -210,7 +210,7 @@ Then add the following lines to your code and check for setup instructions for y
    ```xml
    <?xml version='1.0' encoding='utf-8'?>
    <resources>
-     <string name="facebook_app_id">126035687816994</string>
+      <string name="facebook_app_id">126035687816994</string>
    </resources>
    ```
 4. In your Facebook dev console, go to the Basic settings and add the Android platform if you haven't already. Then set the 'Google Play Packagename' to your applicationId (see your `package.json`) and set 'Classname' to `com.tns.NativeScriptActivity`.
