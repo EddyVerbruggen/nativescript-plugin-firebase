@@ -388,7 +388,7 @@ firebase.getCurrentUser = function (arg) {
           uid: user.getUid(),
           name: user.getDisplayName(),
           email: user.getEmail(),
-          profileImageURL: user.getPhotoUrl().toString()
+          profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
         });
       } else {
         reject();
@@ -429,7 +429,7 @@ function toLoginResult(user) {
     name: user.getDisplayName(),
     email: user.getEmail(),
     // expiresAtUnixEpochSeconds: authData.getExpires(),
-    profileImageURL: user.getPhotoUrl().toString()
+     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
     // token: user.getToken() // can be used to auth with a backend server
   };
 }
