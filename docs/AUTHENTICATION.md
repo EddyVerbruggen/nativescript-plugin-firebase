@@ -203,11 +203,18 @@ Then add the following lines to your code and check for setup instructions for y
 
 #### Android
 
-1. Uncomment the facebook plugin in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
-2. Add `<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>` to the manifest/application tag in `app\App_Resources\Android\AndroidManifest.xml`
-3. Add `<string name="facebook_app_id">1234</string>` to `platforms\android\src\main\res\values\strings.xml`
-4. In your facebook dev console, add the Android app and set the Google Play Packagename to your applicationId (see your `package.config` or in `app\App_Resources\Android\app.gradle`) and the Classname to `com.tns.NativeScriptActivity`.
-5. Set the Key-Hash as well. If you don't know it you can also try facebook login in your app and observe the `adb logcat` output for something like `Key hash <......> does not match any stored key hashes.` 
+1. Uncomment the facebook SDK in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
+2. Add `<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>` to the `manifest/application tag` in `app\App_Resources\Android\AndroidManifest.xml`
+3. Create a file `app\App_Resources\Android\facebooklogin.xml` and add this (replace the id):
+
+   ```xml
+   <?xml version='1.0' encoding='utf-8'?>
+   <resources>
+     <string name="facebook_app_id">126035687816994</string>
+   </resources>
+   ```
+4. In your Facebook dev console, go to the Basic settings and add the Android platform if you haven't already. Then set the 'Google Play Packagename' to your applicationId (see your `package.json`) and set 'Classname' to `com.tns.NativeScriptActivity`.
+5. Set the Key-Hash as well. If you don't know it you can try Facebook login in your app and observe the `adb logcat` output for something like `Key hash <......> does not match any stored key hashes.` 
 
 ### logout
 Shouldn't be more complicated than:

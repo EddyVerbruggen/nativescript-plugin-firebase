@@ -188,17 +188,16 @@ firebase.init = function (arg) {
         firebase.storage = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.storageBucket);
       }
 
+      // Facebook
       if (typeof(com.facebook) !== "undefined") {
         com.facebook.FacebookSdk.sdkInitialize(appModule.android.context);
         fbCallbackManager = com.facebook.CallbackManager.Factory.create();
         appModule.android.on("activityResult",function(eventData){
           fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
-        })
+        });
       }
 
-
-
-        resolve(firebase.instance);
+      resolve(firebase.instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
