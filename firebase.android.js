@@ -860,24 +860,34 @@ firebase.remove = function (path) {
   });
 };
 
+function getStorageRef(reject, arg) {
+  if (typeof(com.google.firebase.storage) === "undefined") {
+    reject("Uncomment firebase-storage in the plugin's include.gradle first");
+    return;
+  }
+
+  if (!arg.remoteFullPath) {
+    reject("remoteFullPath is mandatory");
+    return;
+  }
+
+  var storageRef = firebase.storage;
+
+  if (arg.bucket) {
+    storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
+  }
+
+  return storageRef;
+}
+
 firebase.uploadFile = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
 
-      if (typeof(com.google.firebase.storage) === "undefined") {
-        reject("Uncomment firebase-storage in the plugin's include.gradle first");
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
         return;
-      }
-
-      if (!arg.remoteFullPath) {
-        reject("remoteFullPath is mandatory");
-        return;
-      }
-
-      var storageRef = firebase.storage;
-
-      if (arg.bucket) {
-        storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
       }
 
       var storageReference = storageRef.child(arg.remoteFullPath);
@@ -951,20 +961,10 @@ firebase.downloadFile = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
 
-      if (typeof(com.google.firebase.storage) === "undefined") {
-        reject("Uncomment firebase-storage in the plugin's include.gradle first");
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
         return;
-      }
-
-      if (!arg.remoteFullPath) {
-        reject("remoteFullPath is mandatory");
-        return;
-      }
-
-      var storageRef = firebase.storage;
-
-      if (arg.bucket) {
-        storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
       }
 
       var storageReference = storageRef.child(arg.remoteFullPath);
@@ -1015,20 +1015,10 @@ firebase.getDownloadUrl = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
 
-      if (typeof(com.google.firebase.storage) === "undefined") {
-        reject("Uncomment firebase-storage in the plugin's include.gradle first");
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
         return;
-      }
-
-      if (!arg.remoteFullPath) {
-        reject("remoteFullPath is mandatory");
-        return;
-      }
-
-      var storageRef = firebase.storage;
-
-      if (arg.bucket) {
-        storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
       }
 
       var storageReference = storageRef.child(arg.remoteFullPath);
@@ -1047,6 +1037,43 @@ firebase.getDownloadUrl = function (arg) {
       });
 
       storageReference.getDownloadUrl()
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.getDownloadUrl: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.removeFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function() {
+          console.log("Removed file.");
+          resolve();
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          console.log("Error removing file.");
+          reject(exception);
+        }
+      });
+
+      storageReference.delete()
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 
