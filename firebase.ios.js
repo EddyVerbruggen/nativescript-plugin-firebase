@@ -862,6 +862,26 @@ firebase.remove = function (path) {
   });
 };
 
+function getStorageRef(reject, arg) {
+  if (typeof(FIRStorage) === "undefined") {
+    reject("Uncomment Storage in the plugin's Podfile first");
+    return;
+  }
+
+  if (!arg.remoteFullPath) {
+    reject("remoteFullPath is mandatory");
+    return;
+  }
+
+  var storageRef = firebase.storage;
+
+  if (arg.bucket) {
+    storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
+  }
+
+  return storageRef;
+}
+
 firebase.uploadFile = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -882,20 +902,10 @@ firebase.uploadFile = function (arg) {
         }
       };
 
-      if (typeof(FIRStorage) === "undefined") {
-        reject("Uncomment Storage in the plugin's Podfile first");
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
         return;
-      }
-
-      if (!arg.remoteFullPath) {
-        reject("remoteFullPath is mandatory");
-        return;
-      }
-
-      var storageRef = firebase.storage;
-
-      if (arg.bucket) {
-        storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
       }
 
       var fIRStorageReference = storageRef.child(arg.remoteFullPath);
@@ -944,20 +954,10 @@ firebase.downloadFile = function (arg) {
         }
       };
 
-      if (typeof(FIRStorage) === "undefined") {
-        reject("Uncomment Storage in the plugin's Podfile first");
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
         return;
-      }
-
-      if (!arg.remoteFullPath) {
-        reject("remoteFullPath is mandatory");
-        return;
-      }
-
-      var storageRef = firebase.storage;
-
-      if (arg.bucket) {
-        storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
       }
 
       var fIRStorageReference = storageRef.child(arg.remoteFullPath);
@@ -1003,20 +1003,10 @@ firebase.getDownloadUrl = function (arg) {
         }
       };
 
-      if (typeof(FIRStorage) === "undefined") {
-        reject("Uncomment Storage in the plugin's Podfile first");
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
         return;
-      }
-
-      if (!arg.remoteFullPath) {
-        reject("remoteFullPath is mandatory");
-        return;
-      }
-
-      var storageRef = firebase.storage;
-
-      if (arg.bucket) {
-        storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
       }
 
       var fIRStorageReference = storageRef.child(arg.remoteFullPath);
@@ -1025,6 +1015,35 @@ firebase.getDownloadUrl = function (arg) {
 
     } catch (ex) {
       console.log("Error in firebase.getDownloadUrl: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.removeFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(metadata, error) {
+        if (error !== null) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      };
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var fIRStorageFileRef = storageRef.child(arg.remoteFullPath);
+
+      fIRStorageFileRef.deleteWithCompletion(onCompletion);
+
+    } catch (ex) {
+      console.log("Error in firebase.removeFile: " + ex);
       reject(ex);
     }
   });
