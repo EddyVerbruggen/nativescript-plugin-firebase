@@ -1,8 +1,11 @@
 var appModule = require("application");
+var utils = require("utils/utils");
 var fs = require("file-system");
 var firebase = require("./firebase-common");
 
 firebase._launchNotification = null;
+
+var fbCallbackManager =  null;
 
 (function() {
   if (typeof(com.google.firebase.messaging) === "undefined") {
@@ -183,9 +186,19 @@ firebase.init = function (arg) {
           return;
         }
         firebase.storage = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.storageBucket);
-      } 
+      }
 
-      resolve(firebase.instance);
+      if (typeof(com.facebook) !== "undefined") {
+        com.facebook.FacebookSdk.sdkInitialize(appModule.android.context);
+        fbCallbackManager = com.facebook.CallbackManager.Factory.create();
+        appModule.android.on("activityResult",function(eventData){
+          fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
+        })
+      }
+
+
+
+        resolve(firebase.instance);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
@@ -375,7 +388,7 @@ firebase.getCurrentUser = function (arg) {
           uid: user.getUid(),
           name: user.getDisplayName(),
           email: user.getEmail(),
-          profileImageURL: user.getPhotoUrl()
+          profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
         });
       } else {
         reject();
@@ -416,7 +429,7 @@ function toLoginResult(user) {
     name: user.getDisplayName(),
     email: user.getEmail(),
     // expiresAtUnixEpochSeconds: authData.getExpires(),
-    profileImageURL: user.getPhotoUrl()
+     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
     // token: user.getToken() // can be used to auth with a backend server
   };
 }
@@ -479,28 +492,33 @@ firebase.login = function (arg) {
             return;
           }
 
-          // TODO see https://firebase.google.com/docs/auth/android/facebook-login#authenticate_with_firebase
           var fbLoginManager = com.facebook.login.LoginManager.getInstance();
-          var callbackManager = com.facebook.CallbackManager.Factory.create();
-
           fbLoginManager.registerCallback(
-              callbackManager,
-              new com.facebook.FacebookCallback({
-                onSuccess: function (loginResult) {
-                  console.log("------------- fb callback");
-                  console.log("------------- fb loginResult " + loginResult);
-                }
-              })
+            fbCallbackManager,
+            new com.facebook.FacebookCallback({
+              onSuccess: function (loginResult) {
+                var token = loginResult.getAccessToken().getToken();
+                var authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(token);
+                firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+              },
+              onCancel: function() {
+                reject("Facebook Login canceled");
+              },
+              onError: function(ex) {
+                reject("Error while trying to login with Fb "+ex);
+              }
+            })
           );
 
-          var permissions = ["public_profile", "email"];
+          var permissions = utils.ad.collections.stringArrayToStringSet(["public_profile", "email"]);
           var activity = appModule.android.foregroundActivity;
-          fbLoginManager.logInWithReadPermissions(foregroundActivity, permissions);
+          fbLoginManager.logInWithReadPermissions(activity, permissions);
 
         } else {
           reject ("Unsupported auth type: " + arg.type);
         }
       }
+
 
       try {
         if (appModule.android.foregroundActivity) {
