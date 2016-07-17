@@ -117,21 +117,21 @@ In this example we'll determine the remote URL of the previously uploaded file.
   );
 ```
 
-### removeFile
-You can pass in remote file path to remove it.
+### deleteFile
+You can pass in remote file path to delete it.
 
 ```js
-  firebase.removeFile({
+  firebase.deleteFile({
     // optional, can also be passed during init() as 'storageBucket' param so we can cache it
     bucket: 'gs://n-plugin-test.appspot.com',
     // the full path of an existing file in your Firebase storage
     remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
   }).then(
       function () 
-        console.log("File removed.");
+        console.log("File deleted.");
       },
       function (error) {
-        console.log("File removal Error: " + error);
+        console.log("File deletion Error: " + error);
       }
   );
 ```

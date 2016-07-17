@@ -1025,14 +1025,13 @@ firebase.getDownloadUrl = function (arg) {
 
       var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: function(uri) {
-          console.log("uri: " + uri);
           resolve(uri);
         }
       });
 
       var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
         onFailure: function (exception) {
-          reject(exception);
+          reject(exception.getMessage());
         }
       });
 
@@ -1047,7 +1046,7 @@ firebase.getDownloadUrl = function (arg) {
   });
 };
 
-firebase.removeFile = function (arg) {
+firebase.deleteFile = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
 
@@ -1061,15 +1060,13 @@ firebase.removeFile = function (arg) {
 
       var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: function() {
-          console.log("Removed file.");
           resolve();
         }
       });
 
       var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
         onFailure: function (exception) {
-          console.log("Error removing file.");
-          reject(exception);
+          reject(exception.getMessage());
         }
       });
 
@@ -1078,7 +1075,7 @@ firebase.removeFile = function (arg) {
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.removeFile: " + ex);
+      console.log("Error in firebase.deleteFile: " + ex);
       reject(ex);
     }
   });
