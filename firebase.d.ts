@@ -307,6 +307,19 @@ declare module "nativescript-plugin-firebase" {
         remoteFullPath: string;
     }
 
+    export interface RemoveFileOptions {
+        /**
+         * If you didn't pass 'storageBucket' during init() you will need to do it now.
+         * Takes the form of 'gs://n-plugin-test.appspot.com' and can be found in the Firebase console.
+         */
+        bucket?: string;
+        /**
+         * The full path of an existing file in your Firebase storage
+         * Example: 'uploads/images/telerik-logo-uploaded.png'
+         */
+        remoteFullPath: string;
+    }
+
     export interface SendCrashLogOptions {
         /**
          * Any custom logging you want to send to Firebase.
@@ -352,6 +365,7 @@ declare module "nativescript-plugin-firebase" {
     export function uploadFile(options: UploadFileOptions): Promise<UploadFileResult>;
     export function downloadFile(options: DownloadFileOptions): Promise<any>;
     export function getDownloadUrl(options: GetDownloadUrlOptions): Promise<string>;
+    export function removeFile(options: RemoveFileOptions): Promise<any>;
 
     // crash logging
     // export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;

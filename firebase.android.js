@@ -1078,7 +1078,7 @@ firebase.removeFile = function (arg) {
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.getDownloadUrl: " + ex);
+      console.log("Error in firebase.removeFile: " + ex);
       reject(ex);
     }
   });
