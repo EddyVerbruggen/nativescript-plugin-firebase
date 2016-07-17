@@ -307,7 +307,7 @@ firebase.getRemoteConfig = function (arg) {
         .build();
       firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
 
-      var defaults = firebase.getRemoteConfigDefaults(arg.properties);
+      var defaults = firebase.getRemoteConfigDefaults(arg.properties);      
       firebaseRemoteConfig.setDefaults(firebase.toHashMap(defaults));
 
       var returnMethod = function (throttled) {
@@ -362,7 +362,7 @@ firebase.getRemoteConfig = function (arg) {
         _resolve();
       } else {
         // if this is called before application.start() wait for the event to fire
-        appModule.on(appModule.launchEvent, _resolve);
+        appModule.on(appModule.launchEvent, _resolve);      
       }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);
@@ -509,13 +509,7 @@ firebase.login = function (arg) {
             })
           );
 
-          var scope = ["public_profile", "email"];
-
-          if(args.scope) {
-            scope = args.scope;
-          }
-
-          var permissions = utils.ad.collections.stringArrayToStringSet(scope);
+          var permissions = utils.ad.collections.stringArrayToStringSet(["public_profile", "email"]);
           var activity = appModule.android.foregroundActivity;
           fbLoginManager.logInWithReadPermissions(activity, permissions);
 
@@ -530,7 +524,7 @@ firebase.login = function (arg) {
           _resolve();
         } else {
           // if this is called before application.start() wait for the event to fire
-          appModule.on(appModule.launchEvent, _resolve);
+          appModule.on(appModule.launchEvent, _resolve);      
         }
       } catch (ex) {
         console.log("Error in firebase.login: " + ex);
