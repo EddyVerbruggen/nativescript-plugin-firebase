@@ -56,7 +56,7 @@ You can either pass in a full local path to a file, or (as a convenience) use th
       },
       function (error) {
         console.log("File upload error: " + error);
-      };
+      }
   );
 ```
 
@@ -92,7 +92,7 @@ In this example we'll download the previously uploaded file to a certain path on
       },
       function (error) {
         console.log("File download error: " + error);
-      };
+      }
   );
 ```
 
@@ -113,6 +113,25 @@ In this example we'll determine the remote URL of the previously uploaded file.
       },
       function (error) {
         console.log("Error: " + error);
-      };
+      }
+  );
+```
+
+### removeFile
+You can pass in remote file path to remove it.
+
+```js
+  firebase.removeFile({
+    // optional, can also be passed during init() as 'storageBucket' param so we can cache it
+    bucket: 'gs://n-plugin-test.appspot.com',
+    // the full path of an existing file in your Firebase storage
+    remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
+  }).then(
+      function () 
+        console.log("File removed.");
+      },
+      function (error) {
+        console.log("File removal Error: " + error);
+      }
   );
 ```
