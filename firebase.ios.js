@@ -548,8 +548,8 @@ firebase.login = function (arg) {
         //fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
         var scope = ["public_profile", "email"];
 
-        if(args.scope) {
-          scope = args.scope;
+        if(arg.scope) {
+          scope = arg.scope;
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
