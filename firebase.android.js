@@ -511,8 +511,8 @@ firebase.login = function (arg) {
 
           var scope = ["public_profile", "email"];
 
-          if(args.scope) {
-            scope = args.scope;
+          if(arg.scope) {
+            scope = arg.scope;
           }
 
           var permissions = utils.ad.collections.stringArrayToStringSet(scope);
