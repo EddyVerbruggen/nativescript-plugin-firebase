@@ -1,5 +1,20 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.4.4 (2016, July 17)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.3...3.4.4)
+
+### SDK versions
+If version numbers changed clean your platform folders to avoid build errors.
+
+- iOS: 3.3.x
+- Android: 9.2.0
+
+### New
+- [#75](#75) [Nathan Walker](https://github.com/NathanWalker) added the ability to remove files from Firebase Storage, thanks Nathan!
+
+
+
 ## 3.4.3 (2016, July 16)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.2...3.4.3)

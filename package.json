@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "3.4.3",
+  "version": "3.4.4",
   "description" : "Fire. Base. Firebase!",
   "main" : "firebase.js",
   "nativescript": {
