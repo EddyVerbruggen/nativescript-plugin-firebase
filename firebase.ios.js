@@ -14,7 +14,7 @@ firebase._addObserver = function (eventName, callback) {
 
 firebase.addAppDelegateMethods = function(appDelegate) {
 
-  // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things 
+  // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
     // Firebase Facebook authentication
     if (typeof(FBSDKApplicationDelegate) !== "undefined") {
@@ -33,7 +33,7 @@ firebase.addAppDelegateMethods = function(appDelegate) {
   };
 
   // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
-  if (typeof(FIRMessaging) !== "undefined") { 
+  if (typeof(FIRMessaging) !== "undefined") {
      appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (application, userInfo, completionHandler) {
       completionHandler(UIBackgroundFetchResultNewData);
       var userInfoJSON = firebase.toJsObject(userInfo);
@@ -48,7 +48,7 @@ firebase.addAppDelegateMethods = function(appDelegate) {
         }
       } else {
         userInfoJSON.foreground = false;
-        firebase._pendingNotifications.push(userInfoJSON); 
+        firebase._pendingNotifications.push(userInfoJSON);
       }
     };
   }
@@ -158,7 +158,7 @@ firebase._processPendingNotifications = function() {
         __.prototype = b.prototype;
         d.prototype = new __();
     };
-    
+
     var appDelegate = (function (_super) {
         __extends(appDelegate, _super);
         function appDelegate() {
@@ -230,7 +230,7 @@ firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (firebase.instance !== null) {
-        // if we would run 'FIRApp.configure()' again the app would crash, so: 
+        // if we would run 'FIRApp.configure()' again the app would crash, so:
         reject("You already ran init");
         return;
       }
@@ -242,12 +242,12 @@ firebase.init = function (arg) {
       if (arg.persist) {
         FIRDatabase.database().persistenceEnabled = true;
       }
-      
+
       firebase.instance = FIRDatabase.database().reference();
 
       if (arg.iOSEmulatorFlush) {
         try {
-          // Attempt to sign out before initializing, useful in case previous 
+          // Attempt to sign out before initializing, useful in case previous
           // project token is cached which leads to following type of error:
           // "[FirebaseDatabase] Authentication failed: invalid_token ..."
           console.log('Attempting to sign out of Firebase before init');
@@ -286,11 +286,11 @@ firebase.init = function (arg) {
       // Firebase notifications (FCM)
       if (typeof(FIRMessaging) !== "undefined") {
         firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
-        
+
         if (arg.onMessageReceivedCallback !== undefined) {
           firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
         }
-        
+
         if (arg.onPushTokenReceivedCallback !== undefined) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
@@ -303,7 +303,7 @@ firebase.init = function (arg) {
           return;
         }
         firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
-      } 
+      }
 
       resolve(firebase.instance);
     } catch (ex) {
@@ -370,7 +370,7 @@ firebase.getRemoteConfig = function (arg) {
 
         if (remoteConfigFetchStatus == FIRRemoteConfigFetchStatusSuccess ||
             remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled) {
-          
+
           var activated = firebaseRemoteConfig.activateFetched();
 
           var result = {
@@ -513,7 +513,7 @@ firebase.login = function (arg) {
           reject("Facebook SDK not installed - see Podfile");
           return;
         }
-        
+
         var onFacebookCompletion = function(fbSDKLoginManagerLoginResult, error) {
           if (error) {
             console.log("Facebook login error " + error);
@@ -547,8 +547,14 @@ firebase.login = function (arg) {
         var fbSDKLoginManager = FBSDKLoginManager.new();
         //fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
 
+        var scope = ["public_profile", "email"];
+
+        if(args.scope) {
+          scope = args.scope;
+        }
+
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-            ["public_profile", "email"], // TODO allow user to pass this in
+            scope, // TODO allow user to pass this in
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
 
@@ -782,7 +788,7 @@ firebase.query = function (updateCallback, path, options) {
       }
 
       var query;
-      
+
       // orderBy
       if (options.orderBy.type === firebase.QueryOrderByType.KEY) {
         query = where.queryOrderedByKey();
