@@ -307,7 +307,7 @@ declare module "nativescript-plugin-firebase" {
         remoteFullPath: string;
     }
 
-    export interface RemoveFileOptions {
+    export interface DeleteFileOptions {
         /**
          * If you didn't pass 'storageBucket' during init() you will need to do it now.
          * Takes the form of 'gs://n-plugin-test.appspot.com' and can be found in the Firebase console.
@@ -365,7 +365,7 @@ declare module "nativescript-plugin-firebase" {
     export function uploadFile(options: UploadFileOptions): Promise<UploadFileResult>;
     export function downloadFile(options: DownloadFileOptions): Promise<any>;
     export function getDownloadUrl(options: GetDownloadUrlOptions): Promise<string>;
-    export function removeFile(options: RemoveFileOptions): Promise<any>;
+    export function deleteFile(options: DeleteFileOptions): Promise<any>;
 
     // crash logging
     // export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;

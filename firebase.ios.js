@@ -138,7 +138,7 @@ firebase._processPendingNotifications = function() {
       // Firebase notifications (FCM)
       if (firebase._messagingConnected !== null) {
         FIRMessaging.messaging().connectWithCompletion(function(error) {
-          if (error !== null) {
+          if (error) {
             console.log("Firebase was unable to connect to FCM. Error: " + error);
           } else {
             firebase._messagingConnected = true;
@@ -326,7 +326,7 @@ firebase._onTokenRefreshNotification = function (notification) {
   }
 
   FIRMessaging.messaging().connectWithCompletion(function(error) {
-    if (error !== null) {
+    if (error) {
       // this is not fatal at all but still would like to know how often this happens
       console.log("Firebase was unable to connect to FCM. Error: " + error);
     } else {
@@ -887,7 +887,7 @@ firebase.uploadFile = function (arg) {
     try {
 
       var onCompletion = function(metadata, error) {
-        if (error !== null) {
+        if (error) {
           reject(error.localizedDescription);
         } else {
           resolve({
@@ -947,7 +947,7 @@ firebase.downloadFile = function (arg) {
     try {
 
       var onCompletion = function(url, error) {
-        if (error !== null) {
+        if (error) {
           reject(error.localizedDescription);
         } else {
           resolve(url.absoluteURL);
@@ -996,7 +996,7 @@ firebase.getDownloadUrl = function (arg) {
     try {
 
       var onCompletion = function(url, error) {
-        if (error !== null) {
+        if (error) {
           reject(error.localizedDescription);
         } else {
           resolve(url.absoluteURL);
@@ -1020,12 +1020,12 @@ firebase.getDownloadUrl = function (arg) {
   });
 };
 
-firebase.removeFile = function (arg) {
+firebase.deleteFile = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
 
-      var onCompletion = function(metadata, error) {
-        if (error !== null) {
+      var onCompletion = function(error) {
+        if (error) {
           reject(error.localizedDescription);
         } else {
           resolve();
@@ -1043,7 +1043,7 @@ firebase.removeFile = function (arg) {
       fIRStorageFileRef.deleteWithCompletion(onCompletion);
 
     } catch (ex) {
-      console.log("Error in firebase.removeFile: " + ex);
+      console.log("Error in firebase.deleteFile: " + ex);
       reject(ex);
     }
   });
