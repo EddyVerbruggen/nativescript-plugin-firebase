@@ -553,7 +553,7 @@ firebase.login = function (arg) {
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-            scope, // TODO allow user to pass this in
+            scope,
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
 
