@@ -187,7 +187,8 @@ Then add the following lines to your code and check for setup instructions for y
 
 ```js
   firebase.login({
-    type: firebase.LoginType.FACEBOOK
+    type: firebase.LoginType.FACEBOOK,
+    scope: ['public_profile', 'email'] // optional: defaults
   }).then(
       function (result) {
         JSON.stringify(result);
@@ -197,6 +198,8 @@ Then add the following lines to your code and check for setup instructions for y
       }
   )
 ```
+
+For a complete list of the available scope permissions, visit Facebook's documentation: https://developers.facebook.com/docs/facebook-login/permissions. 
 
 #### iOS
  If you want to use it for iOS open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the Facebook line (you can't miss it).
