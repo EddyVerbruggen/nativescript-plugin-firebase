@@ -1,15 +1,18 @@
 # NativeScript Firebase plugin
 
-<img src="docs/images/firebase.png" width="154px" height="43px" alt="Firebase"/><br/>
+<img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
-### Use when
-* you need to store JSON data in the cloud (but don't want to loose data when the device is offline),
-* you want to sync that data to other devices and platforms,
-* you want to optionally protect that data by having users log in,
-* you want to update clients at the moment the data changes (think chat and multiplayer games),
-* you want an easy way to remotely configure app features,
-* you want push notifications.
+## Features
+For readability the supported features have been moved to their own README's:
+
+* Setup and troubleshooting (continue reading below)
+* [Realtime Database](docs/DATABASE.md)
+* [Authentication](docs/AUTHENTICATION.md)
+* [Remote Config](docs/REMOTECONFIG.md)
+* [Cloud Messaging](docs/MESSAGING.md)
+* [Storage](docs/STORAGE.md)
+* [Crash Reporting](docs/CRASHREPORTING.md)
 
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
@@ -111,15 +114,6 @@ firebase.init({
   }
 );
 ```
-
-## Features
-For readability the supported features have been moved to their own README's:
-
-* [Realtime Database](docs/DATABASE.md)
-* [Authentication](docs/AUTHENTICATION.md)
-* [Remote Config](docs/REMOTECONFIG.md)
-* [Cloud Messaging](docs/MESSAGING.md)
-
 
 ## Known issues on iOS
 On the simulator you may see this message if you have more than one app with the Firebase SDK ever installed:

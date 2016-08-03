@@ -1,7 +1,11 @@
 var appModule = require("application");
+var utils = require("utils/utils");
+var fs = require("file-system");
 var firebase = require("./firebase-common");
 
 firebase._launchNotification = null;
+
+var fbCallbackManager =  null;
 
 (function() {
   if (typeof(com.google.firebase.messaging) === "undefined") {
@@ -142,7 +146,6 @@ firebase.init = function (arg) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
             var user = fbAuth.getCurrentUser();
-            console.log("--------- auth change (1), user: " + user);
             arg.onAuthStateChanged({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -157,7 +160,6 @@ firebase.init = function (arg) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
             var user = fbAuth.getCurrentUser();
-            console.log("--------- auth change (2), user: " + user);
             firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
               user: toLoginResult(user)
@@ -175,6 +177,24 @@ firebase.init = function (arg) {
         if (arg.onPushTokenReceivedCallback !== undefined) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
+      }
+
+      // Firebase storage
+      if (arg.storageBucket) {
+        if (typeof(com.google.firebase.storage) === "undefined") {
+          reject("Uncomment firebase-storage in the plugin's include.gradle first");
+          return;
+        }
+        firebase.storage = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.storageBucket);
+      }
+
+      // Facebook
+      if (typeof(com.facebook) !== "undefined") {
+        com.facebook.FacebookSdk.sdkInitialize(appModule.android.context);
+        fbCallbackManager = com.facebook.CallbackManager.Factory.create();
+        appModule.android.on("activityResult",function(eventData){
+          fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
+        });
       }
 
       resolve(firebase.instance);
@@ -198,7 +218,6 @@ firebase.addOnMessageReceivedCallback = function (callback) {
       org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
           new org.nativescript.plugins.firebase.FirebasePluginListener({
             success: function(notification) {
-              console.log("---------- received notification: " + notification);
               callback(JSON.parse(notification));
             }
           })
@@ -254,7 +273,7 @@ firebase.getRemoteConfigDefaults = function (properties) {
 };
 
 firebase._isGooglePlayServicesAvailable = function () {
-  var context = appModule.android.foregroundActivity;
+  var context = appModule.android.context;
   var playServiceStatusSuccess = com.google.android.gms.common.ConnectionResult.SUCCESS; // 0
   var playServicesStatus = com.google.android.gms.common.GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
   return playServicesStatus === playServiceStatusSuccess;
@@ -262,17 +281,18 @@ firebase._isGooglePlayServicesAvailable = function () {
 
 firebase.getRemoteConfig = function (arg) {
   return new Promise(function (resolve, reject) {
-    try {
-      if (typeof(com.google.firebase.remoteconfig) === "undefined") {
-        reject("Uncomment firebase-config in the plugin's include.gradle first");
-        return;
-      }
 
-      if (arg.properties === undefined) {
-        reject("Argument 'properties' is missing");
-        return;
-      }
+    if (typeof(com.google.firebase.remoteconfig) === "undefined") {
+      reject("Uncomment firebase-config in the plugin's include.gradle first");
+      return;
+    }
 
+    if (arg.properties === undefined) {
+      reject("Argument 'properties' is missing");
+      return;
+    }
+
+    function _resolve() {
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
@@ -287,7 +307,7 @@ firebase.getRemoteConfig = function (arg) {
         .build();
       firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
 
-      var defaults = firebase.getRemoteConfigDefaults(arg.properties);      
+      var defaults = firebase.getRemoteConfigDefaults(arg.properties);
       firebaseRemoteConfig.setDefaults(firebase.toHashMap(defaults));
 
       var returnMethod = function (throttled) {
@@ -335,6 +355,15 @@ firebase.getRemoteConfig = function (arg) {
       firebaseRemoteConfig.fetch(expirationDuration)
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
+    }
+
+    try {
+      if (appModule.android.foregroundActivity) {
+        _resolve();
+      } else {
+        // if this is called before application.start() wait for the event to fire
+        appModule.on(appModule.launchEvent, _resolve);
+      }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);
       reject(ex);
@@ -358,7 +387,7 @@ firebase.getCurrentUser = function (arg) {
           uid: user.getUid(),
           name: user.getDisplayName(),
           email: user.getEmail(),
-          profileImageURL: user.getPhotoUrl()
+          profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
         });
       } else {
         reject();
@@ -399,94 +428,114 @@ function toLoginResult(user) {
     name: user.getDisplayName(),
     email: user.getEmail(),
     // expiresAtUnixEpochSeconds: authData.getExpires(),
-    profileImageURL: user.getPhotoUrl()
+     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
     // token: user.getToken() // can be used to auth with a backend server
   };
 }
 
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
-    try {
-      if (!firebase._isGooglePlayServicesAvailable()) {
-        reject("Google Play services is required for this feature, but not available on this device");
-        return;
-      }
 
-      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
-        onComplete: function (task) {
-          // alert("login task: " + task.isSuccessful());
-          if (!task.isSuccessful()) {
-            reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-          } else {
-            var user = task.getResult().getUser();
-            resolve(toLoginResult(user));
-          }
-        }
-      });
-
-      if (arg.type === firebase.LoginType.ANONYMOUS) {
-        // var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-        // onFailure: function (throwable) {
-        // reject("Anonymous login failed with message: " + throwable.getMessage());
-        // }
-        // });
-        // firebaseAuth.signInAnonymously().addOnFailureListener(onFailureListener);
-        firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
-      } else if (arg.type === firebase.LoginType.PASSWORD) {
-        if (!arg.email || !arg.password) {
-          reject("Auth type emailandpassword requires an email and password argument");
-        } else {
-          firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
-        }
-      } else if (arg.type === firebase.LoginType.CUSTOM) {
-        if (!arg.token && !arg.tokenProviderFn) {
-          reject("Auth type custom requires a token or a tokenProviderFn argument");
-        } else if (arg.token) {
-          firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
-        } else if (arg.tokenProviderFn) {
-          arg.tokenProviderFn()
-              .then(
-                  function (token) {
-                    firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
-                  },
-                  function (error) {
-                    reject(error);
-                  }
-              );
-        }
-
-      } else if (arg.type === firebase.LoginType.FACEBOOK) {
-        if (typeof(com.facebook) === "undefined") {
-          reject("Facebook SDK not installed - see gradle config");
+      function _resolve() {
+        if (!firebase._isGooglePlayServicesAvailable()) {
+          reject("Google Play services is required for this feature, but not available on this device");
           return;
         }
 
-        // TODO see https://firebase.google.com/docs/auth/android/facebook-login#authenticate_with_firebase
-        var fbLoginManager = com.facebook.login.LoginManager.getInstance();
-        var callbackManager = com.facebook.CallbackManager.Factory.create();
+        var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+        var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: function (task) {
+            if (!task.isSuccessful()) {
+              reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            } else {
+              var user = task.getResult().getUser();
+              resolve(toLoginResult(user));
+            }
+          }
+        });
 
-        fbLoginManager.registerCallback(
-            callbackManager,
+        if (arg.type === firebase.LoginType.ANONYMOUS) {
+          // var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+          // onFailure: function (throwable) {
+          // reject("Anonymous login failed with message: " + throwable.getMessage());
+          // }
+          // });
+          // firebaseAuth.signInAnonymously().addOnFailureListener(onFailureListener);
+          firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
+        } else if (arg.type === firebase.LoginType.PASSWORD) {
+          if (!arg.email || !arg.password) {
+            reject("Auth type emailandpassword requires an email and password argument");
+          } else {
+            firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+          }
+        } else if (arg.type === firebase.LoginType.CUSTOM) {
+          if (!arg.token && !arg.tokenProviderFn) {
+            reject("Auth type custom requires a token or a tokenProviderFn argument");
+          } else if (arg.token) {
+            firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+          } else if (arg.tokenProviderFn) {
+            arg.tokenProviderFn()
+                .then(
+                    function (token) {
+                      firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+                    },
+                    function (error) {
+                      reject(error);
+                    }
+                );
+          }
+
+        } else if (arg.type === firebase.LoginType.FACEBOOK) {
+          if (typeof(com.facebook) === "undefined") {
+            reject("Facebook SDK not installed - see gradle config");
+            return;
+          }
+
+          var fbLoginManager = com.facebook.login.LoginManager.getInstance();
+          fbLoginManager.registerCallback(
+            fbCallbackManager,
             new com.facebook.FacebookCallback({
               onSuccess: function (loginResult) {
-                console.log("------------- fb callback");
-                console.log("------------- fb loginResult " + loginResult);
+                var token = loginResult.getAccessToken().getToken();
+                var authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(token);
+                firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+              },
+              onCancel: function() {
+                reject("Facebook Login canceled");
+              },
+              onError: function(ex) {
+                reject("Error while trying to login with Fb "+ex);
               }
             })
-        );
+          );
 
-        var permissions = ["public_profile", "email"];
-        var activity = appModule.android.foregroundActivity;
-        fbLoginManager.logInWithReadPermissions(foregroundActivity, permissions);
+          var scope = ["public_profile", "email"];
 
-      } else {
-        reject ("Unsupported auth type: " + arg.type);
+          if(arg.scope) {
+            scope = arg.scope;
+          }
+
+          var permissions = utils.ad.collections.stringArrayToStringSet(scope);
+          var activity = appModule.android.foregroundActivity;
+          fbLoginManager.logInWithReadPermissions(activity, permissions);
+
+        } else {
+          reject ("Unsupported auth type: " + arg.type);
+        }
       }
-    } catch (ex) {
-      console.log("Error in firebase.login: " + ex);
-      reject(ex);
-    }
+
+
+      try {
+        if (appModule.android.foregroundActivity) {
+          _resolve();
+        } else {
+          // if this is called before application.start() wait for the event to fire
+          appModule.on(appModule.launchEvent, _resolve);
+        }
+      } catch (ex) {
+        console.log("Error in firebase.login: " + ex);
+        reject(ex);
+      }
   });
 };
 
@@ -603,6 +652,19 @@ firebase.deleteUser = function (arg) {
       user.delete().addOnCompleteListener(onCompleteListener);
     } catch (ex) {
       console.log("Error in firebase.deleteUser: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.keepInSync = function (path, switchOn) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var where = firebase.instance.child(path);
+      where.keepSynced(switchOn);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.keepInSync: " + ex);
       reject(ex);
     }
   });
@@ -803,5 +865,251 @@ firebase.remove = function (path) {
     }
   });
 };
+
+function getStorageRef(reject, arg) {
+  if (typeof(com.google.firebase.storage) === "undefined") {
+    reject("Uncomment firebase-storage in the plugin's include.gradle first");
+    return;
+  }
+
+  if (!arg.remoteFullPath) {
+    reject("remoteFullPath is mandatory");
+    return;
+  }
+
+  var storageRef = firebase.storage;
+
+  if (arg.bucket) {
+    storageRef = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
+  }
+
+  return storageRef;
+}
+
+firebase.uploadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function(uploadTaskSnapshot) {
+          var metadata = uploadTaskSnapshot.getMetadata();
+          resolve({
+            name: metadata.getName(),
+            contentType: metadata.getContentType(),
+            created: new Date(metadata.getCreationTimeMillis()),
+            updated: new Date(metadata.getUpdatedTimeMillis()),
+            bucket: metadata.getBucket(),
+            size: metadata.getSizeBytes(),
+            url: metadata.getDownloadUrl().toString(),
+          });
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          console.log("--- upload failed");
+          reject("Upload failed. " + exception);
+        }
+      });
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+
+        var error;
+        var contents = arg.localFile.readSync(function(e) { error = e; });
+
+        if (error) {
+          reject("Error reading file " + arg.localFile + ": " + error);
+          return;
+        }
+
+        var uploadDataTask = storageReference.putBytes(contents)
+            .addOnFailureListener(onFailureListener)
+            .addOnSuccessListener(onSuccessListener);
+
+      } else if (arg.localFullPath) {
+
+        if (!fs.File.exists(arg.localFullPath)) {
+          reject("File does not exist: " + arg.localFullPath);
+          return;
+        }
+
+        // TODO there's prolly a more efficient way to get the file obj.. .android perhaps?
+        var localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFullPath));
+        var uploadFileTask = storageReference.putFile(localFileUrl)
+            .addOnFailureListener(onFailureListener)
+            .addOnSuccessListener(onSuccessListener);
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+    } catch (ex) {
+      console.log("Error in firebase.uploadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.downloadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function(downloadTaskSnapshot) {
+          resolve();
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          reject("Download failed. " + exception);
+        }
+      });
+
+      var localFilePath;
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+        localFilePath = arg.localFile.path;
+
+      } else if (arg.localFullPath) {
+        localFilePath = arg.localFullPath;
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+      var file = new java.io.File(localFilePath);
+
+      storageReference.getFile(file)
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.downloadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getDownloadUrl = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function(uri) {
+          resolve(uri);
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          reject(exception.getMessage());
+        }
+      });
+
+      storageReference.getDownloadUrl()
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.getDownloadUrl: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.deleteFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var storageReference = storageRef.child(arg.remoteFullPath);
+
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function() {
+          resolve();
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          reject(exception.getMessage());
+        }
+      });
+
+      storageReference.delete()
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.deleteFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+/*
+firebase.sendCrashLog = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(com.google.firebase.crash) === "undefined") {
+        reject("Make sure firebase-crash is in the plugin's include.gradle");
+        return;
+      }
+
+      if (!arg.log) {
+        reject("The mandatory 'log' argument is missing");
+        return;
+      }
+
+      com.google.firebase.crash.FirebaseCrash.log(arg.log);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.sendCrashLog: " + ex);
+      reject(ex);
+    }
+  });
+};
+*/
 
 module.exports = firebase;
