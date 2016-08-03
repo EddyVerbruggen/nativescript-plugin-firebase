@@ -1031,7 +1031,7 @@ firebase.getDownloadUrl = function (arg) {
 
       var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: function(uri) {
-          resolve(uri);
+          resolve(uri.toString());
         }
       });
 
