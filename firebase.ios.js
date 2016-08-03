@@ -1,4 +1,5 @@
 var firebase = require("./firebase-common");
+var fs = require("file-system");
 var application = require("application");
 var types = require("utils/types");
 var frame = require("ui/frame");
@@ -13,7 +14,7 @@ firebase._addObserver = function (eventName, callback) {
 
 firebase.addAppDelegateMethods = function(appDelegate) {
 
-  // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things 
+  // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
     // Firebase Facebook authentication
     if (typeof(FBSDKApplicationDelegate) !== "undefined") {
@@ -32,7 +33,7 @@ firebase.addAppDelegateMethods = function(appDelegate) {
   };
 
   // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
-  if (typeof(FIRMessaging) !== "undefined") { 
+  if (typeof(FIRMessaging) !== "undefined") {
      appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (application, userInfo, completionHandler) {
       completionHandler(UIBackgroundFetchResultNewData);
       var userInfoJSON = firebase.toJsObject(userInfo);
@@ -47,7 +48,7 @@ firebase.addAppDelegateMethods = function(appDelegate) {
         }
       } else {
         userInfoJSON.foreground = false;
-        firebase._pendingNotifications.push(userInfoJSON); 
+        firebase._pendingNotifications.push(userInfoJSON);
       }
     };
   }
@@ -137,7 +138,7 @@ firebase._processPendingNotifications = function() {
       // Firebase notifications (FCM)
       if (firebase._messagingConnected !== null) {
         FIRMessaging.messaging().connectWithCompletion(function(error) {
-          if (error !== null) {
+          if (error) {
             console.log("Firebase was unable to connect to FCM. Error: " + error);
           } else {
             firebase._messagingConnected = true;
@@ -157,7 +158,7 @@ firebase._processPendingNotifications = function() {
         __.prototype = b.prototype;
         d.prototype = new __();
     };
-    
+
     var appDelegate = (function (_super) {
         __extends(appDelegate, _super);
         function appDelegate() {
@@ -229,7 +230,7 @@ firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (firebase.instance !== null) {
-        // if we would run 'FIRApp.configure()' again the app would crash, so: 
+        // if we would run 'FIRApp.configure()' again the app would crash, so:
         reject("You already ran init");
         return;
       }
@@ -241,12 +242,12 @@ firebase.init = function (arg) {
       if (arg.persist) {
         FIRDatabase.database().persistenceEnabled = true;
       }
-      
+
       firebase.instance = FIRDatabase.database().reference();
 
       if (arg.iOSEmulatorFlush) {
         try {
-          // Attempt to sign out before initializing, useful in case previous 
+          // Attempt to sign out before initializing, useful in case previous
           // project token is cached which leads to following type of error:
           // "[FirebaseDatabase] Authentication failed: invalid_token ..."
           console.log('Attempting to sign out of Firebase before init');
@@ -285,14 +286,23 @@ firebase.init = function (arg) {
       // Firebase notifications (FCM)
       if (typeof(FIRMessaging) !== "undefined") {
         firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
-        
+
         if (arg.onMessageReceivedCallback !== undefined) {
           firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
         }
-        
+
         if (arg.onPushTokenReceivedCallback !== undefined) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
+      }
+
+      // Firebase storage
+      if (arg.storageBucket) {
+        if (typeof(FIRStorage) === "undefined") {
+          reject("Uncomment Storage in the plugin's Podfile first");
+          return;
+        }
+        firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
       }
 
       resolve(firebase.instance);
@@ -316,7 +326,7 @@ firebase._onTokenRefreshNotification = function (notification) {
   }
 
   FIRMessaging.messaging().connectWithCompletion(function(error) {
-    if (error !== null) {
+    if (error) {
       // this is not fatal at all but still would like to know how often this happens
       console.log("Firebase was unable to connect to FCM. Error: " + error);
     } else {
@@ -360,7 +370,7 @@ firebase.getRemoteConfig = function (arg) {
 
         if (remoteConfigFetchStatus == FIRRemoteConfigFetchStatusSuccess ||
             remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled) {
-          
+
           var activated = firebaseRemoteConfig.activateFetched();
 
           var result = {
@@ -452,6 +462,7 @@ function toLoginResult(user) {
 
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
+
     try {
       var onCompletion = function(user, error) {
         if (error) {
@@ -502,7 +513,7 @@ firebase.login = function (arg) {
           reject("Facebook SDK not installed - see Podfile");
           return;
         }
-        
+
         var onFacebookCompletion = function(fbSDKLoginManagerLoginResult, error) {
           if (error) {
             console.log("Facebook login error " + error);
@@ -535,9 +546,14 @@ firebase.login = function (arg) {
         // this requires you to set the appid and customurlscheme in app_resources/.plist
         var fbSDKLoginManager = FBSDKLoginManager.new();
         //fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
+        var scope = ["public_profile", "email"];
+
+        if(arg.scope) {
+          scope = arg.scope;
+        }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-            ["public_profile", "email"], // TODO allow user to pass this in
+            scope,
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
 
@@ -668,6 +684,19 @@ firebase._addObservers = function(to, updateCallback) {
   });
 };
 
+firebase.keepInSync = function (path, switchOn) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var where = firebase.instance.childByAppendingPath(path);
+      where.keepSynced(switchOn);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.keepInSync: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
@@ -758,7 +787,7 @@ firebase.query = function (updateCallback, path, options) {
       }
 
       var query;
-      
+
       // orderBy
       if (options.orderBy.type === firebase.QueryOrderByType.KEY) {
         query = where.queryOrderedByKey();
@@ -837,5 +866,222 @@ firebase.remove = function (path) {
     }
   });
 };
+
+function getStorageRef(reject, arg) {
+  if (typeof(FIRStorage) === "undefined") {
+    reject("Uncomment Storage in the plugin's Podfile first");
+    return;
+  }
+
+  if (!arg.remoteFullPath) {
+    reject("remoteFullPath is mandatory");
+    return;
+  }
+
+  var storageRef = firebase.storage;
+
+  if (arg.bucket) {
+    storageRef = FIRStorage.storage().referenceForURL(arg.bucket);
+  }
+
+  return storageRef;
+}
+
+firebase.uploadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(metadata, error) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve({
+            name: metadata.name,
+            url: metadata.downloadURL.absoluteURL,
+            contentType: metadata.contentType,
+            created: metadata.timeCreated,
+            updated: metadata.updated,
+            bucket: metadata.bucket,
+            size: metadata.size
+          });
+        }
+      };
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var fIRStorageReference = storageRef.child(arg.remoteFullPath);
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+
+        var error;
+        var contents = arg.localFile.readSync(function(e) { error = e; });
+
+        if (error) {
+          alert("Error reading file " + arg.localFile + ": " + error);
+          return;
+        }
+
+        var fIRStorageUploadDataTask = fIRStorageReference.putDataMetadataCompletion(contents, null, onCompletion);
+
+      } else if (arg.localFullPath) {
+        var localFileUrl = NSURL.fileURLWithPath(arg.localFullPath);
+        var fIRStorageUploadFileTask = fIRStorageReference.putFileMetadataCompletion(localFileUrl, null, onCompletion);
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+    } catch (ex) {
+      console.log("Error in firebase.uploadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.downloadFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(url, error) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(url.absoluteURL);
+        }
+      };
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var fIRStorageReference = storageRef.child(arg.remoteFullPath);
+
+      var localFilePath;
+
+      if (arg.localFile) {
+        if (typeof(arg.localFile) != "object") {
+          reject("localFile argument must be a File object; use file-system module to create one");
+          return;
+        }
+        localFilePath = arg.localFile.path;
+
+      } else if (arg.localFullPath) {
+        localFilePath = arg.localFullPath;
+
+      } else {
+        reject("One of localFile or localFullPath is required");
+        return;
+      }
+
+      // Create local filesystem URL
+      var localFileUrl = NSURL.fileURLWithPath(localFilePath);
+
+      var fIRStorageDownloadTask = fIRStorageReference.writeToFileCompletion(localFileUrl, onCompletion);
+
+    } catch (ex) {
+      console.log("Error in firebase.downloadFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getDownloadUrl = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(url, error) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(url.absoluteURL);
+        }
+      };
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var fIRStorageReference = storageRef.child(arg.remoteFullPath);
+
+      fIRStorageReference.downloadURLWithCompletion(onCompletion);
+
+    } catch (ex) {
+      console.log("Error in firebase.getDownloadUrl: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.deleteFile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      var onCompletion = function(error) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      };
+
+      var storageRef = getStorageRef(reject, arg);
+
+      if (!storageRef) {
+        return;
+      }
+
+      var fIRStorageFileRef = storageRef.child(arg.remoteFullPath);
+
+      fIRStorageFileRef.deleteWithCompletion(onCompletion);
+
+    } catch (ex) {
+      console.log("Error in firebase.deleteFile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+/* disabled since FIRCrashLog is always undefined
+firebase.sendCrashLog = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(FIRCrashLog) === "undefined") {
+        reject("Make sure 'Firebase/Crash' is in the plugin's Podfile");
+        return;
+      }
+
+      if (!arg.log) {
+        reject("The mandatory 'log' argument is missing");
+        return;
+      }
+
+      if (showInConsole) {
+        FIRCrashNSLog(arg.log);
+      } else {
+        FIRCrashLog(arg.log);
+      }
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.sendCrashLog: " + ex);
+      reject(ex);
+    }
+  });
+};
+*/
 
 module.exports = firebase;

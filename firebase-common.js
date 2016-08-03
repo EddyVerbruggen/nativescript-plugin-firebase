@@ -26,6 +26,7 @@ firebase.QueryRangeType = {
 };
 
 firebase.instance = null;
+firebase.storage = null;
 firebase.firebaseRemoteConfig = null;
 firebase.authStateListeners = [];
 firebase._receivedNotificationCallback = null;
@@ -54,7 +55,7 @@ firebase.notifyAuthStateListeners = function(data) {
   firebase.authStateListeners.forEach(function (listener) {
     try {
       if (listener.thisArg) {
-        listener.onAuthStateChanged.apply(thisArg, data);
+        listener.onAuthStateChanged.call(listener.thisArg, data);
       } else {
         listener.onAuthStateChanged(data);
       }
