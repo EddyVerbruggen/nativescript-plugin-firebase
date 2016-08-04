@@ -76,7 +76,10 @@ firebase.toJsObject = function(javaObj) {
   var node;
   switch (javaObj.getClass().getName()) {
     case 'java.lang.Boolean':
-      return Boolean(String(javaObj));
+      var str = String(javaObj);
+      return Boolean(!!(str=="True" || str=="true"));
+    case 'java.lang.String':
+      return String(javaObj);
     case 'java.lang.Long':
     case 'java.lang.Double':
       return Number(String(javaObj));
@@ -95,17 +98,8 @@ firebase.toJsObject = function(javaObj) {
           case 'java.util.HashMap$HashMapEntry':
             node[item.getKey()] = firebase.toJsObject(item.getValue());
             break;
-          case 'java.lang.String':
-            node[item.getKey()] = String(item.getValue());
-            break;
-          case 'java.lang.Boolean':
-            node[item.getKey()] = Boolean(String(item.getValue()));
-            break;
-          case 'java.lang.Long':
-          case 'java.lang.Double':
-            node[item.getKey()] = Number(String(item.getValue()));
-            break;
           default:
+            //we should never reach this line?!
             node[item.getKey()] = item.getValue();
         }
       }
