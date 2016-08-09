@@ -116,7 +116,8 @@ firebase.authStateListener = null;
 
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
-    try {
+
+    function _resolve() {
       if (firebase.instance !== null) {
         reject("You already ran init");
         return;
@@ -191,6 +192,15 @@ firebase.init = function (arg) {
       }
 
       resolve(firebase.instance);
+    }
+
+    try {
+      if (appModule.android.foregroundActivity) {
+        _resolve();
+      } else {
+        // if this is called before application.start() wait for the event to fire
+        appModule.on(appModule.launchEvent, _resolve);
+      }
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
@@ -420,65 +430,64 @@ function toLoginResult(user) {
 
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
+    try {
+      if (!firebase._isGooglePlayServicesAvailable()) {
+        reject("Google Play services is required for this feature, but not available on this device");
+        return;
+      }
 
-      function _resolve() {
-        if (!firebase._isGooglePlayServicesAvailable()) {
-          reject("Google Play services is required for this feature, but not available on this device");
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          if (firebase._rememberedContext !== null) {
+            appModule.android.currentContext = firebase._rememberedContext;
+            firebase._rememberedContext = null;
+          }
+          if (!task.isSuccessful()) {
+            console.log("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            var user = task.getResult().getUser();
+            resolve(toLoginResult(user));
+          }
+        }
+      });
+
+      if (arg.type === firebase.LoginType.ANONYMOUS) {
+        firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
+
+      } else if (arg.type === firebase.LoginType.PASSWORD) {
+        if (!arg.email || !arg.password) {
+          reject("Auth type emailandpassword requires an email and password argument");
+        } else {
+          firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+        }
+
+      } else if (arg.type === firebase.LoginType.CUSTOM) {
+        if (!arg.token && !arg.tokenProviderFn) {
+          reject("Auth type custom requires a token or a tokenProviderFn argument");
+        } else if (arg.token) {
+          firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+        } else if (arg.tokenProviderFn) {
+          arg.tokenProviderFn()
+              .then(
+                  function (token) {
+                    firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+                  },
+                  function (error) {
+                    reject(error);
+                  }
+              );
+        }
+
+      } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        if (typeof(com.facebook) === "undefined") {
+          reject("Facebook SDK not installed - see gradle config");
           return;
         }
 
-        var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-        var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
-          onComplete: function (task) {
-            if (firebase._rememberedContext !== null) {
-              appModule.android.currentContext = firebase._rememberedContext;
-              firebase._rememberedContext = null;
-            }
-            if (!task.isSuccessful()) {
-              console.log("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-              reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-            } else {
-              var user = task.getResult().getUser();
-              resolve(toLoginResult(user));
-            }
-          }
-        });
-
-        if (arg.type === firebase.LoginType.ANONYMOUS) {
-          firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
-
-        } else if (arg.type === firebase.LoginType.PASSWORD) {
-          if (!arg.email || !arg.password) {
-            reject("Auth type emailandpassword requires an email and password argument");
-          } else {
-            firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
-          }
-
-        } else if (arg.type === firebase.LoginType.CUSTOM) {
-          if (!arg.token && !arg.tokenProviderFn) {
-            reject("Auth type custom requires a token or a tokenProviderFn argument");
-          } else if (arg.token) {
-            firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
-          } else if (arg.tokenProviderFn) {
-            arg.tokenProviderFn()
-                .then(
-                    function (token) {
-                      firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
-                    },
-                    function (error) {
-                      reject(error);
-                    }
-                );
-          }
-
-        } else if (arg.type === firebase.LoginType.FACEBOOK) {
-          if (typeof(com.facebook) === "undefined") {
-            reject("Facebook SDK not installed - see gradle config");
-            return;
-          }
-
-          var fbLoginManager = com.facebook.login.LoginManager.getInstance();
-          fbLoginManager.registerCallback(
+        var fbLoginManager = com.facebook.login.LoginManager.getInstance();
+        fbLoginManager.registerCallback(
             fbCallbackManager,
             new com.facebook.FacebookCallback({
               onSuccess: function (loginResult) {
@@ -503,97 +512,87 @@ firebase.login = function (arg) {
                 reject("Error while trying to login with Fb "+ex);
               }
             })
-          );
+        );
 
-          var scope = ["public_profile", "email"];
-          if (arg.scope) {
-            scope = arg.scope;
+        var scope = ["public_profile", "email"];
+        if (arg.scope) {
+          scope = arg.scope;
+        }
+        var permissions = utils.ad.collections.stringArrayToStringSet(scope);
+
+        var activity = appModule.android.foregroundActivity;
+        firebase._rememberedContext = appModule.android.currentContext;
+        fbLoginManager.logInWithReadPermissions(activity, permissions);
+
+      } else if (arg.type === firebase.LoginType.GOOGLE) {
+        if (typeof(com.google.android.gms.auth.api.Auth) === "undefined") {
+          reject("Google Sign In not installed - see gradle config");
+          return;
+        }
+
+        var clientStringId = utils.ad.resources.getStringId("default_web_client_id");
+        var clientId = utils.ad.getApplicationContext().getResources().getString(clientStringId);
+
+        // Configure Google Sign In
+        var googleSignInOptions = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(clientId)
+            .requestEmail()
+            .build();
+
+        var onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
+          onConnectionFailed: function (connectionResult) {
+            reject(connectionResult.getErrorMessage());
           }
-          var permissions = utils.ad.collections.stringArrayToStringSet(scope);
+        });
 
-          var activity = appModule.android.foregroundActivity;
-          firebase._rememberedContext = appModule.android.currentContext;
-          fbLoginManager.logInWithReadPermissions(activity, permissions);
+        var mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.android.context)
+            .addOnConnectionFailedListener(onConnectionFailedListener)
+            .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+            .build();
 
-        } else if (arg.type === firebase.LoginType.GOOGLE) {
-          if (typeof(com.google.android.gms.auth.api.Auth) === "undefined") {
-            reject("Google Sign In not installed - see gradle config");
-            return;
-          }
+        var signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
 
-          var clientStringId = utils.ad.resources.getStringId("default_web_client_id");
-          var clientId = utils.ad.getApplicationContext().getResources().getString(clientStringId);
+        firebase._rememberedContext = appModule.android.currentContext;
+        appModule.android.currentContext.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
 
-          // Configure Google Sign In
-          var googleSignInOptions = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
-              .requestIdToken(clientId)
-              .requestEmail()
-              .build();
-
-          var onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
-            onConnectionFailed: function (connectionResult) {
-              reject(connectionResult.getErrorMessage());
+        appModule.android.on(appModule.AndroidApplication.activityResultEvent, function(eventData) {
+          if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
+            if (firebase._rememberedContext !== null) {
+              appModule.android.currentContext = firebase._rememberedContext;
+              firebase._rememberedContext = null;
             }
-          });
+            var googleSignInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(eventData.intent);
+            var success = googleSignInResult.isSuccess();
+            if (success) {
+              var googleSignInAccount = googleSignInResult.getSignInAccount();
+              var idToken = googleSignInAccount.getIdToken();
+              var accessToken = null;
+              var authCredential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, accessToken);
 
-          var mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.android.context)
-              .addOnConnectionFailedListener(onConnectionFailedListener)
-              .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-              .build();
-
-          var signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-
-          firebase._rememberedContext = appModule.android.currentContext;
-          appModule.android.currentContext.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
-
-          appModule.android.on(appModule.AndroidApplication.activityResultEvent, function(eventData) {
-            if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
-              if (firebase._rememberedContext !== null) {
-                appModule.android.currentContext = firebase._rememberedContext;
-                firebase._rememberedContext = null;
-              }
-              var googleSignInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(eventData.intent);
-              var success = googleSignInResult.isSuccess();
-              if (success) {
-                var googleSignInAccount = googleSignInResult.getSignInAccount();
-                var idToken = googleSignInAccount.getIdToken();
-                var accessToken = null;
-                var authCredential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, accessToken);
-
-                var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-                if (user) {
-                  if (firebase._alreadyLinkedToAuthProvider(user, "google.com")) {
-                    firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
-                  } else {
-                    user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
-                  }
-                } else {
+              var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+              if (user) {
+                if (firebase._alreadyLinkedToAuthProvider(user, "google.com")) {
                   firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                } else {
+                  user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
                 }
               } else {
-                console.log("Make sure you've uploaded you SHA1 fingerprint(s) to the Firebase console");
-                reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
+                firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
               }
+            } else {
+              console.log("Make sure you've uploaded you SHA1 fingerprint(s) to the Firebase console");
+              reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
             }
-          });
+          }
+        });
 
-        } else {
-          reject ("Unsupported auth type: " + arg.type);
-        }
+      } else {
+        reject ("Unsupported auth type: " + arg.type);
       }
-
-
-      try {
-        if (appModule.android.foregroundActivity) {
-          _resolve();
-        } else {
-          // if this is called before application.start() wait for the event to fire
-          appModule.on(appModule.launchEvent, _resolve);
-        }
-      } catch (ex) {
-        console.log("Error in firebase.login: " + ex);
-        reject(ex);
-      }
+    } catch (ex) {
+      console.log("Error in firebase.login: " + ex);
+      reject(ex);
+    }
   });
 };
 
