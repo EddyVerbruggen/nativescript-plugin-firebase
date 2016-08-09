@@ -11,13 +11,12 @@ If version numbers changed clean your platform folders to avoid build errors.
 - __Android: 9.4.0__
 
 ### New
-[#92](#92) Google Sign In, including automatic linking of Facebook-authenticated users in case email addresses match
-[#77](#77) Allow users to pass scope for Facebook Authentication
+- [#92](#92) Google Sign In, including automatic linking of Facebook-authenticated users in case email addresses match
+- [#77](#77) Allow users to pass scope for Facebook Authentication
 
 ### Fixes
-
-[#94](#94) Fix getDownloadUrl on Android to return string 
-[#97](#97) Trying to fix toJsObject for Android (Boolean)
+- [#94](#94) Fix getDownloadUrl on Android to return string 
+- [#97](#97) Trying to fix toJsObject for Android (Boolean)
 
 
 ## 3.4.4 (2016, July 17)
