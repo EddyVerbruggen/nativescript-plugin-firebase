@@ -17,6 +17,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 ### Fixes
 - [#94](#94) Fix getDownloadUrl on Android to return string 
 - [#97](#97) Trying to fix toJsObject for Android (Boolean)
+- [#99](#99) FirebaseApp with name [DEFAULT] doesn't exist (when running `init` before app start)
 
 
 ## 3.4.4 (2016, July 17)
