@@ -1,13 +1,13 @@
 <img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 ## Enabling Authentication
-Version 1.1.0 of this plugin added the capability to log your users in, either
+You can sign in a user either
 
-* anonymously,
-* by email and password,
-* using a custom token,
-* using Facebook,
-* using Google.
+* [anonymously](#anonymous-login),
+* by [email and password](#email-password-login),
+* using a [custom token](#custom-login),
+* using [Facebook](#facebook-login),
+* using [Google](#google-sign-in).
 
 Each of these login mechanisms need to be enabled in your Firebase console at the 'Login & Auth' tab.
 
