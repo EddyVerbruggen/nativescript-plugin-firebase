@@ -1,5 +1,25 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.5.0 (2016, August 9)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.4...3.5.0)
+
+### SDK versions
+If version numbers changed clean your platform folders to avoid build errors.
+
+- iOS: 3.3.x
+- __Android: 9.4.0__
+
+### New
+[#92](#92) Google Sign In, including automatic linking of Facebook-authenticated users in case email addresses match
+[#77](#77) Allow users to pass scope for Facebook Authentication
+
+### Fixes
+
+[#94](#94) Fix getDownloadUrl on Android to return string 
+[#97](#97) Trying to fix toJsObject for Android (Boolean)
+
+
 ## 3.4.4 (2016, July 17)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.3...3.4.4)
@@ -59,7 +79,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 If version numbers changed clean your platform folders to avoid build errors.
 
 - iOS: 3.3.x
-- Android: 9.2.0
+- __Android: 9.2.0__
 
 ### New
 - [#43](#43) Storage ([docs](docs/STORAGE.md))
@@ -76,7 +96,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 ### SDK versions
 If version numbers changed clean your platform folders to avoid build errors.
 
-- iOS: 3.2.x
+- iOS: __3.2.x__
 - Android: 9.0.2
 
 ### New
@@ -91,7 +111,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 If version numbers changed clean your platform folders to avoid build errors.
 
 - iOS: 3.2.0
-- Android: 9.0.2
+- Android: __9.0.2__
 
 ### New
 - [#56](#56) Remote Config ([docs](docs/REMOTECONFIG.md))

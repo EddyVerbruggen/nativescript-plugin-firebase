@@ -116,6 +116,8 @@ firebase.init({
 ```
 
 ## Known issues on iOS
+
+#### Authentication failed: invalid_token
 On the simulator you may see this message if you have more than one app with the Firebase SDK ever installed:
 
 ```
@@ -133,6 +135,10 @@ firebase.init({
   iOSEmulatorFlush: true
 }).then()
 ```
+
+#### Pod dependency error
+If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.3.0) required by Podfile`,
+then check [issue 98](#98) which perfectly explains how to update your local Pod spec repo.
 
 ## Known issues on Android
 
@@ -184,7 +190,7 @@ placing `google-services.json` to `platforms/android/google-services.json` (see 
 the changes to `build.gradle` which are mentioned above as well.
 
 #### Could not find com.google...
-And there's this one: "Could not find com.google.firebase:firebase-auth:9.0.2". That means
+And there's this one: "Could not find com.google.firebase:firebase-auth:9.4.0". That means
 making sure you have the latest Google Repository bits installed.
 Just run `android` from a command prompt and install any pending updates.
 

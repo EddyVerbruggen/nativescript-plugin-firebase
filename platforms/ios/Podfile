@@ -16,3 +16,6 @@ pod 'Firebase/Crash'
 # Uncomment if you want to enable Facebook Authentication
 #pod 'FBSDKCoreKit'
 #pod 'FBSDKLoginKit'
+
+# Uncomment if you want to enable Google Authentication
+#pod 'GoogleSignIn'
