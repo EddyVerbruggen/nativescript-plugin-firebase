@@ -25,12 +25,37 @@ firebase.addAppDelegateMethods = function(appDelegate) {
 
   // there's no notification event to hook into for this one, so using the appDelegate
   appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
+    var result = false;
     if (typeof(FBSDKApplicationDelegate) !== "undefined") {
-        return FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
-    } else {
-        return false;
+      result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
     }
+    // for iOS <= 8
+    if (typeof(GIDSignIn) !== "undefined") {
+      result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
+    }
+    return result;
   };
+
+  if (typeof(GIDSignIn) !== "undefined") {
+    appDelegate.prototype.applicationOpenURLOptions = function (application, url, options) {
+
+      return GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
+          url,
+          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+    };
+
+    // Untested, so commented out
+    /*
+    appDelegate.prototype.signDidDisconnectWithUserWithError = function (signIn, user, error) {
+      if (error === null) {
+        console.log("--- OK in signDidDisconnectWithUserWithError");
+      } else {
+        console.log("--- error in signDidDisconnectWithUserWithError: " + error.localizedDescription);
+      }
+    };
+    */
+  }
 
   // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
   if (typeof(FIRMessaging) !== "undefined") {
@@ -160,18 +185,17 @@ firebase._processPendingNotifications = function() {
     };
 
     var appDelegate = (function (_super) {
-        __extends(appDelegate, _super);
-        function appDelegate() {
-            _super.apply(this, arguments);
-        }
-        firebase.addAppDelegateMethods(appDelegate);
-        appDelegate.ObjCProtocols = [UIApplicationDelegate];
-        return appDelegate;
+      __extends(appDelegate, _super);
+      function appDelegate() {
+          _super.apply(this, arguments);
+      }
+      firebase.addAppDelegateMethods(appDelegate);
+      appDelegate.ObjCProtocols = [UIApplicationDelegate];
+      return appDelegate;
     })(UIResponder);
     application.ios.delegate = appDelegate;
   }
 })();
-
 
 firebase.toJsObject = function(objCObj) {
   if (objCObj === null || typeof objCObj != "object") {
@@ -279,6 +303,7 @@ firebase.init = function (arg) {
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
       }
 
+      // Facebook Auth
       if (typeof(FBSDKAppEvents) !== "undefined") {
         FBSDKAppEvents.activateApp();
       }
@@ -456,7 +481,7 @@ function toLoginResult(user) {
       email: user.email,
       emailVerified: user.emailVerified,
       name: user.displayName,
-      refreshToken: user.refreshToken,
+      refreshToken: user.refreshToken
     };
 }
 
@@ -485,12 +510,14 @@ firebase.login = function (arg) {
 
       if (arg.type === firebase.LoginType.ANONYMOUS) {
         fAuth.signInAnonymouslyWithCompletion(onCompletion);
+
       } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
           fAuth.signInWithEmailPasswordCompletion(arg.email, arg.password, onCompletion);
         }
+
       } else if (arg.type === firebase.LoginType.CUSTOM) {
         if (!arg.token && !arg.tokenProviderFn) {
           reject("Auth type custom requires a token or a tokenProviderFn argument");
@@ -557,6 +584,47 @@ firebase.login = function (arg) {
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
 
+      } else if (arg.type === firebase.LoginType.GOOGLE) {
+        if (typeof(GIDSignIn) === "undefined") {
+          reject("Google Sign In not installed - see Podfile");
+          return;
+        }
+
+        var sIn = GIDSignIn.sharedInstance();
+        sIn.uiDelegate = application.ios.rootController;
+        sIn.clientID = FIRApp.defaultApp().options.clientID;
+
+        var delegate = GIDSignInDelegateImpl.new().initWithCallback(function (user, error) {
+          if (error === null) {
+            // Get a Google ID token and Google access token from the GIDAuthentication object and exchange them for a Firebase credential
+            var authentication = user.authentication;
+            var fIRAuthCredential = FIRGoogleAuthProvider.credentialWithIDTokenAccessToken(authentication.idToken, authentication.accessToken);
+
+            // Finally, authenticate with Firebase using the credential
+            if (fAuth.currentUser) {
+              // link credential, note that you only want to do this if this user doesn't already use Google as an auth provider
+              var onCompletionLink = function (user, error) {
+                if (error) {
+                  // ignore, as this one was probably already linked, so just return the user
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+                } else {
+                  onCompletion(user);
+                }
+              };
+              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+
+            } else {
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+            }
+
+          } else {
+            reject(error.localizedDescription);
+          }
+          delegate = undefined;
+        });
+
+        sIn.delegate = delegate;
+        sIn.signIn();
       } else {
         reject ("Unsupported auth type: " + arg.type);
       }
@@ -566,6 +634,28 @@ firebase.login = function (arg) {
     }
   });
 };
+
+var GIDSignInDelegateImpl = (function (_super) {
+  __extends(GIDSignInDelegateImpl, _super);
+  function GIDSignInDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  GIDSignInDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  GIDSignInDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  GIDSignInDelegateImpl.prototype.signInDidSignInForUserWithError = function (signIn, user, error) {
+    this._callback(user, error);
+  };
+  if (typeof(GIDSignInDelegate) !== "undefined") {
+    GIDSignInDelegateImpl.ObjCProtocols = [GIDSignInDelegate];
+  }
+  return GIDSignInDelegateImpl;
+})(NSObject);
 
 firebase.resetPassword = function (arg) {
   return new Promise(function (resolve, reject) {

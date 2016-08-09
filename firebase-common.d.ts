@@ -22,7 +22,12 @@ declare module "nativescript-plugin-firebase" {
        * This requires you to setup Facebook Auth in the Firebase console,
        * as well as uncommenting the SDK includes in include.gradle (Android) and Podfile (iOS).
        */
-      FACEBOOK
+      FACEBOOK,
+      /**
+       * This requires you to setup Google Sign In in the Firebase console,
+       * as well as uncommenting the SDK includes in include.gradle (Android) and Podfile (iOS).
+       */
+      GOOGLE
     }
 
     /**

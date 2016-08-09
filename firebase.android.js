@@ -5,7 +5,11 @@ var firebase = require("./firebase-common");
 
 firebase._launchNotification = null;
 
-var fbCallbackManager =  null;
+// we need to cache and restore the context, otherwise the next invocation is broken
+firebase._rememberedContext = null;
+
+var fbCallbackManager = null;
+var GOOGLE_SIGNIN_INTENT_ID = 123;
 
 (function() {
   if (typeof(com.google.firebase.messaging) === "undefined") {
@@ -77,7 +81,7 @@ firebase.toJsObject = function(javaObj) {
   switch (javaObj.getClass().getName()) {
     case 'java.lang.Boolean':
       var str = String(javaObj);
-      return Boolean(!!(str=="True" || str=="true"));
+      return Boolean(!!(str == "True" || str == "true"));
     case 'java.lang.String':
       return String(javaObj);
     case 'java.lang.Long':
@@ -94,14 +98,7 @@ firebase.toJsObject = function(javaObj) {
       var iterator = javaObj.entrySet().iterator();
       while (iterator.hasNext()) {
         var item = iterator.next();
-        switch (item.getClass().getName()) {
-          case 'java.util.HashMap$HashMapEntry':
-            node[item.getKey()] = firebase.toJsObject(item.getValue());
-            break;
-          default:
-            //we should never reach this line?!
-            node[item.getKey()] = item.getValue();
-        }
+        node[item.getKey()] = firebase.toJsObject(item.getValue());
       }
   }
   return node;
@@ -186,8 +183,10 @@ firebase.init = function (arg) {
       if (typeof(com.facebook) !== "undefined") {
         com.facebook.FacebookSdk.sdkInitialize(appModule.android.context);
         fbCallbackManager = com.facebook.CallbackManager.Factory.create();
-        appModule.android.on("activityResult",function(eventData){
-          fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
+        appModule.android.on(appModule.AndroidApplication.activityResultEvent, function(eventData){
+          if (eventData.requestCode !== GOOGLE_SIGNIN_INTENT_ID) {
+            fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
+          }
         });
       }
 
@@ -375,7 +374,6 @@ firebase.getCurrentUser = function (arg) {
 
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       var user = firebaseAuth.getCurrentUser();
-      console.log("getCurrentUser: " + user);
       if (user !== null) {
         resolve({
           uid: user.getUid(),
@@ -409,13 +407,6 @@ function toLoginResult(user) {
   if (user === null) {
     return false;
   }
-  /*
-  var providerData = user.getProviderData();
-  for (var i = 0; i < providerData.size(); i++) {
-    var info = providerData.get(i);
-    console.log("--- userInfo - provider: " + info.getProviderId());
-  }
-  */
 
   return {
     uid: user.getUid(),
@@ -439,7 +430,12 @@ firebase.login = function (arg) {
         var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
         var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
           onComplete: function (task) {
+            if (firebase._rememberedContext !== null) {
+              appModule.android.currentContext = firebase._rememberedContext;
+              firebase._rememberedContext = null;
+            }
             if (!task.isSuccessful()) {
+              console.log("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
               reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
             } else {
               var user = task.getResult().getUser();
@@ -449,19 +445,15 @@ firebase.login = function (arg) {
         });
 
         if (arg.type === firebase.LoginType.ANONYMOUS) {
-          // var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-          // onFailure: function (throwable) {
-          // reject("Anonymous login failed with message: " + throwable.getMessage());
-          // }
-          // });
-          // firebaseAuth.signInAnonymously().addOnFailureListener(onFailureListener);
           firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
+
         } else if (arg.type === firebase.LoginType.PASSWORD) {
           if (!arg.email || !arg.password) {
             reject("Auth type emailandpassword requires an email and password argument");
           } else {
             firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
           }
+
         } else if (arg.type === firebase.LoginType.CUSTOM) {
           if (!arg.token && !arg.tokenProviderFn) {
             reject("Auth type custom requires a token or a tokenProviderFn argument");
@@ -492,7 +484,17 @@ firebase.login = function (arg) {
               onSuccess: function (loginResult) {
                 var token = loginResult.getAccessToken().getToken();
                 var authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(token);
-                firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+
+                var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+                if (user) {
+                  if (firebase._alreadyLinkedToAuthProvider(user, "facebook.com")) {
+                    firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  } else {
+                    user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  }
+                } else {
+                  firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                }
               },
               onCancel: function() {
                 reject("Facebook Login canceled");
@@ -504,14 +506,76 @@ firebase.login = function (arg) {
           );
 
           var scope = ["public_profile", "email"];
-
-          if(arg.scope) {
+          if (arg.scope) {
             scope = arg.scope;
           }
-
           var permissions = utils.ad.collections.stringArrayToStringSet(scope);
+
           var activity = appModule.android.foregroundActivity;
+          firebase._rememberedContext = appModule.android.currentContext;
           fbLoginManager.logInWithReadPermissions(activity, permissions);
+
+        } else if (arg.type === firebase.LoginType.GOOGLE) {
+          if (typeof(com.google.android.gms.auth.api.Auth) === "undefined") {
+            reject("Google Sign In not installed - see gradle config");
+            return;
+          }
+
+          var clientStringId = utils.ad.resources.getStringId("default_web_client_id");
+          var clientId = utils.ad.getApplicationContext().getResources().getString(clientStringId);
+
+          // Configure Google Sign In
+          var googleSignInOptions = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
+              .requestIdToken(clientId)
+              .requestEmail()
+              .build();
+
+          var onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
+            onConnectionFailed: function (connectionResult) {
+              reject(connectionResult.getErrorMessage());
+            }
+          });
+
+          var mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.android.context)
+              .addOnConnectionFailedListener(onConnectionFailedListener)
+              .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+              .build();
+
+          var signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+
+          firebase._rememberedContext = appModule.android.currentContext;
+          appModule.android.currentContext.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
+
+          appModule.android.on(appModule.AndroidApplication.activityResultEvent, function(eventData) {
+            if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
+              if (firebase._rememberedContext !== null) {
+                appModule.android.currentContext = firebase._rememberedContext;
+                firebase._rememberedContext = null;
+              }
+              var googleSignInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(eventData.intent);
+              var success = googleSignInResult.isSuccess();
+              if (success) {
+                var googleSignInAccount = googleSignInResult.getSignInAccount();
+                var idToken = googleSignInAccount.getIdToken();
+                var accessToken = null;
+                var authCredential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, accessToken);
+
+                var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+                if (user) {
+                  if (firebase._alreadyLinkedToAuthProvider(user, "google.com")) {
+                    firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  } else {
+                    user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  }
+                } else {
+                  firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                }
+              } else {
+                console.log("Make sure you've uploaded you SHA1 fingerprint(s) to the Firebase console");
+                reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
+              }
+            }
+          });
 
         } else {
           reject ("Unsupported auth type: " + arg.type);
@@ -531,6 +595,17 @@ firebase.login = function (arg) {
         reject(ex);
       }
   });
+};
+
+firebase._alreadyLinkedToAuthProvider = function (user, providerId) {
+  var providerData = user.getProviderData();
+  for (var i = 0; i < providerData.size(); i++) {
+    var profile = providerData.get(i);
+    if (profile.getProviderId() === providerId) {
+      return true;
+    }
+  }
+  return false;
 };
 
 firebase.resetPassword = function (arg) {
@@ -902,7 +977,7 @@ firebase.uploadFile = function (arg) {
             updated: new Date(metadata.getUpdatedTimeMillis()),
             bucket: metadata.getBucket(),
             size: metadata.getSizeBytes(),
-            url: metadata.getDownloadUrl().toString(),
+            url: metadata.getDownloadUrl().toString()
           });
         }
       });

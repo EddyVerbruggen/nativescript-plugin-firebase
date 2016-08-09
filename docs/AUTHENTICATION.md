@@ -6,7 +6,8 @@ Version 1.1.0 of this plugin added the capability to log your users in, either
 * anonymously,
 * by email and password,
 * using a custom token,
-* using Facebook.
+* using Facebook,
+* using Google.
 
 Each of these login mechanisms need to be enabled in your Firebase console at the 'Login & Auth' tab.
 
@@ -188,7 +189,7 @@ Then add the following lines to your code and check for setup instructions for y
 ```js
   firebase.login({
     type: firebase.LoginType.FACEBOOK,
-    scope: ['public_profile', 'email'] // optional: defaults
+    scope: ['public_profile', 'email'] // optional: defaults to ['public_profile', 'email']
   }).then(
       function (result) {
         JSON.stringify(result);
@@ -230,6 +231,51 @@ For a complete list of the available scope permissions, visit Facebook's documen
    ```
 4. In your Facebook dev console, go to the Basic settings and add the Android platform if you haven't already. Then set the 'Google Play Packagename' to your applicationId (see your `package.json`) and set 'Classname' to `com.tns.NativeScriptActivity`.
 5. Set the Key-Hash as well. If you don't know it you can try Facebook login in your app and observe the `adb logcat` output for something like `Key hash <......> does not match any stored key hashes.` 
+
+### Google Sign-In
+
+First, enable Google Sign-In in your firebase instance and add the _Web SDK configuration_.
+
+Then add the following lines to your code and check for setup instructions for your platform below.
+
+```js
+  firebase.login({
+    type: firebase.LoginType.GOOGLE
+  }).then(
+      function (result) {
+        JSON.stringify(result);
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  )
+```
+
+#### iOS
+ If you want to use it for iOS open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the `GoogleSignIn` line.
+ 
+ Make sure the URL Scheme for `REVERSED_CLIENT_ID` is in `app/App_Resources/iOS/Info.plist`:
+ 
+ ```xml
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>REVERSED_CLIENT_ID</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+        <string>com.googleusercontent.apps.1052836194035-l81fsjai1u40ocnqjcpnoebnnsltt03b</string>
+			</array>
+		</dict>
+	</array>
+ ```
+
+#### Android
+
+1. Uncomment `google-services-auth` in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
+2. Google Sign-In requires an SHA1 fingerprint: see [Authenticating Your Client for details](https://developers.google.com/android/guides/client-auth). If you don't do this you will see the account selection popup, but you won't be able to actually sign in.
 
 ### logout
 Shouldn't be more complicated than:

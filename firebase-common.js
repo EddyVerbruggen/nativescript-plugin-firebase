@@ -4,7 +4,8 @@ firebase.LoginType = {
   ANONYMOUS: "anonymous",
   PASSWORD: "password",
   CUSTOM: "custom",
-  FACEBOOK: "facebook"
+  FACEBOOK: "facebook",
+  GOOGLE: "google"
 };
 
 firebase.QueryOrderByType = {
