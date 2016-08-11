@@ -165,8 +165,8 @@ function writeGradleFile(result) {
     }
 
     repositories {
-        mavenCentral()
         jcenter()
+        mavenCentral()
     }
 
     dependencies {
