@@ -2,7 +2,7 @@ var fs = require('fs');
 var prompt = require('prompt');
 
 // Default settings for using ios and android with Firebase
-var usingiOS = false, usingAndroid = false;
+var usingiOS = false, usingAndroid = false, packageName = 'your.package.name';
 
 // The directories where the Podfile and include.gradle are stored
 var directories = {
@@ -26,7 +26,7 @@ function askiOSPrompt() {
         if (err) {
             return console.log(err);
         }
-        if (result.using_ios && result.using_ios.toLowerCase() === 'y') {
+        if (isSelected(result.using_ios)) {
             usingiOS = true;
         }
         askAndroidPrompt();
@@ -45,11 +45,24 @@ function askAndroidPrompt() {
         if (err) {
             return console.log(err);
         }
-        if (result.using_android && result.using_android.toLowerCase() === 'y') {
+        if (isSelected(result.using_android)) {
             usingAndroid = true;
+            prompt.get({
+                name: 'package_name',
+                description: 'Enter your application id (i.e. your.package.name)',
+                required: true
+            }, function(err, result) {
+                if(err) {
+                    return console.log(err);
+                }
+                packageName = result.package_name;
+                promptQuestions();
+            });
         }
-        if(usingiOS || usingAndroid) {
-            promptQuestions();
+        else {
+            if(usingiOS || usingAndroid) {
+                promptQuestions();
+            }
         }
     });
 }
@@ -72,11 +85,11 @@ function promptQuestions() {
         default: 'n'
     }, {
         name: 'facebook_auth',
-        description: 'Are you using Facebook Authentication (y/n)',
+        description: 'Are you using Firebase Facebook Authentication (y/n)',
         default: 'n'
     }, {
         name: 'google_auth',
-        description: 'Are you using Google Authentication (y/n)',
+        description: 'Are you using Firebase Google Authentication (y/n)',
         default: 'n'
     }], function (err, result) {
         if (err) {
@@ -88,6 +101,7 @@ function promptQuestions() {
         if(usingAndroid) {
             writeGradleFile(result);
         }
+        console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run postinstall`.');
     });
 }
 
@@ -144,6 +158,9 @@ function writeGradleFile(result) {
             "fireb" {
                 dimension "fireb"
             }
+        }
+        defaultConfig {
+            applicationId = "` + packageName + `"
         }
     }
 
