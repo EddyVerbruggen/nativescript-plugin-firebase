@@ -9,6 +9,9 @@
       "ios": "1.7.0"
     }
   },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/eddyverbruggen/nativescript-plugin-firebase.git"
@@ -34,5 +37,9 @@
   "bugs": {
     "url": "https://github.com/eddyverbruggen/nativescript-plugin-firebase/issues"
   },
-  "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase"
+  "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
+  "dependencies": {
+    "fs": "0.0.2",
+    "prompt": "^1.0.0"
+  }
 }
