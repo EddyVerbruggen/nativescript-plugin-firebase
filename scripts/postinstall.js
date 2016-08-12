@@ -2,7 +2,7 @@ var fs = require('fs');
 var prompt = require('prompt');
 
 // Default settings for using ios and android with Firebase
-var usingiOS = false, usingAndroid = false, packageName = 'your.package.name';
+var usingiOS = false, usingAndroid = false;
 
 // The directories where the Podfile and include.gradle are stored
 var directories = {
@@ -47,22 +47,9 @@ function askAndroidPrompt() {
         }
         if (isSelected(result.using_android)) {
             usingAndroid = true;
-            prompt.get({
-                name: 'package_name',
-                description: 'Enter your application id (i.e. your.package.name)',
-                required: true
-            }, function(err, result) {
-                if(err) {
-                    return console.log(err);
-                }
-                packageName = result.package_name;
-                promptQuestions();
-            });
         }
-        else {
-            if(usingiOS || usingAndroid) {
-                promptQuestions();
-            }
+        if(usingiOS || usingAndroid) {
+            promptQuestions();
         }
     });
 }
@@ -158,9 +145,6 @@ function writeGradleFile(result) {
             "fireb" {
                 dimension "fireb"
             }
-        }
-        defaultConfig {
-            applicationId = "` + packageName + `"
         }
     }
 
