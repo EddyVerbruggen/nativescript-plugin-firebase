@@ -5,7 +5,8 @@ Since plugin version 3.4.0 you can use Firebase _Storage_ features.
 
 _Storage_ lets you upload and download files to/from Google Cloud Storage which is connected to your Firebase instance.
 
-To enable support for Remote Config you need to manually adjust
+If you didn't choose this feature during installation you can manually uncomment
+the relevant lines to add the SDK's to your app in
 [Podfile](../platforms/ios/Podfile) and [include.gradle](../platforms/android/include.gradle).
 
 Just uncomment the relevant lines (one for each platform) to add the SDK's to your app.

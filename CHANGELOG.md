@@ -1,5 +1,20 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.5.1 (2016, August 12)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.0...3.5.1)
+
+### SDK versions
+If version numbers changed clean your platform folders to avoid build errors.
+
+- iOS: 3.3.x
+- Android: 9.4.0
+
+### New
+- [#101](#101) Post Install script, to help making configuration easier!
+
+
+
 ## 3.5.0 (2016, August 9)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.4...3.5.0)

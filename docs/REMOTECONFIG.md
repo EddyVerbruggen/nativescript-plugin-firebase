@@ -6,10 +6,9 @@ This feature lets you configure parameters in your Firebase instance like these:
 
 <img src="images/remote-config.png" width="500px" height="482px" alt="Remote Config"/>
 
-To enable support for Remote Config you need to manually adjust
+If you didn't choose this feature during installation you can manually uncomment
+the relevant lines to add the SDK's to your app in
 [Podfile](../platforms/ios/Podfile) and [include.gradle](../platforms/android/include.gradle).
-
-Just uncomment the relevant lines (one for each platform) to add the SDK's to your app.
 
 ## Functions
 
