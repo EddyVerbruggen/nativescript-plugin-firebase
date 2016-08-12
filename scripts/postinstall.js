@@ -8,7 +8,7 @@ var usingiOS = false, usingAndroid = false;
 var directories = {
     ios: './platforms/ios',
     android: './platforms/android'
-}
+};
 
 console.log('NativeScript Firebase Plugin Installation');
 prompt.start();
@@ -21,7 +21,7 @@ function askiOSPrompt() {
     prompt.get({
         name: 'using_ios',
         description: 'Are you using iOS (y/n)',
-        default: 'y',
+        default: 'y'
     }, function (err, result) {
         if (err) {
             return console.log(err);
@@ -40,7 +40,7 @@ function askAndroidPrompt() {
     prompt.get({
         name: 'using_android',
         description: 'Are you using Android (y/n)',
-        default: 'y',
+        default: 'y'
     }, function (err, result) {
         if (err) {
             return console.log(err);
@@ -55,13 +55,13 @@ function askAndroidPrompt() {
 }
 
 /**
- * Prompt the user through the configurable firebase add-on services
+ * Prompt the user through the configurable Firebase add-on services
  */
 function promptQuestions() {
     prompt.get([{
         name: 'remote_config',
         description: 'Are you using Firebase RemoteConfig (y/n)',
-        default: 'n',
+        default: 'n'
     }, {
         name: 'messaging',
         description: 'Are you using Firebase Messaging (y/n)',
@@ -191,7 +191,7 @@ function writeGradleFile(result) {
  * Determines if the answer validates as selected
  *
  * @param {any} value The user input for a prompt
- * @returns {true} The answer is yes, {false} The answer is no
+ * @returns {boolean} The answer is yes, {false} The answer is no
  */
 function isSelected(value) {
     return (value && value.toLowerCase() === 'y')

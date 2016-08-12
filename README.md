@@ -14,6 +14,9 @@ For readability the supported features have been moved to their own README's:
 * [Storage](docs/STORAGE.md)
 * [Crash Reporting](docs/CRASHREPORTING.md)
 
+## NativeScript version
+Please update to at least tns 2.1.0 to make plugin installation a little easier (otherwise you'll need to manually add an `applicationId` to `app/App_Resources/Android/app.gradle`). 
+
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
 Your first 'Firebase' will be automatically created and made available via an URL like `https://n-plugin-test.firebaseio.com`.
@@ -35,8 +38,10 @@ From the command prompt go to your app's root folder and execute:
 ```
 tns plugin add nativescript-plugin-firebase
 ```
+_This will guide you through installing additional components. Check the doc links above to see what's what. You can always change your choices later._
 
-And do yourself a favor by adding TypeScript support to your nativeScript app:
+
+Do yourself a favor by adding TypeScript support to your nativeScript app:
 
 ```
 tns install typescript
@@ -51,20 +56,9 @@ Then open `references.d.ts` in the root of your project and add this line to get
 ### Android
 Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
-#### Open `app/App_Resources/Android/app.gradle`
-- If there's no `applicationId` yet please add it to the `defaultConfig` node so it becomes:
-
-```
-android {
-    ...
-    defaultConfig {
-        applicationId = "your.package.name"  
-        ...
-    }
-}
-```
-
 #### Open `platforms/android/build.gradle`
+We're trying to automate these steps, but for now:
+
 - Near the top there's a dependencies section, add `classpath "com.google.gms:google-services:3.0.0"` so it becomes something like:
 ```
   dependencies {
@@ -72,7 +66,11 @@ android {
     classpath "com.google.gms:google-services:3.0.0"
   }
 ```
-- Add the very bottom of the same file add `apply plugin: "com.google.gms.google-services"`
+
+- Add the very bottom of the same file add
+```
+  apply plugin: "com.google.gms.google-services"
+```
 
 ## Usage
 

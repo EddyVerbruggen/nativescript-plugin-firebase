@@ -6,10 +6,10 @@ Version 3.3.0 of this plugin added FCM support (which is the successor of GCM).
 Although using push messages in your Firebase app is really easy setting it up is not. Traditionally, especially for iOS.
 
 ### Android
-Uncomment `firebase-messaging` in [include.gradle](../platforms/android/include.gradle)
+If you didn't choose this feature during installation you can uncomment `firebase-messaging` in [include.gradle](../platforms/android/include.gradle)
 
 ### iOS
-Uncomment `Firebase/Messaging` in [Podfile](../platforms/ios/Podfile)
+If you didn't choose this feature during installation you can uncomment `Firebase/Messaging` in [Podfile](../platforms/ios/Podfile)
 
 #### Receiving remote notifications in the background
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
