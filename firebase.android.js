@@ -405,6 +405,12 @@ firebase.logout = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
+
+      // also disconnect from Google otherwise ppl can't connect with a different account
+      if (firebase._mGoogleApiClient) {
+        com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
+      }
+
       resolve();
     } catch (ex) {
       console.log("Error in firebase.logout: " + ex);
@@ -423,7 +429,7 @@ function toLoginResult(user) {
     name: user.getDisplayName(),
     email: user.getEmail(),
     // expiresAtUnixEpochSeconds: authData.getExpires(),
-     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
+    profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
     // token: user.getToken() // can be used to auth with a backend server
   };
 }
@@ -545,12 +551,12 @@ firebase.login = function (arg) {
           }
         });
 
-        var mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.android.context)
+        firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.android.context)
             .addOnConnectionFailedListener(onConnectionFailedListener)
             .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
             .build();
 
-        var signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        var signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(firebase._mGoogleApiClient);
 
         firebase._rememberedContext = appModule.android.currentContext;
         appModule.android.currentContext.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
@@ -568,6 +574,8 @@ firebase.login = function (arg) {
               var idToken = googleSignInAccount.getIdToken();
               var accessToken = null;
               var authCredential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, accessToken);
+
+              firebase._mGoogleApiClient.connect();
 
               var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
               if (user) {
