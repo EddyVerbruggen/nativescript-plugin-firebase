@@ -44,22 +44,20 @@ firebase.addAppDelegateMethods = function(appDelegate) {
           options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
           options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
     };
-
-    // Untested, so commented out
-    /*
-    appDelegate.prototype.signDidDisconnectWithUserWithError = function (signIn, user, error) {
+    /* no need for this one
+     appDelegate.prototype.signDidDisconnectWithUserWithError = function (signIn, user, error) {
       if (error === null) {
         console.log("--- OK in signDidDisconnectWithUserWithError");
       } else {
-        console.log("--- error in signDidDisconnectWithUserWithError: " + error.localizedDescription);
+       console.log("--- error in signDidDisconnectWithUserWithError: " + error.localizedDescription);
       }
-    };
-    */
+     };
+     */
   }
 
   // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
   if (typeof(FIRMessaging) !== "undefined") {
-     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (application, userInfo, completionHandler) {
+    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (application, userInfo, completionHandler) {
       completionHandler(UIBackgroundFetchResultNewData);
       var userInfoJSON = firebase.toJsObject(userInfo);
 
@@ -464,6 +462,12 @@ firebase.logout = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       FIRAuth.auth().signOut(null);
+
+      // also disconnect from Google otherwise ppl can't connect with a different account
+      if (typeof(GIDSignIn) !== "undefined") {
+        GIDSignIn.sharedInstance().disconnect();
+      }
+
       resolve();
     } catch (ex) {
       console.log("Error in firebase.logout: " + ex);
@@ -1144,7 +1148,7 @@ firebase.deleteFile = function (arg) {
   });
 };
 
-/* disabled since FIRCrashLog is always undefined
+/*
 firebase.sendCrashLog = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
