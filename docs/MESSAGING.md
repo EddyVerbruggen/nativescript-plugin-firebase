@@ -24,8 +24,14 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 #### Provisioning hell
 Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) to the letter. Once you've done it run `tns run ios` and upon starting the app it should prompt you for notification support. That also works on the simulator, but actually receiving notifications is _only_ possible on a real device.
 
-## Functions
-I tried to make this as simple as possible, so everything is handled for you transparently. If you want to act upon the notification that triggered opening your app then configure a callback handler as follows.
+#### Don't receive the "Allow app to receive notifications" prompt?
+Make sure your `app.js` has this before `application.start();`:
+
+```js
+var firebase = require("nativescript-plugin-firebase");
+```
+
+Delete and re-add your app after you've added this.
 
 ### Handling a notification
 To listen to received notifications while in the foreground or when your app moves from the background to the foreground, add a handler `init`.
