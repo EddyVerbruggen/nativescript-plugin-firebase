@@ -102,7 +102,7 @@ function writePodFile(result) {
         fs.mkdirSync(directories.ios);
     }
     fs.writeFile(directories.ios + '/Podfile',
-    `pod 'Firebase', '~> 3.3.0'
+    `pod 'Firebase', '~> 3.4.0'
     pod 'Firebase/Database'
     pod 'Firebase/Auth'
     pod 'Firebase/Crash'

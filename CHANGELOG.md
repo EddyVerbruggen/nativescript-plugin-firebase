@@ -1,8 +1,8 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
-## 3.5.2 (2016, August 20)
+## 3.5.3 (2016, August 20)
 
-[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.1...3.5.2)
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.1...3.5.3)
 
 ### SDK versions
 If version numbers changed clean your platform folders to avoid build errors.
