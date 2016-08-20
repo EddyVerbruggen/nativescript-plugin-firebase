@@ -57,6 +57,16 @@ firebase.addAppDelegateMethods = function(appDelegate) {
 
   // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
   if (typeof(FIRMessaging) !== "undefined") {
+    appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = function (application, devToken) {
+      // TODO guard with _messagingConnected ?
+      FIRInstanceID.instanceID().setAPNSTokenType(devToken, FIRInstanceIDAPNSTokenTypeUnknown);
+      FIRMessaging.messaging().connectWithCompletion(function(error) {
+        if (!error) {
+          firebase._messagingConnected = true;
+        }
+      });
+    };
+
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (application, userInfo, completionHandler) {
       completionHandler(UIBackgroundFetchResultNewData);
       var userInfoJSON = firebase.toJsObject(userInfo);
@@ -124,15 +134,38 @@ firebase._processPendingNotifications = function() {
       firebase._receivedNotificationCallback(userInfoJSON);
     }
     firebase._pendingNotifications = [];
-    firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
     UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
   }
+};
+
+firebase._onTokenRefreshNotification = function (notification) {
+  var token = FIRInstanceID.instanceID().token();
+  if (token === null) {
+    return;
+  }
+
+  console.log("Firebase FCM token received: " + token);
+
+  if (firebase._receivedPushTokenCallback) {
+    firebase._receivedPushTokenCallback(token);
+  }
+
+  FIRMessaging.messaging().connectWithCompletion(function(error) {
+    if (error) {
+      // this is not fatal and it scares the hell out of ppl so not logging it
+      // console.log("Firebase was unable to connect to FCM. Error: " + error);
+    } else {
+      firebase._messagingConnected = true;
+    }
+  });
 };
 
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
 (function () {
 
   if (typeof(FIRMessaging) !== "undefined") {
+
+    firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
 
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
       var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
@@ -161,9 +194,7 @@ firebase._processPendingNotifications = function() {
       // Firebase notifications (FCM)
       if (firebase._messagingConnected !== null) {
         FIRMessaging.messaging().connectWithCompletion(function(error) {
-          if (error) {
-            console.log("Firebase was unable to connect to FCM. Error: " + error);
-          } else {
+          if (!error) {
             firebase._messagingConnected = true;
           }
         });
@@ -308,12 +339,9 @@ firebase.init = function (arg) {
 
       // Firebase notifications (FCM)
       if (typeof(FIRMessaging) !== "undefined") {
-        firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
-
         if (arg.onMessageReceivedCallback !== undefined) {
           firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
         }
-
         if (arg.onPushTokenReceivedCallback !== undefined) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
@@ -332,28 +360,6 @@ firebase.init = function (arg) {
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
-    }
-  });
-};
-
-firebase._onTokenRefreshNotification = function (notification) {
-  var token = FIRInstanceID.instanceID().token();
-  if (token === null) {
-    return;
-  }
-
-  console.log("Firebase FCM token received: " + token);
-
-  if (firebase._receivedPushTokenCallback) {
-    firebase._receivedPushTokenCallback(token);
-  }
-
-  FIRMessaging.messaging().connectWithCompletion(function(error) {
-    if (error) {
-      // this is not fatal at all but still would like to know how often this happens
-      console.log("Firebase was unable to connect to FCM. Error: " + error);
-    } else {
-      firebase._messagingConnected = true;
     }
   });
 };
