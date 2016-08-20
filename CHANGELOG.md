@@ -1,5 +1,23 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.5.2 (2016, August 20)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.1...3.5.2)
+
+### SDK versions
+If version numbers changed clean your platform folders to avoid build errors.
+
+- __iOS: 3.4.x__
+- Android: 9.4.0
+
+### New
+- [#104](#104) Swap authentiction to a different Google account
+
+### Fixes
+- [#105](#105) Receiving notifications from FCM on iOS may work better now 
+
+
+
 ## 3.5.1 (2016, August 12)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.0...3.5.1)
