@@ -1,3 +1,4 @@
+var fs = require('fs');
 var prompt = require('prompt');
 
 // Default settings for using ios and android with Firebase
