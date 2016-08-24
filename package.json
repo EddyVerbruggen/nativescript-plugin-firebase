@@ -39,7 +39,6 @@
   },
   "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
   "dependencies": {
-    "fs": "0.0.2",
     "prompt": "^1.0.0"
   }
 }
