@@ -1,5 +1,21 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.5.4 (2016, August 29)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.3...3.5.4)
+
+### SDK versions
+If version numbers changed clean your platform folders to avoid build errors.
+
+- iOS: 3.4.x
+- Android: 9.4.0
+
+### Fixes
+- #107 Facebook Login does not return any result in iOS
+- #115 Facebook Authentication Redirect 
+
+
+
 ## 3.5.3 (2016, August 20)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.1...3.5.3)
