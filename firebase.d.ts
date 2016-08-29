@@ -87,6 +87,10 @@ declare module "nativescript-plugin-firebase" {
          * See: https://firebase.google.com/docs/auth/server
          */
         tokenProviderFn?: () => Promise<String>;
+        /**
+         * For Facebook auth. Default: ["public_profile", "email"]
+         */
+        scope?: string[];
     }
 
     /**
