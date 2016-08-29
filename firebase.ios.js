@@ -38,21 +38,32 @@ firebase.addAppDelegateMethods = function(appDelegate) {
 
   if (typeof(GIDSignIn) !== "undefined") {
     appDelegate.prototype.applicationOpenURLOptions = function (application, url, options) {
-
-      return GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
+      var result = false;
+      if (typeof(FBSDKApplicationDelegate) !== "undefined") {
+        result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
+          application,
           url,
           options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
           options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+      }
+      // for iOS >= 9
+      result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
+          url,
+          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+      return result;
     };
-    /* no need for this one
-     appDelegate.prototype.signDidDisconnectWithUserWithError = function (signIn, user, error) {
+
+    // Untested, so commented out
+    /*
+    appDelegate.prototype.signDidDisconnectWithUserWithError = function (signIn, user, error) {
       if (error === null) {
         console.log("--- OK in signDidDisconnectWithUserWithError");
       } else {
-       console.log("--- error in signDidDisconnectWithUserWithError: " + error.localizedDescription);
+        console.log("--- error in signDidDisconnectWithUserWithError: " + error.localizedDescription);
       }
-     };
-     */
+    };
+    */
   }
 
   // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
@@ -327,7 +338,7 @@ firebase.init = function (arg) {
           firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
               user: toLoginResult(user)
-            });
+          });
         };
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
       }
@@ -585,7 +596,7 @@ firebase.login = function (arg) {
         //fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
         var scope = ["public_profile", "email"];
 
-        if(arg.scope) {
+        if (arg.scope) {
           scope = arg.scope;
         }
 
