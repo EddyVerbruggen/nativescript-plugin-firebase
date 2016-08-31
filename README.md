@@ -140,6 +140,10 @@ then check [issue 98](#98) which perfectly explains how to update your local Pod
 
 ## Known issues on Android
 
+#### Genymotion
+You can use the awesome [Genymotion emulator](https://www.genymotion.com/)
+but you'll need to [install Google Play Services on it](https://github.com/codepath/android_guides/wiki/Genymotion-2.0-Emulators-with-Google-Play-support) or you'll run into errors during authentication.
+
 #### DexIndexOverflowException
 ```
 com.android.dex.DexIndexOverflowException: method ID not in..
