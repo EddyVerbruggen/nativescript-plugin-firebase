@@ -459,11 +459,11 @@ firebase.getCurrentUser = function (arg) {
           uid: user.uid,
           // anonymous: user.anonymous,
           // provider: user.providerID,
-          profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
+          profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
           email: user.email,
           emailVerified: user.emailVerified,
           name: user.displayName,
-          refreshToken: user.refreshToken,
+          refreshToken: user.refreshToken
         });
       } else {
         reject();
@@ -498,7 +498,7 @@ function toLoginResult(user) {
       uid: user.uid,
       // anonymous: user.anonymous,
       // provider: user.providerID,
-      profileImageURL: user.photoURL ? user.photoURL.absoluteURL : null,
+      profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
       email: user.email,
       emailVerified: user.emailVerified,
       name: user.displayName,
@@ -1008,7 +1008,7 @@ firebase.uploadFile = function (arg) {
         } else {
           resolve({
             name: metadata.name,
-            url: metadata.downloadURL.absoluteURL,
+            url: metadata.downloadURL.absoluteString,
             contentType: metadata.contentType,
             created: metadata.timeCreated,
             updated: metadata.updated,
@@ -1066,7 +1066,7 @@ firebase.downloadFile = function (arg) {
         if (error) {
           reject(error.localizedDescription);
         } else {
-          resolve(url.absoluteURL);
+          resolve(url.absoluteString);
         }
       };
 
@@ -1115,7 +1115,7 @@ firebase.getDownloadUrl = function (arg) {
         if (error) {
           reject(error.localizedDescription);
         } else {
-          resolve(url.absoluteURL);
+          resolve(url.absoluteString);
         }
       };
 
