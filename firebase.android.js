@@ -759,6 +759,11 @@ firebase._addObservers = function(to, updateCallback) {
     },
     onChildMoved: function (snapshot, previousChildKey) {
       updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
+    },
+    onCancelled: function (databaseError) {
+      updateCallback({
+        error: databaseError.getMessage()
+      });
     }
   });
   to.addChildEventListener(listener);
