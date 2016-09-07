@@ -11,6 +11,8 @@ If version numbers __changed__, clean your platform folders to avoid build error
 - Android: 9.4.0
 
 ### New
+- [#119](#119) Upload Progress
+- [#120](#120) Chaining range types for `.query`
 - [#125](#125) Analytics API
 
 

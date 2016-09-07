@@ -1067,6 +1067,18 @@ firebase.uploadFile = function (arg) {
         }
       });
 
+      var onProgressListener = new com.google.firebase.storage.OnProgressListener({
+        onProgress: function (snapshot) {
+          if (typeof(arg.onProgress) === "function") {
+            var fractionCompleted = snapshot.getBytesTransferred() / snapshot.getTotalByteCount();
+            arg.onProgress({
+              fractionCompleted: fractionCompleted,
+              percentageCompleted: Math.round(fractionCompleted * 100)
+            });
+          }
+        }
+      });
+
       if (arg.localFile) {
         if (typeof(arg.localFile) != "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
@@ -1083,7 +1095,8 @@ firebase.uploadFile = function (arg) {
 
         var uploadDataTask = storageReference.putBytes(contents)
             .addOnFailureListener(onFailureListener)
-            .addOnSuccessListener(onSuccessListener);
+            .addOnSuccessListener(onSuccessListener)
+            .addOnProgressListener(onProgressListener);
 
       } else if (arg.localFullPath) {
 
@@ -1096,11 +1109,11 @@ firebase.uploadFile = function (arg) {
         var localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFullPath));
         var uploadFileTask = storageReference.putFile(localFileUrl)
             .addOnFailureListener(onFailureListener)
-            .addOnSuccessListener(onSuccessListener);
+            .addOnSuccessListener(onSuccessListener)
+            .addOnProgressListener(onProgressListener);
 
       } else {
         reject("One of localFile or localFullPath is required");
-        return;
       }
 
     } catch (ex) {

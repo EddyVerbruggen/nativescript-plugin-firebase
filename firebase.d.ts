@@ -276,7 +276,17 @@ declare module "nativescript-plugin-firebase" {
         /**
          * Option 2: a full file path (ignored if 'localFile' is set)
          */
-        localFullPath?: string
+        localFullPath?: string;
+
+        /**
+         * You can get updates during upload by passing a function, example:
+         * 
+         * onProgress: function(status) {
+         *   console.log("Uploaded fraction: " + status.fractionCompleted);
+         *   console.log("Percentage complete: " + status.percentageCompleted);
+         * }
+         */
+        onProgress?: Function;
     }
 
     export interface UploadFileResult {
