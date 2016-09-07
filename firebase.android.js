@@ -291,11 +291,11 @@ firebase.analytics.logEvent = function (arg) {
       }
 
       var bundle = new android.os.Bundle();
-      if (arg.properties !== undefined) {
-        for (var p in arg.properties) {
-          var prop = arg.properties[p];
-          if (prop.value !== undefined) {
-            bundle.putString(prop.key, prop.value);
+      if (arg.parameters !== undefined) {
+        for (var p in arg.parameters) {
+          var param = arg.parameters[p];
+          if (param.value !== undefined) {
+            bundle.putString(param.key, param.value);
           }
         }
       }

@@ -384,11 +384,11 @@ firebase.analytics.logEvent = function (arg) {
       }
 
       var dic = NSMutableDictionary.new();
-      if (arg.properties !== undefined) {
-        for (var p in arg.properties) {
-          var prop = arg.properties[p];
-          if (prop.value !== undefined) {
-            dic.setObjectForKey(prop.value, prop.key);
+      if (arg.parameters !== undefined) {
+        for (var p in arg.parameters) {
+          var param = arg.parameters[p];
+          if (param.value !== undefined) {
+            dic.setObjectForKey(param.value, param.key);
           }
         }
       }
