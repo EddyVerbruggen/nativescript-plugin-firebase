@@ -1,4 +1,5 @@
 var firebase = {};
+firebase.analytics = {};
 
 firebase.LoginType = {
   ANONYMOUS: "anonymous",

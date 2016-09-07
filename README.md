@@ -13,6 +13,7 @@ For readability the supported features have been moved to their own README's:
 * [Cloud Messaging](docs/MESSAGING.md)
 * [Storage](docs/STORAGE.md)
 * [Crash Reporting](docs/CRASHREPORTING.md)
+* [Analytics](docs/ANALYTICS.md)
 
 ## NativeScript version
 Please update to at least tns 2.1.0 to make plugin installation a little easier (otherwise you'll need to manually add an `applicationId` to `app/App_Resources/Android/app.gradle`). 
@@ -136,7 +137,8 @@ firebase.init({
 
 #### Pod dependency error
 If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.3.0) required by Podfile`,
-then check [issue 98](#98) which perfectly explains how to update your local Pod spec repo.
+then check [issue 98](#98) which perfectly explains how to update your local Pod spec repo, or first try
+to `tns platform remove ios && tns platform add ios`.
 
 ## Known issues on Android
 

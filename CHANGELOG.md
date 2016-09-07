@@ -1,11 +1,30 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.6.0 (2016, September 7)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.4...3.6.0)
+
+### SDK versions
+If version numbers __changed__, clean your platform folders to avoid build errors.
+
+- __iOS: 3.5.x__
+- Android: 9.4.0
+
+### New
+- [#125](#125) Analytics API
+
+
+### Fixes
+- ..
+
+
+
 ## 3.5.4 (2016, August 29)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.3...3.5.4)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.4.x
 - Android: 9.4.0
@@ -21,7 +40,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.1...3.5.3)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - __iOS: 3.4.x__
 - Android: 9.4.0
@@ -39,7 +58,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.0...3.5.1)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.3.x
 - Android: 9.4.0
@@ -54,7 +73,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.4...3.5.0)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.3.x
 - __Android: 9.4.0__
@@ -74,7 +93,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.3...3.4.4)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.3.x
 - Android: 9.2.0
@@ -89,7 +108,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.2...3.4.3)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.3.x
 - Android: 9.2.0
@@ -104,7 +123,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.4.0...3.4.2)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.3.x
 - Android: 9.2.0
@@ -125,7 +144,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.3.0...3.4.0)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.3.x
 - __Android: 9.2.0__
@@ -143,7 +162,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.2.0...3.3.0)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: __3.2.x__
 - Android: 9.0.2
@@ -157,7 +176,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.1.0...3.2.0)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.2.0
 - Android: __9.0.2__
@@ -171,7 +190,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.0.0...3.1.0)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.2.0
 - Android: 9.0.0
@@ -185,7 +204,7 @@ If version numbers changed clean your platform folders to avoid build errors.
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/2.1.8...3.0.0)
 
 ### SDK versions
-If version numbers changed clean your platform folders to avoid build errors.
+If version numbers __changed__, clean your platform folders to avoid build errors.
 
 - iOS: 3.2.0
 - Android: 9.0.0

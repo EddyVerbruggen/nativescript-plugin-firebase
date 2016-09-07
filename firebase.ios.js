@@ -375,6 +375,56 @@ firebase.init = function (arg) {
   });
 };
 
+firebase.analytics.logEvent = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (arg.key === undefined) {
+        reject("Argument 'key' is missing");
+        return;
+      }
+
+      var dic = NSMutableDictionary.new();
+      if (arg.properties !== undefined) {
+        for (var p in arg.properties) {
+          var prop = arg.properties[p];
+          if (prop.value !== undefined) {
+            dic.setObjectForKey(prop.value, prop.key);
+          }
+        }
+      }
+
+      FIRAnalytics.logEventWithNameParameters(arg.key, dic);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.logEvent: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.analytics.setUserProperty = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (arg.key === undefined) {
+        reject("Argument 'key' is missing");
+        return;
+      }
+      if (arg.value === undefined) {
+        reject("Argument 'value' is missing");
+        return;
+      }
+
+      FIRAnalytics.setUserPropertyStringForName(arg.value, arg.key);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.setUserProperty: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.getRemoteConfig = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -399,7 +449,6 @@ firebase.getRemoteConfig = function (arg) {
       var dic = NSMutableDictionary.new();
       for (var p in arg.properties) {
         var prop = arg.properties[p];
-        var key = prop.key;
         if (prop.default !== undefined) {
           dic.setObjectForKey(prop.default, prop.key);
         }
