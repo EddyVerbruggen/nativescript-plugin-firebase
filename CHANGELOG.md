@@ -16,10 +16,6 @@ If version numbers __changed__, clean your platform folders to avoid build error
 - [#125](#125) Analytics API
 
 
-### Fixes
-- ..
-
-
 
 ## 3.5.4 (2016, August 29)
 
