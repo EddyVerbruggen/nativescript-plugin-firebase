@@ -50,7 +50,12 @@ You can either pass in a full local path to a file, or (as a convenience) use th
     // option 1: a file-system module File object
     localFile: fs.File.fromPath(logoPath),
     // option 2: a full file path (ignored if 'localFile' is set)
-    localFullPath: logoPath
+    localFullPath: logoPath,
+    // get notified of file upload progress
+    onProgress: function(status) {
+      console.log("Uploaded fraction: " + status.fractionCompleted);
+      console.log("Percentage complete: " + status.percentageCompleted);
+    }
   }).then(
       function (uploadedFile) 
         console.log("File uploaded: " + JSON.stringify(uploadedFile));

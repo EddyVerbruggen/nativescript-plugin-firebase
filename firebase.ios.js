@@ -1095,6 +1095,7 @@ firebase.uploadFile = function (arg) {
       }
 
       var fIRStorageReference = storageRef.child(arg.remoteFullPath);
+      var fIRStorageUploadTask = null;
 
       if (arg.localFile) {
         if (typeof(arg.localFile) != "object") {
@@ -1110,15 +1111,27 @@ firebase.uploadFile = function (arg) {
           return;
         }
 
-        var fIRStorageUploadDataTask = fIRStorageReference.putDataMetadataCompletion(contents, null, onCompletion);
+        fIRStorageUploadTask = fIRStorageReference.putDataMetadataCompletion(contents, null, onCompletion);
 
       } else if (arg.localFullPath) {
         var localFileUrl = NSURL.fileURLWithPath(arg.localFullPath);
-        var fIRStorageUploadFileTask = fIRStorageReference.putFileMetadataCompletion(localFileUrl, null, onCompletion);
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(localFileUrl, null, onCompletion);
 
       } else {
         reject("One of localFile or localFullPath is required");
         return;
+      }
+
+      if (fIRStorageUploadTask !== null) {
+        // Add a progress observer to an upload task
+        var fIRStorageHandle = fIRStorageUploadTask.observeStatusHandler(FIRStorageTaskStatusProgress, function(snapshot) {
+          if (!snapshot.error && typeof(arg.onProgress) === "function") {
+            arg.onProgress({
+              fractionCompleted: snapshot.progress.fractionCompleted,
+              percentageCompleted: Math.round(snapshot.progress.fractionCompleted * 100)
+            });
+          }
+        });
       }
 
     } catch (ex) {
