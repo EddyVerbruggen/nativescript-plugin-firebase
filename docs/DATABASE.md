@@ -90,14 +90,25 @@ Let's say we have the structure as defined at `setValue`, then use this query to
             // order by company.country
             orderBy: {
                 type: firebase.QueryOrderByType.CHILD,
-                value: 'country' // mandatory when type is 'child'
+                value: 'since' // mandatory when type is 'child'
             },
-            // but only companies named 'Telerik'
-            // (this range relates to the orderBy clause)
-            range: {
-                type: firebase.QueryRangeType.EQUAL_TO,
-                value: 'Bulgaria'
-            },
+            // but only companies 'since' a certain year (Telerik's value is 2000, which is imaginary btw)
+            // use either a 'range'
+            //range: {
+            //    type: firebase.QueryRangeType.EQUAL_TO,
+            //    value: 2000
+            ///},
+            // .. or 'chain' ranges like this:
+            ranges: [
+              {
+                  type: firebase.QueryRangeType.START_AT,
+                  value: 1999
+              },
+              {
+                  type: firebase.QueryRangeType.END_AT,
+                  value: 2000
+              }
+            ],
             // only the first 2 matches
             // (note that there's only 1 in this case anyway)
             limit: {
@@ -108,7 +119,7 @@ Let's say we have the structure as defined at `setValue`, then use this query to
     );
 ```
 
-For supported values of the orderBy/range/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
+For supported values of the orderBy/range/ranges/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
 
 ### update
 Changes the values of the keys specified in the dictionary without overwriting other keys at this location.

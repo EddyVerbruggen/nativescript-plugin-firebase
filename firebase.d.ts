@@ -28,6 +28,11 @@ declare module "nativescript-plugin-firebase" {
         storageBucket?: string;
     }
 
+    export interface QueryRangeOption {
+        type: QueryRangeType;
+        value: string;
+    }
+
     /**
      * The options object passed into the query function.
      */
@@ -45,11 +50,15 @@ declare module "nativescript-plugin-firebase" {
 
         /**
          * You can further restrict the returned results by specifying restrictions.
+         * Need more than one range restriction? Use 'ranges' instead.
          */
-        range?: {
-            type: QueryRangeType;
-            value: string;
-        }
+        range?: QueryRangeOption;
+
+        /**
+         * Same as 'range', but for a 'chain of ranges'.
+         * You can further restrict the returned results by specifying restrictions.
+         */
+        ranges?: QueryRangeOption[];
 
         /**
          * You can limit the number of returned rows if you want to.

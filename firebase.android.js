@@ -941,6 +941,27 @@ firebase.query = function (updateCallback, path, options) {
         }
       }
 
+      // ranges
+      if (options.ranges) {
+        for (var i=0; i < options.ranges.length; i++) {
+          var range = options.ranges[i];
+          if (!range.value) {
+            reject("Please set ranges["+i+"].value");
+            return;
+          }
+          if (range.type === firebase.QueryRangeType.START_AT) {
+            query = query.startAt(range.value);
+          } else if (range.type === firebase.QueryRangeType.END_AT) {
+            query = query.endAt(range.value);
+          } else if (range.type === firebase.QueryRangeType.EQUAL_TO) {
+            query = query.equalTo(range.value);
+          } else {
+            reject("Invalid ranges["+i+"].type, use constants like firebase.QueryRangeType.START_AT");
+            return;
+          }
+        }
+      }
+
       // limit
       if (options.limit && options.limit.type) {
         if (!options.limit.value) {
