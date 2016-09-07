@@ -282,6 +282,56 @@ firebase._isGooglePlayServicesAvailable = function () {
   return playServicesStatus === playServiceStatusSuccess;
 };
 
+firebase.analytics.logEvent = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (arg.key === undefined) {
+        reject("Argument 'key' is missing");
+        return;
+      }
+
+      var bundle = new android.os.Bundle();
+      if (arg.properties !== undefined) {
+        for (var p in arg.properties) {
+          var prop = arg.properties[p];
+          if (prop.value !== undefined) {
+            bundle.putString(prop.key, prop.value);
+          }
+        }
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext).logEvent(arg.key, bundle);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.logEvent: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.analytics.setUserProperty = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (arg.key === undefined) {
+        reject("Argument 'key' is missing");
+        return;
+      }
+      if (arg.value === undefined) {
+        reject("Argument 'value' is missing");
+        return;
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext).setUserProperty(arg.key, arg.value);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.setUserProperty: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.getRemoteConfig = function (arg) {
   return new Promise(function (resolve, reject) {
 
@@ -759,11 +809,6 @@ firebase._addObservers = function(to, updateCallback) {
     },
     onChildMoved: function (snapshot, previousChildKey) {
       updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
-    },
-    onCancelled: function (databaseError) {
-      updateCallback({
-        error: databaseError.getMessage()
-      });
     }
   });
   to.addChildEventListener(listener);
