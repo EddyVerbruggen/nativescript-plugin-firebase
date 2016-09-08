@@ -85,7 +85,8 @@ Let's say we have the structure as defined at `setValue`, then use this query to
         "/companies",
         {
             // set this to true if you want to check if the value exists or just want the event to fire once
-            // default false, so it listens continuously
+            // default false, so it listens continuously.
+            // Only when true this function will return the date in the promise as well!
             singleEvent: true,
             // order by company.country
             orderBy: {

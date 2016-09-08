@@ -1024,11 +1024,13 @@ firebase.query = function (updateCallback, path, options) {
       if (options.singleEvent) {
         query.observeSingleEventOfTypeWithBlock(FIRDataEventType.FIRDataEventTypeValue, function (snapshot) {
           updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+          // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
+          resolve(firebase.getCallbackData('ValueChanged', snapshot));
         });
       } else {
         firebase._addObservers(query, updateCallback);
-      }
       resolve();
+      }
     } catch (ex) {
       console.log("Error in firebase.query: " + ex);
       reject(ex);
