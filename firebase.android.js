@@ -982,9 +982,15 @@ firebase.query = function (updateCallback, path, options) {
         var listener = new com.google.firebase.database.ValueEventListener({
           onDataChange: function (snapshot) {
             updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+            // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
+            resolve(firebase.getCallbackData('ValueChanged', snapshot));
           },
           onCancelled: function (databaseError) {
             updateCallback({
+              error: databaseError.getMessage()
+            });
+            // see comment at 'onDataChange'
+            resolve({
               error: databaseError.getMessage()
             });
           }
@@ -992,8 +998,8 @@ firebase.query = function (updateCallback, path, options) {
         query.addListenerForSingleValueEvent(listener);
       } else {
         firebase._addObservers(query, updateCallback);
+        resolve();
       }
-      resolve();
     } catch (ex) {
       console.log("Error in firebase.query: " + ex);
       reject(ex);
