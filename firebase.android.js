@@ -300,7 +300,7 @@ firebase.analytics.logEvent = function (arg) {
         }
       }
 
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext).logEvent(arg.key, bundle);
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || appModule.android.context).logEvent(arg.key, bundle);
 
       resolve();
     } catch (ex) {
@@ -322,7 +322,7 @@ firebase.analytics.setUserProperty = function (arg) {
         return;
       }
 
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext).setUserProperty(arg.key, arg.value);
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || appModule.android.context).setUserProperty(arg.key, arg.value);
 
       resolve();
     } catch (ex) {
