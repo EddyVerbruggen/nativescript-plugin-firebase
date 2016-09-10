@@ -356,8 +356,8 @@ firebase.getRemoteConfig = function (arg) {
 
       // Enable developer mode to allow for frequent refreshes of the cache
       var remoteConfigSettings = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
-        .setDeveloperModeEnabled(arg.developerMode || false)
-        .build();
+          .setDeveloperModeEnabled(arg.developerMode || false)
+          .build();
       firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
 
       var defaults = firebase.getRemoteConfigDefaults(arg.properties);
@@ -812,13 +812,16 @@ firebase._addObservers = function(to, updateCallback) {
     }
   });
   to.addChildEventListener(listener);
+  return listener;
 };
 
 firebase.addChildEventListener = function (updateCallback, path) {
   return new Promise(function (resolve, reject) {
     try {
-      firebase._addObservers(firebase.instance.child(path), updateCallback);
-      resolve();
+      resolve({
+        path: path,
+        listeners: [firebase._addObservers(firebase.instance.child(path), updateCallback)]
+      });
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
       reject(ex);
@@ -840,7 +843,10 @@ firebase.addValueEventListener = function (updateCallback, path) {
         }
       });
       firebase.instance.child(path).addValueEventListener(listener);
-      resolve();
+      resolve({
+        path: path,
+        listeners: [listener]
+      });
     } catch (ex) {
       console.log("Error in firebase.addValueEventListener: " + ex);
       reject(ex);
@@ -851,11 +857,28 @@ firebase.addValueEventListener = function (updateCallback, path) {
 firebase.removeEventListener = function (listener, path) {
   return new Promise(function (resolve, reject) {
     try {
-      console.log("Removing at path " + path + ": " + listener);
+      console.log("Removing listener at path " + path + ": " + listener);
       firebase.instance.child(path).removeEventListener(listener);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.removeEventListener: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.removeEventListeners = function (listeners, path) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var ref = firebase.instance.child(path);
+      for (var i=0; i < listeners.length; i++) {
+        var listener = listeners[i];
+        console.log("Removing listener at path " + path + ": " + listener);
+        ref.removeEventListener(listener);
+      }
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.removeEventListeners: " + ex);
       reject(ex);
     }
   });
@@ -997,8 +1020,10 @@ firebase.query = function (updateCallback, path, options) {
         });
         query.addListenerForSingleValueEvent(listener);
       } else {
-        firebase._addObservers(query, updateCallback);
-        resolve();
+        resolve({
+          path: path,
+          listeners: [firebase._addObservers(query, updateCallback)]
+        });
       }
     } catch (ex) {
       console.log("Error in firebase.query: " + ex);
