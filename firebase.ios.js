@@ -830,18 +830,20 @@ firebase.deleteUser = function (arg) {
 };
 
 firebase._addObservers = function(to, updateCallback) {
-  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildAdded, function (snapshot) {
+  var listeners = [];
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildAdded, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
-  });
-  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildRemoved, function (snapshot) {
+  }));
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildRemoved, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
-  });
-  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildChanged, function (snapshot) {
+  }));
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildChanged, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
-  });
-  to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildMoved, function (snapshot) {
+  }));
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildMoved, function (snapshot) {
     updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
-  });
+  }));
+  return listeners;
 };
 
 firebase.keepInSync = function (path, switchOn) {
@@ -864,8 +866,10 @@ firebase.addChildEventListener = function (updateCallback, path) {
       if (path !== undefined) {
         where = firebase.instance.childByAppendingPath(path);
       }
-      firebase._addObservers(where, updateCallback);
-      resolve();
+      resolve({
+        path: path,
+        listeners: firebase._addObservers(where, updateCallback)
+      });
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
       reject(ex);
@@ -880,7 +884,7 @@ firebase.addValueEventListener = function (updateCallback, path) {
       if (path !== undefined) {
         where = firebase.instance.childByAppendingPath(path);
       }
-      where.observeEventTypeWithBlockWithCancelBlock(
+      var listener = where.observeEventTypeWithBlockWithCancelBlock(
           FIRDataEventType.FIRDataEventTypeValue,
           function (snapshot) {
             updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
@@ -890,9 +894,49 @@ firebase.addValueEventListener = function (updateCallback, path) {
               error: firebaseError.localizedDescription
             });
           });
-      resolve();
+      resolve({
+        path: path,
+        listeners: [listener]
+      });
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.removeEventListener = function (listener, path) {
+  return new Promise(function (resolve, reject) {
+    try {
+      console.log("Removing listener at path " + path + ": " + listener);
+      var where = firebase.instance;
+      if (path !== undefined) {
+        where = firebase.instance.childByAppendingPath(path);
+      }
+      where.removeObserverWithHandle(listener);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.removeEventListener: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.removeEventListeners = function (listeners, path) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var where = firebase.instance;
+      if (path !== undefined) {
+        where = firebase.instance.childByAppendingPath(path);
+      }
+      for (var i=0; i < listeners.length; i++) {
+        var listener = listeners[i];
+        console.log("Removing listener at path " + path + ": " + listener);
+        where.removeObserverWithHandle(listener);
+      }
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.removeEventListeners: " + ex);
       reject(ex);
     }
   });
@@ -1028,8 +1072,10 @@ firebase.query = function (updateCallback, path, options) {
           resolve(firebase.getCallbackData('ValueChanged', snapshot));
         });
       } else {
-        firebase._addObservers(query, updateCallback);
-      resolve();
+        resolve({
+          path: path,
+          listeners: firebase._addObservers(query, updateCallback)
+        });
       }
     } catch (ex) {
       console.log("Error in firebase.query: " + ex);
