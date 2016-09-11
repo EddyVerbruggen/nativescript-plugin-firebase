@@ -905,23 +905,6 @@ firebase.addValueEventListener = function (updateCallback, path) {
   });
 };
 
-firebase.removeEventListener = function (listener, path) {
-  return new Promise(function (resolve, reject) {
-    try {
-      console.log("Removing listener at path " + path + ": " + listener);
-      var where = firebase.instance;
-      if (path !== undefined) {
-        where = firebase.instance.childByAppendingPath(path);
-      }
-      where.removeObserverWithHandle(listener);
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.removeEventListener: " + ex);
-      reject(ex);
-    }
-  });
-};
-
 firebase.removeEventListeners = function (listeners, path) {
   return new Promise(function (resolve, reject) {
     try {
