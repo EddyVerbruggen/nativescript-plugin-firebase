@@ -1,5 +1,24 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.6.2 (2016, September 15)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.1...3.6.2)
+
+### SDK versions
+If version numbers __changed__, clean your platform folders to avoid build errors.
+
+- iOS: 3.5.x
+- Android: 9.4.0
+
+### New
+- [#126](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126) When `singleEvent` is `true` return data in the promise
+- [#129](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/129) Ability to remove listeners
+
+### Fixes
+- [#128](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/128) On Android `logEvent` may cause an exception
+
+
+
 ## 3.6.1 (2016, September 7)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.5.4...3.6.1)
