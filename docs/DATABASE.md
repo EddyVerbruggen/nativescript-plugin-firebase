@@ -146,7 +146,13 @@ The plugin will take care of serializing native data structures to JSON data.
   };
 
   // listen to changes in the /users path
-  firebase.addChildEventListener(onChildEvent, "/users");
+  firebase.addChildEventListener(onChildEvent, "/users").then(
+    function(listenerWrapper) {
+      var path = listenerWrapper.path;
+      var listeners = listenerWrapper.listeners; // an Array of listeners added
+      // you can store the wrapper somewhere to later call 'removeEventListeners'
+    }
+  );
 ```
 
 ### addValueEventListener
@@ -161,7 +167,30 @@ The link is for the iOS SDK, but it's the same for Android.
   };
 
   // listen to changes in the /companies path
-  firebase.addValueEventListener(onValueEvent, "/companies");
+  firebase.addValueEventListener(onValueEvent, "/companies").then(
+    function(listenerWrapper) {
+      var path = listenerWrapper.path;
+      var listeners = listenerWrapper.listeners; // an Array of listeners added
+      // you can store the wrapper somewhere to later call 'removeEventListeners'
+    }
+  );
+```
+    
+export function removeEventListeners(listeners: Array<any>, path: string): Promise<any>;
+
+### removeEventListeners
+Firebase does not automatically remove listeners when fi. a user logs out.
+So please keep track of these listeners yourself and remove them when appropriate.
+
+You can see an example of this in the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/master/Firebase/app/main-view-model.js).
+
+> Note that there was a bug in the Android runtime that was fixed in NativeScript 2.3.0 which caused a crash when using this function.
+
+```js
+  firebase.removeEventListeners(
+     listeners, // an Array of listeners
+     "/users" // the path the listener was previously listening to
+  );
 ```
 
 ### remove
