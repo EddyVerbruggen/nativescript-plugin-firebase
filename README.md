@@ -63,7 +63,7 @@ We're trying to automate these steps, but for now:
 - Near the top there's a dependencies section, add `classpath "com.google.gms:google-services:3.0.0"` so it becomes something like:
 ```
   dependencies {
-    classpath "com.android.tools.build:gradle:1.5.0"
+    classpath "com.android.tools.build:gradle:X.X.X"
     classpath "com.google.gms:google-services:3.0.0"
   }
 ```
