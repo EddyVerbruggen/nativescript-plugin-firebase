@@ -198,6 +198,10 @@ And there's this one: "Could not find com.google.firebase:firebase-auth:9.4.0". 
 making sure you have the latest Google Repository bits installed.
 Just run `android` from a command prompt and install any pending updates.
 
+Also, an error like "Could not find com.google.firebase:firebase-core:9.0.0" can be caused by having
+more than one version of the Android SDK installed. Make sure ANDROID_HOME is set to the Android SDK directory
+that is being updated otherwise it will seem as though your updates have no effect.
+
 #### Found play-services:9.0.0, but version 9.0.2 is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
