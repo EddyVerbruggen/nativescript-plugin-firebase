@@ -5,8 +5,8 @@
   "main" : "firebase.js",
   "nativescript": {
     "platforms": {
-      "android": "1.7.0",
-      "ios": "1.7.0"
+      "android": "2.3.0",
+      "ios": "2.3.0"
     }
   },
   "scripts": {

@@ -3,6 +3,8 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
+> Requires NativeScript 2.3.0 or up. So `npm install -g nativescript` like a boss if you need to!
+
 ## Features
 For readability the supported features have been moved to their own README's:
 

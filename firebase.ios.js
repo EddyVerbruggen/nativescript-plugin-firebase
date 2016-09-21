@@ -1,6 +1,6 @@
 var firebase = require("./firebase-common");
-var fs = require("file-system");
 var application = require("application");
+var utils = require("utils/utils");
 var types = require("utils/types");
 var frame = require("ui/frame");
 
@@ -9,7 +9,8 @@ firebase._pendingNotifications = [];
 firebase._receivedPushTokenCallback = null;
 
 firebase._addObserver = function (eventName, callback) {
-  return NSNotificationCenter.defaultCenter().addObserverForNameObjectQueueUsingBlock(eventName, null, NSOperationQueue.mainQueue(), callback);
+  var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
+  return utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
 };
 
 firebase.addAppDelegateMethods = function(appDelegate) {
@@ -145,7 +146,7 @@ firebase._processPendingNotifications = function() {
       firebase._receivedNotificationCallback(userInfoJSON);
     }
     firebase._pendingNotifications = [];
-    UIApplication.sharedApplication().applicationIconBadgeNumber = 0;
+    utils.ios.getter(UIApplication, UIApplication.sharedApplication).applicationIconBadgeNumber = 0;
   }
 };
 
