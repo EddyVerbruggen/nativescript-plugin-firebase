@@ -1,5 +1,20 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.6.3 (2016, September 21)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.2...3.6.3)
+
+### SDK versions
+If version numbers __changed__, clean your platform folders to avoid build errors.
+
+- iOS: 3.5.x
+- Android: 9.4.0
+
+### Fixes
+- [#135](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/135) Xcode 8 compatibility (iOS 10 SDK)
+
+
+
 ## 3.6.2 (2016, September 15)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.1...3.6.2)
