@@ -1,5 +1,7 @@
 <img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+<img src="images/features/crash.png" width="296px" height="124px" alt="Crash"/>
+
 ## Enabling Crash Reporting
 Nothing to do - since plugin version 3.4.2 this plugin automatically uploads
 crashes to your Firebase Console. Just check the 'Crash' menu item every now and then.

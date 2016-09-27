@@ -1,5 +1,7 @@
 <img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+<img src="images/features/config.png" width="296px" height="124px" alt="Config"/>
+
 ## Enabling Remote Config
 Since plugin version 3.2.0 you can retrieve _Remote Config_ properties.
 This feature lets you configure parameters in your Firebase instance like these:

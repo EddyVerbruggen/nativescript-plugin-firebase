@@ -1,5 +1,7 @@
 <img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+<img src="images/features/auth.png" width="296px" height="124px" alt="Auth"/>
+
 ## Enabling Authentication
 You can sign in a user either
 
