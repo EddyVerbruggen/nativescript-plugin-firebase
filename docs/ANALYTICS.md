@@ -1,5 +1,7 @@
 <img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+<img src="images/features/analytics.png" width="296px" height="124px" alt="Analytics"/>
+
 ## Enabling Analytics
 This plugin has had enalytics enabled since day 1 to collect usage and behavior data for your app. However, you were not able to push your own events. That changed with version 3.6.0 😃🔥
 
