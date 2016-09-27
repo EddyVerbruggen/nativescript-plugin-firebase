@@ -1,5 +1,7 @@
 <img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+<img src="images/features/storage.png" width="296px" height="124px" alt="Storage"/>
+
 ## Enabling Storage
 Since plugin version 3.4.0 you can use Firebase _Storage_ features.
 
