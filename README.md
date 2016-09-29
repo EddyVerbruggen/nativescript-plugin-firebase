@@ -17,9 +17,6 @@ For readability the supported features have been moved to their own README's:
 * [Crash Reporting](docs/CRASHREPORTING.md)
 * [Analytics](docs/ANALYTICS.md)
 
-## NativeScript version
-Please update to at least tns 2.1.0 to make plugin installation a little easier (otherwise you'll need to manually add an `applicationId` to `app/App_Resources/Android/app.gradle`). 
-
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
 Your first 'Firebase' will be automatically created and made available via an URL like `https://n-plugin-test.firebaseio.com`.
