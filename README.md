@@ -53,6 +53,9 @@ Then open `references.d.ts` in the root of your project and add this line to get
 /// <reference path="./node_modules/nativescript-plugin-firebase/firebase.d.ts" />
 ```
 
+### iOS
+[Looking to automate this step](#136), but for now, to build with Xcode 8 (iOS 10 SDK), you need to open the Xcode project via the platforms/ios/appname.__xcworkspace__/ file - then select your app's target, capabilities, enable 'Keychain sharing'.
+
 ### Android
 Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
