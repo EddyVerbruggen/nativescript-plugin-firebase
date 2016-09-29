@@ -204,10 +204,5 @@ that is being updated otherwise it will seem as though your updates have no effe
 #### Found play-services:9.0.0, but version 9.0.2 is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
-## Future work
-- Add support for `removeEventListener`
-- Possibly add more login mechanisms
-- Add other Firebase 3.x SDK features (there's already a few feature requests in the GitHub issue tracker
-
 ## Credits
 The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).
