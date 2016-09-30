@@ -123,6 +123,10 @@ firebase.init = function (arg) {
         return;
       }
 
+      firebase.ServerValue = {
+        TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)
+      };
+
       var fDatabase = com.google.firebase.database.FirebaseDatabase;
       if (arg.persist) {
         fDatabase.getInstance().setPersistenceEnabled(true);

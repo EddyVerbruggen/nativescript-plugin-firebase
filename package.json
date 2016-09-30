@@ -1,8 +1,9 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "3.6.3",
+  "version": "3.6.4-dev",
   "description" : "Fire. Base. Firebase!",
   "main" : "firebase.js",
+  "typings": "firebase.d.ts",
   "nativescript": {
     "platforms": {
       "android": "2.3.0",
