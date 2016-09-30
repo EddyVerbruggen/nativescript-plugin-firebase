@@ -6,8 +6,8 @@ To make it as easy as possible for consumers of this plugin we bundle those bith
 Steps to update the `.aar` file:
 
 * Clone this repo
-* Start Android Studio and pick 'import existing project' > `{this repo}/platforms/android/libraryproject`
-* Update `firebase/src/main/AndroidManifest.xml` as needed
+* Start Android Studio and pick 'import project' > `{this repo}/platforms/android/libraryproject`
+* Update `.java` classes and/or `firebase/src/main/AndroidManifest.xml` as needed
 * Open the Gradle toolwindow
 * Run `firebase > Tasks > build > build`
 * The (release) `.aar` will be generated in `firebase/build/outputs/aar`
