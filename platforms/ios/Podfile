@@ -1,2 +1,21 @@
-pod 'Firebase/Database', '~> 3.2.0'
-pod 'Firebase/Auth', '~> 3.2.0'
+
+pod 'Firebase', '~> 3.5.0'
+pod 'Firebase/Database'
+pod 'Firebase/Auth'
+pod 'Firebase/Crash'
+
+# Uncomment if you want to enable Remote Config
+#pod 'Firebase/RemoteConfig'
+
+# Uncomment if you want to enable FCM (Firebase Cloud Messaging)
+#pod 'Firebase/Messaging'
+
+# Uncomment if you want to enable Firebase Storage
+#pod 'Firebase/Storage'
+
+# Uncomment if you want to enable Facebook Authentication
+#pod 'FBSDKCoreKit'
+#pod 'FBSDKLoginKit'
+
+# Uncomment if you want to enable Google Authentication
+#pod 'GoogleSignIn'
