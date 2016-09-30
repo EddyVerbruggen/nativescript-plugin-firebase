@@ -15,14 +15,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
   @Override
   public void onMessageReceived(RemoteMessage remoteMessage) {
-    RemoteMessage.Notification not = remoteMessage.getNotification();
     try {
-      JSONObject json = new JSONObject()
-          .put("title", not.getTitle())
-          .put("body", not.getBody())
-          .put("foreground", true);
+      final JSONObject json = new JSONObject()
+        .put("foreground", true)
+        .put("from", remoteMessage.getFrom());
 
-      Map<String, String> data = remoteMessage.getData();
+      final RemoteMessage.Notification not = remoteMessage.getNotification();
+      if (not != null) {
+        json.put("title", not.getTitle())
+          .put("body", not.getBody());
+      }
+
+      final Map<String, String> data = remoteMessage.getData();
       for (Map.Entry<String, String> stringStringEntry : data.entrySet()) {
         json.put(stringStringEntry.getKey(), stringStringEntry.getValue());
       }
