@@ -300,6 +300,10 @@ firebase.init = function (arg) {
         return;
       }
 
+      firebase.ServerValue = {
+        TIMESTAMP: FIRServerValue.timestamp()
+      };
+
       // this requires you to download GoogleService-Info.plist and
       // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
       FIRApp.configure();

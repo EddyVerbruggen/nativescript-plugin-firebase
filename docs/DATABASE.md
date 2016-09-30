@@ -26,11 +26,10 @@ If you want to add data to a known path use this, otherwise use `push` (see belo
 The plugin will take care of serializing JSON data to native data structures.
 
 ```js
-
   // to store a JSON object
   firebase.setValue(
       '/companies',
-      {'foo':'bar'}
+      {foo:'bar'}
   );
 
   // to store an array of JSON objects
@@ -40,6 +39,21 @@ The plugin will take care of serializing JSON data to native data structures.
         {name: 'Telerik', country: 'Bulgaria'},
         {name: 'Google', country: 'USA'}
       ]
+  );
+```
+
+#### Adding an update timestamp
+If you want to have Firebase a timestamp to your data (instead of clients which likely are not synchronized),
+you can use the placeholder value `firebase.ServerValue.TIMESTAMP`, so for instance:
+
+```js
+  // to store a JSON object
+  firebase.setValue(
+      '/companies',
+      {
+        foo: 'bar',
+        updateTs: firebase.ServerValue.TIMESTAMP
+      }
   );
 ```
 
