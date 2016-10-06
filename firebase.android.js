@@ -185,7 +185,7 @@ firebase.init = function (arg) {
       }
 
       // Facebook
-      if (typeof(com.facebook) !== "undefined") {
+      if (typeof(com.facebook) !== "undefined" && typeof(com.facebook.FacebookSdk) !== "undefined") {
         com.facebook.FacebookSdk.sdkInitialize(appModule.android.context);
         fbCallbackManager = com.facebook.CallbackManager.Factory.create();
         appModule.android.on(appModule.AndroidApplication.activityResultEvent, function(eventData){
