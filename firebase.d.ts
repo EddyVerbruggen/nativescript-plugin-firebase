@@ -59,9 +59,7 @@ declare module "nativescript-firebase" {
 
     export interface ServerValue {
         /**
-         * When for instance using setValue you can set a timestamp property to this placeholder value.
-         * Example:
-         *   updateTs: firebase.ServerValue.TIMESTAMP
+         * TODO 
          */
         TIMESTAMP: any;
     }
@@ -140,6 +138,13 @@ declare module "nativescript-firebase" {
          * Default false.
          */
         singleEvent?: boolean;
+    }
+
+    export interface GetAuthTokenOptions {
+        /**
+         * Default false.
+         */
+        forceRefresh?: boolean;
     }
 
     /**
@@ -476,6 +481,7 @@ declare module "nativescript-firebase" {
 
     // Auth
     export function login(options: LoginOptions): Promise<User>;
+    export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
     export function logout(): Promise<any>;
     export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
     export function deleteUser(): Promise<any>;
