@@ -791,7 +791,7 @@ firebase.createUser = function (arg) {
           reject(error.localizedDescription);
         } else {
           resolve({
-            key: user.uid // firebase.toJsObject(authData).uid
+            key: user.uid
           });
         }
       };

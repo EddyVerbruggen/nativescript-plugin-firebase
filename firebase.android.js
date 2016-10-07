@@ -745,7 +745,7 @@ firebase.createUser = function (arg) {
               reject("Creating a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
             } else {
               var user = task.getResult().getUser();
-              resolve(toLoginResult(user));
+              resolve({key: user.getUid()});
             }
           }
         });
