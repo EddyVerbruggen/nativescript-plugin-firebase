@@ -185,8 +185,8 @@ firebase.init = function (arg) {
       }
 
       // Facebook
-      if (typeof(com.facebook) !== "undefined") {
-        com.facebook.FacebookSdk.sdkInitialize(com.tns.NativeScriptApplication.getInstance());
+      if (typeof(com.facebook) !== "undefined" && typeof(com.facebook.FacebookSdk) !== "undefined") {
+        com.facebook.FacebookSdk.sdkInitialize(appModule.android.context);
         fbCallbackManager = com.facebook.CallbackManager.Factory.create();
         appModule.android.on(appModule.AndroidApplication.activityResultEvent, function(eventData){
           if (eventData.requestCode !== GOOGLE_SIGNIN_INTENT_ID) {
@@ -280,7 +280,7 @@ firebase.getRemoteConfigDefaults = function (properties) {
 };
 
 firebase._isGooglePlayServicesAvailable = function () {
-  var context = com.tns.NativeScriptApplication.getInstance();
+  var context = appModule.android.context;
   var playServiceStatusSuccess = com.google.android.gms.common.ConnectionResult.SUCCESS; // 0
   var playServicesStatus = com.google.android.gms.common.GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
   return playServicesStatus === playServiceStatusSuccess;
@@ -304,7 +304,7 @@ firebase.analytics.logEvent = function (arg) {
         }
       }
 
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()).logEvent(arg.key, bundle);
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || appModule.android.context).logEvent(arg.key, bundle);
 
       resolve();
     } catch (ex) {
@@ -326,7 +326,7 @@ firebase.analytics.setUserProperty = function (arg) {
         return;
       }
 
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()).setUserProperty(arg.key, arg.value);
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || appModule.android.context).setUserProperty(arg.key, arg.value);
 
       resolve();
     } catch (ex) {
@@ -605,7 +605,7 @@ firebase.login = function (arg) {
           }
         });
 
-        firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
+        firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.android.context)
             .addOnConnectionFailedListener(onConnectionFailedListener)
             .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
             .build();
@@ -745,7 +745,7 @@ firebase.createUser = function (arg) {
               reject("Creating a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
             } else {
               var user = task.getResult().getUser();
-              resolve(toLoginResult(user));
+              resolve({key: user.getUid()});
             }
           }
         });
