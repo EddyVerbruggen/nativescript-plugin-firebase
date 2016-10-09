@@ -1,5 +1,26 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.6.4 (2016, October 9)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.3...3.6.4)
+
+### SDK versions
+If version numbers __changed__, clean your platform folders to avoid build errors.
+
+- iOS: 3.5.x
+- Android: 9.4.0
+
+### New
+- [#132](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/132) Get Firebase timestamp
+- [#148](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/148) Fix for storing primitive types on Android
+- Better TypeScript support (updated `firebase.ts.d`).
+
+### Fixes
+- [#141](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/141) Fix return result of `createUser` on Android
+- [#156](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/156) Invoking `init` before app start now works for Android as well
+
+
+
 ## 3.6.3 (2016, September 21)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.2...3.6.3)
