@@ -72,6 +72,30 @@ firebase.toHashMap = function(obj) {
   return node;
 };
 
+firebase.toValue = function(val){
+  var returnVal = null;
+  if (val !== null) {
+    switch (typeof val) {
+      case 'object':
+        returnVal = firebase.toHashMap(val);
+        break;
+      case 'boolean':
+        returnVal = java.lang.Boolean.valueOf(String(val));
+        break;
+      case 'number':
+        if (Number(val) === val && val % 1 === 0)
+          returnVal = java.lang.Long.valueOf(String(val));
+        else
+          returnVal = java.lang.Double.valueOf(String(val));
+        break;
+      case 'string':
+        returnVal = String(val);
+        break;
+    }
+  }
+  return returnVal;
+};
+
 firebase.toJsObject = function(javaObj) {
   if (javaObj === null || typeof javaObj != "object") {
     return javaObj;
@@ -879,7 +903,7 @@ firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
       var pushInstance = firebase.instance.child(path).push();
-      pushInstance.setValue(firebase.toHashMap(val));
+      pushInstance.setValue(firebase.toValue(val));
       resolve({
         key: pushInstance.getKey()
       });
@@ -893,7 +917,7 @@ firebase.push = function (path, val) {
 firebase.setValue = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
-      firebase.instance.child(path).setValue(firebase.toHashMap(val));
+      firebase.instance.child(path).setValue(firebase.toValue(val));
       resolve();
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
