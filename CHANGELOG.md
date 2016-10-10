@@ -2,7 +2,7 @@
 
 ## 3.7.1 (2016, October 10)
 
-[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.4...3.7.0)
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.4...3.7.1)
 
 ### SDK versions
 
