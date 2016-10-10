@@ -279,6 +279,25 @@ Then add the following lines to your code and check for setup instructions for y
 1. If you didn't choose this feature during installation you can uncomment `google-services-auth` in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
 2. Google Sign-In requires an SHA1 fingerprint: see [Authenticating Your Client for details](https://developers.google.com/android/guides/client-auth). If you don't do this you will see the account selection popup, but you won't be able to actually sign in.
 
+### getAuthToken
+If you want to authenticate your user from your backend server you can obtain
+a Firebase auth token for the currently logged in user.
+
+```js
+  firebase.getAuthToken({
+    // default false, not recommended to set to true by Firebase but exposed for {N} devs nonetheless :)
+    forceRefresh: false
+  }).then(
+      function (token) {
+        console.log("Auth token retrieved: " + token);
+      },
+      function (errorMessage) {
+        console.log("Auth token retrieval error: " + errorMessage);
+      }
+  );
+
+```
+
 ### logout
 Shouldn't be more complicated than:
 

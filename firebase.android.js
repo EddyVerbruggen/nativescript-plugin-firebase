@@ -209,7 +209,7 @@ firebase.init = function (arg) {
       }
 
       // Facebook
-      if (typeof(com.facebook) !== "undefined") {
+      if (typeof(com.facebook) !== "undefined" && typeof(com.facebook.FacebookSdk) !== "undefined") {
         com.facebook.FacebookSdk.sdkInitialize(com.tns.NativeScriptApplication.getInstance());
         fbCallbackManager = com.facebook.CallbackManager.Factory.create();
         appModule.android.on(appModule.AndroidApplication.activityResultEvent, function(eventData){
@@ -497,6 +497,43 @@ firebase.logout = function (arg) {
   });
 };
 
+firebase.getAuthToken = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var user = firebaseAuth.getCurrentUser();
+      if (user !== null) {
+        var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+          onSuccess: function(getTokenResult) {
+            resolve(getTokenResult.getToken());
+          }
+        });
+
+        var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+          onFailure: function (exception) {
+            reject(exception);
+          }
+        });
+
+        user.getToken(arg.forceRefresh)
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+      } else {
+        reject("Log in first");
+      }
+    } catch (ex) {
+      console.log("Error in firebase.getAuthToken: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 function toLoginResult(user) {
   if (user === null) {
     return false;
@@ -508,7 +545,6 @@ function toLoginResult(user) {
     email: user.getEmail(),
     // expiresAtUnixEpochSeconds: authData.getExpires(),
     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
-    // token: user.getToken() // can be used to auth with a backend server
   };
 }
 
@@ -769,7 +805,7 @@ firebase.createUser = function (arg) {
               reject("Creating a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
             } else {
               var user = task.getResult().getUser();
-              resolve(toLoginResult(user));
+              resolve({key: user.getUid()});
             }
           }
         });

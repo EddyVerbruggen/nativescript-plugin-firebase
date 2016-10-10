@@ -42,29 +42,18 @@ firebase.addAppDelegateMethods = function(appDelegate) {
       var result = false;
       if (typeof(FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
-          application,
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+            application,
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
       // for iOS >= 9
       result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+              url,
+              options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+              options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       return result;
     };
-
-    // Untested, so commented out
-    /*
-    appDelegate.prototype.signDidDisconnectWithUserWithError = function (signIn, user, error) {
-      if (error === null) {
-        console.log("--- OK in signDidDisconnectWithUserWithError");
-      } else {
-        console.log("--- error in signDidDisconnectWithUserWithError: " + error.localizedDescription);
-      }
-    };
-    */
   }
 
   // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
@@ -219,16 +208,16 @@ firebase._onTokenRefreshNotification = function (notification) {
     firebase.addAppDelegateMethods(application.ios.delegate);
   } else {
     var __extends = this.__extends || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        __.prototype = b.prototype;
-        d.prototype = new __();
-    };
+          for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+          function __() { this.constructor = d; }
+          __.prototype = b.prototype;
+          d.prototype = new __();
+        };
 
     var appDelegate = (function (_super) {
       __extends(appDelegate, _super);
       function appDelegate() {
-          _super.apply(this, arguments);
+        _super.apply(this, arguments);
       }
       firebase.addAppDelegateMethods(appDelegate);
       appDelegate.ObjCProtocols = [UIApplicationDelegate];
@@ -330,8 +319,8 @@ firebase.init = function (arg) {
       if (arg.onAuthStateChanged) {
         firebase.authStateListener = function(auth, user) {
           arg.onAuthStateChanged({
-              loggedIn: user !== null,
-              user: toLoginResult(user)
+            loggedIn: user !== null,
+            user: toLoginResult(user)
           });
         };
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
@@ -341,8 +330,8 @@ firebase.init = function (arg) {
       if (!firebase.authStateListener) {
         firebase.authStateListener = function(auth, user) {
           firebase.notifyAuthStateListeners({
-              loggedIn: user !== null,
-              user: toLoginResult(user)
+            loggedIn: user !== null,
+            user: toLoginResult(user)
           });
         };
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
@@ -560,6 +549,35 @@ function toLoginResult(user) {
     };
 }
 
+firebase.getAuthToken = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var fAuth = FIRAuth.auth();
+      if (fAuth === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var user = fAuth.currentUser;
+      if (user) {
+        var onCompletion = function(token, error) {
+          if (error) {
+            reject(error.localizedDescription);
+          } else {
+            resolve(token);
+          }
+        };
+        user.getTokenForcingRefreshCompletion(arg.forceRefresh, onCompletion);
+      } else {
+        reject("Log in first");
+      }
+    } catch (ex) {
+      console.log("Error in firebase.getAuthToken: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.login = function (arg) {
   return new Promise(function (resolve, reject) {
 
@@ -600,14 +618,14 @@ firebase.login = function (arg) {
           fAuth.signInWithCustomToken(arg.token, onCompletion);
         }  else if (arg.tokenProviderFn) {
           arg.tokenProviderFn()
-            .then(
-              function (token) {
-                firebaseAuth.signInWithCustomToken(arg.token, onCompletion);
-              },
-              function (error) {
-                reject(error);
-              }
-            );
+              .then(
+                  function (token) {
+                    firebaseAuth.signInWithCustomToken(arg.token, onCompletion);
+                  },
+                  function (error) {
+                    reject(error);
+                  }
+              );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
@@ -791,7 +809,7 @@ firebase.createUser = function (arg) {
           reject(error.localizedDescription);
         } else {
           resolve({
-            key: user.uid // firebase.toJsObject(authData).uid
+            key: user.uid
           });
         }
       };
