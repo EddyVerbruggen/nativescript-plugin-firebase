@@ -6,11 +6,10 @@
 
 ### SDK versions
 
-TODO!!!
 If version numbers __changed__, clean your platform folders to avoid build errors.
 
-- iOS: 3.5.x
-- Android: 9.4.0
+- iOS: __3.7.x__
+- Android: __9.6.x__
 
 ### New
 - [#153](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/153) / [#157](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/157) Get Auth Token

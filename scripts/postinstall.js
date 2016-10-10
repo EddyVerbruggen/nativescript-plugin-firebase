@@ -102,7 +102,7 @@ function writePodFile(result) {
         fs.mkdirSync(directories.ios);
     }
     fs.writeFile(directories.ios + '/Podfile',
-    `pod 'Firebase', '~> 3.4.0'
+    `pod 'Firebase', '~> 3.7.0'
     pod 'Firebase/Database'
     pod 'Firebase/Auth'
     pod 'Firebase/Crash'
@@ -155,28 +155,28 @@ function writeGradleFile(result) {
 
     dependencies {
         // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-        compile "com.google.firebase:firebase-core:9.4.0"
-        compile "com.google.firebase:firebase-database:9.4.0"
-        compile "com.google.firebase:firebase-auth:9.4.0"
-        compile "com.google.firebase:firebase-crash:9.4.0"
+        compile "com.google.firebase:firebase-core:9.6.+"
+        compile "com.google.firebase:firebase-database:9.6.+"
+        compile "com.google.firebase:firebase-auth:9.6.+"
+        compile "com.google.firebase:firebase-crash:9.6.+"
 
         // for reading google-services.json and configuration
-        compile "com.google.android.gms:play-services-base:9.4.0"
+        compile "com.google.android.gms:play-services-base:9.6.+"
 
         // Uncomment if you want to use 'Remote Config'
-        ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.4.0"
+        ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.6.+"
 
         // Uncomment if you want FCM (Firebase Cloud Messaging)
-        ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:9.4.0"
+        ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:9.6.+"
 
         // Uncomment if you want Google Cloud Storage
-        ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:9.4.0'
+        ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:9.6.+'
 
         // Uncomment if you need Facebook Authentication
         ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile "com.facebook.android:facebook-android-sdk:4.+"
 
         // Uncomment if you need Google Sign-In Authentication
-        ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:9.4.0"
+        ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:9.6.+"
 
     }
     `, function(err) {
