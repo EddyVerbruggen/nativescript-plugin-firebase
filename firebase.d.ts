@@ -1,4 +1,4 @@
-declare module "nativescript-firebase" {
+declare module "nativescript-plugin-firebase" {
 
     /**
      * The allowed values for LoginOptions.type.
