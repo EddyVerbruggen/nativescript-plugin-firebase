@@ -1,5 +1,28 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.7.0 (2016, October 10)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.4...3.7.0)
+
+### SDK versions
+
+TODO!!!
+If version numbers __changed__, clean your platform folders to avoid build errors.
+
+- iOS: 3.5.x
+- Android: 9.4.0
+
+### New
+- [#153](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/153) / [#157](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/157) Get Auth Token
+
+### Fixes
+- [#154](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/154) Compatibility with Fresco
+- `createUser` now returns the same value on iOS and Android
+- TypeScript changes in 3.6.4 rolled back because of a few bugreports.
+
+
+
+
 ## 3.6.4 (2016, October 9)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.3...3.6.4)
