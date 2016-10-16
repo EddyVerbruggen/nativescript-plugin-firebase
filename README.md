@@ -40,19 +40,6 @@ tns plugin add nativescript-plugin-firebase
 ```
 _This will guide you through installing additional components. Check the doc links above to see what's what. You can always change your choices later._
 
-
-Do yourself a favor by adding TypeScript support to your nativeScript app:
-
-```
-tns install typescript
-```
-
-Then open `references.d.ts` in the root of your project and add this line to get autocompletion and type-checking for this plugin:
-
-```
-/// <reference path="./node_modules/nativescript-plugin-firebase/firebase.d.ts" />
-```
-
 ### iOS
 [Looking to automate this step](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/136), but for now, to build with Xcode 8 (iOS 10 SDK), you need to open the Xcode project via the platforms/ios/appname.__xcworkspace__/ file - then select your app's target, capabilities, enable 'Keychain sharing'.
 
