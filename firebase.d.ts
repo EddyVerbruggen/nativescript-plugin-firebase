@@ -105,7 +105,7 @@ declare module "nativescript-plugin-firebase" {
 
     export interface QueryRangeOption {
         type: QueryRangeType;
-        value: string;
+        value: any;
     }
 
     /**
