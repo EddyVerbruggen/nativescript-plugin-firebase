@@ -286,7 +286,6 @@ declare module "nativescript-plugin-firebase" {
          *    default: false
          *  }, ..]
          */
-        keys: Array<string>;
         properties: Array<RemoteConfigProperty>
     }
 
