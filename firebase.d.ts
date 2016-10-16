@@ -91,6 +91,16 @@ declare module "nativescript-plugin-firebase" {
          * Can be found in the firebase console.
          */
         storageBucket?: string;
+
+        /**
+         * For FCM either pass in this callback function here, or use addOnMessageReceivedCallback
+         */
+        onPushTokenReceivedCallback?: (data: string) => void;
+
+        /**
+         * For FCM either pass in this callback function here, or use addOnPushTokenReceivedCallback
+         */
+        onMessageReceivedCallback?: (data: Message) => void;
     }
 
     export interface QueryRangeOption {
@@ -332,6 +342,11 @@ declare module "nativescript-plugin-firebase" {
         badge?: number;
     }
 
+    export interface ProgressStatus {
+        fractionCompleted: Number;
+        percentageCompleted: Number;
+    }
+
     /**
      * Use either the 'localFile' or 'localFullPath' param to upload a file.
      */
@@ -366,7 +381,7 @@ declare module "nativescript-plugin-firebase" {
          *   console.log("Percentage complete: " + status.percentageCompleted);
          * }
          */
-        onProgress?: Function;
+        onProgress: (data: ProgressStatus) => void;
     }
 
     export interface UploadFileResult {
