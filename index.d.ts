@@ -1,3 +1,8 @@
+// Type definitions for nativescript-plugin-firebase
+// Project: nativescript-plugin-firebase
+// Definitions by: Eddy Verbruggen https://github.com/EddyVerbruggen/nativescript-plugin-firebase
+
+
 /**
  * The allowed values for LoginOptions.type.
  */
