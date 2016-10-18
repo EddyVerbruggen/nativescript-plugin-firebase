@@ -3,7 +3,7 @@
   "version": "3.7.1",
   "description" : "Fire. Base. Firebase!",
   "main" : "firebase.js",
-  "typings": "firebase.d.ts",
+  "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
       "android": "2.3.0",
