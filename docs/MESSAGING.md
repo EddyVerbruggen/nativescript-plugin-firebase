@@ -26,17 +26,8 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 #### Provisioning hell
 Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) to the letter. Once you've done it run `tns run ios` and upon starting the app it should prompt you for notification support. That also works on the simulator, but actually receiving notifications is _only_ possible on a real device.
 
-#### Don't receive the "Allow app to receive notifications" prompt?
-Make sure your `app.js` has this before `application.start();`:
-
-```js
-var firebase = require("nativescript-plugin-firebase");
-```
-
-Delete and re-add your app after you've added this.
-
 ### Handling a notification
-To listen to received notifications while in the foreground or when your app moves from the background to the foreground, add a handler `init`.
+To listen to received notifications while in the foreground or when your app moves from the background to the foreground, add a handler to `init`.
 
 Any pending notifications (while your app was not in the foreground) will trigger the `onMessageReceivedCallback` handler.
 
@@ -52,6 +43,8 @@ Any pending notifications (while your app was not in the foreground) will trigge
 ```
 
 You don't _have_ to provide the handler during `init` - you can also do it through a dedicated function.
+
+One scenario where you want to do this is if you don't want the "This app wants to send push notifications" popup during init, but delay it until you call this function.
 
 ```js
   firebase.addOnMessageReceivedCallback(
@@ -95,3 +88,5 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 * DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
+
+## iOS push notification popup

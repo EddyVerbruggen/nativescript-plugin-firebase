@@ -1,5 +1,6 @@
 var firebase = require("./firebase-common");
 var application = require("application");
+var applicationSettings = require("application-settings");
 var utils = require("utils/utils");
 var types = require("utils/types");
 var frame = require("ui/frame");
@@ -56,10 +57,10 @@ firebase.addAppDelegateMethods = function(appDelegate) {
     };
   }
 
-  // making this conditional to avoid http://stackoverflow.com/questions/37428539/firebase-causes-issue-missing-push-notification-entitlement-after-delivery-to ?
   if (typeof(FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = function (application, devToken) {
       // TODO guard with _messagingConnected ?
+      applicationSettings.setBoolean("registered", true);
       FIRInstanceID.instanceID().setAPNSTokenType(devToken, FIRInstanceIDAPNSTokenTypeUnknown);
       FIRMessaging.messaging().connectWithCompletion(function(error) {
         if (!error) {
@@ -95,9 +96,12 @@ firebase.addOnMessageReceivedCallback = function (callback) {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
-
       firebase._receivedNotificationCallback = callback;
+
+      var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+      firebase._registerForRemoteNotifications(app);
       firebase._processPendingNotifications();
+
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
@@ -113,11 +117,36 @@ firebase.addOnPushTokenReceivedCallback = function (callback) {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
-
       firebase._receivedPushTokenCallback = callback;
+      
+      // may already be present
+      if (firebase._pushToken) {
+        callback(firebase._pushToken);        
+      }
+
+      var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+      firebase._registerForRemoteNotifications(app);
+      firebase._processPendingNotifications();
+
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addOnPushTokenReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.unregisterForPushNotifications = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(FIRMessaging) === "undefined") {
+        reject("Enable FIRMessaging in Podfile first");
+        return;
+      }
+      utils.ios.getter(UIApplication, UIApplication.sharedApplication).unregisterForRemoteNotifications();
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.unregisterForPushNotifications: " + ex);
       reject(ex);
     }
   });
@@ -145,7 +174,7 @@ firebase._onTokenRefreshNotification = function (notification) {
     return;
   }
 
-  console.log("Firebase FCM token received: " + token);
+  firebase._pushToken = token;
 
   if (firebase._receivedPushTokenCallback) {
     firebase._receivedPushTokenCallback(token);
@@ -161,6 +190,20 @@ firebase._onTokenRefreshNotification = function (notification) {
   });
 };
 
+firebase._registerForRemoteNotificationsRanThisSession = false;
+
+firebase._registerForRemoteNotifications = function (app) {
+  if (firebase._registerForRemoteNotificationsRanThisSession) {
+    // ignore
+    return;
+  }
+  firebase._registerForRemoteNotificationsRanThisSession = true;
+  var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
+  var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
+  app.registerForRemoteNotifications(); // prompts the user to accept notifications
+  app.registerUserNotificationSettings(notificationSettings);
+};
+
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
 (function () {
 
@@ -169,16 +212,18 @@ firebase._onTokenRefreshNotification = function (notification) {
     firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
 
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
-      var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
-      var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
-      var application = appNotification.object;
-      application.registerForRemoteNotifications();
-      application.registerUserNotificationSettings(notificationSettings);
+      // guarded this with a preference so the popup "this app wants to send notifications"
+      // is not shown until the dev intentially wired a listener (see other usages of _registerForRemoteNotifications())
+      if (applicationSettings.getBoolean("registered", false)) {
+        firebase._registerForRemoteNotifications(appNotification.object);
+      }
     });
 
-    firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
-      firebase._processPendingNotifications();
-    });
+    // this one seems redundant with UIApplicationDidBecomeActiveNotification
+    // firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
+      // console.log("-- calling _processPendingNotifications from UIApplicationDidFinishLaunchingNotification");
+      // firebase._processPendingNotifications();
+    // });
 
     firebase._addObserver(UIApplicationDidBecomeActiveNotification, function (appNotification) {
       firebase._processPendingNotifications();
@@ -344,11 +389,13 @@ firebase.init = function (arg) {
 
       // Firebase notifications (FCM)
       if (typeof(FIRMessaging) !== "undefined") {
-        if (arg.onMessageReceivedCallback !== undefined) {
-          firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
-        }
-        if (arg.onPushTokenReceivedCallback !== undefined) {
-          firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
+        if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
+          if (arg.onMessageReceivedCallback !== undefined) {
+            firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+          }
+          if (arg.onPushTokenReceivedCallback !== undefined) {
+            firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
+          }
         }
       }
 
