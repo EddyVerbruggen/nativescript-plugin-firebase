@@ -105,7 +105,7 @@ function writePodFile(result) {
     `pod 'Firebase', '~> 3.7.0'
     pod 'Firebase/Database'
     pod 'Firebase/Auth'
-    pod 'Firebase/Crash'
+    #pod 'Firebase/Crash'
 
     # Uncomment if you want to enable Remote Config
     ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
