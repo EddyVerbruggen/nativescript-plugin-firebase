@@ -321,7 +321,7 @@ export interface GetRemoteConfigResult {
  * The returned object in the callback handler of the addOnMessageReceivedCallback function.
  *
  * Note that any custom data you send from your server will be available as
- * key/value properties on the Message object.
+ * key/value properties on the Message object as well.
  */
 export interface Message {
     /**
@@ -338,10 +338,6 @@ export interface Message {
      * Not available on Android when the notification was received in the background.
      */
     title?: string;
-    /**
-     * iOS badge count, as sent from the server.
-     */
-    badge?: number;
 }
 
 export interface ProgressStatus {
