@@ -4,6 +4,7 @@ var applicationSettings = require("application-settings");
 var utils = require("utils/utils");
 var types = require("utils/types");
 var frame = require("ui/frame");
+var platform = require("platform");
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -58,32 +59,39 @@ firebase.addAppDelegateMethods = function(appDelegate) {
   }
 
   if (typeof(FIRMessaging) !== "undefined") {
+    // not required when swizzling is enabled (which is the default)
     appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = function (application, devToken) {
-      // TODO guard with _messagingConnected ?
       applicationSettings.setBoolean("registered", true);
-      FIRInstanceID.instanceID().setAPNSTokenType(devToken, FIRInstanceIDAPNSTokenTypeUnknown);
-      FIRMessaging.messaging().connectWithCompletion(function(error) {
-        if (!error) {
-          firebase._messagingConnected = true;
-        }
-      });
+      /*
+       FIRInstanceID.instanceID().setAPNSTokenType(devToken, FIRInstanceIDAPNSTokenTypeUnknown); // FIRInstanceIDAPNSTokenTypeSandbox, ..
+       FIRMessaging.messaging().connectWithCompletion(function(error) {
+       if (!error) {
+       firebase._messagingConnected = true;
+       }
+       });
+       */
     };
 
-    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (application, userInfo, completionHandler) {
+    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, userInfo, completionHandler) {
       completionHandler(UIBackgroundFetchResultNewData);
       var userInfoJSON = firebase.toJsObject(userInfo);
+      var aps = userInfo.objectForKey("aps");
+      if (aps !== null) {
+        var alert = aps.objectForKey("alert");
+        if (alert !== null) {
+          userInfoJSON.title = alert.objectForKey("title");
+          userInfoJSON.body = alert.objectForKey("body");
+        }
+      }
 
-      if (application.applicationState === UIApplicationState.UIApplicationStateActive) {
+      firebase._pendingNotifications.push(userInfoJSON);
+      if (app.applicationState === UIApplicationState.UIApplicationStateActive) {
+        userInfoJSON.foreground = true;
         if (firebase._receivedNotificationCallback !== null) {
-          userInfoJSON.foreground = true;
-          firebase._receivedNotificationCallback(userInfoJSON);
-        } else {
-          userInfoJSON.foreground = false;
-          firebase._pendingNotifications.push(userInfoJSON);
+          firebase._processPendingNotifications();
         }
       } else {
         userInfoJSON.foreground = false;
-        firebase._pendingNotifications.push(userInfoJSON);
       }
     };
   }
@@ -118,10 +126,10 @@ firebase.addOnPushTokenReceivedCallback = function (callback) {
         return;
       }
       firebase._receivedPushTokenCallback = callback;
-      
+
       // may already be present
       if (firebase._pushToken) {
-        callback(firebase._pushToken);        
+        callback(firebase._pushToken);
       }
 
       var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
@@ -156,11 +164,13 @@ firebase._processPendingNotifications = function() {
   if (firebase._receivedNotificationCallback !== null) {
     for (var p in firebase._pendingNotifications) {
       var userInfoJSON = firebase._pendingNotifications[p];
-      console.log("Received a push notification with title: " + userInfoJSON.aps.alert.title);
-      // move the most relevant properties so it's according to the TS definition and aligned with Android
-      userInfoJSON.title = userInfoJSON.aps.alert.title;
-      userInfoJSON.body = userInfoJSON.aps.alert.body;
-      userInfoJSON.badge = userInfoJSON.aps.badge;
+      // move the most relevant properties (if set) so it's according to the TS definition and aligned with Android
+      if (userInfoJSON.aps && userInfoJSON.aps.alert) {
+        userInfoJSON.title = userInfoJSON.aps.alert.title;
+        userInfoJSON.body = userInfoJSON.aps.alert.body;
+      }
+      // cleanup
+      userInfoJSON.aps = undefined;
       firebase._receivedNotificationCallback(userInfoJSON);
     }
     firebase._pendingNotifications = [];
@@ -198,10 +208,60 @@ firebase._registerForRemoteNotifications = function (app) {
     return;
   }
   firebase._registerForRemoteNotificationsRanThisSession = true;
-  var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
-  var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
-  app.registerForRemoteNotifications(); // prompts the user to accept notifications
-  app.registerUserNotificationSettings(notificationSettings);
+
+  if (parseInt(platform.device.osVersion) >= 10) {
+    var authorizationOptions = UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionBadge;
+    var curNotCenter = utils.ios.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
+    curNotCenter.requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, function (granted, error) {
+      if (!error) {
+        console.log("User granted push notifications? " + granted);
+        // applicationSettings.setBoolean("registered", true);
+        app.registerForRemoteNotifications();
+      } else {
+        console.log("Error requesting push notification auth: " + error);
+      }
+    });
+
+    firebase._userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback(function (unnotification) {
+      // if the app is in the foreground then this method will receive the notification
+      // if the app is in the background, applicationDidReceiveRemoteNotificationFetchCompletionHandler will receive it
+      var userInfo = unnotification.request.content.userInfo;
+      var userInfoJSON = firebase.toJsObject(userInfo);
+      userInfoJSON.foreground = true;
+      firebase._pendingNotifications.push(userInfoJSON);
+      if (firebase._receivedNotificationCallback !== null) {
+        firebase._processPendingNotifications();
+      }
+    });
+    curNotCenter.delegate = firebase._userNotificationCenterDelegate;
+
+    firebase._firebaseRemoteMessageDelegate = FIRMessagingDelegateImpl.new().initWithCallback(function (appDataDictionary) {
+      var asJs = firebase.toJsObject(appDataDictionary.objectForKey("notification"));
+
+      var userInfoJSON = firebase.toJsObject(appDataDictionary);
+      firebase._pendingNotifications.push(userInfoJSON);
+
+      userInfoJSON.title = asJs.title;
+      userInfoJSON.body = asJs.body;
+
+      var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+      if (app.applicationState === UIApplicationState.UIApplicationStateActive) {
+        userInfoJSON.foreground = true;
+        if (firebase._receivedNotificationCallback !== null) {
+          firebase._processPendingNotifications();
+        }
+      } else {
+        userInfoJSON.foreground = false;
+      }
+    });
+    FIRMessaging.messaging().remoteMessageDelegate = firebase._firebaseRemoteMessageDelegate;
+
+  } else {
+    var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
+    var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
+    app.registerForRemoteNotifications(); // prompts the user to accept notifications
+    app.registerUserNotificationSettings(notificationSettings);
+  }
 };
 
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
@@ -294,9 +354,11 @@ firebase.toJsObject = function(objCObj) {
       var val = objCObj.valueForKey(key);
 
       switch (types.getClass(val)) {
+        case 'NSArray':
         case 'NSMutableArray':
           node[key] = firebase.toJsObject(val);
           break;
+        case 'NSDictionary':
         case 'NSMutableDictionary':
           node[key] = firebase.toJsObject(val);
           break;
@@ -585,15 +647,15 @@ firebase.logout = function (arg) {
 
 function toLoginResult(user) {
   return user && {
-      uid: user.uid,
-      // anonymous: user.anonymous,
-      // provider: user.providerID,
-      profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
-      email: user.email,
-      emailVerified: user.emailVerified,
-      name: user.displayName,
-      refreshToken: user.refreshToken
-    };
+        uid: user.uid,
+        // anonymous: user.anonymous,
+        // provider: user.providerID,
+        profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        name: user.displayName,
+        refreshToken: user.refreshToken
+      };
 }
 
 firebase.getAuthToken = function (arg) {
@@ -774,28 +836,6 @@ firebase.login = function (arg) {
     }
   });
 };
-
-var GIDSignInDelegateImpl = (function (_super) {
-  __extends(GIDSignInDelegateImpl, _super);
-  function GIDSignInDelegateImpl() {
-    _super.apply(this, arguments);
-  }
-
-  GIDSignInDelegateImpl.new = function () {
-    return _super.new.call(this);
-  };
-  GIDSignInDelegateImpl.prototype.initWithCallback = function (callback) {
-    this._callback = callback;
-    return this;
-  };
-  GIDSignInDelegateImpl.prototype.signInDidSignInForUserWithError = function (signIn, user, error) {
-    this._callback(user, error);
-  };
-  if (typeof(GIDSignInDelegate) !== "undefined") {
-    GIDSignInDelegateImpl.ObjCProtocols = [GIDSignInDelegate];
-  }
-  return GIDSignInDelegateImpl;
-})(NSObject);
 
 firebase.resetPassword = function (arg) {
   return new Promise(function (resolve, reject) {
@@ -1350,33 +1390,103 @@ firebase.deleteFile = function (arg) {
 };
 
 /*
-firebase.sendCrashLog = function (arg) {
-  return new Promise(function (resolve, reject) {
-    try {
+ firebase.sendCrashLog = function (arg) {
+ return new Promise(function (resolve, reject) {
+ try {
 
-      if (typeof(FIRCrashLog) === "undefined") {
-        reject("Make sure 'Firebase/Crash' is in the plugin's Podfile");
-        return;
-      }
+ if (typeof(FIRCrashLog) === "undefined") {
+ reject("Make sure 'Firebase/Crash' is in the plugin's Podfile");
+ return;
+ }
 
-      if (!arg.log) {
-        reject("The mandatory 'log' argument is missing");
-        return;
-      }
+ if (!arg.log) {
+ reject("The mandatory 'log' argument is missing");
+ return;
+ }
 
-      if (showInConsole) {
-        FIRCrashNSLog(arg.log);
-      } else {
-        FIRCrashLog(arg.log);
-      }
+ if (showInConsole) {
+ FIRCrashNSLog(arg.log);
+ } else {
+ FIRCrashLog(arg.log);
+ }
 
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.sendCrashLog: " + ex);
-      reject(ex);
-    }
-  });
-};
-*/
+ resolve();
+ } catch (ex) {
+ console.log("Error in firebase.sendCrashLog: " + ex);
+ reject(ex);
+ }
+ });
+ };
+ */
+
+var GIDSignInDelegateImpl = (function (_super) {
+  __extends(GIDSignInDelegateImpl, _super);
+  function GIDSignInDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  GIDSignInDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  GIDSignInDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  GIDSignInDelegateImpl.prototype.signInDidSignInForUserWithError = function (signIn, user, error) {
+    this._callback(user, error);
+  };
+  if (typeof(GIDSignInDelegate) !== "undefined") {
+    GIDSignInDelegateImpl.ObjCProtocols = [GIDSignInDelegate];
+  }
+  return GIDSignInDelegateImpl;
+})(NSObject);
+
+
+// see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc
+var UNUserNotificationCenterDelegateImpl = (function (_super) {
+  __extends(UNUserNotificationCenterDelegateImpl, _super);
+  function UNUserNotificationCenterDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  UNUserNotificationCenterDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  UNUserNotificationCenterDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  UNUserNotificationCenterDelegateImpl.prototype.userNotificationCenterWillPresentNotificationWithCompletionHandler = function (unCenter, notification, completionHandler) {
+    this._callback(notification);
+  };
+  if (typeof(UNUserNotificationCenterDelegate) !== "undefined") {
+    UNUserNotificationCenterDelegateImpl.ObjCProtocols = [UNUserNotificationCenterDelegate];
+  }
+  return UNUserNotificationCenterDelegateImpl;
+})(NSObject);
+
+
+// see https://firebase.google.com/docs/reference/ios/firebasemessaging/api/reference/Protocols/FIRMessagingDelegate
+var FIRMessagingDelegateImpl = (function (_super) {
+  __extends(FIRMessagingDelegateImpl, _super);
+  function FIRMessagingDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  FIRMessagingDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  FIRMessagingDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  FIRMessagingDelegateImpl.prototype.applicationReceivedRemoteMessage = function (firMessagingRemoteMessage) {
+    this._callback(firMessagingRemoteMessage.appData);
+  };
+  if (typeof(FIRMessagingDelegate) !== "undefined") {
+    FIRMessagingDelegateImpl.ObjCProtocols = [FIRMessagingDelegate];
+  }
+  return FIRMessagingDelegateImpl;
+})(NSObject);
 
 module.exports = firebase;
