@@ -102,26 +102,26 @@ function writePodFile(result) {
         fs.mkdirSync(directories.ios);
     }
     fs.writeFile(directories.ios + '/Podfile',
-    `pod 'Firebase', '~> 3.7.0'
-    pod 'Firebase/Database'
-    pod 'Firebase/Auth'
-    #pod 'Firebase/Crash'
+`pod 'Firebase', '~> 3.7.0'
+pod 'Firebase/Database'
+pod 'Firebase/Auth'
+#pod 'Firebase/Crash'
 
-    # Uncomment if you want to enable Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
+# Uncomment if you want to enable Remote Config
+` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
 
-    # Uncomment if you want to enable FCM (Firebase Cloud Messaging)
-    ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
+# Uncomment if you want to enable FCM (Firebase Cloud Messaging)
+` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
-    # Uncomment if you want to enable Firebase Storage
-    ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
+# Uncomment if you want to enable Firebase Storage
+` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
 
-    # Uncomment if you want to enable Facebook Authentication
-    ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
-    ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
+# Uncomment if you want to enable Facebook Authentication
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
 
-    # Uncomment if you want to enable Google Authentication
-    ` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`, function(err) {
+# Uncomment if you want to enable Google Authentication
+` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`, function(err) {
         if(err) {
             return console.log(err);
         }
@@ -139,47 +139,49 @@ function writeGradleFile(result) {
         fs.mkdirSync(directories.android);
     }
     fs.writeFile(directories.android + '/include.gradle',
-    `
-    android {
-        productFlavors {
-            "fireb" {
-                dimension "fireb"
-            }
+`
+android {
+    productFlavors {
+        "fireb" {
+            dimension "fireb"
         }
     }
+}
 
-    repositories {
-        jcenter()
-        mavenCentral()
-    }
+repositories {
+    jcenter()
+    mavenCentral()
+}
 
-    dependencies {
-        // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-        compile "com.google.firebase:firebase-core:9.6.+"
-        compile "com.google.firebase:firebase-database:9.6.+"
-        compile "com.google.firebase:firebase-auth:9.6.+"
-        compile "com.google.firebase:firebase-crash:9.6.+"
+dependencies {
+    // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
+    compile "com.google.firebase:firebase-core:9.6.+"
+    compile "com.google.firebase:firebase-database:9.6.+"
+    compile "com.google.firebase:firebase-auth:9.6.+"
+    compile "com.google.firebase:firebase-crash:9.6.+"
 
-        // for reading google-services.json and configuration
-        compile "com.google.android.gms:play-services-base:9.6.+"
+    // for reading google-services.json and configuration
+    compile "com.google.android.gms:play-services-base:9.6.+"
 
-        // Uncomment if you want to use 'Remote Config'
-        ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.6.+"
+    // Uncomment if you want to use 'Remote Config'
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.6.+"
 
-        // Uncomment if you want FCM (Firebase Cloud Messaging)
-        ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:9.6.+"
+    // Uncomment if you want FCM (Firebase Cloud Messaging)
+    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:9.6.+"
 
-        // Uncomment if you want Google Cloud Storage
-        ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:9.6.+'
+    // Uncomment if you want Google Cloud Storage
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:9.6.+'
 
-        // Uncomment if you need Facebook Authentication
-        ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile "com.facebook.android:facebook-android-sdk:4.+"
+    // Uncomment if you need Facebook Authentication
+    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile "com.facebook.android:facebook-android-sdk:4.+"
 
-        // Uncomment if you need Google Sign-In Authentication
-        ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:9.6.+"
+    // Uncomment if you need Google Sign-In Authentication
+    ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:9.6.+"
 
-    }
-    `, function(err) {
+}
+
+apply plugin: "com.google.gms.google-services"
+`, function(err) {
         if(err) {
             return console.log(err);
         }
