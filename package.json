@@ -1,8 +1,8 @@
 {
   "name": "nativescript-plugin-firebase",
   "version": "3.7.1",
-  "description" : "Fire. Base. Firebase!",
-  "main" : "firebase.js",
+  "description": "Fire. Base. Firebase!",
+  "main": "firebase.js",
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
@@ -11,7 +11,8 @@
     }
   },
   "scripts": {
-    "postinstall": "node scripts/postinstall.js"
+    "postinstall": "node scripts/postinstall.js",
+    "config": "node scripts/postinstall.js config"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
   },
   "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
   "dependencies": {
+    "app-root-path": "^2.0.1",
     "prompt": "^1.0.0"
   }
 }

@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var prompt = require('prompt');
 
 // Default settings for using ios and android with Firebase
@@ -11,8 +12,40 @@ var directories = {
 };
 
 console.log('NativeScript Firebase Plugin Installation');
-prompt.start();
-askiOSPrompt();
+
+var appRoot = require('app-root-path').toString();
+var pluginConfigPath = path.join(appRoot, "firebase.nativescript.json");
+
+var config = {};
+function mergeConfig(result) {
+    for (var key in result) {
+        config[key] = result[key];
+    }
+}
+function saveConfig() {
+    fs.writeFileSync(pluginConfigPath, JSON.stringify(config, null, 4));
+}
+function readConfig() {
+    try {
+        config = JSON.parse(fs.readFileSync(pluginConfigPath));
+    } catch(e) {
+        console.log("Failed reading config at " + pluginConfigPath);
+        console.log(e);
+        config = {};
+    }
+}
+
+if (process.argv.indexOf("config") == -1 && fs.existsSync(pluginConfigPath)) {
+    readConfig();
+    console.log("Config exists at: " + pluginConfigPath);
+    askiOSPromptResult(config);
+    askAndroidPromptResult(config);
+    promptQuestionsResult(config);
+} else {
+    console.log("No existing config at: " + pluginConfigPath);
+    prompt.start();
+    askiOSPrompt();
+}
 
 /**
  * Prompt the user if they are integrating Firebase with iOS
@@ -26,11 +59,15 @@ function askiOSPrompt() {
         if (err) {
             return console.log(err);
         }
-        if (isSelected(result.using_ios)) {
-            usingiOS = true;
-        }
+        mergeConfig(result);
+        askiOSPromptResult(result);
         askAndroidPrompt();
     });
+}
+function askiOSPromptResult(result) {
+    if (isSelected(result.using_ios)) {
+        usingiOS = true;
+    }
 }
 
 /**
@@ -45,13 +82,19 @@ function askAndroidPrompt() {
         if (err) {
             return console.log(err);
         }
-        if (isSelected(result.using_android)) {
-            usingAndroid = true;
-        }
+        mergeConfig(result);
+        askAndroidPromptResult(result);
         if(usingiOS || usingAndroid) {
             promptQuestions();
+        } else {
+            askSaveConfigPrompt();
         }
     });
+}
+function askAndroidPromptResult(result) {
+    if (isSelected(result.using_android)) {
+        usingAndroid = true;
+    }
 }
 
 /**
@@ -82,13 +125,33 @@ function promptQuestions() {
         if (err) {
             return console.log(err);
         }
-        if(usingiOS) {
-            writePodFile(result);
+        mergeConfig(result);
+        promptQuestionsResult(result);
+        askSaveConfigPrompt();
+    });
+}
+function promptQuestionsResult(result) {
+    if(usingiOS) {
+        writePodFile(result);
+    }
+    if(usingAndroid) {
+        writeGradleFile(result);
+    }
+    console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
+}
+
+function askSaveConfigPrompt() {
+    prompt.get({
+        name: 'save_config',
+        description: 'Do you want to save the selected configuration. Reinstalling the dependency will reuse the setup from: ' + pluginConfigPath + '. CI will be easier. (y/n)',
+        default: 'y'
+    }, function (err, result) {
+        if (err) {
+            return console.log(err);
         }
-        if(usingAndroid) {
-            writeGradleFile(result);
+        if (isSelected(result.save_config)) {
+            saveConfig();
         }
-        console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run postinstall`.');
     });
 }
 
@@ -101,7 +164,8 @@ function writePodFile(result) {
     if(!fs.existsSync(directories.ios)) {
         fs.mkdirSync(directories.ios);
     }
-    fs.writeFile(directories.ios + '/Podfile',
+    try {
+        fs.writeFileSync(directories.ios + '/Podfile',
 `pod 'Firebase', '~> 3.7.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
@@ -121,12 +185,12 @@ pod 'Firebase/Auth'
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
 
 # Uncomment if you want to enable Google Authentication
-` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`, function(err) {
-        if(err) {
-            return console.log(err);
-        }
+` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`);
         console.log('Successfully created iOS (Pod) file.');
-    });
+    } catch(e) {
+        console.log('Failed to create iOS (Pod) file.');
+        console.log(e);
+    }
 }
 
 /**
@@ -138,7 +202,8 @@ function writeGradleFile(result) {
      if(!fs.existsSync(directories.android)) {
         fs.mkdirSync(directories.android);
     }
-    fs.writeFile(directories.android + '/include.gradle',
+    try {
+        fs.writeFileSync(directories.android + '/include.gradle',
 `
 android {
     productFlavors {
@@ -181,12 +246,12 @@ dependencies {
 }
 
 apply plugin: "com.google.gms.google-services"
-`, function(err) {
-        if(err) {
-            return console.log(err);
-        }
+`);
         console.log('Successfully created Android (include.gradle) file.');
-    });
+    } catch(e) {
+        console.log('Failed to create Android (include.gradle) file.');
+        console.log(e);
+    }
 }
 
 /**
