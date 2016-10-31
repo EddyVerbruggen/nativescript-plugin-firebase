@@ -57,11 +57,6 @@ We're trying to automate these steps, but for now:
   }
 ```
 
-- Add the very bottom of the same file add
-```
-  apply plugin: "com.google.gms.google-services"
-```
-
 ## Usage
 
 If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
