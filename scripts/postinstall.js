@@ -136,6 +136,7 @@ function promptQuestionsResult(result) {
     }
     if(usingAndroid) {
         writeGradleFile(result);
+        writeGoogleServiceCopyHook();
     }
     console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
 }
@@ -250,6 +251,43 @@ apply plugin: "com.google.gms.google-services"
         console.log('Successfully created Android (include.gradle) file.');
     } catch(e) {
         console.log('Failed to create Android (include.gradle) file.');
+        console.log(e);
+    }
+}
+
+/**
+ * Installs an after-prepare build hook to copy the app/App_Resources/Android/google-services.json to platform/android on build.
+ */
+function writeGoogleServiceCopyHook() {
+    console.log("Install google-service.json copy hook.");
+    try {
+        var scriptContent =
+`
+var path = require("path");
+var fs = require("fs");
+
+module.exports = function() {
+
+    var sourceGoogleJson = path.join(__dirname, "..", "..", "app", "App_Resources", "Android", "google-services.json");
+    var destinationGoogleJson = path.join(__dirname, "..", "..", "platforms", "android", "google-services.json");
+    if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
+        console.log("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
+        fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
+    }
+}
+`;
+        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
+        var afterPrepareDirPath = path.dirname(scriptPath);
+        var hooksDirPath = path.dirname(afterPrepareDirPath);
+        if (!fs.existsSync(afterPrepareDirPath)) {
+            if (!fs.existsSync(hooksDirPath)) {
+                fs.mkdirSync(hooksDirPath);
+            }
+            fs.mkdirSync(afterPrepareDirPath);
+        }
+        fs.writeFileSync(scriptPath, scriptContent);
+    } catch(e) {
+        console.log("Failed to install google-service.json copy hook.");
         console.log(e);
     }
 }
