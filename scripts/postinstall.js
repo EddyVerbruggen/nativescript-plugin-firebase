@@ -19,7 +19,7 @@ var pluginConfigPath = path.join(appRoot, "firebase.nativescript.json");
 var config = {};
 function mergeConfig(result) {
     for (var key in result) {
-        config[key] = result[key];
+        config[key] = isSelected(result[key]);
     }
 }
 function saveConfig() {
@@ -299,5 +299,5 @@ module.exports = function() {
  * @returns {boolean} The answer is yes, {false} The answer is no
  */
 function isSelected(value) {
-    return (value && value.toLowerCase() === 'y')
+    return value === true || (typeof value === "string" && value.toLowerCase() === 'y');
 }
