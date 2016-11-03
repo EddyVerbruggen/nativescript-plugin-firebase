@@ -78,7 +78,7 @@ firebase.addAppDelegateMethods = function(appDelegate) {
       var aps = userInfo.objectForKey("aps");
       if (aps !== null) {
         var alert = aps.objectForKey("alert");
-        if (alert !== null) {
+        if (alert !== null && alert.objectForKey) {
           userInfoJSON.title = alert.objectForKey("title");
           userInfoJSON.body = alert.objectForKey("body");
         }
