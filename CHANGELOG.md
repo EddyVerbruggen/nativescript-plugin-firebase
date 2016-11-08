@@ -1,5 +1,29 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.7.2 (2016, November 8)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.7.1...3.7.2)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+
+- iOS: 3.7.x
+- Android: 9.6.x
+
+### New
+- [#165](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/165) Feature/Question: Is it possible to have more control over push notifications prompt 
+
+### Fixes
+- [#175](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/175) There's a few function params missing in the TS definition file
+- [#176](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/176) Remote Config TS definition is incorrect
+- [#178](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178) Running in debug works, running in release on iOS causes crash
+- [#179](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/179) Error TS2656: Exported external package typings file 'firebase.d.ts' is not a module.
+- [#187](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/187) IOS facebook login crash
+
+
+
+
 ## 3.7.1 (2016, October 10)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.6.4...3.7.1)
