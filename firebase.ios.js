@@ -269,7 +269,8 @@ firebase._registerForRemoteNotifications = function (app) {
 
   if (typeof(FIRMessaging) !== "undefined") {
 
-    firebase._addObserver(kFIRInstanceIDTokenRefreshNotification, firebase._onTokenRefreshNotification);
+    // see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178 for why we're not using a constant here
+    firebase._addObserver("com.firebase.iid.notif.refresh-token", firebase._onTokenRefreshNotification);
 
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
       // guarded this with a preference so the popup "this app wants to send notifications"
