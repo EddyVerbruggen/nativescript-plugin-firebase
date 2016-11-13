@@ -161,7 +161,8 @@ function writeGradleFile(result) {
         compile "com.google.firebase:firebase-crash:9.6.+"
 
         // for reading google-services.json and configuration
-        compile "com.google.android.gms:play-services-base:9.6.+"
+        def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '9.6.+'
+        compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
         // Uncomment if you want to use 'Remote Config'
         ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.6.+"
