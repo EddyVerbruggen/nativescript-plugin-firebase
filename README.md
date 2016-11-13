@@ -62,6 +62,18 @@ We're trying to automate these steps, but for now:
   apply plugin: "com.google.gms.google-services"
 ```
 
+#### Google Play Services Version
+The plugin will default to version 9.6.0+ of the Android `play-services-base` SDK.
+If you need to change the version (to for instance the latest version), you can add a project ext property `googlePlayServicesVersion` like so:
+
+```
+//   /app/App_Resources/Android/app.gradle
+
+project.ext {
+    googlePlayServicesVersion = "+"
+}
+```
+
 ## Usage
 
 If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
