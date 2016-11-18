@@ -150,6 +150,9 @@ If you see an error like `Unable to satisfy the following requirements: Firebase
 then check [issue 98](#98) which perfectly explains how to update your local Pod spec repo, or first try
 to `tns platform remove ios && tns platform add ios`.
 
+Running `pod repo update` on the command line will make sure you have the latest Podspec,
+so when the plugin updates and a newer Firebase version can't be found, try that first.
+
 ## Known issues on Android
 
 #### Genymotion
@@ -205,7 +208,7 @@ the changes to `build.gradle` which are mentioned above as well.
 
 #### Could not find com.google...
 And there's this one: "Could not find com.google.firebase:firebase-auth:9.4.0". That means
-making sure you have the latest Google Repository bits installed.
+making sure you have the latest `Google Repository` bits installed.
 Just run `android` from a command prompt and install any pending updates.
 
 Also, an error like "Could not find com.google.firebase:firebase-core:9.0.0" can be caused by having
@@ -214,6 +217,10 @@ that is being updated otherwise it will seem as though your updates have no effe
 
 #### Found play-services:9.0.0, but version 9.0.2 is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
+
+#### EEXIST: file already exists, symlink '../mkdirp/bin/cmd.js
+This is a reace condition in a tool deep down the toolchain, so not the fault of this plugin.
+Just rerun the build, it only pops up sometimes.
 
 ## Credits
 The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).
