@@ -167,10 +167,10 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 3.7.0'
+`pod 'Firebase', '~> 3.9.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
-#pod 'Firebase/Crash'
+pod 'Firebase/Crash'
 
 # Uncomment if you want to enable Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
@@ -221,29 +221,29 @@ repositories {
 
 dependencies {
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:9.6.+"
-    compile "com.google.firebase:firebase-database:9.6.+"
-    compile "com.google.firebase:firebase-auth:9.6.+"
-    compile "com.google.firebase:firebase-crash:9.6.+"
+    compile "com.google.firebase:firebase-core:9.8.+"
+    compile "com.google.firebase:firebase-database:9.8.+"
+    compile "com.google.firebase:firebase-auth:9.8.+"
+    compile "com.google.firebase:firebase-crash:9.8.+"
 
     // for reading google-services.json and configuration
-    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '9.6.+'
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '9.8.+'
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Remote Config'
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.6.+"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.8.+"
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
-    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:9.6.+"
+    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:9.8.+"
 
     // Uncomment if you want Google Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:9.6.+'
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:9.8.+'
 
     // Uncomment if you need Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile "com.facebook.android:facebook-android-sdk:4.+"
 
     // Uncomment if you need Google Sign-In Authentication
-    ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:9.6.+"
+    ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:9.8.+"
 
 }
 
@@ -275,7 +275,7 @@ module.exports = function() {
         console.log("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
         fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
     }
-}
+};
 `;
         var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
         var afterPrepareDirPath = path.dirname(scriptPath);
