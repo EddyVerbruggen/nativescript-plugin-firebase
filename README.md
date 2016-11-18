@@ -40,6 +40,14 @@ tns plugin add nativescript-plugin-firebase
 ```
 _This will guide you through installing additional components. Check the doc links above to see what's what. You can always change your choices later._
 
+### Config
+If you choose to save your config during the installation, the supported options may be saved in the `firebase.nativescript.json` at the root of your app.
+This is to ensure your app may roundtrip source control and installation on CI won't run the questionary during install.
+
+You can reconfigure the plugin by going to the `node_modules/nativescript-plugin-firebase` and running `npm run config`.
+
+You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
+
 ### iOS
 [Looking to automate this step](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/136), but for now, to build with Xcode 8 (iOS 10 SDK), you need to open the Xcode project via the platforms/ios/appname.__xcworkspace__/ file - then select your app's target, capabilities, enable 'Keychain sharing'.
 
@@ -57,10 +65,11 @@ We're trying to automate these steps, but for now:
   }
 ```
 
-- Add the very bottom of the same file add
-```
-  apply plugin: "com.google.gms.google-services"
-```
+#### google-services.json
+Firebase configures the native android project using a *google-services.json* file.
+You can place it at `app/App_Resources/Android/google-services.json`.
+
+This plugin adds an after-prepare NativeScript CLI hook that will copy it to the native android project at `platforms/android/google-services.json`.
 
 #### Google Play Services Version
 The plugin will default to version 9.6.0+ of the Android `play-services-base` SDK.

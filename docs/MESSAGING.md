@@ -19,8 +19,28 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 ```xml
 <key>UIBackgroundModes</key>
 <array>
-	<string>remote-notification</string>
+    <string>remote-notification</string>
 </array>
+```
+
+For Android you will not get the title and body if the notification was received while the application was in background, but you will get the *data* payload.
+Add the following services in the `app/App_Resources/Android/AndroidManifest.xml` to enable advanced FCM messaging:
+```
+<manifest ... >
+    <application ... >
+        ...
+        <service android:name="org.nativescript.plugins.firebase.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name="org.nativescript.plugins.firebase.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+    </application>
+</manifest>
 ```
 
 #### Provisioning hell
