@@ -66,7 +66,7 @@ We're trying to automate these steps, but for now:
 ```
 
 #### google-services.json
-Firebase configures the native android project using a *google-services.json* file.
+Firebase configures the native Android project using a *google-services.json* file.
 You can place it at `app/App_Resources/Android/google-services.json`.
 
 This plugin adds an after-prepare NativeScript CLI hook that will copy it to the native android project at `platforms/android/google-services.json`.

@@ -23,7 +23,8 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 </array>
 ```
 
-For Android you will not get the title and body if the notification was received while the application was in background, but you will get the *data* payload.
+For Android you will not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
+
 Add the following services in the `app/App_Resources/Android/AndroidManifest.xml` to enable advanced FCM messaging:
 ```
 <manifest ... >

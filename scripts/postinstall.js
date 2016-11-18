@@ -84,7 +84,7 @@ function askAndroidPrompt() {
         }
         mergeConfig(result);
         askAndroidPromptResult(result);
-        if(usingiOS || usingAndroid) {
+        if (usingiOS || usingAndroid) {
             promptQuestions();
         } else {
             askSaveConfigPrompt();
@@ -226,9 +226,9 @@ dependencies {
     compile "com.google.firebase:firebase-auth:9.6.+"
     compile "com.google.firebase:firebase-crash:9.6.+"
 
-        // for reading google-services.json and configuration
-        def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '9.6.+'
-        compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+    // for reading google-services.json and configuration
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '9.6.+'
+    compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Remote Config'
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:9.6.+"
