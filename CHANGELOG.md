@@ -14,7 +14,9 @@ and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
 - iOS: 3.9.x
 - Android: 9.8.x
 
-TODO
+### New
+- [#215](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/215) Upgrade to latest Firebase SDK's 
+
 
 
 
