@@ -15,7 +15,10 @@ var GOOGLE_SIGNIN_INTENT_ID = 123;
   if (typeof(com.google.firebase.messaging) === "undefined") {
     return;
   }
-  appModule.onLaunch = function(intent) {
+  appModule.on("launch", function(args) {
+
+    var intent = args.android;
+
     var extras = intent.getExtras();
     if (extras !== null) {
       var result = {
@@ -40,7 +43,7 @@ var GOOGLE_SIGNIN_INTENT_ID = 123;
         });
       }
     }
-  };
+  });
 
 })();
 
