@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var prompt = require('prompt');
 
 // Default settings for using ios and android with Firebase
@@ -138,6 +139,8 @@ function writeGradleFile(result) {
      if(!fs.existsSync(directories.android)) {
         fs.mkdirSync(directories.android);
     }
+    console.log(directories.android + '/include.gradle');
+    console.log(path.resolve(directories.android + '/include.gradle'));
     fs.writeFile(directories.android + '/include.gradle',
     `
     android {
