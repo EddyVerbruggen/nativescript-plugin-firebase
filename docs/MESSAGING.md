@@ -10,20 +10,7 @@ Although using push messages in your Firebase app is really easy setting it up i
 ### Android
 If you didn't choose this feature during installation you can uncomment `firebase-messaging` in [include.gradle](../platforms/android/include.gradle)
 
-### iOS
-If you didn't choose this feature during installation you can uncomment `Firebase/Messaging` in [Podfile](../platforms/ios/Podfile)
-
-#### Receiving remote notifications in the background
-Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
-
-```xml
-<key>UIBackgroundModes</key>
-<array>
-    <string>remote-notification</string>
-</array>
-```
-
-For Android you will not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
+You will not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
 
 Add the following services in the `app/App_Resources/Android/AndroidManifest.xml` to enable advanced FCM messaging:
 ```
@@ -42,6 +29,19 @@ Add the following services in the `app/App_Resources/Android/AndroidManifest.xml
         </service>
     </application>
 </manifest>
+```
+
+### iOS
+If you didn't choose this feature during installation you can uncomment `Firebase/Messaging` in [Podfile](../platforms/ios/Podfile)
+
+#### Receiving remote notifications in the background
+Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
+
+```xml
+<key>UIBackgroundModes</key>
+<array>
+    <string>remote-notification</string>
+</array>
 ```
 
 #### Provisioning hell
