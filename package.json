@@ -44,6 +44,6 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
   "dependencies": {
     "app-root-path": "^2.0.1",
-    "prompt": "^1.0.0"
+    "prompt-lite": "0.1.1"
   }
 }
