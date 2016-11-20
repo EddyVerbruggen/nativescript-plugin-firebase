@@ -2,5 +2,3 @@
 .DS_Store
 node_modules
 *.tgz
-scripts/postinstall.js
-scripts/install_ios_entitlements_packed.js

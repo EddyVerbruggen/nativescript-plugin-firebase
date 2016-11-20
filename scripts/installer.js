@@ -42,7 +42,7 @@ if (process.argv.indexOf("config") == -1 && fs.existsSync(pluginConfigPath)) {
     askAndroidPromptResult(config);
     promptQuestionsResult(config);
 } else {
-    console.log("No existing config at: " + pluginConfigPath);
+    console.log("No existing config found at: " + pluginConfigPath + ", so let's configure the Firebase plugin!");
     prompt.start();
     askiOSPrompt();
 }
