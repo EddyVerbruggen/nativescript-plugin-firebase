@@ -133,7 +133,7 @@ function promptQuestions() {
 function promptQuestionsResult(result) {
     if(usingiOS) {
         writePodFile(result);
-        // writeIOSEntitlementsCopyHook();
+        writeIOSEntitlementsCopyHook();
     }
     if(usingAndroid) {
         writeGradleFile(result);
@@ -157,13 +157,11 @@ function askSaveConfigPrompt() {
     });
 }
 
-// "scripts/install_ios_entitlements.js"
 function writeIOSEntitlementsCopyHook() {
     console.log("Install ios-entitlements installation hook.");
     try {
-        var scriptContent = "module.exports = require(\"nativescript-plugin-firebase/scripts/install_ios_entitlements.js\");";
-
-        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "run_ios_entitlements_install_script.js");
+        var scriptContent = fs.readFileSync(path.join(appRoot, 'node_modules', 'nativescript-plugin-firebase', 'scripts', 'install_ios_entitlements_packed.js'));
+        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-install-ios-entitlements.js");
         var afterPrepareDirPath = path.dirname(scriptPath);
         var hooksDirPath = path.dirname(afterPrepareDirPath);
         if (!fs.existsSync(afterPrepareDirPath)) {
