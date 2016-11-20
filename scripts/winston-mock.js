@@ -4,7 +4,7 @@ module.exports.Logger.prototype = {
     cli: function() {},
     help: function() {},
     input: function() {},
-    error: function() {},
+    error: function() {}
 };
 
 module.exports.transports = {

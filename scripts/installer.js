@@ -1,8 +1,6 @@
 var fs = require('fs');
 var path = require('path');
 var prompt = require('prompt-lite');
-var path = require('path');
-var prompt = require('prompt');
 
 // Default settings for using ios and android with Firebase
 var usingiOS = false, usingAndroid = false;
@@ -15,7 +13,7 @@ var directories = {
 
 console.log('NativeScript Firebase Plugin Installation');
 
-var appRoot = require('app-root-path').toString();
+var appRoot = "../../";
 var pluginConfigPath = path.join(appRoot, "firebase.nativescript.json");
 
 var config = {};
