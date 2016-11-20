@@ -48,31 +48,11 @@ You can reconfigure the plugin by going to the `node_modules/nativescript-plugin
 
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
 
-### iOS
-[Looking to automate this step](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/136), but for now, to build with Xcode 8 (iOS 10 SDK), you need to open the Xcode project via the platforms/ios/appname.__xcworkspace__/ file - then select your app's target, capabilities, enable 'Keychain sharing'.
-
 ### Android
-Install packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
-
-#### Open `platforms/android/build.gradle`
-We're trying to automate these steps, but for now:
-
-- Near the top there's a dependencies section, add `classpath "com.google.gms:google-services:3.0.0"` so it becomes something like:
-```
-  dependencies {
-    classpath "com.android.tools.build:gradle:X.X.X"
-    classpath "com.google.gms:google-services:3.0.0"
-  }
-```
-
-#### google-services.json
-Firebase configures the native Android project using a *google-services.json* file.
-You can place it at `app/App_Resources/Android/google-services.json`.
-
-This plugin adds an after-prepare NativeScript CLI hook that will copy it to the native android project at `platforms/android/google-services.json`.
+Install the latest packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
 #### Google Play Services Version
-The plugin will default to version 9.6.0+ of the Android `play-services-base` SDK.
+The plugin will default to version 9.8.0+ of the Android `play-services-base` SDK.
 If you need to change the version (to for instance the latest version), you can add a project ext property `googlePlayServicesVersion` like so:
 
 ```
@@ -215,7 +195,7 @@ Also, an error like "Could not find com.google.firebase:firebase-core:9.0.0" can
 more than one version of the Android SDK installed. Make sure ANDROID_HOME is set to the Android SDK directory
 that is being updated otherwise it will seem as though your updates have no effect.
 
-#### Found play-services:9.0.0, but version 9.0.2 is needed..
+#### Found play-services:9.0.0, but version 9.X.Y is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
 ## Credits
