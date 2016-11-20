@@ -2,3 +2,7 @@ platforms/android/libraryproject/
 docs
 README.md
 CHANGELOG.md
+*.tgz
+scripts/webpack.config.js
+scripts/installer.js
+scripts/winston-mock.js

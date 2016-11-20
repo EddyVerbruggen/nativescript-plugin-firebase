@@ -1,6 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var prompt = require('prompt-lite');
+var path = require('path');
+var prompt = require('prompt');
 
 // Default settings for using ios and android with Firebase
 var usingiOS = false, usingAndroid = false;
