@@ -1,7 +1,6 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
-
-## 3.8.0 (2016, November 18) ******** UNRELEASED
+## 3.8.0 (2016, November 20)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.7.2...3.8.0)
 
@@ -11,11 +10,21 @@ If version numbers __changed__, clean your platform folders to avoid build error
 Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
 and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
 
-- iOS: 3.9.x
-- Android: 9.8.x
+- iOS: __3.9.x__
+- Android: __9.8.x__
 
 ### New
+- [#102](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/102) Add google-services to the include.gradle file 
+- [#110](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/110) Version control firebase add-on services configuration? 
+- [#198](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/198) Some automations for Android 
+- [#213](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/213) Bundle postinstall script dependencies 
+- [#214](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/214) Send Email Verification enhancement 
 - [#215](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/215) Upgrade to latest Firebase SDK's 
+- [#216](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/216) Automate enabling iOS 10 keychain sharing 
+
+### Fixes
+- [#53](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/53) Error in tns build android: 'spawn gradle.bat ENOENT'
+- [#211](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/211) `prompt` dependency breaking tns builds and a possible solution
 
 
 
