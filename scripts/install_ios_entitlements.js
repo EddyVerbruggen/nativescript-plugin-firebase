@@ -42,7 +42,7 @@ if (!fs.existsSync(destFile)) {
       pbxProject = xcode.project(projectPath);
 
   pbxProject.parseSync();
-  pbxProject.addResourceFile(path.join("Firebase", "Resources", projName + ".entitlements"));
+  pbxProject.addResourceFile(path.join(projName, "Resources", projName + ".entitlements"));
 
 
   var configGroups = pbxProject.hash.project.objects['XCBuildConfiguration'];
