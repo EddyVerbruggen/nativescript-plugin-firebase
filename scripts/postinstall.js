@@ -1,6 +1,6 @@
 var fs = require('fs');
 var path = require('path');
-var prompt = require('prompt');
+var prompt = require('prompt-lite');
 
 // Default settings for using ios and android with Firebase
 var usingiOS = false, usingAndroid = false;
@@ -133,6 +133,7 @@ function promptQuestions() {
 function promptQuestionsResult(result) {
     if(usingiOS) {
         writePodFile(result);
+        // writeIOSEntitlementsCopyHook();
     }
     if(usingAndroid) {
         writeGradleFile(result);
@@ -154,6 +155,29 @@ function askSaveConfigPrompt() {
             saveConfig();
         }
     });
+}
+
+// "scripts/install_ios_entitlements.js"
+function writeIOSEntitlementsCopyHook() {
+    console.log("Install ios-entitlements installation hook.");
+    try {
+        var scriptContent = "module.exports = require(\"nativescript-plugin-firebase/scripts/install_ios_entitlements.js\");";
+
+        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "run_ios_entitlements_install_script.js");
+        var afterPrepareDirPath = path.dirname(scriptPath);
+        var hooksDirPath = path.dirname(afterPrepareDirPath);
+        if (!fs.existsSync(afterPrepareDirPath)) {
+            if (!fs.existsSync(hooksDirPath)) {
+                fs.mkdirSync(hooksDirPath);
+            }
+            fs.mkdirSync(afterPrepareDirPath);
+        }
+        fs.writeFileSync(scriptPath, scriptContent);
+
+    } catch(e) {
+        console.log("Failed to install ios-entitlements installation hook.");
+        console.log(e);
+    }
 }
 
 /**
