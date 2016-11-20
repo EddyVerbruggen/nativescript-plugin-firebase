@@ -11,7 +11,7 @@
     }
   },
   "scripts": {
-    "bundle-installer": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js scripts/postinstall.js",
+    "bundle-installer": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js scripts/postinstall.js && webpack --config scripts/webpack.config.js scripts/install_ios_entitlements.js scripts/install_ios_entitlements_packed.js",
     "prepublish": "npm run bundle-installer",
     "postinstall": "node scripts/postinstall.js",
     "config": "node scripts/postinstall.js config"
