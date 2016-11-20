@@ -17,4 +17,4 @@ module.exports = {
         //pkginfo is unpackable too, but we can replace it with a simple expression
         "pkginfo": "function(){}"
     }
-}
+};

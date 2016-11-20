@@ -218,9 +218,5 @@ that is being updated otherwise it will seem as though your updates have no effe
 #### Found play-services:9.0.0, but version 9.0.2 is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
-#### EEXIST: file already exists, symlink '../mkdirp/bin/cmd.js
-This is a race condition in a tool deep down the toolchain, so not the fault of this plugin.
-Just rerun the build, it only pops up sometimes.
-
 ## Credits
 The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).
