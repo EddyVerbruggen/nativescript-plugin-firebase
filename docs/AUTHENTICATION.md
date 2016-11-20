@@ -307,3 +307,18 @@ Shouldn't be more complicated than:
 ```
 
 
+### sendEmailVerification
+Sending an "email confirmation" email can be done after the user logged in:
+
+```js
+  firebase.sendEmailVerification().then(
+      function () {
+        console.log("Email verification sent);
+      },
+      function (error) {
+        console.log("Error sending email verification: " + error);
+      }
+  );
+```
+
+
