@@ -482,6 +482,38 @@ firebase.getCurrentUser = function (arg) {
   });
 };
 
+firebase.sendEmailVerification = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      var user = firebaseAuth.getCurrentUser();
+      if (user !== null) {
+        var addOnCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: function(task) {
+            if (!task.isSuccessful()) {
+              reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            } else {
+              resolve();
+            }
+          }
+        });
+
+        user.sendEmailVerification().addOnCompleteListener(addOnCompleteListener);
+      } else {
+        reject("Log in first");
+      }
+    } catch (ex) {
+      console.log("Error in firebase.sendEmailVerification: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.logout = function (arg) {
   return new Promise(function (resolve, reject) {
     try {

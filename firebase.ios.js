@@ -628,6 +628,35 @@ firebase.getCurrentUser = function (arg) {
   });
 };
 
+firebase.sendEmailVerification = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      var fAuth = FIRAuth.auth();
+      if (fAuth === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var user = fAuth.currentUser;
+      if (user) {
+        var onCompletion = function(error) {
+          if (error) {
+            reject(error.localizedDescription);
+          } else {
+            resolve(true);
+          }
+        };
+        user.sendEmailVerificationWithCompletion(onCompletion);
+      } else {
+        reject("Log in first");
+      }
+    } catch (ex) {
+      console.log("Error in firebase.sendEmailVerification: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.logout = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
