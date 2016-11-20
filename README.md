@@ -219,7 +219,7 @@ that is being updated otherwise it will seem as though your updates have no effe
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
 #### EEXIST: file already exists, symlink '../mkdirp/bin/cmd.js
-This is a reace condition in a tool deep down the toolchain, so not the fault of this plugin.
+This is a race condition in a tool deep down the toolchain, so not the fault of this plugin.
 Just rerun the build, it only pops up sometimes.
 
 ## Credits
