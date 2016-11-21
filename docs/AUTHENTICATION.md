@@ -13,19 +13,19 @@ You can sign in a user either
 
 Each of these login mechanisms need to be enabled in your Firebase console at the 'Login & Auth' tab.
 
-## What's returned when logging in?
+## What's returned when logged in?
 All login functions below, as well as `getCurrentUser` return a 'User' object with these properties:
 
 |param|optional|description
 |---|---|---
 |`uid`|no|The Firebase User ID
-|`email`|yes|Not all providers require an email address
-|`emailVerified`|no|You can send an email with a verification link which this refers to
-|`name`|yes|The name stored at the provider
 |`anonymous`|no|Whether or not the user logged in anonymously
+|`emailVerified`|no|You can send an email with a verification link which this refers to
+|`providers`|no|An array of {id: value} objects, where value can be 'facebook.com', etc
+|`email`|yes|Not all providers require an email address
+|`name`|yes|The name stored at the provider
 |`profileImageURL`|yes|A string containing a link to a user image on the web
 |`refreshToken`|yes|iOS only
-|`providers`|no|An array of {id: value} objects, where value can be 'facebook.com', etc
 
 
 ## Functions
