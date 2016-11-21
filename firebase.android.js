@@ -466,12 +466,7 @@ firebase.getCurrentUser = function (arg) {
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       var user = firebaseAuth.getCurrentUser();
       if (user !== null) {
-        resolve({
-          uid: user.getUid(),
-          name: user.getDisplayName(),
-          email: user.getEmail(),
-          profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
-        });
+        resolve(toLoginResult(user));
       } else {
         reject();
       }
@@ -574,11 +569,24 @@ function toLoginResult(user) {
     return false;
   }
 
+  // for convenience return the result in multiple formats
+  var providers = [];
+  var providerData = user.getProviderData();
+  for (var i = 0; i < providerData.size(); i++) {
+    var pid = providerData.get(i).getProviderId();
+    providers.push({
+      id: pid
+    });
+  }
+
   return {
     uid: user.getUid(),
     name: user.getDisplayName(),
     email: user.getEmail(),
-    // expiresAtUnixEpochSeconds: authData.getExpires(),
+    emailVerified: user.isEmailVerified(),
+    // provider: user.getProviderId(), // always 'firebase'
+    providers: providers,
+    anonymous: user.isAnonymous(),
     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
   };
 }
