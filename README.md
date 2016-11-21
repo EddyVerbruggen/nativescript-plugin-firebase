@@ -25,7 +25,7 @@ Open your Firebase project at the Google console and click 'Add app' to add an i
 
 * iOS: `GoogleService-Info.plist` which you'll add to your NativeScript project at `app/App_Resources/iOS/GoogleService-Info.plist`
 
-* Android: `google-services.json` which you'll add to your NativeScript project at `platforms/android/google-services.json`
+* Android: `google-services.json` which you'll add to your NativeScript project at `app/App_Resources/Android/google-services.json`
 
 ## Installation
 If you rather watch a video explaining the steps then check out this step-by-step guide - you'll also learn how to
