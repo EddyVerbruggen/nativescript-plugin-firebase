@@ -162,6 +162,10 @@ export interface GetAuthTokenOptions {
     forceRefresh?: boolean;
 }
 
+export interface Provider {
+    id: string;
+}
+
 /**
  * The options object passed into the login function.
  */
@@ -193,11 +197,13 @@ export interface LoginOptions {
 export interface User {
     uid: string;
     email?: string;
+    emailVerified: boolean;
     name?: string;
-    provider?: LoginType;
-    expiresAtUnixEpochSeconds?: number;
+    anonymous: boolean;
+    providers: Array<Provider>;
     profileImageURL?: string;
-    token?: string;
+    /** iOS only */
+    refreshToken?: string;
 }
 
 /**

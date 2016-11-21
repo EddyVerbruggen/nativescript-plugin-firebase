@@ -613,16 +613,7 @@ firebase.getCurrentUser = function (arg) {
 
       var user = fAuth.currentUser;
       if (user) {
-        resolve({
-          uid: user.uid,
-          // anonymous: user.anonymous,
-          // provider: user.providerID,
-          profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
-          email: user.email,
-          emailVerified: user.emailVerified,
-          name: user.displayName,
-          refreshToken: user.refreshToken
-        });
+        resolve(toLoginResult(user));
       } else {
         reject();
       }
@@ -681,16 +672,30 @@ firebase.logout = function (arg) {
 };
 
 function toLoginResult(user) {
-  return user && {
-        uid: user.uid,
-        // anonymous: user.anonymous,
-        // provider: user.providerID,
-        profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
-        email: user.email,
-        emailVerified: user.emailVerified,
-        name: user.displayName,
-        refreshToken: user.refreshToken
-      };
+  if (!user) {
+    return false;
+  }
+
+  var providers = [];
+  for (i = 0, l = user.providerData.count; i < l; i++) {
+    var firUserInfo = user.providerData.objectAtIndex(i);
+    var pid = firUserInfo.valueForKey("providerID");
+    providers.push({
+      id: pid
+    });
+  }
+
+  return {
+    uid: user.uid,
+    anonymous: user.anonymous,
+    // provider: user.providerID, // always 'Firebase'
+    providers: providers,
+    profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    name: user.displayName,
+    refreshToken: user.refreshToken
+  };
 }
 
 firebase.getAuthToken = function (arg) {
