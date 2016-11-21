@@ -2808,7 +2808,8 @@ var directories = {
 console.log('NativeScript Firebase Plugin Installation');
 
 var appRoot = "../../";
-var pluginConfigPath = path.join(appRoot, "firebase.nativescript.json");
+var pluginConfigFile = "firebase.nativescript.json";
+var pluginConfigPath = path.join(appRoot, pluginConfigFile);
 
 var config = {};
 function mergeConfig(result) {
@@ -2823,7 +2824,7 @@ function readConfig() {
     try {
         config = JSON.parse(fs.readFileSync(pluginConfigPath));
     } catch(e) {
-        console.log("Failed reading config at " + pluginConfigPath);
+        console.log("Failed reading " + pluginConfigFile);
         console.log(e);
         config = {};
     }
@@ -2831,12 +2832,12 @@ function readConfig() {
 
 if (process.argv.indexOf("config") == -1 && fs.existsSync(pluginConfigPath)) {
     readConfig();
-    console.log("Config exists at: " + pluginConfigPath);
+    console.log("Config file exists (" + pluginConfigFile + ")");
     askiOSPromptResult(config);
     askAndroidPromptResult(config);
     promptQuestionsResult(config);
 } else {
-    console.log("No existing config found at: " + pluginConfigPath + ", so let's configure the Firebase plugin!");
+    console.log("No existing " + pluginConfigFile + " config file found, so let's configure the Firebase plugin!");
     prompt.start();
     askiOSPrompt();
 }
@@ -2940,7 +2941,7 @@ function promptQuestionsResult(result) {
 function askSaveConfigPrompt() {
     prompt.get({
         name: 'save_config',
-        description: 'Do you want to save the selected configuration. Reinstalling the dependency will reuse the setup from: ' + pluginConfigPath + '. CI will be easier. (y/n)',
+        description: 'Do you want to save the selected configuration. Reinstalling the dependency will reuse the setup from: ' + pluginConfigFile + '. CI will be easier. (y/n)',
         default: 'y'
     }, function (err, result) {
         if (err) {
