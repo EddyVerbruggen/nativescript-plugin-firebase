@@ -137,7 +137,7 @@ so when the plugin updates and a newer Firebase version can't be found, try that
 
 #### Genymotion
 You can use the awesome [Genymotion emulator](https://www.genymotion.com/)
-but you'll need to [install Google Play Services on it](https://github.com/codepath/android_guides/wiki/Genymotion-2.0-Emulators-with-Google-Play-support) or you'll run into errors during authentication.
+but you'll need to [install Google Play Services on it](https://inthecheesefactory.com/blog/how-to-install-google-services-on-genymotion/en) or you'll run into errors during authentication.
 
 #### DexIndexOverflowException
 ```
