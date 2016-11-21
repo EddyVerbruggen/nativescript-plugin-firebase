@@ -216,7 +216,12 @@ firebase._registerForRemoteNotifications = function (app) {
       if (!error) {
         console.log("User granted push notifications? " + granted);
         // applicationSettings.setBoolean("registered", true);
-        app.registerForRemoteNotifications();
+        if (app === null) {
+          app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+        }
+        if (app !== null) {
+          app.registerForRemoteNotifications();
+        }
       } else {
         console.log("Error requesting push notification auth: " + error);
       }
