@@ -1,5 +1,28 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.8.3 (2016, November 21)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.2...3.8.3)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.9.x
+- Android: 9.8.x
+
+### New
+- [#196](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/196) firebase user provider data? 
+
+### Fixes
+- [#205](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/205) Crash after push notification confirmation
+- [#218](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/218) Error: "null is not an object (evaluating 'app.registerForRemoteNotifications')" #218
+
+
+
+
 ## 3.8.2 (2016, November 20)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.7.2...3.8.2)
