@@ -1,5 +1,25 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.8.4 (2016, November 23)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.3...3.8.4)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.9.x
+- Android: 9.8.x
+
+### Fixes
+- [#222](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/222) Let iOS handle push notifications after the app was killed in the springboard
+- [#225](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/225) Still problems with push messages
+
+
+
+
 ## 3.8.3 (2016, November 21)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.2...3.8.3)
