@@ -17,8 +17,38 @@ firebase._addObserver = function (eventName, callback) {
 
 firebase.addAppDelegateMethods = function(appDelegate) {
 
+  function handleRemoteNotification(app, userInfo) {
+    var userInfoJSON = firebase.toJsObject(userInfo);
+    var aps = userInfo.objectForKey("aps");
+    if (aps !== null) {
+      var alert = aps.objectForKey("alert");
+      if (alert !== null && alert.objectForKey) {
+        userInfoJSON.title = alert.objectForKey("title");
+        userInfoJSON.body = alert.objectForKey("body");
+      }
+    }
+
+    firebase._pendingNotifications.push(userInfoJSON);
+    if (app.applicationState === UIApplicationState.UIApplicationStateActive) {
+      // If this is called from applicationDidFinishLaunchingWithOptions probably the app was dead (background)
+      userInfoJSON.foreground = true;
+      if (firebase._receivedNotificationCallback !== null) {
+        firebase._processPendingNotifications();
+      }
+    } else {
+      userInfoJSON.foreground = false;
+    }
+  }
+
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
+    // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
+    if (launchOptions && typeof(FIRMessaging) !== "undefined") {
+      var remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
+      if (remoteNotification) {
+        handleRemoteNotification(application, remoteNotification);
+      }
+    }
     // Firebase Facebook authentication
     if (typeof(FBSDKApplicationDelegate) !== "undefined") {
       FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions);
@@ -74,25 +104,7 @@ firebase.addAppDelegateMethods = function(appDelegate) {
 
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, userInfo, completionHandler) {
       completionHandler(UIBackgroundFetchResultNewData);
-      var userInfoJSON = firebase.toJsObject(userInfo);
-      var aps = userInfo.objectForKey("aps");
-      if (aps !== null) {
-        var alert = aps.objectForKey("alert");
-        if (alert !== null && alert.objectForKey) {
-          userInfoJSON.title = alert.objectForKey("title");
-          userInfoJSON.body = alert.objectForKey("body");
-        }
-      }
-
-      firebase._pendingNotifications.push(userInfoJSON);
-      if (app.applicationState === UIApplicationState.UIApplicationStateActive) {
-        userInfoJSON.foreground = true;
-        if (firebase._receivedNotificationCallback !== null) {
-          firebase._processPendingNotifications();
-        }
-      } else {
-        userInfoJSON.foreground = false;
-      }
+      handleRemoteNotification(app, userInfo);
     };
   }
 };
@@ -161,6 +173,13 @@ firebase.unregisterForPushNotifications = function (callback) {
 };
 
 firebase._processPendingNotifications = function() {
+  var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+  if (!app) {
+      application.on("launch", function() {
+          firebase._processPendingNotifications();
+      });
+      return;
+  }
   if (firebase._receivedNotificationCallback !== null) {
     for (var p in firebase._pendingNotifications) {
       var userInfoJSON = firebase._pendingNotifications[p];
@@ -174,7 +193,7 @@ firebase._processPendingNotifications = function() {
       firebase._receivedNotificationCallback(userInfoJSON);
     }
     firebase._pendingNotifications = [];
-    utils.ios.getter(UIApplication, UIApplication.sharedApplication).applicationIconBadgeNumber = 0;
+    app.applicationIconBadgeNumber = 0;
   }
 };
 
@@ -203,6 +222,13 @@ firebase._onTokenRefreshNotification = function (notification) {
 firebase._registerForRemoteNotificationsRanThisSession = false;
 
 firebase._registerForRemoteNotifications = function (app) {
+  var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+  if (!app) {
+    application.on("launch", function() {
+      firebase._registerForRemoteNotifications();
+    });
+    return;
+  }
   if (firebase._registerForRemoteNotificationsRanThisSession) {
     // ignore
     return;
