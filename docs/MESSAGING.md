@@ -34,6 +34,10 @@ Add the following services in the `app/App_Resources/Android/AndroidManifest.xml
 ### iOS
 If you didn't choose this feature during installation you can run the "post install" script again (see the main readme) to add messaging support.
 
+#### Enable push support in Xcode
+
+<img src="images/push-xcode-config.png" width="600px" alt="Push Xcode config"/>
+
 #### Receiving remote notifications in the background
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 
@@ -43,10 +47,6 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
     <string>remote-notification</string>
 </array>
 ```
-
-Open Xcode and add push notification support:
-
-<img src="images/push-xcode-config.png" width="600px" alt="Push Xcode config"/>
 
 #### Provisioning hell
 Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) to the letter. Once you've done it run `tns run ios` and upon starting the app it should prompt you for notification support. That also works on the simulator, but actually receiving notifications is _only_ possible on a real device.
