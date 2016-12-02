@@ -1,3 +1,5 @@
+.idea
+.vscode
 platforms/android/libraryproject/
 docs
 README.md
