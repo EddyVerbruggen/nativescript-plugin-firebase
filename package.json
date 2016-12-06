@@ -2,7 +2,7 @@
   "name": "nativescript-plugin-firebase",
   "version": "3.8.4",
   "description": "Fire. Base. Firebase!",
-  "main": "firebase.js",
+  "main": "firebase",
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
