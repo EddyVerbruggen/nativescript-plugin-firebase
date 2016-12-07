@@ -13,6 +13,8 @@ Since this is the most likely feature you'll use with this plugin it has already
 ### init
 You can optionally pass `persist` to the [`init` function](../README.md#init) to make Firebase save data to the local disc so it will work in offline scenario's. Default `false`.
 
+> Beware that `persist` [may cause trouble](#186) when using `livesync`.
+
 ```js
   firebase.init({
     persist: true
