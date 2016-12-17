@@ -46,7 +46,7 @@ The plugin will take care of serializing JSON data to native data structures.
 
 #### Adding an update timestamp
 If you want to have Firebase a timestamp to your data (instead of clients which likely are not synchronized),
-you can use the placeholder value `firebase.ServerValue.TIMESTAMP`, so for instance:
+you can use the placeholder value `firebase.ServerValue.TIMESTAMP` (or `firebase["ServerValue"].TIMESTAMP` if your IDE complains about the former), so for instance:
 
 ```js
   // to store a JSON object
