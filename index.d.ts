@@ -60,13 +60,13 @@ export enum QueryLimitType {
     LAST
 }
 
-export interface ServerValue {
+export enum ServerValue {
     /**
      * When for instance using setValue you can set a timestamp property to this placeholder value.
      * Example:
      *   updateTs: firebase.ServerValue.TIMESTAMP
      */
-    TIMESTAMP: any;
+    TIMESTAMP
 }
 
 /**
