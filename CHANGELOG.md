@@ -1,5 +1,25 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.8.5 (2016, December 23)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.4...3.8.5)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.9.x
+- Android: 9.8.x
+
+### Fixes
+- [#217](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/217) Property 'ServerValue' does not exist on type 'typeof'
+- [#233](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/233) Update package.json to allow webpack bundling
+
+
+
+
 ## 3.8.4 (2016, November 23)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.3...3.8.4)
