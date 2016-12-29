@@ -237,6 +237,14 @@ export interface CreateUserOptions {
 }
 
 /**
+ * The options object passed into the updateProfile function.
+ */
+export interface UpdateProfileOptions {
+    displayName: string;
+    photoURL: string;
+}
+
+/**
  * The options object passed into the resetPassword function.
  */
 export interface ResetPasswordOptions {
@@ -521,6 +529,8 @@ export function sendEmailVerification(): Promise<any>;
 export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
 
 export function deleteUser(): Promise<any>;
+
+export function updateProfile(options: UpdateProfileOptions): Promise<any>;
 
 export function resetPassword(options: ResetPasswordOptions): Promise<any>;
 
