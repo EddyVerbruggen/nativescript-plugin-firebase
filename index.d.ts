@@ -240,8 +240,8 @@ export interface CreateUserOptions {
  * The options object passed into the updateProfile function.
  */
 export interface UpdateProfileOptions {
-    displayName: string;
-    photoURL: string;
+    displayName?: string;
+    photoURL?: string;
 }
 
 /**
