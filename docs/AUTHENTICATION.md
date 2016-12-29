@@ -166,6 +166,21 @@ Don't forget to enable email-password login in your firebase instance.
   );
 ```
 
+#### Updating a profile
+```js
+  firebase.updateProfile({
+    displayName: 'Eddy Verbruggen',
+    photoURL: 'http://provider.com/profiles/eddyverbruggen.png'
+  }).then(
+      function () {
+        // called when update profile was successful
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
 #### Resetting a password
 ```js
   firebase.resetPassword({

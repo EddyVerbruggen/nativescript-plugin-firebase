@@ -890,6 +890,49 @@ firebase.deleteUser = function (arg) {
   });
 };
 
+firebase.updateProfile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (!arg.displayName && !arg.photoURL) {
+        reject("Updating a profile requires a displayName and / or a photoURL argument");
+      } else {
+        var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+        var user = firebaseAuth.getCurrentUser();
+
+        if (user === null) {
+          reject("No current user");
+          return;
+        }
+
+        var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: function (task) {
+            if (task.isSuccessful()) {
+              resolve();
+            } else {
+              reject("Updating a profile failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            }
+          }
+        });
+
+        var profileUpdateBuilder = new com.google.firebase.auth.UserProfileChangeRequest.Builder();
+
+        if (arg.displayName)
+          profileUpdateBuilder.setDisplayName(arg.displayName)
+
+        if (arg.photoURL)
+          profileUpdateBuilder.setPhotoUri(android.net.Uri.parse(arg.photoURL))
+
+        var profileUpdate = profileUpdateBuilder.build();
+
+        user.updateProfile(profileUpdate).addOnCompleteListener(onCompleteListener);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.updateProfile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.keepInSync = function (path, switchOn) {
   return new Promise(function (resolve, reject) {
     try {

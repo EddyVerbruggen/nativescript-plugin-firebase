@@ -1005,6 +1005,43 @@ firebase.deleteUser = function (arg) {
   });
 };
 
+firebase.updateProfile = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var onCompletion = function (error) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      };
+
+      var fAuth = FIRAuth.auth();
+      if (fAuth === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      if (!arg.displayName && !arg.photoURL) {
+        reject("Updating a profile requires a displayName and / or a photoURL argument");
+      } else {
+        var user = fAuth.currentUser;
+        if (user) {
+          var changeRequest = user.profileChangeRequest();
+          changeRequest.displayName = arg.displayName;
+          changeRequest.photoURL = NSURL.URLWithString(arg.photoURL);
+          changeRequest.commitChangesWithCompletion(onCompletion);
+        } else {
+          reject();
+        }
+      }
+    } catch (ex) {
+      console.log("Error in firebase.updateProfile: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase._addObservers = function(to, updateCallback) {
   var listeners = [];
   listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.FIRDataEventTypeChildAdded, function (snapshot) {
