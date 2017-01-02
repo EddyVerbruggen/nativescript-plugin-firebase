@@ -36,7 +36,7 @@ dependencies {
 //    compile "com.facebook.android:facebook-android-sdk:4.+"
 
     // Uncomment if you need Google Sign-In Authentication
-//    compile "com.google.android.gms:play-services-auth:10.0.+"
+//    compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
 }
 
