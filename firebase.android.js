@@ -7,6 +7,8 @@ firebase._launchNotification = null;
 
 // we need to cache and restore the context, otherwise the next invocation is broken
 firebase._rememberedContext = null;
+firebase._googleSignInIdToken = null;
+firebase._facebookAccessToken = null;
 
 var fbCallbackManager = null;
 var GOOGLE_SIGNIN_INTENT_ID = 123;
@@ -654,8 +656,8 @@ firebase.login = function (arg) {
             fbCallbackManager,
             new com.facebook.FacebookCallback({
               onSuccess: function (loginResult) {
-                var token = loginResult.getAccessToken().getToken();
-                var authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(token);
+                firebase._facebookAccessToken = loginResult.getAccessToken().getToken();
+                var authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(firebase._facebookAccessToken);
 
                 var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
                 if (user) {
@@ -728,9 +730,9 @@ firebase.login = function (arg) {
             var success = googleSignInResult.isSuccess();
             if (success) {
               var googleSignInAccount = googleSignInResult.getSignInAccount();
-              var idToken = googleSignInAccount.getIdToken();
+              firebase._googleSignInIdToken = googleSignInAccount.getIdToken();
               var accessToken = null;
-              var authCredential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, accessToken);
+              var authCredential = com.google.firebase.auth.GoogleAuthProvider.getCredential(firebase._googleSignInIdToken, accessToken);
 
               firebase._mGoogleApiClient.connect();
 
@@ -770,6 +772,62 @@ firebase._alreadyLinkedToAuthProvider = function (user, providerId) {
     }
   }
   return false;
+};
+
+firebase.reauthenticate = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+      if (user === null) {
+        reject("no current user");
+        return;
+      }
+
+      var authCredential = null;
+      if (arg.type === firebase.LoginType.PASSWORD) {
+        if (!arg.email || !arg.password) {
+          reject("Auth type emailandpassword requires an email and password argument");
+        } else {
+          authCredential = com.google.firebase.auth.EmailAuthProvider.getCredential(arg.email, arg.password);
+        }
+
+      } else if (arg.type === firebase.LoginType.GOOGLE) {
+        if (!firebase._googleSignInIdToken) {
+          reject("Not currently logged in with Google");
+          return;
+        }
+        authCredential = com.google.firebase.auth.GoogleAuthProvider.getCredential(firebase._googleSignInIdToken, null);
+
+      } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        if (!firebase._facebookAccessToken) {
+          reject("Not currently logged in with Facebook");
+          return;
+        }
+        authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(firebase._facebookAccessToken);
+      }
+
+      if (authCredential === null) {
+        reject("arg.type should be one of LoginType.PASSWORD | LoginType.GOOGLE | LoginType.FACEBOOK");
+        return;
+      }
+
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          if (task.isSuccessful()) {
+            resolve();
+          } else {
+            // TODO extract error
+            reject("Reathentication failed");
+          }
+        }
+      });
+      user.reauthenticate(authCredential).addOnCompleteListener(onCompleteListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.reauthenticate: " + ex);
+      reject(ex);
+    }
+  });
 };
 
 firebase.resetPassword = function (arg) {

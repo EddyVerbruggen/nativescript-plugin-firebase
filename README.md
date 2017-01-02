@@ -52,7 +52,7 @@ You can also change the configuration by deleting the `firebase.nativescript.jso
 Install the latest packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
 #### Google Play Services Version
-The plugin will default to version 9.8.0+ of the Android `play-services-base` SDK.
+The plugin will default to version 10.0+ of the Android `play-services-base` SDK.
 If you need to change the version (to for instance the latest version), you can add a project ext property `googlePlayServicesVersion` like so:
 
 ```
