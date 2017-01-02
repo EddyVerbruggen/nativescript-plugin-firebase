@@ -53,7 +53,9 @@ firebase.toHashMap = function(obj) {
   var node = new java.util.HashMap();
   for (var property in obj) {
     if (obj.hasOwnProperty(property)) {
-      if (obj[property] !== null) {
+      if (obj[property] === null) {
+        node.put(property, null);
+      } else {
         switch (typeof obj[property]) {
           case 'object':
             node.put(property, firebase.toHashMap(obj[property], node));
