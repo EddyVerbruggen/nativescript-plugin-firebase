@@ -167,6 +167,9 @@ Don't forget to enable email-password login in your firebase instance.
 ```
 
 #### Updating a profile
+Pass in at least one of `displayName` and `photoURL`.
+The logged in user will be updated, but for `getCurrentUser` to reflect the change you'll need to do a logout-login.
+
 ```js
   firebase.updateProfile({
     displayName: 'Eddy Verbruggen',
