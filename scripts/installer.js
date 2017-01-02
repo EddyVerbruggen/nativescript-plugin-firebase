@@ -111,6 +111,10 @@ function promptQuestions() {
         description: 'Are you using Firebase Messaging (y/n)',
         default: 'n'
     }, {
+        name: 'crash_reporting',
+        description: 'Are you using Firebase Crash Reporting (y/n)',
+        default: 'n'
+    }, {
         name: 'storage',
         description: 'Are you using Firebase Storage (y/n)',
         default: 'n'
@@ -194,10 +198,12 @@ function writePodFile(result) {
 `pod 'Firebase', '~> 3.11.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
-pod 'Firebase/Crash'
 
 # Uncomment if you want to enable Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
+
+# Uncomment if you want to enable Crash Reporting
+` + (isSelected(result.crash_reporting) ? `` : `#`) + `pod 'Firebase/Crash'
 
 # Uncomment if you want to enable FCM (Firebase Cloud Messaging)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
@@ -248,7 +254,6 @@ dependencies {
     compile "com.google.firebase:firebase-core:10.0.+"
     compile "com.google.firebase:firebase-database:10.0.+"
     compile "com.google.firebase:firebase-auth:10.0.+"
-    compile "com.google.firebase:firebase-crash:10.0.+"
 
     // for reading google-services.json and configuration
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '10.0.+'
@@ -256,6 +261,9 @@ dependencies {
 
     // Uncomment if you want to use 'Remote Config'
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:10.0.+"
+
+    // Uncomment if you want to use 'Crash Reporting'
+    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:10.0.+"
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
     ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:10.0.+"

@@ -3,8 +3,9 @@
 <img src="images/features/crash.png" width="296px" height="124px" alt="Crash"/>
 
 ## Enabling Crash Reporting
-Nothing to do - since plugin version 3.8.2 this plugin automatically uploads
-crashes to your Firebase Console. Just check the 'Crash' menu item every now and then.
+With plugin version 3.9.0+ you will be prompted during installation of the plugin to enable Crash Reporting (it's off by default).
+
+In older versions it was on by default but it may slow down app startup a bit so now it's disabled by default.
 
 ## Making sense of the stacktraces
 Please read [the official docs](https://firebase.google.com/docs/crash/)
