@@ -1306,11 +1306,19 @@ firebase.uploadFile = function (arg) {
       });
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) != "object") {
+        if (typeof(arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
 
+        // using 'putFile' (not 'putBytes') so Firebase can infer the mimetype
+        var localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFile.path));
+        var uploadFileTask = storageReference.putFile(localFileUrl)
+            .addOnFailureListener(onFailureListener)
+            .addOnSuccessListener(onSuccessListener)
+            .addOnProgressListener(onProgressListener);
+
+        /*
         var error;
         var contents = arg.localFile.readSync(function(e) { error = e; });
 
@@ -1323,6 +1331,7 @@ firebase.uploadFile = function (arg) {
             .addOnFailureListener(onFailureListener)
             .addOnSuccessListener(onSuccessListener)
             .addOnProgressListener(onProgressListener);
+        */
 
       } else if (arg.localFullPath) {
 
@@ -1331,7 +1340,6 @@ firebase.uploadFile = function (arg) {
           return;
         }
 
-        // TODO there's prolly a more efficient way to get the file obj.. .android perhaps?
         var localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFullPath));
         var uploadFileTask = storageReference.putFile(localFileUrl)
             .addOnFailureListener(onFailureListener)
@@ -1376,7 +1384,7 @@ firebase.downloadFile = function (arg) {
       var localFilePath;
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) != "object") {
+        if (typeof(arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }

@@ -1404,11 +1404,16 @@ firebase.uploadFile = function (arg) {
       var fIRStorageUploadTask = null;
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) != "object") {
+        if (typeof(arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
 
+        // using 'putFile' (not 'putData') so Firebase can infer the mimetype
+        var localFileUrl = NSURL.fileURLWithPath(arg.localFile.path);
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(localFileUrl, null, onCompletion);
+
+        /*
         var error;
         var contents = arg.localFile.readSync(function(e) { error = e; });
 
@@ -1418,6 +1423,7 @@ firebase.uploadFile = function (arg) {
         }
 
         fIRStorageUploadTask = fIRStorageReference.putDataMetadataCompletion(contents, null, onCompletion);
+        */
 
       } else if (arg.localFullPath) {
         var localFileUrl = NSURL.fileURLWithPath(arg.localFullPath);
@@ -1470,7 +1476,7 @@ firebase.downloadFile = function (arg) {
       var localFilePath;
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) != "object") {
+        if (typeof(arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
