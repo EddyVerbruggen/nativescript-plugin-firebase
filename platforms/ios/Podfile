@@ -2,10 +2,12 @@
 pod 'Firebase', '~> 3.11.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
-pod 'Firebase/Crash'
 
 # Uncomment if you want to enable Remote Config
 #pod 'Firebase/RemoteConfig'
+
+# Uncomment if you want to enable Crash Reporting
+#pod 'Firebase/Crash'
 
 # Uncomment if you want to enable FCM (Firebase Cloud Messaging)
 #pod 'Firebase/Messaging'
