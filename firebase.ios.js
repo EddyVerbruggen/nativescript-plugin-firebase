@@ -791,12 +791,12 @@ firebase.login = function (arg) {
         if (!arg.token && !arg.tokenProviderFn) {
           reject("Auth type custom requires a token or a tokenProviderFn argument");
         } else if (arg.token) {
-          fAuth.signInWithCustomToken(arg.token, onCompletion);
+          fAuth.signInWithCustomTokenCompletion(arg.token, onCompletion);
         }  else if (arg.tokenProviderFn) {
           arg.tokenProviderFn()
               .then(
                   function (token) {
-                    firebaseAuth.signInWithCustomToken(arg.token, onCompletion);
+                    firebaseAuth.signInWithCustomTokenCompletion(token, onCompletion);
                   },
                   function (error) {
                     reject(error);
