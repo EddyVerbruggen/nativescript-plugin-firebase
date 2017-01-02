@@ -637,7 +637,7 @@ firebase.login = function (arg) {
           arg.tokenProviderFn()
               .then(
                   function (token) {
-                    firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
+                    firebaseAuth.signInWithCustomToken(token).addOnCompleteListener(onCompleteListener);
                   },
                   function (error) {
                     reject(error);
