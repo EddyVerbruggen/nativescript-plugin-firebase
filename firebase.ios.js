@@ -9,6 +9,7 @@ var platform = require("platform");
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
 firebase._receivedPushTokenCallback = null;
+firebase._gIDAuthentication = null;
 
 firebase._addObserver = function (eventName, callback) {
   var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
@@ -865,8 +866,8 @@ firebase.login = function (arg) {
         var delegate = GIDSignInDelegateImpl.new().initWithCallback(function (user, error) {
           if (error === null) {
             // Get a Google ID token and Google access token from the GIDAuthentication object and exchange them for a Firebase credential
-            var authentication = user.authentication;
-            var fIRAuthCredential = FIRGoogleAuthProvider.credentialWithIDTokenAccessToken(authentication.idToken, authentication.accessToken);
+            firebase._gIDAuthentication = user.authentication;
+            var fIRAuthCredential = FIRGoogleAuthProvider.credentialWithIDTokenAccessToken(firebase._gIDAuthentication.idToken, firebase._gIDAuthentication.accessToken);
 
             // Finally, authenticate with Firebase using the credential
             if (fAuth.currentUser) {
@@ -898,6 +899,67 @@ firebase.login = function (arg) {
       }
     } catch (ex) {
       console.log("Error in firebase.login: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.reauthenticate = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var fAuth = FIRAuth.auth();
+      if (fAuth === null) {
+        reject("Run init() first!");
+        return;
+      }
+
+      var user = fAuth.currentUser;
+      if (user === null) {
+        reject("no current user");
+        return;
+      }
+
+      var authCredential = null;
+      if (arg.type === firebase.LoginType.PASSWORD) {
+        if (!arg.email || !arg.password) {
+          reject("Auth type emailandpassword requires an email and password argument");
+        } else {
+          authCredential = FIREmailPasswordAuthProvider.credentialWithEmailPassword(arg.email, arg.password);
+        }
+
+      } else if (arg.type === firebase.LoginType.GOOGLE) {
+        if (!firebase._gIDAuthentication) {
+          reject("Not currently logged in with Google");
+          return;
+        }
+        authCredential = FIRGoogleAuthProvider.credentialWithIDTokenAccessToken(firebase._gIDAuthentication.idToken, firebase._gIDAuthentication.accessToken);
+
+      } else if (arg.type === firebase.LoginType.FACEBOOK) {
+        var currentAccessToken = FBSDKAccessToken.currentAccessToken();
+        if (!currentAccessToken) {
+          reject("Not currently logged in with Facebook");
+          return;
+        }
+        authCredential = FIRFacebookAuthProvider.credentialWithAccessToken(currentAccessToken.tokenString);
+      }
+
+      if (authCredential === null) {
+        reject("arg.type should be one of LoginType.PASSWORD | LoginType.GOOGLE | LoginType.FACEBOOK");
+        return;
+      }
+
+      var onCompletion = function(error) {
+        if (error) {
+          reject(error.localizedDescription);
+
+        } else {
+          resolve();
+        }
+      };
+      user.reauthenticateWithCredentialCompletion(authCredential, onCompletion);
+
+    } catch (ex) {
+      console.log("Error in firebase.reauthenticate: " + ex);
       reject(ex);
     }
   });

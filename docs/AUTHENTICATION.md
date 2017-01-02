@@ -96,6 +96,24 @@ Once the user is logged in you can retrieve the currently logged in user.
   });
 ```
 
+### Updating a profile
+Pass in at least one of `displayName` and `photoURL`.
+The logged in user will be updated, but for `getCurrentUser` to reflect the change you'll need to do a logout-login.
+
+```js
+  firebase.updateProfile({
+    displayName: 'Eddy Verbruggen',
+    photoURL: 'http://provider.com/profiles/eddyverbruggen.png'
+  }).then(
+      function () {
+        // called when update profile was successful
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
 ### Anonymous login
 Don't forget to enable anonymous login in your firebase instance.
 
@@ -162,24 +180,6 @@ Don't forget to enable email-password login in your firebase instance.
           message: errorMessage,
           okButtonText: "OK, got it"
         })
-      }
-  );
-```
-
-#### Updating a profile
-Pass in at least one of `displayName` and `photoURL`.
-The logged in user will be updated, but for `getCurrentUser` to reflect the change you'll need to do a logout-login.
-
-```js
-  firebase.updateProfile({
-    displayName: 'Eddy Verbruggen',
-    photoURL: 'http://provider.com/profiles/eddyverbruggen.png'
-  }).then(
-      function () {
-        // called when update profile was successful
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
       }
   );
 ```
@@ -357,6 +357,34 @@ Shouldn't be more complicated than:
   firebase.logout();
 ```
 
+### reauthenticate
+Some security-sensitive actions (deleting an account, changing a password) require that the user has recently signed in.
+If you perform one of these actions, and the user signed in too long ago, the action fails.
+When this happens (or to prevent it from happening), re-authenticate the user.
+
+```js
+  firebase.reauthenticate({
+    type: firebase.LoginType.PASSWORD, // or GOOGLE / FACEBOOK
+    // these are only required in type = PASSWORD
+    email: 'user@domain.com',
+    password: 'thePassword'
+  }).then(
+      function () {
+        // you can now safely delete the account / change the password
+        dialogs.alert({
+          title: "Re-authenticated user",
+          okButtonText: "OK"
+        });
+      },
+      function (error) {
+        dialogs.alert({
+          title: "Re-authenticate error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
+  );
+```
 
 ### sendEmailVerification
 Sending an "email confirmation" email can be done after the user logged in:

@@ -191,6 +191,12 @@ export interface LoginOptions {
     scope?: string[];
 }
 
+export interface ReauthenticateOptions {
+    type: LoginType;
+    email?: string;
+    password?: string;
+}
+
 /**
  * The returned object from the login function.
  */
@@ -519,6 +525,8 @@ export module analytics {
 
 // Auth
 export function login(options: LoginOptions): Promise<User>;
+
+export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
 
 export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
 
