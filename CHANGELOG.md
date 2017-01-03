@@ -1,5 +1,33 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+## 3.9.0 (2017, January 3)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.5...3.9.0)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: __3.11.x__
+- Android: __10.0.x__
+
+### New
+- [#245](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/245) Re-Authenticate a user 
+- [#249](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/249) Added updateProfile method 
+- [#240](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/240) Crash reporting slows startup time
+
+### Fixes
+- [#229](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/229) Update null doesn't remove key on Android
+- [#236](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/236) iOS Image Upload Type in Firebase
+- [#239](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/239) fAuth.signInWithCustomToken is not a function
+- [#250](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/250) Gradle build error when nativescript-google-maps-sdk is added
+
+
+
+
+
 ## 3.8.5 (2016, December 23)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.4...3.8.5)
