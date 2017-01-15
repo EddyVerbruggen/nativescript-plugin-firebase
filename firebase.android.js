@@ -1487,6 +1487,11 @@ firebase.subscribeToTopic = function(topicName){
   return new Promise(function (resolve, reject) {
     try{
 
+      if (typeof(com.google.firebase.messaging) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
       if (firebase.instance === null) {
         reject("Can be run only after init");
         return;
@@ -1504,6 +1509,11 @@ firebase.subscribeToTopic = function(topicName){
 firebase.unsubscribeToTopic = function(topicName){
   return new Promise(function (resolve, reject) {
     try{
+      
+      if (typeof(com.google.firebase.messaging) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
 
       if (firebase.instance === null) {
         reject("Can be run only after init");
