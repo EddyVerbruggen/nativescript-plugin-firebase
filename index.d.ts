@@ -569,5 +569,8 @@ export function getDownloadUrl(options: GetDownloadUrlOptions): Promise<string>;
 
 export function deleteFile(options: DeleteFileOptions): Promise<any>;
 
+export function subscribeToTopic(topicName): Promise<any>;
+
+export function unsubscribeToTopic(topicName): Promise<any>;
 // crash logging
 // export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;
