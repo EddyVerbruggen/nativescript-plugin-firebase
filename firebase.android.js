@@ -1483,6 +1483,41 @@ firebase.deleteFile = function (arg) {
   });
 };
 
+firebase.subscribeToTopic = function(topicName){
+  return new Promise(function (resolve, reject) {
+    try{
+
+      if (firebase.instance === null) {
+        reject("Can be run only after init");
+        return;
+      }
+
+      com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic(topicName);
+      
+    } catch(ex){
+      console.log("Error in firebase.subscribeToTopic: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.unsubscribeToTopic = function(topicName){
+  return new Promise(function (resolve, reject) {
+    try{
+
+      if (firebase.instance === null) {
+        reject("Can be run only after init");
+        return;
+      }
+      
+      com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeToTopic(topicName);
+    
+    } catch(ex){
+      console.log("Error in firebase.unsubscribeToTopic: " + ex);
+      reject(ex);
+    }
+  }); 
+}
 /*
 firebase.sendCrashLog = function (arg) {
   return new Promise(function (resolve, reject) {
