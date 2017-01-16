@@ -1506,7 +1506,7 @@ firebase.subscribeToTopic = function(topicName){
   });
 };
 
-firebase.unsubscribeToTopic = function(topicName){
+firebase.unsubscribeFromTopic = function(topicName){
   return new Promise(function (resolve, reject) {
     try{
       
@@ -1520,10 +1520,10 @@ firebase.unsubscribeToTopic = function(topicName){
         return;
       }
       
-      com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeToTopic(topicName);
+      com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic(topicName);
     
     } catch(ex){
-      console.log("Error in firebase.unsubscribeToTopic: " + ex);
+      console.log("Error in firebase.unsubscribeFromTopic: " + ex);
       reject(ex);
     }
   }); 
