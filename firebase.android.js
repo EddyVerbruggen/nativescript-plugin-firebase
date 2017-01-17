@@ -1111,7 +1111,15 @@ firebase.setValue = function (path, val) {
 firebase.update = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
+      if (typeof val == "object") {
       firebase.instance.child(path).updateChildren(firebase.toHashMap(val));
+      } else {
+        var lastPartOfPath = path.lastIndexOf("/");
+        var pathPrefix = path.substring(0, lastPartOfPath);
+        var pathSuffix = path.substring(lastPartOfPath + 1);
+        var updateObject = '{"' + pathSuffix + '" : "' + val + '"}';
+        firebase.instance.child(pathPrefix).updateChildren(firebase.toHashMap(JSON.parse(updateObject)));
+      }
       resolve();
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
