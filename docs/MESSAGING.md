@@ -102,6 +102,21 @@ Similarly to the message callback you can either wire this through `init` or as 
   );
 ```
 
+### Send messages to Topics
+Based on the publish/subscribe model, FCM topic messaging allows you to send a message to multiple devices that have opted in to a particular topic. You compose topic messages as needed, and FCM handles routing and delivering the message reliably to the right devices.
+
+Client apps can subscribe to any existing topic, or they can create a new topic. When a client app subscribes to a new topic name (one that does not already exist for your Firebase project), a new topic of that name is created in FCM and any client can subsequently subscribe to it.
+
+```js
+  firebase.subscribeToTopic("news");
+```
+
+and:
+
+```js
+  firebase.unsubscribeFromTopic("news");
+```
+
 ## Testing
 Using the Firebase Console gives you most flexibility, but you can quickly and easily test from the command line as well:
 
