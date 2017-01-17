@@ -1493,7 +1493,7 @@ firebase.deleteFile = function (arg) {
 
 firebase.subscribeToTopic = function(topicName){
   return new Promise(function (resolve, reject) {
-    try{
+    try {
 
       if (typeof(com.google.firebase.messaging) === "undefined") {
         reject("Uncomment firebase-messaging in the plugin's include.gradle first");
@@ -1506,7 +1506,7 @@ firebase.subscribeToTopic = function(topicName){
       }
 
       com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic(topicName);
-      
+      resolve();
     } catch(ex){
       console.log("Error in firebase.subscribeToTopic: " + ex);
       reject(ex);
@@ -1516,7 +1516,7 @@ firebase.subscribeToTopic = function(topicName){
 
 firebase.unsubscribeFromTopic = function(topicName){
   return new Promise(function (resolve, reject) {
-    try{
+    try {
       
       if (typeof(com.google.firebase.messaging) === "undefined") {
         reject("Uncomment firebase-messaging in the plugin's include.gradle first");
@@ -1529,13 +1529,14 @@ firebase.unsubscribeFromTopic = function(topicName){
       }
       
       com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic(topicName);
-    
+      resolve();
     } catch(ex){
       console.log("Error in firebase.unsubscribeFromTopic: " + ex);
       reject(ex);
     }
   }); 
 }
+
 /*
 firebase.sendCrashLog = function (arg) {
   return new Promise(function (resolve, reject) {

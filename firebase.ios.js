@@ -1569,6 +1569,42 @@ firebase.deleteFile = function (arg) {
   });
 };
 
+firebase.subscribeToTopic = function(topicName){
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(FIRMessaging) === "undefined") {
+        reject("Enable FIRMessaging in Podfile first");
+        return;
+      }
+
+      FIRMessaging.messaging().subscribeToTopic(topicName);
+      resolve();
+    } catch(ex){
+      console.log("Error in firebase.subscribeToTopic: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.unsubscribeFromTopic = function(topicName){
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(FIRMessaging) === "undefined") {
+        reject("Enable FIRMessaging in Podfile first");
+        return;
+      }
+
+      FIRMessaging.messaging().unsubscribeFromTopic(topicName);
+      resolve();
+    } catch(ex){
+      console.log("Error in firebase.unsubscribeFromTopic: " + ex);
+      reject(ex);
+    }
+  });
+}
+
 /*
  firebase.sendCrashLog = function (arg) {
  return new Promise(function (resolve, reject) {
