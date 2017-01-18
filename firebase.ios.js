@@ -1578,6 +1578,9 @@ firebase.subscribeToTopic = function(topicName){
         return;
       }
 
+      if (topicName.indexOf("/topics/") === -1) {
+        topicName = "/topics/" + topicName;
+      }
       FIRMessaging.messaging().subscribeToTopic(topicName);
       resolve();
     } catch(ex){
@@ -1596,6 +1599,9 @@ firebase.unsubscribeFromTopic = function(topicName){
         return;
       }
 
+      if (topicName.indexOf("/topics/") === -1) {
+        topicName = "/topics/" + topicName;
+      }
       FIRMessaging.messaging().unsubscribeFromTopic(topicName);
       resolve();
     } catch(ex){
