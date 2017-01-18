@@ -1,5 +1,25 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+
+## 3.9.1 (2017, January 18)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.9.0...3.9.1)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.11.x
+- Android: 10.0.x
+
+### New
+- [#262](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/262) Adding ability to (un/)subscribe to topics at firebase 
+
+
+
+
 ## 3.9.0 (2017, January 3)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.8.5...3.9.0)
@@ -23,7 +43,6 @@ and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
 - [#236](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/236) iOS Image Upload Type in Firebase
 - [#239](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/239) fAuth.signInWithCustomToken is not a function
 - [#250](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/250) Gradle build error when nativescript-google-maps-sdk is added
-
 
 
 
