@@ -36,7 +36,10 @@ If you didn't choose this feature during installation you can run the "post inst
 
 #### Enable push support in Xcode
 
+Open your project's target and head over to "Capabilities" to toggle this switch:
 <img src="images/push-xcode-config.png" width="600px" alt="Push Xcode config"/>
+
+> Without this enabled you will receive push messages in the foreground, but **NOT in the background** / when the app is killed.
 
 #### Receiving remote notifications in the background
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
