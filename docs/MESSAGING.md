@@ -36,10 +36,20 @@ If you didn't choose this feature during installation you can run the "post inst
 
 #### Enable push support in Xcode
 
-Open your project's target and head over to "Capabilities" to toggle this switch:
+Open /platforms/ios/yourproject.__xcworkspace__ (!) and go to your project's target and head over to "Capabilities" to toggle this switch:
 <img src="images/push-xcode-config.png" width="600px" alt="Push Xcode config"/>
 
 > Without this enabled you will receive push messages in the foreground, but **NOT in the background** / when the app is killed.
+
+##### copy the entitlements file
+The previous step created a the file`platforms/ios/YourAppName/Resources/YourAppName.entitlements`.
+Copy that file to `app/App_Resources/iOS/` (if it doesn't exist yet, otherwise merge its contents),
+so it's not removed when you remove and re-add the iOS platform. The relevant content for background push in that file is:
+
+```xml
+	<key>aps-environment</key>
+	<string>development</string>
+```
 
 #### Receiving remote notifications in the background
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
@@ -47,7 +57,7 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 ```xml
 <key>UIBackgroundModes</key>
 <array>
-    <string>remote-notification</string>
+  <string>remote-notification</string>
 </array>
 ```
 
