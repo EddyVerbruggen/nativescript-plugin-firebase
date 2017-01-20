@@ -2934,7 +2934,6 @@ function promptQuestions() {
 function promptQuestionsResult(result) {
     if(usingiOS) {
         writePodFile(result);
-        writeIOSEntitlementsCopyHook();
     }
     if(usingAndroid) {
         writeGradleFile(result);
@@ -2957,27 +2956,6 @@ function askSaveConfigPrompt() {
             saveConfig();
         }
     });
-}
-
-function writeIOSEntitlementsCopyHook() {
-    console.log("Install ios-entitlements installation hook.");
-    try {
-        var scriptContent = fs.readFileSync(path.join(appRoot, 'node_modules', 'nativescript-plugin-firebase', 'scripts', 'install_ios_entitlements_packed.js'));
-        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-install-ios-entitlements.js");
-        var afterPrepareDirPath = path.dirname(scriptPath);
-        var hooksDirPath = path.dirname(afterPrepareDirPath);
-        if (!fs.existsSync(afterPrepareDirPath)) {
-            if (!fs.existsSync(hooksDirPath)) {
-                fs.mkdirSync(hooksDirPath);
-            }
-            fs.mkdirSync(afterPrepareDirPath);
-        }
-        fs.writeFileSync(scriptPath, scriptContent);
-
-    } catch(e) {
-        console.log("Failed to install ios-entitlements installation hook.");
-        console.log(e);
-    }
 }
 
 /**

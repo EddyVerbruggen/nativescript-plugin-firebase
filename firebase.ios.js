@@ -16,31 +16,39 @@ firebase._addObserver = function (eventName, callback) {
   return utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
 };
 
-firebase.addAppDelegateMethods = function(appDelegate) {
-
-  function handleRemoteNotification(app, userInfo) {
-    var userInfoJSON = firebase.toJsObject(userInfo);
-    var aps = userInfo.objectForKey("aps");
-    if (aps !== null) {
-      var alert = aps.objectForKey("alert");
-      if (alert !== null && alert.objectForKey) {
-        userInfoJSON.title = alert.objectForKey("title");
-        userInfoJSON.body = alert.objectForKey("body");
-      }
-    }
-
-    firebase._pendingNotifications.push(userInfoJSON);
-    if (app.applicationState === UIApplicationState.UIApplicationStateActive) {
-      // If this is called from applicationDidFinishLaunchingWithOptions probably the app was dead (background)
-      userInfoJSON.foreground = true;
-      if (firebase._receivedNotificationCallback !== null) {
-        firebase._processPendingNotifications();
-      }
-    } else {
-      userInfoJSON.foreground = false;
+function handleRemoteNotification(app, userInfo) {
+  var userInfoJSON = firebase.toJsObject(userInfo);
+  var aps = userInfo.objectForKey("aps");
+  if (aps !== null) {
+    var alrt = aps.objectForKey("alert");
+    if (alrt !== null && alrt.objectForKey) {
+      userInfoJSON.title = alrt.objectForKey("title");
+      userInfoJSON.body = alrt.objectForKey("body");
     }
   }
 
+  firebase._pendingNotifications.push(userInfoJSON);
+  if (app.applicationState === UIApplicationState.UIApplicationStateActive) {
+    // If this is called from applicationDidFinishLaunchingWithOptions probably the app was dead (background)
+    userInfoJSON.foreground = true;
+    if (firebase._receivedNotificationCallback !== null) {
+      firebase._processPendingNotifications();
+    }
+  } else {
+    userInfoJSON.foreground = false;
+  }
+}
+
+function addBackgroundRemoteNotificationHandler(appDelegate) {
+  if (typeof(FIRMessaging) !== "undefined") {
+    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, userInfo, completionHandler) {
+      completionHandler(UIBackgroundFetchResultNewData);
+      handleRemoteNotification(app, userInfo);
+    };
+  }
+}
+
+firebase.addAppDelegateMethods = function(appDelegate) {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
@@ -89,26 +97,10 @@ firebase.addAppDelegateMethods = function(appDelegate) {
     };
   }
 
-  if (typeof(FIRMessaging) !== "undefined") {
-    // not required when swizzling is enabled (which is the default)
-    appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = function (application, devToken) {
-      applicationSettings.setBoolean("registered", true);
-      /*
-       FIRInstanceID.instanceID().setAPNSTokenType(devToken, FIRInstanceIDAPNSTokenTypeUnknown); // FIRInstanceIDAPNSTokenTypeSandbox, ..
-       FIRMessaging.messaging().connectWithCompletion(function(error) {
-       if (!error) {
-       firebase._messagingConnected = true;
-       }
-       });
-       */
-    };
-
-    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, userInfo, completionHandler) {
-      completionHandler(UIBackgroundFetchResultNewData);
-      handleRemoteNotification(app, userInfo);
-    };
-  }
+  addBackgroundRemoteNotificationHandler(appDelegate);
 };
+
+addBackgroundRemoteNotificationHandler(getAppDelegate());
 
 firebase.addOnMessageReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
@@ -119,8 +111,7 @@ firebase.addOnMessageReceivedCallback = function (callback) {
       }
       firebase._receivedNotificationCallback = callback;
 
-      var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
-      firebase._registerForRemoteNotifications(app);
+      firebase._registerForRemoteNotifications();
       firebase._processPendingNotifications();
 
       resolve();
@@ -145,8 +136,7 @@ firebase.addOnPushTokenReceivedCallback = function (callback) {
         callback(firebase._pushToken);
       }
 
-      var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
-      firebase._registerForRemoteNotifications(app);
+      firebase._registerForRemoteNotifications();
       firebase._processPendingNotifications();
 
       resolve();
@@ -176,10 +166,10 @@ firebase.unregisterForPushNotifications = function (callback) {
 firebase._processPendingNotifications = function() {
   var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
-      application.on("launch", function() {
-          firebase._processPendingNotifications();
-      });
-      return;
+    application.on("launch", function() {
+      firebase._processPendingNotifications();
+    });
+    return;
   }
   if (firebase._receivedNotificationCallback !== null) {
     for (var p in firebase._pendingNotifications) {
@@ -222,7 +212,7 @@ firebase._onTokenRefreshNotification = function (notification) {
 
 firebase._registerForRemoteNotificationsRanThisSession = false;
 
-firebase._registerForRemoteNotifications = function (app) {
+firebase._registerForRemoteNotifications = function () {
   var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
     application.on("launch", function() {
@@ -241,7 +231,6 @@ firebase._registerForRemoteNotifications = function (app) {
     var curNotCenter = utils.ios.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
     curNotCenter.requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, function (granted, error) {
       if (!error) {
-        console.log("User granted push notifications? " + granted);
         // applicationSettings.setBoolean("registered", true);
         if (app === null) {
           app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
@@ -297,10 +286,8 @@ firebase._registerForRemoteNotifications = function (app) {
 };
 
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
-(function () {
-
+function prepAppDelegate() {
   if (typeof(FIRMessaging) !== "undefined") {
-
     // see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178 for why we're not using a constant here
     firebase._addObserver("com.firebase.iid.notif.refresh-token", firebase._onTokenRefreshNotification);
 
@@ -308,15 +295,9 @@ firebase._registerForRemoteNotifications = function (app) {
       // guarded this with a preference so the popup "this app wants to send notifications"
       // is not shown until the dev intentially wired a listener (see other usages of _registerForRemoteNotifications())
       if (applicationSettings.getBoolean("registered", false)) {
-        firebase._registerForRemoteNotifications(appNotification.object);
+        firebase._registerForRemoteNotifications();
       }
     });
-
-    // this one seems redundant with UIApplicationDidBecomeActiveNotification
-    // firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
-      // console.log("-- calling _processPendingNotifications from UIApplicationDidFinishLaunchingNotification");
-      // firebase._processPendingNotifications();
-    // });
 
     firebase._addObserver(UIApplicationDidBecomeActiveNotification, function (appNotification) {
       firebase._processPendingNotifications();
@@ -340,11 +321,12 @@ firebase._registerForRemoteNotifications = function (app) {
       }
     });
   }
+  firebase.addAppDelegateMethods(getAppDelegate());
+}
 
-  if (application.ios.delegate !== undefined) {
-    // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
-    firebase.addAppDelegateMethods(application.ios.delegate);
-  } else {
+function getAppDelegate() {
+  // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
+  if (application.ios.delegate === undefined) {
     var __extends = this.__extends || function (d, b) {
           for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
           function __() { this.constructor = d; }
@@ -363,7 +345,8 @@ firebase._registerForRemoteNotifications = function (app) {
     })(UIResponder);
     application.ios.delegate = appDelegate;
   }
-})();
+  return application.ios.delegate;
+}
 
 firebase.toJsObject = function(objCObj) {
   if (objCObj === null || typeof objCObj != "object") {
@@ -433,77 +416,82 @@ firebase.init = function (arg) {
         TIMESTAMP: FIRServerValue.timestamp()
       };
 
-      // this requires you to download GoogleService-Info.plist and
-      // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
-      FIRApp.configure();
+      function runInit() {
+        prepAppDelegate();
 
-      if (arg.persist) {
-        FIRDatabase.database().persistenceEnabled = true;
-      }
+        // this requires you to download GoogleService-Info.plist and
+        // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
+        FIRApp.configure();
 
-      firebase.instance = FIRDatabase.database().reference();
-
-      if (arg.iOSEmulatorFlush) {
-        try {
-          // Attempt to sign out before initializing, useful in case previous
-          // project token is cached which leads to following type of error:
-          // "[FirebaseDatabase] Authentication failed: invalid_token ..."
-          console.log('Attempting to sign out of Firebase before init');
-          FIRAuth.auth().signOut();
-          console.log('Sign out of Firebase successful');
-        } catch(signOutErr) {
-          console.log('Sign out of Firebase error: ' + signOutErr);
+        if (arg.persist) {
+          FIRDatabase.database().persistenceEnabled = true;
         }
-      }
 
-      if (arg.onAuthStateChanged) {
-        firebase.authStateListener = function(auth, user) {
-          arg.onAuthStateChanged({
-            loggedIn: user !== null,
-            user: toLoginResult(user)
-          });
-        };
-        FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
-      }
+        firebase.instance = FIRDatabase.database().reference();
 
-      // Listen to auth state changes
-      if (!firebase.authStateListener) {
-        firebase.authStateListener = function(auth, user) {
-          firebase.notifyAuthStateListeners({
-            loggedIn: user !== null,
-            user: toLoginResult(user)
-          });
-        };
-        FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
-      }
-
-      // Facebook Auth
-      if (typeof(FBSDKAppEvents) !== "undefined") {
-        FBSDKAppEvents.activateApp();
-      }
-
-      // Firebase notifications (FCM)
-      if (typeof(FIRMessaging) !== "undefined") {
-        if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
-          if (arg.onMessageReceivedCallback !== undefined) {
-            firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
-          }
-          if (arg.onPushTokenReceivedCallback !== undefined) {
-            firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
+        if (arg.iOSEmulatorFlush) {
+          try {
+            // Attempt to sign out before initializing, useful in case previous
+            // project token is cached which leads to following type of error:
+            // "[FirebaseDatabase] Authentication failed: invalid_token ..."
+            FIRAuth.auth().signOut();
+          } catch(signOutErr) {
+            console.log('Sign out of Firebase error: ' + signOutErr);
           }
         }
-      }
 
-      // Firebase storage
-      if (arg.storageBucket) {
-        if (typeof(FIRStorage) === "undefined") {
-          reject("Uncomment Storage in the plugin's Podfile first");
-          return;
+        if (arg.onAuthStateChanged) {
+          firebase.authStateListener = function(auth, user) {
+            arg.onAuthStateChanged({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          };
+          FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
         }
-        firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
+
+        // Listen to auth state changes
+        if (!firebase.authStateListener) {
+          firebase.authStateListener = function(auth, user) {
+            firebase.notifyAuthStateListeners({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          };
+          FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
+        }
+
+        // Facebook Auth
+        if (typeof(FBSDKAppEvents) !== "undefined") {
+          FBSDKAppEvents.activateApp();
+        }
+
+        // Firebase notifications (FCM)
+        if (typeof(FIRMessaging) !== "undefined") {
+          if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
+            if (arg.onMessageReceivedCallback !== undefined) {
+              firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+            }
+            if (arg.onPushTokenReceivedCallback !== undefined) {
+              firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
+            }
+          }
+        }
+
+        // Firebase storage
+        if (arg.storageBucket) {
+          if (typeof(FIRStorage) === "undefined") {
+            reject("Uncomment Storage in the plugin's Podfile first");
+            return;
+          }
+          firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
+        }
+
+        resolve(firebase.instance);
       }
 
-      resolve(firebase.instance);
+      // wrapped in a timeout to play nice with nativescript-angular's appdelegate handling
+      setTimeout(runInit, 0);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
@@ -1231,7 +1219,7 @@ firebase.update = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
       if (typeof val == "object") {
-      firebase.instance.childByAppendingPath(path).updateChildValues(val);
+        firebase.instance.childByAppendingPath(path).updateChildValues(val);
       } else {
         var lastPartOfPath = path.lastIndexOf("/");
         var pathPrefix = path.substring(0, lastPartOfPath);
@@ -1419,24 +1407,10 @@ firebase.uploadFile = function (arg) {
         }
 
         // using 'putFile' (not 'putData') so Firebase can infer the mimetype
-        var localFileUrl = NSURL.fileURLWithPath(arg.localFile.path);
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(localFileUrl, null, onCompletion);
-
-        /*
-        var error;
-        var contents = arg.localFile.readSync(function(e) { error = e; });
-
-        if (error) {
-          alert("Error reading file " + arg.localFile + ": " + error);
-          return;
-        }
-
-        fIRStorageUploadTask = fIRStorageReference.putDataMetadataCompletion(contents, null, onCompletion);
-        */
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFile.path), null, onCompletion);
 
       } else if (arg.localFullPath) {
-        var localFileUrl = NSURL.fileURLWithPath(arg.localFullPath);
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(localFileUrl, null, onCompletion);
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFullPath), null, onCompletion);
 
       } else {
         reject("One of localFile or localFullPath is required");

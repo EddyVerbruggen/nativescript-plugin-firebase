@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "3.9.1",
+  "version": "3.9.2",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -11,7 +11,7 @@
     }
   },
   "scripts": {
-    "bundle-installer": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js scripts/postinstall.js && webpack --config scripts/webpack.config.js scripts/install_ios_entitlements.js scripts/install_ios_entitlements_packed.js",
+    "bundle-installer": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js scripts/postinstall.js",
     "prepublish": "npm run bundle-installer",
     "postinstall": "node scripts/postinstall.js",
     "config": "node scripts/postinstall.js config"
