@@ -1,6 +1,28 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 
+## 3.9.2 (2017, January 20)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.9.1...3.9.2)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.11.x
+- Android: 10.0.x
+
+### Fixes
+- [#237](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/237) Notification message not shown when app is in the background  
+- [#243](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/243) iOS: Push Notifications not working in Background or when application is reopened 
+- [#258](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/258) iOS Notification not received in background mode 
+- [#264](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/264) iOS: Push Notifications not working in Background in Production 
+
+
+
+
 ## 3.9.1 (2017, January 18)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.9.0...3.9.1)

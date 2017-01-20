@@ -41,7 +41,7 @@ Open /platforms/ios/yourproject.__xcworkspace__ (!) and go to your project's tar
 
 > Without this enabled you will receive push messages in the foreground, but **NOT in the background** / when the app is killed.
 
-##### copy the entitlements file
+#### Copy the entitlements file
 The previous step created a the file`platforms/ios/YourAppName/Resources/YourAppName.entitlements`.
 Copy that file to `app/App_Resources/iOS/` (if it doesn't exist yet, otherwise merge its contents),
 so it's not removed when you remove and re-add the iOS platform. The relevant content for background push in that file is:
@@ -51,7 +51,7 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 	<string>development</string>
 ```
 
-#### Receiving remote notifications in the background
+#### Allow processing when a background push is received
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 
 ```xml
@@ -60,6 +60,9 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
   <string>remote-notification</string>
 </array>
 ```
+
+#### Cleanup up an old script
+Versions up to 3.9.2 of this plugin added the script `/hooks/after-prepare/firebase-install-ios-entitlements.js`, please remove it.
 
 #### Provisioning hell
 Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) to the letter. Once you've done it run `tns run ios` and upon starting the app it should prompt you for notification support. That also works on the simulator, but actually receiving notifications is _only_ possible on a real device.
