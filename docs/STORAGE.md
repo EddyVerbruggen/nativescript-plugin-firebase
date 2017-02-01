@@ -59,7 +59,7 @@ You can either pass in a full local path to a file, or (as a convenience) use th
       console.log("Percentage complete: " + status.percentageCompleted);
     }
   }).then(
-      function (uploadedFile) 
+      function (uploadedFile) {
         console.log("File uploaded: " + JSON.stringify(uploadedFile));
       },
       function (error) {
@@ -95,7 +95,7 @@ In this example we'll download the previously uploaded file to a certain path on
     // option 2: a full file path (ignored if 'localFile' is set)
     localFullPath: logoPath
   }).then(
-      function (uploadedFile) 
+      function (uploadedFile) {
         console.log("File downloaded to the requested location");
       },
       function (error) {
@@ -116,7 +116,7 @@ In this example we'll determine the remote URL of the previously uploaded file.
     // the full path of an existing file in your Firebase storage
     remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
   }).then(
-      function (url) 
+      function (url) {
         console.log("Remote URL: " + url);
       },
       function (error) {
@@ -135,7 +135,7 @@ You can pass in remote file path to delete it.
     // the full path of an existing file in your Firebase storage
     remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
   }).then(
-      function () 
+      function () {
         console.log("File deleted.");
       },
       function (error) {
