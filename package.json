@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "3.9.2",
+  "version": "3.9.3",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -13,7 +13,7 @@
   "scripts": {
     "bundle-installer": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js scripts/postinstall.js",
     "prepublish": "npm run bundle-installer",
-    "postinstall": "node scripts/postinstall.js",
+    "setup": "node scripts/postinstall.js",
     "config": "node scripts/postinstall.js config"
   },
   "repository": {
@@ -45,8 +45,8 @@
   },
   "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
   "devDependencies": {
-    "prompt-lite": "^0.1.1",
+    "prompt-lite": "^0.1.0",
     "xcode": "0.8.0",
-    "webpack": "~2.1.0-beta.25"
+    "webpack": "~2.2.0"
   }
 }
