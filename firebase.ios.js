@@ -257,13 +257,14 @@ firebase._registerForRemoteNotifications = function () {
     curNotCenter.delegate = firebase._userNotificationCenterDelegate;
 
     firebase._firebaseRemoteMessageDelegate = FIRMessagingDelegateImpl.new().initWithCallback(function (appDataDictionary) {
-      var asJs = firebase.toJsObject(appDataDictionary.objectForKey("notification"));
-
       var userInfoJSON = firebase.toJsObject(appDataDictionary);
       firebase._pendingNotifications.push(userInfoJSON);
 
-      userInfoJSON.title = asJs.title;
-      userInfoJSON.body = asJs.body;
+      var asJs = firebase.toJsObject(appDataDictionary.objectForKey("notification"));
+      if(asJs) {
+        userInfoJSON.title = asJs.title;
+        userInfoJSON.body = asJs.body;
+      }
 
       var app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
       if (app.applicationState === UIApplicationState.UIApplicationStateActive) {
