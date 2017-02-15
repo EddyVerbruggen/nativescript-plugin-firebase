@@ -16,7 +16,6 @@ console.log('NativeScript Firebase Plugin Installation');
 var appRoot = "../../";
 var pluginConfigFile = "firebase.nativescript.json";
 var pluginConfigPath = path.join(appRoot, pluginConfigFile);
-
 var config = {};
 function mergeConfig(result) {
     for (var key in result) {
@@ -36,12 +35,26 @@ function readConfig() {
     }
 }
 
+// workaround for https://github.com/NativeScript/nativescript-cli/issues/2521 (2.5.0 only)
+var nativeScriptVersion = require('child_process').execSync('nativescript --version');
+var promptSupported = nativeScriptVersion.indexOf("2.5.0") === -1;
+
+// note that for CI builds you want a pluginConfigFile, otherwise the build will fail
 if (process.argv.indexOf("config") == -1 && fs.existsSync(pluginConfigPath)) {
     readConfig();
     console.log("Config file exists (" + pluginConfigFile + ")");
     askiOSPromptResult(config);
     askAndroidPromptResult(config);
     promptQuestionsResult(config);
+} else if (!promptSupported && process.argv.indexOf("setup") == -1) {
+    console.log("*******************************************************************");
+    console.log("*******************************************************************");
+    console.log("************************** IMPORTANT: *****************************");
+    console.log("*******************  with nativescript 2.5.0  *********************");
+    console.log("************** now execute 'npm run setup' manually ***************");
+    console.log("***** in the node_modules/nativescript-plugin-firebase folder *****");
+    console.log("*******************************************************************");
+    console.log("*******************************************************************");
 } else {
     console.log("No existing " + pluginConfigFile + " config file found, so let's configure the Firebase plugin!");
     prompt.start();

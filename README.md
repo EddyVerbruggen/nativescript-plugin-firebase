@@ -41,6 +41,11 @@ Now start an install script which will guide you through installing additional c
 
 ```
 cd node_modules/nativescript-plugin-firebase
+```
+
+If you run NativeScript 2.5.0 (only that exact version) then run (with other versions this runs automatically through a postinstall script):
+
+```
 npm run setup
 ```
 
