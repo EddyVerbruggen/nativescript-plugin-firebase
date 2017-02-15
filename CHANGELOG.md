@@ -1,6 +1,11 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 
+## 3.9.4 (2017, February 15)
+
+Fix postinstall script
+
+
 ## 3.9.2 (2017, January 20)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.9.1...3.9.2)
