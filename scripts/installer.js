@@ -139,6 +139,10 @@ function promptQuestions() {
         name: 'google_auth',
         description: 'Are you using Firebase Google Authentication (y/n)',
         default: 'n'
+    }, {
+      name: 'admob',
+      description: 'Are you using AdMob (y/n)',
+      default: 'n'
     }], function (err, result) {
         if (err) {
             return console.log(err);
@@ -186,7 +190,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 3.11.0'
+`pod 'Firebase', '~> 3.13.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
@@ -201,6 +205,9 @@ pod 'Firebase/Auth'
 
 # Uncomment if you want to enable Firebase Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
+
+# Uncomment if you want to enable AdMob
+` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
 # Uncomment if you want to enable Facebook Authentication
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
@@ -242,25 +249,28 @@ repositories {
 
 dependencies {
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:10.0.+"
-    compile "com.google.firebase:firebase-database:10.0.+"
-    compile "com.google.firebase:firebase-auth:10.0.+"
+    compile "com.google.firebase:firebase-core:10.2.+"
+    compile "com.google.firebase:firebase-database:10.2.+"
+    compile "com.google.firebase:firebase-auth:10.2.+"
 
     // for reading google-services.json and configuration
-    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '10.0.+'
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '10.2.+'
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Remote Config'
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:10.0.+"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:10.2.+"
 
     // Uncomment if you want to use 'Crash Reporting'
-    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:10.0.+"
+    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:10.2.+"
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
-    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:10.0.+"
+    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:10.2.+"
 
     // Uncomment if you want Google Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:10.0.+'
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:10.2.+'
+
+    // Uncomment if you want AdMob
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile 'com.google.firebase:firebase-ads:10.2.+'
 
     // Uncomment if you need Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile "com.facebook.android:facebook-android-sdk:4.+"

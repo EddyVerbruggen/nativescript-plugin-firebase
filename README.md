@@ -138,12 +138,10 @@ firebase.init({
 ```
 
 #### Pod dependency error
-If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.3.0) required by Podfile`,
-then check [issue 98](#98) which perfectly explains how to update your local Pod spec repo, or first try
-to `tns platform remove ios && tns platform add ios`.
+If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.13.0) required by Podfile`,
+then run `pod repo update` on the command line to make sure you have the latest Podspec.
 
-Running `pod repo update` on the command line will make sure you have the latest Podspec,
-so when the plugin updates and a newer Firebase version can't be found, try that first.
+This could happen when updating the plugin to a new version. You'll want to `tns platform remove ios && tns platform add ios` as well to clean out the old pod version.
 
 ## Known issues on Android
 
@@ -198,10 +196,9 @@ Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which
 placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
 the changes to `build.gradle` which are mentioned above as well.
 
-#### Could not find com.google...
-And there's this one: "Could not find com.google.firebase:firebase-auth:10.0.+". That means
-making sure you have the latest `Google Repository` bits installed.
-Just run `android` from a command prompt and install any pending updates.
+#### Could not find any version that matches com.google.android.gms:play-services-auth:10.2.+.
+That means making sure you have the latest `Google Repository` bits installed.
+Just run `android` from a command prompt, expand `Extras` and install any pending updates.
 
 Also, an error like "Could not find com.google.firebase:firebase-core:10.0.0" can be caused by having
 more than one version of the Android SDK installed. Make sure ANDROID_HOME is set to the Android SDK directory
