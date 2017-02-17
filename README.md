@@ -14,6 +14,7 @@ For readability the supported features have been moved to their own README's:
 * [Storage](docs/STORAGE.md)
 * [Crash Reporting](docs/CRASHREPORTING.md)
 * [Analytics](docs/ANALYTICS.md)
+* [AdMob](docs/ADMOB.md)
 
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
@@ -44,6 +45,8 @@ cd node_modules/nativescript-plugin-firebase
 ```
 
 If you run NativeScript 2.5.0 (only that exact version) then run (with other versions this runs automatically through a postinstall script):
+
+__NativeScript 2.5.0 is no longer the latest release, so you might as well update before adding this plugin to avoid this issue.__
 
 ```
 npm run setup
