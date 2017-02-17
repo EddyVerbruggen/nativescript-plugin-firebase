@@ -72,13 +72,26 @@ To listen to received notifications while in the foreground or when your app mov
 
 Any pending notifications (while your app was not in the foreground) will trigger the `onMessageReceivedCallback` handler.
 
+##### JavaScript
 ```js
   firebase.init({
     onMessageReceivedCallback: function(message) {
       console.log("Title: " + message.title);
       console.log("Body: " + message.body);
       // if your server passed a custom property called 'foo', then do this:
-      console.log("Value of 'foo': " + message.foo);
+      console.log("Value of 'foo': " + message.data.foo);
+    }
+  });
+```
+
+##### TypeScript
+```js
+  firebase.init({
+    onMessageReceivedCallback: function(message: Message) {
+      console.log(`Title: ${message.title}`);
+      console.log(`Body: ${message.body}`);
+      // if your server passed a custom property called 'foo', then do this:
+      console.log(`Value of 'foo': ${message.data.foo}`);
     }
   });
 ```
