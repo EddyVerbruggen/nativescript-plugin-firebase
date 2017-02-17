@@ -1,10 +1,51 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
-SDK's updated!
+## 3.10.0 (2017, February 17)
 
-## 3.9.4 (2017, February 15)
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.9.3...3.10.0)
 
-Fix postinstall script
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- __iOS: 3.13.x__
+- __Android: 10.2.x__
+
+### New
+- postinstall script enabled again, unless you're using NativeScript 2.5.0
+- [#19](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/19) Conflict with nativescript-admob  …
+- [#55](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/55) Support for AdMob
+- [#85](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/85) Google Service conflits on using nativescript-admob with this plugin
+- [#284](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/284) nativescript-plugin-firebase and nativescript admob conflict
+- [#286](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/286) send push notifications from app + small callback fix for push
+
+### Fixes
+- [#146](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/146) Sending Data Messages without notification key.
+- [#281](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/281) Fix app crash when notification structure is missing
+- [#285](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/285) Plugins not uncommented in include.gradle
+
+
+
+
+## 3.9.3 (2017, February 8)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.9.2...3.9.3)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.11.x
+- Android: 10.0.x
+
+### Fixes
+- [#275](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/275) tns plugin add nativescript-plugin-firebase seems to hang forever
+
+
 
 
 ## 3.9.2 (2017, January 20)
