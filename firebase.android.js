@@ -24,7 +24,8 @@ var GOOGLE_SIGNIN_INTENT_ID = 123;
     var extras = intent.getExtras();
     if (extras !== null) {
       var result = {
-        foreground: false
+        foreground: false,
+        data: {}
       };
 
       var iterator = extras.keySet().iterator();
@@ -32,6 +33,7 @@ var GOOGLE_SIGNIN_INTENT_ID = 123;
         var key = iterator.next();
         if (key !== "from" && key !== "collapse_key") {
           result[key] = extras.get(key);
+          result.data[key] = extras.get(key);
         }
       }
 
@@ -339,7 +341,7 @@ firebase.analytics.logEvent = function (arg) {
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.logEvent: " + ex);
+      console.log("Error in firebase.analytics.logEvent: " + ex);
       reject(ex);
     }
   });
@@ -361,7 +363,7 @@ firebase.analytics.setUserProperty = function (arg) {
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.setUserProperty: " + ex);
+      console.log("Error in firebase.analytics.setUserProperty: " + ex);
       reject(ex);
     }
   });

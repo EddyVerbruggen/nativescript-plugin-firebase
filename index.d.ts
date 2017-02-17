@@ -358,6 +358,10 @@ export interface Message {
      * Not available on Android when the notification was received in the background.
      */
     title?: string;
+    /**
+     * Any other data you may have added to the notification.
+     */
+    data: any;
 }
 
 export interface ProgressStatus {

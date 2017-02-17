@@ -179,6 +179,8 @@ firebase._processPendingNotifications = function() {
         userInfoJSON.title = userInfoJSON.aps.alert.title;
         userInfoJSON.body = userInfoJSON.aps.alert.body;
       }
+      // also, to make the ts.d happy copy all properties to a data element
+      userInfoJSON.data = userInfoJSON;
       // cleanup
       userInfoJSON.aps = undefined;
       firebase._receivedNotificationCallback(userInfoJSON);
