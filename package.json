@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "3.9.4",
+  "version": "3.10.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -13,7 +13,7 @@
   "scripts": {
     "bundle-installer": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js scripts/postinstall.js",
     "prepublish": "npm run bundle-installer",
-    "postinstall": "node scripts/installer.js",
+    "postinstall": "node scripts/postinstall.js",
     "setup": "node scripts/postinstall.js setup",
     "config": "node scripts/postinstall.js config"
   },
@@ -34,7 +34,8 @@
     "Crash Reporting",
     "Analytics",
     "Facebook",
-    "Google"
+    "Google",
+    "AdMob"
   ],
   "author": "Telerik / Eddy Verbruggen <eddyverbruggen@gmail.com>",
   "license": {

@@ -263,7 +263,7 @@ firebase._registerForRemoteNotifications = function () {
       firebase._pendingNotifications.push(userInfoJSON);
 
       var asJs = firebase.toJsObject(appDataDictionary.objectForKey("notification"));
-      if(asJs) {
+      if (asJs) {
         userInfoJSON.title = asJs.title;
         userInfoJSON.body = asJs.body;
       }
@@ -524,7 +524,7 @@ firebase.analytics.logEvent = function (arg) {
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.logEvent: " + ex);
+      console.log("Error in firebase.analytics.logEvent: " + ex);
       reject(ex);
     }
   });
@@ -546,10 +546,148 @@ firebase.analytics.setUserProperty = function (arg) {
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.setUserProperty: " + ex);
+      console.log("Error in firebase.analytics.setUserProperty: " + ex);
       reject(ex);
     }
   });
+};
+
+firebase.admob.showBanner = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (firebase.admob.adView !== null && firebase.admob.adView !== undefined) {
+        firebase.admob.adView.removeFromSuperview();
+        firebase.admob.adView = null;
+      }
+
+      firebase.admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
+      var settings = firebase.merge(arg, firebase.admob.defaults);
+      var view = settings.view;
+      var bannerType = firebase.admob._getBannerType(settings.size);
+      var adViewSize = CGSizeFromGADAdSize(bannerType);
+
+      var originX = (view.frame.size.width - adViewSize.width) / 2;
+      var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - adViewSize.height - settings.margins.bottom : 0.0);
+      var origin = CGPointMake(originX, originY);
+      firebase.admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
+
+      firebase.admob.adView.adUnitID = settings.iosBannerId;
+
+      var adRequest = GADRequest.request();
+
+      if (settings.testing) {
+        var testDevices = [kGADSimulatorID];
+        if (settings.iosTestDeviceIds) {
+          testDevices = testDevices.concat(settings.iosTestDeviceIds);
+        }
+        adRequest.testDevices = testDevices;
+      }
+
+      firebase.admob.adView.rootViewController = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
+      //var statusbarFrame = utils.ios.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
+
+      firebase.admob.adView.loadRequest(adRequest);
+
+      // TODO consider listening to delegate features like 'ad loaded'
+      //adView.delegate = self;
+
+      view.addSubview(firebase.admob.adView);
+
+      // support rotation events
+      application.on(application.orientationChangedEvent, function (data) {
+        if (firebase.admob.adView !== null) {
+          firebase.admob.hideBanner().then(function(res) {
+            firebase.admob.createBanner(arg);
+          });
+        }
+      });
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.admob.showBanner: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.admob.showInterstitial = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var settings = firebase.merge(arg, firebase.admob.defaults);
+      firebase.admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
+
+      // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
+      var delegate = GADBannerViewDelegateImpl.new().initWithCallback(function (ad, error) {
+        if (error) {
+          reject(error);
+        } else {
+          // now we can safely show it
+          firebase.admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+          resolve();
+        }
+        delegate = undefined;
+      });
+      firebase.admob.interstitialView.delegate = delegate;
+
+      var adRequest = GADRequest.request();
+
+      if (settings.testing) {
+        var testDevices = [kGADSimulatorID];
+        if (settings.iosTestDeviceIds) {
+          testDevices = testDevices.concat(settings.iosTestDeviceIds);
+        }
+        adRequest.testDevices = testDevices;
+      }
+
+      firebase.admob.interstitialView.loadRequest(adRequest);
+    } catch (ex) {
+      console.log("Error in firebase.admob.showInterstitial: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.admob.hideBanner = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (firebase.admob.adView !== null) {
+        //adView.delegate = null;
+        firebase.admob.adView.removeFromSuperview();
+        firebase.admob.adView = null;
+      }
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.admob.hideBanner: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.admob._getBannerType = function(size) {
+  // Note that when the app is archived symbols like kGADAdSizeSmartBannerPortrait
+  // are normally not available in {N}.. that's why we added those to build.xcconfig.
+  // However, if that still fails this would work: GADAdSizeFromCGSize(CGSizeMake(250, 250))
+  // (but we then need to hardcode the sizes..)
+  if (size == firebase.admob.AD_SIZE.BANNER) {
+    return kGADAdSizeBanner;
+  } else if (size == firebase.admob.AD_SIZE.LARGE_BANNER) {
+    return kGADAdSizeLargeBanner;
+  } else if (size == firebase.admob.AD_SIZE.MEDIUM_RECTANGLE) {
+    return kGADAdSizeMediumRectangle;
+  } else if (size == firebase.admob.AD_SIZE.FULL_BANNER) {
+    return kGADAdSizeFullBanner;
+  } else if (size == firebase.admob.AD_SIZE.LEADERBOARD) {
+    return kGADAdSizeLeaderboard;
+  } else if (size == firebase.admob.AD_SIZE.SMART_BANNER) {
+    var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
+    if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
+      return kGADAdSizeSmartBannerPortrait;
+    } else {
+      return kGADAdSizeSmartBannerLandscape;
+    }
+  } else {
+    return kGADAdSizeInvalid;
+  }
 };
 
 firebase.getRemoteConfig = function (arg) {
@@ -1617,6 +1755,29 @@ firebase.unsubscribeFromTopic = function(topicName){
  });
  };
  */
+
+var GADBannerViewDelegateImpl = (function (_super) {
+  __extends(GADBannerViewDelegateImpl, _super);
+  function GADBannerViewDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+  GADBannerViewDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  GADBannerViewDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  GADBannerViewDelegateImpl.prototype.interstitialDidReceiveAd = function (ad) {
+    this._callback(ad);
+  };
+  GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
+    this._callback(ad, error);
+  };
+  GADBannerViewDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
+  return GADBannerViewDelegateImpl;
+})(NSObject);
+
 
 var GIDSignInDelegateImpl = (function (_super) {
   __extends(GIDSignInDelegateImpl, _super);
