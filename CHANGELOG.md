@@ -1,5 +1,6 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+SDK's updated!
 
 ## 3.9.4 (2017, February 15)
 
