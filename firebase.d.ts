@@ -462,7 +462,7 @@ export interface SendCrashLogOptions {
     log: string;
 }
 
-export function init(options: InitOptions): Promise<any>;
+export function init(options?: InitOptions): Promise<any>;
 
 // Database
 export function push(path: string, value: any): Promise<PushResult>;

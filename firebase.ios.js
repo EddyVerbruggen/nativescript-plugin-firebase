@@ -420,6 +420,8 @@ firebase.init = function (arg) {
       };
 
       function runInit() {
+        arg = arg || {};
+
         prepAppDelegate();
 
         // this requires you to download GoogleService-Info.plist and
