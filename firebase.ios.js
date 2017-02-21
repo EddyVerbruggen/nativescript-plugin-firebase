@@ -296,7 +296,7 @@ function prepAppDelegate() {
 
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
       // guarded this with a preference so the popup "this app wants to send notifications"
-      // is not shown until the dev intentially wired a listener (see other usages of _registerForRemoteNotifications())
+      // is not shown until the dev intentionally wired a listener (see other usages of _registerForRemoteNotifications())
       if (applicationSettings.getBoolean("registered", false)) {
         firebase._registerForRemoteNotifications();
       }
@@ -557,6 +557,11 @@ firebase.analytics.setUserProperty = function (arg) {
 firebase.admob.showBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
+      if (typeof(GADRequest) === "undefined") {
+        reject("Uncomment AdMob in the plugin's Podfile first");
+        return;
+      }
+
       if (firebase.admob.adView !== null && firebase.admob.adView !== undefined) {
         firebase.admob.adView.removeFromSuperview();
         firebase.admob.adView = null;
@@ -615,6 +620,11 @@ firebase.admob.showBanner = function (arg) {
 firebase.admob.showInterstitial = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
+      if (typeof(GADRequest) === "undefined") {
+        reject("Uncomment AdMob in the plugin's Podfile first");
+        return;
+      }
+
       var settings = firebase.merge(arg, firebase.admob.defaults);
       firebase.admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
 
@@ -1776,7 +1786,9 @@ var GADBannerViewDelegateImpl = (function (_super) {
   GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
     this._callback(ad, error);
   };
-  GADBannerViewDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
+  if (typeof(GADInterstitialDelegate) !== "undefined") {
+    GADBannerViewDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
+  }
   return GADBannerViewDelegateImpl;
 })(NSObject);
 
