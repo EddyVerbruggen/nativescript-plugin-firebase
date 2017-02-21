@@ -157,6 +157,8 @@ firebase.init = function (arg) {
         return;
       }
 
+      arg = arg || {};
+
       firebase.ServerValue = {
         TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)
       };
@@ -1721,7 +1723,7 @@ firebase.unsubscribeFromTopic = function(topicName){
       reject(ex);
     }
   }); 
-}
+};
 
 /*
 firebase.sendCrashLog = function (arg) {
