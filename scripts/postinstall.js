@@ -2845,17 +2845,24 @@ function readConfig() {
 }
 
 // workaround for https://github.com/NativeScript/nativescript-cli/issues/2521 (2.5.0 only)
-var nativeScriptVersion = __webpack_require__(/*! child_process */ 2).execSync('nativescript --version');
-var promptSupported = nativeScriptVersion.indexOf("2.5.0") === -1;
+var nativeScriptVersion = "";
+try {
+    nativeScriptVersion = __webpack_require__(/*! child_process */ 2).execSync('nativescript --version');
+} catch (err) {
+    // On some environments nativescript is not in the PATH
+    // Ignore the error
+}
+
+var isNativeScriptCLI250 = nativeScriptVersion.indexOf("2.5.0") !== -1;
 
 // note that for CI builds you want a pluginConfigFile, otherwise the build will fail
-if (process.argv.indexOf("config") == -1 && fs.existsSync(pluginConfigPath)) {
+if (process.argv.indexOf("config") === -1 && fs.existsSync(pluginConfigPath)) {
     readConfig();
     console.log("Config file exists (" + pluginConfigFile + ")");
     askiOSPromptResult(config);
     askAndroidPromptResult(config);
     promptQuestionsResult(config);
-} else if (!promptSupported && process.argv.indexOf("setup") == -1) {
+} else if (isNativeScriptCLI250 && process.argv.indexOf("setup") === -1) {
     console.log("*******************************************************************");
     console.log("*******************************************************************");
     console.log("************************** IMPORTANT: *****************************");
@@ -3155,7 +3162,7 @@ var fs = require("fs");
 module.exports = function() {
 
     console.log("Configure firebase");
-    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle"); 
+    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle");
     if (fs.existsSync(buildGradlePath)) {
         var buildGradleContent = fs.readFileSync(buildGradlePath).toString();
 
