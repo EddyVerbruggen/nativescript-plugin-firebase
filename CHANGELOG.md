@@ -1,7 +1,7 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 
-## 3.10.1 (2017, February 19)
+## 3.10.1 (2017, February 22)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.10.0...3.10.1)
 
@@ -16,6 +16,8 @@ and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
 
 ### Fixes
 - [#290](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/290) Don't load AdMob symbols if AdMob was not enabled in the config 
+- [#293](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/293) Fix postinstall when nativescript is not in the PATH
+- [#294](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/294) iOS crashes when AdMob is not enabled
 
 
 
