@@ -800,6 +800,10 @@ firebase.login = function (arg) {
           }
           if (!task.isSuccessful()) {
             console.log("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            // also disconnect from Google otherwise ppl can't connect with a different account
+            if (firebase._mGoogleApiClient) {
+                com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
+            }
             reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           } else {
             var user = task.getResult().getUser();
