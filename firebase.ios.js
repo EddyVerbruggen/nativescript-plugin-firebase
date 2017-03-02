@@ -901,6 +901,10 @@ firebase.login = function (arg) {
     try {
       var onCompletion = function(user, error) {
         if (error) {
+          // also disconnect from Google otherwise ppl can't connect with a different account
+          if (typeof(GIDSignIn) !== "undefined") {
+              GIDSignIn.sharedInstance().disconnect();
+          }
           reject(error.localizedDescription);
         } else {
           resolve(toLoginResult(user));
