@@ -495,8 +495,10 @@ firebase.init = function (arg) {
         resolve(firebase.instance);
       }
 
-      // wrapped in a timeout to play nice with nativescript-angular's appdelegate handling
-      setTimeout(runInit, 0);
+      // wrapped in a timeout to play nice with nativescript-angular's appdelegate handling,
+      // but reverted because of #272
+      // setTimeout(runInit, 0);
+      runInit();
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
