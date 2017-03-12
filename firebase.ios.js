@@ -1540,7 +1540,7 @@ firebase.uploadFile = function (arg) {
         } else {
           resolve({
             name: metadata.name,
-            url: metadata.downloadURL.absoluteString,
+            url: metadata.downloadURL() ? metadata.downloadURL().absoluteString : null,
             contentType: metadata.contentType,
             created: metadata.timeCreated,
             updated: metadata.updated,
