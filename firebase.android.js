@@ -1729,7 +1729,6 @@ firebase.unsubscribeFromTopic = function(topicName){
   }); 
 };
 
-/*
 firebase.sendCrashLog = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
@@ -1739,12 +1738,12 @@ firebase.sendCrashLog = function (arg) {
         return;
       }
 
-      if (!arg.log) {
-        reject("The mandatory 'log' argument is missing");
+      if (!arg.message) {
+        reject("The mandatory 'message' argument is missing");
         return;
       }
 
-      com.google.firebase.crash.FirebaseCrash.log(arg.log);
+      com.google.firebase.crash.FirebaseCrash.log(arg.message);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.sendCrashLog: " + ex);
@@ -1752,6 +1751,5 @@ firebase.sendCrashLog = function (arg) {
     }
   });
 };
-*/
 
 module.exports = firebase;

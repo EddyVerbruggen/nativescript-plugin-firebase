@@ -459,7 +459,12 @@ export interface SendCrashLogOptions {
     /**
      * Any custom logging you want to send to Firebase.
      */
-    log: string;
+    message: string;
+
+    /**
+     * Also log to the device console. Default false.
+     */
+    showInConsole: boolean;
 }
 
 export function init(options?: InitOptions): Promise<any>;
@@ -665,5 +670,6 @@ export function deleteFile(options: DeleteFileOptions): Promise<any>;
 export function subscribeToTopic(topicName): Promise<any>;
 
 export function unsubscribeFromTopic(topicName): Promise<any>;
+
 // crash logging
-// export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;
+export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;

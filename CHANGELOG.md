@@ -1,6 +1,29 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 
+## 3.10.2 (2017, March 12)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.10.1...3.10.2)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.13.x
+- Android: 10.2.x
+
+### New
+- [#307](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/307) Feature Request: Support crash log API
+
+### Fixes
+- [#272](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/272) Unusual error message when retrieving data set and binding to layout
+- [#292](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/292) Nativescript app is not running with Firebase in IOS. 
+
+
+
+
 ## 3.10.1 (2017, February 22)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.10.0...3.10.1)
