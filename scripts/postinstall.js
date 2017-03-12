@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -93,13 +93,13 @@ module.exports = require("readline");
  *
  */
 
-var events = __webpack_require__(/*! events */ 13),
+var events = __webpack_require__(/*! events */ 12),
     readline = __webpack_require__(/*! readline */ 0),
-    util = __webpack_require__(/*! util */ 15),
-    async = __webpack_require__(/*! async */ 5),
-    read = __webpack_require__(/*! read */ 10),
-    validate = __webpack_require__(/*! revalidator */ 11).validate,
-    colors = __webpack_require__(/*! colors */ 8);
+    util = __webpack_require__(/*! util */ 14),
+    async = __webpack_require__(/*! async */ 4),
+    read = __webpack_require__(/*! read */ 9),
+    validate = __webpack_require__(/*! revalidator */ 10).validate,
+    colors = __webpack_require__(/*! colors */ 7);
 
 //
 // Monkey-punch readline.Interface to work-around
@@ -896,17 +896,6 @@ function mixin(target) {
 /* 2 */
 /* unknown exports provided */
 /* all exports used */
-/*!********************************!*\
-  !*** external "child_process" ***!
-  \********************************/
-/***/ (function(module, exports) {
-
-module.exports = require("child_process");
-
-/***/ }),
-/* 3 */
-/* unknown exports provided */
-/* all exports used */
 /*!*********************!*\
   !*** external "fs" ***!
   \*********************/
@@ -915,7 +904,7 @@ module.exports = require("child_process");
 module.exports = require("fs");
 
 /***/ }),
-/* 4 */
+/* 3 */
 /* unknown exports provided */
 /* all exports used */
 /*!***********************!*\
@@ -926,7 +915,7 @@ module.exports = require("fs");
 module.exports = require("path");
 
 /***/ }),
-/* 5 */
+/* 4 */
 /* unknown exports provided */
 /* all exports used */
 /*!**************************!*\
@@ -936,11 +925,11 @@ module.exports = require("path");
 
 // This file is just added for convenience so this repository can be
 // directly checked out into a project's deps folder
-module.exports = __webpack_require__(/*! ./lib/async */ 6);
+module.exports = __webpack_require__(/*! ./lib/async */ 5);
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************************!*\
@@ -1643,7 +1632,7 @@ module.exports = __webpack_require__(/*! ./lib/async */ 6);
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************!*\
@@ -1657,11 +1646,11 @@ function webpackEmptyContext(req) {
 webpackEmptyContext.keys = function() { return []; };
 webpackEmptyContext.resolve = webpackEmptyContext;
 module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 7;
+webpackEmptyContext.id = 6;
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /* unknown exports provided */
 /* all exports used */
 /*!****************************!*\
@@ -2014,7 +2003,7 @@ addProperty('zalgo', function () {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /* unknown exports provided */
 /* all exports used */
 /*!*******************************!*\
@@ -2022,7 +2011,7 @@ addProperty('zalgo', function () {
   \*******************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-var Stream = __webpack_require__(/*! stream */ 14)
+var Stream = __webpack_require__(/*! stream */ 13)
 
 module.exports = MuteStream
 
@@ -2170,7 +2159,7 @@ MuteStream.prototype.close = proxy('close')
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /* unknown exports provided */
 /* all exports used */
 /*!****************************!*\
@@ -2182,7 +2171,7 @@ MuteStream.prototype.close = proxy('close')
 module.exports = read
 
 var readline = __webpack_require__(/*! readline */ 0)
-var Mute = __webpack_require__(/*! mute-stream */ 9)
+var Mute = __webpack_require__(/*! mute-stream */ 8)
 
 function read (opts, cb) {
   if (opts.num) {
@@ -2294,7 +2283,7 @@ function read (opts, cb) {
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************************************!*\
@@ -2730,10 +2719,10 @@ function read (opts, cb) {
 
 })(typeof module === 'object' && module && module.exports ? module.exports : window);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../webpack/buildin/module.js */ 12)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../webpack/buildin/module.js */ 11)(module)))
 
 /***/ }),
-/* 12 */
+/* 11 */
 /* unknown exports provided */
 /* all exports used */
 /*!***********************************!*\
@@ -2766,7 +2755,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /* unknown exports provided */
 /* all exports used */
 /*!*************************!*\
@@ -2777,7 +2766,7 @@ module.exports = function(module) {
 module.exports = require("events");
 
 /***/ }),
-/* 14 */
+/* 13 */
 /* unknown exports provided */
 /* all exports used */
 /*!*************************!*\
@@ -2788,7 +2777,7 @@ module.exports = require("events");
 module.exports = require("stream");
 
 /***/ }),
-/* 15 */
+/* 14 */
 /* unknown exports provided */
 /* all exports used */
 /*!***********************!*\
@@ -2799,7 +2788,7 @@ module.exports = require("stream");
 module.exports = require("util");
 
 /***/ }),
-/* 16 */
+/* 15 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************************!*\
@@ -2807,8 +2796,8 @@ module.exports = require("util");
   \******************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-var fs = __webpack_require__(/*! fs */ 3);
-var path = __webpack_require__(/*! path */ 4);
+var fs = __webpack_require__(/*! fs */ 2);
+var path = __webpack_require__(/*! path */ 3);
 var prompt = __webpack_require__(/*! prompt-lite */ 1);
 
 // Default settings for using ios and android with Firebase
@@ -2847,10 +2836,10 @@ function readConfig() {
 // workaround for https://github.com/NativeScript/nativescript-cli/issues/2521 (2.5.0 only)
 var nativeScriptVersion = "";
 try {
-    nativeScriptVersion = __webpack_require__(/*! child_process */ 2).execSync('nativescript --version');
+  nativeScriptVersion = __webpack_require__(/*! child_process */ 2).execSync('nativescript --version');
 } catch (err) {
-    // On some environments nativescript is not in the PATH
-    // Ignore the error
+  // On some environments nativescript is not in the PATH
+  // Ignore the error
 }
 
 var isNativeScriptCLI250 = nativeScriptVersion.indexOf("2.5.0") !== -1;
@@ -3162,7 +3151,7 @@ var fs = require("fs");
 module.exports = function() {
 
     console.log("Configure firebase");
-    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle");
+    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle"); 
     if (fs.existsSync(buildGradlePath)) {
         var buildGradleContent = fs.readFileSync(buildGradlePath).toString();
 
