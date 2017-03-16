@@ -931,7 +931,7 @@ firebase.login = function (arg) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
-            var fIRAuthCredential = FIREmailPasswordAuthProvider.credential(arg.email, arg.password)
+            var fIRAuthCredential = FIREmailPasswordAuthProvider.credentialWithEmailPassword(arg.email, arg.password)
             if (fAuth.currentUser) {
                 // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
                 var onCompletionLink = function (user, error) {
