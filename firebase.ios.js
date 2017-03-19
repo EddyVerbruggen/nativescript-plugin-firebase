@@ -573,10 +573,9 @@ firebase.admob.showBanner = function (arg) {
       var settings = firebase.merge(arg, firebase.admob.defaults);
       var view = settings.view;
       var bannerType = firebase.admob._getBannerType(settings.size);
-      var adViewSize = CGSizeFromGADAdSize(bannerType);
 
-      var originX = (view.frame.size.width - adViewSize.width) / 2;
-      var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - adViewSize.height - settings.margins.bottom : 0.0);
+      var originX = (view.frame.size.width - bannerType.size.width) / 2;
+      var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - bannerType.size.height - settings.margins.bottom : 0.0);
       var origin = CGPointMake(originX, originY);
       firebase.admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
 
@@ -678,29 +677,37 @@ firebase.admob.hideBanner = function () {
 };
 
 firebase.admob._getBannerType = function(size) {
-  // Note that when the app is archived symbols like kGADAdSizeSmartBannerPortrait
-  // are normally not available in {N}.. that's why we added those to build.xcconfig.
-  // However, if that still fails this would work: GADAdSizeFromCGSize(CGSizeMake(250, 250))
-  // (but we then need to hardcode the sizes..)
+  // see nativescript-admob's iOS sourcecode for why we're not using SDK-provided constants here
   if (size == firebase.admob.AD_SIZE.BANNER) {
-    return kGADAdSizeBanner;
+    // return kGADAdSizeBanner;
+    return {"size":{"width":320,"height":50},"flags":0};
   } else if (size == firebase.admob.AD_SIZE.LARGE_BANNER) {
-    return kGADAdSizeLargeBanner;
+    // return kGADAdSizeLargeBanner;
+    return {"size":{"width":320,"height":100},"flags":0};
   } else if (size == firebase.admob.AD_SIZE.MEDIUM_RECTANGLE) {
-    return kGADAdSizeMediumRectangle;
+    // return kGADAdSizeMediumRectangle;
+    return {"size":{"width":300,"height":250},"flags":0};
   } else if (size == firebase.admob.AD_SIZE.FULL_BANNER) {
-    return kGADAdSizeFullBanner;
+    // return kGADAdSizeFullBanner;
+    return {"size":{"width":468,"height":60},"flags":0};
   } else if (size == firebase.admob.AD_SIZE.LEADERBOARD) {
-    return kGADAdSizeLeaderboard;
-  } else if (size == firebase.admob.AD_SIZE.SMART_BANNER) {
+    // return kGADAdSizeLeaderboard;
+    return {"size":{"width":728,"height":90},"flags":0};
+  } else if (size == firebase.admob.AD_SIZE.SKYSCRAPER) {
+    // return kGADAdSizeSkyscraper;
+    return {"size":{"width":120,"height":600},"flags":0};
+  } else if (size == firebase.admob.AD_SIZE.SMART_BANNER || size == firebase.admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
-      return kGADAdSizeSmartBannerPortrait;
+      // return kGADAdSizeSmartBannerPortrait;
+      return {"size":{"width":0,"height":0},"flags":18};
     } else {
-      return kGADAdSizeSmartBannerLandscape;
+      // return kGADAdSizeSmartBannerLandscape;
+      return {"size":{"width":0,"height":0},"flags":26};
     }
   } else {
-    return kGADAdSizeInvalid;
+    // return kGADAdSizeInvalid;
+    return {"size":{"width":-1,"height":-1},"flags":0};
   }
 };
 
