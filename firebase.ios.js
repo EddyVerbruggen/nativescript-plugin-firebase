@@ -5,6 +5,7 @@ var utils = require("utils/utils");
 var types = require("utils/types");
 var frame = require("ui/frame");
 var platform = require("platform");
+var DeviceType = require("ui/enums").DeviceType;
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -574,8 +575,11 @@ firebase.admob.showBanner = function (arg) {
       var view = settings.view;
       var bannerType = firebase.admob._getBannerType(settings.size);
 
-      var originX = (view.frame.size.width - bannerType.size.width) / 2;
-      var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - bannerType.size.height - settings.margins.bottom : 0.0);
+      var adWidth = bannerType.size.width === 0 ? view.frame.size.width : bannerType.size.width;
+      var adHeight = bannerType.size.smartHeight ? bannerType.size.smartHeight : bannerType.size.height;
+
+      var originX = (view.frame.size.width - adWidth) / 2;
+      var originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - adHeight - settings.margins.bottom : 0.0);
       var origin = CGPointMake(originX, originY);
       firebase.admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
 
@@ -698,12 +702,13 @@ firebase.admob._getBannerType = function(size) {
     return {"size":{"width":120,"height":600},"flags":0};
   } else if (size == firebase.admob.AD_SIZE.SMART_BANNER || size == firebase.admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
+    var isIPad = platform.device.deviceType === DeviceType.Tablet;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
-      return {"size":{"width":0,"height":0},"flags":18};
+      return {"size":{"width":0,"height":0,"smartHeight":isIPad ? 90 : 50},"flags":18};
     } else {
       // return kGADAdSizeSmartBannerLandscape;
-      return {"size":{"width":0,"height":0},"flags":26};
+      return {"size":{"width":0,"height":0,"smartHeight":isIPad ? 90 : 32},"flags":26};
     }
   } else {
     // return kGADAdSizeInvalid;
