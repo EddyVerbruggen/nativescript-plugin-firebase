@@ -19,7 +19,7 @@ dependencies {
     compile "com.google.firebase:firebase-auth:10.2.+"
 
     // for converting Java objects to JS
-    compile 'com.google.code.gson:gson:2.8.+'
+    compile "com.google.code.gson:gson:2.8.+"
 
     // for reading google-services.json and configuration
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '10.2.+'
