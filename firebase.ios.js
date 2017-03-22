@@ -101,8 +101,6 @@ firebase.addAppDelegateMethods = function(appDelegate) {
   addBackgroundRemoteNotificationHandler(appDelegate);
 };
 
-addBackgroundRemoteNotificationHandler(getAppDelegate());
-
 firebase.addOnMessageReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
     try {
@@ -225,7 +223,7 @@ firebase._registerForRemoteNotifications = function () {
   }
   if (firebase._registerForRemoteNotificationsRanThisSession) {
     // ignore
-    return;
+    // return;
   }
   firebase._registerForRemoteNotificationsRanThisSession = true;
 
@@ -289,6 +287,29 @@ firebase._registerForRemoteNotifications = function () {
   }
 };
 
+function getAppDelegate() {
+  // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
+  if (application.ios.delegate === undefined) {
+    var __extends = this.__extends || function (d, b) {
+          for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+          function __() { this.constructor = d; }
+          __.prototype = b.prototype;
+          d.prototype = new __();
+        };
+
+    var appDelegate = (function (_super) {
+      __extends(appDelegate, _super);
+      function appDelegate() {
+        _super.apply(this, arguments);
+      }
+      appDelegate.ObjCProtocols = [UIApplicationDelegate];
+      return appDelegate;
+    })(UIResponder);
+    application.ios.delegate = appDelegate;
+  }
+  return application.ios.delegate;
+}
+
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
 function prepAppDelegate() {
   if (typeof(FIRMessaging) !== "undefined") {
@@ -328,29 +349,7 @@ function prepAppDelegate() {
   firebase.addAppDelegateMethods(getAppDelegate());
 }
 
-function getAppDelegate() {
-  // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
-  if (application.ios.delegate === undefined) {
-    var __extends = this.__extends || function (d, b) {
-          for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-          function __() { this.constructor = d; }
-          __.prototype = b.prototype;
-          d.prototype = new __();
-        };
-
-    var appDelegate = (function (_super) {
-      __extends(appDelegate, _super);
-      function appDelegate() {
-        _super.apply(this, arguments);
-      }
-      firebase.addAppDelegateMethods(appDelegate);
-      appDelegate.ObjCProtocols = [UIApplicationDelegate];
-      return appDelegate;
-    })(UIResponder);
-    application.ios.delegate = appDelegate;
-  }
-  return application.ios.delegate;
-}
+prepAppDelegate();
 
 firebase.toJsObject = function(objCObj) {
   if (objCObj === null || typeof objCObj != "object") {
@@ -423,8 +422,6 @@ firebase.init = function (arg) {
       function runInit() {
         arg = arg || {};
 
-        prepAppDelegate();
-
         // this requires you to download GoogleService-Info.plist and
         // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
         FIRApp.configure();
@@ -496,9 +493,6 @@ firebase.init = function (arg) {
         resolve(firebase.instance);
       }
 
-      // wrapped in a timeout to play nice with nativescript-angular's appdelegate handling,
-      // but reverted because of #272
-      // setTimeout(runInit, 0);
       runInit();
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);

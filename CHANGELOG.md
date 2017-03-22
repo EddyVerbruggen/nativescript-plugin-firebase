@@ -1,6 +1,26 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 
+## 3.11.0 (2017, March 22)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.10.2...3.11.0)
+
+### SDK versions
+
+If version numbers __changed__, clean your platform folders to avoid build errors.
+Also, for Android update your Google Repository in the Android SDK manager (type `android` on the command prompt),
+and for iOS do a `pod repo update` to fetch the latest versions from Cocoapods.
+
+- iOS: 3.13.x
+- Android: 10.2.x
+
+### Fixes
+- [#304](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/304) IOS cloud notification on click not triggering addOnMessageReceivedCallback
+- [#274](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/274) Cleanup AppDelegate call #274
+
+
+
+
 ## 3.10.2 (2017, March 12)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.10.1...3.10.2)
