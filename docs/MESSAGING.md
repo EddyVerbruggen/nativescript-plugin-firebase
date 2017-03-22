@@ -51,6 +51,9 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 	<string>development</string>
 ```
 
+Since plugin version 3.11.0 the plugin will pick up that file during a build and integrates it with the built app
+so you no longer need to continually manually enable push notifications in Xcode.
+
 #### Allow processing when a background push is received
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 
@@ -61,7 +64,7 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 </array>
 ```
 
-#### Cleanup up an old script
+#### Cleanup an old script
 Versions up to 3.9.2 of this plugin added the script `/hooks/after-prepare/firebase-install-ios-entitlements.js`, please remove it.
 
 #### Provisioning hell
@@ -150,10 +153,12 @@ and:
 Using the Firebase Console gives you most flexibility, but you can quickly and easily test from the command line as well:
 
 ```
-curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\":{\"title\": \"My title\", \"text\": \"My text\", \"sound\": \"default\"}, \"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"to\": \"DEVICE_TOKEN\"}"
+curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\":{\"title\": \"My title\", \"text\": \"My text\", \"badge\": \"1\", \"sound\": \"default\"}, \"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"to\": \"DEVICE_TOKEN\"}"
 ```
 
 * SERVER_KEY: see below
 * DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`
+
+If you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
