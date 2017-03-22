@@ -14,6 +14,8 @@ firebase._facebookAccessToken = null;
 var fbCallbackManager = null;
 var GOOGLE_SIGNIN_INTENT_ID = 123;
 
+var gson = new com.google.gson.Gson();
+
 (function() {
   if (typeof(com.google.firebase.messaging) === "undefined") {
     return;
@@ -107,35 +109,7 @@ firebase.toValue = function(val){
 };
 
 firebase.toJsObject = function(javaObj) {
-  if (javaObj === null || typeof javaObj != "object") {
-    return javaObj;
-  }
-
-  var node;
-  switch (javaObj.getClass().getName()) {
-    case 'java.lang.Boolean':
-      var str = String(javaObj);
-      return Boolean(!!(str == "True" || str == "true"));
-    case 'java.lang.String':
-      return String(javaObj);
-    case 'java.lang.Long':
-    case 'java.lang.Double':
-      return Number(String(javaObj));
-    case 'java.util.ArrayList':
-      node = [];
-      for (var i = 0; i < javaObj.size(); i++) {
-        node[i] = firebase.toJsObject(javaObj.get(i));
-      }
-      break;
-    default:
-      node = {};
-      var iterator = javaObj.entrySet().iterator();
-      while (iterator.hasNext()) {
-        var item = iterator.next();
-        node[item.getKey()] = firebase.toJsObject(item.getValue());
-      }
-  }
-  return node;
+  return JSON.parse(gson.toJson(javaObj));
 };
 
 firebase.getCallbackData = function(type, snapshot) {
@@ -1401,9 +1375,10 @@ firebase.query = function (updateCallback, path, options) {
       if (options.singleEvent) {
         var listener = new com.google.firebase.database.ValueEventListener({
           onDataChange: function (snapshot) {
-            updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+            var data = firebase.getCallbackData('ValueChanged', snapshot);
+            updateCallback(data);
             // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
-            resolve(firebase.getCallbackData('ValueChanged', snapshot));
+            resolve(data);
           },
           onCancelled: function (databaseError) {
             updateCallback({
