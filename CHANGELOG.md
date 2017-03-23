@@ -11,6 +11,8 @@
 - Android: 10.2.x
 
 ### New
+- [#226](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/226) Cannot find how to link anonymous account to other login type
+- [#316](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/316) Implemented email account linking
 - [#324](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/324) Use Gson to convert javaObject to jsObject
 
 ### Fixes
