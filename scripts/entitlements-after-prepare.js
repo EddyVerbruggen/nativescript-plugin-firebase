@@ -11,12 +11,16 @@ module.exports = function (logger, platformsData, projectData, hookArgs) {
   return new Promise(function (resolve, reject) {
     if (platform == 'ios') {
       fs.exists(entitlementsFile, function (exists) {
-        if (!exists) return reject(); //Error("entitlementsFile: `" + entitlementsFile + "` not found"));
-        var dest = path.join(project, projectData.projectName + ".entitlements");
-        fs.copy(entitlementsFile, dest, function (error) {
-          if (error) return reject(error);
+        if (!exists) {
+          // no need to make noise, this is a totally valid case
           resolve();
-        });
+        } else {
+          var dest = path.join(project, projectData.projectName + ".entitlements");
+          fs.copy(entitlementsFile, dest, function (error) {
+            if (error) return reject(error);
+            resolve();
+          });
+        }
       })
     } else {
       resolve();
