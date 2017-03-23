@@ -962,7 +962,7 @@ firebase.login = function (arg) {
                 firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
               }
             } else {
-              console.log("Make sure you've uploaded you SHA1 fingerprint(s) to the Firebase console");
+              console.log("Make sure you've uploaded your SHA1 fingerprint(s) to the Firebase console");
               reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
             }
           }
