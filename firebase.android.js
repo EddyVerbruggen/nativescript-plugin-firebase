@@ -830,7 +830,17 @@ firebase.login = function (arg) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
-          firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+            var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+            if (user) {
+                if (firebase._alreadyLinkedToAuthProvider(user, "password")) {
+                    firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+                } else {
+                    var authCredential = com.google.firebase.auth.EmailAuthProvider.getCredential(arg.email, arg.password);
+                    user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                }
+            } else {
+                firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+            }
         }
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
