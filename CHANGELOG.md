@@ -10,6 +10,9 @@
 - iOS: 3.13.x
 - Android: 10.2.x
 
+### New
+- [#324](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/324) Use Gson to convert javaObject to jsObject
+
 ### Fixes
 - [#331](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/331) CI builds may file if no entitlements file exists
 
