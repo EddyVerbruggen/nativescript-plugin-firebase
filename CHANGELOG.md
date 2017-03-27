@@ -1,6 +1,21 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 
+## 3.11.2 (2017, March 27)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.11.1...3.11.2)
+
+### SDK versions
+
+- iOS: 3.13.x
+- Android: 10.2.x
+
+### Fixes
+- [#333](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/333) New error after fresh install; Stop at ProcessProductPackaging
+
+
+
+
 ## 3.11.1 (2017, March 23)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.11.0...3.11.1)

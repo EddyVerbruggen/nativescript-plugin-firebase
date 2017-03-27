@@ -9,7 +9,7 @@ module.exports = function (logger, platformsData, projectData, hookArgs) {
       project = path.join(projectRoot, projectData.projectName);
 
   return new Promise(function (resolve, reject) {
-    if (platform == 'ios') {
+    if (platform === 'ios') {
       fs.exists(entitlementsFile, function (exists) {
         if (!exists) {
           // no need to make noise, this is a totally valid case
