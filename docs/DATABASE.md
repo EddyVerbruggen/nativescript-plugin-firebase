@@ -150,6 +150,34 @@ Changes the values of the keys specified in the dictionary without overwriting o
   );
 ```
 
+#### atomic writes across multiple locations
+Changes values in multiple locations
+
+```js
+  var entriesPath = 'entries';
+  var usersPath = 'users';
+
+  var data = {};
+  data[entriesPath] = {'foo':'bar'};
+  data[usersPath] = {'name': 'John'};
+
+  firebase.update('/', data);
+```
+
+#### atomic remove across multiple locations
+Removes values in multiple locations
+
+```js
+  var entriesPath = 'entries';
+  var usersPath = 'users';
+
+  var data = {};
+  data[entriesPath] = null;
+  data[usersPath] = null;
+
+  firebase.update('/', data);
+```
+
 ### addChildEventListener
 To listen for changes in your database you can pass in a listener callback function.
 You get to control which path inside you database you want to listen to, by default it's `/` which is the entire database.
