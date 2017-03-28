@@ -777,9 +777,8 @@ function toLoginResult(user) {
   var providerData = user.getProviderData();
   for (var i = 0; i < providerData.size(); i++) {
     var pid = providerData.get(i).getProviderId();
-    providers.push({
-      id: pid
-    });
+    if (pid==='facebook.com') { providers.push({ id: pid, token: firebase._facebookAccessToken }); }
+    else { providers.push({ id: pid }); }
   }
 
   return {
