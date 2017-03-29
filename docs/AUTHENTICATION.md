@@ -256,6 +256,18 @@ Then add the following lines to your code and check for setup instructions for y
 
 For a complete list of the available scope permissions, visit Facebook's documentation: https://developers.facebook.com/docs/facebook-login/permissions. 
 
+#### Post-login Graph API querying
+Upon successful authentication, Facebook creates an access token that can be obtained from the login method's result object. This access token can then be used for querying the Facebook Graph API, by feeding it to either Facebook's Javascript SDK or their iOS/Android native SDKs:
+
+```js
+"providers": [
+         {
+             "id": "facebook.com",
+             "token": "<FB token>"
+         }
+     ]
+```
+
 #### iOS
  1. If you didn't choose this feature during installation you can open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the Facebook line.
  2. Add a bit of config to `app\App_Resources\iOS\Info.plist` as instructed in Step 4 [here](https://developers.facebook.com/docs/ios/getting-started).
