@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "3.11.2",
+  "version": "3.11.3",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -66,14 +66,14 @@
   },
   "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
   "dependencies": {
-    "xcode": "0.8.0",
+    "xcode": "0.9.2",
     "prompt-lite": "^0.1.1",
     "fs-promise": "^2.0.0",
     "nativescript-hook": "^0.2.1"
   },
   "devDependencies": {
     "prompt-lite": "^0.1.1",
-    "xcode": "0.8.0",
+    "xcode": "0.9.2",
     "webpack": "~2.2.0"
   }
 }
