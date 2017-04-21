@@ -2832,6 +2832,9 @@ function readConfig() {
         config = {};
     }
 }
+function isInteractive() {
+    return process.stdin && process.stdin.isTTY && process.stdout && process.stdout.isTTY;
+}
 
 // workaround for https://github.com/NativeScript/nativescript-cli/issues/2521 (2.5.0 only)
 var nativeScriptVersion = "";
@@ -2860,6 +2863,8 @@ if (process.argv.indexOf("config") === -1 && fs.existsSync(pluginConfigPath)) {
     console.log("***** in the node_modules/nativescript-plugin-firebase folder *****");
     console.log("*******************************************************************");
     console.log("*******************************************************************");
+} else if (!isInteractive()) {
+    console.log("No existing " + pluginConfigFile + " config file found and terminal is not interactive! Default configuration will be used.");
 } else {
     console.log("No existing " + pluginConfigFile + " config file found, so let's configure the Firebase plugin!");
     prompt.start();
@@ -3069,7 +3074,7 @@ dependencies {
 
     // for converting Java objects to JS
     compile "com.google.code.gson:gson:2.8.+"
-    
+
     // for reading google-services.json and configuration
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '10.2.+'
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
@@ -3154,7 +3159,7 @@ var fs = require("fs");
 module.exports = function() {
 
     console.log("Configure firebase");
-    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle"); 
+    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle");
     if (fs.existsSync(buildGradlePath)) {
         var buildGradleContent = fs.readFileSync(buildGradlePath).toString();
 
