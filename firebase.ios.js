@@ -856,7 +856,10 @@ function toLoginResult(user) {
   for (i = 0, l = user.providerData.count; i < l; i++) {
     var firUserInfo = user.providerData.objectAtIndex(i);
     var pid = firUserInfo.valueForKey("providerID");
-    if (pid==='facebook.com') { providers.push({ id: pid, token: FBSDKAccessToken.currentAccessToken().tokenString }); }
+    if (pid==='facebook.com') {
+      var fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
+      providers.push({ id: pid, token: fbCurrentAccessToken?fbCurrentAccessToken.tokenString:null });
+    }
     else { providers.push({ id: pid }); }
   }
 
