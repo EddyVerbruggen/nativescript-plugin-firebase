@@ -1220,6 +1220,11 @@ firebase.keepInSync = function (path, switchOn) {
 
 firebase._addObservers = function(to, updateCallback) {
   var listener = new com.google.firebase.database.ChildEventListener({
+    onCancelled: function (error) {
+      updateCallback({
+        type: 'Cancelled'
+      });
+    },
     onChildAdded: function (snapshot, previousChildKey) {
       updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
     },
