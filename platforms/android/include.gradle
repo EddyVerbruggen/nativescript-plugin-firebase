@@ -46,6 +46,9 @@ dependencies {
     // Uncomment if you need Google Sign-In Authentication
 //    compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
+    // Uncomment if you want to use 'Invites'
+//    compile 'com.google.firebase:firebase-invites:10.2.+'
+
 }
 
 apply plugin: "com.google.gms.google-services"

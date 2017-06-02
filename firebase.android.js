@@ -13,6 +13,7 @@ firebase._facebookAccessToken = null;
 
 var fbCallbackManager = null;
 var GOOGLE_SIGNIN_INTENT_ID = 123;
+var REQUEST_INVITE_INTENT_ID = 48
 
 var gson = typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson();
 
@@ -1773,6 +1774,146 @@ firebase.sendCrashLog = function (arg) {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.sendCrashLog: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.sendInvitation = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(com.google.android.gms.appinvite) === "undefined") {
+        reject("Make sure firebase-invites is in the plugin's include.gradle");
+        return;
+      }
+
+      if (!arg.message || !arg.title) {
+        reject("The mandatory 'message' or 'title' argument is missing");
+        return;
+      }
+
+      var builder = new com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder(arg.title).setMessage(arg.message)
+
+      if (arg.deepLink) {
+        builder.setDeepLink(android.net.Uri.parse(arg.deepLink))
+      }
+
+      if (arg.callToActionText) {
+        builder.setCallToActionText(arg.callToActionText)
+      }
+
+      if (arg.customImage) {
+        builder.setCustomImage(android.net.Uri.parse(arg.customImage))
+      }
+
+      if (arg.iosClientID) {
+        builder.setOtherPlatformsTargetApplication(com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder.PlatformMode.PROJECT_PLATFORM_IOS, arg.iosClientID);
+      }
+
+      var firebaseInviteIntent = builder.build()
+
+      appModule.android.foregroundActivity.startActivityForResult(firebaseInviteIntent, REQUEST_INVITE_INTENT_ID);
+
+      appModule.android.onActivityResult = function (requestCode, resultCode, data) {
+
+          if (requestCode === REQUEST_INVITE_INTENT_ID) {
+
+              if (resultCode == android.app.Activity.RESULT_OK) {
+                  // Get the invitation IDs of all sent messages
+                  var ids = com.google.android.gms.appinvite.AppInviteInvitation.getInvitationIds(resultCode, data);
+                  
+                  try {
+                    var invitationIds = firebase.toJsObject(ids)
+                    var result = {
+                        count: ids.length,
+                        invitationIds: invitationIds
+                    }
+
+                    resolve(result)
+                  } catch (e) {
+                    reject(e)
+                  }
+                  
+              } else {
+                  if (resultCode === 3) {
+                    reject("Resultcode 3, see http://stackoverflow.com/questions/37883664/result-code-3-when-implementing-appinvites");
+                  } else {
+                    reject("Resultcode: " + resultCode);
+                  }
+              }
+          }
+        };
+      
+    } catch (ex) {
+      console.log("Error in firebase.sendInvitation: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getInvitation = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(com.google.android.gms.appinvite) === "undefined") {
+        reject("Make sure firebase-invites is in the plugin's include.gradle");
+        return;
+      }
+
+      var onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
+          onConnectionFailed: function (connectionResult) {
+            reject(connectionResult.getErrorMessage());
+          }
+      });
+
+      var autoLaunchDeepLink = false;
+      var activity = appModule.android.foregroundActivity;
+
+      firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
+            .addOnConnectionFailedListener(onConnectionFailedListener)
+            .addApi(com.google.android.gms.appinvite.AppInvite.API)
+            .build()
+
+      firebase._mGoogleApiClient.connect()            
+
+      var getInvitationCallback = new com.google.android.gms.common.api.ResultCallback({
+          onResult: function(result){
+              
+              console.log("getInvitation:onResult:", result.getStatus().isSuccess())
+              if (result.getStatus().isSuccess()) {
+                // Extract information from the intent
+                var intent = result.getInvitationIntent();
+
+                try {
+
+                  var deepLink = com.google.android.gms.appinvite.AppInviteReferral.getDeepLink(intent);
+                  var invitationId = com.google.android.gms.appinvite.AppInviteReferral.getInvitationId(intent);
+
+                  var result = {
+                    deepLink: firebase.toJsObject(deepLink),
+                    invitationId: firebase.toJsObject(invitationId)
+                  }
+
+                  resolve(result)
+
+                } catch (e) {
+                  reject(e)
+                }
+                
+              }
+              else {
+                reject("Not launched by invitation")
+              }
+            }
+      });
+
+      com.google.android.gms.appinvite.AppInvite.AppInviteApi.getInvitation(firebase._mGoogleApiClient, activity, autoLaunchDeepLink)
+         .setResultCallback(getInvitationCallback);
+          
+        
+    } catch (ex) {
+      console.log("Error in firebase.getInvitation: " + ex);
       reject(ex);
     }
   });

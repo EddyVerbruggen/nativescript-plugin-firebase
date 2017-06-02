@@ -467,6 +467,43 @@ export interface SendCrashLogOptions {
     showInConsole: boolean;
 }
 
+export interface SendInvitationOptions {
+    /**
+     * Invitation title you want to send
+     */
+    title: string;
+
+    /**
+     * Sets the default message sent with invitations
+     */
+    message: string;
+
+    /**
+     * Sets the link into your app that is sent with invitations.
+     */
+    deepLink?: string;
+
+    /**
+     * Sets the call-to-action text of the button rendered in email invitations. Cannot exceed 32 characters.
+     */
+    callToActionText?: string;
+
+    /**
+     * Sets the URL of a custom image to include in email invitations. The image must be square and around 600x600 pixels. The image can be no larger than 4000x4000 pixels.
+     */
+    customImage?: string;
+
+    /**
+     * If you have an Android version of your app and you want to send an invitation that can be opened on Android in addition to iOS
+     */
+    androidClientID?: string;
+
+    /**
+     * You can find your iOS app's client ID in the GoogleService-Info.plist file you downloaded from the Firebase console
+     */
+    iosClientID?: string;
+}
+
 export function init(options?: InitOptions): Promise<any>;
 
 // Database
@@ -673,3 +710,8 @@ export function unsubscribeFromTopic(topicName): Promise<any>;
 
 // crash logging
 export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;
+
+// invites
+export function sendInvitation(options: SendInvitationOptions): Promise<any>;
+
+export function getInvitation(): Promise<any>

@@ -155,6 +155,10 @@ function promptQuestions() {
       name: 'admob',
       description: 'Are you using AdMob (y/n)',
       default: 'n'
+    }, {
+        name: 'invites',
+        description: 'Are you using Firebase Invites (y/n)',
+        default: 'n'
     }], function (err, result) {
         if (err) {
             return console.log(err);
@@ -301,7 +305,8 @@ dependencies {
 
     // Uncomment if you need Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
-
+    // Uncomment if you need Firebase Invites
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:10.2.+"
 }
 
 apply plugin: "com.google.gms.google-services"
