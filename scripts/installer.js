@@ -305,6 +305,7 @@ dependencies {
 
     // Uncomment if you need Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
+
     // Uncomment if you need Firebase Invites
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:10.2.+"
 }
