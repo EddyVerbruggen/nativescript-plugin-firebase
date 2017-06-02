@@ -1793,25 +1793,25 @@ firebase.sendInvitation = function (arg) {
         return;
       }
 
-      var builder = new com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder(arg.title).setMessage(arg.message)
+      var builder = new com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder(arg.title).setMessage(arg.message);
 
       if (arg.deepLink) {
-        builder.setDeepLink(android.net.Uri.parse(arg.deepLink))
+        builder.setDeepLink(android.net.Uri.parse(arg.deepLink));
       }
 
       if (arg.callToActionText) {
-        builder.setCallToActionText(arg.callToActionText)
+        builder.setCallToActionText(arg.callToActionText);
       }
 
       if (arg.customImage) {
-        builder.setCustomImage(android.net.Uri.parse(arg.customImage))
+        builder.setCustomImage(android.net.Uri.parse(arg.customImage));
       }
 
       if (arg.iosClientID) {
         builder.setOtherPlatformsTargetApplication(com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder.PlatformMode.PROJECT_PLATFORM_IOS, arg.iosClientID);
       }
 
-      var firebaseInviteIntent = builder.build()
+      var firebaseInviteIntent = builder.build();
 
       appModule.android.foregroundActivity.startActivityForResult(firebaseInviteIntent, REQUEST_INVITE_INTENT_ID);
 
@@ -1819,18 +1819,18 @@ firebase.sendInvitation = function (arg) {
 
           if (requestCode === REQUEST_INVITE_INTENT_ID) {
 
-              if (resultCode == android.app.Activity.RESULT_OK) {
+              if (resultCode === android.app.Activity.RESULT_OK) {
                   // Get the invitation IDs of all sent messages
                   var ids = com.google.android.gms.appinvite.AppInviteInvitation.getInvitationIds(resultCode, data);
                   
                   try {
-                    var invitationIds = firebase.toJsObject(ids)
+                    var invitationIds = firebase.toJsObject(ids);
                     var result = {
                         count: ids.length,
                         invitationIds: invitationIds
-                    }
+                    };
 
-                    resolve(result)
+                    resolve(result);
                   } catch (e) {
                     reject(e)
                   }
@@ -1873,37 +1873,32 @@ firebase.getInvitation = function () {
       firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
             .addOnConnectionFailedListener(onConnectionFailedListener)
             .addApi(com.google.android.gms.appinvite.AppInvite.API)
-            .build()
+            .build();
 
-      firebase._mGoogleApiClient.connect()            
+      firebase._mGoogleApiClient.connect()      ;
 
       var getInvitationCallback = new com.google.android.gms.common.api.ResultCallback({
           onResult: function(result){
               
-              console.log("getInvitation:onResult:", result.getStatus().isSuccess())
+              console.log("getInvitation:onResult:", result.getStatus().isSuccess());
               if (result.getStatus().isSuccess()) {
                 // Extract information from the intent
                 var intent = result.getInvitationIntent();
 
                 try {
-
                   var deepLink = com.google.android.gms.appinvite.AppInviteReferral.getDeepLink(intent);
                   var invitationId = com.google.android.gms.appinvite.AppInviteReferral.getInvitationId(intent);
 
-                  var result = {
+                  resolve({
                     deepLink: firebase.toJsObject(deepLink),
                     invitationId: firebase.toJsObject(invitationId)
-                  }
-
-                  resolve(result)
+                  });
 
                 } catch (e) {
-                  reject(e)
+                  reject(e);
                 }
-                
-              }
-              else {
-                reject("Not launched by invitation")
+              } else {
+                reject("Not launched by invitation");
               }
             }
       });
