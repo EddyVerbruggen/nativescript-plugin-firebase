@@ -504,6 +504,16 @@ export interface SendInvitationOptions {
     iosClientID?: string;
 }
 
+export interface SendInvitationResult {
+    count: number,
+    invitationIds: any
+}
+
+export interface GetInvitationResult {
+    deeplink: any;
+    invitationId: any;
+}
+
 export function init(options?: InitOptions): Promise<any>;
 
 // Database
@@ -712,6 +722,6 @@ export function unsubscribeFromTopic(topicName): Promise<any>;
 export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;
 
 // invites
-export function sendInvitation(options: SendInvitationOptions): Promise<any>;
+export function sendInvitation(options: SendInvitationOptions): Promise<SendInvitationResult>;
 
-export function getInvitation(): Promise<any>
+export function getInvitation(): Promise<GetInvitationResult>
