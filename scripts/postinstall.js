@@ -3013,7 +3013,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 3.13.0'
+`pod 'Firebase', '~> 3.17.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
@@ -3031,6 +3031,9 @@ pod 'Firebase/Auth'
 
 # Uncomment if you want to enable AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
+
+# Uncomment if you want to enable Invites
+` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
 
 # Uncomment if you want to enable Facebook Authentication
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
