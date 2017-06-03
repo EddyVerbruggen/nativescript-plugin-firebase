@@ -467,53 +467,6 @@ export interface SendCrashLogOptions {
     showInConsole: boolean;
 }
 
-export interface SendInvitationOptions {
-    /**
-     * Invitation title you want to send
-     */
-    title: string;
-
-    /**
-     * Sets the default message sent with invitations
-     */
-    message: string;
-
-    /**
-     * Sets the link into your app that is sent with invitations.
-     */
-    deepLink?: string;
-
-    /**
-     * Sets the call-to-action text of the button rendered in email invitations. Cannot exceed 32 characters.
-     */
-    callToActionText?: string;
-
-    /**
-     * Sets the URL of a custom image to include in email invitations. The image must be square and around 600x600 pixels. The image can be no larger than 4000x4000 pixels.
-     */
-    customImage?: string;
-
-    /**
-     * If you have an Android version of your app and you want to send an invitation that can be opened on Android in addition to iOS
-     */
-    androidClientID?: string;
-
-    /**
-     * You can find your iOS app's client ID in the GoogleService-Info.plist file you downloaded from the Firebase console
-     */
-    iosClientID?: string;
-}
-
-export interface SendInvitationResult {
-    count: number,
-    invitationIds: any
-}
-
-export interface GetInvitationResult {
-    deeplink: any;
-    invitationId: any;
-}
-
 export function init(options?: InitOptions): Promise<any>;
 
 // Database
@@ -538,7 +491,7 @@ export function removeEventListeners(listeners: Array<any>, path: string): Promi
  */
 export function keepInSync(path: string, switchOn: boolean): Promise<any>;
 
-// AdMob, nicely grouped in its own module
+// AdMob module
 export module admob {
 
     /**
@@ -632,7 +585,7 @@ export module admob {
     function hideBanner(): Promise<any>;
 }
 
-// Analytics, nicely grouped in its own module
+// Analytics module
 export module analytics {
     export interface LogEventParameter {
         key: string;
@@ -667,6 +620,62 @@ export module analytics {
 
     function setUserProperty(options: SetUserPropertyOptions): Promise<any>;
 }
+
+// Invites module
+export module invites {
+
+    export interface SendInvitationOptions {
+        /**
+         * Invitation title you want to send
+         */
+        title: string;
+
+        /**
+         * Sets the default message sent with invitations
+         */
+        message: string;
+
+        /**
+         * Sets the link into your app that is sent with invitations.
+         */
+        deepLink?: string;
+
+        /**
+         * Sets the call-to-action text of the button rendered in email invitations. Cannot exceed 32 characters.
+         */
+        callToActionText?: string;
+
+        /**
+         * Sets the URL of a custom image to include in email invitations. The image must be square and around 600x600 pixels. The image can be no larger than 4000x4000 pixels.
+         */
+        customImage?: string;
+
+        /**
+         * If you have an Android version of your app and you want to send an invitation that can be opened on Android in addition to iOS
+         */
+        androidClientID?: string;
+
+        /**
+         * You can find your iOS app's client ID in the GoogleService-Info.plist file you downloaded from the Firebase console
+         */
+        iosClientID?: string;
+    }
+
+    export interface SendInvitationResult {
+        count: number,
+        invitationIds: any
+    }
+
+    export interface GetInvitationResult {
+        deeplink: any;
+        invitationId: any;
+    }
+
+    function sendInvitation(options: SendInvitationOptions): Promise<SendInvitationResult>;
+
+    function getInvitation(): Promise<GetInvitationResult>;
+}
+
 
 // Auth
 export function login(options: LoginOptions): Promise<User>;
@@ -720,8 +729,3 @@ export function unsubscribeFromTopic(topicName): Promise<any>;
 
 // crash logging
 export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;
-
-// invites
-export function sendInvitation(options: SendInvitationOptions): Promise<SendInvitationResult>;
-
-export function getInvitation(): Promise<GetInvitationResult>

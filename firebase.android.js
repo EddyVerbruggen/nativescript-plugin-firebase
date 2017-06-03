@@ -1779,7 +1779,7 @@ firebase.sendCrashLog = function (arg) {
   });
 };
 
-firebase.sendInvitation = function (arg) {
+firebase.invites.sendInvitation = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
 
@@ -1825,12 +1825,10 @@ firebase.sendInvitation = function (arg) {
                   
                   try {
                     var invitationIds = firebase.toJsObject(ids);
-                    var result = {
-                        count: ids.length,
-                        invitationIds: invitationIds
-                    };
-
-                    resolve(result);
+                    resolve({
+                      count: ids.length,
+                      invitationIds: invitationIds
+                    });
                   } catch (e) {
                     reject(e)
                   }
@@ -1852,7 +1850,7 @@ firebase.sendInvitation = function (arg) {
   });
 };
 
-firebase.getInvitation = function () {
+firebase.invites.getInvitation = function () {
   return new Promise(function (resolve, reject) {
     try {
 
@@ -1875,7 +1873,7 @@ firebase.getInvitation = function () {
             .addApi(com.google.android.gms.appinvite.AppInvite.API)
             .build();
 
-      firebase._mGoogleApiClient.connect()      ;
+      firebase._mGoogleApiClient.connect();
 
       var getInvitationCallback = new com.google.android.gms.common.api.ResultCallback({
           onResult: function(result){

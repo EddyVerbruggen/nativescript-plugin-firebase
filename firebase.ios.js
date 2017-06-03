@@ -11,6 +11,7 @@ firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
 firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
+firebase._cachedInvitation = null;
 
 firebase._addObserver = function (eventName, callback) {
   var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
@@ -76,6 +77,20 @@ firebase.addAppDelegateMethods = function(appDelegate) {
     if (typeof(GIDSignIn) !== "undefined") {
       result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
     }
+
+    // Handle App Invite requests
+    if (typeof(FIRInvites) !== "undefined") {
+      var receivedInvite = FIRInvites.handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
+      if (receivedInvite) {
+        console.log("Deep link from " + sourceApplication + ", Invite ID: " + invite.invideId + ", App URL: " + invite.deepLink);
+        this._cachedInvitation = {
+          deepLink: invite.deepLink,
+          invitationId: invite.invideId
+        };
+        result = true;
+      }
+    }
+
     return result;
   };
 
@@ -913,7 +928,7 @@ firebase.login = function (arg) {
         if (error) {
           // also disconnect from Google otherwise ppl can't connect with a different account
           if (typeof(GIDSignIn) !== "undefined") {
-              GIDSignIn.sharedInstance().disconnect();
+            GIDSignIn.sharedInstance().disconnect();
           }
           reject(error.localizedDescription);
         } else {
@@ -939,23 +954,23 @@ firebase.login = function (arg) {
         if (!arg.email || !arg.password) {
           reject("Auth type emailandpassword requires an email and password argument");
         } else {
-            var fIRAuthCredential = FIREmailPasswordAuthProvider.credentialWithEmailPassword(arg.email, arg.password)
-            if (fAuth.currentUser) {
-                // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
-                var onCompletionLink = function (user, error) {
-                    if (error) {
-                        // ignore, as this one was probably already linked, so just return the user
-                        log("--- linking error: " + error.localizedDescription);
-                        fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
-                    } else {
-                        onCompletion(user);
-                    }
-                };
-                fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+          var fIRAuthCredential = FIREmailPasswordAuthProvider.credentialWithEmailPassword(arg.email, arg.password)
+          if (fAuth.currentUser) {
+            // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
+            var onCompletionLink = function (user, error) {
+              if (error) {
+                // ignore, as this one was probably already linked, so just return the user
+                log("--- linking error: " + error.localizedDescription);
+                fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+              } else {
+                onCompletion(user);
+              }
+            };
+            fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
-            } else {
-                fAuth.signInWithEmailPasswordCompletion(arg.email, arg.password, onCompletion);
-            }
+          } else {
+            fAuth.signInWithEmailPasswordCompletion(arg.email, arg.password, onCompletion);
+          }
         }
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
@@ -1795,6 +1810,102 @@ firebase.sendCrashLog = function (arg) {
   });
 };
 
+firebase.invites.sendInvitation = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+
+      if (typeof(FIRInvites) === "undefined") {
+        reject("Make sure 'Firebase/Invites' is in the plugin's Podfile");
+        return;
+      }
+
+      if (!arg.message || !arg.title) {
+        reject("The mandatory 'message' or 'title' argument is missing");
+        return;
+      }
+
+      // note that this returns the wrong type, so need to use 'performSelector' below
+      var inviteDialog = FIRInvites.inviteDialog();
+
+      // A message hint for the dialog. Note this manifests differently depending on the
+      // received invitation type. For example, in an email invite this appears as the subject.
+      // inviteDialog.setMessage(arg.message);
+      inviteDialog.performSelectorWithObject("setMessage:", arg.message);
+
+      // Title for the dialog, this is what the user sees before sending the invites.
+      // inviteDialog.setTitle(arg.title);
+      inviteDialog.performSelectorWithObject("setTitle:", arg.title);
+
+      if (arg.deepLink) {
+        // inviteDialog.setDeepLink(arg.deeplink);
+        inviteDialog.performSelectorWithObject("setDeepLink:", arg.deeplink);
+      }
+
+      if (arg.callToActionText) {
+        // inviteDialog.setCallToActionText(arg.callToActionText);
+        inviteDialog.performSelectorWithObject("setCallToActionText:", arg.callToActionText);
+      }
+
+      if (arg.customImage) {
+        // inviteDialog.setCustomImage(arg.customImage);
+        inviteDialog.performSelectorWithObject("setCustomImage:", arg.customImage);
+      }
+
+      if (arg.androidClientID) {
+        var targetApplication = FIRInvitesTargetApplication.new();
+        targetApplication.androidClientID = arg.androidClientID;
+        // inviteDialog.setOtherPlatformsTargetApplication(targetApplication);
+        inviteDialog.performSelectorWithObject("setOtherPlatformsTargetApplication:", targetApplication);
+      }
+
+      var delegate = FIRInviteDelegateImpl.new().initWithCallback(function (ids, error) {
+        if (error === null) {
+          var invitationIds = firebase.toJsObject(ids);
+          resolve({
+            count: ids.count,
+            invitationIds: invitationIds
+          });
+        } else {
+          reject(error.localizedDescription);
+        }
+        delegate = undefined;
+      });
+      // inviteDialog.setInviteDelegate(delegate);
+      inviteDialog.performSelectorWithObject("setInviteDelegate:", delegate);
+
+      // inviteDialog.open();
+      inviteDialog.performSelector("open");
+
+    } catch (ex) {
+      console.log("Error in firebase.sendInvitation: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.invites.getInvitation = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(FIRInvites) === "undefined") {
+        reject("Make sure 'Firebase/Invites' is in the plugin's Podfile");
+        return;
+      }
+
+      if (firebase._cachedInvitation !== null) {
+        resolve(firebase._cachedInvitation);
+        firebase.cachedInvitation = null;
+      } else {
+        reject("Not launched by invitation");
+      }
+
+    } catch (ex) {
+      console.log("Error in firebase.getInvitation: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+
 var GADBannerViewDelegateImpl = (function (_super) {
   __extends(GADBannerViewDelegateImpl, _super);
   function GADBannerViewDelegateImpl() {
@@ -1866,6 +1977,28 @@ var UNUserNotificationCenterDelegateImpl = (function (_super) {
   return UNUserNotificationCenterDelegateImpl;
 })(NSObject);
 
+
+var FIRInviteDelegateImpl = (function (_super) {
+  __extends(FIRInviteDelegateImpl, _super);
+  function FIRInviteDelegateImpl() {
+    _super.apply(this, arguments);
+  }
+
+  FIRInviteDelegateImpl.new = function () {
+    return _super.new.call(this);
+  };
+  FIRInviteDelegateImpl.prototype.initWithCallback = function (callback) {
+    this._callback = callback;
+    return this;
+  };
+  FIRInviteDelegateImpl.prototype.inviteFinishedWithInvitationsError = function (invitationIds, error) {
+    this._callback(invitationIds, error);
+  };
+  if (typeof(FIRInviteDelegate) !== "undefined") {
+    FIRInviteDelegateImpl.ObjCProtocols = [FIRInviteDelegate];
+  }
+  return FIRInviteDelegateImpl;
+})(NSObject);
 
 // see https://firebase.google.com/docs/reference/ios/firebasemessaging/api/reference/Protocols/FIRMessagingDelegate
 var FIRMessagingDelegateImpl = (function (_super) {

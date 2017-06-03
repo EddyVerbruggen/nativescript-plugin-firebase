@@ -1,5 +1,6 @@
 var firebase = {};
 firebase.analytics = {};
+firebase.invites = {};
 firebase.admob = {};
 firebase.admob.AD_SIZE = {
   SMART_BANNER: "SMART",
