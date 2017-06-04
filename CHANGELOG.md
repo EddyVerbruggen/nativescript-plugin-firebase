@@ -1,6 +1,24 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
 
+## 3.12.0 (2017, June 4)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.11.4...3.12.0)
+
+### SDK versions
+
+- iOS: 3.17.0
+- Android: 10.2.x
+
+### New
+
+- [#199](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/199) Feature request: Invites
+- [#362](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/362) Add Feature Firebase Invites (Android)
+- [#383](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/383) Auto-upgrade com.google.gms:google-services:3.0.0 to 3.1.0
+
+
+
+
 ## 3.11.4 (2017, April 21)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.11.3...3.11.4)

@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "3.11.4",
+  "version": "3.12.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -34,7 +34,8 @@
     "postinstall": "node postinstall-hooks.js && node scripts/postinstall.js",
     "preuninstall": "node preuninstall-hooks.js",
     "setup": "node scripts/postinstall.js setup",
-    "config": "node scripts/postinstall.js config"
+    "config": "node scripts/postinstall.js config",
+    "test": "echo 'TODO implement tests :)'"
   },
   "repository": {
     "type": "git",

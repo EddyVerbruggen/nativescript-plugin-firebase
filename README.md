@@ -39,19 +39,8 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-plugin-firebase
 ```
 
-Now start an install script which will guide you through installing additional components. Check the doc links above to see what's what. You can always change your choices later.
-
-```
-cd node_modules/nativescript-plugin-firebase
-```
-
-If you run NativeScript 2.5.0 (only that exact version) then run (with other versions this runs automatically through a postinstall script):
-
-__NativeScript 2.5.0 is no longer the latest release, so you might as well update before adding this plugin to avoid this issue.__
-
-```
-npm run setup
-```
+This will launch an install script which will guide you through installing additional components.
+Check the doc links above to see what's what. You can always change your choices later.
 
 ### Config
 If you choose to save your config during the installation, the supported options may be saved in the `firebase.nativescript.json` at the root of your app.
@@ -60,6 +49,9 @@ This is to ensure your app may roundtrip source control and installation on CI w
 You can reconfigure the plugin by going to the `node_modules/nativescript-plugin-firebase` and running `npm run config`.
 
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
+
+### iOS
+The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` to ensure you have the latest spec.
 
 ### Android
 Install the latest packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
