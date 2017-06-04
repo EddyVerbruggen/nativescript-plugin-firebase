@@ -1,6 +1,4 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
-
-<img src="images/features/auth.png" width="296px" height="124px" alt="Auth"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/auth.png" height="85px" alt="Authentication"/>
 
 ## Enabling Authentication
 You can sign in a user either

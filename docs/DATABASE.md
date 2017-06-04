@@ -1,6 +1,4 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
-
-<img src="images/features/database.png" width="296px" height="124px" alt="Database"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/database.png" height="85px" alt="Realtime Database"/>
 
 If you can spare 41 seconds, check (an older version of) this plugin's [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo) in action:
 [![YouTube demo, 41 sec](images/yt-thumb-database.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")

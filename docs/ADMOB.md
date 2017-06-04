@@ -1,4 +1,4 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/admob.png" height="85px" alt="AdMob"/>
 
 ## Enabling AdMob
 Since plugin version 3.10.0 you can use Firebase _AdMob_ features.

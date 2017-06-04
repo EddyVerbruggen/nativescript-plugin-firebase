@@ -1,6 +1,4 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
-
-<img src="images/features/crash.png" width="296px" height="124px" alt="Crash"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/crash.png" height="85px" alt="Crash Reporting"/>
 
 ## Enabling Crash Reporting
 With plugin version 3.9.0+ you will be prompted during installation of the plugin to enable Crash Reporting (it's off by default).

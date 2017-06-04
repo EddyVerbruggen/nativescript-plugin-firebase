@@ -1,6 +1,4 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
-
-<img src="images/features/notifications.png" width="296px" height="124px" alt="Notifications"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/notifications.png" height="85px" alt="Notifications"/>
 
 ## Enabling Firebase Cloud Messaging (FCM)
 Version 3.3.0 of this plugin added FCM support (which is the successor of GCM).

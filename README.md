@@ -14,6 +14,7 @@ For readability the supported features have been moved to their own README's:
 * [Storage](docs/STORAGE.md)
 * [Crash Reporting](docs/CRASHREPORTING.md)
 * [Analytics](docs/ANALYTICS.md)
+* [Invites](docs/INVITES.md)
 * [AdMob](docs/ADMOB.md)
 
 ## Prerequisites
@@ -138,7 +139,7 @@ firebase.init({
 ```
 
 #### Pod dependency error
-If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.13.0) required by Podfile`,
+If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.17.0) required by Podfile`,
 then run `pod repo update` on the command line to make sure you have the latest Podspec.
 
 This could happen when updating the plugin to a new version. You'll want to `tns platform remove ios && tns platform add ios` as well to clean out the old pod version.

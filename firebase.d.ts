@@ -626,12 +626,12 @@ export module invites {
 
     export interface SendInvitationOptions {
         /**
-         * Invitation title you want to send
+         * Invitation title you want to send.
          */
         title: string;
 
         /**
-         * Sets the default message sent with invitations
+         * Sets the default message sent with invitations.
          */
         message: string;
 
@@ -651,12 +651,12 @@ export module invites {
         customImage?: string;
 
         /**
-         * If you have an Android version of your app and you want to send an invitation that can be opened on Android in addition to iOS
+         * If you have an Android version of your app and you want to send an invitation that can be opened on Android in addition to iOS.
          */
         androidClientID?: string;
 
         /**
-         * You can find your iOS app's client ID in the GoogleService-Info.plist file you downloaded from the Firebase console
+         * You can find your iOS app's client ID in the GoogleService-Info.plist file you downloaded from the Firebase console.
          */
         iosClientID?: string;
     }
