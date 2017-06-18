@@ -5,6 +5,9 @@ Since plugin version 3.12.0 you can use Firebase _Invites_ features.
 
 _Invites_ lets you invite other users to your app from right within your own app, via SMS and/or Email.
 
+### Android
+* [Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
+
 ### iOS
 * On iOS the user must be signed in with their Google Account to send invitations.
 * You must have the App Store ID set in your developer console project in order for invitations to successfully be sent.
