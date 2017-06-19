@@ -1081,9 +1081,11 @@ firebase.login = function (arg) {
           } else {
             reject(error.localizedDescription);
           }
+          CFRelease(delegate);
           delegate = undefined;
         });
 
+        CFRetain(delegate);
         sIn.delegate = delegate;
         sIn.signIn();
       } else {
