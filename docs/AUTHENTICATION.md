@@ -305,7 +305,11 @@ Then add the following lines to your code and check for setup instructions for y
 
 ```js
   firebase.login({
-    type: firebase.LoginType.GOOGLE
+    type: firebase.LoginType.GOOGLE,
+    //Optional 
+    google: {
+      hostedDomain: "mygsuitedomain.com"
+    }
   }).then(
       function (result) {
         JSON.stringify(result);

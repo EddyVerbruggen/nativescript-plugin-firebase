@@ -915,9 +915,16 @@ firebase.login = function (arg) {
 
         // Configure Google Sign In
         var googleSignInOptions = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(clientId)
-            .requestEmail()
-            .build();
+          .requestIdToken(clientId)
+          .requestEmail();
+        
+        if (arg.google) {
+          if (arg.google.hostedDomain) {
+            googleSignInOptions.setHostedDomain(args.google.hostedDomain)
+          }
+        }
+
+        googleSignInOptions = googleSignInOptions.build();
 
         var onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
           onConnectionFailed: function (connectionResult) {
