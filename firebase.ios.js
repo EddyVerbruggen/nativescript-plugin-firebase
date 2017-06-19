@@ -978,25 +978,25 @@ firebase.login = function (arg) {
           reject("Auth type custom requires a token or a tokenProviderFn argument");
         } else if (arg.token) {
           fAuth.signInWithCustomTokenCompletion(arg.token, onCompletion);
-        }  else if (arg.tokenProviderFn) {
+        } else if (arg.tokenProviderFn) {
           arg.tokenProviderFn()
-              .then(
-                  function (token) {
-                    firebaseAuth.signInWithCustomTokenCompletion(token, onCompletion);
-                  },
-                  function (error) {
-                    reject(error);
-                  }
-              );
+            .then(
+            function (token) {
+              firebaseAuth.signInWithCustomTokenCompletion(token, onCompletion);
+            },
+            function (error) {
+              reject(error);
+            }
+            );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
-        if (typeof(FBSDKLoginManager) === "undefined") {
+        if (typeof (FBSDKLoginManager) === "undefined") {
           reject("Facebook SDK not installed - see Podfile");
           return;
         }
 
-        var onFacebookCompletion = function(fbSDKLoginManagerLoginResult, error) {
+        var onFacebookCompletion = function (fbSDKLoginManagerLoginResult, error) {
           if (error) {
             console.log("Facebook login error " + error);
             reject(error.localizedDescription);
@@ -1035,12 +1035,12 @@ firebase.login = function (arg) {
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-            scope,
-            null, // the viewcontroller param can be null since by default topmost is taken
-            onFacebookCompletion);
+          scope,
+          null, // the viewcontroller param can be null since by default topmost is taken
+          onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
-        if (typeof(GIDSignIn) === "undefined") {
+        if (typeof (GIDSignIn) === "undefined") {
           reject("Google Sign In not installed - see Podfile");
           return;
         }
@@ -1048,6 +1048,12 @@ firebase.login = function (arg) {
         var sIn = GIDSignIn.sharedInstance();
         sIn.uiDelegate = application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
+
+        if (arg.google) {
+          if (arg.google.hostedDomain) {
+            sIn.hostedDomain = arg.google.hostedDomain;
+          }
+        }
 
         var delegate = GIDSignInDelegateImpl.new().initWithCallback(function (user, error) {
           if (error === null) {
