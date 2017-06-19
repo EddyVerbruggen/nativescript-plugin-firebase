@@ -161,6 +161,10 @@ export interface Provider {
     id: string;
 }
 
+export interface GoogleLoginOptions {
+    hostedDomain?: string;
+}
+
 /**
  * The options object passed into the login function.
  */
@@ -184,6 +188,8 @@ export interface LoginOptions {
      * For Facebook auth. Default: ["public_profile", "email"]
      */
     scope?: string[];
+
+    google?: GoogleLoginOptions;
 }
 
 export interface ReauthenticateOptions {
