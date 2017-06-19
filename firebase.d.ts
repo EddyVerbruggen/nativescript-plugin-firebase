@@ -161,8 +161,15 @@ export interface Provider {
     id: string;
 }
 
-export interface GoogleLoginOptions {
+export interface FirebaseGoogleLoginOptions {
     hostedDomain?: string;
+}
+
+export interface FirebaseFacebookLoginOptions {
+    /**
+     * For Facebook auth. Default: ["public_profile", "email"]
+     */
+    scope?: string[];
 }
 
 /**
@@ -186,10 +193,13 @@ export interface LoginOptions {
     tokenProviderFn?: () => Promise<String>;
     /**
      * For Facebook auth. Default: ["public_profile", "email"]
+     * @deprecated Please use the 'facebook?: FirebaseFacebookLoginOptions' object instead.
      */
     scope?: string[];
 
-    google?: GoogleLoginOptions;
+    google?: FirebaseGoogleLoginOptions;
+
+    facebook?: FirebaseFacebookLoginOptions;
 }
 
 export interface ReauthenticateOptions {
