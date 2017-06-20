@@ -4,7 +4,7 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
-## 4.0.0 (2017, June 18)
+## 4.0.0 (2017, June 20)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.12.0...4.0.0)
 
@@ -20,7 +20,10 @@
 - [#388](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/388) Check for 'init' at 'push', 'setValue', etc
 
 ### Fixes
+- [#87](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/87) BUG Database query - range not working when value is number.
+- [#186](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/386) Can't read number field where value is greater than 0
 - [#349](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/349) App crashes on iOS emulator
+- [#365](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/365) IOS firebase to JSON not converting numbers with NSDecimalNumber subclass 
 
 
 
