@@ -6,7 +6,7 @@
 
 ## 4.0.0 (2017, June 20)
 
-[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.12.0...4.0.0)
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/26?closed=1)
 
 ### SDK versions
 
@@ -17,7 +17,7 @@
 - [#255](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/255) How to Regenerate the Firebase Cloud Messaging Token
 - [#360](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/360) export fetchProvidersForEmail
 - [#376](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/376) Add support for firebase phone authentication
-- [#388](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/388) Check for 'init' at 'push', 'setValue', etc
+- [#388](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/388) Check for 'init' at 'push', 'setValue', 'update' and 'query'
 
 ### Fixes
 - [#87](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/87) BUG Database query - range not working when value is number.
