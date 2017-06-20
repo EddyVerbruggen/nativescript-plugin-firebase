@@ -1,7 +1,16 @@
 # NativeScript Firebase plugin
 
+[![NPM version][npm-image]][npm-url]
+[![Downloads][downloads-image]][npm-url]
+[![Twitter Follow][twitter-image]][twitter-url]
+
+[npm-image]:http://img.shields.io/npm/v/nativescript-plugin-firebase.svg
+[npm-url]:https://npmjs.org/package/nativescript-plugin-firebase
+[downloads-image]:http://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
+[twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
+[twitter-url]:https://twitter.com/eddyverbruggen
+
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
-Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
 ## Features
 For readability the supported features have been moved to their own README's:
