@@ -768,6 +768,8 @@ export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) 
 
 export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
 
+export function getCurrentPushToken(): Promise<string>;
+
 // remote config
 export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
 

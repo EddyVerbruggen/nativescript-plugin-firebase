@@ -260,6 +260,22 @@ firebase.init = function (arg) {
   });
 };
 
+firebase.getCurrentPushToken = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(com.google.firebase.messaging || com.google.firebase.iid) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
+      resolve(com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken());
+    } catch (ex) {
+      console.log("Error in firebase.getCurrentPushToken: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.addOnMessageReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
     try {

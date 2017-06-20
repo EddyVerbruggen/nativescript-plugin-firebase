@@ -130,6 +130,22 @@ firebase.addAppDelegateMethods = function(appDelegate) {
   addBackgroundRemoteNotificationHandler(appDelegate);
 };
 
+firebase.getCurrentPushToken = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(FIRMessaging) === "undefined") {
+        reject("Enable FIRMessaging in Podfile first");
+        return;
+      }
+
+      resolve(FIRMessaging.messaging().FCMToken);
+    } catch (ex) {
+      console.log("Error in firebase.getCurrentPushToken: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.addOnMessageReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
     try {
@@ -337,6 +353,9 @@ function getAppDelegate() {
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
 function prepAppDelegate() {
   if (typeof(FIRMessaging) !== "undefined") {
+    // see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178 for why we're not using a constant here
+    firebase._addObserver("com.firebase.iid.notif.refresh-token", firebase._onTokenRefreshNotification);
+
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
       // guarded this with a preference so the popup "this app wants to send notifications"
       // is not shown until the dev intentionally wired a listener (see other usages of _registerForRemoteNotifications())

@@ -34,7 +34,7 @@ If you didn't choose this feature during installation you can run the "post inst
 
 #### Enable push support in Xcode
 
-Open /platforms/ios/yourproject.__xcworkspace__ (!) and go to your project's target and head over to "Capabilities" to toggle this switch:
+Open /platforms/ios/yourproject.__xcworkspace__ (!) and go to your project's target and head over to "Capabilities" to switch this on (if it isn't already):
 <img src="images/push-xcode-config.png" width="600px" alt="Push Xcode config"/>
 
 > Without this enabled you will receive push messages in the foreground, but **NOT in the background** / when the app is killed.
@@ -145,6 +145,17 @@ and:
 
 ```js
   firebase.unsubscribeFromTopic("news");
+```
+
+### Retrieving the push registration token
+If - for some reason - you need to manually retrieve the current push registration token of the device, you can do:
+
+##### TypeScript
+```typescript
+  firebase.getCurrentPushToken().then((token: string) => {
+    // may be null if not known yet
+    console.log("Current push token: " + token);
+  });
 ```
 
 ## Testing
