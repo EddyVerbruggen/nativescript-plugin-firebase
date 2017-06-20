@@ -23,6 +23,7 @@
 ### Fixes
 - [#87](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/87) BUG Database query - range not working when value is number.
 - [#186](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/386) Can't read number field where value is greater than 0
+- [#227](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/227) facing issue while login with facebook :prefilling my firebase account details in facebook popup
 - [#349](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/349) App crashes on iOS emulator
 - [#365](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/365) IOS firebase to JSON not converting numbers with NSDecimalNumber subclass 
 
