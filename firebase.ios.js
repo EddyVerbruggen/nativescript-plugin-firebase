@@ -913,6 +913,10 @@ firebase.logout = function (arg) {
         GIDSignIn.sharedInstance().disconnect();
       }
 
+      if (typeof(FBSDKLoginManager) !== "undefined") {
+        FBSDKLoginManager.alloc().logOut();
+      }
+
       resolve();
     } catch (ex) {
       console.log("Error in firebase.logout: " + ex);
