@@ -1,5 +1,24 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+[Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
+[Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
+
+
+## 4.0.0 (2017, June 18)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.12.0...4.0.0)
+
+### SDK versions
+
+- iOS: 4.0.x
+- Android: 11.0.x
+
+### New
+
+### Fixes
+
+
+
 
 ## 3.12.0 (2017, June 4)
 

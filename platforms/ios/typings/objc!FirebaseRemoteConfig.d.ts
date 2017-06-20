@@ -44,7 +44,7 @@ declare class FIRRemoteConfig extends NSObject implements NSFastEnumeration {
 
 	setDefaultsFromPlistFileNameNamespace(fileName: string, aNamespace: string): void;
 
-	setDefaultsNamespace(defaultConfig: NSDictionary<string, NSObject>, aNamespace: string): void;
+	setDefaultsNamespace(defaults: NSDictionary<string, NSObject>, aNamespace: string): void;
 }
 
 declare const enum FIRRemoteConfigError {

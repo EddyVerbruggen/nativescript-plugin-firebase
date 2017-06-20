@@ -1,3 +1,5 @@
+var dialogs = require("ui/dialogs");
+
 var firebase = {};
 firebase.analytics = {};
 firebase.invites = {};
@@ -116,6 +118,68 @@ firebase.strongTypeify = function (value) {
     value = parseInt(value);
   }
   return value;
+};
+
+firebase.requestPhoneAuthVerificationCode = function (onUserResponse) {
+  dialogs.prompt("Verification code").then(function (promptResult) {
+    if (!promptResult.result) {
+      return;
+    }
+    onUserResponse(promptResult.text);
+  });
+};
+
+// for backward compatibility, because plugin version 4.0.0 move the params to per-logintype objects
+firebase.moveLoginOptionsToObjects = function (loginOptions) {
+  if (loginOptions.email) {
+    console.log("Please update your code: the 'email' property is deprecated and now expected at 'passwordOptions.email'");
+    if (!loginOptions.passwordOptions) {
+      loginOptions.passwordOptions = {};
+    }
+    if (!loginOptions.passwordOptions.email) {
+      loginOptions.passwordOptions.email = loginOptions.email;
+    }
+  }
+
+  if (loginOptions.password) {
+    console.log("Please update your code: the 'password' property is deprecated and now expected at 'passwordOptions.password'");
+    if (!loginOptions.passwordOptions) {
+      loginOptions.passwordOptions = {};
+    }
+    if (!loginOptions.passwordOptions.password) {
+      loginOptions.passwordOptions.password = loginOptions.password;
+    }
+  }
+
+  if (loginOptions.token) {
+    console.log("Please update your code: the 'token' property is deprecated and now expected at 'customOptions.token'");
+    if (!loginOptions.customOptions) {
+      loginOptions.customOptions = {};
+    }
+    if (!loginOptions.customOptions.token) {
+      loginOptions.customOptions.token = loginOptions.token;
+    }
+  }
+
+  if (loginOptions.tokenProviderFn) {
+    console.log("Please update your code: the 'tokenProviderFn' property is deprecated and now expected at 'customOptions.tokenProviderFn'");
+    if (!loginOptions.customOptions) {
+      loginOptions.customOptions = {};
+    }
+    if (!loginOptions.customOptions.tokenProviderFn) {
+      loginOptions.customOptions.tokenProviderFn = loginOptions.tokenProviderFn;
+    }
+  }
+
+  if (loginOptions.scope) {
+    console.log("Please update your code: the 'scope' property is deprecated and now expected at 'facebookOptions.scope'");
+    if (!loginOptions.facebookOptions) {
+      loginOptions.facebookOptions = {};
+    }
+    if (!loginOptions.facebookOptions.scope) {
+      loginOptions.facebookOptions.scope = loginOptions.scope;
+    }
+  }
 };
 
 module.exports = firebase;

@@ -189,15 +189,17 @@ Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which
 placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
 the changes to `build.gradle` which are mentioned above as well.
 
-#### Could not find any version that matches com.google.android.gms:play-services-auth:10.2.+.
+#### Could not find any version that matches com.google.android.gms:play-services-auth:11.0.+.
 That means making sure you have the latest `Google Repository` bits installed.
-Just run `android` from a command prompt, expand `Extras` and install any pending updates.
+
+Just run `$ANDROID_HOME/tools/bin/sdkmanager --update` from a command prompt
+or launch the SDK manager from Android Studio, expand `Extras` and install any pending updates.
 
 Also, an error like "Could not find com.google.firebase:firebase-core:10.0.0" can be caused by having
 more than one version of the Android SDK installed. Make sure ANDROID_HOME is set to the Android SDK directory
 that is being updated otherwise it will seem as though your updates have no effect.
 
-#### Found play-services:9.0.0, but version 10.X.Y is needed..
+#### Found play-services:10.A.B, but version 11.X.Y is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
 #### `include.gradle`: Failed to apply plugin .. For input string: "+"
@@ -209,12 +211,12 @@ android {
   // other stuff here
 
   project.ext {
-    googlePlayServicesVersion = "10.0.+"
+    googlePlayServicesVersion = "11.0.+"
   }
 }
 ```
 
-Where `"10.0.+"` is best set to the same value as the version on [this line](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/platforms/android/include.gradle#L23).
+Where `"11.0.+"` is best set to the same value as the version on [this line](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/platforms/android/include.gradle#L23).
 
 ## Credits
 The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).

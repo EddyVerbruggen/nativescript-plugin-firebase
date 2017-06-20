@@ -1,6 +1,17 @@
 
 declare function CGSizeFromGADAdSize(size: GADAdSize): CGSize;
 
+interface DFPBannerAdLoaderDelegate extends GADAdLoaderDelegate {
+
+	adLoaderDidReceiveDFPBannerView(adLoader: GADAdLoader, bannerView: DFPBannerView): void;
+
+	validBannerSizesForAdLoader(adLoader: GADAdLoader): NSArray<NSValue>;
+}
+declare var DFPBannerAdLoaderDelegate: {
+
+	prototype: DFPBannerAdLoaderDelegate;
+};
+
 declare class DFPBannerView extends GADBannerView {
 
 	static alloc(): DFPBannerView; // inherited from NSObject
@@ -38,6 +49,19 @@ declare class DFPBannerView extends GADBannerView {
 	setAdOptions(adOptions: NSArray<any>): void;
 
 	setValidAdSizesWithSizes(firstSize: interop.Pointer | interop.Reference<GADAdSize>): void;
+}
+
+declare class DFPBannerViewOptions extends GADAdLoaderOptions {
+
+	static alloc(): DFPBannerViewOptions; // inherited from NSObject
+
+	static new(): DFPBannerViewOptions; // inherited from NSObject
+
+	adSizeDelegate: GADAdSizeDelegate;
+
+	appEventDelegate: GADAppEventDelegate;
+
+	enableManualImpressions: boolean;
 }
 
 declare class DFPCustomRenderedAd extends NSObject {
@@ -1757,6 +1781,8 @@ declare function NSStringFromGADAdSize(size: GADAdSize): string;
 declare function NSValueFromGADAdSize(size: GADAdSize): NSValue;
 
 declare var kDFPSimulatorID: any;
+
+declare var kGADAdLoaderAdTypeDFPBanner: string;
 
 declare var kGADAdLoaderAdTypeNativeAppInstall: string;
 

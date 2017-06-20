@@ -86,9 +86,9 @@ Any pending notifications (while your app was not in the foreground) will trigge
 ```
 
 ##### TypeScript
-```js
+```typescript
   firebase.init({
-    onMessageReceivedCallback: function(message: Message) {
+    onMessageReceivedCallback: (message: Message) => {
       console.log(`Title: ${message.title}`);
       console.log(`Body: ${message.body}`);
       // if your server passed a custom property called 'foo', then do this:

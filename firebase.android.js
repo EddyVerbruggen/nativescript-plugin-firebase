@@ -754,7 +754,7 @@ firebase.getAuthToken = function (arg) {
           }
         });
 
-        user.getToken(arg.forceRefresh)
+        user.getIdToken(arg.forceRefresh)
             .addOnSuccessListener(onSuccessListener)
             .addOnFailureListener(onFailureListener);
 
@@ -790,6 +790,7 @@ function toLoginResult(user) {
     // provider: user.getProviderId(), // always 'firebase'
     providers: providers,
     anonymous: user.isAnonymous(),
+    phoneNumber: user.getPhoneNumber(),
     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
   };
 }
@@ -801,6 +802,8 @@ firebase.login = function (arg) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
       }
+      
+      firebase.moveLoginOptionsToObjects(arg);
 
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
@@ -827,29 +830,109 @@ firebase.login = function (arg) {
         firebaseAuth.signInAnonymously().addOnCompleteListener(onCompleteListener);
 
       } else if (arg.type === firebase.LoginType.PASSWORD) {
-        if (!arg.email || !arg.password) {
-          reject("Auth type emailandpassword requires an email and password argument");
+        if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
+          reject("Auth type PASSWORD requires an 'passwordOptions.email' and 'passwordOptions.password' argument");
+          return;
+        }
+
+        var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        if (user) {
+          if (firebase._alreadyLinkedToAuthProvider(user, "password")) {
+            firebaseAuth.signInWithEmailAndPassword(arg.passwordOptions.email, arg.passwordOptions.password).addOnCompleteListener(onCompleteListener);
+          } else {
+            var authCredential = com.google.firebase.auth.EmailAuthProvider.getCredential(arg.passwordOptions.email, arg.passwordOptions.password);
+            user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+          }
         } else {
-            var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-            if (user) {
-                if (firebase._alreadyLinkedToAuthProvider(user, "password")) {
-                    firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
-                } else {
-                    var authCredential = com.google.firebase.auth.EmailAuthProvider.getCredential(arg.email, arg.password);
-                    user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+          firebaseAuth.signInWithEmailAndPassword(arg.passwordOptions.email, arg.passwordOptions.password).addOnCompleteListener(onCompleteListener);
+        }
+
+      } else if (arg.type === firebase.LoginType.PHONE) {
+        // https://firebase.google.com/docs/auth/android/phone-auth
+        if (!arg.phoneOptions || !arg.phoneOptions.phoneNumber) {
+          reject("Auth type PHONE requires a 'phoneOptions.phoneNumber' argument");
+          return;
+        }
+
+        var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        // TODO, no hurry
+        if (false && user) {
+          if (firebase._alreadyLinkedToAuthProvider(user, "phone")) {
+            // TODO .. you don't want to sign in again I guess...
+            // firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+          } else {
+            // TODO get auth credential.. prolly need to move this
+            user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+          }
+        } else {
+
+          var OnVerificationStateChangedCallbacks = com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks.extend({
+            onVerificationCompleted: function(phoneAuthCredential) {
+              firebase._verifyPhoneNumberInProgress = false;
+              // the user previously authenticated with phone (or no prompt was required), so sign in and complete
+              firebaseAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(onCompleteListener);
+            },
+            onVerificationFailed: function(firebaseException) {
+              console.log("onVerificationStateChangedCallbacks.onVerificationFailed: " + firebaseException)
+              firebase._verifyPhoneNumberInProgress = false;
+              var errorMessage = firebaseException.getMessage();
+              if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
+                reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
+              } else {
+                reject(errorMessage);
+              }
+            },
+            onCodeSent: function(verificationId, forceResendingToken) {
+              // TODO these are printed, but need to run on a device with a mathing phonenr of course..
+              console.log("onVerificationStateChangedCallbacks.onCodeSent.verificationId: " + verificationId)
+              console.log("onVerificationStateChangedCallbacks.onCodeSent.forceResendingToken: " + forceResendingToken)
+
+              // in some cases the prompt is not required, and onVerificationCompleted is called immediately.. not sure about the timing, so using a short timeout
+              setTimeout(function() {
+                if (firebase._verifyPhoneNumberInProgress) {
+                  firebase._verifyPhoneNumberInProgress = false;
+
+                  firebase.requestPhoneAuthVerificationCode(function(userResponse) {
+                    console.log("onVerificationStateChangedCallbacks com.google.firebase.auth.PhoneAuthCredential: " + com.google.firebase.auth.PhoneAuthCredential)
+                    var authCredential = com.google.firebase.auth.PhoneAuthCredential.getCredential(verificationId, userResponse);
+                    console.log("onVerificationStateChangedCallbacks authCredential: " + authCredential)
+                    var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+                    console.log("onVerificationStateChangedCallbacks user: " + user)
+                    if (user) {
+                      if (firebase._alreadyLinkedToAuthProvider(user, "phone")) {
+                        firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                      } else {
+                        user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                      }
+                    } else {
+                      firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                    }
+                  });
                 }
-            } else {
-                firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
+              }, 1000);
             }
+          });
+
+          firebase._verifyPhoneNumberInProgress = true;
+
+          com.google.firebase.auth.PhoneAuthProvider.getInstance().verifyPhoneNumber(
+              arg.phoneOptions.phoneNumber,
+              60, // timeout (in seconds, because of the next argument)
+              java.util.concurrent.TimeUnit.SECONDS,
+              appModule.android.foregroundActivity, // or utils.ad.getApplicationContext()
+              new OnVerificationStateChangedCallbacks());
         }
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
-        if (!arg.token && !arg.tokenProviderFn) {
-          reject("Auth type custom requires a token or a tokenProviderFn argument");
-        } else if (arg.token) {
-          firebaseAuth.signInWithCustomToken(arg.token).addOnCompleteListener(onCompleteListener);
-        } else if (arg.tokenProviderFn) {
-          arg.tokenProviderFn()
+        if (!arg.customOptions || (!arg.customOptions.token && !arg.customOptions.tokenProviderFn)) {
+          reject("Auth type CUSTOM requires a 'customOptions.token' or 'customOptions.tokenProviderFn' argument");
+          return;
+        }
+
+        if (arg.customOptions.token) {
+          firebaseAuth.signInWithCustomToken(arg.customOptions.token).addOnCompleteListener(onCompleteListener);
+        } else if (arg.customOptions.tokenProviderFn) {
+          arg.customOptions.tokenProviderFn()
               .then(
                   function (token) {
                     firebaseAuth.signInWithCustomToken(token).addOnCompleteListener(onCompleteListener);
@@ -895,8 +978,8 @@ firebase.login = function (arg) {
         );
 
         var scope = ["public_profile", "email"];
-        if (arg.scope) {
-          scope = arg.scope;
+        if (arg.facebookOptions && arg.facebookOptions.scope) {
+          scope = arg.facebookOptions.scope;
         }
         var permissions = utils.ad.collections.stringArrayToStringSet(scope);
 
@@ -915,13 +998,11 @@ firebase.login = function (arg) {
 
         // Configure Google Sign In
         var googleSignInOptions = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
-          .requestIdToken(clientId)
-          .requestEmail();
-        
-        if (arg.google) {
-          if (arg.google.hostedDomain) {
-            googleSignInOptions.setHostedDomain(args.google.hostedDomain)
-          }
+            .requestIdToken(clientId)
+            .requestEmail();
+
+        if (arg.googleOptions && arg.googleOptions.hostedDomain) {
+          googleSignInOptions.setHostedDomain(arg.googleOptions.hostedDomain)
         }
 
         googleSignInOptions = googleSignInOptions.build();
@@ -1005,13 +1086,15 @@ firebase.reauthenticate = function (arg) {
         return;
       }
 
+      firebase.moveLoginOptionsToObjects(arg);
+
       var authCredential = null;
       if (arg.type === firebase.LoginType.PASSWORD) {
-        if (!arg.email || !arg.password) {
-          reject("Auth type emailandpassword requires an email and password argument");
-        } else {
-          authCredential = com.google.firebase.auth.EmailAuthProvider.getCredential(arg.email, arg.password);
+        if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
+          reject("Auth type PASSWORD requires an 'passwordOptions.email' and 'passwordOptions.password' argument");
+          return;
         }
+        authCredential = com.google.firebase.auth.EmailAuthProvider.getCredential(arg.passwordOptions.email, arg.passwordOptions.password);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (!firebase._googleSignInIdToken) {
@@ -1824,32 +1907,32 @@ firebase.invites.sendInvitation = function (arg) {
 
       appModule.android.onActivityResult = function (requestCode, resultCode, data) {
 
-          if (requestCode === REQUEST_INVITE_INTENT_ID) {
+        if (requestCode === REQUEST_INVITE_INTENT_ID) {
 
-              if (resultCode === android.app.Activity.RESULT_OK) {
-                  // Get the invitation IDs of all sent messages
-                  var ids = com.google.android.gms.appinvite.AppInviteInvitation.getInvitationIds(resultCode, data);
-                  
-                  try {
-                    var invitationIds = firebase.toJsObject(ids);
-                    resolve({
-                      count: ids.length,
-                      invitationIds: invitationIds
-                    });
-                  } catch (e) {
-                    reject(e)
-                  }
-                  
-              } else {
-                  if (resultCode === 3) {
-                    reject("Resultcode 3, see http://stackoverflow.com/questions/37883664/result-code-3-when-implementing-appinvites");
-                  } else {
-                    reject("Resultcode: " + resultCode);
-                  }
-              }
+          if (resultCode === android.app.Activity.RESULT_OK) {
+            // Get the invitation IDs of all sent messages
+            var ids = com.google.android.gms.appinvite.AppInviteInvitation.getInvitationIds(resultCode, data);
+
+            try {
+              var invitationIds = firebase.toJsObject(ids);
+              resolve({
+                count: ids.length,
+                invitationIds: invitationIds
+              });
+            } catch (e) {
+              reject(e)
+            }
+
+          } else {
+            if (resultCode === 3) {
+              reject("Resultcode 3, see http://stackoverflow.com/questions/37883664/result-code-3-when-implementing-appinvites");
+            } else {
+              reject("Resultcode: " + resultCode);
+            }
           }
-        };
-      
+        }
+      };
+
     } catch (ex) {
       console.log("Error in firebase.sendInvitation: " + ex);
       reject(ex);
@@ -1867,51 +1950,52 @@ firebase.invites.getInvitation = function () {
       }
 
       var onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
-          onConnectionFailed: function (connectionResult) {
-            reject(connectionResult.getErrorMessage());
-          }
+        onConnectionFailed: function (connectionResult) {
+          reject(connectionResult.getErrorMessage());
+        }
       });
 
       var autoLaunchDeepLink = false;
       var activity = appModule.android.foregroundActivity;
 
       firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
-            .addOnConnectionFailedListener(onConnectionFailedListener)
-            .addApi(com.google.android.gms.appinvite.AppInvite.API)
-            .build();
+          .addOnConnectionFailedListener(onConnectionFailedListener)
+          .addApi(com.google.android.gms.appinvite.AppInvite.API)
+          .build();
 
       firebase._mGoogleApiClient.connect();
 
       var getInvitationCallback = new com.google.android.gms.common.api.ResultCallback({
-          onResult: function(result){
-              
-              console.log("getInvitation:onResult:", result.getStatus().isSuccess());
-              if (result.getStatus().isSuccess()) {
-                // Extract information from the intent
-                var intent = result.getInvitationIntent();
+        onResult: function(result){
 
-                try {
-                  var deepLink = com.google.android.gms.appinvite.AppInviteReferral.getDeepLink(intent);
-                  var invitationId = com.google.android.gms.appinvite.AppInviteReferral.getInvitationId(intent);
+          console.log("getInvitation:onResult:", result.getStatus().isSuccess());
+          if (result.getStatus().isSuccess()) {
+            // Extract information from the intent
+            var intent = result.getInvitationIntent();
 
-                  resolve({
-                    deepLink: firebase.toJsObject(deepLink),
-                    invitationId: firebase.toJsObject(invitationId)
-                  });
+            try {
+              var deepLink = com.google.android.gms.appinvite.AppInviteReferral.getDeepLink(intent);
+              var invitationId = com.google.android.gms.appinvite.AppInviteReferral.getInvitationId(intent);
 
-                } catch (e) {
-                  reject(e);
-                }
-              } else {
-                reject("Not launched by invitation");
-              }
+              resolve({
+                deepLink: firebase.toJsObject(deepLink),
+                invitationId: firebase.toJsObject(invitationId)
+              });
+
+            } catch (e) {
+              reject(e);
             }
+          } else {
+            reject("Not launched by invitation");
+          }
+        }
       });
 
+      // TODO I think this is deprecated since 11.0 - check the latest docs: https://firebase.google.com/docs/invites/android
       com.google.android.gms.appinvite.AppInvite.AppInviteApi.getInvitation(firebase._mGoogleApiClient, activity, autoLaunchDeepLink)
-         .setResultCallback(getInvitationCallback);
-          
-        
+          .setResultCallback(getInvitationCallback);
+
+
     } catch (ex) {
       console.log("Error in firebase.getInvitation: " + ex);
       reject(ex);

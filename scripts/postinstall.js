@@ -3075,31 +3075,31 @@ repositories {
 
 dependencies {
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:10.2.+"
-    compile "com.google.firebase:firebase-database:10.2.+"
-    compile "com.google.firebase:firebase-auth:10.2.+"
+    compile "com.google.firebase:firebase-core:11.0.+"
+    compile "com.google.firebase:firebase-database:11.0.+"
+    compile "com.google.firebase:firebase-auth:11.0.+"
 
     // for converting Java objects to JS
     compile "com.google.code.gson:gson:2.8.+"
 
     // for reading google-services.json and configuration
-    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '10.2.+'
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '11.0.+'
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Remote Config'
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:10.2.+"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:11.0.+"
 
     // Uncomment if you want to use 'Crash Reporting'
-    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:10.2.+"
+    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:11.0.+"
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
-    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:10.2.+"
+    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:11.0.+"
 
     // Uncomment if you want Google Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:10.2.+'
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:11.0.+'
 
     // Uncomment if you want AdMob
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile 'com.google.firebase:firebase-ads:10.2.+'
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile 'com.google.firebase:firebase-ads:11.0.+'
 
     // Uncomment if you need Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile "com.facebook.android:facebook-android-sdk:4.+"
@@ -3108,7 +3108,7 @@ dependencies {
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
     // Uncomment if you need Firebase Invites
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:10.2.+"
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:11.0.+"
 }
 
 apply plugin: "com.google.gms.google-services"

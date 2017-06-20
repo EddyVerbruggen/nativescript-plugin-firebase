@@ -148,15 +148,15 @@ declare class FIRStorageMetadata extends NSObject implements NSCopying {
 
 	readonly updated: Date;
 
-	constructor(o: { dictionary: NSDictionary<any, any>; });
+	constructor(o: { dictionary: NSDictionary<string, any>; });
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	dictionaryRepresentation(): NSDictionary<any, any>;
+	dictionaryRepresentation(): NSDictionary<string, any>;
 
 	downloadURL(): NSURL;
 
-	initWithDictionary(dictionary: NSDictionary<any, any>): this;
+	initWithDictionary(dictionary: NSDictionary<string, any>): this;
 }
 
 declare class FIRStorageObservableTask extends FIRStorageTask {
@@ -328,4 +328,4 @@ declare class FIRStorageUploadTask extends FIRStorageObservableTask implements F
 	self(): this;
 }
 
-declare var FirebaseStorageVersionString: string;
+declare var FIRStorageVersionString: string;

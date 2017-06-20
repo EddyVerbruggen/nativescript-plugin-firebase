@@ -9,16 +9,12 @@ declare class FIRAnalyticsConfiguration extends NSObject {
 
 	setAnalyticsCollectionEnabled(analyticsCollectionEnabled: boolean): void;
 
-	setIsEnabled(isEnabled: boolean): void;
-
 	setMinimumSessionInterval(minimumSessionInterval: number): void;
 
 	setSessionTimeoutInterval(sessionTimeoutInterval: number): void;
 }
 
 declare class FIRApp extends NSObject {
-
-	static allApps(): NSDictionary<any, any>;
 
 	static alloc(): FIRApp; // inherited from NSObject
 
@@ -38,6 +34,8 @@ declare class FIRApp extends NSObject {
 
 	readonly options: FIROptions;
 
+	static readonly allApps: NSDictionary<string, FIRApp>;
+
 	deleteApp(completion: (p1: boolean) => void): void;
 }
 
@@ -47,11 +45,11 @@ declare class FIRConfiguration extends NSObject {
 
 	static new(): FIRConfiguration; // inherited from NSObject
 
-	static sharedInstance(): FIRConfiguration;
-
 	analyticsConfiguration: FIRAnalyticsConfiguration;
 
 	logLevel: FIRLogLevel;
+
+	static readonly sharedInstance: FIRConfiguration;
 
 	setLoggerLevel(loggerLevel: FIRLoggerLevel): void;
 }
@@ -96,33 +94,39 @@ declare class FIROptions extends NSObject implements NSCopying {
 
 	static new(): FIROptions; // inherited from NSObject
 
-	readonly APIKey: string;
+	APIKey: string;
 
-	readonly GCMSenderID: string;
+	GCMSenderID: string;
 
-	readonly androidClientID: string;
+	androidClientID: string;
 
-	readonly clientID: string;
+	bundleID: string;
 
-	readonly databaseURL: string;
+	clientID: string;
+
+	databaseURL: string;
 
 	deepLinkURLScheme: string;
 
-	readonly googleAppID: string;
+	googleAppID: string;
 
-	readonly projectID: string;
+	projectID: string;
 
-	readonly storageBucket: string;
+	storageBucket: string;
 
-	readonly trackingID: string;
+	trackingID: string;
 
 	constructor(o: { contentsOfFile: string; });
 
 	constructor(o: { googleAppID: string; bundleID: string; GCMSenderID: string; APIKey: string; clientID: string; trackingID: string; androidClientID: string; databaseURL: string; storageBucket: string; deepLinkURLScheme: string; });
+
+	constructor(o: { googleAppID: string; GCMSenderID: string; });
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
 	initWithContentsOfFile(plistPath: string): this;
 
 	initWithGoogleAppIDBundleIDGCMSenderIDAPIKeyClientIDTrackingIDAndroidClientIDDatabaseURLStorageBucketDeepLinkURLScheme(googleAppID: string, bundleID: string, GCMSenderID: string, APIKey: string, clientID: string, trackingID: string, androidClientID: string, databaseURL: string, storageBucket: string, deepLinkURLScheme: string): this;
+
+	initWithGoogleAppIDGCMSenderID(googleAppID: string, GCMSenderID: string): this;
 }

@@ -13,6 +13,14 @@ firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 
+// this requires you to download GoogleService-Info.plist and add it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
+try {
+  FIRApp.configure();
+} catch (e) {
+  console.log(">>>> Firebase is not configured correctly; please remove your 'platforms/ios' folder, then run 'tns run ios'");
+  return;
+}
+
 firebase._addObserver = function (eventName, callback) {
   var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
   return utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
@@ -43,9 +51,15 @@ function handleRemoteNotification(app, userInfo) {
 
 function addBackgroundRemoteNotificationHandler(appDelegate) {
   if (typeof(FIRMessaging) !== "undefined") {
-    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, userInfo, completionHandler) {
+    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, notification, completionHandler) {
+      // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
+      if (FIRAuth.auth().canHandleNotification(notification)) {
+        completionHandler(UIBackgroundFetchResultNoData);
+        return;
+      }
+
       completionHandler(UIBackgroundFetchResultNewData);
-      handleRemoteNotification(app, userInfo);
+      handleRemoteNotification(app, notification);
     };
   }
 }
@@ -204,12 +218,7 @@ firebase._processPendingNotifications = function() {
   }
 };
 
-firebase._onTokenRefreshNotification = function (notification) {
-  var token = FIRInstanceID.instanceID().token();
-  if (token === null) {
-    return;
-  }
-
+firebase._onTokenRefreshNotification = function (token) {
   firebase._pushToken = token;
 
   if (firebase._receivedPushTokenCallback) {
@@ -328,9 +337,6 @@ function getAppDelegate() {
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
 function prepAppDelegate() {
   if (typeof(FIRMessaging) !== "undefined") {
-    // see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178 for why we're not using a constant here
-    firebase._addObserver("com.firebase.iid.notif.refresh-token", firebase._onTokenRefreshNotification);
-
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
       // guarded this with a preference so the popup "this app wants to send notifications"
       // is not shown until the dev intentionally wired a listener (see other usages of _registerForRemoteNotifications())
@@ -425,7 +431,6 @@ firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (firebase.instance !== null) {
-        // if we would run 'FIRApp.configure()' again the app would crash, so:
         reject("You already ran init");
         return;
       }
@@ -436,10 +441,6 @@ firebase.init = function (arg) {
 
       function runInit() {
         arg = arg || {};
-
-        // this requires you to download GoogleService-Info.plist and
-        // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
-        FIRApp.configure();
 
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
@@ -597,7 +598,12 @@ firebase.admob.showBanner = function (arg) {
       var adRequest = GADRequest.request();
 
       if (settings.testing) {
-        var testDevices = [kGADSimulatorID];
+        var testDevices = [];
+        try {
+          testDevices.push(kGADSimulatorID);
+        } catch (ignore) {
+          // can happen on a real device
+        }
         if (settings.iosTestDeviceIds) {
           testDevices = testDevices.concat(settings.iosTestDeviceIds);
         }
@@ -651,14 +657,22 @@ firebase.admob.showInterstitial = function (arg) {
           firebase.admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
           resolve();
         }
+        CFRelease(delegate);
         delegate = undefined;
       });
+      // we're leaving the app to switch to Google's OAuth screen, so making sure this is retained
+      CFRetain(delegate);
       firebase.admob.interstitialView.delegate = delegate;
 
       var adRequest = GADRequest.request();
 
       if (settings.testing) {
-        var testDevices = [kGADSimulatorID];
+        var testDevices = [];
+        try {
+          testDevices.push(kGADSimulatorID);
+        } catch (ignore) {
+          // can happen on a real device
+        }
         if (settings.iosTestDeviceIds) {
           testDevices = testDevices.concat(settings.iosTestDeviceIds);
         }
@@ -887,6 +901,7 @@ function toLoginResult(user) {
     email: user.email,
     emailVerified: user.emailVerified,
     name: user.displayName,
+    phoneNumber: user.phoneNumber,
     refreshToken: user.refreshToken
   };
 }
@@ -947,47 +962,83 @@ firebase.login = function (arg) {
         return;
       }
 
+      firebase.moveLoginOptionsToObjects(arg);
+
       if (arg.type === firebase.LoginType.ANONYMOUS) {
         fAuth.signInAnonymouslyWithCompletion(onCompletion);
 
       } else if (arg.type === firebase.LoginType.PASSWORD) {
-        if (!arg.email || !arg.password) {
-          reject("Auth type emailandpassword requires an email and password argument");
-        } else {
-          var fIRAuthCredential = FIREmailPasswordAuthProvider.credentialWithEmailPassword(arg.email, arg.password)
-          if (fAuth.currentUser) {
-            // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
-            var onCompletionLink = function (user, error) {
-              if (error) {
-                // ignore, as this one was probably already linked, so just return the user
-                log("--- linking error: " + error.localizedDescription);
-                fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
-              } else {
-                onCompletion(user);
-              }
-            };
-            fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
-
-          } else {
-            fAuth.signInWithEmailPasswordCompletion(arg.email, arg.password, onCompletion);
-          }
+        if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
+          reject("Auth type PASSWORD requires an 'passwordOptions.email' and 'passwordOptions.password' argument");
+          return;
         }
 
-      } else if (arg.type === firebase.LoginType.CUSTOM) {
-        if (!arg.token && !arg.tokenProviderFn) {
-          reject("Auth type custom requires a token or a tokenProviderFn argument");
-        } else if (arg.token) {
-          fAuth.signInWithCustomTokenCompletion(arg.token, onCompletion);
-        } else if (arg.tokenProviderFn) {
-          arg.tokenProviderFn()
-            .then(
-            function (token) {
-              firebaseAuth.signInWithCustomTokenCompletion(token, onCompletion);
-            },
-            function (error) {
-              reject(error);
+        var fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailPassword(arg.passwordOptions.email, arg.passwordOptions.password)
+        if (fAuth.currentUser) {
+          // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
+          var onCompletionLink = function (user, error) {
+            if (error) {
+              // ignore, as this one was probably already linked, so just return the user
+              log("--- linking error: " + error.localizedDescription);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+            } else {
+              onCompletion(user);
             }
-            );
+          };
+          fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+
+        } else {
+          fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletion);
+        }
+
+      } else if (arg.type === firebase.LoginType.PHONE) {
+        // https://firebase.google.com/docs/auth/ios/phone-auth
+        if (!arg.phoneOptions || !arg.phoneOptions.phoneNumber) {
+          reject("Auth type PHONE requires a 'phoneOptions.phoneNumber' argument");
+          return;
+        }
+
+        FIRPhoneAuthProvider.provider().verifyPhoneNumberCompletion(arg.phoneOptions.phoneNumber, function(verificationID, error) {
+          if (error) {
+            reject(error.localizedDescription);
+            return;
+          }
+          firebase.requestPhoneAuthVerificationCode(function(userResponse) {
+            var fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
+            if (fAuth.currentUser) {
+              var onCompletionLink = function (user, error) {
+                if (error) {
+                  // ignore, as this one was probably already linked, so just return the user
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+                } else {
+                  onCompletion(user);
+                }
+              };
+              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+            } else {
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+            }
+          });
+        });
+
+      } else if (arg.type === firebase.LoginType.CUSTOM) {
+        if (!arg.customOptions || (!arg.customOptions.token && !arg.customOptions.tokenProviderFn)) {
+          reject("Auth type CUSTOM requires a 'customOptions.token' or 'customOptions.tokenProviderFn' argument");
+          return;
+        }
+
+        if (arg.customOptions.token) {
+          fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletion);
+        } else if (arg.customOptions.tokenProviderFn) {
+          arg.customOptions.tokenProviderFn()
+              .then(
+                  function (token) {
+                    firebaseAuth.signInWithCustomTokenCompletion(token, onCompletion);
+                  },
+                  function (error) {
+                    reject(error);
+                  }
+              );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
@@ -1030,14 +1081,14 @@ firebase.login = function (arg) {
         //fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
         var scope = ["public_profile", "email"];
 
-        if (arg.scope) {
-          scope = arg.scope;
+        if (arg.facebookOptions && arg.facebookOptions.scope) {
+          scope = arg.facebookOptions.scope;
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-          scope,
-          null, // the viewcontroller param can be null since by default topmost is taken
-          onFacebookCompletion);
+            scope,
+            null, // the viewcontroller param can be null since by default topmost is taken
+            onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (typeof (GIDSignIn) === "undefined") {
@@ -1049,10 +1100,8 @@ firebase.login = function (arg) {
         sIn.uiDelegate = application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
 
-        if (arg.google) {
-          if (arg.google.hostedDomain) {
-            sIn.hostedDomain = arg.google.hostedDomain;
-          }
+        if (arg.googleOptions && arg.googleOptions.hostedDomain) {
+          sIn.hostedDomain = arg.googleOptions.hostedDomain;
         }
 
         var delegate = GIDSignInDelegateImpl.new().initWithCallback(function (user, error) {
@@ -1113,13 +1162,15 @@ firebase.reauthenticate = function (arg) {
         return;
       }
 
+      firebase.moveLoginOptionsToObjects(arg);
+
       var authCredential = null;
       if (arg.type === firebase.LoginType.PASSWORD) {
-        if (!arg.email || !arg.password) {
-          reject("Auth type emailandpassword requires an email and password argument");
-        } else {
-          authCredential = FIREmailPasswordAuthProvider.credentialWithEmailPassword(arg.email, arg.password);
+        if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
+          reject("Auth type PASSWORD requires an 'passwordOptions.email' and 'passwordOptions.password' argument");
+          return;
         }
+        authCredential = FIREmailAuthProvider.credentialWithEmailPassword(arg.passwordOptions.email, arg.passwordOptions.password);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (!firebase._gIDAuthentication) {
@@ -1876,8 +1927,11 @@ firebase.invites.sendInvitation = function (arg) {
         } else {
           reject(error.localizedDescription);
         }
+        CFRelease(delegate);
         delegate = undefined;
       });
+      // This opens the contact picker UI, so making sure this is retained
+      CFRetain(delegate);
       // inviteDialog.setInviteDelegate(delegate);
       inviteDialog.performSelectorWithObject("setInviteDelegate:", delegate);
 
@@ -2022,9 +2076,24 @@ var FIRMessagingDelegateImpl = (function (_super) {
     this._callback = callback;
     return this;
   };
+
+  // optional
   FIRMessagingDelegateImpl.prototype.applicationReceivedRemoteMessage = function (firMessagingRemoteMessage) {
     this._callback(firMessagingRemoteMessage.appData);
   };
+
+  // optional
+  FIRMessagingDelegateImpl.prototype.messagingDidReceiveMessage = function (firMessaging, firMessagingRemoteMessage) {
+    // assuming the same as the one above
+    this._callback(firMessagingRemoteMessage.appData);
+  };
+
+  // required
+  FIRMessagingDelegateImpl.prototype.messagingDidRefreshRegistrationToken = function (firMessaging, fcmToken) {
+    console.log(">> fcmToken refreshed: " + fcmToken);
+    firebase._onTokenRefreshNotification(fcmToken);
+  };
+
   if (typeof(FIRMessagingDelegate) !== "undefined") {
     FIRMessagingDelegateImpl.ObjCProtocols = [FIRMessagingDelegate];
   }
