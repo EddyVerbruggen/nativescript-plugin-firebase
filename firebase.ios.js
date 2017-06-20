@@ -130,6 +130,28 @@ firebase.addAppDelegateMethods = function(appDelegate) {
   addBackgroundRemoteNotificationHandler(appDelegate);
 };
 
+firebase.fetchProvidersForEmail = function (email) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(email) !== "string") {
+        reject("A parameter representing an email address is required.");
+        return;
+      }
+
+      FIRAuth.auth().fetchProvidersForEmailCompletion(email, function(providerNSArray, error) /* FIRProviderQueryCallback */ {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(firebase.toJsObject(providerNSArray));
+        }
+      });
+    } catch (ex) {
+      console.log("Error in firebase.fetchProvidersForEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.getCurrentPushToken = function () {
   return new Promise(function (resolve, reject) {
     try {

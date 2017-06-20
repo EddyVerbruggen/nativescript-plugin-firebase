@@ -743,6 +743,8 @@ export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
 
 export function logout(): Promise<any>;
 
+export function fetchProvidersForEmail(email: string): Promise<Array<string>>;
+
 export function sendEmailVerification(): Promise<any>;
 
 export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;

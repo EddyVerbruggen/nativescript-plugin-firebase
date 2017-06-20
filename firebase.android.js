@@ -260,6 +260,34 @@ firebase.init = function (arg) {
   });
 };
 
+firebase.fetchProvidersForEmail = function (email) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(email) !== "string") {
+        reject("A parameter representing an email address is required.");
+        return;
+      }
+
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function(task /* <ProviderQueryResult> */) {
+          if (!task.isSuccessful()) {
+            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            var providerList = task.getResult().getProviders();
+            resolve(firebase.toJsObject(providerList));
+          }
+        }
+      });
+
+      com.google.firebase.auth.FirebaseAuth.getInstance().fetchProvidersForEmail(email).addOnCompleteListener(onCompleteListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.fetchProvidersForEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.getCurrentPushToken = function () {
   return new Promise(function (resolve, reject) {
     try {

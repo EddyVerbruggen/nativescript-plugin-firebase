@@ -96,6 +96,17 @@ Once the user is logged in you can retrieve the currently logged in user.
   });
 ```
 
+### Fetch providers for email
+Want to know which auth providers are associated with an emailaddress?
+
+##### TypeScript
+```typescript
+  const emailAddress = "someone@domain.com";
+  firebase.fetchProvidersForEmail(emailAddress).then((providers: Array<string>) => {
+    console.log(`Providers for ${emailAddress}: ${JSON.stringify(providers)}`);
+  });
+```
+
 ### Updating a profile
 Pass in at least one of `displayName` and `photoURL`.
 The logged in user will be updated, but for `getCurrentUser` to reflect the change you'll need to do a logout-login.
