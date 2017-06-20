@@ -1,0 +1,31 @@
+os: osx
+osx_image: xcode8
+sudo: false
+language: objective-c
+
+env:
+  - NODE_VERSION="6"
+
+script:
+
+  - npm test
+
+before_install:
+  - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+  - source ~/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION
+  - PATH="`npm bin`:`npm bin -g`:$PATH"
+  - npm install -g npm
+  - npm install -g nativescript
+  - npm install
+  # CocoaPods
+  - gem install cocoapods --pre --no-rdoc --no-ri --no-document --quiet
+  - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
+  - pod --version
+  - pod setup --silent
+  - pod repo update --silent
+  # Show environment info
+  - node --version
+  - npm --version
+  - xcpretty --version
+  - xcodebuild -version
+  - xcodebuild -showsdks

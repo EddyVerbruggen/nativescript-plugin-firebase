@@ -14,6 +14,7 @@
 - Android: 11.0.x
 
 ### New
+- [#247](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/247) Device_Token not getting to send notifications
 - [#255](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/255) How to Regenerate the Firebase Cloud Messaging Token
 - [#360](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/360) export fetchProvidersForEmail
 - [#376](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/376) Add support for firebase phone authentication
