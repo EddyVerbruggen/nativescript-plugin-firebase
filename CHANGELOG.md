@@ -4,7 +4,7 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
-## 4.0.0 & 4.0.1 (2017, June 20)
+## 4.0.0, 4.0.1, 4.0.2 (2017, June 20)
 
 [Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/26?closed=1)
 

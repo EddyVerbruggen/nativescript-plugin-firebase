@@ -916,12 +916,13 @@ firebase.login = function (arg) {
 
           var OnVerificationStateChangedCallbacks = com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks.extend({
             onVerificationCompleted: function(phoneAuthCredential) {
+              console.log("phone number verification completed");
               firebase._verifyPhoneNumberInProgress = false;
               // the user previously authenticated with phone (or no prompt was required), so sign in and complete
               firebaseAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(onCompleteListener);
             },
             onVerificationFailed: function(firebaseException) {
-              console.log("onVerificationStateChangedCallbacks.onVerificationFailed: " + firebaseException)
+              console.log("onVerificationStateChangedCallbacks.onVerificationFailed: " + firebaseException);
               firebase._verifyPhoneNumberInProgress = false;
               var errorMessage = firebaseException.getMessage();
               if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
@@ -931,21 +932,14 @@ firebase.login = function (arg) {
               }
             },
             onCodeSent: function(verificationId, forceResendingToken) {
-              // TODO these are printed, but need to run on a device with a mathing phonenr of course..
-              console.log("onVerificationStateChangedCallbacks.onCodeSent.verificationId: " + verificationId)
-              console.log("onVerificationStateChangedCallbacks.onCodeSent.forceResendingToken: " + forceResendingToken)
-
-              // in some cases the prompt is not required, and onVerificationCompleted is called immediately.. not sure about the timing, so using a short timeout
+              // If the device has a SIM card auto-verification may occur in the background (eventually calling onVerificationCompleted)
+              // .. so the prompt would be redundant, but it's recommended by Google not to wait to long before showing the prompt
               setTimeout(function() {
                 if (firebase._verifyPhoneNumberInProgress) {
                   firebase._verifyPhoneNumberInProgress = false;
-
                   firebase.requestPhoneAuthVerificationCode(function(userResponse) {
-                    console.log("onVerificationStateChangedCallbacks com.google.firebase.auth.PhoneAuthCredential: " + com.google.firebase.auth.PhoneAuthCredential)
-                    var authCredential = com.google.firebase.auth.PhoneAuthCredential.getCredential(verificationId, userResponse);
-                    console.log("onVerificationStateChangedCallbacks authCredential: " + authCredential)
+                    var authCredential = com.google.firebase.auth.PhoneAuthProvider.getCredential(verificationId, userResponse);
                     var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-                    console.log("onVerificationStateChangedCallbacks user: " + user)
                     if (user) {
                       if (firebase._alreadyLinkedToAuthProvider(user, "phone")) {
                         firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
@@ -955,9 +949,9 @@ firebase.login = function (arg) {
                     } else {
                       firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
                     }
-                  });
+                  }, arg.phoneOptions.verificationPrompt);
                 }
-              }, 1000);
+              }, 3000);
             }
           });
 

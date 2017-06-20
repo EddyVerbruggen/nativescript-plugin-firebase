@@ -239,7 +239,8 @@ Don't forget to enable email-password login in your firebase instance.
   firebase.login({
     type: firebase.LoginType.PHONE,
     phoneOptions: {
-      phoneNumber: '+12345678900'      
+      phoneNumber: '+12345678900',
+      verificationPrompt: "The received verification code" // default "Verification code"
     }
   }).then(
       function (result) {

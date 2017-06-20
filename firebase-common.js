@@ -120,8 +120,8 @@ firebase.strongTypeify = function (value) {
   return value;
 };
 
-firebase.requestPhoneAuthVerificationCode = function (onUserResponse) {
-  dialogs.prompt("Verification code").then(function (promptResult) {
+firebase.requestPhoneAuthVerificationCode = function (onUserResponse, verificationPrompt) {
+  dialogs.prompt(verificationPrompt || "Verification code").then(function (promptResult) {
     if (!promptResult.result) {
       return;
     }

@@ -174,7 +174,11 @@ export interface FirebasePasswordLoginOptions {
 
 export interface FirebasePhoneLoginOptions {
     phoneNumber: string;
-    // verificationCodePrompt?: string;
+    /**
+     * The message show to the user that prompts him to enter the received verification code.
+     * Default: "Verification code".
+     */
+    verificationPrompt?: string;
 }
 
 export interface FirebaseGoogleLoginOptions {

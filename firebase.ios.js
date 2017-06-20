@@ -1067,7 +1067,7 @@ firebase.login = function (arg) {
             } else {
               fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
             }
-          });
+          }, arg.phoneOptions.verificationPrompt);
         });
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
