@@ -450,8 +450,12 @@ firebase.toJsObject = function(objCObj) {
           node[key] = val;
           break;
         case 'Number':
+        case 'NSDecimalNumber':
           node[key] = Number(String(val));
           break;
+        default:
+          console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + types.getClass(val) + "'. Casting to String as a fallback.");
+          node[key] = String(val);
       }
     }
   }
