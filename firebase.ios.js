@@ -1493,6 +1493,11 @@ firebase.removeEventListeners = function (listeners, path) {
 firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
+      if (typeof firebase.ServerValue === "undefined") {
+        reject("Run init() first!");
+        return;
+      }
+
       var ref = firebase.instance.childByAppendingPath(path).childByAutoId();
       ref.setValue(val);
       resolve({
@@ -1508,6 +1513,11 @@ firebase.push = function (path, val) {
 firebase.setValue = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
+      if (typeof firebase.ServerValue === "undefined") {
+        reject("Run init() first!");
+        return;
+      }
+
       firebase.instance.childByAppendingPath(path).setValue(val);
       resolve();
     } catch (ex) {
@@ -1520,6 +1530,11 @@ firebase.setValue = function (path, val) {
 firebase.update = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
+      if (typeof firebase.ServerValue === "undefined") {
+        reject("Run init() first!");
+        return;
+      }
+
       if (typeof val == "object") {
         firebase.instance.childByAppendingPath(path).updateChildValues(val);
       } else {
@@ -1541,6 +1556,10 @@ firebase.update = function (path, val) {
 firebase.query = function (updateCallback, path, options) {
   return new Promise(function (resolve, reject) {
     try {
+      if (typeof firebase.ServerValue === "undefined") {
+        reject("Run init() first!");
+        return;
+      }
 
       var where = firebase.instance;
       if (path !== undefined) {

@@ -846,7 +846,7 @@ firebase.login = function (arg) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
       }
-      
+
       firebase.moveLoginOptionsToObjects(arg);
 
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
@@ -1436,6 +1436,11 @@ firebase.removeEventListeners = function (listeners, path) {
 firebase.push = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       var pushInstance = firebase.instance.child(path).push();
       pushInstance.setValue(firebase.toValue(val));
       resolve({
@@ -1451,6 +1456,11 @@ firebase.push = function (path, val) {
 firebase.setValue = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       firebase.instance.child(path).setValue(firebase.toValue(val));
       resolve();
     } catch (ex) {
@@ -1463,6 +1473,11 @@ firebase.setValue = function (path, val) {
 firebase.update = function (path, val) {
   return new Promise(function (resolve, reject) {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       if (typeof val == "object") {
         firebase.instance.child(path).updateChildren(firebase.toHashMap(val));
       } else {
@@ -1483,6 +1498,11 @@ firebase.update = function (path, val) {
 firebase.query = function (updateCallback, path, options) {
   return new Promise(function (resolve, reject) {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       var query;
 
       // orderBy
