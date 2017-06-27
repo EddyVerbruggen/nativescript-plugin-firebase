@@ -18,7 +18,6 @@ try {
   FIRApp.configure();
 } catch (e) {
   console.log(">>>> Firebase is not configured correctly; please remove your 'platforms/ios' folder, then run 'tns run ios'");
-  return;
 }
 
 firebase._addObserver = function (eventName, callback) {
