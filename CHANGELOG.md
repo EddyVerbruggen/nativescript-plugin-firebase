@@ -3,6 +3,9 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 4.0.3 (2017, June 29)
+Webpack fix
+
 
 ## 4.0.0, 4.0.1, 4.0.2 (2017, June 20)
 
