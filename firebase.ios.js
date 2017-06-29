@@ -1083,7 +1083,7 @@ firebase._cachedInvitation = null;
             arg.customOptions.tokenProviderFn()
               .then(
               function (token) {
-                firebaseAuth.signInWithCustomTokenCompletion(token, onCompletion);
+                fAuth.signInWithCustomTokenCompletion(token, onCompletion);
               },
               function (error) {
                 reject(error);
