@@ -767,7 +767,7 @@ firebase.logout = function (arg) {
         com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
       }
 
-      if (typeof(com.facebook) !== "undefined") {
+      if (typeof(com.facebook) !== "undefined" && typeof(com.facebook.login) !== "undefined") {
         com.facebook.login.LoginManager.getInstance().logOut();
       }
 
