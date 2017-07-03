@@ -51,7 +51,7 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-plugin-firebase
 ```
 
-** IMPORTANT ** If this is your first installation of this plugin, the CLI should prompt you with a few questions.
+**IMPORTANT** If this is your first installation of this plugin, the CLI should prompt you with a few questions.
 However, due to a bug in the CLI (which will be fixed by [this PR](https://github.com/NativeScript/nativescript-cli/pull/2944)) no prompt may appear,
 in which case you should now do:
 
