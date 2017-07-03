@@ -47,8 +47,17 @@ add iOS and Android support to the Firebase console and how to integrate anonymo
 
 From the command prompt go to your app's root folder and execute:
 
-```
+```bash
 tns plugin add nativescript-plugin-firebase
+```
+
+** IMPORTANT ** If this is your first installation of this plugin, the CLI should prompt you with a few questions.
+However, due to a bug in the CLI (which will be fixed by [this PR](https://github.com/NativeScript/nativescript-cli/pull/2944)) no prompt may appear,
+in which case you should now do:
+
+```bash
+cd node_modules/nativescript-plugin-firebase
+npm run setup
 ```
 
 This will launch an install script which will guide you through installing additional components.
