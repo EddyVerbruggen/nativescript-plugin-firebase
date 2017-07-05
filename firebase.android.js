@@ -15,13 +15,28 @@ var fbCallbackManager = null;
 var GOOGLE_SIGNIN_INTENT_ID = 123;
 var REQUEST_INVITE_INTENT_ID = 48
 
-var gson = typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson();
+function lazy(action) {
+    var _value;
+    var that = this;
+
+    return function() {
+        return that._value || (that._value = action());
+    }
+}
+
+var gson = lazy(function() {
+    return typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson()
+});
+
+var messagingEnabled = lazy(function() {
+    return typeof(com.google.firebase.messaging) !== "undefined"
+});
 
 (function() {
-  if (typeof(com.google.firebase.messaging) === "undefined") {
-    return;
-  }
   appModule.on("launch", function(args) {
+    if (!messagingEnabled()) {
+      return;
+    }
 
     var intent = args.android;
 
@@ -110,8 +125,8 @@ firebase.toValue = function(val){
 };
 
 firebase.toJsObject = function(javaObj) {
-  if (gson !== null) {
-    return JSON.parse(gson.toJson(javaObj));
+  if (gson() !== null) {
+    return JSON.parse(gson().toJson(javaObj));
   } else {
     // temp fallback for folks not having fetched gson yet in their build for some reason
     return firebase.toJsObjectLegacy(javaObj);
@@ -214,7 +229,7 @@ firebase.init = function (arg) {
       }
 
       // Firebase notifications (FCM)
-      if (typeof(com.google.firebase.messaging) !== "undefined") {
+      if (messagingEnabled()) {
         if (arg.onMessageReceivedCallback !== undefined) {
           firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
         }
