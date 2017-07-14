@@ -132,6 +132,9 @@ firebase.init({
 
 ## Known issues on iOS
 
+#### No push notifications in background or after first launch
+[This is a known issue](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20ios%20push) and not much has been done to fix it, fix it yourself and submit a pull request?
+
 #### Authentication failed: invalid_token
 On the simulator you may see this message if you have more than one app with the Firebase SDK ever installed:
 
