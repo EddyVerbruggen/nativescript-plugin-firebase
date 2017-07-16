@@ -611,6 +611,24 @@ firebase.analytics.setUserProperty = function (arg) {
   });
 };
 
+firebase.analytics.setScreenName = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (arg.screenName === undefined) {
+        reject("Argument 'screenName' is missing");
+        return;
+      }
+
+      FIRAnalytics.setScreenNameScreenClass(arg.screenName, null);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setScreenName: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.admob.showBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {

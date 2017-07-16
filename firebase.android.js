@@ -443,6 +443,24 @@ firebase.analytics.setUserProperty = function (arg) {
   });
 };
 
+firebase.analytics.setScreenName = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (arg.screenName === undefined) {
+        reject("Argument 'screenName' is missing");
+        return;
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()).setCurrentScreen(appModule.android.foregroundActivity, arg.screenName, null);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setScreenName: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 //see https://firebase.google.com/docs/admob/android/quick-start
 firebase.admob.showBanner = function (arg) {
   return new Promise(function (resolve, reject) {

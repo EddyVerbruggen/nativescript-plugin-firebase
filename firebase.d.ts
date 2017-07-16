@@ -677,9 +677,15 @@ export module analytics {
         value: string;
     }
 
+    export interface SetScreenNameOptions {
+        screenName: string;
+    }
+
     function logEvent(options: LogEventOptions): Promise<any>;
 
     function setUserProperty(options: SetUserPropertyOptions): Promise<any>;
+
+    function setScreenName(options: SetScreenNameOptions): Promise<any>;
 }
 
 // Invites module
