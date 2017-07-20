@@ -24,11 +24,11 @@ function lazy(action) {
     }
 }
 
-var gson = lazy(function() {
+var gson = new lazy(function () {
     return typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson()
 });
 
-var messagingEnabled = lazy(function() {
+var messagingEnabled = new lazy(function () {
     return typeof(com.google.firebase.messaging) !== "undefined"
 });
 
