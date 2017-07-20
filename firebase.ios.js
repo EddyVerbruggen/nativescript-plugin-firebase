@@ -104,6 +104,11 @@ firebase.addAppDelegateMethods = function(appDelegate) {
       }
     }
 
+    // Set APNS Token to Firebase server
+    appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = (app, apnsToken) => {
+      FIRInstanceID.instanceID().setAPNSTokenType(apnsToken, FIRInstanceIDAPNSTokenTypeUnknown);
+    }
+
     return result;
   };
 
