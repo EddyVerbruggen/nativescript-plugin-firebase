@@ -4,6 +4,12 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 4.0.5 (2017, July 22)
+
+### Fixes
+- [#387](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/387) Fix issues
+- [#434](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/434) JS: Error in firebase.init: TypeError: gson(...).toJson is not a function
+
 
 ## 4.0.4 (2017, July 16)
 

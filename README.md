@@ -132,6 +132,22 @@ firebase.init({
 
 ## Known issues on iOS
 
+#### Trouble running on the simulator
+Open or create `App_Resources/iOS/<appname>.entitlements` and add these two keys with the value `true`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.keystore.access-keychain-keys</key>
+    <true/>
+    <key>com.apple.keystore.device</key>
+    <true/>
+</dict>
+</plist>
+```
+
 #### Authentication failed: invalid_token
 On the simulator you may see this message if you have more than one app with the Firebase SDK ever installed:
 
