@@ -58,7 +58,7 @@ When the user opens your app from an invite, you can retrieve the details via th
 ```js
 firebase.invites.getInvitation().then(
     function (result) { // GetInvitationResult
-      console.log("deeplink: " + result.deeplink + ", invitationId: " result.invitationId);
+      console.log("deeplink: " + result.deeplink + ", invitationId: " + result.invitationId);
     },
     function (error) {
       console.log("getInvitation error: " + error);
