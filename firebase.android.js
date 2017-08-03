@@ -2098,4 +2098,28 @@ firebase.invites.getInvitation = function () {
   });
 };
 
+//Dynamic links make sure invitations are enabled in the gradle file (it uses the same api)
+(function() {
+  appModule.on("launch", function(args) {
+  	var intent = args.android;
+
+ 		var getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
+		  onComplete: function(task) {
+
+		  if (task.isSuccessful() && task.getResult() != null) {
+		  	result = firebase.toJsObject(task.getResult()); 
+				console.log("launched by dynamic link:"+ result);
+		  } else {
+				console.log("Not launched by dynamic link");
+		  }
+		}
+	 });
+		
+	 firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
+	 DynamicLinks = firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
+
+	});
+})()
+
+
 module.exports = firebase;
