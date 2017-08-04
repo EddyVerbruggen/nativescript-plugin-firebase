@@ -157,7 +157,7 @@ function promptQuestions() {
       default: 'n'
     }, {
         name: 'invites',
-        description: 'Are you using Firebase Invites (y/n)',
+        description: 'Are you using Firebase Invites or Firebase Dynamic Links (y/n)',
         default: 'n'
     }], function (err, result) {
         if (err) {
@@ -234,7 +234,7 @@ pod 'Firebase/Auth'
 # Uncomment if you want to enable AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Uncomment if you want to enable Invites
+# Uncomment if you want to enable Invites or Dynamic Links
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
 
 # Uncomment if you want to enable Facebook Authentication

@@ -105,6 +105,11 @@ export interface InitOptions {
      * For FCM either pass in this callback function here, or use addOnPushTokenReceivedCallback
      */
     onMessageReceivedCallback?: (data: Message) => void;
+	
+	/**
+     * Get notified when the dynamic link is changed.
+     */
+    onDynamicLinkCallback?: (data: DynamicLink) => void;
 }
 
 export interface QueryRangeOption {
@@ -743,6 +748,17 @@ export module invites {
     function getInvitation(): Promise<GetInvitationResult>;
 }
 
+// Dynamic Link
+
+export interface DynamicLink {
+        cachedFsi: number;
+        cachedSsi: number;
+        scheme: string;
+        uriString: string;
+        host: string;
+        port: number;
+    }
+	
 
 // Auth
 export function login(options: LoginOptions): Promise<User>;

@@ -72,6 +72,7 @@ firebase.storage = null;
 firebase.firebaseRemoteConfig = null;
 firebase.authStateListeners = [];
 firebase._receivedNotificationCallback = null;
+firebase._DynamicLinkCallback = null;
 
 firebase.addAuthStateListener = function(listener) {
   if (firebase.authStateListeners.indexOf(listener) === -1) {

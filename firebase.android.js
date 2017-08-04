@@ -237,6 +237,11 @@ firebase.init = function (arg) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
       }
+	  
+	  // Firebase DynamicLink
+	  if (arg.onDynamicLinkCallback !== undefined){
+	  	firebase.addOnDynamicLinkReceivedCallback(arg.onDynamicLinkCallback);
+	  }
 
       // Firebase storage
       if (arg.storageBucket) {
@@ -2098,7 +2103,25 @@ firebase.invites.getInvitation = function () {
   });
 };
 
-//Dynamic links make sure invitations are enabled in the gradle file (it uses the same api)
+
+firebase.addOnDynamicLinkReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+		try {
+		  if (typeof(com.google.android.gms.appinvite) === "undefined") {
+				reject("Uncomment invites in the plugin's include.gradle first");
+				return;
+		  }
+
+		  firebase._DynamicLinkCallback = callback;
+		  resolve();
+		} catch (ex) {
+		  console.log("Error in firebase.addOnDynamicLinkReceivedCallback: " + ex);
+		  reject(ex);
+		}
+  });
+};
+
+
 (function() {
   appModule.on("launch", function(args) {
   	var intent = args.android;
@@ -2107,10 +2130,17 @@ firebase.invites.getInvitation = function () {
 		  onComplete: function(task) {
 
 		  if (task.isSuccessful() && task.getResult() != null) {
-		  	result = firebase.toJsObject(task.getResult()); 
-				console.log("launched by dynamic link:"+ result);
-		  } else {
-				console.log("Not launched by dynamic link");
+		  	result = task.getResult().getLink(); 
+		  	result = firebase.toJsObject(result); 
+				if(firebase._DynamicLinkCallback === null){
+					console.log("No callback is provided for a dynamic link");
+				}
+				else{
+					setTimeout(function() {
+						firebase._DynamicLinkCallback(result);
+					});
+				}
+				
 		  }
 		}
 	 });
@@ -2120,6 +2150,5 @@ firebase.invites.getInvitation = function () {
 
 	});
 })()
-
 
 module.exports = firebase;
