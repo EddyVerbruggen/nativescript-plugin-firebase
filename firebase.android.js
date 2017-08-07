@@ -1549,7 +1549,7 @@ firebase.query = function (updateCallback, path, options) {
       } else if (options.orderBy.type === firebase.QueryOrderByType.PRIORITY) {
         query = firebase.instance.child(path).orderByPriority();
       } else if (options.orderBy.type === firebase.QueryOrderByType.CHILD) {
-        if (options.orderBy.value === undefined || options.orderBy.value === null) {
+        if (!options.orderBy.value) {
           reject("When orderBy.type is 'child' you must set orderBy.value as well.");
           return;
         }
@@ -1561,7 +1561,7 @@ firebase.query = function (updateCallback, path, options) {
 
       // range
       if (options.range && options.range.type) {
-        if (options.range.value === undefined || options.range.value === null) {
+        if (!options.range.value) {
           reject("Please set range.value");
           return;
         }
@@ -1581,7 +1581,7 @@ firebase.query = function (updateCallback, path, options) {
       if (options.ranges) {
         for (var i=0; i < options.ranges.length; i++) {
           var range = options.ranges[i];
-          if (range.value === undefined || range.value === null) {
+          if (!range.value) {
             reject("Please set ranges["+i+"].value");
             return;
           }
@@ -1600,7 +1600,7 @@ firebase.query = function (updateCallback, path, options) {
 
       // limit
       if (options.limit && options.limit.type) {
-        if (options.limit.value === undefined || options.limit.value === null) {
+        if (!options.limit.value) {
           reject("Please set limit.value");
           return;
         }
@@ -2121,29 +2121,36 @@ firebase.addOnDynamicLinkReceivedCallback = function (callback) {
   });
 };
 
+var dynamicLinksEnabled = new lazy(function () {
+    return typeof(com.google.android.gms.appinvite) !== "undefined"
+});
 
 (function() {
   appModule.on("launch", function(args) {
-  	var intent = args.android;
+  	if (!dynamicLinksEnabled()) {
+				return;
+		}
+	
+		var intent = args.android;
 
  		var getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
 		  onComplete: function(task) {
 
-		  if (task.isSuccessful() && task.getResult() != null) {
-		  	result = task.getResult().getLink(); 
-		  	result = firebase.toJsObject(result); 
-				if(firebase._DynamicLinkCallback === null){
-					console.log("No callback is provided for a dynamic link");
-				}
-				else{
-					setTimeout(function() {
-						firebase._DynamicLinkCallback(result);
-					});
-				}
-				
-		  }
-		}
-	 });
+			  if (task.isSuccessful() && task.getResult() != null) {
+			  	result = task.getResult().getLink(); 
+			  	result = firebase.toJsObject(result); 
+					if(firebase._DynamicLinkCallback === null){
+						console.log("No callback is provided for a dynamic link");
+					}
+					else{
+						setTimeout(function() {
+							firebase._DynamicLinkCallback(result);
+						});
+					}
+					
+			 	}
+			}
+	 	});
 		
 	 firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
 	 DynamicLinks = firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
