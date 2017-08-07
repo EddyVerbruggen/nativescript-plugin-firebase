@@ -1549,7 +1549,7 @@ firebase.query = function (updateCallback, path, options) {
       } else if (options.orderBy.type === firebase.QueryOrderByType.PRIORITY) {
         query = firebase.instance.child(path).orderByPriority();
       } else if (options.orderBy.type === firebase.QueryOrderByType.CHILD) {
-        if (!options.orderBy.value) {
+        if (options.orderBy.value === undefined || options.orderBy.value === null) {
           reject("When orderBy.type is 'child' you must set orderBy.value as well.");
           return;
         }
@@ -1561,7 +1561,7 @@ firebase.query = function (updateCallback, path, options) {
 
       // range
       if (options.range && options.range.type) {
-        if (!options.range.value) {
+        if (options.range.value === undefined || options.range.value === null) {
           reject("Please set range.value");
           return;
         }
@@ -1581,7 +1581,7 @@ firebase.query = function (updateCallback, path, options) {
       if (options.ranges) {
         for (var i=0; i < options.ranges.length; i++) {
           var range = options.ranges[i];
-          if (!range.value) {
+          if (range.value === undefined || range.value === null) {
             reject("Please set ranges["+i+"].value");
             return;
           }
@@ -1600,7 +1600,7 @@ firebase.query = function (updateCallback, path, options) {
 
       // limit
       if (options.limit && options.limit.type) {
-        if (!options.limit.value) {
+        if (options.limit.value === undefined || options.limit.value === null) {
           reject("Please set limit.value");
           return;
         }
