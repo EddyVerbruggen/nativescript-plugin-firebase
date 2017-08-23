@@ -3,7 +3,13 @@ var utils = require("utils/utils");
 var frame = require("ui/frame");
 var fs = require("file-system");
 var firebase = require("./firebase-common");
-var profile = require("profiling").profile;
+
+// this may fail if tns-core-modules doesn't include it (can be removed in about a year), see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/449
+var profile;
+try {
+  profile = require("profiling").profile;
+} catch (ignore) {}
+
 
 firebase._launchNotification = null;
 
@@ -179,7 +185,7 @@ firebase.authStateListener = null;
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
 
-    const _resolve = profile("firebase.init resolve", function _resolve() {
+    function runInit() {
       if (firebase.instance !== null) {
         reject("You already ran init");
         return;
@@ -260,8 +266,9 @@ firebase.init = function (arg) {
       }
 
       resolve(firebase.instance);
-    });
+    }
 
+    var _resolve = profile === undefined ? runInit : profile("firebase.init resolve", runInit);
     try {
       if (appModule.android.foregroundActivity) {
         _resolve();
@@ -658,7 +665,7 @@ firebase.getRemoteConfig = function (arg) {
       return;
     }
 
-    const _resolve = profile("firebase.getRemoteConfig resolve", function _resolve() {
+    function runGetRemoteConfig() {
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
@@ -721,7 +728,9 @@ firebase.getRemoteConfig = function (arg) {
       firebaseRemoteConfig.fetch(expirationDuration)
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
-    });
+    }
+
+    var _resolve = profile === undefined ? runGetRemoteConfig : profile("firebase.getRemoteConfig resolve", runGetRemoteConfig);
 
     try {
       if (appModule.android.foregroundActivity) {
