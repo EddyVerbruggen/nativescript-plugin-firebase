@@ -44,6 +44,7 @@ firebase.merge = function merge(obj1, obj2){ // Our merge function
 firebase.LoginType = {
   ANONYMOUS: "anonymous",
   PASSWORD: "password",
+  PHONE: "phone",
   CUSTOM: "custom",
   FACEBOOK: "facebook",
   GOOGLE: "google"
