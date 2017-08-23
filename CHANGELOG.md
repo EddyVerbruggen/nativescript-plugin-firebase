@@ -3,6 +3,19 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 4.0.6 (2017, August 23)
+
+### New
+- [#443](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/443) fixed invitation sample code
+- [#444](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/444) Updated how options.*.value is checked to allow booleans and numbers
+- [#449](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/449) Mark init and getRemoteConfig for profiling
+
+### Fixes
+- [#328](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/328) Query range with START_AT not fetching data as expected
+- [#438](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/438) Query : range not working when value is number
+- [#445](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/445) Skip linking for anonymous users
+- [464](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/464) 'phoneNumber' is missing in login result TypeScript definition
+
 
 ## 4.0.5 (2017, July 22)
 
