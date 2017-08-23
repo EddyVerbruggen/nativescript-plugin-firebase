@@ -175,6 +175,8 @@ Don't forget to enable email-password login in your firebase instance.
 
 #### Managing email-password accounts
 ##### Creating a Password account
+This may not work on an (Android) simulator. See #463.
+
 ```js
   firebase.createUser({
     email: 'eddyverbruggen@gmail.com',
