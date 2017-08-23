@@ -261,6 +261,7 @@ export interface User {
     email?: string;
     emailVerified: boolean;
     name?: string;
+    phoneNumber?: string;
     anonymous: boolean;
     providers: Array<Provider>;
     profileImageURL?: string;
