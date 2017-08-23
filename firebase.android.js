@@ -3,6 +3,7 @@ var utils = require("utils/utils");
 var frame = require("ui/frame");
 var fs = require("file-system");
 var firebase = require("./firebase-common");
+var profile = require("profiling").profile;
 
 firebase._launchNotification = null;
 
@@ -178,7 +179,7 @@ firebase.authStateListener = null;
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
 
-    function _resolve() {
+    const _resolve = profile("firebase.init resolve", function _resolve() {
       if (firebase.instance !== null) {
         reject("You already ran init");
         return;
@@ -259,7 +260,7 @@ firebase.init = function (arg) {
       }
 
       resolve(firebase.instance);
-    }
+    });
 
     try {
       if (appModule.android.foregroundActivity) {
@@ -657,7 +658,7 @@ firebase.getRemoteConfig = function (arg) {
       return;
     }
 
-    function _resolve() {
+    const _resolve = profile("firebase.getRemoteConfig resolve", function _resolve() {
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
@@ -720,7 +721,7 @@ firebase.getRemoteConfig = function (arg) {
       firebaseRemoteConfig.fetch(expirationDuration)
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
-    }
+    });
 
     try {
       if (appModule.android.foregroundActivity) {
