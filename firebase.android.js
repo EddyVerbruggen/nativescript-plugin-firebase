@@ -208,6 +208,9 @@ firebase.init = function (arg) {
 
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
+      // init admob
+      com.google.android.gms.ads.MobileAds.initialize(appModule.android.context); // TODO not sure its bound to packagename.. this is from the admob-demo
+
       if (arg.onAuthStateChanged) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
@@ -475,11 +478,6 @@ firebase.admob.showBanner = function (arg) {
     try {
       var settings = firebase.merge(arg, firebase.admob.defaults);
 
-      // this should also be possible in init
-      com.google.android.gms.ads.MobileAds.initialize(
-          appModule.android.context,
-          settings.androidBannerId); // TODO not sure its bound to packagename.. this is from the admob-demo
-
       // always close a previously opened banner
       if (firebase.admob.adView !== null && firebase.admob.adView !== undefined) {
         var parent = firebase.admob.adView.getParent();
@@ -493,16 +491,26 @@ firebase.admob.showBanner = function (arg) {
       var bannerType = firebase.admob._getBannerType(settings.size);
       firebase.admob.adView.setAdSize(bannerType);
       console.log("----- bannerType: " + bannerType);
-      // TODO consider implementing events
-      //firebase.admob.adView.setAdListener(new com.google.android.gms.ads.BannerListener());
+      var BannerAdListener = com.google.android.gms.ads.AdListener.extend({
+        onAdLoaded: function () {
+          //firebase.admob.interstitialView.show();
+          console.log('ad loaded');
+          resolve();
+        },
+        onAdFailedToLoad: function (errorCode) {
+            //console.log('ad error: ' + errorCode);
+            reject(errorCode);
+        }
+      });
+      firebase.admob.adView.setAdListener(new BannerAdListener());
 
       var ad = firebase.admob._buildAdRequest(settings);
       firebase.admob.adView.loadAd(ad);
-
+      
       var density = utils.layout.getDisplayDensity(),
           top = settings.margins.top * density,
           bottom = settings.margins.bottom * density;
-
+         
       var relativeLayoutParams = new android.widget.RelativeLayout.LayoutParams(
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -528,12 +536,10 @@ firebase.admob.showBanner = function (arg) {
       // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
       setTimeout(function () {
         frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
-      }, 0);
-
-      resolve();
+    }, 0);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
-      reject(ex);
+    reject(ex);
     }
   });
 };
