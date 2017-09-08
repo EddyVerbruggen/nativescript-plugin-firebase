@@ -208,9 +208,6 @@ firebase.init = function (arg) {
 
       var firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
-      // init admob
-      com.google.android.gms.ads.MobileAds.initialize(appModule.android.context); // TODO not sure its bound to packagename.. this is from the admob-demo
-
       if (arg.onAuthStateChanged) {
         firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
           onAuthStateChanged: function (fbAuth) {
@@ -268,6 +265,12 @@ firebase.init = function (arg) {
         });
       }
 
+      // Firebase AdMob
+      if (typeof(com.google.android.gms.ads) !== "undefined") {
+        // init admob
+        com.google.android.gms.ads.MobileAds.initialize(appModule.android.context); 
+      }
+        
       resolve(firebase.instance);
     }
 
@@ -545,38 +548,38 @@ firebase.admob.showBanner = function (arg) {
 };
 
 firebase.admob.showInterstitial = function (arg) {
-  return new Promise(function (resolve, reject) {
-    try {
-      var settings = firebase.merge(arg, firebase.admob.defaults);
-      firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(appModule.android.foregroundActivity);
-      firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
-
-      // Interstitial ads must be loaded before they can be shown, so adding a listener
-      var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
-        onAdLoaded: function () {
-          firebase.admob.interstitialView.show();
-          resolve();
-        },
-        onAdFailedToLoad: function (errorCode) {
-          reject(errorCode);
-        },
-        onAdClosed: function () {
-          firebase.admob.interstitialView.setAdListener(null);
-          firebase.admob.interstitialView = null;
-        }
-      });
-      firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
-
-      var ad = firebase.admob._buildAdRequest(settings);
-      firebase.admob.interstitialView.loadAd(ad);
-    } catch (ex) {
-      console.log("Error in firebase.admob.showInterstitial: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.admob.hideBanner = function (arg) {
+    return new Promise(function (resolve, reject) {
+      try {
+        var settings = firebase.merge(arg, firebase.admob.defaults);
+        firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(appModule.android.foregroundActivity);
+        firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
+  
+        // Interstitial ads must be loaded before they can be shown, so adding a listener
+        var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
+          onAdLoaded: function () {
+            firebase.admob.interstitialView.show();
+            resolve();
+          },
+          onAdFailedToLoad: function (errorCode) {
+            reject(errorCode);
+          },
+          onAdClosed: function () {
+            firebase.admob.interstitialView.setAdListener(null);
+            firebase.admob.interstitialView = null;
+          }
+        });
+        firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
+  
+        var ad = firebase.admob._buildAdRequest(settings);
+        firebase.admob.interstitialView.loadAd(ad);
+      } catch (ex) {
+        console.log("Error in firebase.admob.showInterstitial: " + ex);
+        reject(ex);
+      }
+    });
+  };
+  
+  firebase.admob.hideBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (firebase.admob.adView !== null) {
