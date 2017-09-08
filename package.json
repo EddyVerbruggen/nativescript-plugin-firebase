@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -73,6 +73,7 @@
   "devDependencies": {
     "prompt-lite": "~0.1.0",
     "xcode": "~0.9.0",
-    "webpack": "~2.2.0"
+    "webpack": "~2.2.0",
+    "tns-core-modules": "2.5.0"
   }
 }
