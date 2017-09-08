@@ -261,9 +261,9 @@ firebase.init = function (arg) {
       // Firebase AdMob
       if (typeof(com.google.android.gms.ads) !== "undefined") {
         // init admob
-        com.google.android.gms.ads.MobileAds.initialize(appModule.android.context); 
+        com.google.android.gms.ads.MobileAds.initialize(appModule.android.context);
       }
-        
+
       resolve(firebase.instance);
     }
 
@@ -493,19 +493,19 @@ firebase.admob.showBanner = function (arg) {
           resolve();
         },
         onAdFailedToLoad: function (errorCode) {
-            //console.log('ad error: ' + errorCode);
-            reject(errorCode);
+          //console.log('ad error: ' + errorCode);
+          reject(errorCode);
         }
       });
       firebase.admob.adView.setAdListener(new BannerAdListener());
 
       var ad = firebase.admob._buildAdRequest(settings);
       firebase.admob.adView.loadAd(ad);
-      
+
       var density = utils.layout.getDisplayDensity(),
           top = settings.margins.top * density,
           bottom = settings.margins.bottom * density;
-         
+
       var relativeLayoutParams = new android.widget.RelativeLayout.LayoutParams(
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -531,47 +531,47 @@ firebase.admob.showBanner = function (arg) {
       // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
       setTimeout(function () {
         frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
-    }, 0);
+      }, 0);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
-    reject(ex);
+      reject(ex);
     }
   });
 };
 
 firebase.admob.showInterstitial = function (arg) {
-    return new Promise(function (resolve, reject) {
-      try {
-        var settings = firebase.merge(arg, firebase.admob.defaults);
-        firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(appModule.android.foregroundActivity);
-        firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
-  
-        // Interstitial ads must be loaded before they can be shown, so adding a listener
-        var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
-          onAdLoaded: function () {
-            firebase.admob.interstitialView.show();
-            resolve();
-          },
-          onAdFailedToLoad: function (errorCode) {
-            reject(errorCode);
-          },
-          onAdClosed: function () {
-            firebase.admob.interstitialView.setAdListener(null);
-            firebase.admob.interstitialView = null;
-          }
-        });
-        firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
-  
-        var ad = firebase.admob._buildAdRequest(settings);
-        firebase.admob.interstitialView.loadAd(ad);
-      } catch (ex) {
-        console.log("Error in firebase.admob.showInterstitial: " + ex);
-        reject(ex);
-      }
-    });
-  };
-  
-  firebase.admob.hideBanner = function (arg) {
+  return new Promise(function (resolve, reject) {
+    try {
+      var settings = firebase.merge(arg, firebase.admob.defaults);
+      firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(appModule.android.foregroundActivity);
+      firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
+
+      // Interstitial ads must be loaded before they can be shown, so adding a listener
+      var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
+        onAdLoaded: function () {
+          firebase.admob.interstitialView.show();
+          resolve();
+        },
+        onAdFailedToLoad: function (errorCode) {
+          reject(errorCode);
+        },
+        onAdClosed: function () {
+          firebase.admob.interstitialView.setAdListener(null);
+          firebase.admob.interstitialView = null;
+        }
+      });
+      firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
+
+      var ad = firebase.admob._buildAdRequest(settings);
+      firebase.admob.interstitialView.loadAd(ad);
+    } catch (ex) {
+      console.log("Error in firebase.admob.showInterstitial: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.admob.hideBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
       if (firebase.admob.adView !== null) {
@@ -2078,29 +2078,31 @@ firebase.invites.getInvitation = function () {
 
       firebase._mGoogleApiClient.connect();
 
-      var getInvitationCallback = new com.google.android.gms.common.api.ResultCallback({
-        onResult: function (result) {
+      var firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
 
-          console.log("getInvitation:onResult:", result.getStatus().isSuccess());
-          if (result.getStatus().isSuccess()) {
-            // Extract information from the intent
-            var intent = result.getInvitationIntent();
-
-            try {
-              var deepLink = com.google.android.gms.appinvite.AppInviteReferral.getDeepLink(intent);
-              var invitationId = com.google.android.gms.appinvite.AppInviteReferral.getInvitationId(intent);
-
-              resolve({
-                deepLink: firebase.toJsObject(deepLink),
-                invitationId: firebase.toJsObject(invitationId)
-              });
-
-            } catch (e) {
-              reject(e);
-            }
-          } else {
+      var onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: function (pendingDynamicLinkData) {
+          if (pendingDynamicLinkData === null) {
             reject("Not launched by invitation");
+            return;
           }
+
+          // get the deeplink
+          var deepLinkUri = pendingDynamicLinkData.getLink();
+
+          // extract invite
+          var firebaseAppInvite = com.google.firebase.appinvite.FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
+
+          resolve({
+            deepLink: deepLinkUri === null ? null : deepLinkUri.toString(),
+            invitationId: firebaseAppInvite.getInvitationId() // string | null
+          });
+        }
+      });
+
+      var onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: function (exception) {
+          reject(exception.getMessage());
         }
       });
 
