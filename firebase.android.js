@@ -4,13 +4,6 @@ var frame = require("ui/frame");
 var fs = require("file-system");
 var firebase = require("./firebase-common");
 
-// this may fail if tns-core-modules doesn't include it (can be removed in about a year), see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/449
-var profile;
-try {
-  profile = require("profiling").profile;
-} catch (ignore) {}
-
-
 firebase._launchNotification = null;
 
 // we need to cache and restore the context, otherwise the next invocation is broken
@@ -274,13 +267,12 @@ firebase.init = function (arg) {
       resolve(firebase.instance);
     }
 
-    var _resolve = profile === undefined ? runInit : profile("firebase.init resolve", runInit);
     try {
       if (appModule.android.foregroundActivity) {
-        _resolve();
+        runInit();
       } else {
         // if this is called before application.start() wait for the event to fire
-        appModule.on(appModule.launchEvent, _resolve);
+        appModule.on(appModule.launchEvent, runInit);
       }
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
@@ -739,14 +731,12 @@ firebase.getRemoteConfig = function (arg) {
           .addOnFailureListener(onFailureListener);
     }
 
-    var _resolve = profile === undefined ? runGetRemoteConfig : profile("firebase.getRemoteConfig resolve", runGetRemoteConfig);
-
     try {
       if (appModule.android.foregroundActivity) {
-        _resolve();
+        runGetRemoteConfig();
       } else {
         // if this is called before application.start() wait for the event to fire
-        appModule.on(appModule.launchEvent, _resolve);
+        appModule.on(appModule.launchEvent, runGetRemoteConfig);
       }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);
