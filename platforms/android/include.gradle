@@ -46,7 +46,7 @@ dependencies {
     // Uncomment if you need Google Sign-In Authentication
 //    compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
-    // Uncomment if you want to use 'Invites'
+    // Uncomment if you want to use 'Invites or Dynamic Links'
 //    compile 'com.google.firebase:firebase-invites:10.2.+'
 
 }

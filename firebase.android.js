@@ -237,6 +237,11 @@ firebase.init = function (arg) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
       }
+	  
+	  // Firebase DynamicLink
+	  if (arg.onDynamicLinkCallback !== undefined){
+	  	firebase.addOnDynamicLinkReceivedCallback(arg.onDynamicLinkCallback);
+	  }
 
       // Firebase storage
       if (arg.storageBucket) {
@@ -2117,5 +2122,60 @@ firebase.invites.getInvitation = function () {
     }
   });
 };
+
+
+firebase.addOnDynamicLinkReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+		try {
+		  if (typeof(com.google.android.gms.appinvite) === "undefined") {
+				reject("Uncomment invites in the plugin's include.gradle first");
+				return;
+		  }
+
+		  firebase._DynamicLinkCallback = callback;
+		  resolve();
+		} catch (ex) {
+		  console.log("Error in firebase.addOnDynamicLinkReceivedCallback: " + ex);
+		  reject(ex);
+		}
+  });
+};
+
+var dynamicLinksEnabled = new lazy(function () {
+    return typeof(com.google.android.gms.appinvite) !== "undefined"
+});
+
+(function() {
+  appModule.on("launch", function(args) {
+  	if (!dynamicLinksEnabled()) {
+				return;
+		}
+	
+		var intent = args.android;
+
+ 		var getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
+		  onComplete: function(task) {
+
+			  if (task.isSuccessful() && task.getResult() != null) {
+			  	result = task.getResult().getLink(); 
+			  	result = firebase.toJsObject(result); 
+					if(firebase._DynamicLinkCallback === null){
+						console.log("No callback is provided for a dynamic link");
+					}
+					else{
+						setTimeout(function() {
+							firebase._DynamicLinkCallback(result);
+						});
+					}
+					
+			 	}
+			}
+	 	});
+		
+	 firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
+	 DynamicLinks = firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
+
+	});
+})()
 
 module.exports = firebase;
