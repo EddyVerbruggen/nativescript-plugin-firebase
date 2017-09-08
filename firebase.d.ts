@@ -568,6 +568,16 @@ export module admob {
     LEADERBOARD
   }
 
+  /**
+   * The possible error codes (see https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest#ERROR_CODE_INTERNAL_ERROR).
+   */
+  export enum ERROR_CODES {
+    ERROR_CODE_INTERNAL_ERROR,
+    ERROR_CODE_INVALID_REQUEST,
+    ERROR_CODE_NETWORK_ERROR,
+    ERROR_CODE_NO_FILL
+  }
+
   export interface ShowBannerOptions {
     /**
      * The layout of the banner.
