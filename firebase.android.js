@@ -2106,9 +2106,9 @@ firebase.invites.getInvitation = function () {
         }
       });
 
-      // TODO I think this is deprecated since 11.0 - check the latest docs: https://firebase.google.com/docs/invites/android
-      com.google.android.gms.appinvite.AppInvite.AppInviteApi.getInvitation(firebase._mGoogleApiClient, activity, autoLaunchDeepLink)
-          .setResultCallback(getInvitationCallback);
+      firebaseDynamicLinks.getDynamicLink(activity.getIntent())
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
 
 
     } catch (ex) {
