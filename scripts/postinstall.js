@@ -2955,7 +2955,7 @@ function promptQuestions() {
       default: 'n'
     }, {
         name: 'invites',
-        description: 'Are you using Firebase Invites (y/n)',
+        description: 'Are you using Firebase Invites and/or Dynamic Links (y/n)',
         default: 'n'
     }], function (err, result) {
         if (err) {
@@ -3013,7 +3013,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 4.0.4'
+`pod 'Firebase', '~> 4.1.1'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
@@ -3032,7 +3032,7 @@ pod 'Firebase/Auth'
 # Uncomment if you want to enable AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Uncomment if you want to enable Invites
+# Uncomment if you want to enable Invites and/or Dynamic Links
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
 
 # Uncomment if you want to enable Facebook Authentication
@@ -3071,35 +3071,48 @@ android {
 repositories {
     jcenter()
     mavenCentral()
+    maven {
+        url "https://maven.google.com"
+    }
 }
 
+def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
+
 dependencies {
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:customtabs:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:support-compat:$supportVersion"
+
+    def firebaseVersion = "11.2.2"
+
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:11.0.+"
-    compile "com.google.firebase:firebase-database:11.0.+"
-    compile "com.google.firebase:firebase-auth:11.0.+"
+    compile "com.google.firebase:firebase-core:$firebaseVersion"
+    compile "com.google.firebase:firebase-database:$firebaseVersion"
+    compile "com.google.firebase:firebase-auth:$firebaseVersion"
 
     // for converting Java objects to JS
     compile "com.google.code.gson:gson:2.8.+"
 
     // for reading google-services.json and configuration
-    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '11.0.+'
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : firebaseVersion
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Remote Config'
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:11.0.+"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:$firebaseVersion"
 
     // Uncomment if you want to use 'Crash Reporting'
-    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:11.0.+"
+    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
-    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:11.0.+"
+    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:$firebaseVersion"
 
     // Uncomment if you want Google Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile 'com.google.firebase:firebase-storage:11.0.+'
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:$firebaseVersion"
 
     // Uncomment if you want AdMob
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile 'com.google.firebase:firebase-ads:11.0.+'
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:$firebaseVersion"
 
     // Uncomment if you need Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile "com.facebook.android:facebook-android-sdk:4.+"
@@ -3107,8 +3120,8 @@ dependencies {
     // Uncomment if you need Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
-    // Uncomment if you need Firebase Invites
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:11.0.+"
+    // Uncomment if you need Firebase Invites or Dynamic Links
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:$firebaseVersion"
 }
 
 apply plugin: "com.google.gms.google-services"

@@ -3,6 +3,11 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 4.1.0 (2017, September 8)
+
+### New
+
+
 ## 4.0.6 (2017, August 23)
 
 ### New

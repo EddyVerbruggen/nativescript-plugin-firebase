@@ -26,7 +26,7 @@ For readability the supported features have been moved to their own README's:
 * [Storage](docs/STORAGE.md)
 * [Crash Reporting](docs/CRASHREPORTING.md)
 * [Analytics](docs/ANALYTICS.md)
-* [Invites](docs/INVITES.md)
+* [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [AdMob](docs/ADMOB.md)
 
 ## Prerequisites
@@ -73,9 +73,6 @@ You can also change the configuration by deleting the `firebase.nativescript.jso
 
 ### iOS
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` to ensure you have the latest spec.
-
-### Android
-Install the latest packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
 
 #### Google Play Services Version
 The plugin will default to version 10.0+ of the Android `play-services-base` SDK.
@@ -226,15 +223,11 @@ Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which
 placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
 the changes to `build.gradle` which are mentioned above as well.
 
-#### Could not find any version that matches com.google.android.gms:play-services-auth:11.0.+.
-That means making sure you have the latest `Google Repository` bits installed.
+#### Errors regarding API level 26.0.0
+Update your local Android SDKs:
 
 Just run `$ANDROID_HOME/tools/bin/sdkmanager --update` from a command prompt
 or launch the SDK manager from Android Studio, expand `Extras` and install any pending updates.
-
-Also, an error like "Could not find com.google.firebase:firebase-core:10.0.0" can be caused by having
-more than one version of the Android SDK installed. Make sure ANDROID_HOME is set to the Android SDK directory
-that is being updated otherwise it will seem as though your updates have no effect.
 
 #### Found play-services:10.A.B, but version 11.X.Y is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
@@ -248,12 +241,12 @@ android {
   // other stuff here
 
   project.ext {
-    googlePlayServicesVersion = "11.0.+"
+    googlePlayServicesVersion = "11.2.+"
   }
 }
 ```
 
-Where `"11.0.+"` is best set to the same value as the version on [this line](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/platforms/android/include.gradle#L23).
+Where `"11.2.+"` is best set to the same value as the `firebase-core` dependency version in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/platforms/android/include.gradle).
 
 ## Credits
 The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).

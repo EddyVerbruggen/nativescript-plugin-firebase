@@ -12,6 +12,7 @@ firebase._pendingNotifications = [];
 firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
+firebase._cachedDynamicLink = null;
 
 firebase._addObserver = function (eventName, callback) {
   var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
@@ -74,33 +75,42 @@ firebase.addAppDelegateMethods = function (appDelegate) {
   };
 
   // there's no notification event to hook into for this one, so using the appDelegate
-  appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
-    var result = false;
-    if (typeof(FBSDKApplicationDelegate) !== "undefined") {
-      result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
-    }
-    // for iOS <= 8
-    if (typeof(GIDSignIn) !== "undefined") {
-      result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
-    }
-
-    // Handle App Invite requests
-    if (typeof(FIRInvites) !== "undefined") {
-      var receivedInvite = FIRInvites.handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
-      if (receivedInvite) {
-        console.log("Deep link from " + sourceApplication + ", Invite ID: " + invite.invideId + ", App URL: " + invite.deepLink);
-        this._cachedInvitation = {
-          deepLink: invite.deepLink,
-          invitationId: invite.invideId
-        };
-        result = true;
+  if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRInvites) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
+    appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
+      var result = false;
+      if (typeof(FBSDKApplicationDelegate) !== "undefined") {
+        result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
       }
-    }
 
-    return result;
-  };
+      if (typeof(GIDSignIn) !== "undefined") {
+        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
+      }
 
-  if (typeof(GIDSignIn) !== "undefined") {
+      if (typeof(FIRInvites) !== "undefined") {
+        var receivedInvite = FIRInvites.handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
+        if (receivedInvite) {
+          console.log("Deep link from " + sourceApplication + ", Invite ID: " + invite.invideId + ", App URL: " + invite.deepLink);
+          this._cachedInvitation = {
+            deepLink: invite.deepLink,
+            invitationId: invite.invideId
+          };
+          result = true;
+        }
+      }
+
+      if (typeof(FIRDynamicLink) !== "undefined") {
+        var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
+        if (dynamicLink) {
+          this._cachedDeepLink = dynamicLink.url.absoluteString;
+          result = true;
+        }
+      }
+
+      return result;
+    };
+  }
+
+  if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
     appDelegate.prototype.applicationOpenURLOptions = function (application, url, options) {
       var result = false;
       if (typeof(FBSDKApplicationDelegate) !== "undefined") {
@@ -110,11 +120,29 @@ firebase.addAppDelegateMethods = function (appDelegate) {
             options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
             options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
-      // for iOS >= 9
-      result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+
+      if (typeof(GIDSignIn) !== "undefined") {
+        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+      }
+
+      if (typeof(FIRDynamicLink) !== "undefined") {
+        var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
+        if (dynamicLink) {
+          if (dynamicLink.url !== null) {
+            console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
+            if (this._dynamicLinkCallback) {
+              this._dynamicLinkCallback(dynamicLink.url.absoluteString);
+            } else {
+              this._cachedDeepLink = dynamicLink.url.absoluteString;
+            }
+            result = true;
+          }
+        }
+      }
+
       return result;
     };
   }
@@ -175,6 +203,30 @@ firebase.addOnMessageReceivedCallback = function (callback) {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.addOnDynamicLinkReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(FIRDynamicLink) === "undefined") {
+        reject("Enable FIRInvites in Podfile first");
+        return;
+      }
+
+      firebase._dynamicLinkCallback = callback;
+
+      // if the app was launched from a dynamic link, process it now
+      if (firebase._cachedDynamicLink !== null) {
+        callback(firebase._cachedDynamicLink);
+        firebase._cachedDynamicLink = null;
+      }
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnDynamicLinkReceivedCallback: " + ex);
       reject(ex);
     }
   });
@@ -485,8 +537,10 @@ firebase.init = function (arg) {
       function runInit() {
         arg = arg || {};
 
-        // this requires you to download GoogleService-Info.plist and
-        // it to app/App_Resources/iOS/, see https://firebase.google.com/support/guides/firebase-ios
+        // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
+        if (FIROptions.defaultOptions() !== null) {
+          FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
+        }
         FIRApp.configure();
 
         if (arg.persist) {
@@ -525,6 +579,11 @@ firebase.init = function (arg) {
             });
           };
           FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
+        }
+
+        // Firebase DynamicLink
+        if (arg.onDynamicLinkCallback !== undefined) {
+          firebase.addOnDynamicLinkReceivedCallback(arg.onDynamicLinkCallback);
         }
 
         // Facebook Auth

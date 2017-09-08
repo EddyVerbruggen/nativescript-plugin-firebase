@@ -21,6 +21,63 @@ Open `app/App_Resources/iOS/Info.plist` and add this somewhere in the file (if i
   <string>For inviting others to use this app.</string>
 ```
 
+## Receiving Dynamic Links
+
+### Android
+To have a dynamic link open your app you need to add an Intent filter to the `<activity>` in `app/App_Resources/Android/AndroidManifest.xml`:
+
+```xml
+  <intent-filter>
+    <action android:name="android.intent.action.VIEW"/>
+    <category android:name="android.intent.category.DEFAULT"/>
+    <category android:name="android.intent.category.BROWSABLE"/>
+    <data android:host="www.coolapp.com" android:scheme="http"/><!-- Change this -->
+    <data android:host="www.coolapp.com" android:scheme="https"/><!-- .. and this! -->
+  </intent-filter>
+```
+
+### iOS
+> We may automate parts of this later, but for now you'll need to do it by hand.
+
+On iOS you'll need to add a custom URL scheme to `app/App_Resources/iOS/Info.plist` (if you don't have this one already):
+
+```xml
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>firebaseplugin.deeplink.urlscheme</string><!-- anything you like, but must be unique -->
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>org.nativescript.firebasedemo</string><!-- the same as your bundle id (nativescript.id in package.json) -->
+			</array>
+		</dict>
+	</array>
+```
+
+Now open the project in Xcode (the `platforms/ios/<projectname>.xcworkspace` file!) and in the Capabilities tab
+enable Associated Domains and add the following to the Associated Domains list:
+
+```
+applinks:app_code.app.goo.gl
+```
+
+Where `app_code` can be found in the Firebase console at the Dynamic Links section.
+
+#### Copy the entitlements file
+The previous step created a the file`platforms/ios/YourAppName/(Resources/)YourAppName.entitlements`.
+Copy that file to `app/App_Resources/iOS/` (if it doesn't exist yet, otherwise merge its contents),
+so it's not removed when you remove and re-add the iOS platform. The relevant content looks like this:
+
+```xml
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:j4ctx.app.goo.gl</string>
+	</array>
+```
+
 ## Functions
 
 ### invites.sendInvitation
@@ -64,4 +121,27 @@ firebase.invites.getInvitation().then(
       console.log("getInvitation error: " + error);
     }
 );
+```
+
+### addOnDynamicLinkReceivedCallback / init.onDynamicLinkCallback
+When your app is launched from a dynamic link, you may want to capture that link and perform some action.
+
+You can either add an `onDynamicLinkCallback` callback to `init`, or use `addOnDynamicLinkReceivedCallback`:
+
+```js
+  firebase.init({
+    onDynamicLinkCallback: function (url) {
+      console.log("Dynamic Link: " + url); // this is a string, like http://mydomain.com/applink
+    }
+  });
+```
+
+.. or:
+
+```js
+  firebase.addOnDynamicLinkReceivedCallback(
+    function (url) {
+      // ..
+    }
+  );
 ```

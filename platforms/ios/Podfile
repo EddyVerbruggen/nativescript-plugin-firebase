@@ -1,5 +1,5 @@
 
-pod 'Firebase', '~> 4.0.4'
+pod 'Firebase', '~> 4.1.1'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
@@ -18,7 +18,7 @@ pod 'Firebase/Auth'
 # Uncomment if you want to enable AdMob
 #pod 'Firebase/AdMob'
 
-# Uncomment if you want to enable Invites
+# Uncomment if you want to enable Invites and/or Dynamic Links
 #pod 'Firebase/Invites'
 
 # Uncomment if you want to enable Facebook Authentication

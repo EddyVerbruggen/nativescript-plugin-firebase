@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "4.0.6",
+  "version": "4.1.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -55,7 +55,9 @@
     "Analytics",
     "Facebook",
     "Google",
-    "AdMob"
+    "AdMob",
+    "Invites",
+    "Dynamic Links"
   ],
   "author": "Telerik / Eddy Verbruggen <eddyverbruggen@gmail.com>",
   "license": "MIT",

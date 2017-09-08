@@ -5,6 +5,7 @@ var fs = require("file-system");
 var firebase = require("./firebase-common");
 
 firebase._launchNotification = null;
+firebase._launchDynamicLink = null;
 
 // we need to cache and restore the context, otherwise the next invocation is broken
 firebase._rememberedContext = null;
@@ -32,42 +33,63 @@ var messagingEnabled = new lazy(function () {
   return typeof(com.google.firebase.messaging) !== "undefined"
 });
 
+var dynamicLinksEnabled = new lazy(function () {
+  return typeof(com.google.android.gms.appinvite) !== "undefined"
+});
+
 (function () {
   appModule.on("launch", function (args) {
-    if (!messagingEnabled()) {
-      return;
-    }
-
     var intent = args.android;
+    var isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();
 
-    var extras = intent.getExtras();
-    if (extras !== null) {
-      var result = {
-        foreground: false,
-        data: {}
-      };
+    if (!isLaunchIntent && messagingEnabled()) {
+      var extras = intent.getExtras();
+      if (extras !== null) {
+        var result = {
+          foreground: false,
+          data: {}
+        };
 
-      var iterator = extras.keySet().iterator();
-      while (iterator.hasNext()) {
-        var key = iterator.next();
-        if (key !== "from" && key !== "collapse_key") {
-          result[key] = extras.get(key);
-          result.data[key] = extras.get(key);
+        var iterator = extras.keySet().iterator();
+        while (iterator.hasNext()) {
+          var key = iterator.next();
+          if (key !== "from" && key !== "collapse_key") {
+            result[key] = extras.get(key);
+            result.data[key] = extras.get(key);
+          }
+        }
+
+        if (firebase._receivedNotificationCallback === null) {
+          firebase._launchNotification = result;
+        } else {
+          // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
+          setTimeout(function () {
+            firebase._receivedNotificationCallback(result);
+          });
         }
       }
 
-      // in case this was a cold start we don't have the _receivedNotificationCallback yet
-      if (firebase._receivedNotificationCallback === null) {
-        firebase._launchNotification = result;
-      } else {
-        // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
-        setTimeout(function () {
-          firebase._receivedNotificationCallback(result);
-        });
-      }
+    } else if (isLaunchIntent && dynamicLinksEnabled()) {
+      var intent = args.android;
+
+      var getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          if (task.isSuccessful() && task.getResult() !== null) {
+            result = task.getResult().getLink().toString();
+            if (firebase._dynamicLinkCallback === null) {
+              firebase._launchDynamicLink = result;
+            } else {
+              setTimeout(function () {
+                firebase._dynamicLinkCallback(firebase.toJsObject(result));
+              });
+            }
+          }
+        }
+      });
+      var firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
+      firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
     }
   });
-
 })();
 
 firebase.toHashMap = function (obj) {
@@ -177,7 +199,6 @@ firebase.authStateListener = null;
 
 firebase.init = function (arg) {
   return new Promise(function (resolve, reject) {
-
     function runInit() {
       if (firebase.instance !== null) {
         reject("You already ran init");
@@ -237,11 +258,11 @@ firebase.init = function (arg) {
           firebase.addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
         }
       }
-	  
-	  // Firebase DynamicLink
-	  if (arg.onDynamicLinkCallback !== undefined){
-	  	firebase.addOnDynamicLinkReceivedCallback(arg.onDynamicLinkCallback);
-	  }
+
+      // Firebase DynamicLink
+      if (arg.onDynamicLinkCallback !== undefined) {
+        firebase.addOnDynamicLinkReceivedCallback(arg.onDynamicLinkCallback);
+      }
 
       // Firebase storage
       if (arg.storageBucket) {
@@ -357,6 +378,30 @@ firebase.addOnMessageReceivedCallback = function (callback) {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.addOnDynamicLinkReceivedCallback = function (callback) {
+  return new Promise(function (resolve, reject) {
+    try {
+      if (typeof(com.google.android.gms.appinvite) === "undefined") {
+        reject("Uncomment invites in the plugin's include.gradle first");
+        return;
+      }
+
+      firebase._dynamicLinkCallback = callback;
+
+      // if the app was launched from a dynamic link, process it now
+      if (firebase._launchDynamicLink !== null) {
+        callback(firebase._launchDynamicLink);
+        firebase._launchDynamicLink = null;
+      }
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.addOnDynamicLinkReceivedCallback: " + ex);
       reject(ex);
     }
   });
@@ -2073,8 +2118,7 @@ firebase.invites.getInvitation = function () {
         }
       });
 
-      var autoLaunchDeepLink = false;
-      var activity = appModule.android.foregroundActivity;
+      // var autoLaunchDeepLink = false;
 
       firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
           .addOnConnectionFailedListener(onConnectionFailedListener)
@@ -2111,7 +2155,7 @@ firebase.invites.getInvitation = function () {
         }
       });
 
-      firebaseDynamicLinks.getDynamicLink(activity.getIntent())
+      firebaseDynamicLinks.getDynamicLink(appModule.android.startActivity.getIntent())
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 
@@ -2122,60 +2166,5 @@ firebase.invites.getInvitation = function () {
     }
   });
 };
-
-
-firebase.addOnDynamicLinkReceivedCallback = function (callback) {
-  return new Promise(function (resolve, reject) {
-		try {
-		  if (typeof(com.google.android.gms.appinvite) === "undefined") {
-				reject("Uncomment invites in the plugin's include.gradle first");
-				return;
-		  }
-
-		  firebase._DynamicLinkCallback = callback;
-		  resolve();
-		} catch (ex) {
-		  console.log("Error in firebase.addOnDynamicLinkReceivedCallback: " + ex);
-		  reject(ex);
-		}
-  });
-};
-
-var dynamicLinksEnabled = new lazy(function () {
-    return typeof(com.google.android.gms.appinvite) !== "undefined"
-});
-
-(function() {
-  appModule.on("launch", function(args) {
-  	if (!dynamicLinksEnabled()) {
-				return;
-		}
-	
-		var intent = args.android;
-
- 		var getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
-		  onComplete: function(task) {
-
-			  if (task.isSuccessful() && task.getResult() != null) {
-			  	result = task.getResult().getLink(); 
-			  	result = firebase.toJsObject(result); 
-					if(firebase._DynamicLinkCallback === null){
-						console.log("No callback is provided for a dynamic link");
-					}
-					else{
-						setTimeout(function() {
-							firebase._DynamicLinkCallback(result);
-						});
-					}
-					
-			 	}
-			}
-	 	});
-		
-	 firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
-	 DynamicLinks = firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
-
-	});
-})()
 
 module.exports = firebase;

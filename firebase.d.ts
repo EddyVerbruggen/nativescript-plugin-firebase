@@ -74,42 +74,42 @@ export enum ServerValue {
  * The options object passed into the init function.
  */
 export interface InitOptions {
-    /**
-     * Allow disk persistence. Default false.
-     */
-    persist?: boolean;
-    /**
-     * Get notified when the user is logged in.
-     */
-    onAuthStateChanged?: (data: AuthStateData) => void;
-    /**
-     * Attempt to sign out before initializing, useful in case previous
-     * project token is cached which leads to following type of error:
-     *   "[FirebaseDatabase] Authentication failed: invalid_token ..."
-     * Default false.
-     */
-    iOSEmulatorFlush?: boolean;
-    /**
-     * For Firebase Storage you can pass in something like 'gs://n-plugin-test.appspot.com'
-     * here so we can cache it. Otherwise pass in the 'bucket' param when using Storage features.
-     * Can be found in the firebase console.
-     */
-    storageBucket?: string;
+  /**
+   * Allow disk persistence. Default false.
+   */
+  persist?: boolean;
+  /**
+   * Get notified when the user is logged in.
+   */
+  onAuthStateChanged?: (data: AuthStateData) => void;
+  /**
+   * Attempt to sign out before initializing, useful in case previous
+   * project token is cached which leads to following type of error:
+   *   "[FirebaseDatabase] Authentication failed: invalid_token ..."
+   * Default false.
+   */
+  iOSEmulatorFlush?: boolean;
+  /**
+   * For Firebase Storage you can pass in something like 'gs://n-plugin-test.appspot.com'
+   * here so we can cache it. Otherwise pass in the 'bucket' param when using Storage features.
+   * Can be found in the firebase console.
+   */
+  storageBucket?: string;
 
-    /**
-     * For FCM either pass in this callback function here, or use addOnMessageReceivedCallback
-     */
-    onPushTokenReceivedCallback?: (data: string) => void;
+  /**
+   * For FCM either pass in this callback function here, or use addOnMessageReceivedCallback.
+   */
+  onPushTokenReceivedCallback?: (data: string) => void;
 
-    /**
-     * For FCM either pass in this callback function here, or use addOnPushTokenReceivedCallback
-     */
-    onMessageReceivedCallback?: (data: Message) => void;
+  /**
+   * For FCM either pass in this callback function here, or use addOnPushTokenReceivedCallback.
+   */
+  onMessageReceivedCallback?: (data: Message) => void;
 	
-  	/**
-     * Get notified when the dynamic link is changed.
-     */
-    onDynamicLinkCallback?: (data: DynamicLink) => void;
+  /**
+   * Get notified when a dynamic link was used to launch the app. Alternatively use addOnDynamicLinkReceivedCallback.
+   */
+  onDynamicLinkCallback?: (url: string) => void;
 }
 
 export interface QueryRangeOption {
@@ -762,18 +762,6 @@ export module invites {
   function getInvitation(): Promise<GetInvitationResult>;
 }
 
-// Dynamic Link
-
-export interface DynamicLink {
-        cachedFsi: number;
-        cachedSsi: number;
-        scheme: string;
-        uriString: string;
-        host: string;
-        port: number;
-    }
-	
-
 // Auth
 export function login(options: LoginOptions): Promise<User>;
 
@@ -811,6 +799,9 @@ export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) 
 export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
 
 export function getCurrentPushToken(): Promise<string>;
+
+// dynamic links
+export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (url: string) => void): Promise<any>;
 
 // remote config
 export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
