@@ -6,6 +6,13 @@
 ## 4.1.0 (2017, September 8)
 
 ### New
+- [#476](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/476) Moved AdMob init to firebase.init, added AdListener to showBanner()
+- [#478](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/478) Invites on Android: AppInviteApi has been deprecated
+- [#479](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/479) Is anybody using the invites part? I can't get the deeplink or invitation id.
+
+### Fixes
+- [#319](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/319) Unable to query by child that equals to null
+- [#475](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/475) Broken firebase API broken since 8/26
 
 
 ## 4.0.6 (2017, August 23)
