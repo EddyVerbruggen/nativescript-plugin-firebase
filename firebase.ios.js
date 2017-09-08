@@ -1613,10 +1613,11 @@ firebase.query = function (updateCallback, path, options) {
 
       // range
       if (options.range && options.range.type) {
-        if (options.range.value === undefined || options.range.value === null) {
-          reject("Please set range.value");
-          return;
-        }
+        // https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/319
+        // if (options.range.value === undefined || options.range.value === null) {
+        //   reject("Please set range.value");
+        //   return;
+        // }
         if (options.range.type === firebase.QueryRangeType.START_AT) {
           query = query.queryStartingAtValue(options.range.value);
         } else if (options.range.type === firebase.QueryRangeType.END_AT) {
