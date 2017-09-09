@@ -3,6 +3,12 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 4.1.1 (2017, September 9)
+
+### Fixes
+- [#482](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/482) Update to 4.0.1 and got error: Cannot read property 'initialize' of undefined
+
+
 ## 4.1.0 (2017, September 8)
 
 ### New

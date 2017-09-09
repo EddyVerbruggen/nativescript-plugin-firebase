@@ -285,7 +285,7 @@ firebase.init = function (arg) {
       }
 
       // Firebase AdMob
-      if (typeof(com.google.android.gms.ads) !== "undefined") {
+      if (typeof(com.google.android.gms.ads) !== "undefined" && typeof(com.google.android.gms.ads.MobileAds) !== "undefined") {
         // init admob
         com.google.android.gms.ads.MobileAds.initialize(appModule.android.context);
       }
