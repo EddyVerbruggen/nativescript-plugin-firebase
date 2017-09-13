@@ -999,67 +999,63 @@ firebase.login = function (arg) {
         }
 
         var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-        // TODO, no hurry
-        if (false && user) {
-          if (firebase._alreadyLinkedToAuthProvider(user, "phone")) {
-            // TODO .. you don't want to sign in again I guess...
-            // firebaseAuth.signInWithEmailAndPassword(arg.email, arg.password).addOnCompleteListener(onCompleteListener);
-          } else {
-            // TODO get auth credential.. prolly need to move this
-            user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
-          }
-        } else {
 
-          var OnVerificationStateChangedCallbacks = com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks.extend({
-            onVerificationCompleted: function (phoneAuthCredential) {
-              console.log("phone number verification completed");
-              firebase._verifyPhoneNumberInProgress = false;
+        if (user && firebase._alreadyLinkedToAuthProvider(user, "phone")) {
+          // skip sending an SMS if user is already linked to the phone-provider
+          resolve(toLoginResult(user));
+          return;
+        }
+
+        var OnVerificationStateChangedCallbacks = com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks.extend({
+          onVerificationCompleted: function (phoneAuthCredential) {
+            firebase._verifyPhoneNumberInProgress = false;
+            var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+            
+            if (!user || firebase._alreadyLinkedToAuthProvider(user, "phone")) {
               // the user previously authenticated with phone (or no prompt was required), so sign in and complete
               firebaseAuth.signInWithCredential(phoneAuthCredential).addOnCompleteListener(onCompleteListener);
-            },
-            onVerificationFailed: function (firebaseException) {
-              console.log("onVerificationStateChangedCallbacks.onVerificationFailed: " + firebaseException);
-              firebase._verifyPhoneNumberInProgress = false;
-              var errorMessage = firebaseException.getMessage();
-              if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
-                reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
-              } else {
-                reject(errorMessage);
-              }
-            },
-            onCodeSent: function (verificationId, forceResendingToken) {
-              // If the device has a SIM card auto-verification may occur in the background (eventually calling onVerificationCompleted)
-              // .. so the prompt would be redundant, but it's recommended by Google not to wait to long before showing the prompt
-              setTimeout(function () {
-                if (firebase._verifyPhoneNumberInProgress) {
-                  firebase._verifyPhoneNumberInProgress = false;
-                  firebase.requestPhoneAuthVerificationCode(function (userResponse) {
-                    var authCredential = com.google.firebase.auth.PhoneAuthProvider.getCredential(verificationId, userResponse);
-                    var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-                    if (user) {
-                      if (firebase._alreadyLinkedToAuthProvider(user, "phone")) {
-                        firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
-                      } else {
-                        user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
-                      }
-                    } else {
-                      firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
-                    }
-                  }, arg.phoneOptions.verificationPrompt);
-                }
-              }, 3000);
+            } else {
+              user.linkWithCredential(phoneAuthCredential).addOnCompleteListener(onCompleteListener);
             }
-          });
+          },
+          onVerificationFailed: function (firebaseException) {
+            firebase._verifyPhoneNumberInProgress = false;
+            var errorMessage = firebaseException.getMessage();
+            if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
+              reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
+            } else {
+              reject(errorMessage);
+            }
+          },
+          onCodeSent: function (verificationId, forceResendingToken) {
+            // If the device has a SIM card auto-verification may occur in the background (eventually calling onVerificationCompleted)
+            // .. so the prompt would be redundant, but it's recommended by Google not to wait to long before showing the prompt
+            setTimeout(function () {
+              if (firebase._verifyPhoneNumberInProgress) {
+                firebase._verifyPhoneNumberInProgress = false;
+                firebase.requestPhoneAuthVerificationCode(function (userResponse) {
+                  var authCredential = com.google.firebase.auth.PhoneAuthProvider.getCredential(verificationId, userResponse);
+                  var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
 
-          firebase._verifyPhoneNumberInProgress = true;
+                  if (!user || firebase._alreadyLinkedToAuthProvider(user, "phone")) {
+                    firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  } else {
+                    user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  }
+                }, arg.phoneOptions.verificationPrompt);
+              }
+            }, 3000);
+          }
+        });
 
-          com.google.firebase.auth.PhoneAuthProvider.getInstance().verifyPhoneNumber(
-              arg.phoneOptions.phoneNumber,
-              60, // timeout (in seconds, because of the next argument)
-              java.util.concurrent.TimeUnit.SECONDS,
-              appModule.android.foregroundActivity, // or utils.ad.getApplicationContext()
-              new OnVerificationStateChangedCallbacks());
-        }
+        firebase._verifyPhoneNumberInProgress = true;
+
+        com.google.firebase.auth.PhoneAuthProvider.getInstance().verifyPhoneNumber(
+            arg.phoneOptions.phoneNumber,
+            60, // timeout (in seconds, because of the next argument)
+            java.util.concurrent.TimeUnit.SECONDS,
+            appModule.android.foregroundActivity, // or utils.ad.getApplicationContext()
+            new OnVerificationStateChangedCallbacks());
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
         if (!arg.customOptions || (!arg.customOptions.token && !arg.customOptions.tokenProviderFn)) {
