@@ -76,7 +76,20 @@ firebase.addAppDelegateMethods = function (appDelegate) {
 
   // there's no notification event to hook into for this one, so using the appDelegate
   if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRInvites) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
-    appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
+
+      appDelegate.prototype.applicationContinueUserActivityRestorationHandler =  (application, userActivity, restorationhandler) => {
+          var result = false;
+          var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromUniversalLinkURL(userActivity.webpageURL);
+          if (dynamicLink) {
+              if (this._dynamicLinkCallback) {
+                  this._dynamicLinkCallback(dynamicLink.url.absoluteString);
+              }
+              result = true;
+          }
+          return result;
+      };
+
+      appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
       var result = false;
       if (typeof(FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
