@@ -600,7 +600,6 @@ firebase.admob.showInterstitial = function (arg) {
       var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
           firebase.admob.interstitialView.show();
-          resolve();
         },
         onAdFailedToLoad: function (errorCode) {
           reject(errorCode);
@@ -608,6 +607,7 @@ firebase.admob.showInterstitial = function (arg) {
         onAdClosed: function () {
           firebase.admob.interstitialView.setAdListener(null);
           firebase.admob.interstitialView = null;
+          resolve();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
