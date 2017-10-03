@@ -77,17 +77,16 @@ firebase.addAppDelegateMethods = function (appDelegate) {
   // there's no notification event to hook into for this one, so using the appDelegate
   if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRInvites) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
 
-      appDelegate.prototype.applicationContinueUserActivityRestorationHandler = (application, userActivity, restorationhandler) => {
+      appDelegate.prototype.applicationContinueUserActivityRestorationHandler =  (application, userActivity, restorationhandler) => {
           var result = false;
-          if (typeof(FIRDynamicLink) !== "undefined") {
-              var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromUniversalLinkURL(userActivity.webpageURL);
-              if (dynamicLink) {
-                  if (this._dynamicLinkCallback) {
-                      this._dynamicLinkCallback(dynamicLink.url.absoluteString);
-                  }
-                  result = true;
+          result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, (dynamicLink) => {
+              if (firebase._dynamicLinkCallback) {
+                  firebase._dynamicLinkCallback(dynamicLink.url.absoluteString);
+              } else {
+                firebase._cachedDynamicLink = dynamicLink.url.absoluteString;
               }
-          }
+          });
+
           return result;
       };
 
@@ -116,7 +115,7 @@ firebase.addAppDelegateMethods = function (appDelegate) {
       if (typeof(FIRDynamicLink) !== "undefined") {
         var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
         if (dynamicLink) {
-          this._cachedDeepLink = dynamicLink.url.absoluteString;
+          firebase._cachedDynamicLink = dynamicLink.url.absoluteString;
           result = true;
         }
       }
@@ -148,10 +147,10 @@ firebase.addAppDelegateMethods = function (appDelegate) {
         if (dynamicLink) {
           if (dynamicLink.url !== null) {
             console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
-            if (this._dynamicLinkCallback) {
-              this._dynamicLinkCallback(dynamicLink.url.absoluteString);
+            if (firebase._dynamicLinkCallback) {
+              firebase._dynamicLinkCallback(dynamicLink.url.absoluteString);
             } else {
-              this._cachedDeepLink = dynamicLink.url.absoluteString;
+              firebase._cachedDynamicLink = dynamicLink.url.absoluteString;
             }
             result = true;
           }
