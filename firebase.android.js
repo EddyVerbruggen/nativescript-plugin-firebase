@@ -612,13 +612,16 @@ firebase.admob.showInterstitial = function (arg) {
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
-          firebase.admob.interstitialView.show();
+            console.log('showInterstitial -> onAdLoaded');
+            firebase.admob.interstitialView.show();
         },
         onAdFailedToLoad: function (errorCode) {
-          reject(errorCode);
+            console.log('showInterstitial -> onAdFailedToLoad');
+            reject(errorCode);
         },
         onAdClosed: function () {
-          firebase.admob.interstitialView.setAdListener(null);
+            console.log('showInterstitial -> onAdClosed');
+            // firebase.admob.interstitialView.setAdListener(null);
           firebase.admob.interstitialView = null;
           resolve();
         }
