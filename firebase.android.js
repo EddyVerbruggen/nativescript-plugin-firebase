@@ -577,13 +577,24 @@ firebase.admob.showBanner = function (arg) {
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-      // wrapping it in a timeout makes sure that when this function is loaded from
-      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
-      setTimeout(function () {
-          if (frame.topmost() && frame.topmost().currentPage && frame.topmost().currentPage.android) {
-            frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
-          }
-      }, 0);
+        // wrapping it in a timeout makes sure that when this function is loaded from
+        // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
+        var showBanner = function() {
+            if (frame.topmost() && frame.topmost().currentPage && frame.topmost().currentPage.android) {
+                frame
+                    .topmost()
+                    .currentPage.android.getParent()
+                    .addView(adViewLayout, relativeLayoutParamsOuter);
+            } else {
+                console.log('trying again in 300ms...');
+                setTimeout(function() {
+                    showBanner();
+                }, 300);
+            }
+        };
+        setTimeout(function() {
+            showBanner();
+        }, 0);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
       reject(ex);
