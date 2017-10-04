@@ -620,9 +620,10 @@ firebase.admob.showInterstitial = function (arg) {
             reject(errorCode);
         },
         onAdClosed: function () {
-            console.log('showInterstitial -> onAdClosed');
-            // firebase.admob.interstitialView.setAdListener(null);
+            console.log('showInterstitial -> onAdClosed #1');
+            firebase.admob.interstitialView.setAdListener(null);
           firebase.admob.interstitialView = null;
+          console.log('showInterstitial -> onAdClosed #2');
           resolve();
         }
       });
