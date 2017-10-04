@@ -535,11 +535,11 @@ firebase.admob.showBanner = function (arg) {
       firebase.admob.adView.setAdUnitId(settings.androidBannerId);
       var bannerType = firebase.admob._getBannerType(settings.size);
       firebase.admob.adView.setAdSize(bannerType);
-      console.log("----- bannerType: " + bannerType);
+      //console.log("----- bannerType: " + bannerType);
       var BannerAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
           //firebase.admob.interstitialView.show();
-          console.log('ad loaded');
+          //console.log('ad loaded');
           resolve();
         },
         onAdFailedToLoad: function (errorCode) {
