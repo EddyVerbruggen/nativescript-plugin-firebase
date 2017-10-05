@@ -1677,12 +1677,12 @@ firebase.query = function (updateCallback, path, options) {
         var listener = new com.google.firebase.database.ValueEventListener({
           onDataChange: function (snapshot) {
             var data = firebase.getCallbackData('ValueChanged', snapshot);
-            updateCallback(data);
+            if(updateCallback) updateCallback(data);
             // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
             resolve(data);
           },
           onCancelled: function (databaseError) {
-            updateCallback({
+            if(updateCallback) updateCallback({
               error: databaseError.getMessage()
             });
             // see comment at 'onDataChange'
