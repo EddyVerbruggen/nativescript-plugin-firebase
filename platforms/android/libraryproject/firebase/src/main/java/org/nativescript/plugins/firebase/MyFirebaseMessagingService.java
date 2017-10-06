@@ -17,19 +17,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
   public void onMessageReceived(RemoteMessage remoteMessage) {
     try {
       final JSONObject json = new JSONObject()
-        .put("foreground", true)
-        .put("from", remoteMessage.getFrom());
+              .put("foreground", true)
+              .put("from", remoteMessage.getFrom());
 
       final RemoteMessage.Notification not = remoteMessage.getNotification();
       if (not != null) {
         json.put("title", not.getTitle())
-          .put("body", not.getBody());
+                .put("body", not.getBody());
       }
 
       final Map<String, String> data = remoteMessage.getData();
+      final JSONObject data_json = new JSONObject();
       for (Map.Entry<String, String> stringStringEntry : data.entrySet()) {
-        json.put(stringStringEntry.getKey(), stringStringEntry.getValue());
+        data_json.put(stringStringEntry.getKey(), stringStringEntry.getValue());
       }
+      json.put("data", data_json);
 
       FirebasePlugin.executeOnNotificationReceivedCallback(json.toString());
     } catch (JSONException e) {
