@@ -17,13 +17,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
   public void onMessageReceived(RemoteMessage remoteMessage) {
     try {
       final JSONObject json = new JSONObject()
-              .put("foreground", true)
-              .put("from", remoteMessage.getFrom());
+        .put("foreground", true)
+        .put("from", remoteMessage.getFrom());
 
       final RemoteMessage.Notification not = remoteMessage.getNotification();
       if (not != null) {
         json.put("title", not.getTitle())
-                .put("body", not.getBody());
+          .put("body", not.getBody());
       }
 
       final Map<String, String> data = remoteMessage.getData();
