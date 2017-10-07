@@ -579,17 +579,22 @@ firebase.admob.showBanner = function (arg) {
 
         // wrapping it in a timeout makes sure that when this function is loaded from
         // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
-        var showBanner = function() {
+        var showBanner = function(counter) {
             if (frame.topmost() && frame.topmost().currentPage && frame.topmost().currentPage.android && frame.topmost().currentPage.android.getParent()) {
                 frame
                     .topmost()
                     .currentPage.android.getParent()
                     .addView(adViewLayout, relativeLayoutParamsOuter);
             } else {
-                console.log('trying again in 300ms...');
-                setTimeout(function() {
-                    showBanner();
-                }, 300);
+                if (counter === undefined) {
+                    counter = 1;
+                } else if (counter < 5) {
+                    var delay = Number(counter * 300);
+                    console.log('trying again in ' + delay + ' ms...');
+                    setTimeout(function() {
+                        showBanner(counter++);
+                    }, delay);
+                    }
             }
         };
         setTimeout(function() {
