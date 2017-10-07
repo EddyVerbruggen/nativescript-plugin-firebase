@@ -27,9 +27,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
       }
 
       final Map<String, String> data = remoteMessage.getData();
+      final JSONObject data_json = new JSONObject();
       for (Map.Entry<String, String> stringStringEntry : data.entrySet()) {
-        json.put(stringStringEntry.getKey(), stringStringEntry.getValue());
+        data_json.put(stringStringEntry.getKey(), stringStringEntry.getValue());
       }
+      json.put("data", data_json);
 
       FirebasePlugin.executeOnNotificationReceivedCallback(json.toString());
     } catch (JSONException e) {
