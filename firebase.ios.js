@@ -14,7 +14,7 @@ firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 
-export let invokeOnRunLoop = (function () {
+let invokeOnRunLoop = (function () {
   var runloop = CFRunLoopGetMain();
   return function (func) {
     CFRunLoopPerformBlock(runloop, kCFRunLoopDefaultMode, func);
