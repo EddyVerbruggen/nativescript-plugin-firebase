@@ -14,6 +14,14 @@ firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 
+export let invokeOnRunLoop = (function () {
+  var runloop = CFRunLoopGetMain();
+  return function (func) {
+    CFRunLoopPerformBlock(runloop, kCFRunLoopDefaultMode, func);
+    CFRunLoopWakeUp(runloop);
+  }
+}());
+
 firebase._addObserver = function (eventName, callback) {
   var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
   return utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
@@ -43,7 +51,7 @@ function handleRemoteNotification(app, userInfo) {
 }
 
 function addBackgroundRemoteNotificationHandler(appDelegate) {
-  if (typeof(FIRMessaging) !== "undefined") {
+  if (typeof (FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, notification, completionHandler) {
       // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
       if (FIRAuth.auth().canHandleNotification(notification)) {
@@ -61,32 +69,32 @@ firebase.addAppDelegateMethods = function (appDelegate) {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
-    if (launchOptions && typeof(FIRMessaging) !== "undefined") {
+    if (launchOptions && typeof (FIRMessaging) !== "undefined") {
       var remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
       if (remoteNotification) {
         handleRemoteNotification(application, remoteNotification);
       }
     }
     // Firebase Facebook authentication
-    if (typeof(FBSDKApplicationDelegate) !== "undefined") {
+    if (typeof (FBSDKApplicationDelegate) !== "undefined") {
       FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions);
     }
     return true;
   };
 
   // there's no notification event to hook into for this one, so using the appDelegate
-  if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRInvites) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
+  if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRInvites) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
     appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
       var result = false;
-      if (typeof(FBSDKApplicationDelegate) !== "undefined") {
+      if (typeof (FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
       }
 
-      if (typeof(GIDSignIn) !== "undefined") {
+      if (typeof (GIDSignIn) !== "undefined") {
         result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
       }
 
-      if (typeof(FIRInvites) !== "undefined") {
+      if (typeof (FIRInvites) !== "undefined") {
         var receivedInvite = FIRInvites.handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
         if (receivedInvite) {
           console.log("Deep link from " + sourceApplication + ", Invite ID: " + invite.invideId + ", App URL: " + invite.deepLink);
@@ -98,7 +106,7 @@ firebase.addAppDelegateMethods = function (appDelegate) {
         }
       }
 
-      if (typeof(FIRDynamicLink) !== "undefined") {
+      if (typeof (FIRDynamicLink) !== "undefined") {
         var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
         if (dynamicLink) {
           this._cachedDeepLink = dynamicLink.url.absoluteString;
@@ -110,25 +118,25 @@ firebase.addAppDelegateMethods = function (appDelegate) {
     };
   }
 
-  if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
+  if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
     appDelegate.prototype.applicationOpenURLOptions = function (application, url, options) {
       var result = false;
-      if (typeof(FBSDKApplicationDelegate) !== "undefined") {
+      if (typeof (FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
-            application,
-            url,
-            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+          application,
+          url,
+          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
-      if (typeof(GIDSignIn) !== "undefined") {
+      if (typeof (GIDSignIn) !== "undefined") {
         result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-            url,
-            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+          url,
+          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
-      if (typeof(FIRDynamicLink) !== "undefined") {
+      if (typeof (FIRDynamicLink) !== "undefined") {
         var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
         if (dynamicLink) {
           if (dynamicLink.url !== null) {
@@ -153,7 +161,7 @@ firebase.addAppDelegateMethods = function (appDelegate) {
 firebase.fetchProvidersForEmail = function (email) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(email) !== "string") {
+      if (typeof (email) !== "string") {
         reject("A parameter representing an email address is required.");
         return;
       }
@@ -175,7 +183,7 @@ firebase.fetchProvidersForEmail = function (email) {
 firebase.getCurrentPushToken = function () {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRMessaging) === "undefined") {
+      if (typeof (FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
@@ -191,7 +199,7 @@ firebase.getCurrentPushToken = function () {
 firebase.addOnMessageReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRMessaging) === "undefined") {
+      if (typeof (FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
@@ -211,7 +219,7 @@ firebase.addOnMessageReceivedCallback = function (callback) {
 firebase.addOnDynamicLinkReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRDynamicLink) === "undefined") {
+      if (typeof (FIRDynamicLink) === "undefined") {
         reject("Enable FIRInvites in Podfile first");
         return;
       }
@@ -235,7 +243,7 @@ firebase.addOnDynamicLinkReceivedCallback = function (callback) {
 firebase.addOnPushTokenReceivedCallback = function (callback) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRMessaging) === "undefined") {
+      if (typeof (FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
@@ -260,7 +268,7 @@ firebase.addOnPushTokenReceivedCallback = function (callback) {
 firebase.unregisterForPushNotifications = function (callback) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRMessaging) === "undefined") {
+      if (typeof (FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
@@ -343,7 +351,9 @@ firebase._registerForRemoteNotifications = function () {
           app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
         }
         if (app !== null) {
-          app.registerForRemoteNotifications();
+          invokeOnRunLoop(() => {
+            app.registerForRemoteNotifications();
+          });
         }
       } else {
         console.log("Error requesting push notification auth: " + error);
@@ -388,7 +398,9 @@ firebase._registerForRemoteNotifications = function () {
   } else {
     var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
     var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
-    app.registerForRemoteNotifications(); // prompts the user to accept notifications
+    invokeOnRunLoop(() => {
+      app.registerForRemoteNotifications();
+    }); // prompts the user to accept notifications
     app.registerUserNotificationSettings(notificationSettings);
   }
 };
@@ -397,7 +409,8 @@ function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
   if (application.ios.delegate === undefined) {
     var __extends = this.__extends || function (d, b) {
-      for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+      for (var p in b)
+        if (b.hasOwnProperty(p)) d[p] = b[p];
 
       function __() {
         this.constructor = d;
@@ -424,7 +437,7 @@ function getAppDelegate() {
 
 // rather than hijacking the appDelegate for these we'll be a good citizen and listen to the notifications
 function prepAppDelegate() {
-  if (typeof(FIRMessaging) !== "undefined") {
+  if (typeof (FIRMessaging) !== "undefined") {
     // see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178 for why we're not using a constant here
     firebase._addObserver("com.firebase.iid.notif.refresh-token", firebase._onTokenRefreshNotification);
 
@@ -468,7 +481,7 @@ firebase.toJsObject = function (objCObj) {
     return objCObj;
   }
   var node, key, i, l,
-      oKeyArr = objCObj.allKeys;
+    oKeyArr = objCObj.allKeys;
 
   if (oKeyArr === undefined) {
     // array
@@ -587,12 +600,12 @@ firebase.init = function (arg) {
         }
 
         // Facebook Auth
-        if (typeof(FBSDKAppEvents) !== "undefined") {
+        if (typeof (FBSDKAppEvents) !== "undefined") {
           FBSDKAppEvents.activateApp();
         }
 
         // Firebase notifications (FCM)
-        if (typeof(FIRMessaging) !== "undefined") {
+        if (typeof (FIRMessaging) !== "undefined") {
           if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
             if (arg.onMessageReceivedCallback !== undefined) {
               firebase.addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
@@ -605,7 +618,7 @@ firebase.init = function (arg) {
 
         // Firebase storage
         if (arg.storageBucket) {
-          if (typeof(FIRStorage) === "undefined") {
+          if (typeof (FIRStorage) === "undefined") {
             reject("Uncomment Storage in the plugin's Podfile first");
             return;
           }
@@ -694,7 +707,7 @@ firebase.analytics.setScreenName = function (arg) {
 firebase.admob.showBanner = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(GADRequest) === "undefined") {
+      if (typeof (GADRequest) === "undefined") {
         reject("Uncomment AdMob in the plugin's Podfile first");
         return;
       }
@@ -764,7 +777,7 @@ firebase.admob.showBanner = function (arg) {
 firebase.admob.showInterstitial = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(GADRequest) === "undefined") {
+      if (typeof (GADRequest) === "undefined") {
         reject("Uncomment AdMob in the plugin's Podfile first");
         return;
       }
@@ -831,42 +844,98 @@ firebase.admob._getBannerType = function (size) {
   // see nativescript-admob's iOS sourcecode for why we're not using SDK-provided constants here
   if (size == firebase.admob.AD_SIZE.BANNER) {
     // return kGADAdSizeBanner;
-    return {"size": {"width": 320, "height": 50}, "flags": 0};
+    return {
+      "size": {
+        "width": 320,
+        "height": 50
+      },
+      "flags": 0
+    };
   } else if (size == firebase.admob.AD_SIZE.LARGE_BANNER) {
     // return kGADAdSizeLargeBanner;
-    return {"size": {"width": 320, "height": 100}, "flags": 0};
+    return {
+      "size": {
+        "width": 320,
+        "height": 100
+      },
+      "flags": 0
+    };
   } else if (size == firebase.admob.AD_SIZE.MEDIUM_RECTANGLE) {
     // return kGADAdSizeMediumRectangle;
-    return {"size": {"width": 300, "height": 250}, "flags": 0};
+    return {
+      "size": {
+        "width": 300,
+        "height": 250
+      },
+      "flags": 0
+    };
   } else if (size == firebase.admob.AD_SIZE.FULL_BANNER) {
     // return kGADAdSizeFullBanner;
-    return {"size": {"width": 468, "height": 60}, "flags": 0};
+    return {
+      "size": {
+        "width": 468,
+        "height": 60
+      },
+      "flags": 0
+    };
   } else if (size == firebase.admob.AD_SIZE.LEADERBOARD) {
     // return kGADAdSizeLeaderboard;
-    return {"size": {"width": 728, "height": 90}, "flags": 0};
+    return {
+      "size": {
+        "width": 728,
+        "height": 90
+      },
+      "flags": 0
+    };
   } else if (size == firebase.admob.AD_SIZE.SKYSCRAPER) {
     // return kGADAdSizeSkyscraper;
-    return {"size": {"width": 120, "height": 600}, "flags": 0};
+    return {
+      "size": {
+        "width": 120,
+        "height": 600
+      },
+      "flags": 0
+    };
   } else if (size == firebase.admob.AD_SIZE.SMART_BANNER || size == firebase.admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     var isIPad = platform.device.deviceType === DeviceType.Tablet;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
-      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
+      return {
+        "size": {
+          "width": 0,
+          "height": 0,
+          "smartHeight": isIPad ? 90 : 50
+        },
+        "flags": 18
+      };
     } else {
       // return kGADAdSizeSmartBannerLandscape;
-      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 32}, "flags": 26};
+      return {
+        "size": {
+          "width": 0,
+          "height": 0,
+          "smartHeight": isIPad ? 90 : 32
+        },
+        "flags": 26
+      };
     }
   } else {
     // return kGADAdSizeInvalid;
-    return {"size": {"width": -1, "height": -1}, "flags": 0};
+    return {
+      "size": {
+        "width": -1,
+        "height": -1
+      },
+      "flags": 0
+    };
   }
 };
 
 firebase.getRemoteConfig = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRRemoteConfig) === "undefined") {
+      if (typeof (FIRRemoteConfig) === "undefined") {
         reject("Uncomment RemoteConfig in the plugin's Podfile first");
         return;
       }
@@ -896,7 +965,7 @@ firebase.getRemoteConfig = function (arg) {
       var onCompletion = function (remoteConfigFetchStatus, error) {
 
         if (remoteConfigFetchStatus == FIRRemoteConfigFetchStatusSuccess ||
-            remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled) {
+          remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled) {
 
           var activated = firebaseRemoteConfig.activateFetched();
 
@@ -988,11 +1057,11 @@ firebase.logout = function (arg) {
       FIRAuth.auth().signOut(null);
 
       // also disconnect from Google otherwise ppl can't connect with a different account
-      if (typeof(GIDSignIn) !== "undefined") {
+      if (typeof (GIDSignIn) !== "undefined") {
         GIDSignIn.sharedInstance().disconnect();
       }
 
-      if (typeof(FBSDKLoginManager) !== "undefined") {
+      if (typeof (FBSDKLoginManager) !== "undefined") {
         FBSDKLoginManager.alloc().logOut();
       }
 
@@ -1015,9 +1084,14 @@ function toLoginResult(user) {
     var pid = firUserInfo.valueForKey("providerID");
     if (pid === 'facebook.com') { // FIRFacebookAuthProviderID
       var fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
-      providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
+      providers.push({
+        id: pid,
+        token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null
+      });
     } else {
-      providers.push({id: pid});
+      providers.push({
+        id: pid
+      });
     }
   }
 
@@ -1071,7 +1145,7 @@ firebase.login = function (arg) {
       var onCompletion = function (user, error) {
         if (error) {
           // also disconnect from Google otherwise ppl can't connect with a different account
-          if (typeof(GIDSignIn) !== "undefined") {
+          if (typeof (GIDSignIn) !== "undefined") {
             GIDSignIn.sharedInstance().disconnect();
           }
           reject(error.localizedDescription);
@@ -1160,14 +1234,14 @@ firebase.login = function (arg) {
           fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletion);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
-              .then(
-                  function (token) {
-                    fAuth.signInWithCustomTokenCompletion(token, onCompletion);
-                  },
-                  function (error) {
-                    reject(error);
-                  }
-              );
+            .then(
+              function (token) {
+                fAuth.signInWithCustomTokenCompletion(token, onCompletion);
+              },
+              function (error) {
+                reject(error);
+              }
+            );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
@@ -1215,9 +1289,9 @@ firebase.login = function (arg) {
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-            scope,
-            null, // the viewcontroller param can be null since by default topmost is taken
-            onFacebookCompletion);
+          scope,
+          null, // the viewcontroller param can be null since by default topmost is taken
+          onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (typeof (GIDSignIn) === "undefined") {
@@ -1534,15 +1608,15 @@ firebase.addValueEventListener = function (updateCallback, path) {
         where = firebase.instance.childByAppendingPath(path);
       }
       var listener = where.observeEventTypeWithBlockWithCancelBlock(
-          FIRDataEventType.FIRDataEventTypeValue,
-          function (snapshot) {
-            updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
-          },
-          function (firebaseError) {
-            updateCallback({
-              error: firebaseError.localizedDescription
-            });
+        FIRDataEventType.FIRDataEventTypeValue,
+        function (snapshot) {
+          updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+        },
+        function (firebaseError) {
+          updateCallback({
+            error: firebaseError.localizedDescription
           });
+        });
       resolve({
         path: path,
         listeners: [listener]
@@ -1728,7 +1802,7 @@ firebase.query = function (updateCallback, path, options) {
 
       if (options.singleEvent) {
         query.observeSingleEventOfTypeWithBlock(FIRDataEventType.FIRDataEventTypeValue, function (snapshot) {
-          if(updateCallback) updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+          if (updateCallback) updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
           // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
           resolve(firebase.getCallbackData('ValueChanged', snapshot));
         });
@@ -1758,7 +1832,7 @@ firebase.remove = function (path) {
 };
 
 function getStorageRef(reject, arg) {
-  if (typeof(FIRStorage) === "undefined") {
+  if (typeof (FIRStorage) === "undefined") {
     reject("Uncomment Storage in the plugin's Podfile first");
     return;
   }
@@ -1807,7 +1881,7 @@ firebase.uploadFile = function (arg) {
       var fIRStorageUploadTask = null;
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
+        if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
@@ -1826,7 +1900,7 @@ firebase.uploadFile = function (arg) {
       if (fIRStorageUploadTask !== null) {
         // Add a progress observer to an upload task
         var fIRStorageHandle = fIRStorageUploadTask.observeStatusHandler(FIRStorageTaskStatusProgress, function (snapshot) {
-          if (!snapshot.error && typeof(arg.onProgress) === "function") {
+          if (!snapshot.error && typeof (arg.onProgress) === "function") {
             arg.onProgress({
               fractionCompleted: snapshot.progress.fractionCompleted,
               percentageCompleted: Math.round(snapshot.progress.fractionCompleted * 100)
@@ -1865,7 +1939,7 @@ firebase.downloadFile = function (arg) {
       var localFilePath;
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
+        if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
@@ -1953,7 +2027,7 @@ firebase.subscribeToTopic = function (topicName) {
   return new Promise(function (resolve, reject) {
     try {
 
-      if (typeof(FIRMessaging) === "undefined") {
+      if (typeof (FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
@@ -1974,7 +2048,7 @@ firebase.unsubscribeFromTopic = function (topicName) {
   return new Promise(function (resolve, reject) {
     try {
 
-      if (typeof(FIRMessaging) === "undefined") {
+      if (typeof (FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
@@ -1994,7 +2068,7 @@ firebase.unsubscribeFromTopic = function (topicName) {
 firebase.sendCrashLog = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRCrashLog) === "undefined") {
+      if (typeof (FIRCrashLog) === "undefined") {
         reject("Make sure 'Firebase/Crash' is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
         return;
       }
@@ -2022,7 +2096,7 @@ firebase.invites.sendInvitation = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
 
-      if (typeof(FIRInvites) === "undefined") {
+      if (typeof (FIRInvites) === "undefined") {
         reject("Make sure 'Firebase/Invites' is in the plugin's Podfile");
         return;
       }
@@ -2097,7 +2171,7 @@ firebase.invites.sendInvitation = function (arg) {
 firebase.invites.getInvitation = function () {
   return new Promise(function (resolve, reject) {
     try {
-      if (typeof(FIRInvites) === "undefined") {
+      if (typeof (FIRInvites) === "undefined") {
         reject("Make sure 'Firebase/Invites' is in the plugin's Podfile");
         return;
       }
@@ -2137,7 +2211,7 @@ var GADBannerViewDelegateImpl = (function (_super) {
   GADBannerViewDelegateImpl.prototype.interstitialDidFailToReceiveAdWithError = function (ad, error) {
     this._callback(ad, error);
   };
-  if (typeof(GADInterstitialDelegate) !== "undefined") {
+  if (typeof (GADInterstitialDelegate) !== "undefined") {
     GADBannerViewDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
   }
   return GADBannerViewDelegateImpl;
@@ -2161,7 +2235,7 @@ var GIDSignInDelegateImpl = (function (_super) {
   GIDSignInDelegateImpl.prototype.signInDidSignInForUserWithError = function (signIn, user, error) {
     this._callback(user, error);
   };
-  if (typeof(GIDSignInDelegate) !== "undefined") {
+  if (typeof (GIDSignInDelegate) !== "undefined") {
     GIDSignInDelegateImpl.ObjCProtocols = [GIDSignInDelegate];
   }
   return GIDSignInDelegateImpl;
@@ -2186,7 +2260,7 @@ var UNUserNotificationCenterDelegateImpl = (function (_super) {
   UNUserNotificationCenterDelegateImpl.prototype.userNotificationCenterWillPresentNotificationWithCompletionHandler = function (unCenter, notification, completionHandler) {
     this._callback(notification);
   };
-  if (typeof(UNUserNotificationCenterDelegate) !== "undefined") {
+  if (typeof (UNUserNotificationCenterDelegate) !== "undefined") {
     UNUserNotificationCenterDelegateImpl.ObjCProtocols = [UNUserNotificationCenterDelegate];
   }
   return UNUserNotificationCenterDelegateImpl;
@@ -2210,7 +2284,7 @@ var FIRInviteDelegateImpl = (function (_super) {
   FIRInviteDelegateImpl.prototype.inviteFinishedWithInvitationsError = function (invitationIds, error) {
     this._callback(invitationIds, error);
   };
-  if (typeof(FIRInviteDelegate) !== "undefined") {
+  if (typeof (FIRInviteDelegate) !== "undefined") {
     FIRInviteDelegateImpl.ObjCProtocols = [FIRInviteDelegate];
   }
   return FIRInviteDelegateImpl;
@@ -2249,7 +2323,7 @@ var FIRMessagingDelegateImpl = (function (_super) {
     firebase._onTokenRefreshNotification(fcmToken);
   };
 
-  if (typeof(FIRMessagingDelegate) !== "undefined") {
+  if (typeof (FIRMessagingDelegate) !== "undefined") {
     FIRMessagingDelegateImpl.ObjCProtocols = [FIRMessagingDelegate];
   }
   return FIRMessagingDelegateImpl;
