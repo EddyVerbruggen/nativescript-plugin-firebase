@@ -404,8 +404,8 @@ firebase._registerForRemoteNotifications = function () {
     var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
     var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
     invokeOnRunLoop(() => {
-      app.registerForRemoteNotifications();
-    }); // prompts the user to accept notifications
+      app.registerForRemoteNotifications(); // prompts the user to accept notifications
+    });
     app.registerUserNotificationSettings(notificationSettings);
   }
 };
@@ -414,8 +414,7 @@ function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
   if (application.ios.delegate === undefined) {
     var __extends = this.__extends || function (d, b) {
-      for (var p in b)
-        if (b.hasOwnProperty(p)) d[p] = b[p];
+      for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 
       function __() {
         this.constructor = d;
@@ -486,7 +485,7 @@ firebase.toJsObject = function (objCObj) {
     return objCObj;
   }
   var node, key, i, l,
-    oKeyArr = objCObj.allKeys;
+      oKeyArr = objCObj.allKeys;
 
   if (oKeyArr === undefined) {
     // array
@@ -849,91 +848,35 @@ firebase.admob._getBannerType = function (size) {
   // see nativescript-admob's iOS sourcecode for why we're not using SDK-provided constants here
   if (size == firebase.admob.AD_SIZE.BANNER) {
     // return kGADAdSizeBanner;
-    return {
-      "size": {
-        "width": 320,
-        "height": 50
-      },
-      "flags": 0
-    };
+    return {"size": {"width": 320, "height": 50}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.LARGE_BANNER) {
     // return kGADAdSizeLargeBanner;
-    return {
-      "size": {
-        "width": 320,
-        "height": 100
-      },
-      "flags": 0
-    };
+    return {"size": {"width": 320, "height": 100}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.MEDIUM_RECTANGLE) {
     // return kGADAdSizeMediumRectangle;
-    return {
-      "size": {
-        "width": 300,
-        "height": 250
-      },
-      "flags": 0
-    };
+    return {"size": {"width": 300, "height": 250}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.FULL_BANNER) {
     // return kGADAdSizeFullBanner;
-    return {
-      "size": {
-        "width": 468,
-        "height": 60
-      },
-      "flags": 0
-    };
+    return {"size": {"width": 468,"height": 60}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.LEADERBOARD) {
     // return kGADAdSizeLeaderboard;
-    return {
-      "size": {
-        "width": 728,
-        "height": 90
-      },
-      "flags": 0
-    };
+    return {"size": {"width": 728, "height": 90}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.SKYSCRAPER) {
     // return kGADAdSizeSkyscraper;
-    return {
-      "size": {
-        "width": 120,
-        "height": 600
-      },
-      "flags": 0
-    };
+    return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.SMART_BANNER || size == firebase.admob.AD_SIZE.FLUID) {
     var orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
     var isIPad = platform.device.deviceType === DeviceType.Tablet;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
-      return {
-        "size": {
-          "width": 0,
-          "height": 0,
-          "smartHeight": isIPad ? 90 : 50
-        },
-        "flags": 18
-      };
+      return {"size": {"width": 0,"height": 0,"smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
       // return kGADAdSizeSmartBannerLandscape;
-      return {
-        "size": {
-          "width": 0,
-          "height": 0,
-          "smartHeight": isIPad ? 90 : 32
-        },
-        "flags": 26
-      };
+      return {"size": {"width": 0,"height": 0, "smartHeight": isIPad ? 90 : 32}, "flags": 26};
     }
   } else {
     // return kGADAdSizeInvalid;
-    return {
-      "size": {
-        "width": -1,
-        "height": -1
-      },
-      "flags": 0
-    };
+    return {"size": {"width": -1, "height": -1}, "flags": 0};
   }
 };
 
