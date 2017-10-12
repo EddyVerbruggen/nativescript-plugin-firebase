@@ -1179,7 +1179,7 @@ firebase.login = function (arg) {
           arg.customOptions.tokenProviderFn()
               .then(
                   function (token) {
-                      fAuth.signInWithCustomTokenCompletion(token, onCompletion);
+                    fAuth.signInWithCustomTokenCompletion(token, onCompletion);
                   },
                   function (error) {
                     reject(error);
