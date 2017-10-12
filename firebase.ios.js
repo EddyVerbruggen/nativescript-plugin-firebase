@@ -356,7 +356,7 @@ firebase._registerForRemoteNotifications = function () {
           app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
         }
         if (app !== null) {
-          invokeOnRunLoop(() => {
+          invokeOnRunLoop(function () {
             app.registerForRemoteNotifications();
           });
         }
@@ -403,7 +403,7 @@ firebase._registerForRemoteNotifications = function () {
   } else {
     var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
     var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
-    invokeOnRunLoop(() => {
+    invokeOnRunLoop(function () {
       app.registerForRemoteNotifications(); // prompts the user to accept notifications
     });
     app.registerUserNotificationSettings(notificationSettings);
