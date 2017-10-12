@@ -14,6 +14,19 @@ firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 
+/**
+ * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
+ * thanks to Alexander Ziskind found on:
+ * http://nuvious.com/Blog/2016/7/5/calling-dispatch_async-in-nativescript
+ */
+let invokeOnRunLoop = (function () {
+  var runloop = CFRunLoopGetMain();
+  return function (func) {
+    CFRunLoopPerformBlock(runloop, kCFRunLoopDefaultMode, func);
+    CFRunLoopWakeUp(runloop);
+  }
+}());
+
 firebase._addObserver = function (eventName, callback) {
   var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
   return utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
@@ -343,7 +356,9 @@ firebase._registerForRemoteNotifications = function () {
           app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
         }
         if (app !== null) {
-          app.registerForRemoteNotifications();
+          invokeOnRunLoop(() => {
+            app.registerForRemoteNotifications();
+          });
         }
       } else {
         console.log("Error requesting push notification auth: " + error);
@@ -388,7 +403,9 @@ firebase._registerForRemoteNotifications = function () {
   } else {
     var notificationTypes = UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationActivationModeBackground;
     var notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
-    app.registerForRemoteNotifications(); // prompts the user to accept notifications
+    invokeOnRunLoop(() => {
+      app.registerForRemoteNotifications(); // prompts the user to accept notifications
+    });
     app.registerUserNotificationSettings(notificationSettings);
   }
 };
