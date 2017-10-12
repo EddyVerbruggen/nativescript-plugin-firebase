@@ -128,17 +128,17 @@ firebase.addAppDelegateMethods = function (appDelegate) {
       var result = false;
       if (typeof(FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
-          application,
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+            application,
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
       if (typeof(GIDSignIn) !== "undefined") {
         result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
       if (typeof(FIRDynamicLink) !== "undefined") {
@@ -857,7 +857,7 @@ firebase.admob._getBannerType = function (size) {
     return {"size": {"width": 300, "height": 250}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.FULL_BANNER) {
     // return kGADAdSizeFullBanner;
-    return {"size": {"width": 468,"height": 60}, "flags": 0};
+    return {"size": {"width": 468, "height": 60}, "flags": 0};
   } else if (size == firebase.admob.AD_SIZE.LEADERBOARD) {
     // return kGADAdSizeLeaderboard;
     return {"size": {"width": 728, "height": 90}, "flags": 0};
@@ -869,10 +869,10 @@ firebase.admob._getBannerType = function (size) {
     var isIPad = platform.device.deviceType === DeviceType.Tablet;
     if (orientation == UIDeviceOrientation.UIDeviceOrientationPortrait || orientation == UIDeviceOrientation.UIDeviceOrientationPortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
-      return {"size": {"width": 0,"height": 0,"smartHeight": isIPad ? 90 : 50}, "flags": 18};
+      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
       // return kGADAdSizeSmartBannerLandscape;
-      return {"size": {"width": 0,"height": 0, "smartHeight": isIPad ? 90 : 32}, "flags": 26};
+      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 32}, "flags": 26};
     }
   } else {
     // return kGADAdSizeInvalid;
@@ -913,7 +913,7 @@ firebase.getRemoteConfig = function (arg) {
       var onCompletion = function (remoteConfigFetchStatus, error) {
 
         if (remoteConfigFetchStatus == FIRRemoteConfigFetchStatusSuccess ||
-          remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled) {
+            remoteConfigFetchStatus == FIRRemoteConfigFetchStatusThrottled) {
 
           var activated = firebaseRemoteConfig.activateFetched();
 
@@ -1032,14 +1032,9 @@ function toLoginResult(user) {
     var pid = firUserInfo.valueForKey("providerID");
     if (pid === 'facebook.com') { // FIRFacebookAuthProviderID
       var fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
-      providers.push({
-        id: pid,
-        token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null
-      });
+      providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
     } else {
-      providers.push({
-        id: pid
-      });
+      providers.push({id: pid});
     }
   }
 
@@ -1182,18 +1177,18 @@ firebase.login = function (arg) {
           fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletion);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
-            .then(
-              function (token) {
-                fAuth.signInWithCustomTokenCompletion(token, onCompletion);
-              },
-              function (error) {
-                reject(error);
-              }
-            );
+              .then(
+                  function (token) {
+                      fAuth.signInWithCustomTokenCompletion(token, onCompletion);
+                  },
+                  function (error) {
+                    reject(error);
+                  }
+              );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
-        if (typeof(FBSDKLoginManager) === "undefined") {
+        if (typeof (FBSDKLoginManager) === "undefined") {
           reject("Facebook SDK not installed - see Podfile");
           return;
         }
@@ -1237,12 +1232,12 @@ firebase.login = function (arg) {
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-          scope,
-          null, // the viewcontroller param can be null since by default topmost is taken
-          onFacebookCompletion);
+            scope,
+            null, // the viewcontroller param can be null since by default topmost is taken
+            onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
-        if (typeof(GIDSignIn) === "undefined") {
+        if (typeof (GIDSignIn) === "undefined") {
           reject("Google Sign In not installed - see Podfile");
           return;
         }
@@ -1556,15 +1551,15 @@ firebase.addValueEventListener = function (updateCallback, path) {
         where = firebase.instance.childByAppendingPath(path);
       }
       var listener = where.observeEventTypeWithBlockWithCancelBlock(
-        FIRDataEventType.FIRDataEventTypeValue,
-        function (snapshot) {
-          updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
-        },
-        function (firebaseError) {
-          updateCallback({
-            error: firebaseError.localizedDescription
+          FIRDataEventType.FIRDataEventTypeValue,
+          function (snapshot) {
+            updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+          },
+          function (firebaseError) {
+            updateCallback({
+              error: firebaseError.localizedDescription
+            });
           });
-        });
       resolve({
         path: path,
         listeners: [listener]
@@ -1750,7 +1745,7 @@ firebase.query = function (updateCallback, path, options) {
 
       if (options.singleEvent) {
         query.observeSingleEventOfTypeWithBlock(FIRDataEventType.FIRDataEventTypeValue, function (snapshot) {
-          if (updateCallback) updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+          if(updateCallback) updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
           // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
           resolve(firebase.getCallbackData('ValueChanged', snapshot));
         });
