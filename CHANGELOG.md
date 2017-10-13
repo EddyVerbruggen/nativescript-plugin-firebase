@@ -3,6 +3,17 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 4.1.2 (2017, October 13)
+
+### Fixes
+- [#484](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/484) Fix phone authentication
+- [#499](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/499) iOS background notification never show and foreground notification stop working after killing the app
+- [#501](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/501) Added null check for updateCallback on query
+- [#510](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/510) Add FCM data to the data key
+- [#515](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/515) [FIX] iOS registerForRemoteNotifications() Now Runs on Main Thread
+- [#519](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/519) Fix notifications after killing
+
+
 ## 4.1.1 (2017, September 9)
 
 ### Fixes
