@@ -13,6 +13,7 @@ firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
+firebase._configured = null;
 
 /**
  * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
