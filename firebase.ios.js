@@ -313,6 +313,24 @@ firebase._processPendingNotifications = function () {
   }
 };
 
+firebase._messagingConnectWithCompletion = function () {
+  return new Promise(function (resolve, reject) {
+
+    FIRMessaging.messaging().connectWithCompletion(function (error) {
+
+      if (error) {
+        // this is not fatal and it scares the hell out of ppl so not logging it
+        // console.log("Firebase was unable to connect to FCM. Error: " + error);
+        return reject(error);
+      }
+
+      firebase._messagingConnected = true;
+      resolve();
+    });
+
+  });
+};
+
 firebase._onTokenRefreshNotification = function (token) {
   firebase._pushToken = token;
 
@@ -320,14 +338,7 @@ firebase._onTokenRefreshNotification = function (token) {
     firebase._receivedPushTokenCallback(token);
   }
 
-  FIRMessaging.messaging().connectWithCompletion(function (error) {
-    if (error) {
-      // this is not fatal and it scares the hell out of ppl so not logging it
-      // console.log("Firebase was unable to connect to FCM. Error: " + error);
-    } else {
-      firebase._messagingConnected = true;
-    }
-  });
+  firebase._messagingConnectWithCompletion();
 };
 
 firebase._registerForRemoteNotificationsRanThisSession = false;
@@ -455,6 +466,10 @@ function prepAppDelegate() {
 
     firebase._addObserver(UIApplicationDidBecomeActiveNotification, function (appNotification) {
       firebase._processPendingNotifications();
+
+      if (!firebase._messagingConnected) {
+        firebase._messagingConnectWithCompletion();
+      }
     });
 
     firebase._addObserver(UIApplicationDidEnterBackgroundNotification, function (appNotification) {
