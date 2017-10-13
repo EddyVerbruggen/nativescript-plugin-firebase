@@ -19,7 +19,7 @@ firebase._cachedDynamicLink = null;
  * thanks to Alexander Ziskind found on:
  * http://nuvious.com/Blog/2016/7/5/calling-dispatch_async-in-nativescript
  */
-let invokeOnRunLoop = (function () {
+var invokeOnRunLoop = (function () {
   var runloop = CFRunLoopGetMain();
   return function (func) {
     CFRunLoopPerformBlock(runloop, kCFRunLoopDefaultMode, func);
