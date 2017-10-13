@@ -466,6 +466,10 @@ function prepAppDelegate() {
 
     firebase._addObserver(UIApplicationDidBecomeActiveNotification, function (appNotification) {
       firebase._processPendingNotifications();
+
+      if (!firebase._messagingConnected) {
+        firebase._messagingConnectWithCompletion();
+      }
     });
 
     firebase._addObserver(UIApplicationDidEnterBackgroundNotification, function (appNotification) {
