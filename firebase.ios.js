@@ -74,6 +74,12 @@ firebase.addAppDelegateMethods = function (appDelegate) {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
+
+      if (FIROptions.defaultOptions() !== null) {
+          FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
+      }
+      FIRApp.configure();
+
     if (launchOptions && typeof(FIRMessaging) !== "undefined") {
       var remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
       if (remoteNotification) {
@@ -89,7 +95,26 @@ firebase.addAppDelegateMethods = function (appDelegate) {
 
   // there's no notification event to hook into for this one, so using the appDelegate
   if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRInvites) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
-    appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
+
+      appDelegate.prototype.applicationContinueUserActivityRestorationHandler = function (application, userActivity, restorationhandler) {
+          var result = false;
+          console.log('got applicationContinueUserActivityRestorationHandler with '+ userActivity.webpageURL);
+          result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, function(dynamicLink) {
+              if (dynamicLink && dynamicLink.url) {
+              if (firebase._dynamicLinkCallback) {
+                      console.log('applicationContinueUserActivityRestorationHandler with _dynamicLinkCallback')
+                  firebase._dynamicLinkCallback(dynamicLink.url.absoluteString);
+              } else {
+                      console.log('applicationContinueUserActivityRestorationHandler without _dynamicLinkCallback')
+                firebase._cachedDynamicLink = dynamicLink.url.absoluteString;
+              }
+              }
+          });
+
+          return result;
+      };
+
+      appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
       var result = false;
       if (typeof(FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
@@ -114,7 +139,8 @@ firebase.addAppDelegateMethods = function (appDelegate) {
       if (typeof(FIRDynamicLink) !== "undefined") {
         var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
         if (dynamicLink) {
-          this._cachedDeepLink = dynamicLink.url.absoluteString;
+            console.log('applicationOpenURLSourceApplicationAnnotation without _dynamicLinkCallback')
+          firebase._cachedDynamicLink = dynamicLink.url.absoluteString;
           result = true;
         }
       }
@@ -142,14 +168,16 @@ firebase.addAppDelegateMethods = function (appDelegate) {
       }
 
       if (typeof(FIRDynamicLink) !== "undefined") {
+        console.log(url);
         var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
         if (dynamicLink) {
+            console.log('applicationOpenURLOptions' + JSON.stringify(dynamicLink));
           if (dynamicLink.url !== null) {
             console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
-            if (this._dynamicLinkCallback) {
-              this._dynamicLinkCallback(dynamicLink.url.absoluteString);
+            if (firebase._dynamicLinkCallback) {
+              firebase._dynamicLinkCallback(dynamicLink.url.absoluteString);
             } else {
-              this._cachedDeepLink = dynamicLink.url.absoluteString;
+              firebase._cachedDynamicLink = dynamicLink.url.absoluteString;
             }
             result = true;
           }
@@ -570,10 +598,10 @@ firebase.init = function (arg) {
         arg = arg || {};
 
         // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
-        if (FIROptions.defaultOptions() !== null) {
-          FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
-        }
-        FIRApp.configure();
+        // if (FIROptions.defaultOptions() !== null) {
+        //   FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
+        // }
+        // FIRApp.configure();
 
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
