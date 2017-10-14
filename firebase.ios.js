@@ -13,6 +13,7 @@ firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
+firebase._configured = null;
 
 /**
  * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
@@ -26,6 +27,13 @@ var invokeOnRunLoop = (function () {
     CFRunLoopWakeUp(runloop);
   }
 }());
+
+firebase._configure = function () {
+  if (!firebase._configured) {
+    FIRApp.configure();
+    firebase._configured = true;
+  }
+};
 
 firebase._addObserver = function (eventName, callback) {
   var queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
@@ -58,6 +66,9 @@ function handleRemoteNotification(app, userInfo) {
 function addBackgroundRemoteNotificationHandler(appDelegate) {
   if (typeof(FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, notification, completionHandler) {
+
+      firebase._configure();
+
       // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
       if (FIRAuth.auth().canHandleNotification(notification)) {
         completionHandler(UIBackgroundFetchResultNoData);
@@ -573,7 +584,8 @@ firebase.init = function (arg) {
         if (FIROptions.defaultOptions() !== null) {
           FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
         }
-        FIRApp.configure();
+
+        firebase._configure();
 
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
