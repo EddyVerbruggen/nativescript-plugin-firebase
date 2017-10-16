@@ -5,7 +5,7 @@ var fs = require("file-system");
 var firebase = require("./firebase-common");
 
 firebase._launchNotification = null;
-firebase._launchDynamicLink = null;
+firebase._cachedDynamicLink = null;
 
 // we need to cache and restore the context, otherwise the next invocation is broken
 firebase._rememberedContext = null;
@@ -75,12 +75,20 @@ var dynamicLinksEnabled = new lazy(function () {
       var getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
         onComplete: function (task) {
           if (task.isSuccessful() && task.getResult() !== null) {
-            result = task.getResult().getLink().toString();
+            var result = task.getResult();
             if (firebase._dynamicLinkCallback === null) {
-              firebase._launchDynamicLink = result;
-            } else {
+              firebase._cachedDynamicLink = {
+                url: result.getLink().toString(),
+                matchConfidence: 1, 
+                minimumAppVersion: result.getMinimumAppVersion()
+              };
+                } else {
               setTimeout(function () {
-                firebase._dynamicLinkCallback(firebase.toJsObject(result));
+                firebase._dynamicLinkCallback({
+                  url: result.getLink().toString(),
+                  matchConfidence: 1, 
+                  minimumAppVersion: result.getMinimumAppVersion()                    
+                });
               });
             }
           }
@@ -394,9 +402,9 @@ firebase.addOnDynamicLinkReceivedCallback = function (callback) {
       firebase._dynamicLinkCallback = callback;
 
       // if the app was launched from a dynamic link, process it now
-      if (firebase._launchDynamicLink !== null) {
-        callback(firebase._launchDynamicLink);
-        firebase._launchDynamicLink = null;
+      if (firebase._cachedDynamicLink !== null) {
+        callback(firebase._cachedDynamicLink);
+        firebase._cachedDynamicLink = null;
       }
 
       resolve();
@@ -2110,18 +2118,17 @@ firebase.invites.getInvitation = function () {
 
       var onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
         onConnectionFailed: function (connectionResult) {
-          reject(connectionResult.getErrorMessage());
+          // we shouldn't reject on connection failure as the invitation link may still be available locally
+          // reject(connectionResult.getErrorMessage());
         }
       });
 
-      // var autoLaunchDeepLink = false;
-
-      firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
+      firebase._mGoogleInviteApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
           .addOnConnectionFailedListener(onConnectionFailedListener)
           .addApi(com.google.android.gms.appinvite.AppInvite.API)
           .build();
 
-      firebase._mGoogleApiClient.connect();
+      firebase._mGoogleInviteApiClient.connect();
 
       var firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
 
@@ -2140,6 +2147,7 @@ firebase.invites.getInvitation = function () {
 
           resolve({
             deepLink: deepLinkUri === null ? null : deepLinkUri.toString(),
+            matchType: deepLinkUri === null ? null : 1,
             invitationId: firebaseAppInvite.getInvitationId() // string | null
           });
         }

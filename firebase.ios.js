@@ -68,8 +68,8 @@ function addBackgroundRemoteNotificationHandler(appDelegate) {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, notification, completionHandler) {
 
       firebase._configure();
-
-      // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
+      
+            // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
       if (FIRAuth.auth().canHandleNotification(notification)) {
         completionHandler(UIBackgroundFetchResultNoData);
         return;
@@ -114,8 +114,9 @@ firebase.addAppDelegateMethods = function (appDelegate) {
         var receivedInvite = FIRInvites.handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
         if (receivedInvite) {
           console.log("Deep link from " + sourceApplication + ", Invite ID: " + invite.invideId + ", App URL: " + invite.deepLink);
-          this._cachedInvitation = {
+          firebase._cachedInvitation = {
             deepLink: invite.deepLink,
+            matchType: invite.matchType,
             invitationId: invite.invideId
           };
           result = true;
@@ -125,7 +126,12 @@ firebase.addAppDelegateMethods = function (appDelegate) {
       if (typeof(FIRDynamicLink) !== "undefined") {
         var dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url)
         if (dynamicLink) {
-          this._cachedDeepLink = dynamicLink.url.absoluteString;
+          console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
+          firebase._cachedDynamicLink = {
+            url: dynamicLink.url.absoluteString,
+            matchConfidence: dynamicLink.matchConfidence, 
+            minimumAppVersion: dynamicLink.minimumAppVersion
+          };
           result = true;
         }
       }
@@ -157,13 +163,52 @@ firebase.addAppDelegateMethods = function (appDelegate) {
         if (dynamicLink) {
           if (dynamicLink.url !== null) {
             console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
-            if (this._dynamicLinkCallback) {
-              this._dynamicLinkCallback(dynamicLink.url.absoluteString);
+            if (firebase._dynamicLinkCallback) {
+              firebase._dynamicLinkCallback({
+                  url: dynamicLink.url.absoluteString,
+                  matchConfidence: dynamicLink.matchConfidence, 
+                  minimumAppVersion: dynamicLink.minimumAppVersion
+                });
             } else {
-              this._cachedDeepLink = dynamicLink.url.absoluteString;
+              firebase._cachedDynamicLink = {
+                url: dynamicLink.url.absoluteString,
+                matchConfidence: dynamicLink.matchConfidence, 
+                minimumAppVersion: dynamicLink.minimumAppVersion
+              };
             }
             result = true;
           }
+        }
+      }
+
+      return result;
+    };
+  }
+
+  if (typeof(FIRDynamicLink) !== "undefined") {
+    appDelegate.prototype.applicationContinueUserActivityRestorationHandler = function (application, userActivity, restorationHandler) {
+      var result = false;
+      
+      if (typeof(FIRDynamicLink) !== "undefined" ) {
+        if (userActivity.webpageURL) {
+          result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, function(dynamicLink, error){
+            if (dynamicLink.url !== null) {
+              console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
+              if (firebase._dynamicLinkCallback) {
+                firebase._dynamicLinkCallback({
+                    url: dynamicLink.url.absoluteString,
+                    matchConfidence: dynamicLink.matchConfidence, 
+                    minimumAppVersion: dynamicLink.minimumAppVersion
+                  });
+              } else {
+                firebase._cachedDynamicLink = {
+                  url: dynamicLink.url.absoluteString,
+                  matchConfidence: dynamicLink.matchConfidence, 
+                  minimumAppVersion: dynamicLink.minimumAppVersion
+                };
+              }
+            }
+          })
         }
       }
 
@@ -586,7 +631,7 @@ firebase.init = function (arg) {
         }
 
         firebase._configure();
-
+        
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
         }

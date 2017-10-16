@@ -5,6 +5,8 @@ Since plugin version 3.12.0 you can use Firebase _Invites_ features.
 
 _Invites_ lets you invite other users to your app from right within your own app, via SMS and/or Email.
 
+Keep in mind that invites are based of dynamic links, and so calling for an invite may return a plain dynamic link, in which case invitationId is null.
+
 ### Android
 * [Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
 
@@ -110,12 +112,12 @@ The options you can pass to `sendInvitation` are:
 
 
 ### invites.getInvitation
-When the user opens your app from an invite, you can retrieve the details via the `getInvitation` function:
+When the user opens your app from an invite or a dynamic link, you can retrieve the details via the `getInvitation` function after you initialize Firebase:
 
 ```js
 firebase.invites.getInvitation().then(
     function (result) { // GetInvitationResult
-      console.log("deeplink: " + result.deeplink + ", invitationId: " + result.invitationId);
+      console.log("deepLink: " + result.deepLink + ", invitationId: " + result.invitationId+ ", matchType: "+ result.matchType);
     },
     function (error) {
       console.log("getInvitation error: " + error);
@@ -130,8 +132,8 @@ You can either add an `onDynamicLinkCallback` callback to `init`, or use `addOnD
 
 ```js
   firebase.init({
-    onDynamicLinkCallback: function (url) {
-      console.log("Dynamic Link: " + url); // this is a string, like http://mydomain.com/applink
+    onDynamicLinkCallback: function (result) {
+      console.log("Dynamic Link: " + result.url+ ", matchConfidence: "+ result.matchConfidence); 
     }
   });
 ```

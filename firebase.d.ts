@@ -710,6 +710,11 @@ export module analytics {
 // Invites module
 export module invites {
 
+  export enum MATCH_TYPE {
+    WEAK,
+    STRONG
+  }
+
   export interface SendInvitationOptions {
     /**
      * Invitation title you want to send.
@@ -753,13 +758,27 @@ export module invites {
   }
 
   export interface GetInvitationResult {
-    deeplink: any;
-    invitationId: any;
+    deepLink: string;
+    matchType?: MATCH_TYPE,
+    invitationId: string;
   }
 
   function sendInvitation(options: SendInvitationOptions): Promise<SendInvitationResult>;
 
   function getInvitation(): Promise<GetInvitationResult>;
+}
+
+export module dynamicLinks {
+  export enum MATCH_CONFIDENCE {
+    WEAK,
+    STRONG
+  }
+
+  export interface DynamicLinkCallbackData {
+    url: string;
+    matchConfidence?: MATCH_CONFIDENCE,
+    minimumAppVersion?: string;
+  }
 }
 
 // Auth
@@ -801,7 +820,7 @@ export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: strin
 export function getCurrentPushToken(): Promise<string>;
 
 // dynamic links
-export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (url: string) => void): Promise<any>;
+export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBackData: dynamicLinks.DynamicLinkCallbackData) => void): Promise<any>;
 
 // remote config
 export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
