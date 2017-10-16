@@ -20,6 +20,7 @@ For readability the supported features have been moved to their own README's:
 
 * Setup and troubleshooting (continue reading below)
 * [Realtime Database](docs/DATABASE.md)
+* Firestore (work in progress)
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Cloud Messaging](docs/MESSAGING.md)
