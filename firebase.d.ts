@@ -786,6 +786,8 @@ export function login(options: LoginOptions): Promise<User>;
 
 export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
 
+export function reload(): Promise<void>;
+
 export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
 
 export function logout(): Promise<any>;
