@@ -1281,6 +1281,32 @@ firebase.reauthenticate = function (arg) {
   });
 };
 
+firebase.reload = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      var user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+      if (user === null) {
+        reject("no current user");
+        return;
+      }
+
+      var onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: function (task) {
+          if (task.isSuccessful()) {
+            resolve();
+          } else {
+            reject("Reload failed " + task.getException());
+          }
+        }
+      });
+
+      user.reload().addOnCompleteListener(onCompleteListener);
+    } catch (ex) {
+      reject(ex);
+    }
+  });
+};
+
 firebase.resetPassword = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
