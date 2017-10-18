@@ -3,6 +3,15 @@ var dialogs = require("ui/dialogs");
 var firebase = {};
 firebase.analytics = {};
 firebase.invites = {};
+firebase.invites.MATCH_TYPE = {
+  WEAK: 0,
+  STRONG: 1
+};
+firebase.dynamicLinks = {};
+firebase.dynamicLinks.MATCH_CONFIDENCE = {
+  WEAK: 0,
+  STRONG: 1
+};
 firebase.admob = {};
 firebase.admob.AD_SIZE = {
   SMART_BANNER: "SMART",
