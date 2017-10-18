@@ -215,7 +215,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 4.1.1'
+`pod 'Firebase', '~> 4.4.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
