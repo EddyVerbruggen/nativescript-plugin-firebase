@@ -1428,6 +1428,32 @@ firebase.reauthenticate = function (arg) {
   });
 };
 
+firebase.reload = function () {
+  return new Promise(function (resolve, reject) {
+    try {
+      var user = FIRAuth.auth().currentUser;
+
+      if (user === null) {
+        reject("no current user");
+        return;
+      }
+
+      var onCompletion = function (error) {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      };
+
+      user.reloadWithCompletion(onCompletion);
+    } catch (ex) {
+      console.log("Error in firebase.reload: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.resetPassword = function (arg) {
   return new Promise(function (resolve, reject) {
     try {
