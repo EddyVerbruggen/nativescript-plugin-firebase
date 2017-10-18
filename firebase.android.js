@@ -543,11 +543,11 @@ firebase.admob.showBanner = function (arg) {
       firebase.admob.adView.setAdUnitId(settings.androidBannerId);
       var bannerType = firebase.admob._getBannerType(settings.size);
       firebase.admob.adView.setAdSize(bannerType);
-      console.log("----- bannerType: " + bannerType);
+      //console.log("----- bannerType: " + bannerType);
       var BannerAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
           //firebase.admob.interstitialView.show();
-          console.log('ad loaded');
+          //console.log('ad loaded');
           resolve();
         },
         onAdFailedToLoad: function (errorCode) {
@@ -585,11 +585,29 @@ firebase.admob.showBanner = function (arg) {
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-      // wrapping it in a timeout makes sure that when this function is loaded from
-      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
-      setTimeout(function () {
-        frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
-      }, 0);
+        // wrapping it in a timeout makes sure that when this function is loaded from
+        // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
+        var showBanner = function(counter) {
+            if (frame.topmost() && frame.topmost().currentPage && frame.topmost().currentPage.android && frame.topmost().currentPage.android.getParent()) {
+                frame
+                    .topmost()
+                    .currentPage.android.getParent()
+                    .addView(adViewLayout, relativeLayoutParamsOuter);
+            } else {
+                if (counter === undefined) {
+                    counter = 1;
+                } else if (counter < 5) {
+                    var delay = Number(counter * 300);
+                    console.log('trying again in ' + delay + ' ms...');
+                    setTimeout(function() {
+                        showBanner(counter++);
+                    }, delay);
+                    }
+            }
+        };
+        setTimeout(function() {
+            showBanner();
+        }, 0);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
       reject(ex);
@@ -607,15 +625,19 @@ firebase.admob.showInterstitial = function (arg) {
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       var InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: function () {
-          firebase.admob.interstitialView.show();
-          resolve();
+            console.log('showInterstitial -> onAdLoaded');
+            firebase.admob.interstitialView.show();
         },
         onAdFailedToLoad: function (errorCode) {
-          reject(errorCode);
+            console.log('showInterstitial -> onAdFailedToLoad');
+            reject(errorCode);
         },
         onAdClosed: function () {
-          firebase.admob.interstitialView.setAdListener(null);
+            console.log('showInterstitial -> onAdClosed #1');
+            firebase.admob.interstitialView.setAdListener(null);
           firebase.admob.interstitialView = null;
+          console.log('showInterstitial -> onAdClosed #2');
+          resolve();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
