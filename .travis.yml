@@ -1,31 +1,77 @@
-os: osx
-osx_image: xcode8
-sudo: false
-language: objective-c
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-25.0.2
+    - android-25
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-21
 
-env:
-  - NODE_VERSION="6"
+before_cache:
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock 
+
+cache:
+    directories:
+        - .nvm
+        - $HOME/.gradle/caches/
+        - $HOME/.gradle/wrapper/
+
+install:
+    - echo no | npm install -g nativescript
+    - tns usage-reporting disable
+    - tns error-reporting disable
+    - npm install
+    - cd src
+    - npm run setup
 
 script:
 
-  - npm test
 
-before_install:
-  - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
-  - source ~/.nvm/nvm.sh && nvm install $NODE_VERSION && nvm use $NODE_VERSION
-  - PATH="`npm bin`:`npm bin -g`:$PATH"
-  - npm install -g npm
-  - npm install -g nativescript
-  - npm install
-  # CocoaPods
-  - gem install cocoapods --pre --no-rdoc --no-ri --no-document --quiet
-  - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
-  - pod --version
-  - pod setup --silent
-  - pod repo update --silent
-  # Show environment info
-  - node --version
-  - npm --version
-  - xcpretty --version
-  - xcodebuild -version
-  - xcodebuild -showsdks
+matrix:
+  include:
+    - stage: "Lint"
+      language: node_js
+      os: linux
+      node_js: "6"
+      script: "npm run ci.tslint" 
+    - stage: "WebPack"
+      os: osx
+      env:
+        - Webpack="iOS"
+      osx_image: xcode8.3
+      language: node_js 
+      node_js: "6"
+      jdk: oraclejdk8
+      before_install:
+        - gem install cocoapods
+        - pod repo update
+      script: cd ../demo && npm run build-ios-bundle
+    - language: android
+      os: linux
+      env:
+        - Webpack="Android"
+      jdk: oraclejdk8
+      before_install: nvm install 6.10.3
+      script: cd ../demo &&  npm run build-android-bundle
+    - stage: "Build"
+      env: 
+        - BuildAndroid="25"
+      language: android
+      os: linux
+      jdk: oraclejdk8
+      before_install: nvm install 6.10.3
+      script:
+        - cd ../demo && tns build android
+    - os: osx
+      env: 
+        - BuildiOS="10.3"
+        - Xcode="8.3"
+      osx_image: xcode8.3
+      language: node_js 
+      node_js: "6"
+      jdk: oraclejdk8
+      before_install:
+        - gem install cocoapods
+        - pod repo update
+      script:
+        - cd ../demo && tns build ios

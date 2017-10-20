@@ -1,0 +1,7 @@
+*.map
+*.ts
+!*.d.ts
+tsconfig.json
+references.d.ts
+platforms/android/libraryproject/
+platforms/ios/typings/

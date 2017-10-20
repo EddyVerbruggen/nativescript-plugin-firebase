@@ -105,7 +105,7 @@ export interface InitOptions {
    * For FCM either pass in this callback function here, or use addOnPushTokenReceivedCallback.
    */
   onMessageReceivedCallback?: (data: Message) => void;
-	
+
   /**
    * Get notified when a dynamic link was used to launch the app. Alternatively use addOnDynamicLinkReceivedCallback.
    */
@@ -286,7 +286,7 @@ export interface PushResult {
  */
 export interface AddEventListenerResult {
   path: string;
-  listeners: Array<any>
+  listeners: Array<any>;
 }
 
 /**
@@ -335,7 +335,7 @@ export interface FBData {
 export interface ChangePasswordOptions {
   email: string;
   oldPassword: string;
-  newPassword: string
+  newPassword: string;
 }
 
 export interface AuthStateData {
@@ -371,7 +371,7 @@ export interface GetRemoteConfigOptions {
          *    default: false
          *  }, ..]
    */
-  properties: Array<RemoteConfigProperty>
+  properties: Array<RemoteConfigProperty>;
 }
 
 /**
@@ -493,7 +493,7 @@ export interface DownloadFileOptions {
   /**
    * Option 2: a full file path (ignored if 'localFile' is set)
    */
-  localFullPath?: string
+  localFullPath?: string;
 }
 
 export interface GetDownloadUrlOptions {
@@ -559,7 +559,7 @@ export function removeEventListeners(listeners: Array<any>, path: string): Promi
 export function keepInSync(path: string, switchOn: boolean): Promise<any>;
 
 // AdMob module
-export module admob {
+export namespace admob {
 
   /**
    * The allowed values for AD_SIZE.
@@ -629,7 +629,7 @@ export module admob {
        * Default: -1 (ignored).
        */
       bottom?: number;
-    }
+    };
   }
 
   export interface ShowInterstitialOptions {
@@ -665,7 +665,7 @@ export module admob {
 }
 
 // Analytics module
-export module analytics {
+export namespace analytics {
   export interface LogEventParameter {
     key: string;
     value: string;
@@ -688,7 +688,7 @@ export module analytics {
              *    value: "abc"
              *  }, ..]
      */
-    parameters?: Array<LogEventParameter>
+    parameters?: Array<LogEventParameter>;
   }
 
   export interface SetUserPropertyOptions {
@@ -708,7 +708,7 @@ export module analytics {
 }
 
 // Invites module
-export module invites {
+export namespace invites {
 
   export enum MATCH_TYPE {
     WEAK,
@@ -753,13 +753,13 @@ export module invites {
   }
 
   export interface SendInvitationResult {
-    count: number,
-    invitationIds: any
+    count: number;
+    invitationIds: any;
   }
 
   export interface GetInvitationResult {
     deepLink: string;
-    matchType?: MATCH_TYPE,
+    matchType?: MATCH_TYPE;
     invitationId: string;
   }
 
@@ -768,7 +768,7 @@ export module invites {
   function getInvitation(): Promise<GetInvitationResult>;
 }
 
-export module dynamicLinks {
+export namespace dynamicLinks {
   export enum MATCH_CONFIDENCE {
     WEAK,
     STRONG
@@ -776,7 +776,7 @@ export module dynamicLinks {
 
   export interface DynamicLinkCallbackData {
     url: string;
-    matchConfidence?: MATCH_CONFIDENCE,
+    matchConfidence?: MATCH_CONFIDENCE;
     minimumAppVersion?: string;
   }
 }
@@ -786,7 +786,7 @@ export function login(options: LoginOptions): Promise<User>;
 
 export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
 
-export function reload(): Promise<void>;
+export function reloadUser(): Promise<void>;
 
 export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
 

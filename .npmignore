@@ -1,8 +1,0 @@
-.idea
-.vscode
-platforms/android/libraryproject/
-platforms/ios/typings/
-docs
-README.md
-CHANGELOG.md
-node_modules
