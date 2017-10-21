@@ -1,6 +1,7 @@
 import { firebase } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
+import lazy from "tns-core-modules/utils/lazy";
 import * as frame from "tns-core-modules/ui/frame";
 import * as fs from "tns-core-modules/file-system";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
@@ -18,26 +19,9 @@ let fbCallbackManager = null;
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
 
-function lazy(action) {
-  let _value;
-  const that = this;
-
-  return function () {
-    return that._value || (that._value = action());
-  };
-}
-
-const gson = new lazy(function () {
-  return typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson();
-});
-
-const messagingEnabled = new lazy(function () {
-  return typeof(com.google.firebase.messaging) !== "undefined";
-});
-
-const dynamicLinksEnabled = new lazy(function () {
-  return typeof(com.google.android.gms.appinvite) !== "undefined";
-});
+const gson = lazy(() => typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson());
+const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "undefined");
+const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
 
 (function () {
   appModule.on("launch", function (args) {

@@ -35,7 +35,7 @@
     "preuninstall": "node preuninstall-hooks.js",
     "setup": "node scripts/postinstall.js setup",
     "config": "node scripts/postinstall.js config",
-    "build": "npm i && tsc",
+    "build": "tsc",
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios --emulator",
     "demo.ios.device": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios",
     "demo.android": "npm run preparedemo && cd ../demo && tns platform remove android && tns run android --justlaunch",

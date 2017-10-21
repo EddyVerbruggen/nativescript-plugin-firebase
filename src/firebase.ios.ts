@@ -700,7 +700,7 @@ firebase.analytics.logEvent = function (arg) {
         return;
       }
 
-      const dic: NSMutableDictionary<string, any> = NSMutableDictionary.new();
+      const dic: any = NSMutableDictionary.new();
       if (arg.parameters !== undefined) {
         for (let p in arg.parameters) {
           const param = arg.parameters[p];
@@ -951,7 +951,7 @@ firebase.getRemoteConfig = function (arg) {
       // Enable developer mode to allow for frequent refreshes of the cache
       firebaseRemoteConfig.configSettings = new FIRRemoteConfigSettings({developerModeEnabled: arg.developerMode || false});
 
-      const dic: NSMutableDictionary<string, any> = NSMutableDictionary.new();
+      const dic: any = NSMutableDictionary.new();
       for (let p in arg.properties) {
         const prop = arg.properties[p];
         if (prop.default !== undefined) {
