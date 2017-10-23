@@ -29,8 +29,6 @@
     ]
   },
   "scripts": {
-    "bundle-installer": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js scripts/postinstall.js",
-    "prepublish": "npm run bundle-installer",
     "postinstall": "node postinstall-hooks.js && node scripts/postinstall.js",
     "preuninstall": "node preuninstall-hooks.js",
     "setup": "node scripts/postinstall.js setup",
@@ -48,7 +46,6 @@
     "tslint": "tslint --config '../tslint.json' '*.ts' --exclude '**/node_modules/**'",
     "tslint.demo": "tslint --config '../tslint.json' '../demo/app/*.ts' --exclude '**/node_modules/**'",
     "ci.tslint": "npm run tslint && npm run tslint.demo",
-    "prepublishOnly": "npm run build",
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-plugin-firebase && cd ../src",
     "generate.typings.ios": "cd ../demo && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo/typings!'"
   },
@@ -93,7 +90,6 @@
     "prompt-lite": "~0.1.0"
   },
   "devDependencies": {
-    "webpack": "~2.2.0",
     "tns-core-modules": "^3.2.0",
     "tns-platform-declarations": "^3.2.0",
     "tslint": "^5.1.0",

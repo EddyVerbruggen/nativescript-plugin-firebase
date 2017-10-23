@@ -1,0 +1,78 @@
+﻿page {
+  background-color: #F4F4F4;
+}
+
+.tab-content {
+  color: #808080;
+  padding: 20 20 50 20;
+}
+
+.title {
+  font-size: 20;
+  margin: 0 0 10 0;
+  color: #3c3c3c;
+}
+
+.subtitle {
+  font-size: 14;
+  margin: 14 0 6 18;
+  color: #3c3c3c;
+}
+
+.message {
+  font-size: 14;
+  color: #284848;
+  margin: 8 0 8 18;
+}
+
+label {
+  font-size: 14;
+}
+
+button {
+  background-color: #6494AA;
+  padding: 8 12;
+  margin: 4 10;
+  font-size: 13;
+  border-radius: 4;
+}
+
+.button {
+  color: #ffffff;
+}
+
+.button-positive {
+  background-color: #90A959;
+}
+
+.button-user {
+  background-color: #E0A458;
+}
+
+.button-state {
+  background-color: #64A4FF;
+}
+
+.button-company {
+  background-color: #A63D40;
+}
+
+.button-storage {
+  background-color: #54AA77;
+}
+
+.button-analytics {
+  background-color: #BBBB77;
+}
+
+.button-messaging {
+  background-color: #6d996c;
+}
+
+.button-crash {
+  background-color: #d52c1e;
+}
+
+.button-invites {
+  background-color: #1832d5;
+}
