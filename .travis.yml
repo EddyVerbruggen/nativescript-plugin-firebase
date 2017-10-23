@@ -20,8 +20,8 @@ install:
     - echo no | npm install -g nativescript
     - tns usage-reporting disable
     - tns error-reporting disable
-    - npm install
     - cd src
+    - npm install
     - npm run setup
 
 script:
@@ -52,7 +52,7 @@ matrix:
         - Webpack="Android"
       jdk: oraclejdk8
       before_install: nvm install 6.10.3
-      script: cd ../demo &&  npm run build-android-bundle
+      script: cd ../demo && npm run build-android-bundle
     - stage: "Build"
       env: 
         - BuildAndroid="25"
