@@ -44,14 +44,14 @@ matrix:
       before_install:
         - gem install cocoapods
         - pod repo update
-      script: npm run build-ios-bundle
+      script: npm i && npm run build-ios-bundle
     - language: android
       os: linux
       env:
         - Webpack="Android"
       jdk: oraclejdk8
       before_install: nvm install 6.10.3
-      script: npm run build-android-bundle
+      script: npm i ../src && npm run build-android-bundle
     - stage: "Build"
       env: 
         - BuildAndroid="25"
@@ -60,7 +60,7 @@ matrix:
       jdk: oraclejdk8
       before_install: nvm install 6.10.3
       script:
-        - cd tns build android
+        - tns build android
     - os: osx
       env: 
         - BuildiOS="10.3"

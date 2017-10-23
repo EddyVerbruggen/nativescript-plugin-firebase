@@ -88,8 +88,7 @@ project.ext {
 ```
 
 ## Usage
-
-If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
+If you want a quickstart, clone the repo, `cd src`, and `npm run demo.ios` or `npm run demo.android`.
 
 ### Start-up wiring
 We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
