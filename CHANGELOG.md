@@ -4,6 +4,12 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 4.2.1 (2017, October 24)
+
+### Fixes
+- [#531](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/531) [BUG] Reference Error with version 4.2.0
+
+
 ## 4.2.0 (2017, October 24)
 
 ### New

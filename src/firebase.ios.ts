@@ -474,7 +474,6 @@ firebase._registerForRemoteNotifications = function () {
   }
 };
 
-// TODO test & fix
 function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
   if (application.ios.delegate === undefined) {
@@ -2193,9 +2192,12 @@ firebase.invites.getInvitation = function () {
 
 // see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc
 class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNotificationCenterDelegate {
-  public static ObjCProtocols = [UNUserNotificationCenterDelegate];
+  public static ObjCProtocols = [];
 
   static new(): UNUserNotificationCenterDelegateImpl {
+    if (UNUserNotificationCenterDelegateImpl.ObjCProtocols.length === 0 && typeof(UNUserNotificationCenterDelegate) !== "undefined") {
+      UNUserNotificationCenterDelegateImpl.ObjCProtocols.push(UNUserNotificationCenterDelegate);
+    }
     return <UNUserNotificationCenterDelegateImpl>super.new();
   }
 
@@ -2212,9 +2214,12 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
 }
 
 class FIRInviteDelegateImpl extends NSObject implements FIRInviteDelegate {
-  public static ObjCProtocols = [FIRInviteDelegate];
+  public static ObjCProtocols = [];
 
   static new(): FIRInviteDelegateImpl {
+    if (FIRInviteDelegateImpl.ObjCProtocols.length === 0 && typeof(FIRInviteDelegate) !== "undefined") {
+      FIRInviteDelegateImpl.ObjCProtocols.push(FIRInviteDelegate);
+    }
     return <FIRInviteDelegateImpl>super.new();
   }
 
@@ -2231,9 +2236,12 @@ class FIRInviteDelegateImpl extends NSObject implements FIRInviteDelegate {
 }
 
 class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate {
-  public static ObjCProtocols = [FIRMessagingDelegate];
+  public static ObjCProtocols = [];
 
   static new(): FIRMessagingDelegateImpl {
+    if (FIRMessagingDelegateImpl.ObjCProtocols.length === 0 && typeof(FIRMessagingDelegate) !== "undefined") {
+      FIRMessagingDelegateImpl.ObjCProtocols.push(FIRMessagingDelegate);
+    }
     return <FIRMessagingDelegateImpl>super.new();
   }
 
@@ -2259,9 +2267,12 @@ class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate 
 }
 
 class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDelegate {
-  public static ObjCProtocols = [GADInterstitialDelegate];
+  public static ObjCProtocols = [];
 
   static new(): GADInterstitialDelegateImpl {
+    if (GADInterstitialDelegateImpl.ObjCProtocols.length === 0 && typeof(GADInterstitialDelegate) !== "undefined") {
+      GADInterstitialDelegateImpl.ObjCProtocols.push(GADInterstitialDelegate);
+    }
     return <GADInterstitialDelegateImpl>super.new();
   }
 
@@ -2282,9 +2293,12 @@ class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDel
 }
 
 class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {
-  public static ObjCProtocols = [GIDSignInDelegate];
+  public static ObjCProtocols = [];
 
   static new(): GIDSignInDelegateImpl {
+    if (GIDSignInDelegateImpl.ObjCProtocols.length === 0 && typeof(GIDSignInDelegate) !== "undefined") {
+      GIDSignInDelegateImpl.ObjCProtocols.push(GIDSignInDelegate);
+    }
     return <GIDSignInDelegateImpl>super.new();
   }
 
