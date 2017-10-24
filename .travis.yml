@@ -21,6 +21,7 @@ install:
     - tns usage-reporting disable
     - tns error-reporting disable
     - cd demo
+    - npm run build.plugin
     - npm i
 
 script:
@@ -44,14 +45,14 @@ matrix:
       before_install:
         - gem install cocoapods
         - pod repo update
-      script: npm i && npm run build-ios-bundle
+      script: npm run build-ios-bundle
     - language: android
       os: linux
       env:
         - Webpack="Android"
       jdk: oraclejdk8
       before_install: nvm install 6.10.3
-      script: npm i ../src && npm run build-android-bundle
+      script: npm run build-android-bundle
     - stage: "Build"
       env: 
         - BuildAndroid="25"
@@ -73,4 +74,4 @@ matrix:
         - gem install cocoapods
         - pod repo update
       script:
-        - cd tns build ios
+        - tns build ios

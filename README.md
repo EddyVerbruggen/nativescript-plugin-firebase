@@ -41,10 +41,9 @@ Open your Firebase project at the Google console and click 'Add app' to add an i
 * Android: `google-services.json` which you'll add to your NativeScript project at `app/App_Resources/Android/google-services.json`
 
 ## Installation
-If you rather watch a video explaining the steps then check out this step-by-step guide - you'll also learn how to
+If you rather watch a (slightly outdated) video explaining the steps then check out this step-by-step guide - you'll also learn how to
 add iOS and Android support to the Firebase console and how to integrate anonymous authentication:
 [![YouTube demo](docs/images/yt-thumb-setup.png)](https://youtu.be/IextEpoIzwE "YouTube demo")
-
 
 From the command prompt go to your app's root folder and execute:
 
@@ -52,42 +51,33 @@ From the command prompt go to your app's root folder and execute:
 tns plugin add nativescript-plugin-firebase
 ```
 
-**IMPORTANT** If this is your first installation of this plugin, the CLI should prompt you with a few questions.
-However, due to a bug in the CLI (which will be fixed by [this PR](https://github.com/NativeScript/nativescript-cli/pull/2944)) no prompt may appear,
-in which case you should now do:
-
-```bash
-cd node_modules/nativescript-plugin-firebase
-npm run setup
-```
-
 This will launch an install script which will guide you through installing additional components.
 Check the doc links above to see what's what. You can always change your choices later.
 
 ### Config
 If you choose to save your config during the installation, the supported options may be saved in the `firebase.nativescript.json` at the root of your app.
-This is to ensure your app may roundtrip source control and installation on CI won't run the questionary during install.
+This is to ensure your app may roundtrip source control and installation on CI won't prompt for user input during installation.
 
 You can reconfigure the plugin by going to the `node_modules/nativescript-plugin-firebase` and running `npm run config`.
 
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
 
-### iOS
-The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` to ensure you have the latest spec.
+### iOS (Cocoapods)
+The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.
 
 #### Google Play Services Version
-The plugin will default to version 10.0+ of the Android `play-services-base` SDK.
-If you need to change the version (to for instance the latest version), you can add a project ext property `googlePlayServicesVersion` like so:
+The plugin will default to [this version](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle#L27) of the Android `play-services-base` SDK.
+If you need to change the version (to for instance the latest version), you can add a project ext property `googlePlayServicesVersion` to `app/App_Resources/Android/app.gradle`:
 
 ```
-//   /app/App_Resources/Android/app.gradle
-
 project.ext {
     googlePlayServicesVersion = "+"
 }
 ```
 
 ## Usage
+
+### Demo app
 If you want a quickstart, clone the repo, `cd src`, and `npm run demo.ios` or `npm run demo.android`.
 
 ### Start-up wiring
@@ -112,7 +102,7 @@ firebase.init({
 
 #### TypeScript
 ```js
-import firebase = require("nativescript-plugin-firebase");
+const firebase = require("nativescript-plugin-firebase");
 
 firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
@@ -247,6 +237,3 @@ android {
 ```
 
 Where `"11.2.+"` is best set to the same value as the `firebase-core` dependency version in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/platforms/android/include.gradle).
-
-## Credits
-The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).
