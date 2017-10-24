@@ -21,7 +21,7 @@ install:
     - tns usage-reporting disable
     - tns error-reporting disable
     - cd src
-    - npm i
+    - npm i --ignore-scripts
     - npm run build
     - cd ../demo
     - npm i
