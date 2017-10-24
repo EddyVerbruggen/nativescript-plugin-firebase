@@ -3,6 +3,13 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+
+## 4.2.0 (2017, October 24)
+
+### New
+- [#529](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/529) TypeScript conversion of plugin and demo, including various small bugfixes (detail in the issue).
+
+
 ## 4.1.2 (2017, October 13)
 
 ### Fixes
