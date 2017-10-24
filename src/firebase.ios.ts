@@ -1078,7 +1078,8 @@ function toLoginResult(user) {
   for (let i = 0, l = user.providerData.count; i < l; i++) {
     const firUserInfo = user.providerData.objectAtIndex(i);
     const pid = firUserInfo.valueForKey("providerID");
-    if (pid === 'facebook.com') { // FIRFacebookAuthProviderID
+    // the app may have dropped Facebook support, so check if the native class is still there
+    if (pid === 'facebook.com' && typeof(FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
       const fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
       providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
     } else {
