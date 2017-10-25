@@ -16,9 +16,6 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
 ## Features
-For readability the supported features have been moved to their own README's:
-
-* Setup and troubleshooting (continue reading below)
 * [Realtime Database](docs/DATABASE.md)
 * Firestore (work in progress)
 * [Authentication](docs/AUTHENTICATION.md)
