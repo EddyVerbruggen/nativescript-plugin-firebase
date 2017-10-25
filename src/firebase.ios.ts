@@ -19,27 +19,27 @@ firebase._configured = null;
  * thanks to Alexander Ziskind found on:
  * http://nuvious.com/Blog/2016/7/5/calling-dispatch_async-in-nativescript
  */
-const invokeOnRunLoop = (function () {
+const invokeOnRunLoop = (() => {
   const runloop = CFRunLoopGetMain();
   return function (func) {
     CFRunLoopPerformBlock(runloop, kCFRunLoopDefaultMode, func);
     CFRunLoopWakeUp(runloop);
   };
-}());
+})();
 
-firebase._configure = function () {
+firebase._configure = () => {
   if (!firebase._configured) {
     FIRApp.configure();
     firebase._configured = true;
   }
 };
 
-firebase._addObserver = function (eventName, callback) {
+firebase._addObserver = (eventName, callback) => {
   const queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
   return utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
 };
 
-function handleRemoteNotification(app, userInfo) {
+const handleRemoteNotification = (app, userInfo) => {
   const userInfoJSON = firebase.toJsObject(userInfo);
   const aps = userInfo.objectForKey("aps");
   if (aps !== null) {
@@ -60,9 +60,9 @@ function handleRemoteNotification(app, userInfo) {
   } else {
     userInfoJSON.foreground = false;
   }
-}
+};
 
-function addBackgroundRemoteNotificationHandler(appDelegate) {
+const addBackgroundRemoteNotificationHandler = appDelegate => {
   if (typeof(FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, notification, completionHandler) {
 
@@ -78,11 +78,11 @@ function addBackgroundRemoteNotificationHandler(appDelegate) {
       handleRemoteNotification(app, notification);
     };
   }
-}
+};
 
-firebase.addAppDelegateMethods = function (appDelegate) {
+firebase.addAppDelegateMethods = appDelegate => {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
-  appDelegate.prototype.applicationDidFinishLaunchingWithOptions = function (application, launchOptions) {
+  appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
     if (launchOptions && typeof(FIRMessaging) !== "undefined") {
       const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
@@ -99,7 +99,7 @@ firebase.addAppDelegateMethods = function (appDelegate) {
 
   // there's no notification event to hook into for this one, so using the appDelegate
   if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRInvites) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
-    appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
+    appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = (application, url, sourceApplication, annotation) => {
       let result = false;
       if (typeof(FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
@@ -140,7 +140,7 @@ firebase.addAppDelegateMethods = function (appDelegate) {
   }
 
   if (typeof(FBSDKApplicationDelegate) !== "undefined" || typeof(GIDSignIn) !== "undefined" || typeof(FIRDynamicLink) !== "undefined") {
-    appDelegate.prototype.applicationOpenURLOptions = function (application, url, options) {
+    appDelegate.prototype.applicationOpenURLOptions = (application, url, options) => {
       let result = false;
       if (typeof(FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
@@ -185,7 +185,7 @@ firebase.addAppDelegateMethods = function (appDelegate) {
   }
 
   if (typeof(FIRDynamicLink) !== "undefined") {
-    appDelegate.prototype.applicationContinueUserActivityRestorationHandler = function (application, userActivity, restorationHandler) {
+    appDelegate.prototype.applicationContinueUserActivityRestorationHandler = (application, userActivity, restorationHandler) => {
       let result = false;
 
       if (typeof(FIRDynamicLink) !== "undefined") {
@@ -217,15 +217,15 @@ firebase.addAppDelegateMethods = function (appDelegate) {
   addBackgroundRemoteNotificationHandler(appDelegate);
 };
 
-firebase.fetchProvidersForEmail = function (email) {
-  return new Promise(function (resolve, reject) {
+firebase.fetchProvidersForEmail = email => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(email) !== "string") {
         reject("A parameter representing an email address is required.");
         return;
       }
 
-      FIRAuth.auth().fetchProvidersForEmailCompletion(email, function (providerNSArray, error) /* FIRProviderQueryCallback */ {
+      FIRAuth.auth().fetchProvidersForEmailCompletion(email, (providerNSArray, error) /* FIRProviderQueryCallback */ => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -239,8 +239,8 @@ firebase.fetchProvidersForEmail = function (email) {
   });
 };
 
-firebase.getCurrentPushToken = function () {
-  return new Promise(function (resolve, reject) {
+firebase.getCurrentPushToken = () => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
@@ -255,8 +255,8 @@ firebase.getCurrentPushToken = function () {
   });
 };
 
-firebase.addOnMessageReceivedCallback = function (callback) {
-  return new Promise(function (resolve, reject) {
+firebase.addOnMessageReceivedCallback = callback => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
@@ -274,8 +274,8 @@ firebase.addOnMessageReceivedCallback = function (callback) {
   });
 };
 
-firebase.addOnDynamicLinkReceivedCallback = function (callback) {
-  return new Promise(function (resolve, reject) {
+firebase.addOnDynamicLinkReceivedCallback = callback => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRDynamicLink) === "undefined") {
         reject("Enable FIRInvites in Podfile first");
@@ -298,8 +298,8 @@ firebase.addOnDynamicLinkReceivedCallback = function (callback) {
   });
 };
 
-firebase.addOnPushTokenReceivedCallback = function (callback) {
-  return new Promise(function (resolve, reject) {
+firebase.addOnPushTokenReceivedCallback = callback => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
@@ -323,8 +323,8 @@ firebase.addOnPushTokenReceivedCallback = function (callback) {
   });
 };
 
-firebase.unregisterForPushNotifications = function (callback) {
-  return new Promise(function (resolve, reject) {
+firebase.unregisterForPushNotifications = callback => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRMessaging) === "undefined") {
         reject("Enable FIRMessaging in Podfile first");
@@ -339,10 +339,10 @@ firebase.unregisterForPushNotifications = function (callback) {
   });
 };
 
-firebase._processPendingNotifications = function () {
+firebase._processPendingNotifications = () => {
   const app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
-    application.on("launch", function () {
+    application.on("launch", () => {
       firebase._processPendingNotifications();
     });
     return;
@@ -366,10 +366,10 @@ firebase._processPendingNotifications = function () {
   }
 };
 
-firebase._messagingConnectWithCompletion = function () {
-  return new Promise(function (resolve, reject) {
+firebase._messagingConnectWithCompletion = () => {
+  return new Promise((resolve, reject) => {
 
-    FIRMessaging.messaging().connectWithCompletion(function (error) {
+    FIRMessaging.messaging().connectWithCompletion(error => {
 
       if (error) {
         // this is not fatal and it scares the hell out of ppl so not logging it
@@ -384,7 +384,7 @@ firebase._messagingConnectWithCompletion = function () {
   });
 };
 
-firebase._onTokenRefreshNotification = function (token) {
+firebase._onTokenRefreshNotification = token => {
   firebase._pushToken = token;
 
   if (firebase._receivedPushTokenCallback) {
@@ -396,10 +396,10 @@ firebase._onTokenRefreshNotification = function (token) {
 
 firebase._registerForRemoteNotificationsRanThisSession = false;
 
-firebase._registerForRemoteNotifications = function () {
+firebase._registerForRemoteNotifications = () => {
   let app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
-    application.on("launch", function () {
+    application.on("launch", () => {
       firebase._registerForRemoteNotifications();
     });
     return;
@@ -413,14 +413,14 @@ firebase._registerForRemoteNotifications = function () {
   if (parseInt(platform.device.osVersion) >= 10) {
     const authorizationOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge;
     const curNotCenter = utils.ios.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
-    curNotCenter.requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, function (granted, error) {
+    curNotCenter.requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, (granted, error) => {
       if (!error) {
         // applicationSettings.setBoolean("registered", true);
         if (app === null) {
           app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
         }
         if (app !== null) {
-          invokeOnRunLoop(function () {
+          invokeOnRunLoop(() => {
             app.registerForRemoteNotifications();
           });
         }
@@ -467,7 +467,7 @@ firebase._registerForRemoteNotifications = function () {
   } else {
     const notificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationActivationMode.Background;
     const notificationSettings = UIUserNotificationSettings.settingsForTypesCategories(notificationTypes, null);
-    invokeOnRunLoop(function () {
+    invokeOnRunLoop(() => {
       app.registerForRemoteNotifications(); // prompts the user to accept notifications
     });
     app.registerUserNotificationSettings(notificationSettings);
@@ -495,7 +495,7 @@ function prepAppDelegate() {
     // see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178 for why we're not using a constant here
     firebase._addObserver("com.firebase.iid.notif.refresh-token", firebase._onTokenRefreshNotification);
 
-    firebase._addObserver(UIApplicationDidFinishLaunchingNotification, function (appNotification) {
+    firebase._addObserver(UIApplicationDidFinishLaunchingNotification, appNotification => {
       // guarded this with a preference so the popup "this app wants to send notifications"
       // is not shown until the dev intentionally wired a listener (see other usages of _registerForRemoteNotifications())
       if (applicationSettings.getBoolean("registered", false)) {
@@ -503,7 +503,7 @@ function prepAppDelegate() {
       }
     });
 
-    firebase._addObserver(UIApplicationDidBecomeActiveNotification, function (appNotification) {
+    firebase._addObserver(UIApplicationDidBecomeActiveNotification, appNotification => {
       firebase._processPendingNotifications();
 
       if (!firebase._messagingConnected) {
@@ -511,17 +511,17 @@ function prepAppDelegate() {
       }
     });
 
-    firebase._addObserver(UIApplicationDidEnterBackgroundNotification, function (appNotification) {
+    firebase._addObserver(UIApplicationDidEnterBackgroundNotification, appNotification => {
       // Firebase notifications (FCM)
       if (firebase._messagingConnected) {
         FIRMessaging.messaging().disconnect();
       }
     });
 
-    firebase._addObserver(UIApplicationWillEnterForegroundNotification, function (appNotification) {
+    firebase._addObserver(UIApplicationWillEnterForegroundNotification, appNotification => {
       // Firebase notifications (FCM)
       if (firebase._messagingConnected !== null) {
-        FIRMessaging.messaging().connectWithCompletion(function (error) {
+        FIRMessaging.messaging().connectWithCompletion(error => {
           if (!error) {
             firebase._messagingConnected = true;
           }
@@ -534,7 +534,7 @@ function prepAppDelegate() {
 
 prepAppDelegate();
 
-firebase.toJsObject = function (objCObj) {
+firebase.toJsObject = objCObj => {
   if (objCObj === null || typeof objCObj !== "object") {
     return objCObj;
   }
@@ -583,7 +583,7 @@ firebase.toJsObject = function (objCObj) {
   return node;
 };
 
-firebase.getCallbackData = function (type, snapshot) {
+firebase.getCallbackData = (type, snapshot) => {
   return {
     type: type,
     key: snapshot.key,
@@ -593,8 +593,8 @@ firebase.getCallbackData = function (type, snapshot) {
 
 firebase.authStateListener = null;
 
-firebase.init = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.init = arg => {
+  return new Promise((resolve, reject) => {
     try {
       if (firebase.instance !== null) {
         reject("You already ran init");
@@ -632,7 +632,7 @@ firebase.init = function (arg) {
       }
 
       if (arg.onAuthStateChanged) {
-        firebase.authStateListener = function (auth, user) {
+        firebase.authStateListener = (auth, user) => {
           arg.onAuthStateChanged({
             loggedIn: user !== null,
             user: toLoginResult(user)
@@ -643,7 +643,7 @@ firebase.init = function (arg) {
 
       // Listen to auth state changes
       if (!firebase.authStateListener) {
-        firebase.authStateListener = function (auth, user) {
+        firebase.authStateListener = (auth, user) => {
           firebase.notifyAuthStateListeners({
             loggedIn: user !== null,
             user: toLoginResult(user)
@@ -691,8 +691,8 @@ firebase.init = function (arg) {
   });
 };
 
-firebase.analytics.logEvent = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.analytics.logEvent = arg => {
+  return new Promise((resolve, reject) => {
     try {
       if (arg.key === undefined) {
         reject("Argument 'key' is missing");
@@ -719,8 +719,8 @@ firebase.analytics.logEvent = function (arg) {
   });
 };
 
-firebase.analytics.setUserProperty = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.analytics.setUserProperty = arg => {
+  return new Promise((resolve, reject) => {
     try {
       if (arg.key === undefined) {
         reject("Argument 'key' is missing");
@@ -741,8 +741,8 @@ firebase.analytics.setUserProperty = function (arg) {
   });
 };
 
-firebase.analytics.setScreenName = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.analytics.setScreenName = arg => {
+  return new Promise((resolve, reject) => {
     try {
       if (arg.screenName === undefined) {
         reject("Argument 'screenName' is missing");
@@ -759,8 +759,8 @@ firebase.analytics.setScreenName = function (arg) {
   });
 };
 
-firebase.admob.showBanner = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.admob.showBanner = arg => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(GADRequest) === "undefined") {
         reject("Uncomment AdMob in the plugin's Podfile first");
@@ -813,7 +813,7 @@ firebase.admob.showBanner = function (arg) {
       view.addSubview(firebase.admob.adView);
 
       // support rotation events
-      application.on(application.orientationChangedEvent, function (data) {
+      application.on(application.orientationChangedEvent, data => {
         if (firebase.admob.adView !== null) {
           firebase.admob.hideBanner().then(function (res) {
             firebase.admob.createBanner(arg);
@@ -829,8 +829,8 @@ firebase.admob.showBanner = function (arg) {
   });
 };
 
-firebase.admob.showInterstitial = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.admob.showInterstitial = arg => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(GADRequest) === "undefined") {
         reject("Uncomment AdMob in the plugin's Podfile first");
@@ -879,8 +879,8 @@ firebase.admob.showInterstitial = function (arg) {
   });
 };
 
-firebase.admob.hideBanner = function () {
-  return new Promise(function (resolve, reject) {
+firebase.admob.hideBanner = () => {
+  return new Promise((resolve, reject) => {
     try {
       if (firebase.admob.adView !== null) {
         // adView.delegate = null;
@@ -931,8 +931,8 @@ firebase.admob._getBannerType = size => {
   }
 };
 
-firebase.getRemoteConfig = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.getRemoteConfig = arg => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRRemoteConfig) === "undefined") {
         reject("Uncomment RemoteConfig in the plugin's Podfile first");
@@ -959,7 +959,7 @@ firebase.getRemoteConfig = function (arg) {
       }
       firebaseRemoteConfig.setDefaults(dic);
 
-      const onCompletion = function (remoteConfigFetchStatus, error) {
+      const onCompletion = (remoteConfigFetchStatus, error) => {
         if (remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Success ||
                 remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Throttled) {
 
@@ -996,8 +996,8 @@ firebase.getRemoteConfig = function (arg) {
   });
 };
 
-firebase.getCurrentUser = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.getCurrentUser = arg => {
+  return new Promise((resolve, reject) => {
     try {
       const fAuth = FIRAuth.auth();
       if (fAuth === null) {
@@ -1018,8 +1018,8 @@ firebase.getCurrentUser = function (arg) {
   });
 };
 
-firebase.sendEmailVerification = function () {
-  return new Promise(function (resolve, reject) {
+firebase.sendEmailVerification = () => {
+  return new Promise((resolve, reject) => {
     try {
       const fAuth = FIRAuth.auth();
       if (fAuth === null) {
@@ -1029,7 +1029,7 @@ firebase.sendEmailVerification = function () {
 
       const user = fAuth.currentUser;
       if (user) {
-        const onCompletion = function (error) {
+        const onCompletion = error => {
           if (error) {
             reject(error.localizedDescription);
           } else {
@@ -1047,8 +1047,8 @@ firebase.sendEmailVerification = function () {
   });
 };
 
-firebase.logout = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.logout = arg => {
+  return new Promise((resolve, reject) => {
     try {
       FIRAuth.auth().signOut();
 
@@ -1101,8 +1101,8 @@ function toLoginResult(user) {
   };
 }
 
-firebase.getAuthToken = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.getAuthToken = arg => {
+  return new Promise((resolve, reject) => {
     try {
       const fAuth = FIRAuth.auth();
       if (fAuth === null) {
@@ -1112,7 +1112,7 @@ firebase.getAuthToken = function (arg) {
 
       const user = fAuth.currentUser;
       if (user) {
-        const onCompletion = function (token, error) {
+        const onCompletion = (token, error) => {
           if (error) {
             reject(error.localizedDescription);
           } else {
@@ -1130,8 +1130,8 @@ firebase.getAuthToken = function (arg) {
   });
 };
 
-firebase.login = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.login = arg => {
+  return new Promise((resolve, reject) => {
     try {
       const onCompletion = (user: FIRUser, error?: NSError) => {
         if (error) {
@@ -1197,10 +1197,10 @@ firebase.login = function (arg) {
             reject(error.localizedDescription);
             return;
           }
-          firebase.requestPhoneAuthVerificationCode(function (userResponse) {
+          firebase.requestPhoneAuthVerificationCode(userResponse => {
             const fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
             if (fAuth.currentUser) {
-              const onCompletionLink = function (user, error) {
+              const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
@@ -1226,10 +1226,10 @@ firebase.login = function (arg) {
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
               .then(
-                  function (token) {
+                  token => {
                     fAuth.signInWithCustomTokenCompletion(token, onCompletion);
                   },
-                  function (error) {
+                  error => {
                     reject(error);
                   }
               );
@@ -1253,7 +1253,7 @@ firebase.login = function (arg) {
             const fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString);
             if (fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
-              const onCompletionLink = function (user, error) {
+              const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   log("--- linking error: " + error.localizedDescription);
@@ -1307,7 +1307,7 @@ firebase.login = function (arg) {
             // Finally, authenticate with Firebase using the credential
             if (fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use Google as an auth provider
-              const onCompletionLink = function (user, error) {
+              const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
@@ -1341,8 +1341,8 @@ firebase.login = function (arg) {
   });
 };
 
-firebase.reauthenticate = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.reauthenticate = arg => {
+  return new Promise((resolve, reject) => {
     try {
       const fAuth = FIRAuth.auth();
       if (fAuth === null) {
@@ -1387,7 +1387,7 @@ firebase.reauthenticate = function (arg) {
         return;
       }
 
-      const onCompletion = function (error) {
+      const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
 
@@ -1404,8 +1404,8 @@ firebase.reauthenticate = function (arg) {
   });
 };
 
-firebase.reloadUser = function () {
-  return new Promise(function (resolve, reject) {
+firebase.reloadUser = () => {
+  return new Promise((resolve, reject) => {
     try {
       const user = FIRAuth.auth().currentUser;
 
@@ -1414,7 +1414,7 @@ firebase.reloadUser = function () {
         return;
       }
 
-      const onCompletion = function (error) {
+      const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1430,10 +1430,10 @@ firebase.reloadUser = function () {
   });
 };
 
-firebase.resetPassword = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.resetPassword = arg => {
+  return new Promise((resolve, reject) => {
     try {
-      const onCompletion = function (error) {
+      const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1453,10 +1453,10 @@ firebase.resetPassword = function (arg) {
   });
 };
 
-firebase.changePassword = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.changePassword = arg => {
+  return new Promise((resolve, reject) => {
     try {
-      const onCompletion = function (error) {
+      const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1481,10 +1481,10 @@ firebase.changePassword = function (arg) {
   });
 };
 
-firebase.createUser = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.createUser = arg => {
+  return new Promise((resolve, reject) => {
     try {
-      const onCompletion = function (user, error) {
+      const onCompletion = (user, error) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1507,8 +1507,8 @@ firebase.createUser = function (arg) {
   });
 };
 
-firebase.deleteUser = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.deleteUser = arg => {
+  return new Promise((resolve, reject) => {
     try {
       const user = FIRAuth.auth().currentUser;
       if (user === null) {
@@ -1516,7 +1516,7 @@ firebase.deleteUser = function (arg) {
         return;
       }
 
-      const onCompletion = function (error) {
+      const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1532,10 +1532,10 @@ firebase.deleteUser = function (arg) {
   });
 };
 
-firebase.updateProfile = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.updateProfile = arg => {
+  return new Promise((resolve, reject) => {
     try {
-      const onCompletion = function (error) {
+      const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1569,25 +1569,25 @@ firebase.updateProfile = function (arg) {
   });
 };
 
-firebase._addObservers = function (to, updateCallback) {
+firebase._addObservers = (to, updateCallback) => {
   const listeners = [];
-  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildAdded, function (snapshot) {
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildAdded, snapshot => {
     updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
   }));
-  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildRemoved, function (snapshot) {
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildRemoved, snapshot => {
     updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
   }));
-  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildChanged, function (snapshot) {
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildChanged, snapshot => {
     updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
   }));
-  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildMoved, function (snapshot) {
+  listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildMoved, snapshot => {
     updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
   }));
   return listeners;
 };
 
-firebase.keepInSync = function (path, switchOn) {
-  return new Promise(function (resolve, reject) {
+firebase.keepInSync = (path, switchOn) => {
+  return new Promise((resolve, reject) => {
     try {
       const where = firebase.instance.childByAppendingPath(path);
       where.keepSynced(switchOn);
@@ -1599,8 +1599,8 @@ firebase.keepInSync = function (path, switchOn) {
   });
 };
 
-firebase.addChildEventListener = function (updateCallback, path) {
-  return new Promise(function (resolve, reject) {
+firebase.addChildEventListener = (updateCallback, path) => {
+  return new Promise((resolve, reject) => {
     try {
       const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
       resolve({
@@ -1614,16 +1614,16 @@ firebase.addChildEventListener = function (updateCallback, path) {
   });
 };
 
-firebase.addValueEventListener = function (updateCallback, path) {
-  return new Promise(function (resolve, reject) {
+firebase.addValueEventListener = (updateCallback, path) => {
+  return new Promise((resolve, reject) => {
     try {
       const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
       const listener = where.observeEventTypeWithBlockWithCancelBlock(
           FIRDataEventType.Value,
-          function (snapshot) {
+          snapshot => {
             updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
           },
-          function (firebaseError) {
+          firebaseError => {
             updateCallback({
               error: firebaseError.localizedDescription
             });
@@ -1639,8 +1639,8 @@ firebase.addValueEventListener = function (updateCallback, path) {
   });
 };
 
-firebase.removeEventListeners = function (listeners, path) {
-  return new Promise(function (resolve, reject) {
+firebase.removeEventListeners = (listeners, path) => {
+  return new Promise((resolve, reject) => {
     try {
       const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
       for (let i = 0; i < listeners.length; i++) {
@@ -1655,8 +1655,8 @@ firebase.removeEventListeners = function (listeners, path) {
   });
 };
 
-firebase.push = function (path, val) {
-  return new Promise(function (resolve, reject) {
+firebase.push = (path, val) => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof firebase.ServerValue === "undefined") {
         reject("Run init() first!");
@@ -1675,8 +1675,8 @@ firebase.push = function (path, val) {
   });
 };
 
-firebase.setValue = function (path, val) {
-  return new Promise(function (resolve, reject) {
+firebase.setValue = (path, val) => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof firebase.ServerValue === "undefined") {
         reject("Run init() first!");
@@ -1692,8 +1692,8 @@ firebase.setValue = function (path, val) {
   });
 };
 
-firebase.update = function (path, val) {
-  return new Promise(function (resolve, reject) {
+firebase.update = (path, val) => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof firebase.ServerValue === "undefined") {
         reject("Run init() first!");
@@ -1718,8 +1718,8 @@ firebase.update = function (path, val) {
   });
 };
 
-firebase.query = function (updateCallback, path, options) {
-  return new Promise(function (resolve, reject) {
+firebase.query = (updateCallback, path, options) => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof firebase.ServerValue === "undefined") {
         reject("Run init() first!");
@@ -1804,7 +1804,7 @@ firebase.query = function (updateCallback, path, options) {
       }
 
       if (options.singleEvent) {
-        query.observeSingleEventOfTypeWithBlock(FIRDataEventType.Value, function (snapshot) {
+        query.observeSingleEventOfTypeWithBlock(FIRDataEventType.Value, snapshot => {
           if (updateCallback) updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
           // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
           resolve(firebase.getCallbackData('ValueChanged', snapshot));
@@ -1822,8 +1822,8 @@ firebase.query = function (updateCallback, path, options) {
   });
 };
 
-firebase.remove = function (path) {
-  return new Promise(function (resolve, reject) {
+firebase.remove = path => {
+  return new Promise((resolve, reject) => {
     try {
       firebase.instance.childByAppendingPath(path).setValue(null);
       resolve();
@@ -1848,11 +1848,11 @@ function getStorageRef(reject, arg) {
   return arg.bucket ? FIRStorage.storage().referenceForURL(arg.bucket) : firebase.storage;
 }
 
-firebase.uploadFile = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.uploadFile = arg => {
+  return new Promise((resolve, reject) => {
     try {
 
-      const onCompletion = function (metadata, error) {
+      const onCompletion = (metadata, error) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1896,7 +1896,7 @@ firebase.uploadFile = function (arg) {
 
       if (fIRStorageUploadTask !== null) {
         // Add a progress observer to an upload task
-        const fIRStorageHandle = fIRStorageUploadTask.observeStatusHandler(FIRStorageTaskStatus.Progress, function (snapshot) {
+        const fIRStorageHandle = fIRStorageUploadTask.observeStatusHandler(FIRStorageTaskStatus.Progress, snapshot => {
           if (!snapshot.error && typeof(arg.onProgress) === "function") {
             arg.onProgress({
               fractionCompleted: snapshot.progress.fractionCompleted,
@@ -1913,11 +1913,11 @@ firebase.uploadFile = function (arg) {
   });
 };
 
-firebase.downloadFile = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.downloadFile = arg => {
+  return new Promise((resolve, reject) => {
     try {
 
-      const onCompletion = function (url, error) {
+      const onCompletion = (url, error) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1962,11 +1962,11 @@ firebase.downloadFile = function (arg) {
   });
 };
 
-firebase.getDownloadUrl = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.getDownloadUrl = arg => {
+  return new Promise((resolve, reject) => {
     try {
 
-      const onCompletion = function (url, error) {
+      const onCompletion = (url, error) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1991,11 +1991,11 @@ firebase.getDownloadUrl = function (arg) {
   });
 };
 
-firebase.deleteFile = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.deleteFile = arg => {
+  return new Promise((resolve, reject) => {
     try {
 
-      const onCompletion = function (error) {
+      const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -2020,8 +2020,8 @@ firebase.deleteFile = function (arg) {
   });
 };
 
-firebase.subscribeToTopic = function (topicName) {
-  return new Promise(function (resolve, reject) {
+firebase.subscribeToTopic = topicName => {
+  return new Promise((resolve, reject) => {
     try {
 
       if (typeof(FIRMessaging) === "undefined") {
@@ -2041,8 +2041,8 @@ firebase.subscribeToTopic = function (topicName) {
   });
 };
 
-firebase.unsubscribeFromTopic = function (topicName) {
-  return new Promise(function (resolve, reject) {
+firebase.unsubscribeFromTopic = topicName => {
+  return new Promise((resolve, reject) => {
     try {
 
       if (typeof(FIRMessaging) === "undefined") {
@@ -2062,8 +2062,8 @@ firebase.unsubscribeFromTopic = function (topicName) {
   });
 };
 
-firebase.sendCrashLog = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.sendCrashLog = arg => {
+  return new Promise((resolve, reject) => {
     try {
       // TODO generate typings again and see if 'FIRCrashLog' is available
 
@@ -2093,8 +2093,8 @@ firebase.sendCrashLog = function (arg) {
   });
 };
 
-firebase.invites.sendInvitation = function (arg) {
-  return new Promise(function (resolve, reject) {
+firebase.invites.sendInvitation = arg => {
+  return new Promise((resolve, reject) => {
     try {
 
       if (typeof(FIRInvites) === "undefined") {
@@ -2169,8 +2169,8 @@ firebase.invites.sendInvitation = function (arg) {
   });
 };
 
-firebase.invites.getInvitation = function () {
-  return new Promise(function (resolve, reject) {
+firebase.invites.getInvitation = () => {
+  return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRInvites) === "undefined") {
         reject("Make sure 'Firebase/Invites' is in the plugin's Podfile");

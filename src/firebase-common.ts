@@ -82,7 +82,7 @@ export const firebase: any = {
     return firebase.authStateListeners.indexOf(listener) >= 0;
   },
   notifyAuthStateListeners: data => {
-    firebase.authStateListeners.forEach(function (listener) {
+    firebase.authStateListeners.forEach(listener => {
       try {
         if (listener.thisArg) {
           listener.onAuthStateChanged.call(listener.thisArg, data);
@@ -107,7 +107,7 @@ export const firebase: any = {
     return value;
   },
   requestPhoneAuthVerificationCode: (onUserResponse, verificationPrompt) => {
-    prompt(verificationPrompt || "Verification code").then(function (promptResult) {
+    prompt(verificationPrompt || "Verification code").then(promptResult => {
       if (!promptResult.result) {
         return;
       }
