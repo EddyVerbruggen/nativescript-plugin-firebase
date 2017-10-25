@@ -21,7 +21,7 @@ firebase._configured = null;
  */
 const invokeOnRunLoop = (() => {
   const runloop = CFRunLoopGetMain();
-  return function (func) {
+  return func => {
     CFRunLoopPerformBlock(runloop, kCFRunLoopDefaultMode, func);
     CFRunLoopWakeUp(runloop);
   };
@@ -64,7 +64,7 @@ const handleRemoteNotification = (app, userInfo) => {
 
 const addBackgroundRemoteNotificationHandler = appDelegate => {
   if (typeof(FIRMessaging) !== "undefined") {
-    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = function (app, notification, completionHandler) {
+    appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
 
       firebase._configure();
 
@@ -190,7 +190,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
       if (typeof(FIRDynamicLink) !== "undefined") {
         if (userActivity.webpageURL) {
-          result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, function (dynamicLink, error) {
+          result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, (dynamicLink, error) => {
             if (dynamicLink.url !== null) {
               console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
               if (firebase._dynamicLinkCallback) {
@@ -812,10 +812,10 @@ firebase.admob.showBanner = arg => {
 
       view.addSubview(firebase.admob.adView);
 
-      // support rotation events
+      // support rotation events (TODO we don't want to add multiple handlers)
       application.on(application.orientationChangedEvent, data => {
         if (firebase.admob.adView !== null) {
-          firebase.admob.hideBanner().then(function (res) {
+          firebase.admob.hideBanner().then(res => {
             firebase.admob.createBanner(arg);
           });
         }

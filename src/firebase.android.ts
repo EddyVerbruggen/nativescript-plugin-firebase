@@ -191,7 +191,7 @@ firebase.authStateListener = null;
 
 firebase.init = arg => {
   return new Promise((resolve, reject) => {
-    function runInit() {
+    const runInit = () => {
       if (firebase.instance !== null) {
         reject("You already ran init");
         return;
@@ -283,7 +283,7 @@ firebase.init = arg => {
       }
 
       resolve(firebase.instance);
-    }
+    };
 
     try {
       if (appModule.android.foregroundActivity) {
@@ -706,7 +706,7 @@ firebase.getRemoteConfig = arg => {
       return;
     }
 
-    function runGetRemoteConfig() {
+    const runGetRemoteConfig = () => {
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
@@ -769,7 +769,7 @@ firebase.getRemoteConfig = arg => {
       firebaseRemoteConfig.fetch(expirationDuration)
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
-    }
+    };
 
     try {
       if (appModule.android.foregroundActivity) {
