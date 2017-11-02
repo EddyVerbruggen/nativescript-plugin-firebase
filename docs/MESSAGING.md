@@ -99,7 +99,7 @@ Any pending notifications (while your app was not in the foreground) will trigge
 
 You don't _have_ to provide the handler during `init` - you can also do it through a dedicated function.
 
-One scenario where you want to do this is if you don't want the "This app wants to send push notifications" popup during init, but delay it until you call this function.
+One scenario where you want to do this is if you don't want the "This app wants to send push notifications" popup during init, but delay it until you call this function. Second case is when you want to use Angular's `Router` or `RouterExtensions` `navigate` method inside your handler, otherwise the view just won't update.
 
 ```js
   firebase.addOnMessageReceivedCallback(
