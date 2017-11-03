@@ -469,7 +469,7 @@ export interface UploadFileOptions {
 }
 
 export interface UploadFileResult {
-
+  name: string;
 }
 
 export interface DownloadFileOptions {
