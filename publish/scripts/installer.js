@@ -215,7 +215,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 4.4.0'
+`pod 'Firebase', '~> 4.5.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
@@ -287,7 +287,7 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "11.2.2"
+    def firebaseVersion = "11.4.0"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$firebaseVersion"

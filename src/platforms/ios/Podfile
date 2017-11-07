@@ -1,5 +1,5 @@
 
-pod 'Firebase', '~> 4.4.0'
+pod 'Firebase', '~> 4.5.0'
 pod 'Firebase/Database'
 pod 'Firebase/Auth'
 
