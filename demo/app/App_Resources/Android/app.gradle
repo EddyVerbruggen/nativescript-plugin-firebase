@@ -8,7 +8,6 @@
 android {
   defaultConfig {
     generatedDensities = []
-    // added these:
     multiDexEnabled true
     applicationId "org.nativescript.firebasedemo"
   }
