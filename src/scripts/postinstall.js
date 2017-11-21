@@ -2938,6 +2938,10 @@ function promptQuestions() {
         description: 'Are you using Firebase Crash Reporting (y/n)',
         default: 'n'
     }, {
+        name: 'crashlytics',
+        description: 'Are you using Firebase Crashlytics (y/n)',
+        default: 'n'
+    }, {
         name: 'storage',
         description: 'Are you using Firebase Storage (y/n)',
         default: 'n'
@@ -2970,6 +2974,7 @@ function promptQuestionsResult(result) {
     if (usingiOS) {
         writePodFile(result);
         exposeAdMobSymbols(isSelected(result.admob));
+        writeBuildscriptHook(isSelected(result.crashlytics));
     }
     if (usingAndroid) {
         writeGradleFile(result);
@@ -3021,7 +3026,19 @@ pod 'Firebase/Auth'
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
 
 # Uncomment if you want to enable Crash Reporting
-` + (isSelected(result.crash_reporting) ? `` : `#`) + `pod 'Firebase/Crash'
+` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
+
+# Uncomment if you want to enable Crashlytics
+` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
+` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Crashlytics'
+# Crashlytics works best without bitcode
+` + (isSelected(result.crashlytics) ? `` : `#`) + `post_install do |installer|
+` + (isSelected(result.crashlytics) ? `` : `#`) + `    installer.pods_project.targets.each do |target|
+` + (isSelected(result.crashlytics) ? `` : `#`) + `        target.build_configurations.each do |config|
+` + (isSelected(result.crashlytics) ? `` : `#`) + `            config.build_settings['ENABLE_BITCODE'] = "NO"
+` + (isSelected(result.crashlytics) ? `` : `#`) + `        end
+` + (isSelected(result.crashlytics) ? `` : `#`) + `    end
+` + (isSelected(result.crashlytics) ? `` : `#`) + `end
 
 # Uncomment if you want to enable FCM (Firebase Cloud Messaging)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
@@ -3044,6 +3061,71 @@ pod 'Firebase/Auth'
         console.log('Successfully created iOS (Pod) file.');
     } catch(e) {
         console.log('Failed to create iOS (Pod) file.');
+        console.log(e);
+    }
+}
+
+/**
+ * Create the iOS build script for uploading dSYM files to Crashlytics
+ *
+ * @param {any} enable Is Crashlytics enbled
+ */
+function writeBuildscriptHook(enable) {
+    if (!enable) {
+        return
+    }
+    console.log("Install Crashlytics buildscript hook.");
+    try {
+        var scriptContent =
+`var fs = require('fs-extra');
+var path = require('path');
+var xcode = require('xcode');
+
+
+module.exports = function($logger, $projectData, hookArgs) {
+  var platform = hookArgs.platform.toLowerCase();
+  return new Promise(function(resolve, reject) {
+    var isNativeProjectPrepared = !hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare;
+    if (isNativeProjectPrepared) {
+      try {
+        if (platform === 'ios') {
+          var appName = path.basename($projectData.projectDir);
+          var sanitizedName = appName.split('').filter(function(c) { return /[a-zA-Z0-9]/.test(c); }).join('');
+          var projectPath = path.join($projectData.projectDir, 'platforms', 'ios', sanitizedName + '.xcodeproj', 'project.pbxproj');
+          $logger.trace('Using Xcode project', projectPath);
+          var xcodeProject = xcode.project(projectPath);
+          xcodeProject.parseSync();
+          var options = { shellPath: '/bin/sh', shellScript: '\${PODS_ROOT}/Fabric/run' };
+          var buildPhase = xcodeProject.addBuildPhase([], 'PBXShellScriptBuildPhase', 'Configure Crashlytics', xcodeProject.getFirstTarget().uuid, options).buildPhase;
+          fs.writeFileSync(projectPath, xcodeProject.writeSync());
+          $logger.trace('Xcode project written');
+          resolve();
+        } else {
+          resolve();
+        }
+      } catch (e) {
+        $logger.error('Unknown error during prepare Crashlytics', e);
+        reject();
+      }
+    } else {
+      $logger.trace("Native project not prepared.");
+      resolve();
+    }
+  });
+};
+`;
+        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
+        var afterPrepareDirPath = path.dirname(scriptPath);
+        var hooksDirPath = path.dirname(afterPrepareDirPath);
+        if (!fs.existsSync(afterPrepareDirPath)) {
+            if (!fs.existsSync(hooksDirPath)) {
+                fs.mkdirSync(hooksDirPath);
+            }
+            fs.mkdirSync(afterPrepareDirPath);
+        }
+        fs.writeFileSync(scriptPath, scriptContent);
+    } catch(e) {
+        console.log("Failed to install Crashlytics buildscript hook.");
         console.log(e);
     }
 }
