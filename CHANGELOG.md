@@ -8,6 +8,8 @@
 
 ### New
 - [#547](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/547) Add a 'getValue' function to mimic the Web API's 'once'
+- [#548](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/548) Compatibility with the Firebase Web API
+- [#550](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/550) Add an Angular demo app
 
 
 ## 4.2.1 (2017, October 24)
