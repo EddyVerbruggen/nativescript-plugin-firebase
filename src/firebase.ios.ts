@@ -583,7 +583,7 @@ firebase.toJsObject = objCObj => {
   return node;
 };
 
-firebase.getCallbackData = (type, snapshot) => {
+firebase.getCallbackData = (type, snapshot: FIRDataSnapshot) => {
   return {
     type: type,
     key: snapshot.key,
@@ -1090,6 +1090,7 @@ function toLoginResult(user) {
   return {
     uid: user.uid,
     anonymous: user.anonymous,
+    isAnonymous: user.anonymous,
     // provider: user.providerID, // always 'Firebase'
     providers: providers,
     profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
@@ -1634,6 +1635,25 @@ firebase.addValueEventListener = (updateCallback, path) => {
       });
     } catch (ex) {
       console.log("Error in firebase.addChildEventListener: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getValue = path => {
+  return new Promise((resolve, reject) => {
+    try {
+      const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
+      const listener = where.observeSingleEventOfTypeWithBlockWithCancelBlock(
+          FIRDataEventType.Value,
+          snapshot => {
+            resolve(firebase.getCallbackData('ValueChanged', snapshot));
+          },
+          firebaseError => {
+            reject(firebaseError.localizedDescription);
+          });
+    } catch (ex) {
+      console.log("Error in firebase.getValue: " + ex);
       reject(ex);
     }
   });

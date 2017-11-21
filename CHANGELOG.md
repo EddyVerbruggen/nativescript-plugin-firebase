@@ -4,6 +4,12 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.0.0 (work in progress)
+
+### New
+- [#547](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/547) Add a 'getValue' function to mimic the Web API's 'once'
+
+
 ## 4.2.1 (2017, October 24)
 
 ### Fixes

@@ -6,10 +6,11 @@
 *.js.map
 build/
 *.log.*
-src/*.d.ts
+src/**/*.d.ts
 !src/firebase.d.ts
 !src/index.d.ts
 !src/references.d.ts
+!src/platforms/web/typings/firebase-webapi.d.ts
 !src/scripts/*.js
 !demo/karma.conf.js
 !demo/app/tests/*.js

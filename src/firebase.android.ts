@@ -924,6 +924,7 @@ function toLoginResult(user) {
     // provider: user.getProviderId(), // always 'firebase'
     providers: providers,
     anonymous: user.isAnonymous(),
+    isAnonymous: user.isAnonymous(),
     phoneNumber: user.getPhoneNumber(),
     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
   };
@@ -1509,6 +1510,25 @@ firebase.addValueEventListener = (updateCallback, path) => {
       });
     } catch (ex) {
       console.log("Error in firebase.addValueEventListener: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.getValue = path => {
+  return new Promise((resolve, reject) => {
+    try {
+      const listener = new com.google.firebase.database.ValueEventListener({
+        onDataChange: snapshot => {
+          resolve(firebase.getCallbackData('ValueChanged', snapshot));
+        },
+        onCancelled: databaseError => {
+          reject(databaseError.getMessage());
+        }
+      });
+      firebase.instance.child(path).addListenerForSingleValueEvent(listener);
+    } catch (ex) {
+      console.log("Error in firebase.getValue: " + ex);
       reject(ex);
     }
   });

@@ -2,9 +2,11 @@ import { Observable } from "tns-core-modules/data/observable";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
 import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { isIOS } from "tns-core-modules/platform";
-import { AddEventListenerResult } from "nativescript-plugin-firebase";
+import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
+
 const firebase = require("nativescript-plugin-firebase");
+const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 declare const assert: any;
 
@@ -13,6 +15,223 @@ export class HelloWorldModel extends Observable {
   public userEmailOrPhone: string;
   private userListenerWrapper: AddEventListenerResult;
   private companiesListenerWrapper: AddEventListenerResult;
+  private onAuthStateChangedHandlerSet = false;
+
+
+  /***********************************************
+   * Web API usage examples
+   ***********************************************/
+
+  private ensureWebOnAuthChangedHandler(): void {
+    if (!this.onAuthStateChangedHandlerSet) {
+      this.onAuthStateChangedHandlerSet = true;
+      firebaseWebApi.auth().onAuthStateChanged((user?: User) => {
+        console.log(">> auth state changed: " + user);
+        if (user) {
+          this.set("userEmailOrPhone", user.email ? user.email : (user.phoneNumber ? user.phoneNumber : "N/A"));
+          alert({
+            title: "User signed in",
+            message: JSON.stringify(user),
+            okButtonText: "Nice!"
+          });
+        } else {
+          alert({
+            title: "User signed out",
+            okButtonText: "Bye!"
+          });
+        }
+      });
+    }
+  }
+
+  public doWebInit(): void {
+    firebaseWebApi.initializeApp();
+  }
+
+  public doWebLoginAnonymously(): void {
+    this.ensureWebOnAuthChangedHandler();
+    firebaseWebApi.auth().signInAnonymously()
+        .catch(err => {
+              alert({
+                title: "Login error",
+                message: JSON.stringify(err),
+                okButtonText: "OK, pity"
+              });
+            }
+        );
+  }
+
+  public doWebLoginByPassword(): void {
+    this.ensureWebOnAuthChangedHandler();
+    firebaseWebApi.auth().signInWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+        .catch(err => {
+              alert({
+                title: "Login error",
+                message: JSON.stringify(err),
+                okButtonText: "OK, pity"
+              });
+            }
+        );
+  }
+
+  public doWebFetchProvidersForEmail(): void {
+    const user = firebaseWebApi.auth().currentUser;
+    if (!user || !user.email) {
+      alert({
+        title: "Can't fetch providers",
+        message: "No user with emailaddress logged in.",
+        okButtonText: "OK, makes sense.."
+      });
+      return;
+    }
+
+    firebaseWebApi.auth().fetchProvidersForEmail(user.email).then(
+        result => {
+          alert({
+            title: `Providers for ${user.email}`,
+            message: JSON.stringify(result), // likely to be ["password"]
+            okButtonText: "Thanks!"
+          });
+        },
+        errorMessage => {
+          alert({
+            title: "Fetch Providers for Email error",
+            message: errorMessage,
+            okButtonText: "OK, pity.."
+          });
+        }
+    );
+  }
+
+  public doWebLogout(): void {
+    firebaseWebApi.auth().signOut()
+        .then(() => {
+          this.set("userEmailOrPhone", null);
+          alert({
+            title: "Logout OK",
+            okButtonText: "OK, bye!"
+          });
+        })
+        .catch(error => {
+              alert({
+                title: "Logout error",
+                message: JSON.stringify(error),
+                okButtonText: "Hmmkay"
+              });
+            }
+        );
+  }
+
+  public doWebCreateUser(): void {
+    firebaseWebApi.auth().createUserWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+        .then(result => {
+          alert({
+            title: "User created",
+            message: JSON.stringify(result),
+            okButtonText: "Nice!"
+          });
+        })
+        .catch(
+            error => {
+              alert({
+                title: "No user created",
+                message: JSON.stringify(error),
+                okButtonText: "OK, got it"
+              });
+            }
+        );
+  }
+
+  public doWebGetCurrentUser(): void {
+    const user = firebaseWebApi.auth().currentUser;
+    if (user) {
+      alert({
+        title: "Current user",
+        message: JSON.stringify(user),
+        okButtonText: "Nice!"
+      });
+    } else {
+      alert({
+        title: "No current user",
+        okButtonText: "OK, thanks"
+      });
+    }
+  }
+
+  public doWebAddValueEventListenerForCompanies(): void {
+    const path = "/companies";
+    const onValueEvent = result => {
+      if (result.error) {
+        alert({
+          title: "Listener error",
+          message: result.error,
+          okButtonText: "Darn!"
+        });
+      } else {
+        this.set("path", path);
+        this.set("key", result.key);
+        this.set("value", JSON.stringify(result.val()));
+      }
+    };
+
+    firebaseWebApi.database().ref(path).on("value", onValueEvent);
+  }
+
+  public doWebRemoveValueEventListenersForCompanies(): void {
+    const path = "/companies";
+    firebaseWebApi.database().ref(path).off("value");
+  }
+
+  public doWebGetValueForCompanies(): void {
+    const path = "/companies";
+    firebaseWebApi.database().ref(path)
+        .once("value")
+        .then(result => {
+          this.set("path", path);
+          this.set("key", result.key);
+          this.set("value", JSON.stringify(result.val()));
+        })
+        .catch(error => console.log("doWebGetValueForCompanies error: " + error));
+  }
+
+  public doWebStoreCompaniesBySetValue(): void {
+    firebaseWebApi.database().ref("/companies")
+        .set([
+              {
+                name: 'Telerik (web)',
+                country: 'Bulgaria',
+                since: 2000,
+                updateTs: firebase.ServerValue.TIMESTAMP
+              },
+              {
+                name: 'Google (web)',
+                country: 'USA',
+                since: 1900,
+                updateTs: firebase.ServerValue.TIMESTAMP
+              }
+            ]
+        )
+        .then(() => console.log("firebase.setValue done"))
+        .catch(error => console.log("firebase.setValue error: " + error));
+  }
+
+  public doWebRemoveCompanies(): void {
+    firebaseWebApi.database().ref("/companies").remove()
+        .then(() => console.log("firebase.remove done"))
+        .catch((err) => console.log("firebase.remove error: " + err));
+  }
+
+  public doWebQueryBulgarianCompanies(): void {
+    const path = "/companies";
+    const child = "name";
+    firebaseWebApi.database().ref(path).orderByChild(child);
+  }
+
+
+
+  /***********************************************
+   * Native API usage examples
+   ***********************************************/
 
   public doInit(): void {
     firebase.init({
@@ -720,6 +939,21 @@ export class HelloWorldModel extends Observable {
         },
         error => {
           console.log("firebase.removeEventListeners error.");
+        }
+    );
+  }
+
+  public doGetValueForCompanies(): void {
+    firebase.getValue('/companies').then(
+        result => {
+          alert({
+            title: "Value retrieved",
+            message: JSON.stringify(result),
+            okButtonText: "OK"
+          });
+        },
+        error => {
+          console.log("doGetValueForCompanies error: " + error);
         }
     );
   }
