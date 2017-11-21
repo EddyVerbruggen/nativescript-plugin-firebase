@@ -268,6 +268,7 @@ export interface User {
   name?: string;
   phoneNumber?: string;
   anonymous: boolean;
+  isAnonymous: boolean; // This is used by the web API
   providers: Array<Provider>;
   profileImageURL?: string;
   /** iOS only */
@@ -538,6 +539,8 @@ export function init(options?: InitOptions): Promise<any>;
 
 // Database
 export function push(path: string, value: any): Promise<PushResult>;
+
+export function getValue(path: string): Promise<any>;
 
 export function setValue(path: string, value: any): Promise<any>;
 
