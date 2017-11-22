@@ -15,10 +15,13 @@ src/**/*.d.ts
 !demo/karma.conf.js
 !demo/app/tests/*.js
 demo/*.d.ts
+demo-ng/*.d.ts
 !demo/references.d.ts
+!demo-ng/references.d.ts
 demo/lib
+demo-ng/lib
 demo/platforms
-demo/.nsbuildinfo
+demo-ng/platforms
 node_modules
 demo/report/report.html
 demo/report/stats.json

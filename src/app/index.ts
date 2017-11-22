@@ -7,9 +7,6 @@ import * as firebase from "../firebase";
 import { auth as firebaseAuthModule } from "./auth";
 import { database as firebaseDatabaseModule } from "./database";
 
-export * from "./auth";
-export * from "./database";
-
 export function initializeApp(options?: Object, name?: string): any /* TODO App object.. doesn't look too useful though */ {
   firebase.init().then(
       () => console.log("Firebase is ready"),

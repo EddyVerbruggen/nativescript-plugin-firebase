@@ -5,8 +5,8 @@
 //	compile 'com.android.support:recyclerview-v7:+'
 //}
 
-android {
-  defaultConfig {
+android {  
+  defaultConfig {  
     generatedDensities = []
     multiDexEnabled true
     applicationId "org.nativescript.firebasedemo"
@@ -18,6 +18,6 @@ android {
   }
 
   aaptOptions {
-    additionalParameters "--no-version-vectors"
-  }
-}
+    additionalParameters "--no-version-vectors"  
+  }  
+} 
