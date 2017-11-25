@@ -1,6 +1,7 @@
 .vscode/
 .idea/
 .DS_Store
+package-lock.json
 *.js
 !src/*-hooks.js
 *.js.map
@@ -11,6 +12,8 @@ src/**/*.d.ts
 !src/index.d.ts
 !src/references.d.ts
 !src/platforms/web/typings/firebase-webapi.d.ts
+!src/platforms/ios/typings/*.d.ts
+!src/platforms/android/typings/**/*.d.ts
 !src/scripts/*.js
 !demo/karma.conf.js
 !demo/app/tests/*.js
