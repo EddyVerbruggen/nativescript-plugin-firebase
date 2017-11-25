@@ -49,6 +49,10 @@ declare class FIRDatabase extends NSObject {
 
 	static databaseForApp(app: FIRApp): FIRDatabase;
 
+	static databaseForAppURL(app: FIRApp, url: string): FIRDatabase;
+
+	static databaseWithURL(url: string): FIRDatabase;
+
 	static new(): FIRDatabase; // inherited from NSObject
 
 	static sdkVersion(): string;

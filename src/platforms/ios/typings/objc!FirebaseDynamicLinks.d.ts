@@ -57,6 +57,8 @@ declare class FIRDynamicLinkComponents extends NSObject {
 
 	options: FIRDynamicLinkComponentsOptions;
 
+	otherPlatformParameters: FIRDynamicLinkOtherPlatformParameters;
+
 	socialMetaTagParameters: FIRDynamicLinkSocialMetaTagParameters;
 
 	readonly url: NSURL;
@@ -164,6 +166,17 @@ declare class FIRDynamicLinkNavigationInfoParameters extends NSObject {
 	forcedRedirectEnabled: boolean;
 }
 
+declare class FIRDynamicLinkOtherPlatformParameters extends NSObject {
+
+	static alloc(): FIRDynamicLinkOtherPlatformParameters; // inherited from NSObject
+
+	static new(): FIRDynamicLinkOtherPlatformParameters; // inherited from NSObject
+
+	static parameters(): FIRDynamicLinkOtherPlatformParameters;
+
+	fallbackUrl: NSURL;
+}
+
 declare class FIRDynamicLinkSocialMetaTagParameters extends NSObject {
 
 	static alloc(): FIRDynamicLinkSocialMetaTagParameters; // inherited from NSObject
@@ -186,6 +199,8 @@ declare class FIRDynamicLinks extends NSObject {
 	static dynamicLinks(): FIRDynamicLinks;
 
 	static new(): FIRDynamicLinks; // inherited from NSObject
+
+	static performDiagnosticsWithCompletion(completionHandler: (p1: string, p2: boolean) => void): void;
 
 	dynamicLinkFromCustomSchemeURL(url: NSURL): FIRDynamicLink;
 

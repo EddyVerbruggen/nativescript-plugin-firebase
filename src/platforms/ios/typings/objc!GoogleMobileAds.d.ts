@@ -161,15 +161,6 @@ declare class GADAdChoicesView extends UIView {
 	nativeAd: GADNativeAd;
 }
 
-interface GADAdDelegate extends NSObjectProtocol {
-
-	adShouldChangeAudioSessionToCategory?(ad: any, audioSessionCategory: string): boolean;
-}
-declare var GADAdDelegate: {
-
-	prototype: GADAdDelegate;
-};
-
 declare class GADAdLoader extends NSObject {
 
 	static alloc(): GADAdLoader; // inherited from NSObject
@@ -180,9 +171,11 @@ declare class GADAdLoader extends NSObject {
 
 	delegate: GADAdLoaderDelegate;
 
-	constructor(o: { adUnitID: string; rootViewController: UIViewController; adTypes: NSArray<any>; options: NSArray<any>; });
+	readonly loading: boolean;
 
-	initWithAdUnitIDRootViewControllerAdTypesOptions(adUnitID: string, rootViewController: UIViewController, adTypes: NSArray<any>, options: NSArray<any>): this;
+	constructor(o: { adUnitID: string; rootViewController: UIViewController; adTypes: NSArray<string>; options: NSArray<GADAdLoaderOptions>; });
+
+	initWithAdUnitIDRootViewControllerAdTypesOptions(adUnitID: string, rootViewController: UIViewController, adTypes: NSArray<string>, options: NSArray<GADAdLoaderOptions>): this;
 
 	loadRequest(request: GADRequest): void;
 }
@@ -190,6 +183,8 @@ declare class GADAdLoader extends NSObject {
 interface GADAdLoaderDelegate extends NSObjectProtocol {
 
 	adLoaderDidFailToReceiveAdWithError(adLoader: GADAdLoader, error: GADRequestError): void;
+
+	adLoaderDidFinishLoading?(adLoader: GADAdLoader): void;
 }
 declare var GADAdLoaderDelegate: {
 
@@ -338,7 +333,7 @@ declare class GADBannerView extends UIView {
 	loadRequest(request: GADRequest): void;
 }
 
-interface GADBannerViewDelegate extends GADAdDelegate {
+interface GADBannerViewDelegate extends NSObjectProtocol {
 
 	adViewDidDismissScreen?(bannerView: GADBannerView): void;
 
@@ -835,7 +830,7 @@ declare class GADInterstitial extends NSObject {
 	setAdUnitID(adUnitID: string): void;
 }
 
-interface GADInterstitialDelegate extends GADAdDelegate {
+interface GADInterstitialDelegate extends NSObjectProtocol {
 
 	interstitialDidDismissScreen?(ad: GADInterstitial): void;
 
@@ -888,6 +883,10 @@ declare var GADMAdNetworkAdapter: {
 };
 
 interface GADMAdNetworkConnector extends GADMediationAdRequest {
+
+	adMuted(): boolean;
+
+	adVolume(): number;
 
 	adapterClickDidOccurInBanner(adapter: GADMAdNetworkAdapter, view: UIView): void;
 
@@ -1169,6 +1168,15 @@ declare class GADMobileAds extends NSObject {
 	isSDKVersionAtLeastMajorMinorPatch(major: number, minor: number, patch: number): boolean;
 }
 
+declare class GADMultipleAdsAdLoaderOptions extends GADAdLoaderOptions {
+
+	static alloc(): GADMultipleAdsAdLoaderOptions; // inherited from NSObject
+
+	static new(): GADMultipleAdsAdLoaderOptions; // inherited from NSObject
+
+	numberOfAds: number;
+}
+
 declare class GADNativeAd extends NSObject {
 
 	static alloc(): GADNativeAd; // inherited from NSObject
@@ -1281,6 +1289,8 @@ declare class GADNativeAppInstallAd extends GADNativeAd {
 
 	registerAdViewAssetViews(adView: UIView, assetViews: NSDictionary<string, UIView>): void;
 
+	registerAdViewClickableAssetViewsNonclickableAssetViews(adView: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>): void;
+
 	unregisterAdView(): void;
 }
 
@@ -1382,6 +1392,8 @@ declare class GADNativeContentAd extends GADNativeAd {
 
 	registerAdViewAssetViews(adView: UIView, assetViews: NSDictionary<string, UIView>): void;
 
+	registerAdViewClickableAssetViewsNonclickableAssetViews(adView: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>): void;
+
 	unregisterAdView(): void;
 }
 
@@ -1459,7 +1471,7 @@ declare class GADNativeCustomTemplateAd extends GADNativeAd {
 
 	static new(): GADNativeCustomTemplateAd; // inherited from NSObject
 
-	readonly availableAssetKeys: NSArray<any>;
+	readonly availableAssetKeys: NSArray<string>;
 
 	customClickHandler: (p1: string) => void;
 
@@ -1484,12 +1496,14 @@ interface GADNativeCustomTemplateAdLoaderDelegate extends GADAdLoaderDelegate {
 
 	adLoaderDidReceiveNativeCustomTemplateAd(adLoader: GADAdLoader, nativeCustomTemplateAd: GADNativeCustomTemplateAd): void;
 
-	nativeCustomTemplateIDsForAdLoader(adLoader: GADAdLoader): NSArray<any>;
+	nativeCustomTemplateIDsForAdLoader(adLoader: GADAdLoader): NSArray<string>;
 }
 declare var GADNativeCustomTemplateAdLoaderDelegate: {
 
 	prototype: GADNativeCustomTemplateAdLoaderDelegate;
 };
+
+declare var GADNativeCustomTemplateAdMediaViewKey: string;
 
 declare class GADNativeExpressAdView extends UIView {
 
@@ -1598,7 +1612,11 @@ declare class GADRequestError extends NSError {
 
 	static alloc(): GADRequestError; // inherited from NSObject
 
-	static errorWithDomainCodeUserInfo(domain: string, code: number, dict: NSDictionary<any, any>): GADRequestError; // inherited from NSError
+	static errorWithDomainCodeUserInfo(domain: string, code: number, dict: NSDictionary<string, any>): GADRequestError; // inherited from NSError
+
+	static fileProviderErrorForCollisionWithItem(existingItem: NSFileProviderItem): GADRequestError; // inherited from NSError
+
+	static fileProviderErrorForNonExistentItemWithIdentifier(itemIdentifier: string): GADRequestError; // inherited from NSError
 
 	static new(): GADRequestError; // inherited from NSObject
 }
@@ -1616,6 +1634,8 @@ declare class GADRewardBasedVideoAd extends NSObject {
 	delegate: GADRewardBasedVideoAdDelegate;
 
 	readonly ready: boolean;
+
+	userIdentifier: string;
 
 	loadRequestWithAdUnitID(request: GADRequest, adUnitID: string): void;
 
@@ -1733,6 +1753,8 @@ declare class GADVideoController extends NSObject {
 
 	aspectRatio(): number;
 
+	clickToExpandEnabled(): boolean;
+
 	customControlsEnabled(): boolean;
 
 	hasVideoContent(): boolean;
@@ -1766,6 +1788,8 @@ declare class GADVideoOptions extends GADAdLoaderOptions {
 	static alloc(): GADVideoOptions; // inherited from NSObject
 
 	static new(): GADVideoOptions; // inherited from NSObject
+
+	clickToExpandRequested: boolean;
 
 	customControlsRequested: boolean;
 
