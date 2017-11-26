@@ -1,4 +1,5 @@
 import { prompt } from "tns-core-modules/ui/dialogs";
+import { firestore } from "./firebase";
 
 export const firebase: any = {
   instance: null,
@@ -8,6 +9,7 @@ export const firebase: any = {
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,
   analytics: {},
+  firestore: {},
   invites: {
     MATCH_TYPE: {
       WEAK: 0,
@@ -184,3 +186,11 @@ export const firebase: any = {
     return result;
   }
 };
+
+export class QuerySnapshot implements firestore.QuerySnapshot {
+  public docSnapshots: firestore.DocumentSnapshot[];
+
+  forEach(callback: (result: firestore.DocumentSnapshot) => void, thisArg?: any): void {
+    this.docSnapshots.map(snapshot => callback(snapshot));
+  }
+}

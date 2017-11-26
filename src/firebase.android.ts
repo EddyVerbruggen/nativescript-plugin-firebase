@@ -1,10 +1,11 @@
-import { firebase } from "./firebase-common";
+import { firebase, QuerySnapshot } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import * as frame from "tns-core-modules/ui/frame";
 import * as fs from "tns-core-modules/file-system";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
+import { firestore } from "./firebase";
 
 declare const com, org: any;
 
@@ -411,6 +412,9 @@ firebase.addOnPushTokenReceivedCallback = callback => {
           new org.nativescript.plugins.firebase.FirebasePluginListener({
             success: token => {
               callback(token);
+            },
+            error: err => {
+              console.log("addOnPushTokenReceivedCallback error: " + err);
             }
           })
       );
@@ -2171,6 +2175,251 @@ firebase.invites.getInvitation = () => {
 
     } catch (ex) {
       console.log("Error in firebase.getInvitation: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
+  try {
+
+    if (typeof(com.google.firebase.firestore) === "undefined") {
+      console.log("Make sure firebase-firestore is in the plugin's include.gradle");
+      return null;
+    }
+
+    console.log(">> collection, collectionPath " + collectionPath);
+
+    const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+    const collectionRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
+
+    return {
+      id: collectionRef.getId(),
+      doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
+      add: document => firebase.firestore.add(collectionPath, document),
+      get: () => firebase.firestore.get(collectionPath)
+    };
+
+  } catch (ex) {
+    console.log("Error in firebase.firestore.collection: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
+  try {
+
+    if (typeof(com.google.firebase.firestore) === "undefined") {
+      console.log("Make sure firebase-firestore is in the plugin's include.gradle");
+      return null;
+    }
+
+    const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+    const colRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
+    const docRef: com.google.firebase.firestore.DocumentReference = documentPath ? colRef.document(documentPath) : colRef.document();
+
+    return {
+      id: docRef.getId(),
+      collection: cp => firebase.firestore.collection(cp),
+      set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
+      update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
+      delete: () => firebase.firestore.update(collectionPath, docRef.getId())
+    };
+
+  } catch (ex) {
+    console.log("Error in firebase.firestore.doc: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof(com.google.firebase.firestore) === "undefined") {
+        reject("Make sure firebase-firestore is in the plugin's include.gradle");
+        return;
+      }
+
+      const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+
+      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: (documentReference: com.google.firebase.firestore.DocumentReference) => {
+          resolve({
+            id: documentReference.getId(),
+            collection: cp => firebase.firestore.collection(cp),
+            set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, documentReference.getId(), data, options),
+            update: (data: any) => firebase.firestore.update(collectionPath, documentReference.getId(), data),
+            delete: () => firebase.firestore.update(collectionPath, documentReference.getId())
+          });
+        }
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => reject(exception.getMessage())
+      });
+
+      db.collection(collectionPath)
+          .add(firebase.toValue(document))
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.add: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof(com.google.firebase.firestore) === "undefined") {
+        reject("Make sure firebase-firestore is in the plugin's include.gradle");
+        return;
+      }
+
+      const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+
+      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: () => resolve()
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => reject(exception.getMessage())
+      });
+
+      const docRef: com.google.firebase.firestore.DocumentReference = db.collection(collectionPath).document(documentPath);
+      if (options && options.merge) {
+        docRef
+            .set(firebase.toValue(document), com.google.firebase.firestore.SetOptions.merge())
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
+      } else {
+        docRef
+            .set(firebase.toValue(document))
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
+      }
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.set: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof(com.google.firebase.firestore) === "undefined") {
+        reject("Make sure firebase-firestore is in the plugin's include.gradle");
+        return;
+      }
+
+      const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+
+      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: () => resolve()
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => reject(exception.getMessage())
+      });
+
+      const docRef: com.google.firebase.firestore.DocumentReference = db.collection(collectionPath).document(documentPath);
+      docRef
+          .update(firebase.toValue(document))
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.update: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof(com.google.firebase.firestore) === "undefined") {
+        reject("Make sure firebase-firestore is in the plugin's include.gradle");
+        return;
+      }
+
+      const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+
+      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: () => resolve()
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => reject(exception.getMessage())
+      });
+
+      const docRef: com.google.firebase.firestore.DocumentReference = db.collection(collectionPath).document(documentPath);
+      docRef
+          .delete()
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.delete: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof(com.google.firebase.firestore) === "undefined") {
+        reject("Make sure firebase-firestore is in the plugin's include.gradle");
+        return;
+      }
+
+      const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task => {
+          if (!task.isSuccessful()) {
+            const ex = task.getException();
+            reject(ex && ex.getReason ? ex.getReason() : ex);
+          } else {
+            const result: com.google.firebase.firestore.QuerySnapshot = task.getResult();
+            const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+            for (let i = 0; i < result.size(); i++) {
+              const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
+              docSnapshots.push({
+                id: documentSnapshot.getId(),
+                data: () => firebase.toJsObject(documentSnapshot.getData())
+              });
+            }
+            const snap = new QuerySnapshot();
+            snap.docSnapshots = docSnapshots;
+            resolve(snap);
+          }
+        }
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => {
+          reject(exception.getMessage());
+        }
+      });
+
+      db.collection(collectionPath)
+          .get()
+          .addOnCompleteListener(onCompleteListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.add: " + ex);
       reject(ex);
     }
   });

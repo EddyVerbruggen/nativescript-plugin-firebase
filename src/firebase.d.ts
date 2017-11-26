@@ -784,6 +784,58 @@ export namespace dynamicLinks {
   }
 }
 
+export namespace firestore {
+  export type DocumentData = { [field: string]: any };
+
+  export interface SetOptions {
+    merge?: boolean;
+  }
+
+  export interface DocumentReference {
+    id: string;
+    collection: (collectionPath: string) => CollectionReference;
+    set: (document: any, options?: SetOptions) => Promise<void>;
+    update: (document: any) => Promise<void>;
+    delete: () => Promise<void>;
+  }
+
+  export interface DocumentSnapshot {
+    id: string;
+
+    data(): DocumentData;
+  }
+
+  export interface Query {
+    get(): Promise<QuerySnapshot>;
+  }
+
+  export interface CollectionReference extends Query {
+    id: string;
+
+    doc(documentPath?: string): DocumentReference;
+
+    add(data: DocumentData): Promise<DocumentReference>;
+  }
+
+  export interface QuerySnapshot {
+    docSnapshots: firestore.DocumentSnapshot[];
+
+    forEach(callback: (result: DocumentSnapshot) => void, thisArg?: any): void;
+  }
+
+  function collection(collectionPath: string): CollectionReference;
+
+  function doc(collectionPath: string, documentPath?: string): DocumentReference;
+
+  function add(collectionPath: string, documentData: any): Promise<DocumentReference>;
+
+  function set(collectionPath: string, documentPath: string, document: any, options?: any): Promise<void>;
+
+  function get(collectionPath: string): Promise<QuerySnapshot>;
+
+  function update(collectionPath: string, documentPath: string, document: any): Promise<void>;
+}
+
 // Auth
 export function login(options: LoginOptions): Promise<User>;
 

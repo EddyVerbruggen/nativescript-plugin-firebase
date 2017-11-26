@@ -2,5 +2,14 @@
 </ActionBar>
 
 <StackLayout class="page">
-  <Button text="login" (tap)="login()"></Button>
+  <Label text="Authentication" class="h2"></Label>
+  <Button text="login anonymously" (tap)="loginAnonymously()" class="button button-user"></Button>
+  <Label text="Firestore" class="h2"></Label>
+  <Button text="Add" (tap)="firestoreAdd()" class="button"></Button>
+  <Button text="Set" (tap)="firestoreSet()" class="button"></Button>
+  <Button text="Set (auto id)" (tap)="firestoreSetByAutoID()" class="button"></Button>
+  <Button text="Update" (tap)="firestoreUpdate()" class="button"></Button>
+  <Button text="Get" (tap)="firestoreGet()" class="button"></Button>
+  <Button text="Delete" (tap)="firestoreDelete()" class="button"></Button>
+
 </StackLayout>

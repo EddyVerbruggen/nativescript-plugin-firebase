@@ -1,6 +1,7 @@
 {
   "using_ios": true,
   "using_android": true,
+  "firestore": false,
   "remote_config": true,
   "messaging": true,
   "crash_reporting": true,

@@ -22,7 +22,7 @@ install:
     - tns error-reporting disable
     - cd src
     - npm i --ignore-scripts
-    - npm run build
+    - npm run tsc
     - cd ../demo
     - npm i
 
