@@ -53,7 +53,6 @@ var isNativeScriptCLI250 = nativeScriptVersion.indexOf("2.5.0") !== -1;
 if (process.argv.indexOf("config") === -1 && fs.existsSync(pluginConfigPath)) {
     readConfig();
     console.log("Config file exists (" + pluginConfigFile + ")");
-    console.log("Config file contents: " + JSON.stringify(config));
     askiOSPromptResult(config);
     askAndroidPromptResult(config);
     promptQuestionsResult(config);

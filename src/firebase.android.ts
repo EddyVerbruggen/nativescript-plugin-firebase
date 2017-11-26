@@ -2223,7 +2223,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       collection: cp => firebase.firestore.collection(cp),
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
       update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
-      delete: () => firebase.firestore.update(collectionPath, docRef.getId())
+      delete: () => firebase.firestore.delete(collectionPath, docRef.getId())
     };
 
   } catch (ex) {
@@ -2250,7 +2250,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             collection: cp => firebase.firestore.collection(cp),
             set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, documentReference.getId(), data, options),
             update: (data: any) => firebase.firestore.update(collectionPath, documentReference.getId(), data),
-            delete: () => firebase.firestore.update(collectionPath, documentReference.getId())
+            delete: () => firebase.firestore.delete(collectionPath, documentReference.getId())
           });
         }
       });
