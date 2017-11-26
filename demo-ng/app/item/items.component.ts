@@ -39,6 +39,50 @@ export class ItemsComponent implements OnInit {
           console.log("Woofie set");
         })
         .catch(err => console.log("Setting Woofie failed, error: " + err));
+
+
+    // example from https://firebase.google.com/docs/firestore/query-data/get-data
+    const citiesRef = firebase.firestore().collection("cities");
+
+    citiesRef.doc("SF").set({
+      name: "San Francisco",
+      state: "CA",
+      country: "USA",
+      capital: false,
+      population: 860000
+    });
+
+    citiesRef.doc("LA").set({
+      name: "Los Angeles",
+      state: "CA",
+      country: "USA",
+      capital: false,
+      population: 3900000
+    });
+
+    citiesRef.doc("DC").set({
+      name: "Washington, D.C.",
+      state: null,
+      country: "USA",
+      capital: true,
+      population: 680000
+    });
+
+    citiesRef.doc("TOK").set({
+      name: "Tokyo",
+      state: null,
+      country: "Japan",
+      capital: true,
+      population: 9000000
+    });
+
+    citiesRef.doc("BJ").set({
+      name: "Beijing",
+      state: null,
+      country: "China",
+      capital: true,
+      population: 21500000
+    });
   }
 
   public firestoreSetByAutoID(): void {
@@ -68,6 +112,19 @@ export class ItemsComponent implements OnInit {
           });
         })
         .catch(err => console.log("Get failed, error" + err));
+
+    // example from https://firebase.google.com/docs/firestore/query-data/get-data
+    const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
+    docRef.get().then((doc: firestore.DocumentSnapshot) => {
+      if (doc.exists) {
+        console.log("Document data:", JSON.stringify(doc.data()));
+      } else {
+        console.log("No such document!");
+      }
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
   }
 
   public firestoreDelete(): void {

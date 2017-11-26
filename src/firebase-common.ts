@@ -187,6 +187,16 @@ export const firebase: any = {
   }
 };
 
+export class DocumentSnapshot implements firestore.DocumentSnapshot {
+  public id: string;
+  public exists: boolean;
+  public docSnapshot: firestore.DocumentSnapshot;
+
+  data(): firestore.DocumentData {
+    return this.docSnapshot;
+  }
+}
+
 export class QuerySnapshot implements firestore.QuerySnapshot {
   public docSnapshots: firestore.DocumentSnapshot[];
 

@@ -1,4 +1,4 @@
-import { firebase, QuerySnapshot } from "./firebase-common";
+import { firebase, DocumentSnapshot, QuerySnapshot } from "./firebase-common";
 import * as application from "tns-core-modules/application";
 import * as applicationSettings from "tns-core-modules/application-settings";
 import * as utils from "tns-core-modules/utils/utils";
@@ -2239,6 +2239,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       id: fIRDocumentReference.documentID,
       collection: cp => firebase.firestore.collection(cp),
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
+      get: () =>  firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
       update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
       delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID)
     };
@@ -2268,6 +2269,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
                 id: fIRDocumentReference.documentID,
                 collection: cp => firebase.firestore.collection(cp),
                 set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
+                get: () =>  firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
                 update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
                 delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID)
               });
@@ -2373,7 +2375,7 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
   });
 };
 
-firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRFirestore) === "undefined") {
@@ -2393,6 +2395,7 @@ firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapsh
                 const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
                 docSnapshots.push({
                   id: document.documentID,
+                  exists: true,
                   data: () => firebase.toJsObject(document.data())
                 });
               }
@@ -2403,7 +2406,41 @@ firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapsh
           });
 
     } catch (ex) {
-      console.log("Error in firebase.firestore.get: " + ex);
+      console.log("Error in firebase.firestore.getCollection: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+  return firebase.firestore.getCollection(collectionPath);
+};
+
+firebase.firestore.getDocument = (collectionPath: string, documentPath: string): Promise<firestore.DocumentSnapshot> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(FIRFirestore) === "undefined") {
+        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+        return;
+      }
+
+      FIRFirestore.firestore()
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath)
+          .getDocumentWithCompletion((snapshot: FIRDocumentSnapshot, error: NSError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve({
+                id: snapshot ? snapshot.documentID : null,
+                exists: !!snapshot,
+                data: () => snapshot ? firebase.toJsObject(snapshot.data()) : null
+              });
+            }
+          });
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.getDocument: " + ex);
       reject(ex);
     }
   });

@@ -2222,6 +2222,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       id: docRef.getId(),
       collection: cp => firebase.firestore.collection(cp),
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
+      get: () =>  firebase.firestore.getDocument(collectionPath, docRef.getId()),
       update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
       delete: () => firebase.firestore.delete(collectionPath, docRef.getId())
     };
@@ -2249,6 +2250,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             id: documentReference.getId(),
             collection: cp => firebase.firestore.collection(cp),
             set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, documentReference.getId(), data, options),
+            get: () =>  firebase.firestore.getDocument(collectionPath, documentReference.getId()),
             update: (data: any) => firebase.firestore.update(collectionPath, documentReference.getId(), data),
             delete: () => firebase.firestore.delete(collectionPath, documentReference.getId())
           });
@@ -2374,7 +2376,7 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
   });
 };
 
-firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
   return new Promise((resolve, reject) => {
     try {
 
@@ -2397,6 +2399,7 @@ firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapsh
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
               docSnapshots.push({
                 id: documentSnapshot.getId(),
+                exists: true,
                 data: () => firebase.toJsObject(documentSnapshot.getData())
               });
             }
@@ -2419,7 +2422,57 @@ firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapsh
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.firestore.add: " + ex);
+      console.log("Error in firebase.firestore.getCollection: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+  return firebase.firestore.getCollection(collectionPath);
+};
+
+firebase.firestore.getDocument = (collectionPath: string, documentPath: string): Promise<firestore.DocumentSnapshot> => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof(com.google.firebase.firestore) === "undefined") {
+        reject("Make sure firebase-firestore is in the plugin's include.gradle");
+        return;
+      }
+
+      const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task => {
+          if (!task.isSuccessful()) {
+            const ex = task.getException();
+            reject(ex && ex.getReason ? ex.getReason() : ex);
+          } else {
+            const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
+            resolve({
+              id: result ? result.getId() : null,
+              exists: !!result,
+              data: () => result ? firebase.toJsObject(result.getData()) : null
+            });
+          }
+        }
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => {
+          reject(exception.getMessage());
+        }
+      });
+
+      db.collection(collectionPath)
+          .document(documentPath)
+          .get()
+          .addOnCompleteListener(onCompleteListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.getDocument: " + ex);
       reject(ex);
     }
   });

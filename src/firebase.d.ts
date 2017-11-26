@@ -791,18 +791,20 @@ export namespace firestore {
     merge?: boolean;
   }
 
+  export interface DocumentSnapshot {
+    id: string;
+    exists: boolean;
+
+    data(): DocumentData;
+  }
+
   export interface DocumentReference {
     id: string;
     collection: (collectionPath: string) => CollectionReference;
     set: (document: any, options?: SetOptions) => Promise<void>;
+    get: () => Promise<DocumentSnapshot>;
     update: (document: any) => Promise<void>;
     delete: () => Promise<void>;
-  }
-
-  export interface DocumentSnapshot {
-    id: string;
-
-    data(): DocumentData;
   }
 
   export interface Query {
@@ -831,7 +833,9 @@ export namespace firestore {
 
   function set(collectionPath: string, documentPath: string, document: any, options?: any): Promise<void>;
 
-  function get(collectionPath: string): Promise<QuerySnapshot>;
+  function getCollection(collectionPath: string): Promise<QuerySnapshot>;
+
+  function getDocument(collectionPath: string, documentPath: string): Promise<DocumentSnapshot>;
 
   function update(collectionPath: string, documentPath: string, document: any): Promise<void>;
 }
