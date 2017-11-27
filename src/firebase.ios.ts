@@ -557,6 +557,12 @@ firebase.toJsObject = objCObj => {
       key = oKeyArr.objectAtIndex(i);
       const val = objCObj.valueForKey(key);
 
+      // Firestore can store nulls
+      if (val === null) {
+        node[key] = null;
+        continue;
+      }
+
       switch (types.getClass(val)) {
         case 'NSArray':
         case 'NSMutableArray':
@@ -2216,7 +2222,8 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       id: fIRCollectionReference.collectionID,
       doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
       add: document => firebase.firestore.add(collectionPath, document),
-      get: () => firebase.firestore.get(collectionPath)
+      get: () => firebase.firestore.get(collectionPath),
+      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value)
     };
 
   } catch (ex) {
@@ -2239,7 +2246,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       id: fIRDocumentReference.documentID,
       collection: cp => firebase.firestore.collection(cp),
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
-      get: () =>  firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
+      get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
       update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
       delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID)
     };
@@ -2269,7 +2276,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
                 id: fIRDocumentReference.documentID,
                 collection: cp => firebase.firestore.collection(cp),
                 set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
-                get: () =>  firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
+                get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
                 update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
                 delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID)
               });
@@ -2444,6 +2451,66 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
       reject(ex);
     }
   });
+};
+
+firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any): firestore.Query => {
+  try {
+    if (typeof(FIRFirestore) === "undefined") {
+      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    const colRef: FIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
+    let query: FIRQuery;
+
+    if (opStr === "<") {
+      query = colRef.queryWhereFieldIsLessThan(fieldPath, value);
+    } else if (opStr === "<=") {
+      query = colRef.queryWhereFieldIsLessThanOrEqualTo(fieldPath, value);
+    } else if (opStr === "==") {
+      query = colRef.queryWhereFieldIsEqualTo(fieldPath, value);
+    } else if (opStr === ">=") {
+      query = colRef.queryWhereFieldIsGreaterThanOrEqualTo(fieldPath, value);
+    } else if (opStr === ">") {
+      query = colRef.queryWhereFieldIsGreaterThan(fieldPath, value);
+    } else {
+      console.log("Illegal argument for opStr: " + opStr);
+      return null;
+    }
+
+    return {
+      get: () => new Promise((resolve, reject) => {
+        query.getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
+          if (error) {
+            reject(error.localizedDescription);
+          } else {
+            console.log(">> .where, snapshot: " + snapshot);
+            const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+            for (let i = 0, l = snapshot.documents.count; i < l; i++) {
+              const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+              docSnapshots.push({
+                id: document.documentID,
+                exists: true,
+                data: () => firebase.toJsObject(document.data())
+              });
+            }
+            const snap = new QuerySnapshot();
+            snap.docSnapshots = docSnapshots;
+            resolve(snap);
+          }
+        });
+      }),
+      where: () => {
+        // TODO check web impl
+        console.log("in where....");
+        return this;
+      }
+    };
+
+  } catch (ex) {
+    console.log("Error in firebase.firestore.where: " + ex);
+    return null;
+  }
 };
 
 // see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc

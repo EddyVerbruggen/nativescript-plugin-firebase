@@ -786,6 +786,7 @@ export namespace dynamicLinks {
 
 export namespace firestore {
   export type DocumentData = { [field: string]: any };
+  export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>';
 
   export interface SetOptions {
     merge?: boolean;
@@ -809,6 +810,8 @@ export namespace firestore {
 
   export interface Query {
     get(): Promise<QuerySnapshot>;
+
+    where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;
   }
 
   export interface CollectionReference extends Query {

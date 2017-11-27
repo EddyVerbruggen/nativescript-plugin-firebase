@@ -1,11 +1,11 @@
 {
   "nativescript": {
     "id": "org.nativescript.firebasedemo",
-    "tns-ios": {
-      "version": "3.3.0"
-    },
     "tns-android": {
       "version": "3.3.1"
+    },
+    "tns-ios": {
+      "version": "3.3.0"
     }
   },
   "dependencies": {

@@ -113,7 +113,7 @@ export class ItemsComponent implements OnInit {
         })
         .catch(err => console.log("Get failed, error" + err));
 
-    // example from https://firebase.google.com/docs/firestore/query-data/get-data
+    // examples from https://firebase.google.com/docs/firestore/query-data/get-data
     const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
 
     docRef.get().then((doc: firestore.DocumentSnapshot) => {
@@ -125,6 +125,18 @@ export class ItemsComponent implements OnInit {
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
+
+    const query: firestore.Query = firebase.firestore().collection("cities")
+        .where("capital", "==", true);
+
+    query
+        .get()
+        .then((querySnapshot: firestore.QuerySnapshot) => {
+          querySnapshot.forEach(doc => {
+            console.log(`Capital: ${doc.id} => ${JSON.stringify(doc.data())}`);
+          });
+        })
+        .catch(err => console.log("Where-get failed, error" + err));
   }
 
   public firestoreDelete(): void {

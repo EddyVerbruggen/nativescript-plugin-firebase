@@ -2197,7 +2197,8 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       id: collectionRef.getId(),
       doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
       add: document => firebase.firestore.add(collectionPath, document),
-      get: () => firebase.firestore.get(collectionPath)
+      get: () => firebase.firestore.get(collectionPath),
+      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value)
     };
 
   } catch (ex) {
@@ -2222,7 +2223,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       id: docRef.getId(),
       collection: cp => firebase.firestore.collection(cp),
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
-      get: () =>  firebase.firestore.getDocument(collectionPath, docRef.getId()),
+      get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
       update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
       delete: () => firebase.firestore.delete(collectionPath, docRef.getId())
     };
@@ -2250,7 +2251,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             id: documentReference.getId(),
             collection: cp => firebase.firestore.collection(cp),
             set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, documentReference.getId(), data, options),
-            get: () =>  firebase.firestore.getDocument(collectionPath, documentReference.getId()),
+            get: () => firebase.firestore.getDocument(collectionPath, documentReference.getId()),
             update: (data: any) => firebase.firestore.update(collectionPath, documentReference.getId(), data),
             delete: () => firebase.firestore.delete(collectionPath, documentReference.getId())
           });
@@ -2476,6 +2477,72 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
       reject(ex);
     }
   });
+};
+
+firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any): firestore.Query => {
+  try {
+    if (typeof(com.google.firebase.firestore) === "undefined") {
+      console.log("Make sure firebase-firestore is in the plugin's include.gradle");
+      return null;
+    }
+
+    const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+    const colRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
+
+    let query: com.google.firebase.firestore.Query;
+
+    if (opStr === "<") {
+      query = colRef.whereLessThan(fieldPath, firebase.toValue(value));
+    } else if (opStr === "<=") {
+      query = colRef.whereLessThanOrEqualTo(fieldPath, firebase.toValue(value));
+    } else if (opStr === "==") {
+      query = colRef.whereEqualTo(fieldPath, firebase.toValue(value));
+    } else if (opStr === ">=") {
+      query = colRef.whereGreaterThanOrEqualTo(fieldPath, firebase.toValue(value));
+    } else if (opStr === ">") {
+      query = colRef.whereGreaterThan(fieldPath, firebase.toValue(value));
+    } else {
+      console.log("Illegal argument for opStr: " + opStr);
+      return null;
+    }
+
+    return {
+      get: () => new Promise((resolve, reject) => {
+        const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: task => {
+            if (!task.isSuccessful()) {
+              const ex = task.getException();
+              reject(ex && ex.getReason ? ex.getReason() : ex);
+            } else {
+              const result: com.google.firebase.firestore.QuerySnapshot = task.getResult();
+              const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+              for (let i = 0; i < result.size(); i++) {
+                const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
+                docSnapshots.push({
+                  id: documentSnapshot.getId(),
+                  exists: true,
+                  data: () => firebase.toJsObject(documentSnapshot.getData())
+                });
+              }
+              const snap = new QuerySnapshot();
+              snap.docSnapshots = docSnapshots;
+              resolve(snap);
+            }
+          }
+        });
+        query.get().addOnCompleteListener(onCompleteListener);
+      }),
+      where: () => {
+        // TODO check web impl
+        console.log("in where....");
+        return this;
+      }
+    };
+
+  } catch (ex) {
+    console.log("Error in firebase.firestore.where: " + ex);
+    return null;
+  }
 };
 
 module.exports = firebase;
