@@ -787,6 +787,7 @@ export namespace dynamicLinks {
 export namespace firestore {
   export type DocumentData = { [field: string]: any };
   export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>';
+  export type OrderByDirection = 'desc' | 'asc';
 
   export interface SetOptions {
     merge?: boolean;
@@ -812,6 +813,10 @@ export namespace firestore {
     get(): Promise<QuerySnapshot>;
 
     where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;
+
+    orderBy(fieldPath: string, directionStr: firestore.OrderByDirection): Query;
+
+    limit(limit: number): Query;
   }
 
   export interface CollectionReference extends Query {

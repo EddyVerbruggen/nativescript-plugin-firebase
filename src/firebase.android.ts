@@ -2198,7 +2198,9 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
       add: document => firebase.firestore.add(collectionPath, document),
       get: () => firebase.firestore.get(collectionPath),
-      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value)
+      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
+      orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, collectionRef),
+      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef)
     };
 
   } catch (ex) {
@@ -2479,6 +2481,39 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
   });
 };
 
+firebase.firestore._getQuery = (collectionPath: string, query: com.google.firebase.firestore.Query): firestore.Query => {
+  return {
+    get: () => new Promise((resolve, reject) => {
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task => {
+          if (!task.isSuccessful()) {
+            const ex = task.getException();
+            reject(ex && ex.getReason ? ex.getReason() : ex);
+          } else {
+            const result: com.google.firebase.firestore.QuerySnapshot = task.getResult();
+            const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+            for (let i = 0; i < result.size(); i++) {
+              const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
+              docSnapshots.push({
+                id: documentSnapshot.getId(),
+                exists: true,
+                data: () => firebase.toJsObject(documentSnapshot.getData())
+              });
+            }
+            const snap = new QuerySnapshot();
+            snap.docSnapshots = docSnapshots;
+            resolve(snap);
+          }
+        }
+      });
+      query.get().addOnCompleteListener(onCompleteListener);
+    }),
+    where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query),
+    orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
+    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query)
+  };
+};
+
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: com.google.firebase.firestore.Query): firestore.Query => {
   try {
     if (typeof(com.google.firebase.firestore) === "undefined") {
@@ -2504,39 +2539,22 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
       return null;
     }
 
-    return {
-      get: () => new Promise((resolve, reject) => {
-        const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
-          onComplete: task => {
-            if (!task.isSuccessful()) {
-              const ex = task.getException();
-              reject(ex && ex.getReason ? ex.getReason() : ex);
-            } else {
-              const result: com.google.firebase.firestore.QuerySnapshot = task.getResult();
-              const docSnapshots: Array<firestore.DocumentSnapshot> = [];
-              for (let i = 0; i < result.size(); i++) {
-                const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-                docSnapshots.push({
-                  id: documentSnapshot.getId(),
-                  exists: true,
-                  data: () => firebase.toJsObject(documentSnapshot.getData())
-                });
-              }
-              const snap = new QuerySnapshot();
-              snap.docSnapshots = docSnapshots;
-              resolve(snap);
-            }
-          }
-        });
-        query.get().addOnCompleteListener(onCompleteListener);
-      }),
-      where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query)
-    };
+    return firebase.firestore._getQuery(collectionPath, query);
 
   } catch (ex) {
     console.log("Error in firebase.firestore.where: " + ex);
     return null;
   }
+};
+
+firebase.firestore.orderBy = (collectionPath: string, fieldPath: string, direction: firestore.OrderByDirection, query: com.google.firebase.firestore.Query): firestore.Query => {
+  query = query.orderBy(fieldPath, direction === "desc" ? com.google.firebase.firestore.Query.Direction.DESCENDING : com.google.firebase.firestore.Query.Direction.ASCENDING);
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.limit = (collectionPath: string, limit: number, query: com.google.firebase.firestore.Query): firestore.Query => {
+  query = query.limit(limit);
+  return firebase.firestore._getQuery(collectionPath, query);
 };
 
 module.exports = firebase;

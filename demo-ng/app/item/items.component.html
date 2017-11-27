@@ -1,16 +1,18 @@
 <ActionBar title="My App" class="action-bar">
 </ActionBar>
 
-<StackLayout class="page">
-  <Label text="Authentication" class="h2"></Label>
-  <Button text="login anonymously" (tap)="loginAnonymously()" class="button button-user"></Button>
-  <Label text="Firestore" class="h2"></Label>
-  <Button text="Add" (tap)="firestoreAdd()" class="button"></Button>
-  <Button text="Set" (tap)="firestoreSet()" class="button"></Button>
-  <Button text="Set (auto id)" (tap)="firestoreSetByAutoID()" class="button"></Button>
-  <Button text="Update" (tap)="firestoreUpdate()" class="button"></Button>
-  <Button text="Get" (tap)="firestoreGet()" class="button"></Button>
-  <Button text="Where" (tap)="firestoreWhere()" class="button"></Button>
-  <Button text="Delete" (tap)="firestoreDelete()" class="button"></Button>
-
-</StackLayout>
+<ScrollView>
+  <StackLayout class="page">
+    <Label text="Authentication" class="h2"></Label>
+    <Button text="login anonymously" (tap)="loginAnonymously()" class="button button-user"></Button>
+    <Label text="Firestore" class="h2"></Label>
+    <Button text="Add" (tap)="firestoreAdd()" class="button"></Button>
+    <Button text="Set" (tap)="firestoreSet()" class="button"></Button>
+    <Button text="Set (auto id)" (tap)="firestoreSetByAutoID()" class="button"></Button>
+    <Button text="Update" (tap)="firestoreUpdate()" class="button"></Button>
+    <Button text="Get" (tap)="firestoreGet()" class="button"></Button>
+    <Button text="Where" (tap)="firestoreWhere()" class="button"></Button>
+    <Button text="Where, Order, Limit" (tap)="firestoreWhereOrderLimit()" class="button"></Button>
+    <Button text="Delete" (tap)="firestoreDelete()" class="button"></Button>
+  </StackLayout>
+</ScrollView>

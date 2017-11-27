@@ -60,6 +60,14 @@ export class ItemsComponent implements OnInit {
       population: 3900000
     });
 
+    citiesRef.doc("SAC").set({
+      name: "Sacramento",
+      state: "CA",
+      country: "USA",
+      capital: true,
+      population: 500000
+    });
+
     citiesRef.doc("DC").set({
       name: "Washington, D.C.",
       state: "WA",
@@ -130,7 +138,7 @@ export class ItemsComponent implements OnInit {
   public firestoreWhere(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
         .where("state", "==", "CA")
-        .where("population", "<", 1000000);
+        .where("population", "<", 550000);
 
     query
         .get()
@@ -140,6 +148,22 @@ export class ItemsComponent implements OnInit {
           });
         })
         .catch(err => console.log("Where-get failed, error" + err));
+  }
+
+  public firestoreWhereOrderLimit(): void {
+    const query: firestore.Query = firebase.firestore().collection("cities")
+        .where("state", "==", "CA")
+        .orderBy("population", "desc")
+        .limit(2);
+
+    query
+        .get()
+        .then((querySnapshot: firestore.QuerySnapshot) => {
+          querySnapshot.forEach(doc => {
+            console.log(`${JSON.stringify(doc.data())}`);
+          });
+        })
+        .catch(err => console.log("firestoreWhereOrderLimit failed, error" + err));
   }
 
   public firestoreDelete(): void {

@@ -2226,7 +2226,9 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
       add: document => firebase.firestore.add(collectionPath, document),
       get: () => firebase.firestore.get(collectionPath),
-      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value)
+      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
+      orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, fIRCollectionReference),
+      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, fIRCollectionReference)
     };
 
   } catch (ex) {
@@ -2456,6 +2458,35 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
   });
 };
 
+firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firestore.Query => {
+  return {
+    get: () => new Promise((resolve, reject) => {
+      query.getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          console.log(">> .where, snapshot: " + snapshot);
+          const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+          for (let i = 0, l = snapshot.documents.count; i < l; i++) {
+            const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+            docSnapshots.push({
+              id: document.documentID,
+              exists: true,
+              data: () => firebase.toJsObject(document.data())
+            });
+          }
+          const snap = new QuerySnapshot();
+          snap.docSnapshots = docSnapshots;
+          resolve(snap);
+        }
+      });
+    }),
+    where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
+    orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
+    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query)
+  };
+};
+
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
   try {
     if (typeof(FIRFirestore) === "undefined") {
@@ -2480,35 +2511,22 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
       return null;
     }
 
-    return {
-      get: () => new Promise((resolve, reject) => {
-        query.getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
-          if (error) {
-            reject(error.localizedDescription);
-          } else {
-            console.log(">> .where, snapshot: " + snapshot);
-            const docSnapshots: Array<firestore.DocumentSnapshot> = [];
-            for (let i = 0, l = snapshot.documents.count; i < l; i++) {
-              const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-              docSnapshots.push({
-                id: document.documentID,
-                exists: true,
-                data: () => firebase.toJsObject(document.data())
-              });
-            }
-            const snap = new QuerySnapshot();
-            snap.docSnapshots = docSnapshots;
-            resolve(snap);
-          }
-        });
-      }),
-      where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query)
-    };
+    return firebase.firestore._getQuery(collectionPath, query);
 
   } catch (ex) {
     console.log("Error in firebase.firestore.where: " + ex);
     return null;
   }
+};
+
+firebase.firestore.orderBy = (collectionPath: string, fieldPath: string, direction: firestore.OrderByDirection, query: FIRQuery): firestore.Query => {
+  query = query.queryOrderedByFieldDescending(fieldPath, direction === "desc");
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQuery): firestore.Query => {
+  query = query.queryLimitedTo(limit);
+  return firebase.firestore._getQuery(collectionPath, query);
 };
 
 // see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc
