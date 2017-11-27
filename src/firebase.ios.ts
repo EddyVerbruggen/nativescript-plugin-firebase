@@ -582,6 +582,9 @@ firebase.toJsObject = objCObj => {
         case 'NSDecimalNumber':
           node[key] = Number(String(val));
           break;
+        case 'Date':
+          node[key] = new Date(val);
+          break;
         default:
           console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + types.getClass(val) + "'. Casting to String as a fallback.");
           node[key] = String(val);
@@ -2453,26 +2456,25 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
   });
 };
 
-firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any): firestore.Query => {
+firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
   try {
     if (typeof(FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
       return null;
     }
 
-    const colRef: FIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
-    let query: FIRQuery;
+    query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
 
     if (opStr === "<") {
-      query = colRef.queryWhereFieldIsLessThan(fieldPath, value);
+      query = query.queryWhereFieldIsLessThan(fieldPath, value);
     } else if (opStr === "<=") {
-      query = colRef.queryWhereFieldIsLessThanOrEqualTo(fieldPath, value);
+      query = query.queryWhereFieldIsLessThanOrEqualTo(fieldPath, value);
     } else if (opStr === "==") {
-      query = colRef.queryWhereFieldIsEqualTo(fieldPath, value);
+      query = query.queryWhereFieldIsEqualTo(fieldPath, value);
     } else if (opStr === ">=") {
-      query = colRef.queryWhereFieldIsGreaterThanOrEqualTo(fieldPath, value);
+      query = query.queryWhereFieldIsGreaterThanOrEqualTo(fieldPath, value);
     } else if (opStr === ">") {
-      query = colRef.queryWhereFieldIsGreaterThan(fieldPath, value);
+      query = query.queryWhereFieldIsGreaterThan(fieldPath, value);
     } else {
       console.log("Illegal argument for opStr: " + opStr);
       return null;
@@ -2500,11 +2502,7 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
           }
         });
       }),
-      where: () => {
-        // TODO check web impl
-        console.log("in where....");
-        return this;
-      }
+      where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query)
     };
 
   } catch (ex) {

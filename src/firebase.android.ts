@@ -2479,7 +2479,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
   });
 };
 
-firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any): firestore.Query => {
+firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: com.google.firebase.firestore.Query): firestore.Query => {
   try {
     if (typeof(com.google.firebase.firestore) === "undefined") {
       console.log("Make sure firebase-firestore is in the plugin's include.gradle");
@@ -2487,20 +2487,18 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
     }
 
     const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
-    const colRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
-
-    let query: com.google.firebase.firestore.Query;
+    query = query || db.collection(collectionPath);
 
     if (opStr === "<") {
-      query = colRef.whereLessThan(fieldPath, firebase.toValue(value));
+      query = query.whereLessThan(fieldPath, firebase.toValue(value));
     } else if (opStr === "<=") {
-      query = colRef.whereLessThanOrEqualTo(fieldPath, firebase.toValue(value));
+      query = query.whereLessThanOrEqualTo(fieldPath, firebase.toValue(value));
     } else if (opStr === "==") {
-      query = colRef.whereEqualTo(fieldPath, firebase.toValue(value));
+      query = query.whereEqualTo(fieldPath, firebase.toValue(value));
     } else if (opStr === ">=") {
-      query = colRef.whereGreaterThanOrEqualTo(fieldPath, firebase.toValue(value));
+      query = query.whereGreaterThanOrEqualTo(fieldPath, firebase.toValue(value));
     } else if (opStr === ">") {
-      query = colRef.whereGreaterThan(fieldPath, firebase.toValue(value));
+      query = query.whereGreaterThan(fieldPath, firebase.toValue(value));
     } else {
       console.log("Illegal argument for opStr: " + opStr);
       return null;
@@ -2532,11 +2530,7 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
         });
         query.get().addOnCompleteListener(onCompleteListener);
       }),
-      where: () => {
-        // TODO check web impl
-        console.log("in where....");
-        return this;
-      }
+      where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query)
     };
 
   } catch (ex) {

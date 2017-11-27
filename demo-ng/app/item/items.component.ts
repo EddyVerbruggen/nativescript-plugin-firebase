@@ -62,7 +62,7 @@ export class ItemsComponent implements OnInit {
 
     citiesRef.doc("DC").set({
       name: "Washington, D.C.",
-      state: null,
+      state: "WA",
       country: "USA",
       capital: true,
       population: 680000
@@ -114,7 +114,7 @@ export class ItemsComponent implements OnInit {
         .catch(err => console.log("Get failed, error" + err));
 
     // examples from https://firebase.google.com/docs/firestore/query-data/get-data
-    const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+    const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("BJ");
 
     docRef.get().then((doc: firestore.DocumentSnapshot) => {
       if (doc.exists) {
@@ -125,9 +125,12 @@ export class ItemsComponent implements OnInit {
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
+  }
 
+  public firestoreWhere(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
-        .where("capital", "==", true);
+        .where("state", "==", "CA")
+        .where("population", "<", 1000000);
 
     query
         .get()
