@@ -16,7 +16,6 @@ src/**/*.d.ts
 !src/platforms/android/typings/**/*.d.ts
 !src/scripts/*.js
 !demo/karma.conf.js
-!demo/app/tests/*.js
 demo/*.d.ts
 demo-ng/*.d.ts
 !demo/references.d.ts
