@@ -1,16 +1,13 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/firestore.png" height="85px" alt="Cloud Firestore"/>
 
-## Enabling the database features
+## Enabling Firestore
 During plugin installation you'll be prompted to use either Firestore or the default DB.
 
-In case you're upgrading and you have the `firebase.nativescript.json` file in your project root,
-you can edit it and add: `"firestore": true`. Then do `rm -rf platforms/ios && rm -rf platforms/android && rm -rf node_modules && npm i`.
+In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, edit it and add: `"firestore": true`. Then do `rm -rf platforms/ios && rm -rf platforms/android && rm -rf node_modules && npm i`.
 
 ## Functions
 All of these are 100% compatible with the Firestore Web API to make it easy to share code between web and native, and you can
 refer to the [Firestore web api docs](https://firebase.google.com/docs/firestore/data-model) (make sure to look at the 'WEB' tab of those code samples).
-
-> The plugin will take care of serializing JSON data to and from native data structures.
 
 ### `init` / `initializeApp`
 By default Firestore on iOS and Android persists data locally for offline usage (web doesn't by default, and the regular Firebase DB doesn't either on any platform).
@@ -27,7 +24,7 @@ firebase.initializeApp({
 ```
 
 ### `collection`
-A 'collection' is at the root of any Firestore interaction. Data is stored as 'documents' in a 'collection'.
+A 'collection' is at the root of any Firestore interaction. Data is stored as a 'document' inside a collection.
 
 ```typescript
 const citiesCollection = firebase.firestore().collection("cities");
@@ -47,21 +44,22 @@ citiesCollection.get().then(querySnapshot => {
 ```
 
 ### `collection.doc()`
-A 'document' lives inside a 'collection' and contains the actual data:
+As mentioned, a document lives inside a collection and contains the actual data:
 
 ```typescript
-const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+const citiesCollection = firebase.firestore().collection("cities");
+const sanFranciscoDocument = citiesCollection.doc("SF");
 ```
 
 ### `collection.doc().get()`
-To get the data inside a document:
+To get the data inside a document (and check whether or not the document actually exists):
 
 ```typescript
 const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
 
 sanFranciscoDocument.get().then(doc => {
   if (doc.exists) {
-    console.log("Document data:", JSON.stringify(doc.data()));
+    console.log(`Document data: ${JSON.stringify(doc.data())}`);
   } else {
     console.log("No such document!");
   }
@@ -81,7 +79,7 @@ citiesCollection.add({
   capital: false,
   population: 860000
 }).then(documentRef => {
-  console.log("San Francisco added with auto-generated ID: " + documentRef.id);
+  console.log(`San Francisco added with auto-generated ID: ${documentRef.id}`);
 });
 ```
 
@@ -173,4 +171,5 @@ query
     });
 ```
 
-> Need something that's not supported yet? Please open an Issue or PR 😚
+## Future work
+Need something that's not supported yet? Please open an Issue or PR 😚
