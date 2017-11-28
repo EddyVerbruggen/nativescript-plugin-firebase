@@ -173,4 +173,6 @@ query
 ```
 
 ## Future work
-Need something that's not supported yet? Please open an Issue or PR 😚
+I'll soon add [`onSnapshot`](https://firebase.google.com/docs/firestore/query-data/listen) to support realtime updates.
+
+Need something else that's not supported yet? Please open an Issue or PR 😚
