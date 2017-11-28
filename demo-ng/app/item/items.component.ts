@@ -9,6 +9,8 @@ const firebase = require("nativescript-plugin-firebase/app");
 })
 export class ItemsComponent implements OnInit {
 
+  private listenerUnsubscribe: () => void;
+
   constructor() {
   }
 
@@ -136,15 +138,30 @@ export class ItemsComponent implements OnInit {
   }
 
   public firestoreListen(): void {
+    if (this.listenerUnsubscribe !== undefined) {
+      console.log("Already listening ;)");
+      return;
+    }
+
     const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
 
-    docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
+    this.listenerUnsubscribe = docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
       if (doc.exists) {
         console.log("Document data:", JSON.stringify(doc.data()));
       } else {
         console.log("No such document!");
       }
     });
+  }
+
+  public firestoreStopListening(): void {
+    if (this.listenerUnsubscribe === undefined) {
+      console.log("Please start listening first ;)");
+      return;
+    }
+
+    this.listenerUnsubscribe();
+    this.listenerUnsubscribe = undefined;
   }
 
   public firestoreWhere(): void {

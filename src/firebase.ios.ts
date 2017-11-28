@@ -2243,10 +2243,20 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.onSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): void => {
-  docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
+firebase.firestore.onSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
+  const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
     callback(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, snapshot ? () => firebase.toJsObject(snapshot.data()) : null));
-  })
+  });
+
+  // There's a bug resulting this function to be undefined..
+  if (listener.remove === undefined) {
+    return () => {
+      // .. so we're just ignoring anything received from the server (until the callback is set again when 'onSnapshot' is invoked).
+      callback = () => {};
+    };
+  } else {
+    return () => listener.remove();
+  }
 };
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {

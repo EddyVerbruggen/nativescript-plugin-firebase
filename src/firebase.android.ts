@@ -2216,8 +2216,8 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): void => {
-  docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
+firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): ()=> void => {
+  const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
         onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
           if (exception !== null) {
             return;
@@ -2229,6 +2229,8 @@ firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentR
         })
       })
   );
+
+  return () => listener.remove();
 };
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {

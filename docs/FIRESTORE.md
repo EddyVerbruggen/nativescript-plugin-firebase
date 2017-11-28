@@ -68,18 +68,25 @@ sanFranciscoDocument.get().then(doc => {
 ```
 
 ### `collection.doc().onSnapshot()`
-To listen to changes in a certain document, you can register a callback function that gets invoked every time data is changed:
+To listen to changes in a certain document, you can register a callback function that gets invoked every time data is changed.
+
+To unsubscribe the listener, just invoke the function that was returned when attaching the listener.
+
+> NOTE: Due to a bug in the iOS Firestore SDK 'unsubscribe' does not currently work (plugin version 5.0.0), so the plugin is silently ignoring further updates after unsubscribing. This should not hurt your usage in any way though.
 
 ```typescript
 const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
 
-sanFranciscoDocument.onSnapshot(doc => {
+const unsubscribe = sanFranciscoDocument.onSnapshot(doc => {
   if (doc.exists) {
     console.log("Document data:", JSON.stringify(doc.data()));
   } else {
     console.log("No such document!");
   }
 });
+
+// then after a while, to detach the listener:
+unsubscribe();
 ```
 
 ### `collection.add()`
