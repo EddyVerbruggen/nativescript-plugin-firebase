@@ -3,7 +3,8 @@
 ## Enabling Firestore
 During plugin installation you'll be prompted to use either Firestore or the default DB.
 
-In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, edit it and add: `"firestore": true`. Then do `rm -rf platforms/ios && rm -rf platforms/android && rm -rf node_modules && npm i`.
+In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, edit it and add: `"firestore": true`.
+Then run `rm -rf platforms && rm -rf node_modules && npm i`.
 
 ## Functions
 All of these are 100% compatible with the Firestore Web API to make it easy to share code between web and native, and you can
