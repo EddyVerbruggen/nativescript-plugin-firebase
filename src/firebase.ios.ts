@@ -2260,6 +2260,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
       update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
       delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID)
+      // onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(fIRDocumentReference, callback)
     };
 
   } catch (ex) {
@@ -2267,6 +2268,12 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
     return null;
   }
 };
+
+// firebase.firestore.onSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): void => {
+//   docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
+//     callback(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, snapshot ? firebase.toJsObject(snapshot.data()) : null));
+//   })
+// };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
   return new Promise((resolve, reject) => {
@@ -2411,11 +2418,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
               const docSnapshots: Array<firestore.DocumentSnapshot> = [];
               for (let i = 0, l = snapshot.documents.count; i < l; i++) {
                 const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-                docSnapshots.push({
-                  id: document.documentID,
-                  exists: true,
-                  data: () => firebase.toJsObject(document.data())
-                });
+                docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
               }
               const snap = new QuerySnapshot();
               snap.docSnapshots = docSnapshots;
@@ -2449,11 +2452,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve({
-                id: snapshot ? snapshot.documentID : null,
-                exists: !!snapshot,
-                data: () => snapshot ? firebase.toJsObject(snapshot.data()) : null
-              });
+              resolve(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, () => snapshot ? firebase.toJsObject(snapshot.data()) : null));
             }
           });
 
@@ -2475,11 +2474,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0, l = snapshot.documents.count; i < l; i++) {
             const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-            docSnapshots.push({
-              id: document.documentID,
-              exists: true,
-              data: () => firebase.toJsObject(document.data())
-            });
+            docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
           }
           const snap = new QuerySnapshot();
           snap.docSnapshots = docSnapshots;

@@ -1,4 +1,4 @@
-import { firebase, QuerySnapshot } from "./firebase-common";
+import { DocumentSnapshot, firebase, QuerySnapshot } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
@@ -2407,11 +2407,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push({
-                id: documentSnapshot.getId(),
-                exists: true,
-                data: () => firebase.toJsObject(documentSnapshot.getData())
-              });
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;
@@ -2460,11 +2456,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
             reject(ex && ex.getReason ? ex.getReason() : ex);
           } else {
             const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
-            resolve({
-              id: result ? result.getId() : null,
-              exists: !!result,
-              data: () => result ? firebase.toJsObject(result.getData()) : null
-            });
+            resolve(new DocumentSnapshot(result ? result.getId() : null, !!result, () => result ? firebase.toJsObject(result.getData()) : null));
           }
         }
       });
@@ -2501,11 +2493,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push({
-                id: documentSnapshot.getId(),
-                exists: true,
-                data: () => firebase.toJsObject(documentSnapshot.getData())
-              });
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;
