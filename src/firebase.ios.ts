@@ -2243,6 +2243,12 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
+firebase.firestore.onSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): void => {
+  docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
+    callback(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, snapshot ? () => firebase.toJsObject(snapshot.data()) : null));
+  })
+};
+
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   try {
     if (typeof(FIRFirestore) === "undefined") {
@@ -2259,8 +2265,8 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
       get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
       update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
-      delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID)
-      // onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(fIRDocumentReference, callback)
+      delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
+      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(fIRDocumentReference, callback)
     };
 
   } catch (ex) {
@@ -2268,12 +2274,6 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
     return null;
   }
 };
-
-// firebase.firestore.onSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): void => {
-//   docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
-//     callback(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, snapshot ? firebase.toJsObject(snapshot.data()) : null));
-//   })
-// };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
   return new Promise((resolve, reject) => {
@@ -2296,7 +2296,8 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
                 set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
                 get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
                 update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
-                delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID)
+                delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
+                onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(fIRDocumentReference, callback)
               });
             }
           });

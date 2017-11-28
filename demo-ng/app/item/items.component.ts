@@ -135,6 +135,18 @@ export class ItemsComponent implements OnInit {
     });
   }
 
+  public firestoreListen(): void {
+    const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
+    docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
+      if (doc.exists) {
+        console.log("Document data:", JSON.stringify(doc.data()));
+      } else {
+        console.log("No such document!");
+      }
+    });
+  }
+
   public firestoreWhere(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
         .where("state", "==", "CA")

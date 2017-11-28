@@ -67,6 +67,21 @@ sanFranciscoDocument.get().then(doc => {
 });
 ```
 
+### `collection.doc().onSnapshot()`
+To listen to changes in a certain document, you can register a callback function that gets invoked every time data is changed:
+
+```typescript
+const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+
+sanFranciscoDocument.onSnapshot(doc => {
+  if (doc.exists) {
+    console.log("Document data:", JSON.stringify(doc.data()));
+  } else {
+    console.log("No such document!");
+  }
+});
+```
+
 ### `collection.add()`
 If you want to add a document with an auto-generated ID, use `add` on a *collection*:
 
@@ -173,6 +188,4 @@ query
 ```
 
 ## Future work
-I'll soon add [`onSnapshot`](https://firebase.google.com/docs/firestore/query-data/listen) to support realtime updates.
-
 Need something else that's not supported yet? Please open an Issue or PR 😚

@@ -2216,6 +2216,21 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
+firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): void => {
+  docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
+        onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
+          if (exception !== null) {
+            return;
+          }
+          callback(new DocumentSnapshot(
+              snapshot ? snapshot.getId() : null,
+              snapshot.exists(),
+              snapshot ? () => firebase.toJsObject(snapshot.getData()) : null));
+        })
+      })
+  );
+};
+
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   try {
 
@@ -2234,7 +2249,8 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
       get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
       update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
-      delete: () => firebase.firestore.delete(collectionPath, docRef.getId())
+      delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
+      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(docRef, callback)
     };
 
   } catch (ex) {
@@ -2255,14 +2271,15 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: (documentReference: com.google.firebase.firestore.DocumentReference) => {
+        onSuccess: (docRef: com.google.firebase.firestore.DocumentReference) => {
           resolve({
-            id: documentReference.getId(),
+            id: docRef.getId(),
             collection: cp => firebase.firestore.collection(cp),
-            set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, documentReference.getId(), data, options),
-            get: () => firebase.firestore.getDocument(collectionPath, documentReference.getId()),
-            update: (data: any) => firebase.firestore.update(collectionPath, documentReference.getId(), data),
-            delete: () => firebase.firestore.delete(collectionPath, documentReference.getId())
+            set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
+            get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
+            update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
+            delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
+            onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(docRef, callback)
           });
         }
       });

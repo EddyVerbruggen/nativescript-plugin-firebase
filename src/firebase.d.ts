@@ -807,7 +807,7 @@ export namespace firestore {
     get: () => Promise<DocumentSnapshot>;
     update: (document: any) => Promise<void>;
     delete: () => Promise<void>;
-    // onSnapshot(callback: (doc: DocumentSnapshot) => void): void;
+    onSnapshot(callback: (doc: DocumentSnapshot) => void): void;
   }
 
   export interface Query {
