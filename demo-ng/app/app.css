@@ -11,10 +11,15 @@ refer to http://docs.nativescript.org/ui/theme.
 */
 @import 'nativescript-theme-core/css/core.light.css';
 
-.h2 {
-  font-size: 16;
-  font-weight: bold;
+label {
+  padding: 6;
+  font-size: 14;
   text-align: center;
+}
+
+.h2 {
+  font-size: 17;
+  font-weight: bold;
   margin: 22 0 0 0;
 }
 

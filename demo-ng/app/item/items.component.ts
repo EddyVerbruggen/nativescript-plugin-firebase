@@ -1,7 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
-// import { firestore } from "nativescript-plugin-firebase/app/firestore";
-
 const firebase = require("nativescript-plugin-firebase/app");
 
 @Component({
@@ -15,7 +13,9 @@ export class ItemsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    firebase.initializeApp();
+    firebase.initializeApp({
+      persist: false
+    }).then(() => console.log("Firebase initialized"));
   }
 
   public loginAnonymously(): void {

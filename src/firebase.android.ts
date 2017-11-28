@@ -1,10 +1,10 @@
 import { firebase, QuerySnapshot } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
+import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import * as frame from "tns-core-modules/ui/frame";
 import * as fs from "tns-core-modules/file-system";
-import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { firestore } from "./firebase";
 
 declare const com, org: any;
@@ -200,18 +200,25 @@ firebase.init = arg => {
 
       arg = arg || {};
 
-      firebase.ServerValue = {
-        TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)
-      };
+      if (typeof(com.google.firebase.firestore) === "undefined") {
+        firebase.ServerValue = {
+          TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)
+        };
 
-      const fDatabase = com.google.firebase.database.FirebaseDatabase;
-      if (arg.persist) {
-        fDatabase.getInstance().setPersistenceEnabled(true);
+        const fDatabase = com.google.firebase.database.FirebaseDatabase;
+        if (arg.persist) {
+          fDatabase.getInstance().setPersistenceEnabled(true);
+        }
+        firebase.instance = fDatabase.getInstance().getReference();
+      } else {
+        // Firestore has offline persistence enabled by default
+        if (!arg.persist) {
+          com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
+              new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
+                  .setPersistenceEnabled(false)
+                  .build());
+        }
       }
-      // the URL is picked up from google-services.json, so you can use it like this:
-      firebase.instance = fDatabase.getInstance().getReference();
-      // it is however still possible to pass the URL programmatically (which we'll do for now):
-      // firebase.instance = fDatabase.getInstance().getReferenceFromUrl(arg.url);
 
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 

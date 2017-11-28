@@ -632,13 +632,19 @@ firebase.init = arg => {
 
       firebase._configure();
 
-      // TODO something for Firestore?
       if (typeof(FIRDatabase) !== "undefined") {
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
         }
 
         firebase.instance = FIRDatabase.database().reference();
+      } else if (typeof(FIRStorage) !== "undefined") {
+        // Firestore has offline persistence enabled by default
+        if (arg.persist === false) {
+          const fIRFirestoreSettings = FIRFirestoreSettings.new();
+          fIRFirestoreSettings.persistenceEnabled = false;
+          FIRFirestore.firestore().settings = fIRFirestoreSettings;
+        }
       }
 
       if (arg.iOSEmulatorFlush) {

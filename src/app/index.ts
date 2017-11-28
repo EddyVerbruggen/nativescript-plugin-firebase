@@ -8,11 +8,8 @@ import { auth as firebaseAuthModule } from "./auth";
 import { database as firebaseDatabaseModule } from "./database";
 import { firestore as firebaseFirestoreModule } from "./firestore";
 
-export function initializeApp(options?: Object, name?: string): any /* TODO App object.. doesn't look too useful though */ {
-  firebase.init().then(
-      () => console.log("Firebase is ready"),
-      error => console.log("firebase.init error: " + error)
-  );
+export function initializeApp(options?: firebase.InitOptions, name? /* ignored */: string): Promise<any> {
+  return firebase.init(options);
 }
 
 let authCache;

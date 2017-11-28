@@ -75,7 +75,7 @@ export enum ServerValue {
  */
 export interface InitOptions {
   /**
-   * Allow disk persistence. Default false.
+   * Allow disk persistence. Default true for Firestore, false for regular Firebase DB.
    */
   persist?: boolean;
   /**
