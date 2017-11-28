@@ -1,0 +1,176 @@
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/firestore.png" height="85px" alt="Cloud Firestore"/>
+
+## Enabling the database features
+During plugin installation you'll be prompted to use either Firestore or the default DB.
+
+In case you're upgrading and you have the `firebase.nativescript.json` file in your project root,
+you can edit it and add: `"firestore": true`. Then do `rm -rf platforms/ios && rm -rf platforms/android && rm -rf node_modules && npm i`.
+
+## Functions
+All of these are 100% compatible with the Firestore Web API to make it easy to share code between web and native, and you can
+refer to the [Firestore web api docs](https://firebase.google.com/docs/firestore/data-model) (make sure to look at the 'WEB' tab of those code samples).
+
+> The plugin will take care of serializing JSON data to and from native data structures.
+
+### `init` / `initializeApp`
+By default Firestore on iOS and Android persists data locally for offline usage (web doesn't by default, and the regular Firebase DB doesn't either on any platform).
+If you don't like that awesome feature, you can pass `persist: false` to the [`init` function](../README.md#init).
+
+> Note that `initializeApp` is simply an alias for `init` to make the plugin compatible with the web API.
+
+```typescript
+const firebase = require("nativescript-plugin-firebase/app");
+
+firebase.initializeApp({
+  persist: false
+});
+```
+
+### `collection`
+A 'collection' is at the root of any Firestore interaction. Data is stored as 'documents' in a 'collection'.
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+```
+
+### `collection.get()`
+To get all documents inside a collection:
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+
+citiesCollection.get().then(querySnapshot => {
+  querySnapshot.forEach(doc => {
+    console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+  });
+});
+```
+
+### `collection.doc()`
+A 'document' lives inside a 'collection' and contains the actual data:
+
+```typescript
+const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+```
+
+### `collection.doc().get()`
+To get the data inside a document:
+
+```typescript
+const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+
+sanFranciscoDocument.get().then(doc => {
+  if (doc.exists) {
+    console.log("Document data:", JSON.stringify(doc.data()));
+  } else {
+    console.log("No such document!");
+  }
+});
+```
+
+### `collection.add()`
+If you want to add a document with an auto-generated ID, use `add` on a *collection*:
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+
+citiesCollection.add({
+  name: "San Francisco",
+  state: "CA",
+  country: "USA",
+  capital: false,
+  population: 860000
+}).then(documentRef => {
+  console.log("San Francisco added with auto-generated ID: " + documentRef.id);
+});
+```
+
+### `collection.doc().set()`
+If you want to specify an ID yourself, use `set` on a *document*:
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+
+citiesCollection.doc("SF").set({
+   name: "San Francisco",
+   state: "CA",
+   country: "USA",
+   capital: false,
+   population: 860000
+});
+
+citiesCollection.doc("LA").set({
+  name: "Los Angeles",
+  state: "CA",
+  country: "USA",
+  capital: false,
+  population: 3900000
+});
+```
+
+### `collection.doc().update()`
+Update any number of properties of a document:
+
+```typescript
+const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+
+sanFranciscoDocument.update({
+  population: 860001
+}).then(() => {
+  console.log("SF population updated");
+});
+```
+
+### `collection.doc().delete()`
+Entirely remove a document from a collection:
+
+```typescript
+const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+
+sanFranciscoDocument.delete().then(() => {
+  console.log("SF was erased from the face of the earth!");
+});
+```
+
+### `collection.where()`
+Firestore supports advanced querying with the `where` function. Those `where` clauses can be chained to form logical 'AND' queries:
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+
+// "Gimme all cities in California with a population below 550000"
+const query = citiesCollection
+    .where("state", "==", "CA")
+    .where("population", "<", 550000);
+
+query
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        console.log(`Relatively small Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
+      });
+    });
+```
+
+### Ordering and limiting results of `collection.where()`
+Return data sorted (asc or desc), or limit to a certain number of results:
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+
+// "Gimme the two largest cities in California, the largest first please"
+const query = citiesCollection
+    .where("state", "==", "CA")
+    .orderBy("population", "desc")
+    .limit(2);
+
+query
+    .get()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        console.log(`Large Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
+      });
+    });
+```
+
+> Need something that's not supported yet? Please open an Issue or PR 😚

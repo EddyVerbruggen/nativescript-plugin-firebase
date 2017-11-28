@@ -17,7 +17,7 @@
 
 ## Features
 * [Realtime Database](docs/DATABASE.md)
-* Firestore (work in progress)
+* [Firestore](docs/FIRESTORE.md)
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Cloud Messaging](docs/MESSAGING.md)

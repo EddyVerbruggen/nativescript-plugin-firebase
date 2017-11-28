@@ -42,9 +42,9 @@ export class ItemsComponent implements OnInit {
 
 
     // example from https://firebase.google.com/docs/firestore/query-data/get-data
-    const citiesRef = firebase.firestore().collection("cities");
+    const citiesCollection = firebase.firestore().collection("cities");
 
-    citiesRef.doc("SF").set({
+    citiesCollection.doc("SF").set({
       name: "San Francisco",
       state: "CA",
       country: "USA",
@@ -52,7 +52,7 @@ export class ItemsComponent implements OnInit {
       population: 860000
     });
 
-    citiesRef.doc("LA").set({
+    citiesCollection.doc("LA").set({
       name: "Los Angeles",
       state: "CA",
       country: "USA",
@@ -60,7 +60,7 @@ export class ItemsComponent implements OnInit {
       population: 3900000
     });
 
-    citiesRef.doc("SAC").set({
+    citiesCollection.doc("SAC").set({
       name: "Sacramento",
       state: "CA",
       country: "USA",
@@ -68,7 +68,7 @@ export class ItemsComponent implements OnInit {
       population: 500000
     });
 
-    citiesRef.doc("DC").set({
+    citiesCollection.doc("DC").set({
       name: "Washington, D.C.",
       state: "WA",
       country: "USA",
@@ -76,7 +76,7 @@ export class ItemsComponent implements OnInit {
       population: 680000
     });
 
-    citiesRef.doc("TOK").set({
+    citiesCollection.doc("TOK").set({
       name: "Tokyo",
       state: null,
       country: "Japan",
@@ -84,7 +84,7 @@ export class ItemsComponent implements OnInit {
       population: 9000000
     });
 
-    citiesRef.doc("BJ").set({
+    citiesCollection.doc("BJ").set({
       name: "Beijing",
       state: null,
       country: "China",
@@ -144,7 +144,7 @@ export class ItemsComponent implements OnInit {
         .get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => {
-            console.log(`Capital: ${doc.id} => ${JSON.stringify(doc.data())}`);
+            console.log(`Relatively small Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
           });
         })
         .catch(err => console.log("Where-get failed, error" + err));
@@ -160,7 +160,7 @@ export class ItemsComponent implements OnInit {
         .get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => {
-            console.log(`${JSON.stringify(doc.data())}`);
+            console.log(`Large Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
           });
         })
         .catch(err => console.log("firestoreWhereOrderLimit failed, error" + err));
