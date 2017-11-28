@@ -2927,7 +2927,11 @@ function askAndroidPromptResult(result) {
 function promptQuestions() {
     prompt.get([{
         name: 'firestore',
-        description: 'Are you using Cloud Firestore instead of the regular Database engine (y/n)',
+        description: 'Are you using Cloud Firestore (y/n)',
+        default: 'n'
+    }, {
+        name: 'realtimedb',
+        description: 'Are you using Realtime DB (y/n)',
         default: 'n'
     }, {
         name: 'remote_config',
@@ -3020,8 +3024,8 @@ function writePodFile(result) {
 `pod 'Firebase', '~> 4.6.0'
 pod 'Firebase/Auth'
 
-# Uncomment if you want to enable the regular Database (instead of Cloud Firestore)
-` + (!isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Database'
+# Uncomment if you want to enable Realtime DB
+` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
 
 # Uncomment if you want to enable Cloud Firestore
 ` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
@@ -3107,8 +3111,8 @@ dependencies {
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : firebaseVersion
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
-    // Uncomment if you want to use the regular Database (instead of 'Cloud Firestore')
-    ` + (!isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:$firebaseVersion"
+    // Uncomment if you want to use the regular Database
+    ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:$firebaseVersion"
 
     // Uncomment if you want to use 'Cloud Firestore'
     ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:$firebaseVersion"
@@ -3251,6 +3255,10 @@ module.exports = function() {
  */
 function isSelected(value) {
     return value === true || (typeof value === "string" && value.toLowerCase() === 'y');
+}
+
+function isPresent(value) {
+  return value !== undefined;
 }
 
 

@@ -200,7 +200,7 @@ firebase.init = arg => {
 
       arg = arg || {};
 
-      if (typeof(com.google.firebase.firestore) === "undefined") {
+      if (typeof(com.google.firebase.database) !== "undefined") {
         firebase.ServerValue = {
           TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)
         };
@@ -210,7 +210,9 @@ firebase.init = arg => {
           fDatabase.getInstance().setPersistenceEnabled(true);
         }
         firebase.instance = fDatabase.getInstance().getReference();
-      } else {
+      }
+
+      if (typeof(com.google.firebase.firestore) !== "undefined") {
         // Firestore has offline persistence enabled by default
         if (!arg.persist) {
           com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(

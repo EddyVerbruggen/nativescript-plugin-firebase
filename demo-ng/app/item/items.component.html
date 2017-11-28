@@ -4,8 +4,13 @@
 <ScrollView>
   <StackLayout class="page">
     <Label text="After pressing those buttons, check the console log" textWrap="true"></Label>
+
     <Label text="Authentication" class="h2"></Label>
     <Button text="login anonymously" (tap)="loginAnonymously()" class="button button-user"></Button>
+
+    <Label text="Realtime DB" class="h2"></Label>
+    <Button text="Get companies" (tap)="doWebGetValueForCompanies()" class="button"></Button>
+
     <Label text="Firestore" class="h2"></Label>
     <Button text="Add" (tap)="firestoreAdd()" class="button"></Button>
     <Button text="Set" (tap)="firestoreSet()" class="button"></Button>

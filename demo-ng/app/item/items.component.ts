@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
 const firebase = require("nativescript-plugin-firebase/app");
+const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 @Component({
   selector: "ns-items",
@@ -202,5 +203,15 @@ export class ItemsComponent implements OnInit {
           console.log("Woofie deleted");
         })
         .catch(err => console.log("Delete failed, error" + err));
+  }
+
+  public doWebGetValueForCompanies(): void {
+    const path = "/companies";
+    firebaseWebApi.database().ref(path)
+        .once("value")
+        .then(result => {
+          console.log(`${result.key} => ${JSON.stringify(result.val())}`);
+        })
+        .catch(error => console.log("doWebGetValueForCompanies error: " + error));
   }
 }

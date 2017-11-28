@@ -4,7 +4,13 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
-## 5.0.0 (work in progress)
+## 5.0.1 (2017, November 28)
+
+### New
+- [#553](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/553) Firebase Realtime DB and Firestore in the same app
+
+
+## 5.0.0 (2017, November 28)
 
 ### New
 - [#507](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/507) Firestore anytime soon?

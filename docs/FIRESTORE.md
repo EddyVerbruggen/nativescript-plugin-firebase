@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/firestore.png" height="85px" alt="Cloud Firestore"/>
 
 ## Enabling Firestore
-During plugin installation you'll be prompted to use either Firestore or the default DB.
+During plugin installation you'll be asked whether or not you use Firestore.
 
 In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, edit it and add: `"firestore": true`.
 Then run `rm -rf platforms && rm -rf node_modules && npm i`.

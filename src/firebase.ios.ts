@@ -613,7 +613,7 @@ firebase.init = arg => {
       }
 
       try {
-        // this is only available when the Database Pod is loaded (not with Firestore)
+        // this is only available when the Realtime DB Pod is loaded
         if (typeof(FIRServerValue) !== "undefined") {
           firebase.ServerValue = {
             TIMESTAMP: FIRServerValue.timestamp()
@@ -636,9 +636,10 @@ firebase.init = arg => {
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
         }
-
         firebase.instance = FIRDatabase.database().reference();
-      } else if (typeof(FIRStorage) !== "undefined") {
+      }
+
+      if (typeof(FIRStorage) !== "undefined") {
         // Firestore has offline persistence enabled by default
         if (arg.persist === false) {
           const fIRFirestoreSettings = FIRFirestoreSettings.new();
