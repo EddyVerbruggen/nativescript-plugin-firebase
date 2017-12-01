@@ -4,6 +4,15 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.0.2 (2017, December 1)
+
+### New
+- [#518](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/518) Background Messages Android: fix foreground=true/false flag, removed notifications without 'from'
+
+### Revert
+- [#445](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/445) Skip linking for anonymous users
+
+
 ## 5.0.1 (2017, November 28)
 
 ### New
