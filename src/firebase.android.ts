@@ -1199,10 +1199,6 @@ firebase.login = arg => {
 };
 
 firebase._alreadyLinkedToAuthProvider = (user, providerId) => {
-  if (user.isAnonymous()) {
-    return true;
-  }
-
   const providerData = user.getProviderData();
   for (let i = 0; i < providerData.size(); i++) {
     const profile = providerData.get(i);
