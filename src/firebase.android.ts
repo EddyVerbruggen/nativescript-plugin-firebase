@@ -25,13 +25,17 @@ const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "u
 const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
 
 (() => {
-  appModule.on("launch", args => {
+  // note that this means we need to require the plugin before the app is loaded
+  appModule.on(appModule.launchEvent, args => {
+    org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
+
     const intent = args.android;
     const isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();
 
     if (!isLaunchIntent && messagingEnabled()) {
       const extras = intent.getExtras();
-      if (extras !== null) {
+      // filter out any rubbish that doesn't have a 'from' key
+      if (extras !== null && extras.keySet().contains("from")) {
         let result = {
           foreground: false,
           data: {}

@@ -168,6 +168,16 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 * SERVER_KEY: see below
 * DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`
 
+Examples:
+
+```
+// noti + data
+curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiUkNY3nrti4st4WOUs_w1A0Rttcx31U90YGv-p3U4Oql-vh-FzZzWUUPEwl47uvwhI4tB5yz4wwzrJA2fVqLEKZpDU42AQppYnU2-dsURqkyc9sKcjay2egWbfyNK2b-G2JQCqrLVA" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\":{\"title\": \"My title\", \"text\": \"My text\", \"badge\": \"1\", \"sound\": \"default\"}, \"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"to\": \"fmt3SiVgJH4:APA91bFNvamGmOr_ELaa2oFPunF7PzVfjINe3Hdu5UyqJpfdisCXZUFLyVwISqu7j5Ff9yGh3iPrMHHg3rEXwMRpQE9oCG85YV5pQ1pGjIjpAOAJCU31RKIqGLC5bIrTHxk1Dz--cmGE\"}"
+
+// data only
+curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiUkNY3nrti4st4WOUs_w1A0Rttcx31U90YGv-p3U4Oql-vh-FzZzWUUPEwl47uvwhI4tB5yz4wwzrJA2fVqLEKZpDU42AQppYnU2-dsURqkyc9sKcjay2egWbfyNK2b-G2JQCqrLVA" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"to\": \"fmt3SiVgJH4:APA91bFNvamGmOr_ELaa2oFPunF7PzVfjINe3Hdu5UyqJpfdisCXZUFLyVwISqu7j5Ff9yGh3iPrMHHg3rEXwMRpQE9oCG85YV5pQ1pGjIjpAOAJCU31RKIqGLC5bIrTHxk1Dz--cmGE\"}"
+```
+
 If you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
