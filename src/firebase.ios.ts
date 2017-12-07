@@ -13,7 +13,9 @@ firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
-firebase._configured = null;
+
+// Note that this must be done only once
+FIRApp.configure();
 
 /**
  * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
@@ -27,13 +29,6 @@ const invokeOnRunLoop = (() => {
     CFRunLoopWakeUp(runloop);
   };
 })();
-
-firebase._configure = () => {
-  if (!firebase._configured) {
-    FIRApp.configure();
-    firebase._configured = true;
-  }
-};
 
 firebase._addObserver = (eventName, callback) => {
   const queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
@@ -66,8 +61,6 @@ const handleRemoteNotification = (app, userInfo) => {
 const addBackgroundRemoteNotificationHandler = appDelegate => {
   if (typeof(FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
-
-      firebase._configure();
 
       // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
       if (FIRAuth.auth().canHandleNotification(notification)) {
@@ -629,8 +622,6 @@ firebase.init = arg => {
       if (FIROptions.defaultOptions() !== null) {
         FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
       }
-
-      firebase._configure();
 
       if (typeof(FIRDatabase) !== "undefined") {
         if (arg.persist) {
@@ -1513,7 +1504,7 @@ firebase.changePassword = arg => {
 firebase.createUser = arg => {
   return new Promise((resolve, reject) => {
     try {
-      const onCompletion = (user, error) => {
+      const onCompletion = (user: FIRUser, error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
