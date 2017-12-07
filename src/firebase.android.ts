@@ -2249,7 +2249,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 
     return {
       id: docRef.getId(),
-      collection: cp => firebase.firestore.collection(cp),
+      collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
       set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
       get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
       update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),

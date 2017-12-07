@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
 const firebase = require("nativescript-plugin-firebase/app");
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
+// import { AngularFireModule } from 'angularfire2';
 
 @Component({
   selector: "ns-items",
@@ -13,6 +14,7 @@ export class ItemsComponent implements OnInit {
   private listenerUnsubscribe: () => void;
 
   constructor() {
+    // AngularFireModule.initializeApp({});
   }
 
   ngOnInit(): void {
@@ -133,6 +135,22 @@ export class ItemsComponent implements OnInit {
       } else {
         console.log("No such document!");
       }
+    }).catch(function (error) {
+      console.log("Error getting document:", error);
+    });
+  }
+
+  public firestoreGetNested(): void {
+    const streetsColRef: firestore.CollectionReference =
+        firebase.firestore()
+            .collection("cities")
+            .doc("SF")
+            .collection("streets");
+
+    streetsColRef.get().then((querySnapshot: firestore.QuerySnapshot) => {
+      querySnapshot.forEach(doc => {
+        console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+      });
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
