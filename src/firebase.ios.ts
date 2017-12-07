@@ -612,8 +612,7 @@ firebase.init = arg => {
             TIMESTAMP: FIRServerValue.timestamp()
           };
         }
-      } catch (e) {
-        console.log(e);
+      } catch (ignore) {
       }
 
       arg = arg || {};
@@ -630,7 +629,7 @@ firebase.init = arg => {
         firebase.instance = FIRDatabase.database().reference();
       }
 
-      if (typeof(FIRStorage) !== "undefined") {
+      if (typeof(FIRFirestore) !== "undefined") {
         // Firestore has offline persistence enabled by default
         if (arg.persist === false) {
           const fIRFirestoreSettings = FIRFirestoreSettings.new();
