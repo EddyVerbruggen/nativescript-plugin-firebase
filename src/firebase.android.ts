@@ -2197,8 +2197,6 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       return null;
     }
 
-    console.log(">> collection, collectionPath " + collectionPath);
-
     const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
     const collectionRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
 

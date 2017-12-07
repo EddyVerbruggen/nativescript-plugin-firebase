@@ -141,16 +141,19 @@ export class ItemsComponent implements OnInit {
   }
 
   public firestoreGetNested(): void {
-    const streetsColRef: firestore.CollectionReference =
+    const mainStreetInSFDocRef: firestore.DocumentReference =
         firebase.firestore()
             .collection("cities")
             .doc("SF")
-            .collection("streets");
+            .collection("streets")
+            .doc("QZNrg22tkN8W71YC3qCb"); // id of 'main st.'
 
-    streetsColRef.get().then((querySnapshot: firestore.QuerySnapshot) => {
-      querySnapshot.forEach(doc => {
-        console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
-      });
+    mainStreetInSFDocRef.get().then((doc: firestore.DocumentSnapshot) => {
+      if (doc.exists) {
+        console.log("Document data:", JSON.stringify(doc.data()));
+      } else {
+        console.log("No such document!");
+      }
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });

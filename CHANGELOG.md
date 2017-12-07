@@ -11,6 +11,7 @@
 
 ### Fixes
 - [#563](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/563) Initialization problem on 5.0.2 on iOS
+- [#559](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/559) Firestore nested collections
 
 
 ## 5.0.2 (2017, December 1)
