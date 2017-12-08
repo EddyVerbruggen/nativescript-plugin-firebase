@@ -15,7 +15,7 @@ repositories {
     }
 }
 
-def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.1"
+def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
 
 dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
