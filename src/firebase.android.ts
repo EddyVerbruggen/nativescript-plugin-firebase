@@ -27,7 +27,9 @@ const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) 
 (() => {
   // note that this means we need to require the plugin before the app is loaded
   appModule.on(appModule.launchEvent, args => {
-    org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
+    if (messagingEnabled()) {
+      org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
+    }
 
     const intent = args.android;
     const isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();

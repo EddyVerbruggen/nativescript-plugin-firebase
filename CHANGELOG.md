@@ -4,6 +4,12 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.0.4 (2017, December 8)
+
+### Fixes
+- [#566](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/566) FIrebase Messages Error since 5.0.2
+
+
 ## 5.0.3 (2017, December 7)
 
 ### New
