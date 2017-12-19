@@ -4,6 +4,12 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.0.5 (2017, December 19)
+
+### Fixes
+- [#581](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/581) sendEmailVerification - "Run init() first!"
+
+
 ## 5.0.4 (2017, December 8)
 
 ### Fixes
