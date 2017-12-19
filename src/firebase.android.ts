@@ -199,11 +199,6 @@ firebase.authStateListener = null;
 firebase.init = arg => {
   return new Promise((resolve, reject) => {
     const runInit = () => {
-      if (firebase.instance !== null) {
-        reject("You already ran init");
-        return;
-      }
-
       arg = arg || {};
 
       if (typeof(com.google.firebase.database) !== "undefined") {
@@ -807,11 +802,6 @@ firebase.getRemoteConfig = arg => {
 firebase.getCurrentUser = arg => {
   return new Promise((resolve, reject) => {
     try {
-      if (firebase.instance === null) {
-        reject("Run init() first!");
-        return;
-      }
-
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
@@ -829,11 +819,6 @@ firebase.getCurrentUser = arg => {
 firebase.sendEmailVerification = () => {
   return new Promise((resolve, reject) => {
     try {
-      if (firebase.instance === null) {
-        reject("Run init() first!");
-        return;
-      }
-
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
@@ -883,11 +868,6 @@ firebase.logout = arg => {
 firebase.getAuthToken = arg => {
   return new Promise((resolve, reject) => {
     try {
-      if (firebase.instance === null) {
-        reject("Run init() first!");
-        return;
-      }
-
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
@@ -1457,6 +1437,11 @@ firebase.updateProfile = arg => {
 firebase.keepInSync = (path, switchOn) => {
   return new Promise((resolve, reject) => {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       const where = firebase.instance.child(path);
       where.keepSynced(switchOn);
       resolve();
@@ -1494,6 +1479,11 @@ firebase._addObservers = (to, updateCallback) => {
 firebase.addChildEventListener = (updateCallback, path) => {
   return new Promise((resolve, reject) => {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       resolve({
         path: path,
         listeners: [firebase._addObservers(firebase.instance.child(path), updateCallback)]
@@ -1508,6 +1498,11 @@ firebase.addChildEventListener = (updateCallback, path) => {
 firebase.addValueEventListener = (updateCallback, path) => {
   return new Promise((resolve, reject) => {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       const listener = new com.google.firebase.database.ValueEventListener({
         onDataChange: snapshot => {
           updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
@@ -1533,6 +1528,11 @@ firebase.addValueEventListener = (updateCallback, path) => {
 firebase.getValue = path => {
   return new Promise((resolve, reject) => {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       const listener = new com.google.firebase.database.ValueEventListener({
         onDataChange: snapshot => {
           resolve(firebase.getCallbackData('ValueChanged', snapshot));
@@ -1552,6 +1552,11 @@ firebase.getValue = path => {
 firebase.removeEventListeners = (listeners, path) => {
   return new Promise((resolve, reject) => {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
+
       const ref = firebase.instance.child(path);
       for (let i = 0; i < listeners.length; i++) {
         const listener = listeners[i];
@@ -1747,6 +1752,10 @@ firebase.query = (updateCallback, path, options) => {
 firebase.remove = path => {
   return new Promise((resolve, reject) => {
     try {
+      if (firebase.instance === null) {
+        reject("Run init() first!");
+        return;
+      }
       firebase.instance.child(path).setValue(null);
       resolve();
     } catch (ex) {
@@ -2000,11 +2009,6 @@ firebase.subscribeToTopic = topicName => {
         return;
       }
 
-      if (firebase.instance === null) {
-        reject("Can be run only after init");
-        return;
-      }
-
       com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic(topicName);
       resolve();
     } catch (ex) {
@@ -2020,11 +2024,6 @@ firebase.unsubscribeFromTopic = topicName => {
 
       if (typeof(com.google.firebase.messaging) === "undefined") {
         reject("Uncomment firebase-messaging in the plugin's include.gradle first");
-        return;
-      }
-
-      if (firebase.instance === null) {
-        reject("Can be run only after init");
         return;
       }
 

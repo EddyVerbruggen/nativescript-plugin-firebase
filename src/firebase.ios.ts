@@ -600,11 +600,6 @@ firebase.authStateListener = null;
 firebase.init = arg => {
   return new Promise((resolve, reject) => {
     try {
-      if (firebase.instance !== null) {
-        reject("You already ran init");
-        return;
-      }
-
       try {
         // this is only available when the Realtime DB Pod is loaded
         if (typeof(FIRServerValue) !== "undefined") {
