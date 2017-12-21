@@ -17,7 +17,7 @@
 
 ## Features
 * [Realtime Database](docs/DATABASE.md)
-* Firestore (work in progress)
+* [Firestore](docs/FIRESTORE.md)
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Cloud Messaging](docs/MESSAGING.md)
@@ -228,9 +228,9 @@ android {
   // other stuff here
 
   project.ext {
-    googlePlayServicesVersion = "11.2.+"
+    googlePlayServicesVersion = "11.4.2"
   }
 }
 ```
 
-Where `"11.2.+"` is best set to the same value as the `firebase-core` dependency version in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/platforms/android/include.gradle).
+Where `"11.4.2"` is best set to the same value as the `firebaseVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle).

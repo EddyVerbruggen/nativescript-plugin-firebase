@@ -55,7 +55,9 @@ interface FIRMessagingDelegate extends NSObjectProtocol {
 
 	messagingDidReceiveMessage?(messaging: FIRMessaging, remoteMessage: FIRMessagingRemoteMessage): void;
 
-	messagingDidRefreshRegistrationToken(messaging: FIRMessaging, fcmToken: string): void;
+	messagingDidReceiveRegistrationToken?(messaging: FIRMessaging, fcmToken: string): void;
+
+	messagingDidRefreshRegistrationToken?(messaging: FIRMessaging, fcmToken: string): void;
 }
 declare var FIRMessagingDelegate: {
 

@@ -2926,6 +2926,14 @@ function askAndroidPromptResult(result) {
  */
 function promptQuestions() {
     prompt.get([{
+        name: 'firestore',
+        description: 'Are you using Cloud Firestore (y/n)',
+        default: 'n'
+    }, {
+        name: 'realtimedb',
+        description: 'Are you using Realtime DB (y/n)',
+        default: 'n'
+    }, {
         name: 'remote_config',
         description: 'Are you using Firebase RemoteConfig (y/n)',
         default: 'n'
@@ -3018,9 +3026,14 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 4.4.0'
-pod 'Firebase/Database'
+`pod 'Firebase', '~> 4.6.0'
 pod 'Firebase/Auth'
+
+# Uncomment if you want to enable Realtime DB
+` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
+
+# Uncomment if you want to enable Cloud Firestore
+` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
 
 # Uncomment if you want to enable Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
@@ -3167,11 +3180,10 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "11.2.2"
+    def firebaseVersion = "11.4.2"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$firebaseVersion"
-    compile "com.google.firebase:firebase-database:$firebaseVersion"
     compile "com.google.firebase:firebase-auth:$firebaseVersion"
 
     // for converting Java objects to JS
@@ -3180,6 +3192,12 @@ dependencies {
     // for reading google-services.json and configuration
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : firebaseVersion
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+
+    // Uncomment if you want to use the regular Database
+    ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:$firebaseVersion"
+
+    // Uncomment if you want to use 'Cloud Firestore'
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:$firebaseVersion"
 
     // Uncomment if you want to use 'Remote Config'
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:$firebaseVersion"
@@ -3296,12 +3314,13 @@ module.exports = function() {
             return;
         }
 
-        buildGradleContent = buildGradleContent.substr(0, search - 1) + '    classpath "com.google.gms:google-services:3.0.0"\\n    ' + buildGradleContent.substr(search - 1);
+        buildGradleContent = buildGradleContent.substr(0, search - 1) + '    classpath "com.google.gms:google-services:3.1.0"\\n    ' + buildGradleContent.substr(search - 1);
 
         fs.writeFileSync(buildGradlePath, buildGradleContent);
     }
 };
 `;
+        console.log("Writing 'firebase-build-gradle.js' to " + appRoot + "/hooks/after-prepare");
         var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-build-gradle.js");
         fs.writeFileSync(scriptPath, scriptContent);
     } catch(e) {
@@ -3318,6 +3337,10 @@ module.exports = function() {
  */
 function isSelected(value) {
     return value === true || (typeof value === "string" && value.toLowerCase() === 'y');
+}
+
+function isPresent(value) {
+  return value !== undefined;
 }
 
 

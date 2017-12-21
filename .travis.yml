@@ -2,8 +2,8 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-25.0.2
-    - android-25
+    - build-tools-26.0.1
+    - android-26
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-21
 
@@ -22,7 +22,7 @@ install:
     - tns error-reporting disable
     - cd src
     - npm i --ignore-scripts
-    - npm run build
+    - npm run tsc
     - cd ../demo
     - npm i
 

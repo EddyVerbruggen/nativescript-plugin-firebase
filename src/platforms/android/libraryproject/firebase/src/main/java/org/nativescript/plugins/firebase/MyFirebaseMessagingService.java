@@ -12,12 +12,15 @@ import java.util.Map;
  * This class takes care of notifications received while the app is in the foreground.
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+  static final String TAG = "FirebasePlugin";
+
+  static boolean isActive = false;
 
   @Override
   public void onMessageReceived(RemoteMessage remoteMessage) {
     try {
       final JSONObject json = new JSONObject()
-        .put("foreground", true)
+        .put("foreground", isActive)
         .put("from", remoteMessage.getFrom());
 
       final RemoteMessage.Notification not = remoteMessage.getNotification();

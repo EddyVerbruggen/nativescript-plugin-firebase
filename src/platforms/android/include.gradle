@@ -11,7 +11,7 @@ repositories {
     jcenter()
     mavenCentral()
     maven {
-        url "https://maven.google.com" // Google's Maven repository
+        url "https://maven.google.com"
     }
 }
 
@@ -24,11 +24,10 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "11.2.2"
+    def firebaseVersion = "11.4.2"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$firebaseVersion"
-    compile "com.google.firebase:firebase-database:$firebaseVersion"
     compile "com.google.firebase:firebase-auth:$firebaseVersion"
 
     // for converting Java objects to JS
@@ -37,6 +36,12 @@ dependencies {
     // for reading google-services.json and configuration
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : firebaseVersion
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+
+    // Uncomment if you want to use the regular Database (instead of 'Cloud Firestore')
+//    compile "com.google.firebase:firebase-database:$firebaseVersion"
+
+    // Uncomment if you want to use 'Cloud Firestore'
+//    compile "com.google.firebase:firebase-firestore:$firebaseVersion"
 
     // Uncomment if you want to use 'Remote Config'
 //    compile "com.google.firebase:firebase-config:$firebaseVersion"
@@ -59,7 +64,7 @@ dependencies {
     // Uncomment if you need Google Sign-In Authentication
 //    compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
-    // Uncomment if you need Firebase Invites
+    // Uncomment if you need Firebase Invites or Dynamics Links
 //    compile "com.google.firebase:firebase-invites:$firebaseVersion"
 }
 

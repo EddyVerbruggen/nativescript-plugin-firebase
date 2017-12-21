@@ -255,11 +255,10 @@ export class HelloWorldModel extends Observable {
         }
       },
       onMessageReceivedCallback: message => {
-        console.log("--- message received: " + message);
         setTimeout(() => {
           alert({
             title: "Push message!",
-            message: (message.title !== undefined ? message.title : ""),
+            message: (message.title !== undefined ? message.title : "") + (message.data ? " Data: " + JSON.stringify(message.data) : ""),
             okButtonText: "Sw33t"
           });
         }, 500);

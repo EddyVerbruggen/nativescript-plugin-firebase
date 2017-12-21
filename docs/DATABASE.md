@@ -4,22 +4,38 @@ If you can spare 41 seconds, check (an older version of) this plugin's [demo app
 [![YouTube demo, 41 sec](images/yt-thumb-database.png)](https://youtu.be/7zYU5e0Djkw "YouTube demo, 41 sec")
 
 ## Enabling the database features
-Since this is the most likely feature you'll use with this plugin it has already been properly configured to interact with the database, so nothing to do here on top of the stuff in the main readme.
+Before plugin version 5.0.0 this was enabled by default, but since 5.0.0 we're also supporting Firestore.
+
+If your saved config file `firebase.nativescript.json` (in the root of your project) doesn't include `"realtimedb"` we'll assume `true` for backward compatibility.
+You can disable it by editing that file and setting `"realtimedb": false`. Then run `rm -rf platforms && rm -rf node_modules && npm i`.
 
 ## Functions
 
 ### init
 You can optionally pass `persist` to the [`init` function](../README.md#init) to make Firebase save data to the local disc so it will work in offline scenario's. Default `false`.
 
+<details>
+ <summary>Native API</summary>
+
 ```js
   firebase.init({
     persist: true
   });
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebase.initializeApp({
+    persist: true
+  });
+```
+</details>
 
 ### setValue
-Data is stored as JSON data at a specific path (which is appended to the URL you passed to `init`).
-If you want to add data to a known path use this, otherwise use `push` (see below).
+Data is stored as JSON data at a specific path. If you want to add data to a known path use this, otherwise use `push` (see below).
 
 The plugin will take care of serializing JSON data to native data structures.
 

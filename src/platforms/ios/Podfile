@@ -1,7 +1,11 @@
-
-pod 'Firebase', '~> 4.4.0'
-pod 'Firebase/Database'
+pod 'Firebase', '~> 4.6.0'
 pod 'Firebase/Auth'
+
+# Uncomment if you want to enable the regular Database (instead of Cloud Firestore)
+#pod 'Firebase/Database'
+
+# Uncomment if you want to enable Cloud Firestore
+#pod 'Firebase/Firestore'
 
 # Uncomment if you want to enable Remote Config
 #pod 'Firebase/RemoteConfig'

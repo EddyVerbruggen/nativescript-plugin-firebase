@@ -16,7 +16,32 @@ declare const enum FIRActionCodeOperation {
 
 	PasswordReset = 1,
 
-	VerifyEmail = 2
+	VerifyEmail = 2,
+
+	RecoverEmail = 3
+}
+
+declare class FIRActionCodeSettings extends NSObject {
+
+	static alloc(): FIRActionCodeSettings; // inherited from NSObject
+
+	static new(): FIRActionCodeSettings; // inherited from NSObject
+
+	URL: NSURL;
+
+	readonly androidInstallIfNotAvailable: boolean;
+
+	readonly androidMinimumVersion: string;
+
+	readonly androidPackageName: string;
+
+	handleCodeInApp: boolean;
+
+	readonly iOSBundleID: string;
+
+	setAndroidPackageNameInstallIfNotAvailableMinimumVersion(androidPackageName: string, installIfNotAvailable: boolean, minimumVersion: string): void;
+
+	setIOSBundleID(iOSBundleID: string): void;
 }
 
 declare const enum FIRActionDataKey {
@@ -57,6 +82,8 @@ declare class FIRAuth extends NSObject {
 
 	readonly currentUser: FIRUser;
 
+	languageCode: string;
+
 	addAuthStateDidChangeListener(listener: (p1: FIRAuth, p2: FIRUser) => void): NSObjectProtocol;
 
 	addIDTokenDidChangeListener(listener: (p1: FIRAuth, p2: FIRUser) => void): NSObjectProtocol;
@@ -64,6 +91,8 @@ declare class FIRAuth extends NSObject {
 	applyActionCodeCompletion(code: string, completion: (p1: NSError) => void): void;
 
 	canHandleNotification(userInfo: NSDictionary<any, any>): boolean;
+
+	canHandleURL(URL: NSURL): boolean;
 
 	checkActionCodeCompletion(code: string, completion: (p1: FIRActionCodeInfo, p2: NSError) => void): void;
 
@@ -76,6 +105,8 @@ declare class FIRAuth extends NSObject {
 	removeAuthStateDidChangeListener(listenerHandle: NSObjectProtocol): void;
 
 	removeIDTokenDidChangeListener(listenerHandle: NSObjectProtocol): void;
+
+	sendPasswordResetWithEmailActionCodeSettingsCompletion(email: string, actionCodeSettings: FIRActionCodeSettings, completion: (p1: NSError) => void): void;
 
 	sendPasswordResetWithEmailCompletion(email: string, completion: (p1: NSError) => void): void;
 
@@ -92,6 +123,8 @@ declare class FIRAuth extends NSObject {
 	signInWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRUser, p2: NSError) => void): void;
 
 	signOut(): boolean;
+
+	useAppLanguage(): void;
 
 	verifyPasswordResetCodeCompletion(code: string, completion: (p1: string, p2: NSError) => void): void;
 }
@@ -181,6 +214,18 @@ declare const enum FIRAuthErrorCode {
 
 	InvalidRecipientEmail = 17033,
 
+	MissingEmail = 17034,
+
+	MissingIosBundleID = 17036,
+
+	MissingAndroidPackageName = 17037,
+
+	UnauthorizedDomain = 17038,
+
+	InvalidContinueURI = 17039,
+
+	MissingContinueURI = 17040,
+
 	MissingPhoneNumber = 17041,
 
 	InvalidPhoneNumber = 17042,
@@ -207,6 +252,20 @@ declare const enum FIRAuthErrorCode {
 
 	AppNotVerified = 17055,
 
+	CaptchaCheckFailed = 17056,
+
+	WebContextAlreadyPresented = 17057,
+
+	WebContextCancelled = 17058,
+
+	AppVerificationUserInteractionFailure = 17059,
+
+	InvalidClientID = 17060,
+
+	WebNetworkRequestFailed = 17061,
+
+	WebInternalError = 17062,
+
 	KeychainError = 17995,
 
 	InternalError = 17999
@@ -222,6 +281,17 @@ declare class FIRAuthErrors {
 }
 
 declare var FIRAuthStateDidChangeNotification: string;
+
+interface FIRAuthUIDelegate extends NSObjectProtocol {
+
+	dismissViewControllerAnimatedCompletion(flag: boolean, completion: () => void): void;
+
+	presentViewControllerAnimatedCompletion(viewControllerToPresent: UIViewController, flag: boolean, completion: () => void): void;
+}
+declare var FIRAuthUIDelegate: {
+
+	prototype: FIRAuthUIDelegate;
+};
 
 declare var FIRAuthUpdatedCredentialKey: string;
 
@@ -302,6 +372,8 @@ declare class FIRPhoneAuthProvider extends NSObject {
 	credentialWithVerificationIDVerificationCode(verificationID: string, verificationCode: string): FIRPhoneAuthCredential;
 
 	verifyPhoneNumberCompletion(phoneNumber: string, completion: (p1: string, p2: NSError) => void): void;
+
+	verifyPhoneNumberUIDelegateCompletion(phoneNumber: string, UIDelegate: FIRAuthUIDelegate, completion: (p1: string, p2: NSError) => void): void;
 }
 
 declare var FIRPhoneAuthProviderID: string;
@@ -326,6 +398,8 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 	readonly anonymous: boolean;
 
 	readonly emailVerified: boolean;
+
+	readonly metadata: FIRUserMetadata;
 
 	readonly providerData: NSArray<FIRUserInfo>;
 
@@ -399,6 +473,8 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	self(): this;
 
+	sendEmailVerificationWithActionCodeSettingsCompletion(actionCodeSettings: FIRActionCodeSettings, completion: (p1: NSError) => void): void;
+
 	sendEmailVerificationWithCompletion(completion: (p1: NSError) => void): void;
 
 	unlinkFromProviderCompletion(provider: string, completion: (p1: FIRUser, p2: NSError) => void): void;
@@ -428,6 +504,17 @@ declare var FIRUserInfo: {
 
 	prototype: FIRUserInfo;
 };
+
+declare class FIRUserMetadata extends NSObject {
+
+	static alloc(): FIRUserMetadata; // inherited from NSObject
+
+	static new(): FIRUserMetadata; // inherited from NSObject
+
+	readonly creationDate: Date;
+
+	readonly lastSignInDate: Date;
+}
 
 declare class FIRUserProfileChangeRequest extends NSObject {
 

@@ -1,10 +1,11 @@
-import { firebase } from "./firebase-common";
+import { firebase, DocumentSnapshot, QuerySnapshot } from "./firebase-common";
 import * as application from "tns-core-modules/application";
 import * as applicationSettings from "tns-core-modules/application-settings";
 import * as utils from "tns-core-modules/utils/utils";
 import * as types from "tns-core-modules/utils/types";
 import * as platform from "tns-core-modules/platform";
 import { DeviceType } from "tns-core-modules/ui/enums";
+import { firestore } from "./firebase";
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -12,7 +13,9 @@ firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
-firebase._configured = null;
+
+// Note that this must be done only once
+FIRApp.configure();
 
 /**
  * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
@@ -26,13 +29,6 @@ const invokeOnRunLoop = (() => {
     CFRunLoopWakeUp(runloop);
   };
 })();
-
-firebase._configure = () => {
-  if (!firebase._configured) {
-    FIRApp.configure();
-    firebase._configured = true;
-  }
-};
 
 firebase._addObserver = (eventName, callback) => {
   const queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
@@ -65,8 +61,6 @@ const handleRemoteNotification = (app, userInfo) => {
 const addBackgroundRemoteNotificationHandler = appDelegate => {
   if (typeof(FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
-
-      firebase._configure();
 
       // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
       if (FIRAuth.auth().canHandleNotification(notification)) {
@@ -484,6 +478,7 @@ function getAppDelegate() {
         return <UIApplicationDelegateImpl>super.new();
       }
     }
+
     application.ios.delegate = UIApplicationDelegateImpl;
   }
   return application.ios.delegate;
@@ -555,6 +550,12 @@ firebase.toJsObject = objCObj => {
       key = oKeyArr.objectAtIndex(i);
       const val = objCObj.valueForKey(key);
 
+      // Firestore can store nulls
+      if (val === null) {
+        node[key] = null;
+        continue;
+      }
+
       switch (types.getClass(val)) {
         case 'NSArray':
         case 'NSMutableArray':
@@ -573,6 +574,9 @@ firebase.toJsObject = objCObj => {
         case 'Number':
         case 'NSDecimalNumber':
           node[key] = Number(String(val));
+          break;
+        case 'Date':
+          node[key] = new Date(val);
           break;
         default:
           console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + types.getClass(val) + "'. Casting to String as a fallback.");
@@ -596,14 +600,15 @@ firebase.authStateListener = null;
 firebase.init = arg => {
   return new Promise((resolve, reject) => {
     try {
-      if (firebase.instance !== null) {
-        reject("You already ran init");
-        return;
+      try {
+        // this is only available when the Realtime DB Pod is loaded
+        if (typeof(FIRServerValue) !== "undefined") {
+          firebase.ServerValue = {
+            TIMESTAMP: FIRServerValue.timestamp()
+          };
+        }
+      } catch (ignore) {
       }
-
-      firebase.ServerValue = {
-        TIMESTAMP: FIRServerValue.timestamp()
-      };
 
       arg = arg || {};
 
@@ -612,13 +617,21 @@ firebase.init = arg => {
         FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
       }
 
-      firebase._configure();
-
-      if (arg.persist) {
-        FIRDatabase.database().persistenceEnabled = true;
+      if (typeof(FIRDatabase) !== "undefined") {
+        if (arg.persist) {
+          FIRDatabase.database().persistenceEnabled = true;
+        }
+        firebase.instance = FIRDatabase.database().reference();
       }
 
-      firebase.instance = FIRDatabase.database().reference();
+      if (typeof(FIRFirestore) !== "undefined") {
+        // Firestore has offline persistence enabled by default
+        if (arg.persist === false) {
+          const fIRFirestoreSettings = FIRFirestoreSettings.new();
+          fIRFirestoreSettings.persistenceEnabled = false;
+          FIRFirestore.firestore().settings = fIRFirestoreSettings;
+        }
+      }
 
       if (arg.iOSEmulatorFlush) {
         try {
@@ -961,7 +974,7 @@ firebase.getRemoteConfig = arg => {
 
       const onCompletion = (remoteConfigFetchStatus, error) => {
         if (remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Success ||
-                remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Throttled) {
+            remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Throttled) {
 
           const activated = firebaseRemoteConfig.activateFetched();
 
@@ -1485,7 +1498,7 @@ firebase.changePassword = arg => {
 firebase.createUser = arg => {
   return new Promise((resolve, reject) => {
     try {
-      const onCompletion = (user, error) => {
+      const onCompletion = (user: FIRUser, error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -1678,11 +1691,6 @@ firebase.removeEventListeners = (listeners, path) => {
 firebase.push = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof firebase.ServerValue === "undefined") {
-        reject("Run init() first!");
-        return;
-      }
-
       const ref = firebase.instance.childByAppendingPath(path).childByAutoId();
       ref.setValue(val);
       resolve({
@@ -1698,11 +1706,6 @@ firebase.push = (path, val) => {
 firebase.setValue = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof firebase.ServerValue === "undefined") {
-        reject("Run init() first!");
-        return;
-      }
-
       firebase.instance.childByAppendingPath(path).setValue(val);
       resolve();
     } catch (ex) {
@@ -1715,11 +1718,6 @@ firebase.setValue = (path, val) => {
 firebase.update = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof firebase.ServerValue === "undefined") {
-        reject("Run init() first!");
-        return;
-      }
-
       if (typeof val === "object") {
         firebase.instance.childByAppendingPath(path).updateChildValues(val);
       } else {
@@ -1741,11 +1739,6 @@ firebase.update = (path, val) => {
 firebase.query = (updateCallback, path, options) => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof firebase.ServerValue === "undefined") {
-        reject("Run init() first!");
-        return;
-      }
-
       const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
       let query;
 
@@ -2209,6 +2202,329 @@ firebase.invites.getInvitation = () => {
       reject(ex);
     }
   });
+};
+
+firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
+  try {
+    if (typeof(FIRFirestore) === "undefined") {
+      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
+
+    return {
+      id: fIRCollectionReference.collectionID,
+      doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
+      add: document => firebase.firestore.add(collectionPath, document),
+      get: () => firebase.firestore.get(collectionPath),
+      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
+      orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, fIRCollectionReference),
+      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, fIRCollectionReference)
+    };
+
+  } catch (ex) {
+    console.log("Error in firebase.firestore.collection: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.onSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
+  const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
+    callback(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, snapshot ? () => firebase.toJsObject(snapshot.data()) : null));
+  });
+
+  // There's a bug resulting this function to be undefined..
+  if (listener.remove === undefined) {
+    return () => {
+      // .. so we're just ignoring anything received from the server (until the callback is set again when 'onSnapshot' is invoked).
+      callback = () => {};
+    };
+  } else {
+    return () => listener.remove();
+  }
+};
+
+firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
+  try {
+    if (typeof(FIRFirestore) === "undefined") {
+      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
+    const fIRDocumentReference = documentPath ? fIRCollectionReference.documentWithPath(documentPath) : fIRCollectionReference.documentWithAutoID();
+
+    return {
+      id: fIRDocumentReference.documentID,
+      collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
+      set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
+      get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
+      update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
+      delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
+      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(fIRDocumentReference, callback)
+    };
+
+  } catch (ex) {
+    console.log("Error in firebase.firestore.doc: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(FIRFirestore) === "undefined") {
+        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+        return;
+      }
+
+      const defaultFirestore = FIRFirestore.firestore();
+      const fIRDocumentReference = defaultFirestore
+          .collectionWithPath(collectionPath)
+          .addDocumentWithDataCompletion(document, (error: NSError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve({
+                id: fIRDocumentReference.documentID,
+                collection: cp => firebase.firestore.collection(cp),
+                set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
+                get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
+                update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
+                delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
+                onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(fIRDocumentReference, callback)
+              });
+            }
+          });
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.add: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(FIRFirestore) === "undefined") {
+        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+        return;
+      }
+
+      const docRef: FIRDocumentReference = FIRFirestore.firestore()
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath);
+
+      if (options && options.merge) {
+        docRef.setDataOptionsCompletion(document, FIRSetOptions.merge(), (error: NSError) => {
+          if (error) {
+            reject(error.localizedDescription);
+          } else {
+            resolve();
+          }
+        });
+
+      } else {
+        docRef.setDataCompletion(document, (error: NSError) => {
+          if (error) {
+            reject(error.localizedDescription);
+          } else {
+            resolve();
+          }
+        });
+      }
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.set: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(FIRFirestore) === "undefined") {
+        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+        return;
+      }
+
+      const docRef: FIRDocumentReference = FIRFirestore.firestore()
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath);
+
+      docRef.updateDataCompletion(document, (error: NSError) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      });
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.update: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(FIRFirestore) === "undefined") {
+        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+        return;
+      }
+
+      const docRef: FIRDocumentReference = FIRFirestore.firestore()
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath);
+
+      docRef.deleteDocumentWithCompletion((error: NSError) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      });
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.delete: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(FIRFirestore) === "undefined") {
+        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+        return;
+      }
+
+      const defaultFirestore = FIRFirestore.firestore();
+      const fIRDocumentReference = defaultFirestore
+          .collectionWithPath(collectionPath)
+          .getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+              for (let i = 0, l = snapshot.documents.count; i < l; i++) {
+                const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+                docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+              }
+              const snap = new QuerySnapshot();
+              snap.docSnapshots = docSnapshots;
+              resolve(snap);
+            }
+          });
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.getCollection: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+  return firebase.firestore.getCollection(collectionPath);
+};
+
+firebase.firestore.getDocument = (collectionPath: string, documentPath: string): Promise<firestore.DocumentSnapshot> => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(FIRFirestore) === "undefined") {
+        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+        return;
+      }
+
+      FIRFirestore.firestore()
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath)
+          .getDocumentWithCompletion((snapshot: FIRDocumentSnapshot, error: NSError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, () => snapshot ? firebase.toJsObject(snapshot.data()) : null));
+            }
+          });
+
+    } catch (ex) {
+      console.log("Error in firebase.firestore.getDocument: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firestore.Query => {
+  return {
+    get: () => new Promise((resolve, reject) => {
+      query.getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          console.log(">> .where, snapshot: " + snapshot);
+          const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+          for (let i = 0, l = snapshot.documents.count; i < l; i++) {
+            const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+            docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+          }
+          const snap = new QuerySnapshot();
+          snap.docSnapshots = docSnapshots;
+          resolve(snap);
+        }
+      });
+    }),
+    where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
+    orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
+    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query)
+  };
+};
+
+firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
+  try {
+    if (typeof(FIRFirestore) === "undefined") {
+      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
+
+    if (opStr === "<") {
+      query = query.queryWhereFieldIsLessThan(fieldPath, value);
+    } else if (opStr === "<=") {
+      query = query.queryWhereFieldIsLessThanOrEqualTo(fieldPath, value);
+    } else if (opStr === "==") {
+      query = query.queryWhereFieldIsEqualTo(fieldPath, value);
+    } else if (opStr === ">=") {
+      query = query.queryWhereFieldIsGreaterThanOrEqualTo(fieldPath, value);
+    } else if (opStr === ">") {
+      query = query.queryWhereFieldIsGreaterThan(fieldPath, value);
+    } else {
+      console.log("Illegal argument for opStr: " + opStr);
+      return null;
+    }
+
+    return firebase.firestore._getQuery(collectionPath, query);
+
+  } catch (ex) {
+    console.log("Error in firebase.firestore.where: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.orderBy = (collectionPath: string, fieldPath: string, direction: firestore.OrderByDirection, query: FIRQuery): firestore.Query => {
+  query = query.queryOrderedByFieldDescending(fieldPath, direction === "desc");
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQuery): firestore.Query => {
+  query = query.queryLimitedTo(limit);
+  return firebase.firestore._getQuery(collectionPath, query);
 };
 
 // see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc

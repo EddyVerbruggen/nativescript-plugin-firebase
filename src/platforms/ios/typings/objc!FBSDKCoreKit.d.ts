@@ -112,6 +112,8 @@ declare var FBSDKAppEventNameUnlockedAchievement: string;
 
 declare var FBSDKAppEventNameViewedContent: string;
 
+declare var FBSDKAppEventParameterNameContent: string;
+
 declare var FBSDKAppEventParameterNameContentID: string;
 
 declare var FBSDKAppEventParameterNameContentType: string;

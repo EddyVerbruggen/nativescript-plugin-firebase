@@ -51,6 +51,8 @@ declare class FIRInvites extends NSObject {
 
 	static handleURLSourceApplicationAnnotation(url: NSURL, sourceApplication: string, annotation: any): any;
 
+	static handleUniversalLinkCompletion(URL: NSURL, completion: (p1: FIRReceivedInvite, p2: NSError) => void): boolean;
+
 	static inviteDialog(): FIRInviteBuilder;
 
 	static new(): FIRInvites; // inherited from NSObject

@@ -9,7 +9,7 @@ android {
   defaultConfig {  
     generatedDensities = []
     multiDexEnabled true
-    applicationId "org.nativescript.firebasedemo"
+    applicationId "org.nativescript.firebasedemo.firestore"
   }
 
   // after adding a few additional Firebase libs we'll need this (otherwise: OutOfMemoryException)
