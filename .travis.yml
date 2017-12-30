@@ -47,14 +47,14 @@ matrix:
       before_install:
         - gem install cocoapods
         - pod repo update
-      script: npm run build-ios-bundle
+      script: tns build ios --bundle
     - language: android
       os: linux
       env:
         - Webpack="Android"
       jdk: oraclejdk8
       before_install: nvm install 6.10.3
-      script: npm run build-android-bundle
+      script: tns build android --bundle
     - stage: "Build"
       env: 
         - BuildAndroid="25"
