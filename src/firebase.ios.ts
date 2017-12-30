@@ -366,7 +366,7 @@ firebase._messagingConnectWithCompletion = () => {
 
       if (error) {
         // this is not fatal and it scares the hell out of ppl so not logging it
-        console.log("Firebase was unable to connect to FCM. Error: " + error);
+        // console.log("Firebase was unable to connect to FCM. Error: " + error);
         return reject(error);
       }
 
