@@ -13,6 +13,7 @@ firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
+firebase._configured = false;
 
 // Note that FIRApp.configure must be called only once, but not here (see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564)
 
@@ -75,7 +76,10 @@ function addBackgroundRemoteNotificationHandler(appDelegate) {
 firebase.addAppDelegateMethods = appDelegate => {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
-    FIRApp.configure();
+    if (!firebase._configured) {
+      firebase._configured = true;
+      FIRApp.configure();
+    }
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
     if (launchOptions && typeof(FIRMessaging) !== "undefined") {
       const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
@@ -615,7 +619,11 @@ firebase.init = arg => {
       if (FIROptions.defaultOptions() !== null) {
         FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
       }
-        // FIRApp.configure();
+
+      if (!firebase._configured) {
+        firebase._configured = true;
+        FIRApp.configure();
+      }
 
       if (typeof(FIRDatabase) !== "undefined") {
         if (arg.persist) {
