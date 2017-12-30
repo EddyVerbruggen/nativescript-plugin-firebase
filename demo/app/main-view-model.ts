@@ -620,7 +620,7 @@ export class HelloWorldModel extends Observable {
 
   public doCreateUser(): void {
     firebase.createUser({
-      email: 'eddy@x-services.nl',
+      email: 'eddy3@xservices.nl',
       password: 'firebase'
     }).then(
         result => {
