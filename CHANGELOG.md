@@ -4,6 +4,15 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.0 (2017, December 30)
+
+### Fixes
+- [#564](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564) Firebase Auth + WebPack crashing iOS application (when createUser is triggered) - FIX
+
+### New
+- [#590](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/590) Bump Firebase SDK versions
+
+
 ## 5.0.5 (2017, December 19)
 
 ### Fixes

@@ -228,9 +228,9 @@ android {
   // other stuff here
 
   project.ext {
-    googlePlayServicesVersion = "11.4.2"
+    googlePlayServicesVersion = "11.8.0"
   }
 }
 ```
 
-Where `"11.4.2"` is best set to the same value as the `firebaseVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle).
+Where `"11.8.0"` is best set to the same value as the `firebaseVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle).
