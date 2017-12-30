@@ -2457,7 +2457,8 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, () => snapshot ? firebase.toJsObject(snapshot.data()) : null));
+              const exists = snapshot.exists;
+              resolve(new DocumentSnapshot(exists ? snapshot.documentID : null, exists, () => exists ? firebase.toJsObject(snapshot.data()) : null));
             }
           });
 
