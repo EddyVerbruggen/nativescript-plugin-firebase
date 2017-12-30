@@ -14,8 +14,7 @@ firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 
-// Note that this must be done only once
-FIRApp.configure();
+// Note that FIRApp.configure must be called only once, but not here (see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564)
 
 /**
  * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
@@ -58,10 +57,9 @@ const handleRemoteNotification = (app, userInfo) => {
   }
 };
 
-const addBackgroundRemoteNotificationHandler = appDelegate => {
+function addBackgroundRemoteNotificationHandler(appDelegate) {
   if (typeof(FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
-
       // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
       if (FIRAuth.auth().canHandleNotification(notification)) {
         completionHandler(UIBackgroundFetchResult.NoData);
@@ -72,11 +70,12 @@ const addBackgroundRemoteNotificationHandler = appDelegate => {
       handleRemoteNotification(app, notification);
     };
   }
-};
+}
 
 firebase.addAppDelegateMethods = appDelegate => {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
+    FIRApp.configure();
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
     if (launchOptions && typeof(FIRMessaging) !== "undefined") {
       const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
@@ -367,7 +366,7 @@ firebase._messagingConnectWithCompletion = () => {
 
       if (error) {
         // this is not fatal and it scares the hell out of ppl so not logging it
-        // console.log("Firebase was unable to connect to FCM. Error: " + error);
+        console.log("Firebase was unable to connect to FCM. Error: " + error);
         return reject(error);
       }
 
@@ -474,9 +473,9 @@ function getAppDelegate() {
     class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
       public static ObjCProtocols = [UIApplicationDelegate];
 
-      static new(): UIApplicationDelegateImpl {
-        return <UIApplicationDelegateImpl>super.new();
-      }
+      // static new(): UIApplicationDelegateImpl {
+      //   return <UIApplicationDelegateImpl>super.new();
+      // }
     }
 
     application.ios.delegate = UIApplicationDelegateImpl;
@@ -616,6 +615,7 @@ firebase.init = arg => {
       if (FIROptions.defaultOptions() !== null) {
         FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
       }
+        // FIRApp.configure();
 
       if (typeof(FIRDatabase) !== "undefined") {
         if (arg.persist) {
