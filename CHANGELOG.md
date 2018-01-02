@@ -4,6 +4,23 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.1 (2017, December 30)
+
+### Fixes
+- [#589](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/589) Firestore: doc.exists returns true for non-existing documents
+- [#564](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564) Firebase Auth + WebPack crashing iOS application (when createUser is triggered) - BETTER FIX
+
+
+## 5.1.0 (2017, December 30)
+
+### Fixes
+- [#564](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564) Firebase Auth + WebPack crashing iOS application (when createUser is triggered) - FIX
+- [#587](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/587) Push token is not always a string
+
+### New
+- [#590](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/590) Bump Firebase SDK versions
+
+
 ## 5.0.5 (2017, December 19)
 
 ### Fixes

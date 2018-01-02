@@ -2476,7 +2476,8 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
             reject(ex && ex.getReason ? ex.getReason() : ex);
           } else {
             const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
-            resolve(new DocumentSnapshot(result ? result.getId() : null, !!result, () => result ? firebase.toJsObject(result.getData()) : null));
+            const exists = result.exists();
+            resolve(new DocumentSnapshot(exists ? result.getId() : null, exists, () => exists ? firebase.toJsObject(result.getData()) : null));
           }
         }
       });

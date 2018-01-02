@@ -3292,8 +3292,15 @@ module.exports = function() {
     if (fs.existsSync(buildGradlePath)) {
         var buildGradleContent = fs.readFileSync(buildGradlePath).toString();
 
-        // already at 3.1.0?
+        // already at 3.1.2?
         if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.2"') != -1) {
+            return;
+        }
+
+        // upgrade 3.1.1 to 3.1.2?
+        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.1"') != -1) {
+            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.1.0"', 'classpath "com.google.gms:google-services:3.1.2"');
+            fs.writeFileSync(buildGradlePath, buildGradleContent);
             return;
         }
 

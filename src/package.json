@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "5.0.5",
+  "version": "5.1.1",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -40,8 +40,8 @@
     "plugin.tscwatch": "npm run tsc -- -w",
     "package": "cd ../publish && rm -rf ./package && ./pack.sh",
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios --emulator",
-    "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns run ios --emulator",
     "demo.ios.device": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios",
+    "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns run ios --emulator",
     "demo-ng.ios.device": "npm run preparedemo-ng && cd ../demo-ng && tns platform remove ios && tns run ios",
     "demo.android": "npm run preparedemo && cd ../demo && tns platform remove android && tns run android --justlaunch",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns platform remove android && tns run android --justlaunch",

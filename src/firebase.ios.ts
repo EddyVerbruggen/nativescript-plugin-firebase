@@ -13,9 +13,9 @@ firebase._receivedPushTokenCallback = null;
 firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
+firebase._configured = false;
 
-// Note that this must be done only once
-FIRApp.configure();
+// Note that FIRApp.configure must be called only once, but not here (see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564)
 
 /**
  * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
@@ -58,10 +58,9 @@ const handleRemoteNotification = (app, userInfo) => {
   }
 };
 
-const addBackgroundRemoteNotificationHandler = appDelegate => {
+function addBackgroundRemoteNotificationHandler(appDelegate) {
   if (typeof(FIRMessaging) !== "undefined") {
     appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
-
       // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
       if (FIRAuth.auth().canHandleNotification(notification)) {
         completionHandler(UIBackgroundFetchResult.NoData);
@@ -72,11 +71,15 @@ const addBackgroundRemoteNotificationHandler = appDelegate => {
       handleRemoteNotification(app, notification);
     };
   }
-};
+}
 
 firebase.addAppDelegateMethods = appDelegate => {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
+    if (!firebase._configured) {
+      firebase._configured = true;
+      FIRApp.configure();
+    }
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
     if (launchOptions && typeof(FIRMessaging) !== "undefined") {
       const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
@@ -474,9 +477,9 @@ function getAppDelegate() {
     class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
       public static ObjCProtocols = [UIApplicationDelegate];
 
-      static new(): UIApplicationDelegateImpl {
-        return <UIApplicationDelegateImpl>super.new();
-      }
+      // static new(): UIApplicationDelegateImpl {
+      //   return <UIApplicationDelegateImpl>super.new();
+      // }
     }
 
     application.ios.delegate = UIApplicationDelegateImpl;
@@ -488,7 +491,7 @@ function getAppDelegate() {
 function prepAppDelegate() {
   if (typeof(FIRMessaging) !== "undefined") {
     // see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/178 for why we're not using a constant here
-    firebase._addObserver("com.firebase.iid.notif.refresh-token", firebase._onTokenRefreshNotification);
+    firebase._addObserver("com.firebase.iid.notif.refresh-token", notification => firebase._onTokenRefreshNotification(notification.object));
 
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, appNotification => {
       // guarded this with a preference so the popup "this app wants to send notifications"
@@ -615,6 +618,11 @@ firebase.init = arg => {
       // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
       if (FIROptions.defaultOptions() !== null) {
         FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
+      }
+
+      if (!firebase._configured) {
+        firebase._configured = true;
+        FIRApp.configure();
       }
 
       if (typeof(FIRDatabase) !== "undefined") {
@@ -2449,7 +2457,8 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, () => snapshot ? firebase.toJsObject(snapshot.data()) : null));
+              const exists = snapshot.exists;
+              resolve(new DocumentSnapshot(exists ? snapshot.documentID : null, exists, () => exists ? firebase.toJsObject(snapshot.data()) : null));
             }
           });
 

@@ -147,6 +147,7 @@ export class ItemsComponent implements OnInit {
             .doc("SF")
             .collection("streets")
             .doc("QZNrg22tkN8W71YC3qCb"); // id of 'main st.'
+            // .doc("doesntexist");
 
     mainStreetInSFDocRef.get().then((doc: firestore.DocumentSnapshot) => {
       if (doc.exists) {
