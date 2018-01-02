@@ -24,7 +24,7 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "11.4.2"
+    def firebaseVersion = "11.8.0"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$firebaseVersion"
@@ -49,6 +49,11 @@ dependencies {
     // Uncomment if you want to use 'Crash Reporting'
 //    compile "com.google.firebase:firebase-crash:$firebaseVersion"
 
+    // Uncomment if you want to use 'Crashlytics'
+//    compile("com.crashlytics.sdk.android:crashlytics:2.7.1@aar") {
+//       transitive = true
+//    }
+
     // Uncomment if you want FCM (Firebase Cloud Messaging)
 //    compile "com.google.firebase:firebase-messaging:$firebaseVersion"
 
@@ -68,4 +73,6 @@ dependencies {
 //    compile "com.google.firebase:firebase-invites:$firebaseVersion"
 }
 
+// Uncomment if you want to use 'Crashlytics'
+// apply plugin: 'io.fabric'
 apply plugin: "com.google.gms.google-services"

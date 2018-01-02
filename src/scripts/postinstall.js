@@ -3180,7 +3180,7 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "11.4.2"
+    def firebaseVersion = "11.8.0"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$firebaseVersion"
@@ -3203,7 +3203,12 @@ dependencies {
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:$firebaseVersion"
 
     // Uncomment if you want to use 'Crash Reporting'
-    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
+    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
+    
+    // Uncomment if you want to use 'Crashlytics'
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile("com.crashlytics.sdk.android:crashlytics:2.7.1@aar") {
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + `    transitive = true
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` }
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
     ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:$firebaseVersion"
@@ -3224,6 +3229,8 @@ dependencies {
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:$firebaseVersion"
 }
 
+// Uncomment if you want to use 'Crashlytics'
+` + (isSelected(result.messaging) ? `` : `//`) + ` apply plugin: 'io.fabric'
 apply plugin: "com.google.gms.google-services"
 `);
         console.log('Successfully created Android (include.gradle) file.');
@@ -3286,13 +3293,20 @@ module.exports = function() {
         var buildGradleContent = fs.readFileSync(buildGradlePath).toString();
 
         // already at 3.1.0?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.0"') != -1) {
+        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.2"') != -1) {
             return;
         }
 
-        // upgrade 3.0.0 to 3.1.0?
+        // upgrade 3.1.0 to 3.1.2?
+        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.0"') != -1) {
+            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.1.0"', 'classpath "com.google.gms:google-services:3.1.2"');
+            fs.writeFileSync(buildGradlePath, buildGradleContent);
+            return;
+        }
+
+        // upgrade 3.0.0 to 3.1.2?
         if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.0.0"') != -1) {
-            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.0.0"', 'classpath "com.google.gms:google-services:3.1.0"');
+            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.0.0"', 'classpath "com.google.gms:google-services:3.1.2"');
             fs.writeFileSync(buildGradlePath, buildGradleContent);
             return;
         }
@@ -3314,7 +3328,7 @@ module.exports = function() {
             return;
         }
 
-        buildGradleContent = buildGradleContent.substr(0, search - 1) + '    classpath "com.google.gms:google-services:3.1.0"\\n    ' + buildGradleContent.substr(search - 1);
+        buildGradleContent = buildGradleContent.substr(0, search - 1) + '    classpath "com.google.gms:google-services:3.1.2"\\n    ' + `(isSelected(result.crashlytics) ? `    classpath "com.google.gms:google-services:3.1.2"\\n    ` : ``)` + buildGradleContent.substr(search - 1);
 
         fs.writeFileSync(buildGradlePath, buildGradleContent);
     }
