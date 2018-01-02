@@ -258,7 +258,7 @@ export class HelloWorldModel extends Observable {
         setTimeout(() => {
           alert({
             title: "Push message!",
-            message: (message.title !== undefined ? message.title : "") + (message.data ? " Data: " + JSON.stringify(message.data) : ""),
+            message: (message.title !== undefined ? message.title : ""),
             okButtonText: "Sw33t"
           });
         }, 500);
@@ -456,7 +456,6 @@ export class HelloWorldModel extends Observable {
     );
     firebase.addOnMessageReceivedCallback(
         message => {
-          console.log("----- message received: " + JSON.stringify(message));
           alert({
             title: "Push message!",
             message: (message.title !== undefined ? message.title : ""),
@@ -621,7 +620,7 @@ export class HelloWorldModel extends Observable {
 
   public doCreateUser(): void {
     firebase.createUser({
-      email: 'eddy@x-services.nl',
+      email: 'eddy3@xservices.nl',
       password: 'firebase'
     }).then(
         result => {

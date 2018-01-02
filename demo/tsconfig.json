@@ -10,7 +10,8 @@
     "skipLibCheck": true,
     "lib": [
       "es6",
-      "dom"
+      "dom",
+      "es2015.iterable"
     ],
     "pretty": true,
     "allowUnreachableCode": false,
@@ -21,9 +22,15 @@
     "noImplicitReturns": true,
     "noImplicitUseStrict": false,
     "noFallthroughCasesInSwitch": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules"
+    ],
+    "types": [],
     "baseUrl": ".",
     "paths": {
       "*": [
+        "./node_modules/tns-core-modules/*",
         "./node_modules/*"
       ]
     }
