@@ -520,16 +520,21 @@ module.exports = function() {
         ` + (isSelected(result.crashlytics) ? `` : `//`) + `        return match + '\\n        ' + latestFabricPlugin;
         ` + (isSelected(result.crashlytics) ? `` : `//`) + `    });
         ` + (isSelected(result.crashlytics) ? `` : `//`) + `}
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let matchIndex = 0;
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `buildGradleContent = buildGradleContent.replace(/jcenter\\(\\)/g, function (match) {
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `  if (matchIndex === 0) {
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    matchIndex++;
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    return 'jcenter()\\n        maven { url "https://maven.fabric.io/public" }';
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `  } else {
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    matchIndex++;
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    return 'jcenter()\\n        maven { url "https://maven.google.com/" }';
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `  }
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `});
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let mavenFabricRepo = 'maven { url "https://maven.fabric.io/public" }';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let mavenGoogleRepo = 'maven { url "https://maven.google.com/" }';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `if (!RegExp(mavenFabricRepo).test(buildGradleContent) || !RegExp(mavenGoogleRepo).test(buildGradleContent)) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    let matchIndex = 0;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(/jcenter\\(\\)/g, function (match) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `      if (matchIndex === 0) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `        matchIndex++;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `        return 'jcenter()\\n        ' + mavenFabricRepo;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `      } else {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `        matchIndex++;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `        return 'jcenter()\\n        ' + mavenGoogleRepo;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `      }
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    });
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `}
 
         fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
     }
@@ -541,8 +546,11 @@ module.exports = function() {
         buildGradleContent = buildGradleContent.replace('buildToolsVersion : "26.0.1"', 'buildToolsVersion : "26.0.3"'); 
         
         // for Crashlytics
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let applyPluginPattern = 'apply plugin: "com.android.application"';
-        ` + (isSelected(result.crashlytics) ? `` : `//`) + `buildGradleContent = buildGradleContent.replace(applyPluginPattern, applyPluginPattern + '\\napply plugin: "io.fabric"');
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let applyAppPluginPattern = 'apply plugin: "com.android.application"';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let applyFabricPluginPattern = 'apply plugin: "io.fabric"';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `if (!RegExp(applyFabricPluginPattern).test(buildGradleContent)) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(applyAppPluginPattern, applyAppPluginPattern + '\\n' + applyFabricPluginPattern);
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `}
 
         buildGradleContent = buildGradleContent.replace(/renameResultApks\\(variant\\)/, 'variant.outputs.all { output ->\\n\\t\\t\\tdef abiName = "";\\n\\t\\t\\tif (output.getFilter(com.android.build.OutputFile.ABI)) {\\n\\t\\t\\t\\tabiName = "-" + output.getFilter(com.android.build.OutputFile.ABI);\\n\\t\\t\\t}\\n\\t\\t\\toutputFileName = "../../\${rootProject.name + "-" + variant.buildType.name + abiName}.apk"\\n\\t\\t}');
 
