@@ -492,6 +492,10 @@ module.exports = function() {
     if (fs.existsSync(projectBuildGradlePath)) {
         let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
         
+        // Crashlytics requires Firebase >= 11.8.0
+        // Firebase 11.8.0 requires google-services plugin >= 3.1.2
+        // google-services plugin 3.1.2 requires gradle-plugin >= 3.0.1
+        // gradle-plugin 3.0.1 requires buildToolsVersion >=26.0.3
         let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
         let latestGradlePlugin = 'classpath "com.android.tools.build:gradle:3.0.1"';
         buildGradleContent = buildGradleContent.replace(gradlePattern, latestGradlePlugin);
