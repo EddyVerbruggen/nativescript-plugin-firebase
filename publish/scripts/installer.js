@@ -189,7 +189,7 @@ function promptQuestionsResult(result) {
     if (usingAndroid) {
         writeGradleFile(result);
         writeGoogleServiceCopyHook();
-        writeGoogleServiceGradleHook();
+        writeGoogleServiceGradleHook(result);
     }
     console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
 }
@@ -431,8 +431,6 @@ dependencies {
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:$firebaseVersion"
 }
 
-// Uncomment if you want to use 'Crashlytics'
-` + (isSelected(result.messaging) ? `` : `//`) + ` apply plugin: 'io.fabric'
 apply plugin: "com.google.gms.google-services"
 `);
         console.log('Successfully created Android (include.gradle) file.');
@@ -479,7 +477,7 @@ module.exports = function() {
     }
 }
 
-function writeGoogleServiceGradleHook() {
+function writeGoogleServiceGradleHook(result) {
     console.log("Install firebase-build-gradle hook.");
     try {
         var scriptContent =
@@ -490,56 +488,61 @@ var fs = require("fs");
 module.exports = function() {
 
     console.log("Configure firebase");
-    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle");
-    if (fs.existsSync(buildGradlePath)) {
-        var buildGradleContent = fs.readFileSync(buildGradlePath).toString();
-
-        // already at 3.1.2?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.2"') != -1) {
-            return;
+    let projectBuildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle");
+    if (fs.existsSync(projectBuildGradlePath)) {
+        let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
+        
+        let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
+        let latestGradlePlugin = 'classpath "com.android.tools.build:gradle:3.0.1"';
+        buildGradleContent = buildGradleContent.replace(gradlePattern, latestGradlePlugin);
+        
+        let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.1"';
+        let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
+        if (googleServicesPattern.test(buildGradleContent)) {
+            buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
+        } else {
+            buildGradleContent = buildGradleContent.replace(gradlePattern, function (match) {
+                return match + '\\n        ' + latestGoogleServicesPlugin;
+            });
         }
 
-        // upgrade 3.1.1 to 3.1.2?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.1"') != -1) {
-            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.1.0"', 'classpath "com.google.gms:google-services:3.1.2"');
-            fs.writeFileSync(buildGradlePath, buildGradleContent);
-            return;
-        }
+        // for Crashlytics
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let latestFabricPlugin = 'classpath "io.fabric.tools:gradle:1.24.4"';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let fabricPattern = /classpath ('|")io\\.fabric\\.tools:gradle:\\d+\\.\\d+\\.\\d+('|")/;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `if (fabricPattern.test(buildGradleContent)) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(fabricPattern, latestFabricPlugin);
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `} else {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(googleServicesPattern, function (match) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `        return match + '\\n        ' + latestFabricPlugin;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    });
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `}
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let matchIndex = 0;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `buildGradleContent = buildGradleContent.replace(/jcenter\\(\\)/g, function (match) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `  if (matchIndex === 0) {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    matchIndex++;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    return 'jcenter()\\n        maven { url "https://maven.fabric.io/public" }';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `  } else {
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    matchIndex++;
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `    return 'jcenter()\\n        maven { url "https://maven.google.com/" }';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `  }
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `});
 
-        // upgrade 3.1.0 to 3.1.2?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.0"') != -1) {
-            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.1.0"', 'classpath "com.google.gms:google-services:3.1.2"');
-            fs.writeFileSync(buildGradlePath, buildGradleContent);
-            return;
-        }
+        fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
+    }
+    
+    let appBuildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "app", "build.gradle");
+    if (fs.existsSync(projectBuildGradlePath)) {
+        let buildGradleContent = fs.readFileSync(appBuildGradlePath).toString();
+        
+        buildGradleContent = buildGradleContent.replace('buildToolsVersion : "26.0.1"', 'buildToolsVersion : "26.0.3"'); 
+        
+        // for Crashlytics
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `let applyPluginPattern = 'apply plugin: "com.android.application"';
+        ` + (isSelected(result.crashlytics) ? `` : `//`) + `buildGradleContent = buildGradleContent.replace(applyPluginPattern, applyPluginPattern + '\\napply plugin: "io.fabric"');
 
-        // upgrade 3.0.0 to 3.1.2?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.0.0"') != -1) {
-            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.0.0"', 'classpath "com.google.gms:google-services:3.1.2"');
-            fs.writeFileSync(buildGradlePath, buildGradleContent);
-            return;
-        }
+        buildGradleContent = buildGradleContent.replace(/renameResultApks\\(variant\\)/, 'variant.outputs.all { output ->\\n\\t\\t\\tdef abiName = "";\\n\\t\\t\\tif (output.getFilter(com.android.build.OutputFile.ABI)) {\\n\\t\\t\\t\\tabiName = "-" + output.getFilter(com.android.build.OutputFile.ABI);\\n\\t\\t\\t}\\n\\t\\t\\toutputFileName = "../../\${rootProject.name + "-" + variant.buildType.name + abiName}.apk"\\n\\t\\t}');
 
-        var search = -1;
-
-        search = buildGradleContent.indexOf("repositories", 0);
-        if (search == -1) {
-            return;
-        }
-
-        search = buildGradleContent.indexOf("dependencies", search);
-        if (search == -1) {
-            return;
-        }
-
-        search = buildGradleContent.indexOf("}", search);
-        if (search == -1) {
-            return;
-        }
-
-        buildGradleContent = buildGradleContent.substr(0, search - 1) + '    classpath "com.google.gms:google-services:3.1.2"\\n    ' + `(isSelected(result.crashlytics) ? `    classpath "com.google.gms:google-services:3.1.2"\\n    ` : ``)` + buildGradleContent.substr(search - 1);
-
-        fs.writeFileSync(buildGradlePath, buildGradleContent);
+        fs.writeFileSync(appBuildGradlePath, buildGradleContent);
     }
 };
 `;

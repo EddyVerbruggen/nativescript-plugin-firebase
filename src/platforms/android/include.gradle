@@ -73,6 +73,4 @@ dependencies {
 //    compile "com.google.firebase:firebase-invites:$firebaseVersion"
 }
 
-// Uncomment if you want to use 'Crashlytics'
-// apply plugin: 'io.fabric'
 apply plugin: "com.google.gms.google-services"
