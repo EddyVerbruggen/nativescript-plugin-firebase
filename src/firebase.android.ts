@@ -98,22 +98,28 @@ firebase.toHashMap = obj => {
       if (obj[property] === null) {
         node.put(property, null);
       } else {
-        switch (typeof obj[property]) {
-          case 'object':
-            node.put(property, firebase.toHashMap(obj[property], node));
-            break;
-          case 'boolean':
-            node.put(property, java.lang.Boolean.valueOf(String(obj[property])));
-            break;
-          case 'number':
-            if (Number(obj[property]) === obj[property] && obj[property] % 1 === 0)
-              node.put(property, java.lang.Long.valueOf(String(obj[property])));
-            else
-              node.put(property, java.lang.Double.valueOf(String(obj[property])));
-            break;
-          case 'string':
-            node.put(property, String(obj[property]));
-            break;
+        if(obj[property] instanceof Date) {
+            node.put(property, new java.util.Date(obj[property].getTime()));
+        } else if (Array.isArray(obj[property])){
+            node.put(property, firebase.toJavaArray(obj[property]));
+        } else {
+          switch (typeof obj[property]) {
+            case 'object':
+              node.put(property, firebase.toHashMap(obj[property], node));
+              break;
+            case 'boolean':
+              node.put(property, java.lang.Boolean.valueOf(String(obj[property])));
+              break;
+            case 'number':
+              if (Number(obj[property]) === obj[property] && obj[property] % 1 === 0)
+                node.put(property, java.lang.Long.valueOf(String(obj[property])));
+              else
+                node.put(property, java.lang.Double.valueOf(String(obj[property])));
+              break;
+            case 'string':
+              node.put(property, String(obj[property]));
+              break;
+          }
         }
       }
     }
@@ -121,9 +127,25 @@ firebase.toHashMap = obj => {
   return node;
 };
 
+firebase.toJavaArray = val => {
+  var javaArray = new java.util.ArrayList();
+  for(var i = 0; i < val.length; i++) {
+    javaArray.add(firebase.toValue(val[i]));
+  }
+  return javaArray;
+};
+
 firebase.toValue = val => {
   let returnVal = null;
   if (val !== null) {
+
+    if(val instanceof Date) {
+      return new java.util.Date(val.getTime());
+    }
+    if(Array.isArray(val)) {
+      return firebase.toJavaArray(val);
+    }
+
     switch (typeof val) {
       case 'object':
         returnVal = firebase.toHashMap(val);
