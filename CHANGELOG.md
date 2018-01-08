@@ -4,6 +4,15 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.2 (2018, January 8)
+
+### Fixes
+- [#594](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/594) Android - Background notification causing app to crash after upgrade to 5.1.1
+
+### New
+- [#595](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/595) Creating Observables from Firestore Documents/Collections
+
+
 ## 5.1.1 (2017, December 30)
 
 ### Fixes

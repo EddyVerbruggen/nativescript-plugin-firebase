@@ -818,6 +818,8 @@ export namespace firestore {
     orderBy(fieldPath: string, directionStr: firestore.OrderByDirection): Query;
 
     limit(limit: number): Query;
+
+    onSnapshot(callback: (snapshot: QuerySnapshot) => void): () => void;
   }
 
   export interface CollectionReference extends Query {

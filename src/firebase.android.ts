@@ -98,10 +98,10 @@ firebase.toHashMap = obj => {
       if (obj[property] === null) {
         node.put(property, null);
       } else {
-        if(obj[property] instanceof Date) {
-            node.put(property, new java.util.Date(obj[property].getTime()));
-        } else if (Array.isArray(obj[property])){
-            node.put(property, firebase.toJavaArray(obj[property]));
+        if (obj[property] instanceof Date) {
+          node.put(property, new java.util.Date(obj[property].getTime()));
+        } else if (Array.isArray(obj[property])) {
+          node.put(property, firebase.toJavaArray(obj[property]));
         } else {
           switch (typeof obj[property]) {
             case 'object':
@@ -128,8 +128,8 @@ firebase.toHashMap = obj => {
 };
 
 firebase.toJavaArray = val => {
-  var javaArray = new java.util.ArrayList();
-  for(var i = 0; i < val.length; i++) {
+  const javaArray = new java.util.ArrayList();
+  for (let i = 0; i < val.length; i++) {
     javaArray.add(firebase.toValue(val[i]));
   }
   return javaArray;
@@ -139,10 +139,10 @@ firebase.toValue = val => {
   let returnVal = null;
   if (val !== null) {
 
-    if(val instanceof Date) {
+    if (val instanceof Date) {
       return new java.util.Date(val.getTime());
     }
-    if(Array.isArray(val)) {
+    if (Array.isArray(val)) {
       return firebase.toJavaArray(val);
     }
 
@@ -220,6 +220,11 @@ firebase.authStateListener = null;
 
 firebase.init = arg => {
   return new Promise((resolve, reject) => {
+    if (firebase.initialized) {
+      reject("Firebase already initialized");
+    }
+    firebase.initialized = true;
+
     const runInit = () => {
       arg = arg || {};
 
@@ -230,7 +235,10 @@ firebase.init = arg => {
 
         const fDatabase = com.google.firebase.database.FirebaseDatabase;
         if (arg.persist) {
-          fDatabase.getInstance().setPersistenceEnabled(true);
+          try {
+            fDatabase.getInstance().setPersistenceEnabled(true);
+          } catch (ignore) {
+          }
         }
         firebase.instance = fDatabase.getInstance().getReference();
       }
@@ -238,10 +246,13 @@ firebase.init = arg => {
       if (typeof(com.google.firebase.firestore) !== "undefined") {
         // Firestore has offline persistence enabled by default
         if (!arg.persist) {
-          com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
-              new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
-                  .setPersistenceEnabled(false)
-                  .build());
+          try {
+            com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
+                new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
+                    .setPersistenceEnabled(false)
+                    .build());
+          } catch (ignore) {
+          }
         }
       }
 
@@ -2230,7 +2241,8 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       get: () => firebase.firestore.get(collectionPath),
       where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
       orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, collectionRef),
-      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef)
+      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef),
+      onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, callback)
     };
 
   } catch (ex) {
@@ -2239,7 +2251,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): ()=> void => {
+firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
         onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
           if (exception !== null) {
@@ -2249,6 +2261,28 @@ firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentR
               snapshot ? snapshot.getId() : null,
               snapshot.exists(),
               snapshot ? () => firebase.toJsObject(snapshot.getData()) : null));
+        })
+      })
+  );
+
+  return () => listener.remove();
+};
+
+firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore.CollectionReference, callback: (snapshot: QuerySnapshot) => void): () => void => {
+  const listener = colRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
+        onEvent: ((snapshot: com.google.firebase.firestore.QuerySnapshot, exception) => {
+          if (exception !== null) {
+            return;
+          }
+
+          const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+          for (let i = 0; i < snapshot.size(); i++) {
+            const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = snapshot.getDocuments().get(i);
+            docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+          }
+          const snap = new QuerySnapshot();
+          snap.docSnapshots = docSnapshots;
+          callback(snap);
         })
       })
   );
@@ -2275,7 +2309,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
       get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
       update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
       delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(docRef, callback)
+      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, callback)
     };
 
   } catch (ex) {
@@ -2304,7 +2338,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
             update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
             delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-            onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(docRef, callback)
+            onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, callback)
           });
         }
       });
@@ -2548,7 +2582,8 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
     }),
     where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
-    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query)
+    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
+    onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback)
   };
 };
 

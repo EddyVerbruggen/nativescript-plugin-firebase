@@ -1,7 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, NgZone, OnInit } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
+import { Observable } from "rxjs/Observable";
+import { City } from "../model/City";
+
 const firebase = require("nativescript-plugin-firebase/app");
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
+
 // import { AngularFireModule } from 'angularfire2';
 
 @Component({
@@ -13,14 +17,21 @@ export class ItemsComponent implements OnInit {
 
   private listenerUnsubscribe: () => void;
 
-  constructor() {
+  public myCity$: Observable<City>;
+  public myCities$: Observable<Array<City>>;
+  private city: City;
+  private cities: Array<City> = [];
+
+  constructor(private zone: NgZone) {
     // AngularFireModule.initializeApp({});
   }
 
   ngOnInit(): void {
     firebase.initializeApp({
       persist: false
-    }).then(() => console.log("Firebase initialized"));
+    }).then(() => {
+      console.log("Firebase initialized");
+    });
   }
 
   public loginAnonymously(): void {
@@ -147,7 +158,7 @@ export class ItemsComponent implements OnInit {
             .doc("SF")
             .collection("streets")
             .doc("QZNrg22tkN8W71YC3qCb"); // id of 'main st.'
-            // .doc("doesntexist");
+    // .doc("doesntexist");
 
     mainStreetInSFDocRef.get().then((doc: firestore.DocumentSnapshot) => {
       if (doc.exists) {
@@ -157,6 +168,32 @@ export class ItemsComponent implements OnInit {
       }
     }).catch(function (error) {
       console.log("Error getting document:", error);
+    });
+  }
+
+
+  firestoreDocumentObservable(): void {
+    this.myCity$ = Observable.create(subscriber => {
+      const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+      docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
+        this.zone.run(() => {
+          this.city = <City>doc.data();
+          subscriber.next(this.city);
+        });
+      });
+    });
+  }
+
+  firestoreCollectionObservable(): void {
+    this.myCities$ = Observable.create(subscriber => {
+      const colRef: firestore.CollectionReference = firebase.firestore().collection("cities");
+      colRef.onSnapshot((snapshot: firestore.QuerySnapshot) => {
+        this.zone.run(() => {
+          this.cities = [];
+          snapshot.forEach(docSnap => this.cities.push(<City>docSnap.data()));
+          subscriber.next(this.cities);
+        });
+      });
     });
   }
 

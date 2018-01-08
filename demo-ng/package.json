@@ -5,10 +5,10 @@
   "repository": "<fill-your-repository-here>",
   "nativescript": {
     "id": "org.nativescript.firebasedemo.firestore",
-    "tns-android": {
+    "tns-ios": {
       "version": "3.4.0"
     },
-    "tns-ios": {
+    "tns-android": {
       "version": "3.4.0"
     }
   },
@@ -24,7 +24,7 @@
     "angularfire2": "^5.0.0-rc.4",
     "firebase": "^4.6.2",
     "nativescript-angular": "~4.4.0",
-    "nativescript-plugin-firebase": "5.1.1",
+    "nativescript-plugin-firebase": "5.1.2",
     "nativescript-theme-core": "~1.0.2",
     "reflect-metadata": "~0.1.8",
     "rxjs": "~5.4.2",
