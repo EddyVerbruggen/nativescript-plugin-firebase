@@ -10,14 +10,17 @@
 
 - [#170](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/170) Need a way to unregister push notification from Firebase
 
+### Fixes
+- [#601](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/601) Error using admob
+
 
 ## 5.1.2 (2018, January 8)
 
-### Fixes
-- [#594](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/594) Android - Background notification causing app to crash after upgrade to 5.1.1
-
 ### New
 - [#595](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/595) Creating Observables from Firestore Documents/Collections
+
+### Fixes
+- [#594](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/594) Android - Background notification causing app to crash after upgrade to 5.1.1
 
 
 ## 5.1.1 (2017, December 30)

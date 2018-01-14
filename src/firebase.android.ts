@@ -634,7 +634,8 @@ firebase.admob.showInterstitial = arg => {
   return new Promise((resolve, reject) => {
     try {
       const settings = firebase.merge(arg, firebase.admob.defaults);
-      firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(appModule.android.foregroundActivity);
+      const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+      firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(activity);
       firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
 
       // Interstitial ads must be loaded before they can be shown, so adding a listener
@@ -703,7 +704,8 @@ firebase.admob._buildAdRequest = settings => {
   if (settings.testing) {
     builder.addTestDevice(com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
     // This will request test ads on the emulator and device by passing this hashed device ID.
-    const ANDROID_ID = android.provider.Settings.Secure.getString(appModule.android.foregroundActivity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+    const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+    const ANDROID_ID = android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     let deviceId = firebase.admob._md5(ANDROID_ID);
     if (deviceId !== null) {
       deviceId = deviceId.toUpperCase();
