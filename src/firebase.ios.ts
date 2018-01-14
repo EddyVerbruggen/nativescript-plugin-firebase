@@ -320,7 +320,7 @@ firebase.addOnPushTokenReceivedCallback = callback => {
   });
 };
 
-firebase.unregisterForPushNotifications = callback => {
+firebase.unregisterForPushNotifications = () => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRMessaging) === "undefined") {

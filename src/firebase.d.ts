@@ -891,6 +891,8 @@ export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: strin
 
 export function getCurrentPushToken(): Promise<string>;
 
+export function unregisterForPushNotifications(): Promise<void>;
+
 // dynamic links
 export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBackData: dynamicLinks.DynamicLinkCallbackData) => void): Promise<any>;
 

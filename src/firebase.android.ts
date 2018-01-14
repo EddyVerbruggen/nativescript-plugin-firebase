@@ -470,6 +470,10 @@ firebase.addOnPushTokenReceivedCallback = callback => {
   });
 };
 
+firebase.unregisterForPushNotifications = () => {
+  return Promise.reject("Not supported on Android");
+};
+
 firebase.getRemoteConfigDefaults = properties => {
   let defaults = {};
   for (const p in properties) {

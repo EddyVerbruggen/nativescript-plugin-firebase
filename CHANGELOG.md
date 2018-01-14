@@ -4,6 +4,13 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.3 (2018, January XX)
+
+### New
+
+- [#170](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/170) Need a way to unregister push notification from Firebase
+
+
 ## 5.1.2 (2018, January 8)
 
 ### Fixes
