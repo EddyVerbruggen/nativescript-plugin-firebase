@@ -9,6 +9,8 @@
 ### New
 
 - [#170](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/170) Need a way to unregister push notification from Firebase
+- [#609](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/609) When Google Play Services is not available, show a dialog asking the user to install it
+
 
 ### Fixes
 - [#601](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/601) Error using admob

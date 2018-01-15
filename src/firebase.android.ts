@@ -486,10 +486,20 @@ firebase.getRemoteConfigDefaults = properties => {
 };
 
 firebase._isGooglePlayServicesAvailable = () => {
-  const context = com.tns.NativeScriptApplication.getInstance();
+  const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+  const googleApiAvailability = com.google.android.gms.common.GoogleApiAvailability.getInstance();
   const playServiceStatusSuccess = com.google.android.gms.common.ConnectionResult.SUCCESS; // 0
-  const playServicesStatus = com.google.android.gms.common.GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
-  return playServicesStatus === playServiceStatusSuccess;
+  const playServicesStatus = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+  const available = playServicesStatus === playServiceStatusSuccess;
+  if (!available && googleApiAvailability.isUserResolvableError(playServicesStatus)) {
+    // show a dialog offering the user to update (no need to wait for it to finish)
+    googleApiAvailability.showErrorDialogFragment(activity, playServicesStatus, 1, new android.content.DialogInterface.OnCancelListener({
+      onCancel: dialogInterface => {
+        console.log("Canceled");
+      }
+    }));
+  }
+  return available;
 };
 
 firebase.analytics.logEvent = arg => {
