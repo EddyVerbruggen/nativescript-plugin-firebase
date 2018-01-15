@@ -133,6 +133,9 @@ export class ItemsComponent implements OnInit {
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => {
             console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
+            // since there's a reference stored here, we can use that to retrieve its data
+            const docRef: firestore.DocumentReference = doc.data().ref2sf;
+            docRef.get().then(res => console.log("docref.get: " + JSON.stringify(res.data())));
           });
         })
         .catch(err => console.log("Get failed, error" + err));

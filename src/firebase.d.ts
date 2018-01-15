@@ -808,6 +808,8 @@ export namespace firestore {
     update: (document: any) => Promise<void>;
     delete: () => Promise<void>;
     onSnapshot(callback: (doc: DocumentSnapshot) => void): () => void;
+    android?: any;
+    ios?: any;
   }
 
   export interface Query {

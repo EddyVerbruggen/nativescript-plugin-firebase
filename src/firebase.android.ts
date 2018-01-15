@@ -20,7 +20,7 @@ let fbCallbackManager = null;
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
 
-const gson = lazy(() => typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson());
+// const gson = lazy(() => typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson());
 const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "undefined");
 const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
 
@@ -167,13 +167,18 @@ firebase.toValue = val => {
   return returnVal;
 };
 
+// no longer using Gson as fi Firestore's DocumentReference isn't serialized
 firebase.toJsObject = javaObj => {
-  if (gson() !== null) {
-    return JSON.parse(gson().toJson(javaObj));
-  } else {
-    // temp fallback for folks not having fetched gson yet in their build for some reason
-    return firebase.toJsObjectLegacy(javaObj);
-  }
+  // if (gson() !== null) {
+  //   try {
+  //     return JSON.parse(gson().toJson(javaObj)); // this may fail if fi a DocumentReference is encountered
+  //   } catch (ignore) {
+  //     return firebase.toJsObjectLegacy(javaObj);
+  //   }
+  // } else {
+  // fallback for folks not having fetched gson yet in their build for some reason
+  return firebase.toJsObjectLegacy(javaObj);
+  // }
 };
 
 firebase.toJsObjectLegacy = javaObj => {
@@ -191,6 +196,17 @@ firebase.toJsObjectLegacy = javaObj => {
     case 'java.lang.Long':
     case 'java.lang.Double':
       return Number(String(javaObj));
+    case 'java.util.Date':
+      return new Date(javaObj);
+    case 'com.google.firebase.firestore.GeoPoint':
+      return {
+        "latitude": javaObj.getLatitude(),
+        "longitude": javaObj.getLongitude()
+      };
+    case 'com.google.firebase.firestore.DocumentReference':
+      const path: string = javaObj.getPath();
+      const lastSlashIndex = path.lastIndexOf("/");
+      return firebase.firestore._getDocumentReference(javaObj, path.substring(0, lastSlashIndex), path.substring(lastSlashIndex + 1));
     case 'java.util.ArrayList':
       node = [];
       for (let i = 0; i < javaObj.size(); i++) {
@@ -198,11 +214,15 @@ firebase.toJsObjectLegacy = javaObj => {
       }
       break;
     default:
-      node = {};
-      const iterator = javaObj.entrySet().iterator();
-      while (iterator.hasNext()) {
-        const item = iterator.next();
-        node[item.getKey()] = firebase.toJsObjectLegacy(item.getValue());
+      try {
+        node = {};
+        const iterator = javaObj.entrySet().iterator();
+        while (iterator.hasNext()) {
+          const item = iterator.next();
+          node[item.getKey()] = firebase.toJsObjectLegacy(item.getValue());
+        }
+      } catch (e) {
+        console.log("PLEASE REPORT THIS AT https://github.com/NativeScript/NativeScript/issues: Tried to serialize an unsupported type: javaObj.getClass().getName(), error: " + e);
       }
   }
   return node;
@@ -2306,9 +2326,21 @@ firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore
   return () => listener.remove();
 };
 
+firebase.firestore._getDocumentReference = (javaObj, collectionPath, documentPath): firestore.DocumentReference => {
+  return {
+    id: javaObj.getId(),
+    collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
+    set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, javaObj.getId(), data, options),
+    get: () => firebase.firestore.getDocument(collectionPath, javaObj.getId()),
+    update: (data: any) => firebase.firestore.update(collectionPath, javaObj.getId(), data),
+    delete: () => firebase.firestore.delete(collectionPath, javaObj.getId()),
+    onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(javaObj, callback),
+    android: javaObj
+  };
+};
+
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   try {
-
     if (typeof(com.google.firebase.firestore) === "undefined") {
       console.log("Make sure firebase-firestore is in the plugin's include.gradle");
       return null;
@@ -2317,17 +2349,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
     const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
     const colRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
     const docRef: com.google.firebase.firestore.DocumentReference = documentPath ? colRef.document(documentPath) : colRef.document();
-
-    return {
-      id: docRef.getId(),
-      collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
-      set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
-      get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
-      update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
-      delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, callback)
-    };
-
+    return firebase.firestore._getDocumentReference(docRef, collectionPath, documentPath);
   } catch (ex) {
     console.log("Error in firebase.firestore.doc: " + ex);
     return null;

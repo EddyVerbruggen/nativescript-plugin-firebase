@@ -581,6 +581,17 @@ firebase.toJsObject = objCObj => {
         case 'Date':
           node[key] = new Date(val);
           break;
+        case 'FIRDocumentReference':
+          const path = (<FIRDocumentReference>val).path;
+          const lastSlashIndex = path.lastIndexOf("/");
+          node[key] = firebase.firestore._getDocumentReference(val, path.substring(0, lastSlashIndex), path.substring(lastSlashIndex + 1));
+          break;
+        case 'FIRGeoPoint':
+          node[key] = {
+            latitude: (<FIRGeoPoint>val).latitude,
+            longitude: (<FIRGeoPoint>val).longitude
+          };
+          break;
         default:
           console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + types.getClass(val) + "'. Casting to String as a fallback.");
           node[key] = String(val);
@@ -2285,6 +2296,19 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
   }
 };
 
+firebase.firestore._getDocumentReference = (fIRDocumentReference, collectionPath, documentPath): firestore.DocumentReference => {
+  return {
+    id: fIRDocumentReference.documentID,
+    collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
+    set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
+    get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
+    update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
+    delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
+    onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(fIRDocumentReference, callback),
+    ios: fIRDocumentReference
+  };
+};
+
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   try {
     if (typeof(FIRFirestore) === "undefined") {
@@ -2294,17 +2318,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 
     const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
     const fIRDocumentReference = documentPath ? fIRCollectionReference.documentWithPath(documentPath) : fIRCollectionReference.documentWithAutoID();
-
-    return {
-      id: fIRDocumentReference.documentID,
-      collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
-      set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
-      get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
-      update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
-      delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
-      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(fIRDocumentReference, callback)
-    };
-
+    return firebase.firestore._getDocumentReference(fIRDocumentReference, collectionPath, documentPath);
   } catch (ex) {
     console.log("Error in firebase.firestore.doc: " + ex);
     return null;

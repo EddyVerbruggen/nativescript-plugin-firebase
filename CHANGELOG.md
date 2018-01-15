@@ -14,6 +14,7 @@
 
 ### Fixes
 - [#601](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/601) Error using admob
+- [#604](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/604) Date saved to Firestore get retrieved as strings
 
 
 ## 5.1.2 (2018, January 8)
