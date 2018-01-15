@@ -4,7 +4,7 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
-## 5.1.3 (2018, January XX)
+## 5.1.3 (2018, January 15)
 
 ### New
 
