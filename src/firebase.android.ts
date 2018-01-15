@@ -2618,7 +2618,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
       });
       query.get().addOnCompleteListener(onCompleteListener);
     }),
-    where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query),
+    where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
     onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback)

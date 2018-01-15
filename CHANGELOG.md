@@ -13,6 +13,7 @@
 
 
 ### Fixes
+- [#577](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/577) Firestore References can't be parsed
 - [#601](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/601) Error using admob
 - [#604](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/604) Date saved to Firestore get retrieved as strings
 
