@@ -2,10 +2,10 @@
   "nativescript": {
     "id": "org.nativescript.firebasedemo",
     "tns-ios": {
-      "version": "3.4.0"
+      "version": "3.4.1"
     },
     "tns-android": {
-      "version": "3.4.0"
+      "version": "3.4.1"
     }
   },
   "dependencies": {
