@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+
 const firebase = require("nativescript-plugin-firebase");
 
 @Component({
@@ -7,13 +8,12 @@ const firebase = require("nativescript-plugin-firebase");
 })
 
 export class AppComponent implements OnInit {
-
   ngOnInit(): void {
-    firebase.init({
-      persist: false
-    }).then(() => {
-      console.log("Firebase initialized");
-    });
+    firebase.init(
+        {
+          persist: false
+        })
+        .then(() => console.log(">>>>> Firebase initialized"))
+        .catch(err => console.log(">>>>> Firebase init error: " + err));
   }
-
 }

@@ -350,7 +350,7 @@ firebase.init = arg => {
     };
 
     try {
-      if (appModule.android.foregroundActivity) {
+      if (appModule.android.startActivity) {
         runInit();
       } else {
         // if this is called before application.start() wait for the event to fire
