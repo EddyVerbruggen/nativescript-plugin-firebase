@@ -255,6 +255,7 @@ export class HelloWorldModel extends Observable {
         }
       },
       onMessageReceivedCallback: message => {
+        console.log("Push message received");
         setTimeout(() => {
           alert({
             title: "Push message!",

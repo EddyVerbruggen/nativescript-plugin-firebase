@@ -47,14 +47,9 @@ const handleRemoteNotification = (app, userInfo) => {
   }
 
   firebase._pendingNotifications.push(userInfoJSON);
-  if (app.applicationState === UIApplicationState.Active) {
-    // If this is called from applicationDidFinishLaunchingWithOptions probably the app was dead (background)
-    userInfoJSON.foreground = true;
-    if (firebase._receivedNotificationCallback !== null) {
-      firebase._processPendingNotifications();
-    }
-  } else {
-    userInfoJSON.foreground = false;
+  userInfoJSON.foreground = app.applicationState === UIApplicationState.Active;
+  if (firebase._receivedNotificationCallback !== null) {
+    firebase._processPendingNotifications();
   }
 };
 
