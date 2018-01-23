@@ -4,6 +4,20 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.4 (2018, January 23)
+
+### New
+
+- [#615](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/615) Conflict with nativescript-barcodescanner
+
+### Fixes
+- [#585](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/585) Firebase Queries - “cannot read property of null” after upgrade to NS 3.4.0
+- [#588](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/588) Angular 5 onAuthStateChanged never called
+- [#593](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/593) JS: Error: Uncaught (in promise): Run init() first!
+- [#612](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/612) Nativescript 3.4 and angular 5 - support
+- [#613](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/613) Best practice to init firebase
+
+
 ## 5.1.3 (2018, January 15)
 
 ### New
