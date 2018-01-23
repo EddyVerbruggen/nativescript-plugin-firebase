@@ -25,11 +25,11 @@
     <Label [text]="(myCity$ | async).name" height="32" *ngIf="myCity$"></Label>
     <Button text="Collection Observable (cities)" (tap)="firestoreCollectionObservable()" class="button"></Button>
     <ListView [items]="myCities$ | async" height="200" *ngIf="myCities$">
-      <template let-item="item">
+      <ng-template let-item="item">
         <StackLayout>
           <Label style="color: red" [text]='item.name'></Label>
         </StackLayout>
-      </template>
+      </ng-template>
     </ListView>
     <Button text="Listen to changes in SF" (tap)="firestoreListen()" class="button"></Button>
     <Button text="Stop listening" (tap)="firestoreStopListening()" class="button"></Button>

@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
 import { Observable } from "rxjs/Observable";
 import { City } from "../model/City";
@@ -13,7 +13,7 @@ const firebaseWebApi = require("nativescript-plugin-firebase/app");
   moduleId: module.id,
   templateUrl: "./items.component.html",
 })
-export class ItemsComponent implements OnInit {
+export class ItemsComponent {
 
   private listenerUnsubscribe: () => void;
 
@@ -24,14 +24,6 @@ export class ItemsComponent implements OnInit {
 
   constructor(private zone: NgZone) {
     // AngularFireModule.initializeApp({});
-  }
-
-  ngOnInit(): void {
-    firebase.initializeApp({
-      persist: false
-    }).then(() => {
-      console.log("Firebase initialized");
-    });
   }
 
   public loginAnonymously(): void {
