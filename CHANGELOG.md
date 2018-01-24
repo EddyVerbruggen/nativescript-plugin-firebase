@@ -4,6 +4,43 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.4 (2018, January 23)
+
+### New
+
+- [#615](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/615) Conflict with nativescript-barcodescanner
+
+### Fixes
+- [#585](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/585) Firebase Queries - “cannot read property of null” after upgrade to NS 3.4.0
+- [#588](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/588) Angular 5 onAuthStateChanged never called
+- [#593](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/593) JS: Error: Uncaught (in promise): Run init() first!
+- [#612](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/612) Nativescript 3.4 and angular 5 - support
+- [#613](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/613) Best practice to init firebase
+
+
+## 5.1.3 (2018, January 15)
+
+### New
+
+- [#170](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/170) Need a way to unregister push notification from Firebase
+- [#609](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/609) When Google Play Services is not available, show a dialog asking the user to install it
+
+
+### Fixes
+- [#577](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/577) Firestore References can't be parsed
+- [#601](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/601) Error using admob
+- [#604](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/604) Date saved to Firestore get retrieved as strings
+
+
+## 5.1.2 (2018, January 8)
+
+### New
+- [#595](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/595) Creating Observables from Firestore Documents/Collections
+
+### Fixes
+- [#594](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/594) Android - Background notification causing app to crash after upgrade to 5.1.1
+
+
 ## 5.1.1 (2017, December 30)
 
 ### Fixes

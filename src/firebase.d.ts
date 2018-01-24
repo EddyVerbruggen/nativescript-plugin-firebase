@@ -808,6 +808,8 @@ export namespace firestore {
     update: (document: any) => Promise<void>;
     delete: () => Promise<void>;
     onSnapshot(callback: (doc: DocumentSnapshot) => void): () => void;
+    android?: any;
+    ios?: any;
   }
 
   export interface Query {
@@ -818,6 +820,8 @@ export namespace firestore {
     orderBy(fieldPath: string, directionStr: firestore.OrderByDirection): Query;
 
     limit(limit: number): Query;
+
+    onSnapshot(callback: (snapshot: QuerySnapshot) => void): () => void;
   }
 
   export interface CollectionReference extends Query {
@@ -888,6 +892,8 @@ export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) 
 export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
 
 export function getCurrentPushToken(): Promise<string>;
+
+export function unregisterForPushNotifications(): Promise<void>;
 
 // dynamic links
 export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBackData: dynamicLinks.DynamicLinkCallbackData) => void): Promise<any>;

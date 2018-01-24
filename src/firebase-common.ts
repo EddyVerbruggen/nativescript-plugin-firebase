@@ -2,6 +2,7 @@ import { prompt } from "tns-core-modules/ui/dialogs";
 import { firestore } from "./firebase";
 
 export const firebase: any = {
+  initialized: false,
   instance: null,
   storage: null,
   firebaseRemoteConfig: null,

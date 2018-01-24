@@ -20,7 +20,7 @@ let fbCallbackManager = null;
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
 
-const gson = lazy(() => typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson());
+// const gson = lazy(() => typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson());
 const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "undefined");
 const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
 
@@ -98,22 +98,28 @@ firebase.toHashMap = obj => {
       if (obj[property] === null) {
         node.put(property, null);
       } else {
-        switch (typeof obj[property]) {
-          case 'object':
-            node.put(property, firebase.toHashMap(obj[property], node));
-            break;
-          case 'boolean':
-            node.put(property, java.lang.Boolean.valueOf(String(obj[property])));
-            break;
-          case 'number':
-            if (Number(obj[property]) === obj[property] && obj[property] % 1 === 0)
-              node.put(property, java.lang.Long.valueOf(String(obj[property])));
-            else
-              node.put(property, java.lang.Double.valueOf(String(obj[property])));
-            break;
-          case 'string':
-            node.put(property, String(obj[property]));
-            break;
+        if (obj[property] instanceof Date) {
+          node.put(property, new java.util.Date(obj[property].getTime()));
+        } else if (Array.isArray(obj[property])) {
+          node.put(property, firebase.toJavaArray(obj[property]));
+        } else {
+          switch (typeof obj[property]) {
+            case 'object':
+              node.put(property, firebase.toHashMap(obj[property], node));
+              break;
+            case 'boolean':
+              node.put(property, java.lang.Boolean.valueOf(String(obj[property])));
+              break;
+            case 'number':
+              if (Number(obj[property]) === obj[property] && obj[property] % 1 === 0)
+                node.put(property, java.lang.Long.valueOf(String(obj[property])));
+              else
+                node.put(property, java.lang.Double.valueOf(String(obj[property])));
+              break;
+            case 'string':
+              node.put(property, String(obj[property]));
+              break;
+          }
         }
       }
     }
@@ -121,9 +127,25 @@ firebase.toHashMap = obj => {
   return node;
 };
 
+firebase.toJavaArray = val => {
+  const javaArray = new java.util.ArrayList();
+  for (let i = 0; i < val.length; i++) {
+    javaArray.add(firebase.toValue(val[i]));
+  }
+  return javaArray;
+};
+
 firebase.toValue = val => {
   let returnVal = null;
   if (val !== null) {
+
+    if (val instanceof Date) {
+      return new java.util.Date(val.getTime());
+    }
+    if (Array.isArray(val)) {
+      return firebase.toJavaArray(val);
+    }
+
     switch (typeof val) {
       case 'object':
         returnVal = firebase.toHashMap(val);
@@ -145,13 +167,18 @@ firebase.toValue = val => {
   return returnVal;
 };
 
+// no longer using Gson as fi Firestore's DocumentReference isn't serialized
 firebase.toJsObject = javaObj => {
-  if (gson() !== null) {
-    return JSON.parse(gson().toJson(javaObj));
-  } else {
-    // temp fallback for folks not having fetched gson yet in their build for some reason
-    return firebase.toJsObjectLegacy(javaObj);
-  }
+  // if (gson() !== null) {
+  //   try {
+  //     return JSON.parse(gson().toJson(javaObj)); // this may fail if fi a DocumentReference is encountered
+  //   } catch (ignore) {
+  //     return firebase.toJsObjectLegacy(javaObj);
+  //   }
+  // } else {
+  // fallback for folks not having fetched gson yet in their build for some reason
+  return firebase.toJsObjectLegacy(javaObj);
+  // }
 };
 
 firebase.toJsObjectLegacy = javaObj => {
@@ -169,6 +196,17 @@ firebase.toJsObjectLegacy = javaObj => {
     case 'java.lang.Long':
     case 'java.lang.Double':
       return Number(String(javaObj));
+    case 'java.util.Date':
+      return new Date(javaObj);
+    case 'com.google.firebase.firestore.GeoPoint':
+      return {
+        "latitude": javaObj.getLatitude(),
+        "longitude": javaObj.getLongitude()
+      };
+    case 'com.google.firebase.firestore.DocumentReference':
+      const path: string = javaObj.getPath();
+      const lastSlashIndex = path.lastIndexOf("/");
+      return firebase.firestore._getDocumentReference(javaObj, path.substring(0, lastSlashIndex), path.substring(lastSlashIndex + 1));
     case 'java.util.ArrayList':
       node = [];
       for (let i = 0; i < javaObj.size(); i++) {
@@ -176,11 +214,15 @@ firebase.toJsObjectLegacy = javaObj => {
       }
       break;
     default:
-      node = {};
-      const iterator = javaObj.entrySet().iterator();
-      while (iterator.hasNext()) {
-        const item = iterator.next();
-        node[item.getKey()] = firebase.toJsObjectLegacy(item.getValue());
+      try {
+        node = {};
+        const iterator = javaObj.entrySet().iterator();
+        while (iterator.hasNext()) {
+          const item = iterator.next();
+          node[item.getKey()] = firebase.toJsObjectLegacy(item.getValue());
+        }
+      } catch (e) {
+        console.log("PLEASE REPORT THIS AT https://github.com/NativeScript/NativeScript/issues: Tried to serialize an unsupported type: javaObj.getClass().getName(), error: " + e);
       }
   }
   return node;
@@ -198,6 +240,11 @@ firebase.authStateListener = null;
 
 firebase.init = arg => {
   return new Promise((resolve, reject) => {
+    if (firebase.initialized) {
+      reject("Firebase already initialized");
+    }
+    firebase.initialized = true;
+
     const runInit = () => {
       arg = arg || {};
 
@@ -208,7 +255,10 @@ firebase.init = arg => {
 
         const fDatabase = com.google.firebase.database.FirebaseDatabase;
         if (arg.persist) {
-          fDatabase.getInstance().setPersistenceEnabled(true);
+          try {
+            fDatabase.getInstance().setPersistenceEnabled(true);
+          } catch (ignore) {
+          }
         }
         firebase.instance = fDatabase.getInstance().getReference();
       }
@@ -216,10 +266,13 @@ firebase.init = arg => {
       if (typeof(com.google.firebase.firestore) !== "undefined") {
         // Firestore has offline persistence enabled by default
         if (!arg.persist) {
-          com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
-              new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
-                  .setPersistenceEnabled(false)
-                  .build());
+          try {
+            com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
+                new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
+                    .setPersistenceEnabled(false)
+                    .build());
+          } catch (ignore) {
+          }
         }
       }
 
@@ -297,7 +350,7 @@ firebase.init = arg => {
     };
 
     try {
-      if (appModule.android.foregroundActivity) {
+      if (appModule.android.startActivity) {
         runInit();
       } else {
         // if this is called before application.start() wait for the event to fire
@@ -437,6 +490,10 @@ firebase.addOnPushTokenReceivedCallback = callback => {
   });
 };
 
+firebase.unregisterForPushNotifications = () => {
+  return Promise.reject("Not supported on Android");
+};
+
 firebase.getRemoteConfigDefaults = properties => {
   let defaults = {};
   for (const p in properties) {
@@ -449,10 +506,20 @@ firebase.getRemoteConfigDefaults = properties => {
 };
 
 firebase._isGooglePlayServicesAvailable = () => {
-  const context = com.tns.NativeScriptApplication.getInstance();
+  const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+  const googleApiAvailability = com.google.android.gms.common.GoogleApiAvailability.getInstance();
   const playServiceStatusSuccess = com.google.android.gms.common.ConnectionResult.SUCCESS; // 0
-  const playServicesStatus = com.google.android.gms.common.GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
-  return playServicesStatus === playServiceStatusSuccess;
+  const playServicesStatus = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+  const available = playServicesStatus === playServiceStatusSuccess;
+  if (!available && googleApiAvailability.isUserResolvableError(playServicesStatus)) {
+    // show a dialog offering the user to update (no need to wait for it to finish)
+    googleApiAvailability.showErrorDialogFragment(activity, playServicesStatus, 1, new android.content.DialogInterface.OnCancelListener({
+      onCancel: dialogInterface => {
+        console.log("Canceled");
+      }
+    }));
+  }
+  return available;
 };
 
 firebase.analytics.logEvent = arg => {
@@ -597,7 +664,8 @@ firebase.admob.showInterstitial = arg => {
   return new Promise((resolve, reject) => {
     try {
       const settings = firebase.merge(arg, firebase.admob.defaults);
-      firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(appModule.android.foregroundActivity);
+      const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+      firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(activity);
       firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
 
       // Interstitial ads must be loaded before they can be shown, so adding a listener
@@ -666,7 +734,8 @@ firebase.admob._buildAdRequest = settings => {
   if (settings.testing) {
     builder.addTestDevice(com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
     // This will request test ads on the emulator and device by passing this hashed device ID.
-    const ANDROID_ID = android.provider.Settings.Secure.getString(appModule.android.foregroundActivity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+    const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+    const ANDROID_ID = android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     let deviceId = firebase.admob._md5(ANDROID_ID);
     if (deviceId !== null) {
       deviceId = deviceId.toUpperCase();
@@ -2208,7 +2277,8 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       get: () => firebase.firestore.get(collectionPath),
       where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
       orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, collectionRef),
-      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef)
+      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef),
+      onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, callback)
     };
 
   } catch (ex) {
@@ -2217,7 +2287,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): ()=> void => {
+firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
         onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
           if (exception !== null) {
@@ -2234,9 +2304,43 @@ firebase.firestore.onSnapshot = (docRef: com.google.firebase.firestore.DocumentR
   return () => listener.remove();
 };
 
+firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore.CollectionReference, callback: (snapshot: QuerySnapshot) => void): () => void => {
+  const listener = colRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
+        onEvent: ((snapshot: com.google.firebase.firestore.QuerySnapshot, exception) => {
+          if (exception !== null) {
+            return;
+          }
+
+          const docSnapshots: Array<firestore.DocumentSnapshot> = [];
+          for (let i = 0; i < snapshot.size(); i++) {
+            const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = snapshot.getDocuments().get(i);
+            docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+          }
+          const snap = new QuerySnapshot();
+          snap.docSnapshots = docSnapshots;
+          callback(snap);
+        })
+      })
+  );
+
+  return () => listener.remove();
+};
+
+firebase.firestore._getDocumentReference = (javaObj, collectionPath, documentPath): firestore.DocumentReference => {
+  return {
+    id: javaObj.getId(),
+    collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
+    set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, javaObj.getId(), data, options),
+    get: () => firebase.firestore.getDocument(collectionPath, javaObj.getId()),
+    update: (data: any) => firebase.firestore.update(collectionPath, javaObj.getId(), data),
+    delete: () => firebase.firestore.delete(collectionPath, javaObj.getId()),
+    onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(javaObj, callback),
+    android: javaObj
+  };
+};
+
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   try {
-
     if (typeof(com.google.firebase.firestore) === "undefined") {
       console.log("Make sure firebase-firestore is in the plugin's include.gradle");
       return null;
@@ -2245,17 +2349,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
     const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
     const colRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
     const docRef: com.google.firebase.firestore.DocumentReference = documentPath ? colRef.document(documentPath) : colRef.document();
-
-    return {
-      id: docRef.getId(),
-      collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
-      set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
-      get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
-      update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
-      delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-      onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(docRef, callback)
-    };
-
+    return firebase.firestore._getDocumentReference(docRef, collectionPath, documentPath);
   } catch (ex) {
     console.log("Error in firebase.firestore.doc: " + ex);
     return null;
@@ -2282,7 +2376,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
             update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
             delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-            onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onSnapshot(docRef, callback)
+            onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, callback)
           });
         }
       });
@@ -2524,9 +2618,10 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
       });
       query.get().addOnCompleteListener(onCompleteListener);
     }),
-    where: (fp: string, os: firestore.WhereFilterOp, v: any) => firebase.firestore.where(collectionPath, fp, os, v, query),
+    where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
-    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query)
+    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
+    onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback)
   };
 };
 

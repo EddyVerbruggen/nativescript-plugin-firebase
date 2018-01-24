@@ -44,6 +44,26 @@ citiesCollection.get().then(querySnapshot => {
 });
 ```
 
+### `collection().onSnapshot()`
+To listen to changes in a certain collection, you can register a callback function that gets invoked every time data is changed.
+
+To unsubscribe the listener, just invoke the function that was returned when attaching the listener.
+
+> NOTE: Due to a bug in the iOS Firestore SDK 'unsubscribe' does not currently work (plugin version 5.0.0), so the plugin is silently ignoring further updates after unsubscribing. This should not hurt your usage in any way though.
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+
+const unsubscribe = citiesCollection.onSnapshot((snapshot: firestore.QuerySnapshot) => {
+  snapshot.forEach(city => console.log(city.data()));
+});
+
+// then after a while, to detach the listener:
+unsubscribe();
+```
+
+> Using **Observables**? [Check the example in the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/f6972433dea48bf1d342a6e4ef7f955dff341837/demo-ng/app/item/items.component.ts#L187-L198).
+
 ### `collection.doc()`
 As mentioned, a document lives inside a collection and contains the actual data:
 
@@ -88,6 +108,8 @@ const unsubscribe = sanFranciscoDocument.onSnapshot(doc => {
 // then after a while, to detach the listener:
 unsubscribe();
 ```
+
+> Using **Observables**? [Check the example in the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/f6972433dea48bf1d342a6e4ef7f955dff341837/demo-ng/app/item/items.component.ts#L175-L185).
 
 ### `collection.add()`
 If you want to add a document with an auto-generated ID, use `add` on a *collection*:

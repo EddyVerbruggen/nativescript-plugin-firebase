@@ -5,36 +5,37 @@
   "repository": "<fill-your-repository-here>",
   "nativescript": {
     "id": "org.nativescript.firebasedemo.firestore",
-    "tns-android": {
-      "version": "3.4.0"
-    },
     "tns-ios": {
-      "version": "3.4.0"
+      "version": "3.4.1"
+    },
+    "tns-android": {
+      "version": "3.4.1"
     }
   },
   "dependencies": {
-    "@angular/animations": "~4.4.1",
-    "@angular/common": "~4.4.1",
-    "@angular/compiler": "~4.4.1",
-    "@angular/core": "~4.4.1",
-    "@angular/forms": "~4.4.1",
-    "@angular/http": "~4.4.1",
-    "@angular/platform-browser": "~4.4.1",
-    "@angular/router": "~4.4.1",
-    "nativescript-angular": "~4.4.0",
-    "nativescript-plugin-firebase": "5.1.1",
-    "nativescript-theme-core": "~1.0.2",
-    "reflect-metadata": "~0.1.8",
-    "rxjs": "~5.4.2",
-    "tns-core-modules": "~3.3.0",
-    "zone.js": "~0.8.2"
+    "@angular/animations": "~5.2.0",
+    "@angular/common": "~5.2.0",
+    "@angular/compiler": "~5.2.0",
+    "@angular/core": "~5.2.0",
+    "@angular/forms": "~5.2.0",
+    "@angular/http": "~5.2.0",
+    "@angular/platform-browser": "~5.2.0",
+    "@angular/platform-browser-dynamic": "~5.2.0",
+    "@angular/router": "~5.2.0",
+    "nativescript-angular": "~5.2.0",
+    "nativescript-plugin-firebase": "5.1.4",
+    "nativescript-theme-core": "~1.0.4",
+    "reflect-metadata": "~0.1.10",
+    "rxjs": "~5.5.0",
+    "tns-core-modules": "~3.4.0",
+    "zone.js": "~0.8.18"
   },
   "devDependencies": {
     "babel-traverse": "6.26.0",
     "babel-types": "6.26.0",
     "babylon": "6.18.0",
     "lazy": "1.0.11",
-    "nativescript-dev-typescript": "~0.5.0",
-    "typescript": "~2.4.2"
+    "nativescript-dev-typescript": "~0.6.0",
+    "typescript": "~2.6.2"
   }
 }
