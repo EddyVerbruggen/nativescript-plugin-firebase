@@ -5,6 +5,7 @@
   "remote_config": true,
   "messaging": true,
   "crash_reporting": true,
+  "crashlytics": true,
   "storage": true,
   "facebook_auth": true,
   "google_auth": true,
