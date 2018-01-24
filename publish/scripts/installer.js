@@ -500,7 +500,7 @@ module.exports = function() {
         let latestGradlePlugin = 'classpath "com.android.tools.build:gradle:3.0.1"';
         buildGradleContent = buildGradleContent.replace(gradlePattern, latestGradlePlugin);
         
-        let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.1"';
+        let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.2"';
         let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
         if (googleServicesPattern.test(buildGradleContent)) {
             buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
