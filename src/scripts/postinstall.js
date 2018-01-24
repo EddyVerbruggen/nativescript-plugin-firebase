@@ -3026,7 +3026,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 4.6.0'
+`pod 'Firebase', '~> 4.8.0'
 pod 'Firebase/Auth'
 
 # Uncomment if you want to enable Realtime DB
