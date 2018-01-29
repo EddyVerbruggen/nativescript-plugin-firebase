@@ -2942,12 +2942,12 @@ function promptQuestions() {
         description: 'Are you using Firebase Messaging (y/n)',
         default: 'n'
     }, {
-        name: 'crash_reporting',
-        description: 'Are you using Firebase Crash Reporting (y/n)',
+        name: 'crashlytics',
+        description: 'Are you using Firebase Crashlytics (currently iOS only; both crashlytics and crash_reporting can be enabled and crashlytics will be used for iOS and crash_reporting for android) (y/n)',
         default: 'n'
     }, {
-        name: 'crashlytics',
-        description: 'Are you using Firebase Crashlytics (y/n)',
+        name: 'crash_reporting',
+        description: 'Are you using Firebase Crash Reporting (y/n)',
         default: 'n'
     }, {
         name: 'storage',
