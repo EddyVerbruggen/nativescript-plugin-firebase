@@ -3203,12 +3203,7 @@ dependencies {
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:$firebaseVersion"
 
     // Uncomment if you want to use 'Crash Reporting'
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
-    
-    // Uncomment if you want to use 'Crashlytics'
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile("com.crashlytics.sdk.android:crashlytics:2.7.1@aar") {
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + `    transitive = true
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` }
+    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
     ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:$firebaseVersion"
@@ -3301,16 +3296,9 @@ module.exports = function($logger, $projectData) {
         if (fs.existsSync(projectBuildGradlePath)) {
             let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
             
-            // Crashlytics requires Firebase >= 11.8.0
-            // Firebase 11.8.0 requires google-services plugin >= 3.1.2
-            // google-services plugin 3.1.2 requires gradle-plugin >= 3.0.1
-            // gradle-plugin 3.0.1 requires buildToolsVersion >=26.0.3
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
-            let latestGradlePlugin = 'classpath "com.android.tools.build:gradle:2.3.3"';
-            buildGradleContent = buildGradleContent.replace(gradlePattern, latestGradlePlugin);
-            
-            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.1"';
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.1"';
             if (googleServicesPattern.test(buildGradleContent)) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {
@@ -3319,51 +3307,7 @@ module.exports = function($logger, $projectData) {
                 });
             }
     
-            // for Crashlytics
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `let latestFabricPlugin = 'classpath "io.fabric.tools:gradle:1.24.4"';
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `let fabricPattern = /classpath ('|")io\\.fabric\\.tools:gradle:\\d+\\.\\d+\\.\\d+('|")/;
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `if (fabricPattern.test(buildGradleContent)) {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(fabricPattern, latestFabricPlugin);
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `} else {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(googleServicesPattern, function (match) {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `        return match + '\\n        ' + latestFabricPlugin;
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `    });
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `}
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `let mavenFabricRepo = 'maven { url "https://maven.fabric.io/public" }';
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `let mavenGoogleRepo = 'maven { url "https://maven.google.com/" }';
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `if (!RegExp(mavenFabricRepo).test(buildGradleContent) || !RegExp(mavenGoogleRepo).test(buildGradleContent)) {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `    let matchIndex = 0;
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(/jcenter\\(\\)/g, function (match) {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `      if (matchIndex === 0) {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `        matchIndex++;
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `        return 'jcenter()\\n        ' + mavenFabricRepo;
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `      } else {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `        matchIndex++;
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `        return 'jcenter()\\n        ' + mavenGoogleRepo;
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `      }
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `    });
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `}
-    
             fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
-        }
-        
-        let appBuildGradlePath = path.join($projectData.platformsDir, "android", "app", "build.gradle");
-        if (fs.existsSync(projectBuildGradlePath)) {
-            let buildGradleContent = fs.readFileSync(appBuildGradlePath).toString();
-            
-            buildGradleContent = buildGradleContent.replace('buildToolsVersion : "26.0.1"', 'buildToolsVersion : "26.0.3"'); 
-            
-            // for Crashlytics
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `let applyAppPluginPattern = 'apply plugin: "com.android.application"';
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `let applyFabricPluginPattern = 'apply plugin: "io.fabric"';
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `if (!RegExp(applyFabricPluginPattern).test(buildGradleContent)) {
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `    buildGradleContent = buildGradleContent.replace(applyAppPluginPattern, applyAppPluginPattern + '\\n' + applyFabricPluginPattern);
-            ` + (isSelected(result.crashlytics) ? `` : `//`) + `}
-    
-            buildGradleContent = buildGradleContent.replace(/renameResultApks\\(variant\\)/, 'variant.outputs.all { output ->\\n\\t\\t\\tdef abiName = "";\\n\\t\\t\\tif (output.getFilter(com.android.build.OutputFile.ABI)) {\\n\\t\\t\\t\\tabiName = "-" + output.getFilter(com.android.build.OutputFile.ABI);\\n\\t\\t\\t}\\n\\t\\t\\toutputFileName = "../../\${rootProject.name + "-" + variant.buildType.name + abiName}.apk"\\n\\t\\t}');
-    
-            fs.writeFileSync(appBuildGradlePath, buildGradleContent);
         }
         resolve();
     });
