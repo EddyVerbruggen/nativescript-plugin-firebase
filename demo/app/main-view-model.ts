@@ -1129,7 +1129,6 @@ export class HelloWorldModel extends Observable {
     ).then(
         result => {
           console.log("This 'result' should be available since singleEvent is true: " + JSON.stringify(result));
-          console.log("firebase.doQueryUsers done; added a listener");
         },
         errorMessage => {
           alert({
