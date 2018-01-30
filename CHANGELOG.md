@@ -4,6 +4,13 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.5 (2018, January 30)
+
+### Fixes
+- [#272](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/272) Unusual error message when retrieving data set and binding to layout
+
+
+
 ## 5.1.4 (2018, January 23)
 
 ### New
