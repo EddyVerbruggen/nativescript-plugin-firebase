@@ -640,7 +640,6 @@ firebase.init = arg => {
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
         }
-        firebase.instance = FIRDatabase.database().reference();
       }
 
       if (typeof(FIRFirestore) !== "undefined") {
@@ -715,7 +714,7 @@ firebase.init = arg => {
         firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
       }
 
-      resolve(firebase.instance);
+      resolve(FIRDatabase.database().reference());
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
@@ -1622,7 +1621,7 @@ firebase._addObservers = (to, updateCallback) => {
 firebase.keepInSync = (path, switchOn) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = firebase.instance.childByAppendingPath(path);
+      const where = FIRDatabase.database().reference().childByAppendingPath(path);
       where.keepSynced(switchOn);
       resolve();
     } catch (ex) {
@@ -1635,7 +1634,7 @@ firebase.keepInSync = (path, switchOn) => {
 firebase.addChildEventListener = (updateCallback, path) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       resolve({
         path: path,
         listeners: firebase._addObservers(where, updateCallback)
@@ -1650,7 +1649,7 @@ firebase.addChildEventListener = (updateCallback, path) => {
 firebase.addValueEventListener = (updateCallback, path) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       const listener = where.observeEventTypeWithBlockWithCancelBlock(
           FIRDataEventType.Value,
           snapshot => {
@@ -1675,7 +1674,7 @@ firebase.addValueEventListener = (updateCallback, path) => {
 firebase.getValue = path => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       const listener = where.observeSingleEventOfTypeWithBlockWithCancelBlock(
           FIRDataEventType.Value,
           snapshot => {
@@ -1694,7 +1693,7 @@ firebase.getValue = path => {
 firebase.removeEventListeners = (listeners, path) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       for (let i = 0; i < listeners.length; i++) {
         const listener = listeners[i];
         where.removeObserverWithHandle(listener);
@@ -1710,7 +1709,7 @@ firebase.removeEventListeners = (listeners, path) => {
 firebase.push = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      const ref = firebase.instance.childByAppendingPath(path).childByAutoId();
+      const ref = FIRDatabase.database().reference().childByAppendingPath(path).childByAutoId();
       ref.setValue(val);
       resolve({
         key: ref.key
@@ -1725,7 +1724,7 @@ firebase.push = (path, val) => {
 firebase.setValue = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      firebase.instance.childByAppendingPath(path).setValue(val);
+      FIRDatabase.database().reference().childByAppendingPath(path).setValue(val);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
@@ -1738,13 +1737,13 @@ firebase.update = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof val === "object") {
-        firebase.instance.childByAppendingPath(path).updateChildValues(val);
+        FIRDatabase.database().reference().childByAppendingPath(path).updateChildValues(val);
       } else {
         const lastPartOfPath = path.lastIndexOf("/");
         const pathPrefix = path.substring(0, lastPartOfPath);
         const pathSuffix = path.substring(lastPartOfPath + 1);
         const updateObject = '{"' + pathSuffix + '" : "' + val + '"}';
-        firebase.instance.childByAppendingPath(pathPrefix).updateChildValues(JSON.parse(updateObject));
+        FIRDatabase.database().reference().childByAppendingPath(pathPrefix).updateChildValues(JSON.parse(updateObject));
       }
 
       resolve();
@@ -1758,7 +1757,7 @@ firebase.update = (path, val) => {
 firebase.query = (updateCallback, path, options) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? firebase.instance : firebase.instance.childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       let query;
 
       // orderBy
@@ -1857,7 +1856,7 @@ firebase.query = (updateCallback, path, options) => {
 firebase.remove = path => {
   return new Promise((resolve, reject) => {
     try {
-      firebase.instance.childByAppendingPath(path).setValue(null);
+      FIRDatabase.database().reference().childByAppendingPath(path).setValue(null);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
