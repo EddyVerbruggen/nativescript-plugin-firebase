@@ -2279,7 +2279,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
     callback(snap);
   });
 
-  // There's a bug resulting this function to be undefined..
+  // There's a bug resulting in this function to be undefined..
   if (listener.remove === undefined) {
     return () => {
       // .. so we're just ignoring anything received from the server (until the callback is set again when 'onSnapshot' is invoked).
