@@ -714,7 +714,7 @@ firebase.init = arg => {
         firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
       }
 
-      resolve(FIRDatabase.database().reference());
+      resolve(typeof (FIRDatabase) !== "undefined" ? FIRDatabase.database().reference() : undefined);
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
       reject(ex);
