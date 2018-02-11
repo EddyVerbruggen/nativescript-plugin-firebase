@@ -10,6 +10,16 @@ If your saved config file `firebase.nativescript.json` (in the root of your proj
 You can disable it by editing that file and setting `"realtimedb": false`. Then run `rm -rf platforms && rm -rf node_modules && npm i`.
 
 ## Functions
+You can either use the Native API, or the Web API. It's just a matter of personal background or preference. Under the hood the implementations are identical.
+
+You can also mix and match the API calls.
+
+The relevant imports would be:
+
+```typescript
+const firebase = require("nativescript-plugin-firebase");
+const firebaseWebApi = require("nativescript-plugin-firebase/app");
+```
 
 ### init
 You can optionally pass `persist` to the [`init` function](../README.md#init) to make Firebase save data to the local disc so it will work in offline scenario's. Default `false`.
@@ -28,7 +38,7 @@ You can optionally pass `persist` to the [`init` function](../README.md#init) to
  <summary>Web API</summary>
 
 ```js
-  firebase.initializeApp({
+  firebaseWebApi.initializeApp({
     persist: true
   });
 ```
@@ -39,7 +49,10 @@ Data is stored as JSON data at a specific path. If you want to add data to a kno
 
 The plugin will take care of serializing JSON data to native data structures.
 
-```js
+<details>
+ <summary>Native API</summary>
+
+```typescript
   // to store a JSON object
   firebase.setValue(
       '/companies',
@@ -55,15 +68,57 @@ The plugin will take care of serializing JSON data to native data structures.
       ]
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.database().ref("/companies")
+      .set([
+            {
+              name: 'Telerik (web)',
+              country: 'Bulgaria',
+              since: 2000,
+              updateTs: firebase.ServerValue.TIMESTAMP
+            },
+            {
+              name: 'Google (web)',
+              country: 'USA',
+              since: 1900,
+              updateTs: firebase.ServerValue.TIMESTAMP
+            }
+          ]
+      )
+      .then(() => console.log("Value set"))
+      .catch(error => console.log("Error: " + error));
+```
+</details>
+
 
 ### getValue
-To just get a value at a certain path 'once', use this convenience method:
+To just get a value at a certain path *once*, use this method:
 
-```js
-  firebase.getValue('/companies').then(function(result) {
-    console.log(JSON.stringify(result));
-  });
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.getValue('/companies')
+      .then(result => console.log(JSON.stringify(result)))
+      .catch(error => console.log("Error: " + error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.database().ref("/companies")
+      .once("value")
+      .then(result => console.log(JSON.stringify(result)))
+      .catch(error => console.log("Error: " + error));
+```
+</details>
 
 #### Adding an update timestamp
 If you want to have Firebase a timestamp to your data (instead of clients which likely are not synchronized),
@@ -226,6 +281,9 @@ The plugin will take care of serializing native data structures to JSON data.
 The difference with `addChildEventListener` is [explained here](https://www.firebase.com/docs/ios/guide/retrieving-data.html).
 The link is for the iOS SDK, but it's the same for Android.
 
+<details>
+ <summary>Native API</summary>
+
 ```js
   var onValueEvent = function(result) {
     console.log("Event type: " + result.type);
@@ -242,16 +300,34 @@ The link is for the iOS SDK, but it's the same for Android.
     }
   );
 ```
-    
-export function removeEventListeners(listeners: Array<any>, path: string): Promise<any>;
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  const onValueEvent = result => {
+    if (result.error) {
+      console.log("Listener error: " + result.error);
+    } else {
+      console.log("Key: " + result.key);
+      console.log("Calue: " + JSON.stringify(result.val()));
+    }
+  };
+
+  firebaseWebApi.database().ref("/companies").on("value", onValueEvent);
+```
+</details>
+
 
 ### removeEventListeners
 Firebase does not automatically remove listeners when fi. a user logs out.
 So please keep track of these listeners yourself and remove them when appropriate.
 
-You can see an example of this in the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/master/Firebase/app/main-view-model.js).
+You can see an example of this (for both the native and web API) in the [demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/master/Firebase/app/main-view-model.js).
 
-> Note that there was a bug in the Android runtime that was fixed in NativeScript 2.3.0 which caused a crash when using this function.
+<details>
+ <summary>Native API</summary>
 
 ```js
   firebase.removeEventListeners(
@@ -259,14 +335,41 @@ You can see an example of this in the [demo app](https://github.com/EddyVerbrugg
      "/users" // the path the listener was previously listening to
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebaseWebApi.database().ref("/companies").off("value");
+```
+</details>
 
 ### remove
 You can remove the entire database content by passing `/` as param,
-but if you only want to wipe everything at `/users`, do this:
+but if you only want to for instance wipe everything at `/users`, do this:
 
 ```js
   firebase.remove("/users");
 ```
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.remove("/users");
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.database().ref("/users").remove()
+      .then(() => console.log("Removal done"))
+      .catch((err) => console.log("Error: " + err));
+```
+</details>
 
 ### keepInSync
 The Firebase Realtime Database synchronizes and stores a local copy of the data for active listeners (see the methods above). In addition, you can keep specific locations in sync.

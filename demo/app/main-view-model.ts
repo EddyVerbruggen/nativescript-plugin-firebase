@@ -51,6 +51,7 @@ export class HelloWorldModel extends Observable {
   public doWebLoginAnonymously(): void {
     this.ensureWebOnAuthChangedHandler();
     firebaseWebApi.auth().signInAnonymously()
+        .then(() => console.log("User logged in"))
         .catch(err => {
               alert({
                 title: "Login error",
@@ -64,6 +65,7 @@ export class HelloWorldModel extends Observable {
   public doWebLoginByPassword(): void {
     this.ensureWebOnAuthChangedHandler();
     firebaseWebApi.auth().signInWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+        .then(() => console.log("User logged in"))
         .catch(err => {
               alert({
                 title: "Login error",
@@ -79,7 +81,7 @@ export class HelloWorldModel extends Observable {
     if (!user || !user.email) {
       alert({
         title: "Can't fetch providers",
-        message: "No user with emailaddress logged in.",
+        message: "No user with an emailaddress logged in.",
         okButtonText: "OK, makes sense.."
       });
       return;
@@ -182,6 +184,18 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path).off("value");
   }
 
+  public doWebGetServerInfo(): void {
+    const path = ".info";
+    firebaseWebApi.database().ref(path)
+        .once("value")
+        .then(result => {
+          this.set("path", path);
+          this.set("key", result.key);
+          this.set("value", JSON.stringify(result.val()));
+        })
+        .catch(error => console.log("doWebGetServerTime error: " + error));
+  }
+
   public doWebGetValueForCompanies(): void {
     const path = "/companies";
     firebaseWebApi.database().ref(path)
@@ -227,6 +241,22 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path).orderByChild(child);
   }
 
+  public doWebStoreCompanyByFirstCreatingKey(): void {
+    const path = "companies",
+        companyRef = firebaseWebApi.database().ref().child(path),
+        newCompanyKey = companyRef.push().key,
+        storeAtPath = `/${path}/${newCompanyKey}`,
+        value = {
+          name: `Company with key ${newCompanyKey}`,
+          updateTs: firebase.ServerValue.TIMESTAMP
+        };
+
+    firebaseWebApi.database().ref(storeAtPath).set(value).then(() => {
+      this.set("path", storeAtPath);
+      this.set("key", newCompanyKey);
+      this.set("value", JSON.stringify(value));
+    });
+  }
 
 
   /***********************************************

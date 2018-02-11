@@ -4,6 +4,13 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.7 (2018, February 11)
+
+### New
+
+- [#624](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/624) Get push key avoiding .then()
+
+
 ## 5.1.6 (2018, February 1)
 
 ### Fixes

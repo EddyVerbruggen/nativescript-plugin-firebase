@@ -29,6 +29,16 @@ All login functions below, as well as `getCurrentUser` return a 'User' object wi
 
 
 ## Functions
+You can either use the Native API, or the Web API. It's just a matter of personal background or preference. Under the hood the implementations are identical.
+
+You can also mix and match the API calls.
+
+The relevant imports would be:
+
+```typescript
+const firebase = require("nativescript-plugin-firebase");
+const firebaseWebApi = require("nativescript-plugin-firebase/app");
+```
 
 ### Listening to auth state changes
 As stated [here](https://firebase.google.com/docs/auth/ios/manage-users#get_the_currently_signed-in_user):
@@ -73,39 +83,56 @@ If - for some reason - you want more control over the listener you can use these
 ```
 
 ### Get Current User
-Once the user is logged in you can retrieve the currently logged in user.
+Once the user is logged in you can retrieve the currently logged in user:
 
-##### JavaScript
-```js
-  firebase.getCurrentUser().then(
-    function (result) {
-      console.log(JSON.stringify(result));
-    },
-    function (errorMessage) {
-      console.log(errorMessage);
-    }
-  );
-```
+<details>
+ <summary>Native API</summary>
 
-##### TypeScript
 ```typescript
-  firebase.getCurrentUser().then(user => {
-      alert("User uid: " + user.uid);
-  }, error => {
-      alert("Trouble in paradise: " + error);
-  });
+  firebase.getCurrentUser()
+      .then(user => console.log("User uid: " + user.uid))
+      .catch(error => console.log("Trouble in paradise: " + error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  const user = firebaseWebApi.auth().currentUser;
+```
+</details>
 
 ### Fetch providers for email
 Want to know which auth providers are associated with an emailaddress?
 
-##### TypeScript
+
+<details>
+ <summary>Native API</summary>
+
 ```typescript
   const emailAddress = "someone@domain.com";
   firebase.fetchProvidersForEmail(emailAddress).then((providers: Array<string>) => {
     console.log(`Providers for ${emailAddress}: ${JSON.stringify(providers)}`);
   });
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  const user = firebaseWebApi.auth().currentUser;
+  if (!user || !user.email) {
+    console.log("Can't fetch providers; no user with an emailaddress logged in.");
+    return;
+  }
+
+  firebaseWebApi.auth().fetchProvidersForEmail(user.email)
+      .then(result => console.log(`Providers for ${user.email}: ${JSON.stringify(result)}`))
+      .catch(error => console.log("Fetch Providers for Email error: " + error));
+```
+</details>
 
 ### Updating a profile
 Pass in at least one of `displayName` and `photoURL`.
@@ -128,54 +155,67 @@ The logged in user will be updated, but for `getCurrentUser` to reflect the chan
 ### Anonymous login
 Don't forget to enable anonymous login in your firebase instance.
 
-##### JavaScript
-```js
-  firebase.login({
-    type: firebase.LoginType.ANONYMOUS
-  }).then(
-      function (result) {
-        console.log(JSON.stringify(result));
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
-```
+<details>
+ <summary>Native API</summary>
 
-##### TypeScript
 ```typescript
-  firebase.login({
-      type: firebase.LoginType.ANONYMOUS
-  }).then(user => {
-      alert("User uid: " + user.uid);
-  }, error => {
-      alert("Trouble in paradise: " + error);
-  });
+  firebase.login(
+      {
+        type: firebase.LoginType.ANONYMOUS
+      })
+      .then(user => console.log("User uid: " + user.uid))
+      .catch(error => console.log("Trouble in paradise: " + error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().signInAnonymously()
+      .then(() => console.log("User logged in"))
+      .catch(err => console.log("Login error: " + JSON.stringify(err)));
+```
+</details>
 
 ### Email-Password login
 Don't forget to enable email-password login in your firebase instance.
 
-```js
-  firebase.login({
-    type: firebase.LoginType.PASSWORD,
-    passwordOptions: {
-      email: 'useraccount@provider.com',
-      password: 'theirpassword'
-    }
-  }).then(
-      function (result) {
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.login(
+      {
+        type: firebase.LoginType.PASSWORD,
+        passwordOptions: {
+          email: 'useraccount@provider.com',
+          password: 'theirpassword'
+        }
+      })
+      .then(result => JSON.stringify(result))
+      .catch(error => console.log(error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().signInWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+      .then(() => console.log("User logged in"))
+      .catch(err => console.log("Login error: " + JSON.stringify(err)));
+```
+</details>
+
 
 #### Managing email-password accounts
+
 ##### Creating a Password account
 This may not work on an (Android) simulator. See #463.
+
+<details>
+ <summary>Native API</summary>
 
 ```js
   firebase.createUser({
@@ -198,6 +238,19 @@ This may not work on an (Android) simulator. See #463.
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().signOut()
+      .then(() => console.log("Logout OK"))
+      .catch(error => "Logout error: " + JSON.stringify(error));
+```
+</details>
+
+
 
 #### Resetting a password
 ```js
@@ -415,9 +468,23 @@ a Firebase auth token for the currently logged in user.
 ### logout
 Shouldn't be more complicated than:
 
+<details>
+ <summary>Native API</summary>
+
 ```js
   firebase.logout();
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebaseWebApi.auth().signOut()
+      .then(() => console.log("Logout OK"))
+      .catch(error => console.log("Logout error: " + JSON.stringify(error)));
+```
+</details>
 
 ### reauthenticate
 Some security-sensitive actions (deleting an account, changing a password) require that the user has recently signed in.
