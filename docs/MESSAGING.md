@@ -66,7 +66,7 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 Versions up to 3.9.2 of this plugin added the script `/hooks/after-prepare/firebase-install-ios-entitlements.js`, please remove it.
 
 #### Provisioning hell
-Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) to the letter. Once you've done it run `tns run ios` and upon starting the app it should prompt you for notification support. That also works on the simulator, but actually receiving notifications is _only_ possible on a real device.
+Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) to the letter. Once you've done it run `tns run ios` and upon starting the app it should prompt you for notification support. That also works on the simulator, but actually receiving (background) notifications is __only__ possible on a real device.
 
 ### Handling a notification
 To listen to received notifications while in the foreground or when your app moves from the background to the foreground, add a handler to `init`.
