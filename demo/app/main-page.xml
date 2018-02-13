@@ -18,7 +18,7 @@
         <TabViewItem.view>
           <ScrollView>
             <GridLayout columns="*, *"
-                        rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                        rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                         horizontalAlignment="stretch"
                         class="tab-content">
               <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doWebInit }}" class="button button-positive"/>
@@ -48,17 +48,17 @@
               <Button row="11" col="0" text="ordered query" tap="{{ doWebQueryBulgarianCompanies }}" class="button button-company"/>
               <Button row="11" col="1" text="remove path" tap="{{ doWebRemoveCompanies }}" class="button button-company"/>
 
-              <Label row="12" col="0" text="Last update path:" class="message"/>
-              <Label row="12" col="1" text="{{ path }}" class="message" textWrap="true"/>
+              <Button row="12" col="0" text="store with key" tap="{{ doWebStoreCompanyByFirstCreatingKey }}" class="button button-company"/>
+              <Button row="12" col="1" text="get server info" tap="{{ doWebGetServerInfo }}" class="button button-company"/>
 
-              <Label row="13" col="0" text="Key:" class="message"/>
-              <Label row="13" col="1" text="{{ key }}" class="message" textWrap="true"/>
+              <Label row="13" col="0" text="Last update path:" class="message"/>
+              <Label row="13" col="1" text="{{ path }}" class="message" textWrap="true"/>
 
-              <Label row="14" col="0" text="Value:" class="message"/>
-              <Label row="14" col="1" text="{{ value }}" class="message" textWrap="true"/>
+              <Label row="14" col="0" text="Key:" class="message"/>
+              <Label row="14" col="1" text="{{ key }}" class="message" textWrap="true"/>
 
-              <!--<Button row="10" col="0" text="query with range" tap="{{ doQueryBulgarianCompanies }}" class="button button-company"/>-->
-              <!--<Button row="10" col="1" text="delete path" tap="{{ doRemoveCompanies }}" class="button button-company"/>-->
+              <Label row="15" col="0" text="Value:" class="message"/>
+              <Label row="15" col="1" text="{{ value }}" class="message" textWrap="true"/>
 
             </GridLayout>
           </ScrollView>
