@@ -181,3 +181,9 @@ curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiU
 If you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
+
+## What if iOS doesn't receive notifications in the background?
+Make sure you [`require` the plugin in `app.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
+*before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts`).
+
+> Make sure to use `require`, *not* `import` in `app.ts` because TSC will remove the import in case you're not using it.
