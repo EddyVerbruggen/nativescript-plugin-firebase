@@ -184,6 +184,6 @@ If you don't want a badge on the app icon, remove the `badge` property or set it
 
 ## What if iOS doesn't receive notifications in the background?
 Make sure you [`require` the plugin in `app.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
-*before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts`).
+*before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts` - not even in a timeout; move it out of `app.ts` entirely!).
 
 > Make sure to use `require`, *not* `import` in `app.ts` because TSC will remove the import in case you're not using it.
