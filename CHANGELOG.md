@@ -4,6 +4,13 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.1.8 (2018, March 1)
+
+### New
+
+- [#633](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/633) The plugin is too picky about the name of the entitlements file
+
+
 ## 5.1.7 (2018, February 11)
 
 ### New

@@ -80,6 +80,8 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 	</array>
 ```
 
+> Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` is the iOS foldername, see the path above.
+
 ## Functions
 
 ### invites.sendInvitation

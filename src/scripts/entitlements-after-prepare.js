@@ -8,6 +8,11 @@ module.exports = function (logger, platformsData, projectData, hookArgs) {
       projectRoot = path.join(projectData.platformsDir, "ios"),
       project = path.join(projectRoot, projectData.projectName);
 
+  // look for both <projectname.entitlements and app.entitlements
+  if (!fs.existsSync(entitlementsFile)) {
+    entitlementsFile = path.join(appResourcesDirectoryPath, "iOS", "app.entitlements");
+  }
+
   return new Promise(function (resolve, reject) {
     if (platform === 'ios' && fs.existsSync(entitlementsFile)) {
       var dest = path.join(project, projectData.projectName + ".entitlements");
