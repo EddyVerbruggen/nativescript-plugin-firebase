@@ -49,8 +49,7 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 	<string>development</string>
 ```
 
-Since plugin version 3.11.0 the plugin will pick up that file during a build and integrates it with the built app
-so you no longer need to continually manually enable push notifications in Xcode.
+> Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` is the iOS foldername, see the path above.
 
 #### Allow processing when a background push is received
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
@@ -61,9 +60,6 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
   <string>remote-notification</string>
 </array>
 ```
-
-#### Cleanup an old script
-Versions up to 3.9.2 of this plugin added the script `/hooks/after-prepare/firebase-install-ios-entitlements.js`, please remove it.
 
 #### Provisioning hell
 Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) to the letter. Once you've done it run `tns run ios` and upon starting the app it should prompt you for notification support. That also works on the simulator, but actually receiving (background) notifications is __only__ possible on a real device.
@@ -165,8 +161,8 @@ Using the Firebase Console gives you most flexibility, but you can quickly and e
 curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\":{\"title\": \"My title\", \"text\": \"My text\", \"badge\": \"1\", \"sound\": \"default\"}, \"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"to\": \"DEVICE_TOKEN\"}"
 ```
 
-* SERVER_KEY: see below
-* DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`
+* SERVER_KEY: see the image below (make sure to use the 'Legacy' server key).
+* DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`.
 
 Examples:
 
@@ -181,3 +177,9 @@ curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiU
 If you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
+
+## What if iOS doesn't receive notifications in the background?
+Make sure you [`require` the plugin in `app.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
+*before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts` - not even in a timeout; move it out of `app.ts` entirely!).
+
+> Make sure to use `require`, *not* `import` in `app.ts` because TSC will remove the import in case you're not using it.

@@ -7,6 +7,11 @@ module.exports = function (logger, platformsData, projectData, hookArgs) {
       entitlementsFile = path.join(appResourcesDirectoryPath, "iOS", projectData.projectName + ".entitlements"),
       platformResourcesDirectory = path.join(appResourcesDirectoryPath, 'iOS');
 
+  // look for both <projectname.entitlements and app.entitlements
+  if (!fs.existsSync(entitlementsFile)) {
+    entitlementsFile = path.join(appResourcesDirectoryPath, "iOS", "app.entitlements");
+  }
+
   return new Promise(function (resolve, reject) {
     if (platform === 'ios' && fs.existsSync(entitlementsFile)) {
       var target = path.join(platformResourcesDirectory, 'build.xcconfig');
