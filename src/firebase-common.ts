@@ -1,5 +1,6 @@
 import { prompt } from "tns-core-modules/ui/dialogs";
 import { firestore } from "./firebase";
+import * as analytics from "./analytics";
 
 export const firebase: any = {
   initialized: false,
@@ -9,7 +10,7 @@ export const firebase: any = {
   authStateListeners: [],
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,
-  analytics: {},
+  analytics,
   firestore: {},
   invites: {
     MATCH_TYPE: {
