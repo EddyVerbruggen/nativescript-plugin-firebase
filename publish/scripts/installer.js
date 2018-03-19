@@ -296,9 +296,9 @@ function writeBuildscriptHook(enable) {
 const path = require('path');
 const xcode = require('xcode');
 
-const pattern1 = /\\n\\s*\\/\\/Crashlytics 1 BEGIN[\\s\\w]*\\/\\/Crashlytics 1 END.*\\n/m;
-const pattern2 = /\\n\\s*\\/\\/Crashlytics 2 BEGIN[\\s\\w]*\\/\\/Crashlytics 2 END.*\\n/m;
-const pattern3 = /\\n\\s*\\/\\/Crashlytics 3 BEGIN[\\s\\w]*\\/\\/Crashlytics 3 END.*\\n/m;
+const pattern1 = /\\n\\s*\\/\\/Crashlytics 1 BEGIN[\\s\\S]*\\/\\/Crashlytics 1 END.*\\n/m;
+const pattern2 = /\\n\\s*\\/\\/Crashlytics 2 BEGIN[\\s\\S]*\\/\\/Crashlytics 2 END.*\\n/m;
+const pattern3 = /\\n\\s*\\/\\/Crashlytics 3 BEGIN[\\s\\S]*\\/\\/Crashlytics 3 END.*\\n/m;
 
 const string1 = \`
 //Crashlytics 1 BEGIN
