@@ -3107,9 +3107,9 @@ const string1 = \`
 \`;
 
 const string2 = \`
+//Crashlytics 2 BEGIN
 #if DEBUG
 #else
-//Crashlytics 2 BEGIN
 static int redirect_cls(const char *prefix, const char *buffer, int size) {
   CLSLog(@"%s: %.*s", prefix, size, buffer);
   return size;
@@ -3122,8 +3122,8 @@ static int stderr_redirect(void *inFD, const char *buffer, int size) {
 static int stdout_redirect(void *inFD, const char *buffer, int size) {
   return redirect_cls("stdout", buffer, size);
 }
-//Crashlytics 2 END
 #endif
+//Crashlytics 2 END
 \`;
 
 const string3 = \`
@@ -3140,8 +3140,8 @@ const string3 = \`
   // stderr usually only occurs during critical failures;
   // so it is usually essential to identifying crashes, especially in JS
   stderr->_write = stderr_redirect;
-//Crashlytics 3 END
 #endif
+//Crashlytics 3 END
 \`;
 
 module.exports = function($logger, $projectData, hookArgs) {
@@ -3176,15 +3176,15 @@ module.exports = function($logger, $projectData, hookArgs) {
           if (fs.existsSync(mainmPath)) {
             let mainmContent = fs.readFileSync(mainmPath).toString();
             // string1
-            mainmContent = pattern1.test(mainmPath)
+            mainmContent = pattern1.test(mainmContent)
               ? mainmContent.replace(pattern1, string1)
               : mainmContent.replace(/(\\n#endif\\n)/, string1);
             // string2
-            mainmContent = pattern2.test(mainmPath)
+            mainmContent = pattern2.test(mainmContent)
               ? mainmContent.replace(pattern2, string2)
               : mainmContent.replace(/(\\nint main.*)/, string2 + '$1');
             // string3
-            mainmContent = pattern3.test(mainmPath)
+            mainmContent = pattern3.test(mainmContent)
               ? mainmContent.replace(pattern3, string3)
               : mainmContent.replace(/(int main.*\\n)/, '$1' + string3 + '\\n');
             fs.writeFileSync(mainmPath, mainmContent);
