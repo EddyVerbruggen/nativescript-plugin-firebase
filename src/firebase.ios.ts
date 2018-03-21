@@ -750,6 +750,24 @@ firebase.analytics.logEvent = arg => {
   });
 };
 
+firebase.analytics.setUserId = arg => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (arg.userId === undefined) {
+        reject("Argument 'userId' is missing");
+        return;
+      }
+
+      FIRAnalytics.setUserID(arg.userId);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setUserId: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.analytics.setUserProperty = arg => {
   return new Promise((resolve, reject) => {
     try {

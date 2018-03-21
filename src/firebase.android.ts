@@ -550,6 +550,24 @@ firebase.analytics.logEvent = arg => {
   });
 };
 
+firebase.analytics.setUserId = arg => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (arg.userId === undefined) {
+        reject("Argument 'userId' is missing");
+        return;
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()).setUserId(arg.userId);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setUserId: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.analytics.setUserProperty = arg => {
   return new Promise((resolve, reject) => {
     try {

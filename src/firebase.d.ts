@@ -694,6 +694,10 @@ export namespace analytics {
     parameters?: Array<LogEventParameter>;
   }
 
+  export interface SetUserIdOptions {
+    userId: string;
+  }
+
   export interface SetUserPropertyOptions {
     key: string;
     value: string;
@@ -705,6 +709,8 @@ export namespace analytics {
 
   function logEvent(options: LogEventOptions): Promise<any>;
 
+  function setUserId(options: SetUserIdOptions): Promise<any>;
+  
   function setUserProperty(options: SetUserPropertyOptions): Promise<any>;
 
   function setScreenName(options: SetScreenNameOptions): Promise<any>;
