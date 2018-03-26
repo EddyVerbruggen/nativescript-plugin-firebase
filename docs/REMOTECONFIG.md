@@ -1,6 +1,5 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/config.png" height="85px" alt="Remote Config"/>
 
-<img src="images/features/config.png" width="296px" height="124px" alt="Config"/>
 
 ## Enabling Remote Config
 Since plugin version 3.2.0 you can retrieve _Remote Config_ properties.

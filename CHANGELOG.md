@@ -1,5 +1,253 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
+[Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
+[Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
+
+
+## 5.1.8 (2018, March 1)
+
+### New
+
+- [#633](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/633) The plugin is too picky about the name of the entitlements file
+
+
+## 5.1.7 (2018, February 11)
+
+### New
+
+- [#624](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/624) Get push key avoiding .then()
+
+
+## 5.1.6 (2018, February 1)
+
+### Fixes
+- [#618](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/618) iOS app crashes straight after splash screen (iOS 11.2, iPhones X, 8 & 7 on simulator)
+
+
+## 5.1.5 (2018, January 30)
+
+### Fixes
+- [#272](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/272) Unusual error message when retrieving data set and binding to layout
+
+
+## 5.1.4 (2018, January 23)
+
+### New
+
+- [#615](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/615) Conflict with nativescript-barcodescanner
+
+### Fixes
+- [#585](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/585) Firebase Queries - “cannot read property of null” after upgrade to NS 3.4.0
+- [#588](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/588) Angular 5 onAuthStateChanged never called
+- [#593](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/593) JS: Error: Uncaught (in promise): Run init() first!
+- [#612](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/612) Nativescript 3.4 and angular 5 - support
+- [#613](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/613) Best practice to init firebase
+
+
+## 5.1.3 (2018, January 15)
+
+### New
+
+- [#170](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/170) Need a way to unregister push notification from Firebase
+- [#609](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/609) When Google Play Services is not available, show a dialog asking the user to install it
+
+
+### Fixes
+- [#577](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/577) Firestore References can't be parsed
+- [#601](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/601) Error using admob
+- [#604](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/604) Date saved to Firestore get retrieved as strings
+
+
+## 5.1.2 (2018, January 8)
+
+### New
+- [#595](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/595) Creating Observables from Firestore Documents/Collections
+
+### Fixes
+- [#594](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/594) Android - Background notification causing app to crash after upgrade to 5.1.1
+
+
+## 5.1.1 (2017, December 30)
+
+### Fixes
+- [#589](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/589) Firestore: doc.exists returns true for non-existing documents
+- [#564](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564) Firebase Auth + WebPack crashing iOS application (when createUser is triggered) - BETTER FIX
+
+
+## 5.1.0 (2017, December 30)
+
+### Fixes
+- [#564](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564) Firebase Auth + WebPack crashing iOS application (when createUser is triggered) - FIX
+- [#587](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/587) Push token is not always a string
+
+### New
+- [#590](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/590) Bump Firebase SDK versions
+
+
+## 5.0.5 (2017, December 19)
+
+### Fixes
+- [#581](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/581) sendEmailVerification - "Run init() first!"
+
+
+## 5.0.4 (2017, December 8)
+
+### Fixes
+- [#566](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/566) FIrebase Messages Error since 5.0.2
+
+
+## 5.0.3 (2017, December 7)
+
+### New
+- [#564](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564) Firebase Auth + WebPack crashing iOS application (when createUser is triggered)
+
+### Fixes
+- [#563](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/563) Initialization problem on 5.0.2 on iOS
+- [#559](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/559) Firestore nested collections
+
+
+## 5.0.2 (2017, December 1)
+
+### New
+- [#518](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/518) Background Messages Android: fix foreground=true/false flag, removed notifications without 'from'
+
+### Revert
+- [#445](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/445) Skip linking for anonymous users
+
+
+## 5.0.1 (2017, November 28)
+
+### New
+- [#553](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/553) Firebase Realtime DB and Firestore in the same app
+
+
+## 5.0.0 (2017, November 28)
+
+### New
+- [#507](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/507) Firestore anytime soon?
+- [#547](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/547) Add a 'getValue' function to mimic the Web API's 'once'
+- [#548](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/548) Compatibility with the Firebase Web API
+- [#550](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/550) Add an Angular demo app
+
+
+## 4.2.1 (2017, October 24)
+
+### Fixes
+- [#531](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/531) [BUG] Reference Error with version 4.2.0
+
+
+## 4.2.0 (2017, October 24)
+
+### New
+- [#529](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/529) TypeScript conversion of plugin and demo, including various small bugfixes (detail in the issue).
+
+
+## 4.1.2 (2017, October 13)
+
+### Fixes
+- [#484](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/484) Fix phone authentication
+- [#499](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/499) iOS background notification never show and foreground notification stop working after killing the app
+- [#501](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/501) Added null check for updateCallback on query
+- [#510](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/510) Add FCM data to the data key
+- [#515](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/515) [FIX] iOS registerForRemoteNotifications() Now Runs on Main Thread
+- [#519](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/519) Fix notifications after killing
+
+
+## 4.1.1 (2017, September 9)
+
+### Fixes
+- [#482](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/482) Update to 4.0.1 and got error: Cannot read property 'initialize' of undefined
+
+
+## 4.1.0 (2017, September 8)
+
+### New
+- [#476](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/476) Moved AdMob init to firebase.init, added AdListener to showBanner()
+- [#478](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/478) Invites on Android: AppInviteApi has been deprecated
+- [#479](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/479) Is anybody using the invites part? I can't get the deeplink or invitation id.
+
+### Fixes
+- [#319](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/319) Unable to query by child that equals to null
+- [#475](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/475) Broken firebase API broken since 8/26
+
+
+## 4.0.6 (2017, August 23)
+
+### New
+- [#443](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/443) fixed invitation sample code
+- [#444](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/444) Updated how options.*.value is checked to allow booleans and numbers
+- [#449](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/449) Mark init and getRemoteConfig for profiling
+
+### Fixes
+- [#328](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/328) Query range with START_AT not fetching data as expected
+- [#438](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/438) Query : range not working when value is number
+- [#445](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/445) Skip linking for anonymous users
+- [464](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/464) 'phoneNumber' is missing in login result TypeScript definition
+
+
+## 4.0.5 (2017, July 22)
+
+### Fixes
+- [#387](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/387) Fix issues
+- [#434](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/434) JS: Error in firebase.init: TypeError: gson(...).toJson is not a function
+
+
+## 4.0.4 (2017, July 16)
+
+### New
+- [#420](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/420) found no keychain client entitlements" after upgrade
+- [#430](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/430) Can we set screenName?
+
+### Fixes
+- [#418](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/418) Logout breaking on Android when nativescript-fresco plugin is added to app
+
+
+## 4.0.3 (2017, June 29)
+Webpack fix
+
+
+## 4.0.0, 4.0.1, 4.0.2 (2017, June 20)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/26?closed=1)
+
+### SDK versions
+
+- iOS: 4.0.x
+- Android: 11.0.x
+
+### New
+- [#247](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/247) Device_Token not getting to send notifications
+- [#255](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/255) How to Regenerate the Firebase Cloud Messaging Token
+- [#360](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/360) export fetchProvidersForEmail
+- [#376](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/376) Add support for firebase phone authentication
+- [#388](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/388) Check for 'init' at 'push', 'setValue', 'update' and 'query'
+
+### Fixes
+- [#87](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/87) BUG Database query - range not working when value is number.
+- [#186](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/386) Can't read number field where value is greater than 0
+- [#227](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/227) facing issue while login with facebook :prefilling my firebase account details in facebook popup
+- [#349](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/349) App crashes on iOS emulator
+- [#365](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/365) IOS firebase to JSON not converting numbers with NSDecimalNumber subclass 
+
+
+
+## 3.12.0 (2017, June 4)
+
+[Full changelog](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/compare/3.11.4...3.12.0)
+
+### SDK versions
+
+- iOS: 3.17.0
+- Android: 10.2.x
+
+### New
+
+- [#199](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/199) Feature request: Invites
+- [#362](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/362) Add Feature Firebase Invites (Android)
+- [#383](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/383) Auto-upgrade com.google.gms:google-services:3.0.0 to 3.1.0
+
+
+
 
 ## 3.11.4 (2017, April 21)
 

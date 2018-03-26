@@ -1,6 +1,5 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/storage.png" height="85px" alt="Storage"/>
 
-<img src="images/features/storage.png" width="296px" height="124px" alt="Storage"/>
 
 ## Enabling Storage
 Since plugin version 3.4.0 you can use Firebase _Storage_ features.

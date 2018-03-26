@@ -1,0 +1,14 @@
+{
+  "name": "nativescript-publish",
+  "version": "1.0.0",
+  "description": "Publish helper",
+  "scripts": {
+    "prepublish": "npm install --ignore-scripts && webpack --config scripts/webpack.config.js scripts/installer.js ../src/scripts/postinstall.js"
+  },
+  "devDependencies": {
+    "ncp": "^2.0.0",
+    "prompt-lite": "~0.1.0",
+    "rimraf": "^2.5.0",
+    "webpack": "~2.2.0"
+  }
+}

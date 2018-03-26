@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <!-- TODO this is the app id of the other demo app -->
+  <string name="facebook_app_id">126035687816994</string>
+</resources>

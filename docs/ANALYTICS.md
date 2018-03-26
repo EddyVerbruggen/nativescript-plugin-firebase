@@ -1,6 +1,4 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
-
-<img src="images/features/analytics.png" width="296px" height="124px" alt="Analytics"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/analytics.png" height="85px" alt="Analytics"/>
 
 ## Enabling Analytics
 This plugin has had enalytics enabled since day 1 to collect usage and behavior data for your app. However, you were not able to push your own events. That changed with version 3.6.0 😃🔥
@@ -53,6 +51,19 @@ You own properties need to be [preregistered with Firebase](https://support.goog
   }).then(
       function () {
         console.log("Analytics user property set");
+      }
+  );
+```
+
+### analytics.setUserId
+Want to log a user ID with your analytics data? Go ahead:
+
+```js
+  firebase.analytics.setUserId({
+    userId: "whatever-you-want"
+  }).then(
+      function () {
+        console.log("Analytics userId set");
       }
   );
 ```

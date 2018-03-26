@@ -1,12 +1,11 @@
-<img src="images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
-
-<img src="images/features/auth.png" width="296px" height="124px" alt="Auth"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/auth.png" height="85px" alt="Authentication"/>
 
 ## Enabling Authentication
 You can sign in a user either
 
 * [anonymously](#anonymous-login),
 * by [email and password](#email-password-login),
+* by [phone verification](#phone-verification),
 * using a [custom token](#custom-login),
 * using [Facebook](#facebook-login),
 * using [Google](#google-sign-in).
@@ -25,10 +24,21 @@ All login functions below, as well as `getCurrentUser` return a 'User' object wi
 |`email`|yes|Not all providers require an email address
 |`name`|yes|The name stored at the provider
 |`profileImageURL`|yes|A string containing a link to a user image on the web
+|`phoneNumber`|yes|The user's phone number
 |`refreshToken`|yes|iOS only
 
 
 ## Functions
+You can either use the Native API, or the Web API. It's just a matter of personal background or preference. Under the hood the implementations are identical.
+
+You can also mix and match the API calls.
+
+The relevant imports would be:
+
+```typescript
+const firebase = require("nativescript-plugin-firebase");
+const firebaseWebApi = require("nativescript-plugin-firebase/app");
+```
 
 ### Listening to auth state changes
 As stated [here](https://firebase.google.com/docs/auth/ios/manage-users#get_the_currently_signed-in_user):
@@ -73,28 +83,56 @@ If - for some reason - you want more control over the listener you can use these
 ```
 
 ### Get Current User
-Once the user is logged in you can retrieve the currently logged in user.
+Once the user is logged in you can retrieve the currently logged in user:
 
-##### JavaScript
-```js
-  firebase.getCurrentUser().then(
-    function (result) {
-      console.log(JSON.stringify(result));
-    },
-    function (errorMessage) {
-      console.log(errorMessage);
-    }
-  );
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.getCurrentUser()
+      .then(user => console.log("User uid: " + user.uid))
+      .catch(error => console.log("Trouble in paradise: " + error));
 ```
+</details>
 
-##### TypeScript
-```js
-  firebase.getCurrentUser().then((user) => {
-      alert("User uid: " + user.uid);
-  }, (error) => {
-      alert("Trouble in paradise: " + error);
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  const user = firebaseWebApi.auth().currentUser;
+```
+</details>
+
+### Fetch providers for email
+Want to know which auth providers are associated with an emailaddress?
+
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  const emailAddress = "someone@domain.com";
+  firebase.fetchProvidersForEmail(emailAddress).then((providers: Array<string>) => {
+    console.log(`Providers for ${emailAddress}: ${JSON.stringify(providers)}`);
   });
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  const user = firebaseWebApi.auth().currentUser;
+  if (!user || !user.email) {
+    console.log("Can't fetch providers; no user with an emailaddress logged in.");
+    return;
+  }
+
+  firebaseWebApi.auth().fetchProvidersForEmail(user.email)
+      .then(result => console.log(`Providers for ${user.email}: ${JSON.stringify(result)}`))
+      .catch(error => console.log("Fetch Providers for Email error: " + error));
+```
+</details>
 
 ### Updating a profile
 Pass in at least one of `displayName` and `photoURL`.
@@ -117,51 +155,68 @@ The logged in user will be updated, but for `getCurrentUser` to reflect the chan
 ### Anonymous login
 Don't forget to enable anonymous login in your firebase instance.
 
-##### JavaScript
-```js
-  firebase.login({
-    type: firebase.LoginType.ANONYMOUS
-  }).then(
-      function (result) {
-        console.log(JSON.stringify(result));
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
-```
+<details>
+ <summary>Native API</summary>
 
-##### TypeScript
-```js
-  firebase.login({
-      type: firebase.LoginType.ANONYMOUS
-  }).then((user) => {
-      alert("User uid: " + user.uid);
-  }, (error) => {
-      alert("Trouble in paradise: " + error);
-  });
+```typescript
+  firebase.login(
+      {
+        type: firebase.LoginType.ANONYMOUS
+      })
+      .then(user => console.log("User uid: " + user.uid))
+      .catch(error => console.log("Trouble in paradise: " + error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().signInAnonymously()
+      .then(() => console.log("User logged in"))
+      .catch(err => console.log("Login error: " + JSON.stringify(err)));
+```
+</details>
 
 ### Email-Password login
 Don't forget to enable email-password login in your firebase instance.
 
-```js
-  firebase.login({
-    type: firebase.LoginType.PASSWORD,
-    email: 'useraccount@provider.com',
-    password: 'theirpassword'
-  }).then(
-      function (result) {
-        JSON.stringify(result);
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.login(
+      {
+        type: firebase.LoginType.PASSWORD,
+        passwordOptions: {
+          email: 'useraccount@provider.com',
+          password: 'theirpassword'
+        }
+      })
+      .then(result => JSON.stringify(result))
+      .catch(error => console.log(error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().signInWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+      .then(() => console.log("User logged in"))
+      .catch(err => console.log("Login error: " + JSON.stringify(err)));
+```
+</details>
+
 
 #### Managing email-password accounts
+
 ##### Creating a Password account
+This may not work on an (Android) simulator. See #463.
+
+<details>
+ <summary>Native API</summary>
+
 ```js
   firebase.createUser({
     email: 'eddyverbruggen@gmail.com',
@@ -183,6 +238,19 @@ Don't forget to enable email-password login in your firebase instance.
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().signOut()
+      .then(() => console.log("Logout OK"))
+      .catch(error => "Logout error: " + JSON.stringify(error));
+```
+</details>
+
+
 
 #### Resetting a password
 ```js
@@ -215,6 +283,31 @@ Don't forget to enable email-password login in your firebase instance.
   );
 ```
 
+### Phone Verification
+* Don't forget to enable Phone login in your firebase instance.
+* You can only test this on a real device (not on an emulator/simulator).
+* Use the phone number of the device you're testing on.
+* _ANDROID:_ [Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
+* _iOS:_ Make sure you have messaging enabled as well, as this uses push notifications on iOS.
+
+```js
+  firebase.login({
+    type: firebase.LoginType.PHONE,
+    phoneOptions: {
+      phoneNumber: '+12345678900',
+      verificationPrompt: "The received verification code" // default "Verification code"
+    }
+  }).then(
+      function (result) {
+        JSON.stringify(result);
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
+
 ### Custom login
 Use this login type to authenticate against firebase using a token generated by your own backend server. See these [instructions on how to generate the authentication token](https://firebase.google.com/docs/auth/server).
 
@@ -223,7 +316,9 @@ Use this login type to authenticate against firebase using a token generated by 
 
   firebase.login({
     type: firebase.LoginType.CUSTOM,
-    token: token
+    customOptions: {
+      token: token
+    }
   }).then(
       function (result) {
         JSON.stringify(result);
@@ -243,7 +338,11 @@ Then add the following lines to your code and check for setup instructions for y
 ```js
   firebase.login({
     type: firebase.LoginType.FACEBOOK,
-    scope: ['public_profile', 'email'] // optional: defaults to ['public_profile', 'email']
+    // Optional
+    facebookOptions: {
+      // defaults to ['public_profile', 'email']
+      scope: ['public_profile', 'email']
+    }
   }).then(
       function (result) {
         JSON.stringify(result);
@@ -307,7 +406,11 @@ Then add the following lines to your code and check for setup instructions for y
 
 ```js
   firebase.login({
-    type: firebase.LoginType.GOOGLE
+    type: firebase.LoginType.GOOGLE,
+    // Optional 
+    googleOptions: {
+      hostedDomain: "mygsuitedomain.com"
+    }
   }).then(
       function (result) {
         JSON.stringify(result);
@@ -343,6 +446,7 @@ Then add the following lines to your code and check for setup instructions for y
 
 1. If you didn't choose this feature during installation you can uncomment `google-services-auth` in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
 2. Google Sign-In requires an SHA1 fingerprint: see [Authenticating Your Client for details](https://developers.google.com/android/guides/client-auth). If you don't do this you will see the account selection popup, but you won't be able to actually sign in.
+3. Those fingerprints need to be added to your Firebase console. Go to 'project overview', 'project settings', then scroll down a bit.
 
 ### getAuthToken
 If you want to authenticate your user from your backend server you can obtain
@@ -365,9 +469,23 @@ a Firebase auth token for the currently logged in user.
 ### logout
 Shouldn't be more complicated than:
 
+<details>
+ <summary>Native API</summary>
+
 ```js
   firebase.logout();
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebaseWebApi.auth().signOut()
+      .then(() => console.log("Logout OK"))
+      .catch(error => console.log("Logout error: " + JSON.stringify(error)));
+```
+</details>
 
 ### reauthenticate
 Some security-sensitive actions (deleting an account, changing a password) require that the user has recently signed in.
@@ -377,9 +495,11 @@ When this happens (or to prevent it from happening), re-authenticate the user.
 ```js
   firebase.reauthenticate({
     type: firebase.LoginType.PASSWORD, // or GOOGLE / FACEBOOK
-    // these are only required in type = PASSWORD
-    email: 'user@domain.com',
-    password: 'thePassword'
+    // this is only required in type == PASSWORD
+    passwordOptions: {
+      email: 'user@domain.com',
+      password: 'thePassword'
+    }
   }).then(
       function () {
         // you can now safely delete the account / change the password

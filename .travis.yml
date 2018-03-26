@@ -1,0 +1,79 @@
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-26.0.1
+    - android-26
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-21
+
+before_cache:
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock 
+
+cache:
+    directories:
+        - .nvm
+        - $HOME/.gradle/caches/
+        - $HOME/.gradle/wrapper/
+
+install:
+    - echo no | npm install -g nativescript
+    - tns usage-reporting disable
+    - tns error-reporting disable
+    - cd src
+    - npm i --ignore-scripts
+    - npm run tsc
+    - cd ../demo
+    - npm i
+
+script:
+
+
+matrix:
+  include:
+    - stage: "Lint"
+      language: node_js
+      os: linux
+      node_js: "6"
+      script: "npm run ci.tslint" 
+    - stage: "WebPack"
+      os: osx
+      env:
+        - Webpack="iOS"
+      osx_image: xcode9.2
+      language: node_js 
+      node_js: "6"
+      jdk: oraclejdk8
+      before_install:
+        - gem install cocoapods
+        - pod repo update
+      script: tns build ios --bundle
+    - language: android
+      os: linux
+      env:
+        - Webpack="Android"
+      jdk: oraclejdk8
+      before_install: nvm install 6.10.3
+      script: tns build android --bundle
+    - stage: "Build"
+      env: 
+        - BuildAndroid="25"
+      language: android
+      os: linux
+      jdk: oraclejdk8
+      before_install: nvm install 6.10.3
+      script:
+        - tns build android
+    - os: osx
+      env: 
+        - BuildiOS="10.3"
+        - Xcode="9.2"
+      osx_image: xcode9.2
+      language: node_js 
+      node_js: "6"
+      jdk: oraclejdk8
+      before_install:
+        - gem install cocoapods
+        - pod repo update
+      script:
+        - tns build ios

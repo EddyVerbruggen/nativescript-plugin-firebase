@@ -1,0 +1,40 @@
+<ActionBar title="Firestore demo" class="action-bar" flat="true">
+</ActionBar>
+
+<ScrollView>
+  <StackLayout class="page">
+    <Label text="After pressing those buttons, check the console log" textWrap="true"></Label>
+
+    <Label text="Authentication" class="h2"></Label>
+    <Button text="login anonymously" (tap)="loginAnonymously()" class="button button-user"></Button>
+
+    <Label text="Realtime DB" class="h2"></Label>
+    <Button text="Get companies" (tap)="doWebGetValueForCompanies()" class="button"></Button>
+
+
+
+
+    <Label text="Firestore" class="h2"></Label>
+    <Button text="Add" (tap)="firestoreAdd()" class="button"></Button>
+    <Button text="Set" (tap)="firestoreSet()" class="button"></Button>
+    <Button text="Set (auto id)" (tap)="firestoreSetByAutoID()" class="button"></Button>
+    <Button text="Update" (tap)="firestoreUpdate()" class="button"></Button>
+    <Button text="Get" (tap)="firestoreGet()" class="button"></Button>
+    <Button text="Get nested" (tap)="firestoreGetNested()" class="button"></Button>
+    <Button text="Document Observable (SF)" (tap)="firestoreDocumentObservable()" class="button"></Button>
+    <Label [text]="(myCity$ | async).name" height="32" *ngIf="myCity$"></Label>
+    <Button text="Collection Observable (cities)" (tap)="firestoreCollectionObservable()" class="button"></Button>
+    <ListView [items]="myCities$ | async" height="200" *ngIf="myCities$">
+      <ng-template let-item="item">
+        <StackLayout>
+          <Label style="color: red" [text]='item.name'></Label>
+        </StackLayout>
+      </ng-template>
+    </ListView>
+    <Button text="Listen to changes in SF" (tap)="firestoreListen()" class="button"></Button>
+    <Button text="Stop listening" (tap)="firestoreStopListening()" class="button"></Button>
+    <Button text="Where" (tap)="firestoreWhere()" class="button"></Button>
+    <Button text="Where, Order, Limit" (tap)="firestoreWhereOrderLimit()" class="button"></Button>
+    <Button text="Delete" (tap)="firestoreDelete()" class="button"></Button>
+  </StackLayout>
+</ScrollView>

@@ -1,19 +1,30 @@
 # NativeScript Firebase plugin
 
+[![Build Status][build-status]][build-url]
+[![NPM version][npm-image]][npm-url]
+[![Downloads][downloads-image]][npm-url]
+[![Twitter Follow][twitter-image]][twitter-url]
+
+[build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-plugin-firebase.svg?branch=master
+[build-url]:https://travis-ci.org/EddyVerbruggen/nativescript-plugin-firebase
+[npm-image]:http://img.shields.io/npm/v/nativescript-plugin-firebase.svg
+[npm-url]:https://npmjs.org/package/nativescript-plugin-firebase
+[downloads-image]:http://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
+[twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
+[twitter-url]:https://twitter.com/eddyverbruggen
+
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
-Google's realtime app platform (Database, Authentication, Configuration, Notifications) [firebase.google.com](https://firebase.google.com/)
 
 ## Features
-For readability the supported features have been moved to their own README's:
-
-* Setup and troubleshooting (continue reading below)
 * [Realtime Database](docs/DATABASE.md)
+* [Firestore](docs/FIRESTORE.md)
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Cloud Messaging](docs/MESSAGING.md)
 * [Storage](docs/STORAGE.md)
 * [Crash Reporting](docs/CRASHREPORTING.md)
 * [Analytics](docs/ANALYTICS.md)
+* [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [AdMob](docs/ADMOB.md)
 
 ## Prerequisites
@@ -27,49 +38,40 @@ Open your Firebase project at the Google console and click 'Add app' to add an i
 * Android: `google-services.json` which you'll add to your NativeScript project at `app/App_Resources/Android/google-services.json`
 
 ## Installation
-If you rather watch a video explaining the steps then check out this step-by-step guide - you'll also learn how to
+If you rather watch a (slightly outdated) video explaining the steps then check out this step-by-step guide - you'll also learn how to
 add iOS and Android support to the Firebase console and how to integrate anonymous authentication:
 [![YouTube demo](docs/images/yt-thumb-setup.png)](https://youtu.be/IextEpoIzwE "YouTube demo")
 
-
 From the command prompt go to your app's root folder and execute:
 
-```
+```bash
 tns plugin add nativescript-plugin-firebase
 ```
 
-Now start an install script which will guide you through installing additional components. Check the doc links above to see what's what. You can always change your choices later.
-
-```
-cd node_modules/nativescript-plugin-firebase
-```
-
-If you run NativeScript 2.5.0 (only that exact version) then run (with other versions this runs automatically through a postinstall script):
-
-__NativeScript 2.5.0 is no longer the latest release, so you might as well update before adding this plugin to avoid this issue.__
-
-```
-npm run setup
-```
+This will launch an install script which will guide you through installing additional components.
+Check the doc links above to see what's what. You can always change your choices later.
 
 ### Config
 If you choose to save your config during the installation, the supported options may be saved in the `firebase.nativescript.json` at the root of your app.
-This is to ensure your app may roundtrip source control and installation on CI won't run the questionary during install.
+This is to ensure your app may roundtrip source control and installation on CI won't prompt for user input during installation.
 
 You can reconfigure the plugin by going to the `node_modules/nativescript-plugin-firebase` and running `npm run config`.
 
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
 
-### Android
-Install the latest packages 'Google Play Services' and 'Google Repository' in your [Android SDK Manager](http://stackoverflow.com/a/37310513)
+#### Using Vue?
+If you're using this template: [vue-cli-template](https://github.com/nativescript-vue/vue-cli-template), then copy `firebase.nativescript.json` to the `template` folder. You could also symlink it: `firebase.nativescript.json -> template/firebase.nativescript.json`.
+
+And also, `require` the plugin before Vue.start runs (probably in `main.js`), but run `firebase.init()` afterwards (although it may work before). You could wrap it in a timeout to make sure.
+
+### iOS (Cocoapods)
+The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.
 
 #### Google Play Services Version
-The plugin will default to version 10.0+ of the Android `play-services-base` SDK.
-If you need to change the version (to for instance the latest version), you can add a project ext property `googlePlayServicesVersion` like so:
+The plugin will default to [this version](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle#L27) of the Android `play-services-base` SDK.
+If you need to change the version (to for instance the latest version), you can add a project ext property `googlePlayServicesVersion` to `app/App_Resources/Android/app.gradle`:
 
 ```
-//   /app/App_Resources/Android/app.gradle
-
 project.ext {
     googlePlayServicesVersion = "+"
 }
@@ -77,7 +79,8 @@ project.ext {
 
 ## Usage
 
-If you want a quickstart, [clone our demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo).
+### Demo app
+If you want a quickstart, clone the repo, `cd src`, and `npm run demo.ios` or `npm run demo.android`.
 
 ### Start-up wiring
 We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
@@ -101,22 +104,38 @@ firebase.init({
 
 #### TypeScript
 ```js
-import firebase = require("nativescript-plugin-firebase");
+const firebase = require("nativescript-plugin-firebase");
 
 firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
   // see their respective docs.
 }).then(
-  (instance) => {
+  instance => {
     console.log("firebase.init done");
   },
-  (error) => {
-    console.log("firebase.init error: " + error);
+  error => {
+    console.log(`firebase.init error: ${error}`);
   }
 );
 ```
 
 ## Known issues on iOS
+
+#### Trouble running on the simulator
+Open or create `App_Resources/iOS/<appname>.entitlements` and add these two keys with the value `true`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>com.apple.keystore.access-keychain-keys</key>
+    <true/>
+    <key>com.apple.keystore.device</key>
+    <true/>
+</dict>
+</plist>
+```
 
 #### Authentication failed: invalid_token
 On the simulator you may see this message if you have more than one app with the Firebase SDK ever installed:
@@ -138,7 +157,7 @@ firebase.init({
 ```
 
 #### Pod dependency error
-If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.13.0) required by Podfile`,
+If you see an error like `Unable to satisfy the following requirements: Firebase (~> 3.17.0) required by Podfile`,
 then run `pod repo update` on the command line to make sure you have the latest Podspec.
 
 This could happen when updating the plugin to a new version. You'll want to `tns platform remove ios && tns platform add ios` as well to clean out the old pod version.
@@ -196,15 +215,13 @@ Another possible error is "FirebaseApp with name [DEFAULT] doesn't exist." which
 placing `google-services.json` to `platforms/android/google-services.json` (see above), and making
 the changes to `build.gradle` which are mentioned above as well.
 
-#### Could not find any version that matches com.google.android.gms:play-services-auth:10.2.+.
-That means making sure you have the latest `Google Repository` bits installed.
-Just run `android` from a command prompt, expand `Extras` and install any pending updates.
+#### Errors regarding API level 26.0.0
+Update your local Android SDKs:
 
-Also, an error like "Could not find com.google.firebase:firebase-core:10.0.0" can be caused by having
-more than one version of the Android SDK installed. Make sure ANDROID_HOME is set to the Android SDK directory
-that is being updated otherwise it will seem as though your updates have no effect.
+Just run `$ANDROID_HOME/tools/bin/sdkmanager --update` from a command prompt
+or launch the SDK manager from Android Studio, expand `Extras` and install any pending updates.
 
-#### Found play-services:9.0.0, but version 10.X.Y is needed..
+#### Found play-services:10.A.B, but version 11.X.Y is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
 #### `include.gradle`: Failed to apply plugin .. For input string: "+"
@@ -216,12 +233,9 @@ android {
   // other stuff here
 
   project.ext {
-    googlePlayServicesVersion = "10.0.+"
+    googlePlayServicesVersion = "11.8.0"
   }
 }
 ```
 
-Where `"10.0.+"` is best set to the same value as the version on [this line](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/platforms/android/include.gradle#L23).
-
-## Credits
-The starting point for this plugin was [this great Gist](https://gist.github.com/jbristowe/c89a7bcae7fc9a035ee7) by [John Bristowe](https://github.com/jbristowe).
+Where `"11.8.0"` is best set to the same value as the `firebaseVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle).
