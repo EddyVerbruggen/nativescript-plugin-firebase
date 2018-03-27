@@ -197,7 +197,7 @@ firebase.toJsObjectLegacy = javaObj => {
     case 'java.lang.Double':
       return Number(String(javaObj));
     case 'java.util.Date':
-      return new Date(javaObj);
+      return new Date(javaObj.getTime());
     case 'com.google.firebase.firestore.GeoPoint':
       return {
         "latitude": javaObj.getLatitude(),
