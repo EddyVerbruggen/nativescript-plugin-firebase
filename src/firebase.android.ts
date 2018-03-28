@@ -1018,9 +1018,12 @@ function toLoginResult(user) {
 
 firebase.login = arg => {
   return new Promise((resolve, reject) => {
+    this.resolve = resolve;
+    this.reject = reject;
+
     try {
       if (!firebase._isGooglePlayServicesAvailable()) {
-        reject("Google Play services is required for this feature, but not available on this device");
+        this.reject("Google Play services is required for this feature, but not available on this device");
         return;
       }
 
@@ -1035,7 +1038,7 @@ firebase.login = arg => {
             if (firebase._mGoogleApiClient) {
               com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
             }
-            reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            this.reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           } else {
             const user = task.getResult().getUser();
             resolve(toLoginResult(user));
@@ -1048,7 +1051,7 @@ firebase.login = arg => {
 
       } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
-          reject("Auth type PASSWORD requires an 'passwordOptions.email' and 'passwordOptions.password' argument");
+          this.reject("Auth type PASSWORD requires an 'passwordOptions.email' and 'passwordOptions.password' argument");
           return;
         }
 
@@ -1067,7 +1070,7 @@ firebase.login = arg => {
       } else if (arg.type === firebase.LoginType.PHONE) {
         // https://firebase.google.com/docs/auth/android/phone-auth
         if (!arg.phoneOptions || !arg.phoneOptions.phoneNumber) {
-          reject("Auth type PHONE requires a 'phoneOptions.phoneNumber' argument");
+          this.reject("Auth type PHONE requires a 'phoneOptions.phoneNumber' argument");
           return;
         }
 
@@ -1095,9 +1098,9 @@ firebase.login = arg => {
             firebase._verifyPhoneNumberInProgress = false;
             const errorMessage = firebaseException.getMessage();
             if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
-              reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
+              this.reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
             } else {
-              reject(errorMessage);
+              this.reject(errorMessage);
             }
           },
           onCodeSent: (verificationId, forceResendingToken) => {
@@ -1132,7 +1135,7 @@ firebase.login = arg => {
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
         if (!arg.customOptions || (!arg.customOptions.token && !arg.customOptions.tokenProviderFn)) {
-          reject("Auth type CUSTOM requires a 'customOptions.token' or 'customOptions.tokenProviderFn' argument");
+          this.reject("Auth type CUSTOM requires a 'customOptions.token' or 'customOptions.tokenProviderFn' argument");
           return;
         }
 
@@ -1145,14 +1148,14 @@ firebase.login = arg => {
                     firebaseAuth.signInWithCustomToken(token).addOnCompleteListener(onCompleteListener);
                   },
                   error => {
-                    reject(error);
+                    this.reject(error);
                   }
               );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
         if (typeof(com.facebook) === "undefined") {
-          reject("Facebook SDK not installed - see gradle config");
+          this.reject("Facebook SDK not installed - see gradle config");
           return;
         }
 
@@ -1176,10 +1179,10 @@ firebase.login = arg => {
                 }
               },
               onCancel: () => {
-                reject("Facebook Login canceled");
+                this.reject("Facebook Login canceled");
               },
               onError: ex => {
-                reject("Error while trying to login with Fb " + ex);
+                this.reject("Error while trying to login with Fb " + ex);
               }
             })
         );
@@ -1195,7 +1198,7 @@ firebase.login = arg => {
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (typeof(com.google.android.gms.auth.api.Auth) === "undefined") {
-          reject("Google Sign In not installed - see gradle config");
+          this.reject("Google Sign In not installed - see gradle config");
           return;
         }
 
@@ -1215,7 +1218,7 @@ firebase.login = arg => {
 
         const onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
           onConnectionFailed: connectionResult => {
-            reject(connectionResult.getErrorMessage());
+            this.reject(connectionResult.getErrorMessage());
           }
         });
 
@@ -1252,17 +1255,17 @@ firebase.login = arg => {
               }
             } else {
               console.log("Make sure you've uploaded your SHA1 fingerprint(s) to the Firebase console");
-              reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
+              this.reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
             }
           }
         });
 
       } else {
-        reject("Unsupported auth type: " + arg.type);
+        this.reject("Unsupported auth type: " + arg.type);
       }
     } catch (ex) {
       console.log("Error in firebase.login: " + ex);
-      reject(ex);
+      this.reject(ex);
     }
   });
 };
