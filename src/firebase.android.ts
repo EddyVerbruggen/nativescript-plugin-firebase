@@ -2314,7 +2314,7 @@ firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.D
           callback(new DocumentSnapshot(
               snapshot ? snapshot.getId() : null,
               snapshot.exists(),
-              snapshot ? () => firebase.toJsObject(snapshot.getData()) : null));
+              () => snapshot.exists() ? firebase.toJsObject(snapshot.getData()) : undefined));
         })
       })
   );
