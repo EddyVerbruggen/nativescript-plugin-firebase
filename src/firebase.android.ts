@@ -167,7 +167,7 @@ firebase.toValue = val => {
   return returnVal;
 };
 
-// no longer using Gson as fi Firestore's DocumentReference isn't serialized
+// no longer using Gson as fi Firestore's DocumentReference isn't serialized (also removed it from the dependencies)
 firebase.toJsObject = javaObj => {
   // if (gson() !== null) {
   //   try {
@@ -626,14 +626,21 @@ firebase.admob.showBanner = arg => {
       firebase.admob.adView.setAdUnitId(settings.androidBannerId);
       const bannerType = firebase.admob._getBannerType(settings.size);
       firebase.admob.adView.setAdSize(bannerType);
+
+      // need these to support showing a banner more than once
+      this.resolve = resolve;
+      this.reject = reject;
+
       const BannerAdListener = com.google.android.gms.ads.AdListener.extend({
+        resolve: null,
+        reject: null,
         onAdLoaded: () => {
           // firebase.admob.interstitialView.show();
-          resolve();
+          this.resolve();
         },
         onAdFailedToLoad: errorCode => {
           // console.log('ad error: ' + errorCode);
-          reject(errorCode);
+          this.reject(errorCode);
         }
       });
       firebase.admob.adView.setAdListener(new BannerAdListener());
@@ -1079,6 +1086,10 @@ firebase.login = arg => {
           return;
         }
 
+        // need these to support using phone auth more than once
+        this.resolve = resolve;
+        this.reject = reject;
+
         const OnVerificationStateChangedCallbacks = com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks.extend({
           onVerificationCompleted: phoneAuthCredential => {
             firebase._verifyPhoneNumberInProgress = false;
@@ -1095,9 +1106,9 @@ firebase.login = arg => {
             firebase._verifyPhoneNumberInProgress = false;
             const errorMessage = firebaseException.getMessage();
             if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
-              reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
+              this.reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
             } else {
-              reject(errorMessage);
+              this.reject(errorMessage);
             }
           },
           onCodeSent: (verificationId, forceResendingToken) => {
