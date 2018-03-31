@@ -56,7 +56,7 @@
     "tslint.demo": "tslint --config '../tslint.json' '../demo/app/*.ts' --exclude '**/node_modules/**'",
     "ci.tslint": "npm run tslint && npm run tslint.demo",
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-plugin-firebase && cd ../src",
-    "generate.typings.ios": "cd ../demo && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo/typings!'",
+    "generate.typings.ios": "cd ../demo-ng && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo-ng/typings!'",
     "generate.typings.android": "java -jar ../../android-dts-generator/dts-generator/build/libs/dts-generator.jar -input ../$npm_package_config_typingsproject/platforms/android/build/intermediates/exploded-aar/com.google.firebase/firebase-$npm_package_config_typings/**/jars/classes.jar -output platforms/android/typings/$npm_package_config_typings",
     "generate.typings.android.analytics": "npm run generate.typings.android --nativescript-plugin-firebase:typings=analytics-impl",
     "generate.typings.android.auth": "npm run generate.typings.android --nativescript-plugin-firebase:typings=auth",
