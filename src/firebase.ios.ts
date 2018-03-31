@@ -2287,7 +2287,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
   const listener = colRef.addSnapshotListener((snapshot: FIRQuerySnapshot, error: NSError) => {
     const docSnapshots: Array<firestore.DocumentSnapshot> = [];
     for (let i = 0, l = snapshot.documents.count; i < l; i++) {
-      const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+      const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
       docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
     }
 
@@ -2480,7 +2480,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
             } else {
               const docSnapshots: Array<firestore.DocumentSnapshot> = [];
               for (let i = 0, l = snapshot.documents.count; i < l; i++) {
-                const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+                const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
                 docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
               }
               const snap = new QuerySnapshot();
@@ -2537,7 +2537,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
           console.log(">> .where, snapshot: " + snapshot);
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0, l = snapshot.documents.count; i < l; i++) {
-            const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+            const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
             docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
           }
           const snap = new QuerySnapshot();

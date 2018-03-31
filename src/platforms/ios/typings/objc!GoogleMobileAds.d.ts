@@ -157,8 +157,6 @@ declare class GADAdChoicesView extends UIView {
 	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject>): GADAdChoicesView; // inherited from UIAppearance
 
 	static new(): GADAdChoicesView; // inherited from NSObject
-
-	nativeAd: GADNativeAd;
 }
 
 declare class GADAdLoader extends NSObject {
@@ -511,6 +509,8 @@ interface GADCustomEventNativeAdDelegate extends NSObjectProtocol {
 	customEventNativeAdDidFailToLoadWithError(customEventNativeAd: GADCustomEventNativeAd, error: NSError): void;
 
 	customEventNativeAdDidReceiveMediatedNativeAd(customEventNativeAd: GADCustomEventNativeAd, mediatedNativeAd: GADMediatedNativeAd): void;
+
+	customEventNativeAdDidReceiveMediatedUnifiedNativeAd(customEventNativeAd: GADCustomEventNativeAd, mediatedUnifiedNativeAd: GADMediatedUnifiedNativeAd): void;
 }
 declare var GADCustomEventNativeAdDelegate: {
 
@@ -908,6 +908,8 @@ interface GADMAdNetworkConnector extends GADMediationAdRequest {
 
 	adapterDidReceiveMediatedNativeAd(adapter: GADMAdNetworkAdapter, mediatedNativeAd: GADMediatedNativeAd): void;
 
+	adapterDidReceiveMediatedUnifiedNativeAd(adapter: GADMAdNetworkAdapter, mediatedUnifiedNativeAd: GADMediatedUnifiedNativeAd): void;
+
 	adapterWillDismissFullScreenModal(adapter: GADMAdNetworkAdapter): void;
 
 	adapterWillDismissInterstitial(adapter: GADMAdNetworkAdapter): void;
@@ -977,6 +979,8 @@ interface GADMRewardBasedVideoAdNetworkConnector extends GADMediationAdRequest {
 
 	adapterDidCloseRewardBasedVideoAd(rewardBasedVideoAdAdapter: GADMRewardBasedVideoAdNetworkAdapter): void;
 
+	adapterDidCompletePlayingRewardBasedVideoAd(rewardBasedVideoAdAdapter: GADMRewardBasedVideoAdNetworkAdapter): void;
+
 	adapterDidFailToLoadRewardBasedVideoAdwithError(rewardBasedVideoAdAdapter: GADMRewardBasedVideoAdNetworkAdapter, error: NSError): void;
 
 	adapterDidFailToSetUpRewardBasedVideoAdWithError(rewardBasedVideoAdAdapter: GADMRewardBasedVideoAdNetworkAdapter, error: NSError): void;
@@ -1017,8 +1021,6 @@ declare class GADMediaView extends UIView {
 	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject>): GADMediaView; // inherited from UIAppearance
 
 	static new(): GADMediaView; // inherited from NSObject
-
-	nativeAd: GADNativeAd;
 }
 
 interface GADMediatedNativeAd extends NSObjectProtocol {
@@ -1038,6 +1040,8 @@ interface GADMediatedNativeAdDelegate extends NSObjectProtocol {
 
 	mediatedNativeAdDidRecordImpression?(mediatedNativeAd: GADMediatedNativeAd): void;
 
+	mediatedNativeAdDidRenderInViewClickableAssetViewsNonclickableAssetViewsViewController?(mediatedNativeAd: GADMediatedNativeAd, view: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>, viewController: UIViewController): void;
+
 	mediatedNativeAdDidRenderInViewViewController?(mediatedNativeAd: GADMediatedNativeAd, view: UIView, viewController: UIViewController): void;
 
 	mediatedNativeAdDidUntrackView?(mediatedNativeAd: GADMediatedNativeAd, view: UIView): void;
@@ -1052,6 +1056,12 @@ declare class GADMediatedNativeAdNotificationSource extends NSObject {
 	static alloc(): GADMediatedNativeAdNotificationSource; // inherited from NSObject
 
 	static mediatedNativeAdDidDismissScreen(mediatedNativeAd: GADMediatedNativeAd): void;
+
+	static mediatedNativeAdDidEndVideoPlayback(mediatedNativeAd: GADMediatedNativeAd): void;
+
+	static mediatedNativeAdDidPauseVideo(mediatedNativeAd: GADMediatedNativeAd): void;
+
+	static mediatedNativeAdDidPlayVideo(mediatedNativeAd: GADMediatedNativeAd): void;
 
 	static mediatedNativeAdDidRecordClick(mediatedNativeAd: GADMediatedNativeAd): void;
 
@@ -1074,11 +1084,15 @@ interface GADMediatedNativeAppInstallAd extends GADMediatedNativeAd {
 
 	callToAction(): string;
 
+	hasVideoContent?(): boolean;
+
 	headline(): string;
 
 	icon(): GADNativeAdImage;
 
 	images(): NSArray<any>;
+
+	mediaView?(): UIView;
 
 	price(): string;
 
@@ -1101,16 +1115,86 @@ interface GADMediatedNativeContentAd extends GADMediatedNativeAd {
 
 	callToAction(): string;
 
+	hasVideoContent?(): boolean;
+
 	headline(): string;
 
 	images(): NSArray<any>;
 
 	logo(): GADNativeAdImage;
+
+	mediaView?(): UIView;
 }
 declare var GADMediatedNativeContentAd: {
 
 	prototype: GADMediatedNativeContentAd;
 };
+
+interface GADMediatedUnifiedNativeAd extends NSObjectProtocol {
+
+	adChoicesView?: UIView;
+
+	advertiser: string;
+
+	body: string;
+
+	callToAction: string;
+
+	extraAssets: NSDictionary<string, any>;
+
+	hasVideoContent?: boolean;
+
+	headline: string;
+
+	icon: GADNativeAdImage;
+
+	images: NSArray<GADNativeAdImage>;
+
+	mediaView?: UIView;
+
+	price: string;
+
+	starRating: NSDecimalNumber;
+
+	store: string;
+
+	didRecordClickOnAssetWithNameViewViewController?(assetName: string, view: UIView, viewController: UIViewController): void;
+
+	didRecordImpression?(): void;
+
+	didRenderInViewClickableAssetViewsNonclickableAssetViewsViewController?(view: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>, viewController: UIViewController): void;
+
+	didUntrackView?(view: UIView): void;
+}
+declare var GADMediatedUnifiedNativeAd: {
+
+	prototype: GADMediatedUnifiedNativeAd;
+};
+
+declare class GADMediatedUnifiedNativeAdNotificationSource extends NSObject {
+
+	static alloc(): GADMediatedUnifiedNativeAdNotificationSource; // inherited from NSObject
+
+	static mediatedNativeAdDidDismissScreen(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdDidEndVideoPlayback(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdDidPauseVideo(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdDidPlayVideo(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdDidRecordClick(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdDidRecordImpression(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdWillDismissScreen(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdWillLeaveApplication(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static mediatedNativeAdWillPresentScreen(mediatedNativeAd: GADMediatedUnifiedNativeAd): void;
+
+	static new(): GADMediatedUnifiedNativeAdNotificationSource; // inherited from NSObject
+}
 
 interface GADMediationAdRequest extends NSObjectProtocol {
 
@@ -1646,6 +1730,8 @@ interface GADRewardBasedVideoAdDelegate extends NSObjectProtocol {
 
 	rewardBasedVideoAdDidClose?(rewardBasedVideoAd: GADRewardBasedVideoAd): void;
 
+	rewardBasedVideoAdDidCompletePlaying?(rewardBasedVideoAd: GADRewardBasedVideoAd): void;
+
 	rewardBasedVideoAdDidFailToLoadWithError?(rewardBasedVideoAd: GADRewardBasedVideoAd, error: NSError): void;
 
 	rewardBasedVideoAdDidOpen?(rewardBasedVideoAd: GADRewardBasedVideoAd): void;
@@ -1743,6 +1829,155 @@ declare class GADSearchRequest extends GADRequest {
 	setBackgroundSolid(color: UIColor): void;
 }
 
+declare class GADUnifiedNativeAd extends NSObject {
+
+	static alloc(): GADUnifiedNativeAd; // inherited from NSObject
+
+	static new(): GADUnifiedNativeAd; // inherited from NSObject
+
+	readonly adNetworkClassName: string;
+
+	readonly advertiser: string;
+
+	readonly body: string;
+
+	readonly callToAction: string;
+
+	delegate: GADUnifiedNativeAdDelegate;
+
+	readonly extraAssets: NSDictionary<string, any>;
+
+	readonly headline: string;
+
+	readonly icon: GADNativeAdImage;
+
+	readonly images: NSArray<GADNativeAdImage>;
+
+	readonly price: string;
+
+	rootViewController: UIViewController;
+
+	readonly starRating: NSDecimalNumber;
+
+	readonly store: string;
+
+	unconfirmedClickDelegate: GADUnifiedNativeAdUnconfirmedClickDelegate;
+
+	readonly videoController: GADVideoController;
+
+	cancelUnconfirmedClick(): void;
+
+	registerAdViewClickableAssetViewsNonclickableAssetViews(adView: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>): void;
+
+	registerClickConfirmingView(view: UIView): void;
+
+	unregisterAdView(): void;
+}
+
+declare var GADUnifiedNativeAdChoicesViewAsset: string;
+
+interface GADUnifiedNativeAdDelegate extends NSObjectProtocol {
+
+	nativeAdDidDismissScreen?(nativeAd: GADUnifiedNativeAd): void;
+
+	nativeAdDidRecordClick?(nativeAd: GADUnifiedNativeAd): void;
+
+	nativeAdDidRecordImpression?(nativeAd: GADUnifiedNativeAd): void;
+
+	nativeAdWillDismissScreen?(nativeAd: GADUnifiedNativeAd): void;
+
+	nativeAdWillLeaveApplication?(nativeAd: GADUnifiedNativeAd): void;
+
+	nativeAdWillPresentScreen?(nativeAd: GADUnifiedNativeAd): void;
+}
+declare var GADUnifiedNativeAdDelegate: {
+
+	prototype: GADUnifiedNativeAdDelegate;
+};
+
+interface GADUnifiedNativeAdLoaderDelegate extends GADAdLoaderDelegate {
+
+	adLoaderDidReceiveUnifiedNativeAd(adLoader: GADAdLoader, nativeAd: GADUnifiedNativeAd): void;
+}
+declare var GADUnifiedNativeAdLoaderDelegate: {
+
+	prototype: GADUnifiedNativeAdLoaderDelegate;
+};
+
+interface GADUnifiedNativeAdUnconfirmedClickDelegate extends NSObjectProtocol {
+
+	nativeAdDidCancelUnconfirmedClick(nativeAd: GADUnifiedNativeAd): void;
+
+	nativeAdDidReceiveUnconfirmedClickOnAssetID(nativeAd: GADUnifiedNativeAd, assetID: string): void;
+}
+declare var GADUnifiedNativeAdUnconfirmedClickDelegate: {
+
+	prototype: GADUnifiedNativeAdUnconfirmedClickDelegate;
+};
+
+declare class GADUnifiedNativeAdView extends UIView {
+
+	static alloc(): GADUnifiedNativeAdView; // inherited from NSObject
+
+	static appearance(): GADUnifiedNativeAdView; // inherited from UIAppearance
+
+	static appearanceForTraitCollection(trait: UITraitCollection): GADUnifiedNativeAdView; // inherited from UIAppearance
+
+	static appearanceForTraitCollectionWhenContainedIn(trait: UITraitCollection, ContainerClass: typeof NSObject): GADUnifiedNativeAdView; // inherited from UIAppearance
+
+	static appearanceForTraitCollectionWhenContainedInInstancesOfClasses(trait: UITraitCollection, containerTypes: NSArray<typeof NSObject>): GADUnifiedNativeAdView; // inherited from UIAppearance
+
+	static appearanceWhenContainedIn(ContainerClass: typeof NSObject): GADUnifiedNativeAdView; // inherited from UIAppearance
+
+	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject>): GADUnifiedNativeAdView; // inherited from UIAppearance
+
+	static new(): GADUnifiedNativeAdView; // inherited from NSObject
+
+	adChoicesView: GADAdChoicesView;
+
+	advertiserView: UIView;
+
+	bodyView: UIView;
+
+	callToActionView: UIView;
+
+	headlineView: UIView;
+
+	iconView: UIView;
+
+	imageView: UIView;
+
+	mediaView: GADMediaView;
+
+	nativeAd: GADUnifiedNativeAd;
+
+	priceView: UIView;
+
+	starRatingView: UIView;
+
+	storeView: UIView;
+}
+
+declare var GADUnifiedNativeAdvertiserAsset: string;
+
+declare var GADUnifiedNativeBodyAsset: string;
+
+declare var GADUnifiedNativeCallToActionAsset: string;
+
+declare var GADUnifiedNativeHeadlineAsset: string;
+
+declare var GADUnifiedNativeIconAsset: string;
+
+declare var GADUnifiedNativeImageAsset: string;
+
+declare var GADUnifiedNativeMediaViewAsset: string;
+
+declare var GADUnifiedNativePriceAsset: string;
+
+declare var GADUnifiedNativeStarRatingAsset: string;
+
+declare var GADUnifiedNativeStoreAsset: string;
+
 declare class GADVideoController extends NSObject {
 
 	static alloc(): GADVideoController; // inherited from NSObject
@@ -1813,6 +2048,8 @@ declare var kGADAdLoaderAdTypeNativeAppInstall: string;
 declare var kGADAdLoaderAdTypeNativeContent: string;
 
 declare var kGADAdLoaderAdTypeNativeCustomTemplate: string;
+
+declare var kGADAdLoaderAdTypeUnifiedNative: string;
 
 declare var kGADAdSizeBanner: GADAdSize;
 

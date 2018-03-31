@@ -1,4 +1,15 @@
 
+declare const enum FIRDLMatchType {
+
+	None = 0,
+
+	Weak = 1,
+
+	Default = 2,
+
+	Unique = 3
+}
+
 declare class FIRDynamicLink extends NSObject {
 
 	static alloc(): FIRDynamicLink; // inherited from NSObject
@@ -6,6 +17,8 @@ declare class FIRDynamicLink extends NSObject {
 	static new(): FIRDynamicLink; // inherited from NSObject
 
 	readonly matchConfidence: FIRDynamicLinkMatchConfidence;
+
+	readonly matchType: FIRDLMatchType;
 
 	readonly minimumAppVersion: string;
 

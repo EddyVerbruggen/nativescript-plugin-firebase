@@ -18,7 +18,9 @@ declare const enum FIRActionCodeOperation {
 
 	VerifyEmail = 2,
 
-	RecoverEmail = 3
+	RecoverEmail = 3,
+
+	EmailLink = 4
 }
 
 declare class FIRActionCodeSettings extends NSObject {
@@ -98,9 +100,15 @@ declare class FIRAuth extends NSObject {
 
 	confirmPasswordResetWithCodeNewPasswordCompletion(code: string, newPassword: string, completion: (p1: NSError) => void): void;
 
+	createUserAndRetrieveDataWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
 	createUserWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRUser, p2: NSError) => void): void;
 
 	fetchProvidersForEmailCompletion(email: string, completion: (p1: NSArray<string>, p2: NSError) => void): void;
+
+	fetchSignInMethodsForEmailCompletion(email: string, completion: (p1: NSArray<string>, p2: NSError) => void): void;
+
+	isSignInWithEmailLink(link: string): boolean;
 
 	removeAuthStateDidChangeListener(listenerHandle: NSObjectProtocol): void;
 
@@ -110,15 +118,25 @@ declare class FIRAuth extends NSObject {
 
 	sendPasswordResetWithEmailCompletion(email: string, completion: (p1: NSError) => void): void;
 
+	sendSignInLinkToEmailActionCodeSettingsCompletion(email: string, actionCodeSettings: FIRActionCodeSettings, completion: (p1: NSError) => void): void;
+
 	setAPNSTokenType(token: NSData, type: FIRAuthAPNSTokenType): void;
 
 	signInAndRetrieveDataWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
+	signInAndRetrieveDataWithCustomTokenCompletion(token: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
+	signInAndRetrieveDataWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
+	signInAnonymouslyAndRetrieveDataWithCompletion(completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	signInAnonymouslyWithCompletion(completion: (p1: FIRUser, p2: NSError) => void): void;
 
 	signInWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRUser, p2: NSError) => void): void;
 
 	signInWithCustomTokenCompletion(token: string, completion: (p1: FIRUser, p2: NSError) => void): void;
+
+	signInWithEmailLinkCompletion(email: string, link: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	signInWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRUser, p2: NSError) => void): void;
 
@@ -299,6 +317,8 @@ declare class FIREmailAuthProvider extends NSObject {
 
 	static alloc(): FIREmailAuthProvider; // inherited from NSObject
 
+	static credentialWithEmailLink(email: string, link: string): FIRAuthCredential;
+
 	static credentialWithEmailPassword(email: string, password: string): FIRAuthCredential;
 
 	static new(): FIREmailAuthProvider; // inherited from NSObject
@@ -306,7 +326,11 @@ declare class FIREmailAuthProvider extends NSObject {
 
 declare var FIREmailAuthProviderID: string;
 
+declare var FIREmailLinkAuthSignInMethod: string;
+
 declare var FIREmailPasswordAuthProviderID: string;
+
+declare var FIREmailPasswordAuthSignInMethod: string;
 
 declare class FIRFacebookAuthProvider extends NSObject {
 
@@ -319,6 +343,8 @@ declare class FIRFacebookAuthProvider extends NSObject {
 
 declare var FIRFacebookAuthProviderID: string;
 
+declare var FIRFacebookAuthSignInMethod: string;
+
 declare class FIRGitHubAuthProvider extends NSObject {
 
 	static alloc(): FIRGitHubAuthProvider; // inherited from NSObject
@@ -330,6 +356,8 @@ declare class FIRGitHubAuthProvider extends NSObject {
 
 declare var FIRGitHubAuthProviderID: string;
 
+declare var FIRGitHubAuthSignInMethod: string;
+
 declare class FIRGoogleAuthProvider extends NSObject {
 
 	static alloc(): FIRGoogleAuthProvider; // inherited from NSObject
@@ -340,6 +368,8 @@ declare class FIRGoogleAuthProvider extends NSObject {
 }
 
 declare var FIRGoogleAuthProviderID: string;
+
+declare var FIRGoogleAuthSignInMethod: string;
 
 declare class FIROAuthProvider extends NSObject {
 
@@ -378,6 +408,8 @@ declare class FIRPhoneAuthProvider extends NSObject {
 
 declare var FIRPhoneAuthProviderID: string;
 
+declare var FIRPhoneAuthSignInMethod: string;
+
 declare class FIRTwitterAuthProvider extends NSObject {
 
 	static alloc(): FIRTwitterAuthProvider; // inherited from NSObject
@@ -388,6 +420,8 @@ declare class FIRTwitterAuthProvider extends NSObject {
 }
 
 declare var FIRTwitterAuthProviderID: string;
+
+declare var FIRTwitterAuthSignInMethod: string;
 
 declare class FIRUser extends NSObject implements FIRUserInfo {
 
