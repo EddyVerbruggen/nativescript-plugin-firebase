@@ -238,7 +238,14 @@ export class HelloWorldModel extends Observable {
   public doWebQueryBulgarianCompanies(): void {
     const path = "/companies";
     const child = "name";
-    firebaseWebApi.database().ref(path).orderByChild(child);
+    firebaseWebApi.database().ref(path).orderByChild(child)
+        .once("value")
+        .then(result => {
+          this.set("path", path);
+          this.set("key", result.key);
+          this.set("value", JSON.stringify(result.val()));
+        })
+        .catch(error => console.log("doWebQueryBulgarianCompanies error: " + error));
   }
 
   public doWebStoreCompanyByFirstCreatingKey(): void {
