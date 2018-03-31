@@ -189,7 +189,9 @@ export const firebase: any = {
 };
 
 export class DocumentSnapshot implements firestore.DocumentSnapshot {
-  constructor(public id: string, public exists: boolean, public data: () => firestore.DocumentData) {
+  public data: () => firestore.DocumentData;
+  constructor(public id: string, public exists: boolean, documentData: firestore.DocumentData) {
+    this.data = () => exists ? documentData : undefined;
   }
 }
 

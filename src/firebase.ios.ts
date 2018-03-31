@@ -2268,10 +2268,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 
 firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
-    callback(new DocumentSnapshot(
-      snapshot ? snapshot.documentID : null,
-      snapshot.exists,
-      () => snapshot.exists ? firebase.toJsObject(snapshot.data()) : undefined));
+    callback(new DocumentSnapshot(snapshot.documentID, snapshot.exists, firebase.toJsObject(snapshot.data())));
   });
 
   // There's a bug resulting this function to be undefined..
@@ -2291,7 +2288,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
     const docSnapshots: Array<firestore.DocumentSnapshot> = [];
     for (let i = 0, l = snapshot.documents.count; i < l; i++) {
       const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-      docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+      docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
     }
 
     const snap = new QuerySnapshot();
@@ -2484,7 +2481,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
               const docSnapshots: Array<firestore.DocumentSnapshot> = [];
               for (let i = 0, l = snapshot.documents.count; i < l; i++) {
                 const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-                docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+                docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
               }
               const snap = new QuerySnapshot();
               snap.docSnapshots = docSnapshots;
@@ -2519,7 +2516,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
               reject(error.localizedDescription);
             } else {
               const exists = snapshot.exists;
-              resolve(new DocumentSnapshot(exists ? snapshot.documentID : null, exists, () => exists ? firebase.toJsObject(snapshot.data()) : null));
+              resolve(new DocumentSnapshot(exists ? snapshot.documentID : null, exists, firebase.toJsObject(snapshot.data())));
             }
           });
 
@@ -2541,7 +2538,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0, l = snapshot.documents.count; i < l; i++) {
             const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-            docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+            docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
           }
           const snap = new QuerySnapshot();
           snap.docSnapshots = docSnapshots;

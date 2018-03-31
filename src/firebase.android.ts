@@ -2319,13 +2319,9 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
         onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
-          if (exception !== null) {
-            return;
+          if (exception === null) {
+            callback(new DocumentSnapshot(snapshot ? snapshot.getId() : null, snapshot.exists(), firebase.toJsObject(snapshot.getData())));
           }
-          callback(new DocumentSnapshot(
-              snapshot ? snapshot.getId() : null,
-              snapshot.exists(),
-              () => snapshot.exists() ? firebase.toJsObject(snapshot.getData()) : undefined));
         })
       })
   );
@@ -2343,7 +2339,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0; i < snapshot.size(); i++) {
             const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = snapshot.getDocuments().get(i);
-            docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+            docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
           }
           const snap = new QuerySnapshot();
           snap.docSnapshots = docSnapshots;
@@ -2550,7 +2546,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;
@@ -2600,7 +2596,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
           } else {
             const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
             const exists = result.exists();
-            resolve(new DocumentSnapshot(exists ? result.getId() : null, exists, () => exists ? firebase.toJsObject(result.getData()) : null));
+            resolve(new DocumentSnapshot(exists ? result.getId() : null, exists, firebase.toJsObject(result.getData())));
           }
         }
       });
@@ -2637,7 +2633,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;
