@@ -768,6 +768,13 @@ firebase.admob._buildAdRequest = settings => {
       builder.addTestDevice(deviceId);
     }
   }
+
+  if (settings.keywords !== undefined && settings.keywords.length > 0) {
+    for (let i = 0; i < settings.keywords.length; i++) {
+      builder.addKeyword(settings.keywords[i]);
+    }
+  }
+
   const bundle = new android.os.Bundle();
   bundle.putInt("nativescript", 1);
   const adextras = new com.google.android.gms.ads.mediation.admob.AdMobExtras(bundle);
@@ -1987,15 +1994,11 @@ firebase.downloadFile = arg => {
       const storageReference = storageRef.child(arg.remoteFullPath);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: downloadTaskSnapshot => {
-          resolve();
-        }
+        onSuccess: downloadTaskSnapshot => resolve()
       });
 
       const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-        onFailure: exception => {
-          reject("Download failed. " + exception);
-        }
+        onFailure: exception => reject("Download failed. " + exception)
       });
 
       let localFilePath;

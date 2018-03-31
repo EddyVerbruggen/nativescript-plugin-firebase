@@ -851,12 +851,16 @@ firebase.admob.showBanner = arg => {
         adRequest.testDevices = testDevices;
       }
 
+      if (settings.keywords !== undefined) {
+        adRequest.keywords = settings.keywords;
+      }
+
       firebase.admob.adView.rootViewController = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
       // var statusbarFrame = utils.ios.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
 
       firebase.admob.adView.loadRequest(adRequest);
 
-      // TODO consider listening to delegate features like 'ad loaded'
+      // TODO consider listening to delegate features like 'ad loaded' (Android resolves when the banner is actually showing)
       // adView.delegate = self;
 
       view.addSubview(firebase.admob.adView);
@@ -1967,6 +1971,7 @@ firebase.downloadFile = arg => {
     try {
 
       const onCompletion = (url, error) => {
+        console.log(">>> download complete, error: " + error);
         if (error) {
           reject(error.localizedDescription);
         } else {

@@ -633,6 +633,11 @@ export namespace admob {
        */
       bottom?: number;
     };
+
+    /**
+     * Specify keywords for ad targeting
+     */
+    keywords?: string[];
   }
 
   export interface ShowInterstitialOptions {
@@ -710,7 +715,7 @@ export namespace analytics {
   function logEvent(options: LogEventOptions): Promise<any>;
 
   function setUserId(options: SetUserIdOptions): Promise<any>;
-  
+
   function setUserProperty(options: SetUserPropertyOptions): Promise<any>;
 
   function setScreenName(options: SetScreenNameOptions): Promise<any>;
