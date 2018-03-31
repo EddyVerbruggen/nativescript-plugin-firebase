@@ -1,4 +1,4 @@
-pod 'Firebase', '~> 4.8.0'
+pod 'Firebase', '~> 4.11.0'
 pod 'Firebase/Auth'
 
 # Uncomment if you want to enable the regular Database (instead of Cloud Firestore)

@@ -407,7 +407,11 @@ export class HelloWorldModel extends Observable {
       ]
     }).then(
         () => {
-          console.log("AdMob banner showing");
+          alert({
+            title: "Ad loaded successfully",
+            message: "Should now be showing..",
+            okButtonText: "Hmmkay"
+          });
         },
         errorMessage => {
           alert({
