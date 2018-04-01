@@ -180,11 +180,31 @@ firebase.addAppDelegateMethods = appDelegate => {
     appDelegate.prototype.applicationContinueUserActivityRestorationHandler = (application, userActivity, restorationHandler) => {
       let result = false;
 
-      if (typeof(FIRDynamicLink) !== "undefined") {
-        if (userActivity.webpageURL) {
+      if (userActivity.webpageURL) {
+        // check for an email-link-login flow
+        if (FIRAuth.auth().isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
+          const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
+          if (rememberedEmail !== undefined) {
+            FIRAuth.auth().signInWithEmailLinkCompletion(
+                rememberedEmail,
+                userActivity.webpageURL.absoluteString,
+                (authData: FIRAuthDataResult, error: NSError) => {
+                  if (error) {
+                    console.log(error.localizedDescription);
+                  } else {
+                    // TODO if already logged in with another prover, consider merging them (https://firebase.google.com/docs/auth/ios/email-link-auth)
+                    firebase.notifyAuthStateListeners({
+                      loggedIn: true,
+                      user: authData.user
+                    });
+                  }
+                });
+          }
+          result = true;
+
+        } else {
           result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, (dynamicLink, error) => {
             if (dynamicLink.url !== null) {
-              console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
               if (firebase._dynamicLinkCallback) {
                 firebase._dynamicLinkCallback({
                   url: dynamicLink.url.absoluteString,
@@ -1238,6 +1258,37 @@ firebase.login = arg => {
         } else {
           fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletion);
         }
+
+      } else if (arg.type === firebase.LoginType.EMAIL_LINK) {
+        if (!arg.emailLinkOptions || !arg.emailLinkOptions.email) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.email' argument");
+          return;
+        }
+
+        const firActionCodeSettings = FIRActionCodeSettings.new();
+        // This 'continue URL' is what's emailed to the receiver, and the domain must be whitelisted in the Firebase console
+        firActionCodeSettings.URL = NSURL.URLWithString("https://combidesk.com"); // TODO have this passed in
+        // The sign-in operation has to always be completed in the app.
+        firActionCodeSettings.handleCodeInApp = true;
+        firActionCodeSettings.setIOSBundleID(utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier);
+        firActionCodeSettings.setAndroidPackageNameInstallIfNotAvailableMinimumVersion(
+            "org.nativescript.firebasedemo", // TODO add to options (same for iOS, used in the Android implementation)
+            false, // TODO not sure
+            "12"); // TODO not sure
+        fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
+            arg.emailLinkOptions.email,
+            firActionCodeSettings,
+            (error: NSError) => {
+              if (error) {
+                reject(error.localizedDescription);
+                return;
+              }
+              // The link was successfully sent.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
+              resolve();
+            }
+        );
 
       } else if (arg.type === firebase.LoginType.PHONE) {
         // https://firebase.google.com/docs/auth/ios/phone-auth

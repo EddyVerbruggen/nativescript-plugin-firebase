@@ -776,6 +776,41 @@ export class HelloWorldModel extends Observable {
     });
   }
 
+  public doLoginByEmailLink(): void {
+    prompt(
+        "The email address to send the link to",
+        ""
+    ).then(promptResult => {
+      if (!promptResult.result) {
+        return;
+      }
+
+      console.log(">> using promptResult.text: " + promptResult.text);
+      firebase.login({
+        // note that you need to enable phone login in your firebase instance
+        type: firebase.LoginType.EMAIL_LINK,
+        emailLinkOptions: {
+          email: promptResult.text
+        }
+      }).then(
+          result => {
+            alert({
+              title: "Email link sent",
+              message: "Check your email :)",
+              okButtonText: "Cool"
+            });
+          },
+          errorMessage => {
+            alert({
+              title: "Email link login error",
+              message: errorMessage,
+              okButtonText: "OK, damn shame"
+            });
+          }
+      );
+    });
+  }
+
   public doLoginByFacebook(): void {
     firebase.login({
       // note that you need to enable Facebook auth in your firebase instance

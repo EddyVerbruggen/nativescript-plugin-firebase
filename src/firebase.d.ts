@@ -31,7 +31,12 @@ export enum LoginType {
    * as well as uncommenting the SDK includes in include.gradle (Android) and Podfile (iOS).
    * You can pass in an optional 'googleOptions' object to set a 'hostedDomain'.
    */
-  GOOGLE
+  GOOGLE,
+  /**
+   * This requires you to pass in the 'emailLinkOptions' as well.
+   * Note that 'Firebase Dynamic Links' must be enabled for this login type to work.
+   */
+  EMAIL_LINK
 }
 
 /**
@@ -177,6 +182,10 @@ export interface FirebasePasswordLoginOptions {
   password: string;
 }
 
+export interface FirebaseEmailLinkLoginOptions {
+  email: string;
+}
+
 export interface FirebasePhoneLoginOptions {
   phoneNumber: string;
   /**
@@ -218,6 +227,7 @@ export interface FirebaseCustomLoginOptions {
 export interface LoginOptions {
   type: LoginType;
   passwordOptions?: FirebasePasswordLoginOptions;
+  emailLinkOptions?: FirebaseEmailLinkLoginOptions;
   phoneOptions?: FirebasePhoneLoginOptions;
   googleOptions?: FirebaseGoogleLoginOptions;
   facebookOptions?: FirebaseFacebookLoginOptions;
