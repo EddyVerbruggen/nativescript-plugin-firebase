@@ -105,6 +105,35 @@ export class HelloWorldModel extends Observable {
     );
   }
 
+  public doWebFetchSignInMethodsForEmail(): void {
+    const user = firebaseWebApi.auth().currentUser;
+    if (!user || !user.email) {
+      alert({
+        title: "Can't fetch providers",
+        message: "No user with an emailaddress logged in.",
+        okButtonText: "OK, makes sense.."
+      });
+      return;
+    }
+
+    firebaseWebApi.auth().fetchSignInMethodsForEmail(user.email).then(
+        result => {
+          alert({
+            title: `Sign-in methods for ${user.email}`,
+            message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
+            okButtonText: "Thanks!"
+          });
+        },
+        errorMessage => {
+          alert({
+            title: "Sign-in methods for Email error",
+            message: errorMessage,
+            okButtonText: "OK, pity.."
+          });
+        }
+    );
+  }
+
   public doWebLogout(): void {
     firebaseWebApi.auth().signOut()
         .then(() => {
@@ -661,6 +690,37 @@ export class HelloWorldModel extends Observable {
         });
   }
 
+  public doFetchSignInMethodsForEmail(): void {
+    firebase.getCurrentUser().then(
+        user => {
+          if (!user || !user.email) {
+            alert({
+              title: "Can't fetch providers",
+              message: "No user with emailaddress logged in.",
+              okButtonText: "OK, makes sense.."
+            });
+            return;
+          }
+
+          firebase.fetchSignInMethodsForEmail(user.email).then(
+              result => {
+                alert({
+                  title: `Sign-in methods for ${user.email}`,
+                  message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
+                  okButtonText: "Thanks!"
+                });
+              },
+              errorMessage => {
+                alert({
+                  title: "Fetch Sign-in methods for Email error",
+                  message: errorMessage,
+                  okButtonText: "OK, pity.."
+                });
+              }
+          );
+        });
+  }
+
   public doCreateUser(): void {
     firebase.createUser({
       email: 'eddy3@xservices.nl',
@@ -790,7 +850,8 @@ export class HelloWorldModel extends Observable {
         // note that you need to enable phone login in your firebase instance
         type: firebase.LoginType.EMAIL_LINK,
         emailLinkOptions: {
-          email: promptResult.text
+          email: promptResult.text,
+          url: "https://combidesk.com?foo=bar"
         }
       }).then(
           result => {

@@ -182,23 +182,49 @@ firebase.addAppDelegateMethods = appDelegate => {
 
       if (userActivity.webpageURL) {
         // check for an email-link-login flow
-        if (FIRAuth.auth().isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
+        const fAuth = FIRAuth.auth();
+        if (fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
           const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
           if (rememberedEmail !== undefined) {
-            FIRAuth.auth().signInWithEmailLinkCompletion(
-                rememberedEmail,
-                userActivity.webpageURL.absoluteString,
-                (authData: FIRAuthDataResult, error: NSError) => {
-                  if (error) {
-                    console.log(error.localizedDescription);
-                  } else {
-                    // TODO if already logged in with another prover, consider merging them (https://firebase.google.com/docs/auth/ios/email-link-auth)
-                    firebase.notifyAuthStateListeners({
-                      loggedIn: true,
-                      user: authData.user
-                    });
-                  }
-                });
+
+            if (fAuth.currentUser) {
+              const onCompletionLink = (result: FIRAuthDataResult, error: NSError) => {
+                if (error) {
+                  console.log("linkAndRetrieveDataWithCredentialCompletion error: " + error.localizedDescription);
+                  // ignore, and complete the email link sign in flow
+                  fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+                    if (error) {
+                      console.log("signInWithEmailLinkCompletion error: " + error.localizedDescription);
+                    } else {
+                      firebase.notifyAuthStateListeners({
+                        loggedIn: true,
+                        user: result.user
+                      });
+                    }
+                  });
+                } else {
+                  // linking successful, so the user can now log in with either their email address, or however he logged in previously
+                  firebase.notifyAuthStateListeners({
+                    loggedIn: true,
+                    user: result.user
+                  });
+                }
+              };
+              const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailLink(rememberedEmail, userActivity.webpageURL.absoluteString);
+              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+
+            } else {
+              fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+                if (error) {
+                  console.log(error.localizedDescription);
+                } else {
+                  firebase.notifyAuthStateListeners({
+                    loggedIn: true,
+                    user: authData.user
+                  });
+                }
+              });
+            }
           }
           result = true;
 
@@ -237,7 +263,7 @@ firebase.fetchProvidersForEmail = email => {
         return;
       }
 
-      FIRAuth.auth().fetchProvidersForEmailCompletion(email, (providerNSArray, error) /* FIRProviderQueryCallback */ => {
+      FIRAuth.auth().fetchProvidersForEmailCompletion(email, (providerNSArray, error) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -246,6 +272,28 @@ firebase.fetchProvidersForEmail = email => {
       });
     } catch (ex) {
       console.log("Error in firebase.fetchProvidersForEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.fetchSignInMethodsForEmail = email => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(email) !== "string") {
+        reject("A parameter representing an email address is required.");
+        return;
+      }
+
+      FIRAuth.auth().fetchSignInMethodsForEmailCompletion(email, (methodsNSArray, error) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(firebase.toJsObject(methodsNSArray));
+        }
+      });
+    } catch (ex) {
+      console.log("Error in firebase.fetchSignInMethodsForEmail: " + ex);
       reject(ex);
     }
   });
@@ -1265,14 +1313,19 @@ firebase.login = arg => {
           return;
         }
 
+        if (!arg.emailLinkOptions.url) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.url' argument");
+          return;
+        }
+
         const firActionCodeSettings = FIRActionCodeSettings.new();
         // This 'continue URL' is what's emailed to the receiver, and the domain must be whitelisted in the Firebase console
-        firActionCodeSettings.URL = NSURL.URLWithString("https://combidesk.com"); // TODO have this passed in
+        firActionCodeSettings.URL = NSURL.URLWithString(arg.emailLinkOptions.url);
         // The sign-in operation has to always be completed in the app.
         firActionCodeSettings.handleCodeInApp = true;
-        firActionCodeSettings.setIOSBundleID(utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier);
+        firActionCodeSettings.setIOSBundleID(arg.emailLinkOptions.iosBundleId || NSBundle.mainBundle.bundleIdentifier);
         firActionCodeSettings.setAndroidPackageNameInstallIfNotAvailableMinimumVersion(
-            "org.nativescript.firebasedemo", // TODO add to options (same for iOS, used in the Android implementation)
+            arg.emailLinkOptions.androidPackageId || NSBundle.mainBundle.bundleIdentifier,
             false, // TODO not sure
             "12"); // TODO not sure
         fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(

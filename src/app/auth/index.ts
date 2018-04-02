@@ -76,5 +76,9 @@ export module auth {
     public fetchProvidersForEmail(email: string): Promise<any> {
       return firebase.fetchProvidersForEmail(email);
     }
+
+    public fetchSignInMethodsForEmail(email: string): Promise<any> {
+      return firebase.fetchSignInMethodsForEmail(email);
+    }
   }
 }

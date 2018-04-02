@@ -184,6 +184,9 @@ export interface FirebasePasswordLoginOptions {
 
 export interface FirebaseEmailLinkLoginOptions {
   email: string;
+  url: string;
+  iosBundleId?: string;
+  androidPackageId?: string;
 }
 
 export interface FirebasePhoneLoginOptions {
@@ -886,6 +889,8 @@ export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
 export function logout(): Promise<any>;
 
 export function fetchProvidersForEmail(email: string): Promise<Array<string>>;
+
+export function fetchSignInMethodsForEmail(email: string): Promise<Array<string>>;
 
 export function sendEmailVerification(): Promise<any>;
 

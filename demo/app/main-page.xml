@@ -23,16 +23,18 @@
                         class="tab-content">
               <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doWebInit }}" class="button button-positive"/>
 
-              <Label row="3" colSpan="2" text="Authentication" class="subtitle"/>
+              <Label row="1" colSpan="2" text="Authentication" class="subtitle"/>
 
-              <Button row="4" col="0" text="anonymous login" tap="{{ doWebLoginAnonymously }}" class="button"/>
-              <Button row="4" col="1" text="fetch providers" tap="{{ doWebFetchProvidersForEmail }}" class="button"/>
+              <Button row="2" col="0" text="anonymous login" tap="{{ doWebLoginAnonymously }}" class="button"/>
+              <Button row="2" col="1" text="passwd login" tap="{{ doWebLoginByPassword }}" class="button"/>
 
-              <Button row="5" col="0" text="passwd login" tap="{{ doWebLoginByPassword }}" class="button"/>
-              <Button row="5" col="1" text="create pwd user" tap="{{ doWebCreateUser }}" class="button"/>
+              <Button row="3" col="0" text="providers for email" tap="{{ doWebFetchProvidersForEmail }}" class="button"/>
+              <Button row="3" col="1" text="email sign-in methods" tap="{{ doWebFetchSignInMethodsForEmail }}" class="button"/>
 
-              <Button row="6" col="0" text="get current user" tap="{{ doWebGetCurrentUser }}" class="button"/>
-              <Button row="6" col="1" text="logout" tap="{{ doWebLogout }}" class="button"/>
+              <Button row="4" col="0" text="create pwd user" tap="{{ doWebCreateUser }}" class="button"/>
+              <Button row="4" col="1" text="get current user" tap="{{ doWebGetCurrentUser }}" class="button"/>
+
+              <Button row="5" colSpan="2" text="logout" tap="{{ doWebLogout }}" class="button"/>
 
               <Label row="7" col="0" text="User email/phone:" class="message"/>
               <Label row="7" col="1" text="{{ userEmailOrPhone }}" class="message" textWrap="true"/>
@@ -82,19 +84,19 @@
               <Label row="3" colSpan="2" text="Authentication" class="subtitle"/>
 
               <Button row="4" col="0" text="anonymous login" tap="{{ doLoginAnonymously }}" class="button"/>
-              <Button row="4" col="1" text="fetch providers" tap="{{ doFetchProvidersForEmail }}" class="button"/>
+              <Button row="4" col="1" text="passwd login" tap="{{ doLoginByPassword }}" class="button"/>
 
-              <Button row="5" col="0" text="passwd login" tap="{{ doLoginByPassword }}" class="button"/>
-              <Button row="5" col="1" text="phone login" tap="{{ doLoginByPhone }}" class="button"/>
+              <Button row="5" col="0" text="create pwd user" tap="{{ doCreateUser }}" class="button"/>
+              <Button row="5" col="1" text="reset pwd" tap="{{ doResetPassword }}" class="button"/>
 
-              <Button row="6" col="0" text="create pwd user" tap="{{ doCreateUser }}" class="button"/>
-              <Button row="6" col="1" text="reset pwd" tap="{{ doResetPassword }}" class="button"/>
+              <Button row="6" col="0" text="Google login" tap="{{ doLoginByGoogle }}" class="button"/>
+              <Button row="6" col="1" text="Facebook login" tap="{{ doLoginByFacebook }}" class="button"/>
 
-              <Button row="7" col="0" text="Google login" tap="{{ doLoginByGoogle }}" class="button"/>
-              <Button row="7" col="1" text="Facebook login" tap="{{ doLoginByFacebook }}" class="button"/>
+              <Button row="7" col="0" text="phone login" tap="{{ doLoginByPhone }}" class="button"/>
+              <Button row="7" col="1" text="update profile" tap="{{ doUpdateProfile }}" class="button"/>
 
-              <Button row="8" col="0" text="get current user" tap="{{ doGetCurrentUser }}" class="button"/>
-              <Button row="8" col="1" text="update profile" tap="{{ doUpdateProfile }}" class="button"/>
+              <Button row="8" col="0" text="providers for email" tap="{{ doFetchProvidersForEmail }}" class="button"/>
+              <Button row="8" col="1" text="email sign-in methods" tap="{{ doFetchSignInMethodsForEmail }}" class="button"/>
 
               <Button row="9" col="0" text="re-auth passwd" tap="{{ doReauthenticatePwdUser }}" class="button"/>
               <Button row="9" col="1" text="re-auth Facebook" tap="{{ doReauthenticateFacebookUser }}" class="button"/>
@@ -108,7 +110,8 @@
               <Button row="12" col="0" text="email login link" tap="{{ doLoginByEmailLink }}" class="button"/>
               <Button row="12" col="1" text="send email conf" tap="{{ doSendEmailVerification }}" class="button"/>
 
-              <Button row="13" colSpan="2" text="logout" tap="{{ doLogout }}" class="button"/>
+              <Button row="13" col="0" text="get current user" tap="{{ doGetCurrentUser }}" class="button"/>
+              <Button row="13" col="1" text="logout" tap="{{ doLogout }}" class="button"/>
 
               <Label row="14" colSpan="2" text="Methods on path /users" class="subtitle"/>
 

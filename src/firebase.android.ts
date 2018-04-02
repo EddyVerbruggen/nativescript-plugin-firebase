@@ -383,9 +383,35 @@ firebase.fetchProvidersForEmail = email => {
       });
 
       com.google.firebase.auth.FirebaseAuth.getInstance().fetchProvidersForEmail(email).addOnCompleteListener(onCompleteListener);
-
     } catch (ex) {
       console.log("Error in firebase.fetchProvidersForEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.fetchSignInMethodsForEmail = email => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(email) !== "string") {
+        reject("A parameter representing an email address is required.");
+        return;
+      }
+
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task /* <SignInMethodQueryResult> */ => {
+          if (!task.isSuccessful()) {
+            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            const signInMethods = task.getResult().getSignInMethods();
+            resolve(firebase.toJsObject(signInMethods));
+          }
+        }
+      });
+
+      com.google.firebase.auth.FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(onCompleteListener);
+    } catch (ex) {
+      console.log("Error in firebase.fetchSignInMethodsForEmail: " + ex);
       reject(ex);
     }
   });
