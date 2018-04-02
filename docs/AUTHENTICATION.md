@@ -106,7 +106,6 @@ Once the user is logged in you can retrieve the currently logged in user:
 ### Fetch providers for email
 Want to know which auth providers are associated with an emailaddress?
 
-
 <details>
  <summary>Native API</summary>
 
@@ -131,6 +130,37 @@ Want to know which auth providers are associated with an emailaddress?
   firebaseWebApi.auth().fetchProvidersForEmail(user.email)
       .then(result => console.log(`Providers for ${user.email}: ${JSON.stringify(result)}`))
       .catch(error => console.log("Fetch Providers for Email error: " + error));
+```
+</details>
+
+### Fetch sign-in methods for email
+Both email-password login and email-link login are `password` providers, so by just using `fetchProvidersForEmail`
+you won't be able to differentiate between those login methods. That's where `fetchSignInMethodsForEmail` comes in.
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  const emailAddress = "someone@domain.com";
+  firebase.fetchSignInMethodsForEmail(emailAddress).then((methods: Array<string>) => {
+    console.log(`Sign-in methods for ${emailAddress}: ${JSON.stringify(methods)}`);
+  });
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  const user = firebaseWebApi.auth().currentUser;
+  if (!user || !user.email) {
+    console.log("Can't fetch sign-in methods; no user with an emailaddress logged in.");
+    return;
+  }
+
+  firebaseWebApi.auth().fetchSignInMethodsForEmail(user.email)
+      .then(result => console.log(`Sign-in methods for ${user.email}: ${JSON.stringify(result)}`))
+      .catch(error => console.log("Fetch Sign-in methods for Email error: " + error));
 ```
 </details>
 
