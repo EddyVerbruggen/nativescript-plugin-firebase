@@ -182,11 +182,20 @@ export interface FirebasePasswordLoginOptions {
   password: string;
 }
 
-export interface FirebaseEmailLinkLoginOptions {
-  email: string;
+export interface FirebaseEmailLinkActionCodeSettings {
   url: string;
-  iosBundleId?: string;
-  androidPackageId?: string;
+  iOS?: {
+    bundleId: string;
+  };
+  android?: {
+    packageName: string;
+    installApp?: false;
+    minimumVersion?: string;
+  }
+}
+
+export interface FirebaseEmailLinkLoginOptions extends FirebaseEmailLinkActionCodeSettings {
+  email: string;
 }
 
 export interface FirebasePhoneLoginOptions {

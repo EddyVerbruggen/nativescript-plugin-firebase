@@ -190,15 +190,12 @@ firebase.addAppDelegateMethods = appDelegate => {
             if (fAuth.currentUser) {
               const onCompletionLink = (result: FIRAuthDataResult, error: NSError) => {
                 if (error) {
-                  console.log("linkAndRetrieveDataWithCredentialCompletion error: " + error.localizedDescription);
                   // ignore, and complete the email link sign in flow
                   fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
-                    if (error) {
-                      console.log("signInWithEmailLinkCompletion error: " + error.localizedDescription);
-                    } else {
+                    if (!error) {
                       firebase.notifyAuthStateListeners({
                         loggedIn: true,
-                        user: result.user
+                        user: authData.user
                       });
                     }
                   });
@@ -1323,11 +1320,11 @@ firebase.login = arg => {
         firActionCodeSettings.URL = NSURL.URLWithString(arg.emailLinkOptions.url);
         // The sign-in operation has to always be completed in the app.
         firActionCodeSettings.handleCodeInApp = true;
-        firActionCodeSettings.setIOSBundleID(arg.emailLinkOptions.iosBundleId || NSBundle.mainBundle.bundleIdentifier);
+        firActionCodeSettings.setIOSBundleID(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : NSBundle.mainBundle.bundleIdentifier);
         firActionCodeSettings.setAndroidPackageNameInstallIfNotAvailableMinimumVersion(
-            arg.emailLinkOptions.androidPackageId || NSBundle.mainBundle.bundleIdentifier,
-            false, // TODO not sure
-            "12"); // TODO not sure
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
         fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
             arg.emailLinkOptions.email,
             firActionCodeSettings,

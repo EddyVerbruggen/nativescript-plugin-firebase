@@ -25,7 +25,7 @@ const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "u
 const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
 
 (() => {
-  // note that this means we need to require the plugin before the app is loaded
+  // note that this means we need to 'require()' the plugin before the app is loaded
   appModule.on(appModule.launchEvent, args => {
     if (messagingEnabled()) {
       org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
@@ -63,30 +63,58 @@ const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) 
       }
 
     } else if (isLaunchIntent && dynamicLinksEnabled()) {
-      const getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
-        onComplete: task => {
-          if (task.isSuccessful() && task.getResult() !== null) {
-            const result = task.getResult();
-            if (firebase._dynamicLinkCallback === null) {
-              firebase._cachedDynamicLink = {
-                url: result.getLink().toString(),
-                matchConfidence: 1,
-                minimumAppVersion: result.getMinimumAppVersion()
-              };
-            } else {
-              setTimeout(() => {
-                firebase._dynamicLinkCallback({
+      // let's see if this is part of an email-link authentication flow
+      const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      const emailLink = "" + intent.getData();
+      if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
+        const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
+        if (rememberedEmail !== undefined) {
+          const emailLinkOnCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+            onComplete: task => {
+              if (task.isSuccessful()) {
+                const authResult = task.getResult();
+                firebase.notifyAuthStateListeners({
+                  loggedIn: true,
+                  user: authResult.getUser()
+                });
+              }
+            }
+          });
+          const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+          if (user) {
+            const authCredential = com.google.firebase.auth.EmailAuthProvider.getCredentialWithLink(rememberedEmail, emailLink);
+            user.linkWithCredential(authCredential).addOnCompleteListener(emailLinkOnCompleteListener);
+          } else {
+            firebaseAuth.signInWithEmailLink(rememberedEmail, emailLink).addOnCompleteListener(emailLinkOnCompleteListener);
+          }
+        }
+
+      } else {
+        const getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: task => {
+            if (task.isSuccessful() && task.getResult() !== null) {
+              const result = task.getResult();
+              if (firebase._dynamicLinkCallback === null) {
+                firebase._cachedDynamicLink = {
                   url: result.getLink().toString(),
                   matchConfidence: 1,
                   minimumAppVersion: result.getMinimumAppVersion()
+                };
+              } else {
+                setTimeout(() => {
+                  firebase._dynamicLinkCallback({
+                    url: result.getLink().toString(),
+                    matchConfidence: 1,
+                    minimumAppVersion: result.getMinimumAppVersion()
+                  });
                 });
-              });
+              }
             }
           }
-        }
-      });
-      const firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
-      firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
+        });
+        const firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
+        firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
+      }
     }
   });
 })();
@@ -1103,6 +1131,43 @@ firebase.login = arg => {
         } else {
           firebaseAuth.signInWithEmailAndPassword(arg.passwordOptions.email, arg.passwordOptions.password).addOnCompleteListener(onCompleteListener);
         }
+
+      } else if (arg.type === firebase.LoginType.EMAIL_LINK) {
+        if (!arg.emailLinkOptions || !arg.emailLinkOptions.email) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.email' argument");
+          return;
+        }
+
+        if (!arg.emailLinkOptions.url) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.url' argument");
+          return;
+        }
+
+        const actionCodeSettings = com.google.firebase.auth.ActionCodeSettings.newBuilder()
+            // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
+            .setUrl(arg.emailLinkOptions.url)
+            .setHandleCodeInApp(true)
+            .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : appModule.android.context.getPackageName())
+            .setAndroidPackageName(
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : appModule.android.context.getPackageName(),
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1")
+            .build();
+
+        const onEmailLinkCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: task => {
+            if (!task.isSuccessful()) {
+              reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            } else {
+              // The link was successfully sent.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
+              resolve();
+            }
+          }
+        });
+
+        firebaseAuth.sendSignInLinkToEmail(arg.emailLinkOptions.email, actionCodeSettings).addOnCompleteListener(onEmailLinkCompleteListener);
 
       } else if (arg.type === firebase.LoginType.PHONE) {
         // https://firebase.google.com/docs/auth/android/phone-auth

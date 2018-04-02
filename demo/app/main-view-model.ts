@@ -64,7 +64,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebLoginByPassword(): void {
     this.ensureWebOnAuthChangedHandler();
-    firebaseWebApi.auth().signInWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+    firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
         .then(() => console.log("User logged in"))
         .catch(err => {
               alert({
@@ -154,7 +154,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doWebCreateUser(): void {
-    firebaseWebApi.auth().createUserWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+    firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
         .then(result => {
           alert({
             title: "User created",
@@ -723,7 +723,7 @@ export class HelloWorldModel extends Observable {
 
   public doCreateUser(): void {
     firebase.createUser({
-      email: 'eddy3@xservices.nl',
+      email: 'eddyverbruggen@gmail.com',
       password: 'firebase'
     }).then(
         result => {
@@ -767,7 +767,7 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.PASSWORD,
       passwordOptions: {
         // note that these credentials have been pre-configured in our demo firebase instance
-        email: 'eddy@x-services.nl',
+        email: 'eddyverbruggen@gmail.com',
         password: 'firebase'
       }
     }).then(
@@ -918,7 +918,7 @@ export class HelloWorldModel extends Observable {
 
   public doResetPassword(): void {
     firebase.resetPassword({
-      email: 'eddy@x-services.nl'
+      email: 'eddyverbruggen@gmail.com'
     }).then(
         result => {
           alert({
@@ -1359,7 +1359,7 @@ export class HelloWorldModel extends Observable {
     firebase.reauthenticate({
       type: firebase.LoginType.PASSWORD,
       passwordOptions: {
-        email: 'eddy@x-services.nl',
+        email: 'eddyverbruggen@gmail.com',
         password: 'firebase'
       }
     }).then(
