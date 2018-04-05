@@ -168,7 +168,7 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 
 > Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
 
-### Notfications popup example
+### Notfication-popup example
 
 ```bash
 curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiUkNY3nrti4st4WOUs_w1A0Rttcx31U90YGv-p3U4Oql-vh-FzZzWUUPEwl47uvwhI4tB5yz4wwzrJA2fVqLEKZpDU42AQppYnU2-dsURqkyc9sKcjay2egWbfyNK2b-G2JQCqrLVA" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"notification\":{\"title\": \"My title\", \"text\": \"My text\", \"badge\": \"1\", \"sound\": \"default\"}, \"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"to\": \"exbKSYOGbto:APA91bHqFX9EA6SxY7NkVKV3ajea9xYn9_2dPz2jS7DGuymoE3fMDhPZLVbTXxbQ5_tS6nxmjdmfAEACM4_L-egNneXInuvg8JfRjrCVICTa8vnccTBq8cAnIx6cME1FvER9WIDC3dC4\"}"
@@ -179,7 +179,7 @@ This results in a payload of:
 - App in the foreground: `{"foo":"bar", "gcm.message_id":"0:1522952720644653%3194ccac3194ccac", "foreground":true, "title":"My title", "body":"My text"}`
 - App in the background: `{"foo":"bar", "gcm.message_id":"0:1522952737879515%3194ccac3194ccac", "title":"My title", "body":"My text", "foreground":false}`
 
-### (iOS) background notification
+### (iOS) background notification example
 
 > Take note of `content_available:true` here
 
