@@ -164,6 +164,8 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 * SERVER_KEY: see the image below (make sure to use the 'Legacy' server key).
 * DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`.
 
+> Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
+
 ### Notfications popup example
 
 ```bash
@@ -172,8 +174,8 @@ curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiU
 
 This results in a payload of:
 
-- App in the foreground: `{"foo":"bar","gcm.message_id":"0:1522952720644653%3194ccac3194ccac","foreground":true,"title":"My title","body":"My text"}`
-- App in the background: `{"foo":"bar","gcm.message_id":"0:1522952737879515%3194ccac3194ccac","title":"My title","body":"My text","foreground":false}`
+- App in the foreground: `{"foo":"bar", "gcm.message_id":"0:1522952720644653%3194ccac3194ccac", "foreground":true, "title":"My title", "body":"My text"}`
+- App in the background: `{"foo":"bar", "gcm.message_id":"0:1522952737879515%3194ccac3194ccac", "title":"My title", "body":"My text", "foreground":false}`
 
 ### (iOS) background notification
 
@@ -184,11 +186,10 @@ curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiU
 ```
 
 This results in a payload of:
-- App in the foreground: `{"gcm.message_id":"0:1522952782882471%3194ccac3194ccac","foo":"bar","foreground":true}`
-- App in the background: `{"gcm.message_id":"0:1522952757954843%3194ccac3194ccac","foo":"bar","foreground":false}`
+- App in the foreground: `{"gcm.message_id":"0:1522952782882471%3194ccac3194ccac", "foo":"bar", "foreground":true}`
+- App in the background: `{"gcm.message_id":"0:1522952757954843%3194ccac3194ccac", "foo":"bar", "foreground":false}`
 
 
-Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
 
