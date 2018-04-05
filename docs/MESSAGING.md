@@ -164,6 +164,8 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 * SERVER_KEY: see the image below (make sure to use the 'Legacy' server key).
 * DEVICE_TOKEN: the one you got in `addOnPushTokenReceivedCallback` or `init`'s `onPushTokenReceivedCallback`.
 
+<img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
+
 > Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
 
 ### Notfications popup example
@@ -189,11 +191,7 @@ This results in a payload of:
 - App in the foreground: `{"gcm.message_id":"0:1522952782882471%3194ccac3194ccac", "foo":"bar", "foreground":true}`
 - App in the background: `{"gcm.message_id":"0:1522952757954843%3194ccac3194ccac", "foo":"bar", "foreground":false}`
 
-
-
-<img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
-
-## What if iOS doesn't receive notifications in the background?
+## What if iOS doesn't show/receive notifications in the background?
 Make sure you [`require` the plugin in `app.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
 *before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts` - not even in a timeout; move it out of `app.ts` entirely!).
 
