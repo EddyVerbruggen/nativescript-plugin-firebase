@@ -25,7 +25,7 @@ const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "u
 const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
 
 (() => {
-  // note that this means we need to require the plugin before the app is loaded
+  // note that this means we need to 'require()' the plugin before the app is loaded
   appModule.on(appModule.launchEvent, args => {
     if (messagingEnabled()) {
       org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
@@ -63,30 +63,58 @@ const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) 
       }
 
     } else if (isLaunchIntent && dynamicLinksEnabled()) {
-      const getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
-        onComplete: task => {
-          if (task.isSuccessful() && task.getResult() !== null) {
-            const result = task.getResult();
-            if (firebase._dynamicLinkCallback === null) {
-              firebase._cachedDynamicLink = {
-                url: result.getLink().toString(),
-                matchConfidence: 1,
-                minimumAppVersion: result.getMinimumAppVersion()
-              };
-            } else {
-              setTimeout(() => {
-                firebase._dynamicLinkCallback({
+      // let's see if this is part of an email-link authentication flow
+      const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      const emailLink = "" + intent.getData();
+      if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
+        const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
+        if (rememberedEmail !== undefined) {
+          const emailLinkOnCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+            onComplete: task => {
+              if (task.isSuccessful()) {
+                const authResult = task.getResult();
+                firebase.notifyAuthStateListeners({
+                  loggedIn: true,
+                  user: authResult.getUser()
+                });
+              }
+            }
+          });
+          const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+          if (user) {
+            const authCredential = com.google.firebase.auth.EmailAuthProvider.getCredentialWithLink(rememberedEmail, emailLink);
+            user.linkWithCredential(authCredential).addOnCompleteListener(emailLinkOnCompleteListener);
+          } else {
+            firebaseAuth.signInWithEmailLink(rememberedEmail, emailLink).addOnCompleteListener(emailLinkOnCompleteListener);
+          }
+        }
+
+      } else {
+        const getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: task => {
+            if (task.isSuccessful() && task.getResult() !== null) {
+              const result = task.getResult();
+              if (firebase._dynamicLinkCallback === null) {
+                firebase._cachedDynamicLink = {
                   url: result.getLink().toString(),
                   matchConfidence: 1,
                   minimumAppVersion: result.getMinimumAppVersion()
+                };
+              } else {
+                setTimeout(() => {
+                  firebase._dynamicLinkCallback({
+                    url: result.getLink().toString(),
+                    matchConfidence: 1,
+                    minimumAppVersion: result.getMinimumAppVersion()
+                  });
                 });
-              });
+              }
             }
           }
-        }
-      });
-      const firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
-      firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
+        });
+        const firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
+        firebaseDynamicLinks.getDynamicLink(intent).addOnCompleteListener(getDynamicLinksCallback);
+      }
     }
   });
 })();
@@ -167,7 +195,7 @@ firebase.toValue = val => {
   return returnVal;
 };
 
-// no longer using Gson as fi Firestore's DocumentReference isn't serialized
+// no longer using Gson as fi Firestore's DocumentReference isn't serialized (also removed it from the dependencies)
 firebase.toJsObject = javaObj => {
   // if (gson() !== null) {
   //   try {
@@ -383,9 +411,35 @@ firebase.fetchProvidersForEmail = email => {
       });
 
       com.google.firebase.auth.FirebaseAuth.getInstance().fetchProvidersForEmail(email).addOnCompleteListener(onCompleteListener);
-
     } catch (ex) {
       console.log("Error in firebase.fetchProvidersForEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.fetchSignInMethodsForEmail = email => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(email) !== "string") {
+        reject("A parameter representing an email address is required.");
+        return;
+      }
+
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task /* <SignInMethodQueryResult> */ => {
+          if (!task.isSuccessful()) {
+            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            const signInMethods = task.getResult().getSignInMethods();
+            resolve(firebase.toJsObject(signInMethods));
+          }
+        }
+      });
+
+      com.google.firebase.auth.FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnCompleteListener(onCompleteListener);
+    } catch (ex) {
+      console.log("Error in firebase.fetchSignInMethodsForEmail: " + ex);
       reject(ex);
     }
   });
@@ -626,14 +680,21 @@ firebase.admob.showBanner = arg => {
       firebase.admob.adView.setAdUnitId(settings.androidBannerId);
       const bannerType = firebase.admob._getBannerType(settings.size);
       firebase.admob.adView.setAdSize(bannerType);
+
+      // need these to support showing a banner more than once
+      this.resolve = resolve;
+      this.reject = reject;
+
       const BannerAdListener = com.google.android.gms.ads.AdListener.extend({
+        resolve: null,
+        reject: null,
         onAdLoaded: () => {
           // firebase.admob.interstitialView.show();
-          resolve();
+          this.resolve();
         },
         onAdFailedToLoad: errorCode => {
           // console.log('ad error: ' + errorCode);
-          reject(errorCode);
+          this.reject(errorCode);
         }
       });
       firebase.admob.adView.setAdListener(new BannerAdListener());
@@ -761,6 +822,13 @@ firebase.admob._buildAdRequest = settings => {
       builder.addTestDevice(deviceId);
     }
   }
+
+  if (settings.keywords !== undefined && settings.keywords.length > 0) {
+    for (let i = 0; i < settings.keywords.length; i++) {
+      builder.addKeyword(settings.keywords[i]);
+    }
+  }
+
   const bundle = new android.os.Bundle();
   bundle.putInt("nativescript", 1);
   const adextras = new com.google.android.gms.ads.mediation.admob.AdMobExtras(bundle);
@@ -1064,6 +1132,43 @@ firebase.login = arg => {
           firebaseAuth.signInWithEmailAndPassword(arg.passwordOptions.email, arg.passwordOptions.password).addOnCompleteListener(onCompleteListener);
         }
 
+      } else if (arg.type === firebase.LoginType.EMAIL_LINK) {
+        if (!arg.emailLinkOptions || !arg.emailLinkOptions.email) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.email' argument");
+          return;
+        }
+
+        if (!arg.emailLinkOptions.url) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.url' argument");
+          return;
+        }
+
+        const actionCodeSettings = com.google.firebase.auth.ActionCodeSettings.newBuilder()
+            // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
+            .setUrl(arg.emailLinkOptions.url)
+            .setHandleCodeInApp(true)
+            .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : appModule.android.context.getPackageName())
+            .setAndroidPackageName(
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : appModule.android.context.getPackageName(),
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1")
+            .build();
+
+        const onEmailLinkCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          onComplete: task => {
+            if (!task.isSuccessful()) {
+              reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            } else {
+              // The link was successfully sent.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
+              resolve();
+            }
+          }
+        });
+
+        firebaseAuth.sendSignInLinkToEmail(arg.emailLinkOptions.email, actionCodeSettings).addOnCompleteListener(onEmailLinkCompleteListener);
+
       } else if (arg.type === firebase.LoginType.PHONE) {
         // https://firebase.google.com/docs/auth/android/phone-auth
         if (!arg.phoneOptions || !arg.phoneOptions.phoneNumber) {
@@ -1078,6 +1183,10 @@ firebase.login = arg => {
           resolve(toLoginResult(user));
           return;
         }
+
+        // need these to support using phone auth more than once
+        this.resolve = resolve;
+        this.reject = reject;
 
         const OnVerificationStateChangedCallbacks = com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks.extend({
           onVerificationCompleted: phoneAuthCredential => {
@@ -1095,9 +1204,9 @@ firebase.login = arg => {
             firebase._verifyPhoneNumberInProgress = false;
             const errorMessage = firebaseException.getMessage();
             if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
-              reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
+              this.reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
             } else {
-              reject(errorMessage);
+              this.reject(errorMessage);
             }
           },
           onCodeSent: (verificationId, forceResendingToken) => {
@@ -1976,15 +2085,11 @@ firebase.downloadFile = arg => {
       const storageReference = storageRef.child(arg.remoteFullPath);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: downloadTaskSnapshot => {
-          resolve();
-        }
+        onSuccess: downloadTaskSnapshot => resolve()
       });
 
       const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-        onFailure: exception => {
-          reject("Download failed. " + exception);
-        }
+        onFailure: exception => reject("Download failed. " + exception)
       });
 
       let localFilePath;
@@ -2308,13 +2413,9 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
         onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
-          if (exception !== null) {
-            return;
+          if (exception === null) {
+            callback(new DocumentSnapshot(snapshot ? snapshot.getId() : null, snapshot.exists(), firebase.toJsObject(snapshot.getData())));
           }
-          callback(new DocumentSnapshot(
-              snapshot ? snapshot.getId() : null,
-              snapshot.exists(),
-              snapshot ? () => firebase.toJsObject(snapshot.getData()) : null));
         })
       })
   );
@@ -2332,7 +2433,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0; i < snapshot.size(); i++) {
             const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = snapshot.getDocuments().get(i);
-            docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+            docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
           }
           const snap = new QuerySnapshot();
           snap.docSnapshots = docSnapshots;
@@ -2539,7 +2640,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;
@@ -2589,7 +2690,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
           } else {
             const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
             const exists = result.exists();
-            resolve(new DocumentSnapshot(exists ? result.getId() : null, exists, () => exists ? firebase.toJsObject(result.getData()) : null));
+            resolve(new DocumentSnapshot(exists ? result.getId() : null, exists, firebase.toJsObject(result.getData())));
           }
         }
       });
@@ -2626,7 +2727,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, () => firebase.toJsObject(documentSnapshot.getData())));
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;

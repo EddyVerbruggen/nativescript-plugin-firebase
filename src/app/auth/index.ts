@@ -1,5 +1,5 @@
 import * as firebase from "../../firebase";
-import { LoginType, User } from "../../firebase";
+import { FirebaseEmailLinkActionCodeSettings, LoginType, User } from "../../firebase";
 
 export module auth {
   export class Auth {
@@ -49,6 +49,27 @@ export module auth {
       });
     }
 
+    public sendSignInLinkToEmail(email: string, actionCodeSettings: FirebaseEmailLinkActionCodeSettings): Promise<any> {
+      return new Promise((resolve, reject) => {
+        firebase.login({
+          type: LoginType.EMAIL_LINK,
+          emailLinkOptions: {
+            email: email,
+            url: actionCodeSettings.url,
+          }
+        }).then((user: User) => {
+          this.currentUser = user;
+          this.authStateChangedHandler && this.authStateChangedHandler(user);
+          resolve();
+        }, (err => {
+          reject({
+            // code: "",
+            message: err
+          });
+        }));
+      });
+    }
+
     public createUserWithEmailAndPassword(email: string, password: string): Promise<any> {
       return firebase.createUser({
         email: email,
@@ -75,6 +96,10 @@ export module auth {
 
     public fetchProvidersForEmail(email: string): Promise<any> {
       return firebase.fetchProvidersForEmail(email);
+    }
+
+    public fetchSignInMethodsForEmail(email: string): Promise<any> {
+      return firebase.fetchSignInMethodsForEmail(email);
     }
   }
 }

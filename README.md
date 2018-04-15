@@ -104,7 +104,7 @@ firebase.init({
 
 #### TypeScript
 ```js
-const firebase = require("nativescript-plugin-firebase");
+import firebase = require("nativescript-plugin-firebase");
 
 firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
@@ -117,6 +117,31 @@ firebase.init({
     console.log(`firebase.init error: ${error}`);
   }
 );
+```
+
+#### Angular
+Because of the specifics of the angular bootstrap it is best to initalize firebase once the angular application is running. For example your main compoment's `ngOnInit` method:
+```js
+import firebase = require("nativescript-plugin-firebase");
+
+@Component({
+    // ...
+})
+export class AppComponent implements OnInit {
+  ngOnInit() {
+    firebase.init({
+      // Optionally pass in properties for database, authentication and cloud messaging,
+      // see their respective docs.
+    }).then(
+      instance => {
+        console.log("firebase.init done");
+      },
+      error => {
+        console.log(`firebase.init error: ${error}`);
+      }
+    );
+  }
+}
 ```
 
 ## Known issues on iOS

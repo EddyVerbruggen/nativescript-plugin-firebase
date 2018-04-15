@@ -180,11 +180,54 @@ firebase.addAppDelegateMethods = appDelegate => {
     appDelegate.prototype.applicationContinueUserActivityRestorationHandler = (application, userActivity, restorationHandler) => {
       let result = false;
 
-      if (typeof(FIRDynamicLink) !== "undefined") {
-        if (userActivity.webpageURL) {
+      if (userActivity.webpageURL) {
+        // check for an email-link-login flow
+        const fAuth = FIRAuth.auth();
+        if (fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
+          const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
+          if (rememberedEmail !== undefined) {
+
+            if (fAuth.currentUser) {
+              const onCompletionLink = (result: FIRAuthDataResult, error: NSError) => {
+                if (error) {
+                  // ignore, and complete the email link sign in flow
+                  fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+                    if (!error) {
+                      firebase.notifyAuthStateListeners({
+                        loggedIn: true,
+                        user: authData.user
+                      });
+                    }
+                  });
+                } else {
+                  // linking successful, so the user can now log in with either their email address, or however he logged in previously
+                  firebase.notifyAuthStateListeners({
+                    loggedIn: true,
+                    user: result.user
+                  });
+                }
+              };
+              const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailLink(rememberedEmail, userActivity.webpageURL.absoluteString);
+              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+
+            } else {
+              fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+                if (error) {
+                  console.log(error.localizedDescription);
+                } else {
+                  firebase.notifyAuthStateListeners({
+                    loggedIn: true,
+                    user: authData.user
+                  });
+                }
+              });
+            }
+          }
+          result = true;
+
+        } else {
           result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, (dynamicLink, error) => {
             if (dynamicLink.url !== null) {
-              console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
               if (firebase._dynamicLinkCallback) {
                 firebase._dynamicLinkCallback({
                   url: dynamicLink.url.absoluteString,
@@ -217,7 +260,7 @@ firebase.fetchProvidersForEmail = email => {
         return;
       }
 
-      FIRAuth.auth().fetchProvidersForEmailCompletion(email, (providerNSArray, error) /* FIRProviderQueryCallback */ => {
+      FIRAuth.auth().fetchProvidersForEmailCompletion(email, (providerNSArray, error) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -226,6 +269,28 @@ firebase.fetchProvidersForEmail = email => {
       });
     } catch (ex) {
       console.log("Error in firebase.fetchProvidersForEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.fetchSignInMethodsForEmail = email => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof(email) !== "string") {
+        reject("A parameter representing an email address is required.");
+        return;
+      }
+
+      FIRAuth.auth().fetchSignInMethodsForEmailCompletion(email, (methodsNSArray, error) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(firebase.toJsObject(methodsNSArray));
+        }
+      });
+    } catch (ex) {
+      console.log("Error in firebase.fetchSignInMethodsForEmail: " + ex);
       reject(ex);
     }
   });
@@ -851,12 +916,16 @@ firebase.admob.showBanner = arg => {
         adRequest.testDevices = testDevices;
       }
 
+      if (settings.keywords !== undefined) {
+        adRequest.keywords = settings.keywords;
+      }
+
       firebase.admob.adView.rootViewController = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
       // var statusbarFrame = utils.ios.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
 
       firebase.admob.adView.loadRequest(adRequest);
 
-      // TODO consider listening to delegate features like 'ad loaded'
+      // TODO consider listening to delegate features like 'ad loaded' (Android resolves when the banner is actually showing)
       // adView.delegate = self;
 
       view.addSubview(firebase.admob.adView);
@@ -1234,6 +1303,42 @@ firebase.login = arg => {
         } else {
           fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletion);
         }
+
+      } else if (arg.type === firebase.LoginType.EMAIL_LINK) {
+        if (!arg.emailLinkOptions || !arg.emailLinkOptions.email) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.email' argument");
+          return;
+        }
+
+        if (!arg.emailLinkOptions.url) {
+          reject("Auth type EMAIL_LINK requires an 'emailLinkOptions.url' argument");
+          return;
+        }
+
+        const firActionCodeSettings = FIRActionCodeSettings.new();
+        // This 'continue URL' is what's emailed to the receiver, and the domain must be whitelisted in the Firebase console
+        firActionCodeSettings.URL = NSURL.URLWithString(arg.emailLinkOptions.url);
+        // The sign-in operation has to always be completed in the app.
+        firActionCodeSettings.handleCodeInApp = true;
+        firActionCodeSettings.setIOSBundleID(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : NSBundle.mainBundle.bundleIdentifier);
+        firActionCodeSettings.setAndroidPackageNameInstallIfNotAvailableMinimumVersion(
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
+        fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
+            arg.emailLinkOptions.email,
+            firActionCodeSettings,
+            (error: NSError) => {
+              if (error) {
+                reject(error.localizedDescription);
+                return;
+              }
+              // The link was successfully sent.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
+              resolve();
+            }
+        );
 
       } else if (arg.type === firebase.LoginType.PHONE) {
         // https://firebase.google.com/docs/auth/ios/phone-auth
@@ -1967,6 +2072,7 @@ firebase.downloadFile = arg => {
     try {
 
       const onCompletion = (url, error) => {
+        console.log(">>> download complete, error: " + error);
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -2268,7 +2374,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 
 firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
-    callback(new DocumentSnapshot(snapshot ? snapshot.documentID : null, !!snapshot, snapshot ? () => firebase.toJsObject(snapshot.data()) : null));
+    callback(new DocumentSnapshot(snapshot.documentID, snapshot.exists, firebase.toJsObject(snapshot.data())));
   });
 
   // There's a bug resulting this function to be undefined..
@@ -2287,8 +2393,8 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
   const listener = colRef.addSnapshotListener((snapshot: FIRQuerySnapshot, error: NSError) => {
     const docSnapshots: Array<firestore.DocumentSnapshot> = [];
     for (let i = 0, l = snapshot.documents.count; i < l; i++) {
-      const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-      docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+      const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+      docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
     }
 
     const snap = new QuerySnapshot();
@@ -2480,8 +2586,8 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
             } else {
               const docSnapshots: Array<firestore.DocumentSnapshot> = [];
               for (let i = 0, l = snapshot.documents.count; i < l; i++) {
-                const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-                docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+                const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+                docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
               }
               const snap = new QuerySnapshot();
               snap.docSnapshots = docSnapshots;
@@ -2516,7 +2622,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
               reject(error.localizedDescription);
             } else {
               const exists = snapshot.exists;
-              resolve(new DocumentSnapshot(exists ? snapshot.documentID : null, exists, () => exists ? firebase.toJsObject(snapshot.data()) : null));
+              resolve(new DocumentSnapshot(exists ? snapshot.documentID : null, exists, firebase.toJsObject(snapshot.data())));
             }
           });
 
@@ -2537,8 +2643,8 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
           console.log(">> .where, snapshot: " + snapshot);
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0, l = snapshot.documents.count; i < l; i++) {
-            const document: FIRDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-            docSnapshots.push(new DocumentSnapshot(document.documentID, true, () => firebase.toJsObject(document.data())));
+            const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
+            docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
           }
           const snap = new QuerySnapshot();
           snap.docSnapshots = docSnapshots;

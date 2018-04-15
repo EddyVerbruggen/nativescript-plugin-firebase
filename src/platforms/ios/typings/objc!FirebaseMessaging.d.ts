@@ -11,6 +11,8 @@ declare class FIRMessaging extends NSObject {
 
 	readonly FCMToken: string;
 
+	autoInitEnabled: boolean;
+
 	delegate: FIRMessagingDelegate;
 
 	readonly isDirectChannelEstablished: boolean;

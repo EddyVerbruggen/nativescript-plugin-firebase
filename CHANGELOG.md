@@ -4,6 +4,22 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.2.0 (2018, April 2)
+
+### New
+
+- [#648](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/648) Implement setUserId for analytics
+- [#665](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/665) Add Email Link Authentication
+- [#666](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/666) Add 'keywords' support to AdMob banners
+
+### Fixes
+- [#462](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/462) Firebase PhoneVerification
+- [#657](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/657) Login with LoginType.PHONE only completes the promise for the first time
+- [#660](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/660) Notification Icon not showing on Oreo devices (Android)
+- [#661](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/661) [iOS] FIRDocumentReference.onSnapshot always exists 
+- [#662](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/662) fix snapshot creation logic and data callback return type
+
+
 ## 5.1.8 (2018, March 1)
 
 ### New

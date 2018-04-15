@@ -123,12 +123,7 @@ export class ItemsComponent {
     const collectionRef: firestore.CollectionReference = firebase.firestore().collection("dogs");
     collectionRef.get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
-          querySnapshot.forEach(doc => {
-            console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
-            // since there's a reference stored here, we can use that to retrieve its data
-            const docRef: firestore.DocumentReference = doc.data().ref2sf;
-            docRef.get().then(res => console.log("docref.get: " + JSON.stringify(res.data())));
-          });
+          querySnapshot.forEach(doc => console.log(`${doc.id} => ${JSON.stringify(doc.data())}`));
         })
         .catch(err => console.log("Get failed, error" + err));
 
@@ -138,6 +133,9 @@ export class ItemsComponent {
     docRef.get().then((doc: firestore.DocumentSnapshot) => {
       if (doc.exists) {
         console.log("Document data:", JSON.stringify(doc.data()));
+        // since there's a reference stored here, we can use that to retrieve its data
+        const docRef: firestore.DocumentReference = doc.data().referenceToCitiesDC;
+        docRef.get().then(res => console.log("docref.get: " + JSON.stringify(res.data())));
       } else {
         console.log("No such document!");
       }

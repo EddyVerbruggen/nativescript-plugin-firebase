@@ -5,6 +5,7 @@ You can sign in a user either
 
 * [anonymously](#anonymous-login),
 * by [email and password](#email-password-login),
+* by [email link](#email-link),
 * by [phone verification](#phone-verification),
 * using a [custom token](#custom-login),
 * using [Facebook](#facebook-login),
@@ -106,7 +107,6 @@ Once the user is logged in you can retrieve the currently logged in user:
 ### Fetch providers for email
 Want to know which auth providers are associated with an emailaddress?
 
-
 <details>
  <summary>Native API</summary>
 
@@ -131,6 +131,37 @@ Want to know which auth providers are associated with an emailaddress?
   firebaseWebApi.auth().fetchProvidersForEmail(user.email)
       .then(result => console.log(`Providers for ${user.email}: ${JSON.stringify(result)}`))
       .catch(error => console.log("Fetch Providers for Email error: " + error));
+```
+</details>
+
+### Fetch sign-in methods for email
+Both email-password login and email-link login are `password` providers, so by just using `fetchProvidersForEmail`
+you won't be able to differentiate between those login methods. That's where `fetchSignInMethodsForEmail` comes in.
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  const emailAddress = "someone@domain.com";
+  firebase.fetchSignInMethodsForEmail(emailAddress).then((methods: Array<string>) => {
+    console.log(`Sign-in methods for ${emailAddress}: ${JSON.stringify(methods)}`);
+  });
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  const user = firebaseWebApi.auth().currentUser;
+  if (!user || !user.email) {
+    console.log("Can't fetch sign-in methods; no user with an emailaddress logged in.");
+    return;
+  }
+
+  firebaseWebApi.auth().fetchSignInMethodsForEmail(user.email)
+      .then(result => console.log(`Sign-in methods for ${user.email}: ${JSON.stringify(result)}`))
+      .catch(error => console.log("Fetch Sign-in methods for Email error: " + error));
 ```
 </details>
 
@@ -204,6 +235,69 @@ Don't forget to enable email-password login in your firebase instance.
 ```typescript
   firebaseWebApi.auth().signInWithEmailAndPassword('eddy@x-services.nl', 'firebase')
       .then(() => console.log("User logged in"))
+      .catch(err => console.log("Login error: " + JSON.stringify(err)));
+```
+</details>
+
+
+### Email-Link login
+Enable email-password login in your firebase instance, and flip the "E-mail link" switch.
+
+This login type allows your users to login without providing a password. They can simply click a link
+and get redirected to the app. The app may even run on a different device.
+
+Enable dynamic links, as described in the [Dynamic Links readme]("./INVITES_DYNAMICLINKS.md"), because the user
+that receives the link will need to be redirected to your app.
+
+#### iOS configuration
+- Specify the bundle id of your app in the Firebase console.
+
+#### Android configuration
+- Specify the package name of your app in the Firebase console.
+- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme]("./INVITES_DYNAMICLINKS.md").
+- Also add an `android:host` for the `emailLinkOptions.url` to your `app/App_Resources/Android/AndroidManifest.xml` file as described in that readme.
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.login(
+      {
+        type: firebase.LoginType.EMAIL_LINK,
+        emailLinkOptions: {
+          email: "eddy@x-services.nl",
+          url: "https://domain.com?foo=bar",
+          // the stuff below is optional, if not set the plugin will infer this for you (bundle/package is taken from currently used platform)
+          iOS: {
+            bundleId: "my.bundle.id"
+          },
+          android: {
+            packageName: "my.package.name"
+          }
+        }
+      })
+      .then(result => JSON.stringify(result))
+      .catch(error => console.log(error));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().sendSignInLinkToEmail(
+      "eddy@x-services.nl",
+       {
+         url: "https://domain.com?foo=bar",
+         // the stuff below is optional, if not set the plugin will infer this for you (bundle/package is taken from currently used platform)
+         iOS: {
+           bundleId: "my.bundle.id"
+         },
+         android: {
+           packageName: "my.package.name"
+         }
+       })
+      .then(() => console.log("Email link sent"))
       .catch(err => console.log("Login error: " + JSON.stringify(err)));
 ```
 </details>
