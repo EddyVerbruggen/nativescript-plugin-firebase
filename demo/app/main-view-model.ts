@@ -10,6 +10,19 @@ const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 declare const assert: any;
 
+const getCircularReplacer = () => {
+  const seen = new WeakSet;
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
 export class HelloWorldModel extends Observable {
 
   public userEmailOrPhone: string;
@@ -528,11 +541,13 @@ export class HelloWorldModel extends Observable {
     );
     firebase.addOnMessageReceivedCallback(
         message => {
-          alert({
-            title: "Push message!",
-            message: (message.title !== undefined ? message.title : ""),
-            okButtonText: "Sw33t"
-          });
+          console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
+
+          // alert({
+          //   title: "Push message!",
+          //   message: (message.title !== undefined ? message.title : ""),
+          //   okButtonText: "Sw33t"
+          // });
         }
     ).then(() => {
       console.log("Added addOnMessageReceivedCallback");
