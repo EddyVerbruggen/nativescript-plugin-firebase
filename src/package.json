@@ -103,9 +103,9 @@
     "prompt-lite": "~0.1.0"
   },
   "devDependencies": {
-    "tns-core-modules": "~3.3.0",
-    "tns-platform-declarations": "~3.3.0",
+    "tns-core-modules": "~4.0.0",
+    "tns-platform-declarations": "~4.0.0",
     "tslint": "^5.1.0",
-    "typescript": "~2.4.0"
+    "typescript": "~2.8.0"
   }
 }
