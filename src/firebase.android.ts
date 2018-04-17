@@ -1087,6 +1087,10 @@ function toLoginResult(user) {
 firebase.login = arg => {
   return new Promise((resolve, reject) => {
     try {
+      // need these to support using phone auth more than once
+      this.resolve = resolve;
+      this.reject = reject;
+
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
@@ -1103,10 +1107,10 @@ firebase.login = arg => {
             if (firebase._mGoogleApiClient) {
               com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
             }
-            reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            this.reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           } else {
             const user = task.getResult().getUser();
-            resolve(toLoginResult(user));
+            this.resolve(toLoginResult(user));
           }
         }
       });
@@ -1183,10 +1187,6 @@ firebase.login = arg => {
           resolve(toLoginResult(user));
           return;
         }
-
-        // need these to support using phone auth more than once
-        this.resolve = resolve;
-        this.reject = reject;
 
         const OnVerificationStateChangedCallbacks = com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks.extend({
           onVerificationCompleted: phoneAuthCredential => {
