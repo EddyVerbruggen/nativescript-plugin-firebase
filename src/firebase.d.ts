@@ -191,7 +191,7 @@ export interface FirebaseEmailLinkActionCodeSettings {
     packageName: string;
     installApp?: false;
     minimumVersion?: string;
-  }
+  };
 }
 
 export interface FirebaseEmailLinkLoginOptions extends FirebaseEmailLinkActionCodeSettings {
