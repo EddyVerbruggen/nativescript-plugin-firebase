@@ -13,6 +13,10 @@ pod 'Firebase/Auth'
 # Uncomment if you want to enable Crash Reporting
 #pod 'Firebase/Crash'
 
+# Uncomment if you want to enable Crashlytics
+#pod 'Fabric'
+#pod 'Crashlytics'
+
 # Uncomment if you want to enable FCM (Firebase Cloud Messaging)
 #pod 'Firebase/Messaging'
 

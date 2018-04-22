@@ -1004,7 +1004,7 @@ firebase.logout = arg => {
       com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
 
       // also disconnect from Google otherwise ppl can't connect with a different account
-      if (firebase._mGoogleApiClient) {
+      if (firebase._mGoogleApiClient && firebase._mGoogleApiClient.isConnected()) {
         com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
       }
 

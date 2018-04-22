@@ -2942,6 +2942,10 @@ function promptQuestions() {
         description: 'Are you using Firebase Messaging (y/n)',
         default: 'n'
     }, {
+        name: 'crashlytics',
+        description: 'Are you using Firebase Crashlytics (currently iOS only; both crashlytics and crash_reporting can be enabled and crashlytics will be used for iOS and crash_reporting for android) (y/n)',
+        default: 'n'
+    }, {
         name: 'crash_reporting',
         description: 'Are you using Firebase Crash Reporting (y/n)',
         default: 'n'
@@ -2978,11 +2982,12 @@ function promptQuestionsResult(result) {
     if (usingiOS) {
         writePodFile(result);
         exposeAdMobSymbols(isSelected(result.admob));
+        writeBuildscriptHook(isSelected(result.crashlytics));
     }
     if (usingAndroid) {
         writeGradleFile(result);
         writeGoogleServiceCopyHook();
-        writeGoogleServiceGradleHook();
+        writeGoogleServiceGradleHook(result);
     }
     console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
 }
@@ -3034,7 +3039,19 @@ pod 'Firebase/Auth'
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
 
 # Uncomment if you want to enable Crash Reporting
-` + (isSelected(result.crash_reporting) ? `` : `#`) + `pod 'Firebase/Crash'
+` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
+
+# Uncomment if you want to enable Crashlytics
+` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
+` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Crashlytics'
+# Crashlytics works best without bitcode
+` + (isSelected(result.crashlytics) ? `` : `#`) + `post_install do |installer|
+` + (isSelected(result.crashlytics) ? `` : `#`) + `    installer.pods_project.targets.each do |target|
+` + (isSelected(result.crashlytics) ? `` : `#`) + `        target.build_configurations.each do |config|
+` + (isSelected(result.crashlytics) ? `` : `#`) + `            config.build_settings['ENABLE_BITCODE'] = "NO"
+` + (isSelected(result.crashlytics) ? `` : `#`) + `        end
+` + (isSelected(result.crashlytics) ? `` : `#`) + `    end
+` + (isSelected(result.crashlytics) ? `` : `#`) + `end
 
 # Uncomment if you want to enable FCM (Firebase Cloud Messaging)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
@@ -3057,6 +3074,152 @@ pod 'Firebase/Auth'
         console.log('Successfully created iOS (Pod) file.');
     } catch(e) {
         console.log('Failed to create iOS (Pod) file.');
+        console.log(e);
+    }
+}
+
+/**
+ * Create the iOS build script for uploading dSYM files to Crashlytics
+ *
+ * @param {any} enable Is Crashlytics enbled
+ */
+function writeBuildscriptHook(enable) {
+    if (!enable) {
+        return
+    }
+    console.log("Install Crashlytics buildscript hook.");
+    try {
+        var scriptContent =
+`const fs = require('fs-extra');
+const path = require('path');
+const xcode = require('xcode');
+
+const pattern1 = /\\n\\s*\\/\\/Crashlytics 1 BEGIN[\\s\\S]*\\/\\/Crashlytics 1 END.*\\n/m;
+const pattern2 = /\\n\\s*\\/\\/Crashlytics 2 BEGIN[\\s\\S]*\\/\\/Crashlytics 2 END.*\\n/m;
+const pattern3 = /\\n\\s*\\/\\/Crashlytics 3 BEGIN[\\s\\S]*\\/\\/Crashlytics 3 END.*\\n/m;
+
+const string1 = \`
+//Crashlytics 1 BEGIN
+#else
+#import <Crashlytics/CLSLogging.h>
+#endif
+//Crashlytics 1 END
+\`;
+
+const string2 = \`
+//Crashlytics 2 BEGIN
+#if DEBUG
+#else
+static int redirect_cls(const char *prefix, const char *buffer, int size) {
+  CLSLog(@"%s: %.*s", prefix, size, buffer);
+  return size;
+}
+
+static int stderr_redirect(void *inFD, const char *buffer, int size) {
+  return redirect_cls("stderr", buffer, size);
+}
+
+static int stdout_redirect(void *inFD, const char *buffer, int size) {
+  return redirect_cls("stdout", buffer, size);
+}
+#endif
+//Crashlytics 2 END
+\`;
+
+const string3 = \`
+//Crashlytics 3 BEGIN
+#if DEBUG
+#else
+  // Per https://docs.fabric.io/apple/crashlytics/enhanced-reports.html#custom-logs :
+  // Crashlytics ensures that all log entries are recorded, even if the very next line of code crashes.
+  // This means that logging must incur some IO. Be careful when logging in performance-critical areas.
+  
+  // As per the note above, enabling this can affect performance if too much logging is present.
+  // stdout->_write = stdout_redirect;
+  
+  // stderr usually only occurs during critical failures;
+  // so it is usually essential to identifying crashes, especially in JS
+  stderr->_write = stderr_redirect;
+#endif
+//Crashlytics 3 END
+\`;
+
+module.exports = function($logger, $projectData, hookArgs) {
+  const platform = hookArgs.platform.toLowerCase();
+  return new Promise(function(resolve, reject) {
+    const isNativeProjectPrepared = !hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare;
+    if (isNativeProjectPrepared) {
+      try {
+        if (platform === 'ios') {
+          const sanitizedAppName = path.basename($projectData.projectDir).split('').filter((c) => /[a-zA-Z0-9]/.test(c)).join('');
+
+          // write buildscript for dSYM upload
+          const xcodeProjectPath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcodeproj', 'project.pbxproj');
+          $logger.trace('Using Xcode project', xcodeProjectPath);
+          if (fs.existsSync(xcodeProjectPath)) {
+            var xcodeProject = xcode.project(xcodeProjectPath);
+            xcodeProject.parseSync();
+            var options = { shellPath: '/bin/sh', shellScript: '\${PODS_ROOT}/Fabric/run' };
+            xcodeProject.addBuildPhase(
+              [], 'PBXShellScriptBuildPhase', 'Configure Crashlytics', xcodeProject.getFirstTarget().uuid, options
+            ).buildPhase;
+            fs.writeFileSync(xcodeProjectPath, xcodeProject.writeSync());
+            $logger.trace('Xcode project written');
+          } else {
+            $logger.error(xcodeProjectPath + ' is missing.');
+            reject()
+          }
+
+          // Logging from stdout/stderr
+          $logger.out('Add iOS crash logging');
+          const mainmPath = path.join($projectData.platformsDir, 'ios', 'internal', 'main.m');
+          if (fs.existsSync(mainmPath)) {
+            let mainmContent = fs.readFileSync(mainmPath).toString();
+            // string1
+            mainmContent = pattern1.test(mainmContent)
+              ? mainmContent.replace(pattern1, string1)
+              : mainmContent.replace(/(\\n#endif\\n)/, string1);
+            // string2
+            mainmContent = pattern2.test(mainmContent)
+              ? mainmContent.replace(pattern2, string2)
+              : mainmContent.replace(/(\\nint main.*)/, string2 + '$1');
+            // string3
+            mainmContent = pattern3.test(mainmContent)
+              ? mainmContent.replace(pattern3, string3)
+              : mainmContent.replace(/(int main.*\\n)/, '$1' + string3 + '\\n');
+            fs.writeFileSync(mainmPath, mainmContent);
+          } else {
+            $logger.error(mainmPath + ' is missing.');
+            reject()
+          }
+
+          resolve();
+        } else {
+          resolve();
+        }
+      } catch (e) {
+        $logger.error('Unknown error during prepare Crashlytics', e);
+        reject();
+      }
+    } else {
+      $logger.trace("Native project not prepared.");
+      resolve();
+    }
+  });
+};
+`;
+        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
+        var afterPrepareDirPath = path.dirname(scriptPath);
+        var hooksDirPath = path.dirname(afterPrepareDirPath);
+        if (!fs.existsSync(afterPrepareDirPath)) {
+            if (!fs.existsSync(hooksDirPath)) {
+                fs.mkdirSync(hooksDirPath);
+            }
+            fs.mkdirSync(afterPrepareDirPath);
+        }
+        fs.writeFileSync(scriptPath, scriptContent);
+    } catch(e) {
+        console.log("Failed to install Crashlytics buildscript hook.");
         console.log(e);
     }
 }
@@ -3159,14 +3322,24 @@ function writeGoogleServiceCopyHook() {
 var path = require("path");
 var fs = require("fs");
 
-module.exports = function() {
+module.exports = function($logger, $projectData, hookArgs) {
 
-    var sourceGoogleJson = path.join(__dirname, "..", "..", "app", "App_Resources", "Android", "google-services.json");
-    var destinationGoogleJson = path.join(__dirname, "..", "..", "platforms", "android", "google-services.json");
-    if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
-        console.log("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
-        fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
-    }
+    return new Promise(function(resolve, reject) {
+        if (hookArgs.platform.toLowerCase() === 'android') {
+            var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json");
+            var destinationGoogleJson = path.join($projectData.platformsDir, "android", "app", "google-services.json");
+            if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
+                $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
+                fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
+                resolve()
+            } else {
+                $logger.warn("Unable to copy google-services.json.");
+                reject();
+            }
+        } else {
+            resolve()
+        }
+    });
 };
 `;
         var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
@@ -3185,7 +3358,7 @@ module.exports = function() {
     }
 }
 
-function writeGoogleServiceGradleHook() {
+function writeGoogleServiceGradleHook(result) {
     console.log("Install firebase-build-gradle hook.");
     try {
         var scriptContent =
@@ -3193,56 +3366,32 @@ function writeGoogleServiceGradleHook() {
 var path = require("path");
 var fs = require("fs");
 
-module.exports = function() {
+module.exports = function($logger, $projectData) {
 
-    console.log("Configure firebase");
-    var buildGradlePath = path.join(__dirname, "..", "..", "platforms", "android", "build.gradle");
-    if (fs.existsSync(buildGradlePath)) {
-        var buildGradleContent = fs.readFileSync(buildGradlePath).toString();
-
-        // already at 3.1.1?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.1"') != -1) {
-            return;
+    return new Promise(function(resolve, reject) {
+        $logger.out("Configure firebase");
+        let projectBuildGradlePath = path.join($projectData.platformsDir, "android", "build.gradle");
+        if (fs.existsSync(projectBuildGradlePath)) {
+            let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
+            
+            let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
+            let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.1"';
+            if (googleServicesPattern.test(buildGradleContent)) {
+                buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
+            } else {
+                buildGradleContent = buildGradleContent.replace(gradlePattern, function (match) {
+                    return match + '\\n        ' + latestGoogleServicesPlugin;
+                });
+            }
+    
+            fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
         }
-
-        // upgrade 3.1.0 to 3.1.1?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.1.0"') != -1) {
-            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.1.0"', 'classpath "com.google.gms:google-services:3.1.1"');
-            fs.writeFileSync(buildGradlePath, buildGradleContent);
-            return;
-        }
-
-        // upgrade 3.0.0 to 3.1.1?
-        if (buildGradleContent.indexOf('classpath "com.google.gms:google-services:3.0.0"') != -1) {
-            buildGradleContent = buildGradleContent.replace('classpath "com.google.gms:google-services:3.0.0"', 'classpath "com.google.gms:google-services:3.1.1"');
-            fs.writeFileSync(buildGradlePath, buildGradleContent);
-            return;
-        }
-
-        var search = -1;
-
-        search = buildGradleContent.indexOf("repositories", 0);
-        if (search == -1) {
-            return;
-        }
-
-        search = buildGradleContent.indexOf("dependencies", search);
-        if (search == -1) {
-            return;
-        }
-
-        search = buildGradleContent.indexOf("}", search);
-        if (search == -1) {
-            return;
-        }
-
-        buildGradleContent = buildGradleContent.substr(0, search - 1) + '    classpath "com.google.gms:google-services:3.1.1"\\n    ' + buildGradleContent.substr(search - 1);
-
-        fs.writeFileSync(buildGradlePath, buildGradleContent);
-    }
+        resolve();
+    });
 };
 `;
-        console.log("Writing 'firebase-build-gradle.js' to " + appRoot + "/hooks/after-prepare");
+        console.log("Writing 'firebase-build-gradle.js' to " + appRoot + "hooks/after-prepare");
         var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-build-gradle.js");
         fs.writeFileSync(scriptPath, scriptContent);
     } catch(e) {
