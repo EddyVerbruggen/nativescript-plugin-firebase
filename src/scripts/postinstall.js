@@ -3369,7 +3369,6 @@ function writeGoogleServiceGradleHook(result) {
     try {
         var scriptContent =
 `
-
 var path = require("path");
 var fs = require("fs");
 
@@ -3421,7 +3420,7 @@ task copyMetadata {
         from "$projectDir/src/main/assets/metadata"
         def toDir = new File("$projectDir/build/intermediates/assets").listFiles()[0].name
         if (toDir != 'debug' && toDir != 'release') {
-            toDir = toDir + "/release"
+            toDir += "/release"
         }
         into "$projectDir/build/intermediates/assets/" + toDir + "/metadata"
     }
