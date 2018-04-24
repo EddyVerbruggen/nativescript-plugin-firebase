@@ -46,6 +46,9 @@ dependencies {
     // Uncomment if you want to use 'Crash Reporting'
 //    compile "com.google.firebase:firebase-crash:$firebaseVersion"
 
+    // Uncomment if you want to enable 'Crashlytics' (1 / 2)
+//    compile 'com.crashlytics.sdk.android:crashlytics:2.9.1'
+
     // Uncomment if you want FCM (Firebase Cloud Messaging)
 //    compile "com.google.firebase:firebase-messaging:$firebaseVersion"
 
@@ -66,3 +69,6 @@ dependencies {
 }
 
 apply plugin: "com.google.gms.google-services"
+
+// Uncomment if you want to enable 'Crashlytics' (2 / 2)
+//apply plugin: "io.fabric"

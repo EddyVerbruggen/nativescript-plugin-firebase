@@ -2943,11 +2943,11 @@ function promptQuestions() {
         default: 'n'
     }, {
         name: 'crashlytics',
-        description: 'Are you using Firebase Crashlytics (currently iOS only; both crashlytics and crash_reporting can be enabled and crashlytics will be used for iOS and crash_reporting for android) (y/n)',
+        description: 'Are you using Firebase Crashlytics (y/n)',
         default: 'n'
     }, {
         name: 'crash_reporting',
-        description: 'Are you using Firebase Crash Reporting (y/n)',
+        description: 'Are you using Firebase Crash Reporting (answer "n" if you want to use Crashlytics instead) (y/n)',
         default: 'n'
     }, {
         name: 'storage',
@@ -3281,7 +3281,10 @@ dependencies {
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:$firebaseVersion"
 
     // Uncomment if you want to use 'Crash Reporting'
-    ` + (isSelected(result.crash_reporting) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
+    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
+
+    // Uncomment if you want to use 'Crashlytics'
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.1"
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
     ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:$firebaseVersion"
@@ -3303,6 +3306,9 @@ dependencies {
 }
 
 apply plugin: "com.google.gms.google-services"
+
+// Uncomment if you want to use 'Crashlytics'
+` + (isSelected(result.crashlytics) ? `` : `//`) + `apply plugin: "io.fabric"
 `);
         console.log('Successfully created Android (include.gradle) file.');
     } catch(e) {
@@ -3363,6 +3369,7 @@ function writeGoogleServiceGradleHook(result) {
     try {
         var scriptContent =
 `
+
 var path = require("path");
 var fs = require("fs");
 
@@ -3373,10 +3380,24 @@ module.exports = function($logger, $projectData) {
         let projectBuildGradlePath = path.join($projectData.platformsDir, "android", "build.gradle");
         if (fs.existsSync(projectBuildGradlePath)) {
             let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
-            
+
+            if (buildGradleContent.indexOf("fabric.io") === -1) {
+                let repositoriesNode = buildGradleContent.indexOf("repositories", 0);
+                if (repositoriesNode > -1) {
+                    repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
+                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '	    maven { url "https://maven.fabric.io/public" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
+                }
+
+                let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
+                if (dependenciesNode > -1) {
+                    dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
+                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.25.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                }
+            }
+
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
-            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.1"';
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.2"';
             if (googleServicesPattern.test(buildGradleContent)) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {
@@ -3387,6 +3408,29 @@ module.exports = function($logger, $projectData) {
     
             fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
         }
+
+        let projectAppBuildGradlePath = path.join($projectData.platformsDir, "android", "app", "build.gradle");
+        if (fs.existsSync(projectAppBuildGradlePath)) {
+          let appBuildGradleContent = fs.readFileSync(projectAppBuildGradlePath).toString();
+          if (appBuildGradleContent.indexOf("buildMetadata.finalizedBy(copyMetadata)") === -1) {
+            appBuildGradleContent = appBuildGradleContent.replace("ensureMetadataOutDir.finalizedBy(buildMetadata)", "ensureMetadataOutDir.finalizedBy(buildMetadata)\\n\\t\\tbuildMetadata.finalizedBy(copyMetadata)");
+            appBuildGradleContent += \`
+task copyMetadata {
+  doLast {
+    copy {
+        from "$projectDir/src/main/assets/metadata"
+        def toDir = new File("$projectDir/build/intermediates/assets").listFiles()[0].name
+        if (toDir != 'debug' && toDir != 'release') {
+            toDir = toDir + "/release"
+        }
+        into "$projectDir/build/intermediates/assets/" + toDir + "/metadata"
+    }
+  }
+}\`;
+            fs.writeFileSync(projectAppBuildGradlePath, appBuildGradleContent);
+          }
+        }
+
         resolve();
     });
 };

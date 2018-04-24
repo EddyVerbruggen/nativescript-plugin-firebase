@@ -41,7 +41,7 @@
     "package": "cd ../publish && rm -rf ./package && ./pack.sh",
     "demo.ios": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios",
     "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns platform remove ios && tns run ios",
-    "demo.android": "npm run preparedemo && cd ../demo && tns platform remove android && tns run android --justlaunch",
+    "demo.android": "npm run preparedemo && cd ../demo && tns platform remove android && tns run android",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",
     "test": "npm run tslint && npm run tslint.demo && cd ../demo && tns build ios && tns build android",
     "test.ios": "cd ../demo && tns test ios --emulator",
