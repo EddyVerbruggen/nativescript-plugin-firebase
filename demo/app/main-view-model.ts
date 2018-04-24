@@ -5,6 +5,7 @@ import { isIOS } from "tns-core-modules/platform";
 import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 
+import * as analytics from "nativescript-plugin-firebase/analytics";
 const firebase = require("nativescript-plugin-firebase");
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
@@ -364,7 +365,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doLogAnalyticsEvent(): void {
-    firebase.analytics.logEvent({
+    analytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
       parameters: [{ // optional
@@ -392,7 +393,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetAnalyticsUserProperty(): void {
-    firebase.analytics.setUserProperty({
+    analytics.setUserProperty({
       key: "origin", // note that this needs to be preregistered, see https://support.google.com/firebase/answer/6317519?hl=en&ref_topic=6317489#create-property
       value: "demoapp"
     }).then(
@@ -420,9 +421,9 @@ export class HelloWorldModel extends Observable {
     this.setScreenName("Screen B");
   }
 
-  private setScreenName(name): void {
-    firebase.analytics.setScreenName({
-      screenName: name
+  private setScreenName(screenName): void {
+    analytics.setScreenName({
+      screenName
     }).then(
         () => {
           alert({
@@ -568,8 +569,9 @@ export class HelloWorldModel extends Observable {
   }
 
   public doGetRemoteConfig(): void {
+    console.log(">>> doGetRemoteConfig");
     firebase.getRemoteConfig({
-      developerMode: false,
+      developerMode: true,
       cacheExpirationSeconds: 600, // 10 minutes, default is 12 hours
       properties: [{
         "key": "holiday_promo_enabled",

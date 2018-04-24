@@ -23,6 +23,10 @@ export interface LogEventOptions {
   parameters?: Array<LogEventParameter>;
 }
 
+export interface SetUserIdOptions {
+  userId: string;
+}
+
 export interface SetUserPropertyOptions {
   key: string;
   value: string;
@@ -32,8 +36,10 @@ export interface SetScreenNameOptions {
   screenName: string;
 }
 
-function logEvent(options: LogEventOptions): Promise<any>;
+export declare function logEvent(options: LogEventOptions): Promise<void>;
 
-function setUserProperty(options: SetUserPropertyOptions): Promise<any>;
+export declare function setUserId(options: SetUserIdOptions): Promise<void>;
 
-function setScreenName(options: SetScreenNameOptions): Promise<any>;
+export declare function setUserProperty(options: SetUserPropertyOptions): Promise<void>;
+
+export declare function setScreenName(options: SetScreenNameOptions): Promise<void>;

@@ -11,7 +11,6 @@ src/**/*.d.ts
 !src/firebase.d.ts
 !src/index.d.ts
 !src/references.d.ts
-!src/analytics/index.d.ts
 !src/analytics/analytics.d.ts
 !src/platforms/web/typings/firebase-webapi.d.ts
 !src/platforms/ios/typings/*.d.ts

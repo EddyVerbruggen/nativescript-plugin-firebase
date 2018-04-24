@@ -3,7 +3,7 @@ import { LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from ".
 
 declare const com: any;
 
-export function logEvent(options: LogEventOptions): Promise<any> {
+export function logEvent(options: LogEventOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (options.key === undefined) {
@@ -33,7 +33,25 @@ export function logEvent(options: LogEventOptions): Promise<any> {
   });
 }
 
-export function setUserProperty(options: SetUserPropertyOptions): Promise<any> {
+export function setUserId(arg): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      if (arg.userId === undefined) {
+        reject("Argument 'userId' is missing");
+        return;
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()).setUserId(arg.userId);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setUserId: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function setUserProperty(options: SetUserPropertyOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (options.key === undefined) {
@@ -57,7 +75,7 @@ export function setUserProperty(options: SetUserPropertyOptions): Promise<any> {
   });
 }
 
-export function setScreenName(options: SetScreenNameOptions): Promise<any> {
+export function setScreenName(options: SetScreenNameOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (options.screenName === undefined) {

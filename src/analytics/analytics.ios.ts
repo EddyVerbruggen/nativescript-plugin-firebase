@@ -1,6 +1,6 @@
 import { LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from "./analytics";
 
-export function logEvent(options: LogEventOptions): Promise<any> {
+export function logEvent(options: LogEventOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (options.key === undefined) {
@@ -28,7 +28,25 @@ export function logEvent(options: LogEventOptions): Promise<any> {
   });
 }
 
-export function setUserProperty(options: SetUserPropertyOptions): Promise<any> {
+export function setUserId(arg): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      if (arg.userId === undefined) {
+        reject("Argument 'userId' is missing");
+        return;
+      }
+
+      FIRAnalytics.setUserID(arg.userId);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setUserId: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function setUserProperty(options: SetUserPropertyOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (options.key === undefined) {
@@ -50,7 +68,7 @@ export function setUserProperty(options: SetUserPropertyOptions): Promise<any> {
   });
 }
 
-export function setScreenName(options: SetScreenNameOptions): Promise<any> {
+export function setScreenName(options: SetScreenNameOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (options.screenName === undefined) {
