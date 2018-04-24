@@ -2,13 +2,13 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-26.0.1
+    - build-tools-26.0.2
     - android-26
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-21
 
 before_cache:
-    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock 
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 
 cache:
     directories:
@@ -35,13 +35,13 @@ matrix:
       language: node_js
       os: linux
       node_js: "6"
-      script: "npm run ci.tslint" 
+      script: "npm run ci.tslint"
     - stage: "WebPack"
       os: osx
       env:
         - Webpack="iOS"
       osx_image: xcode9.2
-      language: node_js 
+      language: node_js
       node_js: "6"
       jdk: oraclejdk8
       before_install:
@@ -56,7 +56,7 @@ matrix:
       before_install: nvm install 6.10.3
       script: tns build android --bundle
     - stage: "Build"
-      env: 
+      env:
         - BuildAndroid="25"
       language: android
       os: linux
@@ -65,11 +65,11 @@ matrix:
       script:
         - tns build android
     - os: osx
-      env: 
+      env:
         - BuildiOS="10.3"
         - Xcode="9.2"
       osx_image: xcode9.2
-      language: node_js 
+      language: node_js
       node_js: "6"
       jdk: oraclejdk8
       before_install:

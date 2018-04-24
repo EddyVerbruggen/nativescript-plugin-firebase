@@ -134,6 +134,8 @@ declare class FIRStorageMetadata extends NSObject implements NSCopying {
 
 	readonly generation: number;
 
+	readonly md5Hash: string;
+
 	readonly metageneration: number;
 
 	readonly name: string;

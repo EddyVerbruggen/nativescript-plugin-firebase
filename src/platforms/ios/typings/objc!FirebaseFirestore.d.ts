@@ -26,7 +26,7 @@ declare class FIRDocumentChange extends NSObject {
 
 	static new(): FIRDocumentChange; // inherited from NSObject
 
-	readonly document: FIRDocumentSnapshot;
+	readonly document: FIRQueryDocumentSnapshot;
 
 	readonly newIndex: number;
 
@@ -52,7 +52,7 @@ declare class FIRDocumentListenOptions extends NSObject {
 
 	static options(): FIRDocumentListenOptions;
 
-	readonly includeMetadataChanges: boolean;
+	includeMetadataChanges(includeMetadataChanges: boolean): this;
 }
 
 declare class FIRDocumentReference extends NSObject {
@@ -110,7 +110,13 @@ declare class FIRDocumentSnapshot extends NSObject {
 
 	data(): NSDictionary<string, any>;
 
+	dataWithOptions(options: FIRSnapshotOptions): NSDictionary<string, any>;
+
 	objectForKeyedSubscript(key: any): any;
+
+	valueForField(field: any): any;
+
+	valueForFieldOptions(field: any, options: FIRSnapshotOptions): any;
 }
 
 declare class FIRFieldPath extends NSObject implements NSCopying {
@@ -159,7 +165,11 @@ declare class FIRFirestore extends NSObject {
 
 	collectionWithPath(collectionPath: string): FIRCollectionReference;
 
+	disableNetworkWithCompletion(completion: (p1: NSError) => void): void;
+
 	documentWithPath(documentPath: string): FIRDocumentReference;
+
+	enableNetworkWithCompletion(completion: (p1: NSError) => void): void;
 
 	runTransactionWithBlockCompletion(updateBlock: (p1: FIRTransaction, p2: interop.Pointer | interop.Reference<NSError>) => any, completion: (p1: any, p2: NSError) => void): void;
 }
@@ -268,6 +278,8 @@ declare class FIRQuery extends NSObject {
 
 	queryEndingBeforeValues(fieldValues: NSArray<any>): FIRQuery;
 
+	queryFilteredUsingPredicate(predicate: NSPredicate): FIRQuery;
+
 	queryLimitedTo(limit: number): FIRQuery;
 
 	queryOrderedByField(field: string): FIRQuery;
@@ -307,6 +319,13 @@ declare class FIRQuery extends NSObject {
 	queryWhereFieldPathIsLessThanOrEqualTo(path: FIRFieldPath, value: any): FIRQuery;
 }
 
+declare class FIRQueryDocumentSnapshot extends FIRDocumentSnapshot {
+
+	static alloc(): FIRQueryDocumentSnapshot; // inherited from NSObject
+
+	static new(): FIRQueryDocumentSnapshot; // inherited from NSObject
+}
+
 declare class FIRQueryListenOptions extends NSObject {
 
 	static alloc(): FIRQueryListenOptions; // inherited from NSObject
@@ -330,13 +349,22 @@ declare class FIRQuerySnapshot extends NSObject {
 
 	readonly documentChanges: NSArray<FIRDocumentChange>;
 
-	readonly documents: NSArray<FIRDocumentSnapshot>;
+	readonly documents: NSArray<FIRQueryDocumentSnapshot>;
 
 	readonly empty: boolean;
 
 	readonly metadata: FIRSnapshotMetadata;
 
 	readonly query: FIRQuery;
+}
+
+declare const enum FIRServerTimestampBehavior {
+
+	None = 0,
+
+	Estimate = 1,
+
+	Previous = 2
 }
 
 declare class FIRSetOptions extends NSObject {
@@ -361,6 +389,42 @@ declare class FIRSnapshotMetadata extends NSObject {
 	readonly pendingWrites: boolean;
 }
 
+declare class FIRSnapshotOptions extends NSObject {
+
+	static alloc(): FIRSnapshotOptions; // inherited from NSObject
+
+	static new(): FIRSnapshotOptions; // inherited from NSObject
+
+	static serverTimestampBehavior(serverTimestampBehavior: FIRServerTimestampBehavior): FIRSnapshotOptions;
+}
+
+declare class FIRTimestamp extends NSObject implements NSCopying {
+
+	static alloc(): FIRTimestamp; // inherited from NSObject
+
+	static new(): FIRTimestamp; // inherited from NSObject
+
+	static timestamp(): FIRTimestamp;
+
+	static timestampWithDate(date: Date): FIRTimestamp;
+
+	static timestampWithSecondsNanoseconds(seconds: number, nanoseconds: number): FIRTimestamp;
+
+	readonly nanoseconds: number;
+
+	readonly seconds: number;
+
+	constructor(o: { seconds: number; nanoseconds: number; });
+
+	approximateDateValue(): Date;
+
+	compare(other: FIRTimestamp): NSComparisonResult;
+
+	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
+
+	initWithSecondsNanoseconds(seconds: number, nanoseconds: number): this;
+}
+
 declare class FIRTransaction extends NSObject {
 
 	static alloc(): FIRTransaction; // inherited from NSObject
@@ -383,6 +447,8 @@ declare class FIRWriteBatch extends NSObject {
 	static alloc(): FIRWriteBatch; // inherited from NSObject
 
 	static new(): FIRWriteBatch; // inherited from NSObject
+
+	commit(): void;
 
 	commitWithCompletion(completion: (p1: NSError) => void): void;
 

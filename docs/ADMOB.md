@@ -42,7 +42,8 @@ Go [manage your AdMob app](https://apps.admob.com/#account/appmgmt:) and grab th
     iosTestDeviceIds: [ //Android automatically adds the connected device as test device with testing:true, iOS does not
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
-    ]
+    ],
+    keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
   }).then(
       function () {
         console.log("AdMob banner showing");

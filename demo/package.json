@@ -2,17 +2,17 @@
   "nativescript": {
     "id": "org.nativescript.firebasedemo",
     "tns-android": {
-      "version": "3.4.1"
+      "version": "4.0.0-rc-2018.4.2.1"
     },
     "tns-ios": {
-      "version": "3.4.1"
+      "version": "4.0.1"
     }
   },
   "dependencies": {
-    "nativescript-plugin-firebase": "5.1.8",
+    "nativescript-plugin-firebase": "5.2.0",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-unit-test-runner": "^0.3.4",
-    "tns-core-modules": "~3.4.0"
+    "tns-core-modules": "~4.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "~2.8.0",
@@ -30,17 +30,19 @@
     "karma-nativescript-launcher": "^0.4.0",
     "lazy": "1.0.11",
     "nativescript-css-loader": "~0.26.0",
-    "nativescript-dev-typescript": "libs",
-    "nativescript-dev-webpack": "~0.9.0",
+    "nativescript-dev-typescript": "~0.7.1",
+    "nativescript-dev-webpack": "~0.10.0",
     "nativescript-worker-loader": "~0.8.1",
     "raw-loader": "~0.5.1",
     "resolve-url-loader": "~2.1.0",
     "tns-platform-declarations": "^3.4.0",
     "tslint": "~5.4.3",
-    "typescript": "~2.4.0",
+    "typescript": "~2.6.0",
     "webpack": "~3.8.1",
     "webpack-bundle-analyzer": "^2.8.2",
-    "webpack-sources": "~1.0.1"
+    "webpack-sources": "~1.0.1",
+    "uglifyjs-webpack-plugin": "~1.1.6",
+    "clean-webpack-plugin": "~0.1.19"
   },
   "scripts": {
     "build.plugin": "cd ../src && npm run build",

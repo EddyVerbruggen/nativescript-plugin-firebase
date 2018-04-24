@@ -1,6 +1,7 @@
 import { prompt } from "tns-core-modules/ui/dialogs";
 import { firestore } from "./firebase";
 import * as analytics from "./analytics";
+import * as applicationSettings from "tns-core-modules/application-settings";
 
 export const firebase: any = {
   initialized: false,
@@ -50,7 +51,8 @@ export const firebase: any = {
     PHONE: "phone",
     CUSTOM: "custom",
     FACEBOOK: "facebook",
-    GOOGLE: "google"
+    GOOGLE: "google",
+    EMAIL_LINK: "emailLink"
   },
   QueryOrderByType: {
     KEY: "key",
@@ -97,6 +99,12 @@ export const firebase: any = {
         console.error("Firebase AuthStateListener failed to trigger", listener, ex);
       }
     });
+  },
+  rememberEmailForEmailLinkLogin: (email: string) => {
+    applicationSettings.setString("FirebasePlugin.EmailLinkLogin", email);
+  },
+  getRememberedEmailForEmailLinkLogin: () => {
+    return applicationSettings.getString("FirebasePlugin.EmailLinkLogin");
   },
   strongTypeify: value => {
     if (value === "true") {
@@ -190,7 +198,9 @@ export const firebase: any = {
 };
 
 export class DocumentSnapshot implements firestore.DocumentSnapshot {
-  constructor(public id: string, public exists: boolean, public data: () => firestore.DocumentData) {
+  public data: () => firestore.DocumentData;
+  constructor(public id: string, public exists: boolean, documentData: firestore.DocumentData) {
+    this.data = () => exists ? documentData : undefined;
   }
 }
 

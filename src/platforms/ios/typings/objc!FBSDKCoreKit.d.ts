@@ -707,4 +707,8 @@ declare class FBSDKUtility extends NSObject {
 	static new(): FBSDKUtility; // inherited from NSObject
 
 	static queryStringWithDictionaryError(dictionary: NSDictionary<any, any>): string;
+
+	static startGCDTimerWithIntervalBlock(interval: number, block: () => void): NSObject;
+
+	static stopGCDTimer(timer: NSObject): void;
 }

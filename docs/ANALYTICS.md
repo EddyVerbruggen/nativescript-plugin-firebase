@@ -54,3 +54,16 @@ You own properties need to be [preregistered with Firebase](https://support.goog
       }
   );
 ```
+
+### analytics.setUserId
+Want to log a user ID with your analytics data? Go ahead:
+
+```js
+  firebase.analytics.setUserId({
+    userId: "whatever-you-want"
+  }).then(
+      function () {
+        console.log("Analytics userId set");
+      }
+  );
+```

@@ -4,7 +4,7 @@
 
 .tab-content {
   color: #808080;
-  padding: 20 20 50 20;
+  padding: 10 10 50 10;
 }
 
 .title {
@@ -31,8 +31,8 @@ label {
 
 button {
   background-color: #6494AA;
-  padding: 8 12;
-  margin: 4 10;
+  padding: 8;
+  margin: 4 8;
   font-size: 13;
   border-radius: 4;
 }

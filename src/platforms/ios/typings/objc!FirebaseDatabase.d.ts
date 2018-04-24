@@ -18,7 +18,7 @@ declare class FIRDataSnapshot extends NSObject {
 
 	static new(): FIRDataSnapshot; // inherited from NSObject
 
-	readonly children: NSEnumerator<any>;
+	readonly children: NSEnumerator<FIRDataSnapshot>;
 
 	readonly childrenCount: number;
 
@@ -216,7 +216,7 @@ declare class FIRMutableData extends NSObject {
 
 	static new(): FIRMutableData; // inherited from NSObject
 
-	readonly children: NSEnumerator<any>;
+	readonly children: NSEnumerator<FIRMutableData>;
 
 	readonly childrenCount: number;
 

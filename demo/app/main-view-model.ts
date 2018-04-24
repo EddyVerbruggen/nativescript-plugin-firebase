@@ -8,7 +8,20 @@ import * as fs from "tns-core-modules/file-system";
 const firebase = require("nativescript-plugin-firebase");
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
-declare const assert: any;
+declare const Crashlytics: any;
+
+const getCircularReplacer = () => {
+  const seen = new WeakSet;
+  return (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
 
 export class HelloWorldModel extends Observable {
 
@@ -64,7 +77,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebLoginByPassword(): void {
     this.ensureWebOnAuthChangedHandler();
-    firebaseWebApi.auth().signInWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+    firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
         .then(() => console.log("User logged in"))
         .catch(err => {
               alert({
@@ -105,6 +118,35 @@ export class HelloWorldModel extends Observable {
     );
   }
 
+  public doWebFetchSignInMethodsForEmail(): void {
+    const user = firebaseWebApi.auth().currentUser;
+    if (!user || !user.email) {
+      alert({
+        title: "Can't fetch providers",
+        message: "No user with an emailaddress logged in.",
+        okButtonText: "OK, makes sense.."
+      });
+      return;
+    }
+
+    firebaseWebApi.auth().fetchSignInMethodsForEmail(user.email).then(
+        result => {
+          alert({
+            title: `Sign-in methods for ${user.email}`,
+            message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
+            okButtonText: "Thanks!"
+          });
+        },
+        errorMessage => {
+          alert({
+            title: "Sign-in methods for Email error",
+            message: errorMessage,
+            okButtonText: "OK, pity.."
+          });
+        }
+    );
+  }
+
   public doWebLogout(): void {
     firebaseWebApi.auth().signOut()
         .then(() => {
@@ -125,7 +167,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doWebCreateUser(): void {
-    firebaseWebApi.auth().createUserWithEmailAndPassword('eddy@x-services.nl', 'firebase')
+    firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
         .then(result => {
           alert({
             title: "User created",
@@ -238,7 +280,14 @@ export class HelloWorldModel extends Observable {
   public doWebQueryBulgarianCompanies(): void {
     const path = "/companies";
     const child = "name";
-    firebaseWebApi.database().ref(path).orderByChild(child);
+    firebaseWebApi.database().ref(path).orderByChild(child)
+        .once("value")
+        .then(result => {
+          this.set("path", path);
+          this.set("key", result.key);
+          this.set("value", JSON.stringify(result.val()));
+        })
+        .catch(error => console.log("doWebQueryBulgarianCompanies error: " + error));
   }
 
   public doWebStoreCompanyByFirstCreatingKey(): void {
@@ -314,7 +363,7 @@ export class HelloWorldModel extends Observable {
     );
   }
 
-  public doLogAnayticsEvent(): void {
+  public doLogAnalyticsEvent(): void {
     firebase.analytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
@@ -404,10 +453,15 @@ export class HelloWorldModel extends Observable {
       iosTestDeviceIds: [
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
-      ]
+      ],
+      keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
     }).then(
         () => {
-          console.log("AdMob banner showing");
+          alert({
+            title: "Ad loaded successfully",
+            message: "Should now be showing..",
+            okButtonText: "Hmmkay"
+          });
         },
         errorMessage => {
           alert({
@@ -487,11 +541,13 @@ export class HelloWorldModel extends Observable {
     );
     firebase.addOnMessageReceivedCallback(
         message => {
-          alert({
-            title: "Push message!",
-            message: (message.title !== undefined ? message.title : ""),
-            okButtonText: "Sw33t"
-          });
+          console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
+
+          // alert({
+          //   title: "Push message!",
+          //   message: (message.title !== undefined ? message.title : ""),
+          //   okButtonText: "Sw33t"
+          // });
         }
     ).then(() => {
       console.log("Added addOnMessageReceivedCallback");
@@ -649,9 +705,40 @@ export class HelloWorldModel extends Observable {
         });
   }
 
+  public doFetchSignInMethodsForEmail(): void {
+    firebase.getCurrentUser().then(
+        user => {
+          if (!user || !user.email) {
+            alert({
+              title: "Can't fetch providers",
+              message: "No user with emailaddress logged in.",
+              okButtonText: "OK, makes sense.."
+            });
+            return;
+          }
+
+          firebase.fetchSignInMethodsForEmail(user.email).then(
+              result => {
+                alert({
+                  title: `Sign-in methods for ${user.email}`,
+                  message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
+                  okButtonText: "Thanks!"
+                });
+              },
+              errorMessage => {
+                alert({
+                  title: "Fetch Sign-in methods for Email error",
+                  message: errorMessage,
+                  okButtonText: "OK, pity.."
+                });
+              }
+          );
+        });
+  }
+
   public doCreateUser(): void {
     firebase.createUser({
-      email: 'eddy3@xservices.nl',
+      email: 'eddyverbruggen@gmail.com',
       password: 'firebase'
     }).then(
         result => {
@@ -695,7 +782,7 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.PASSWORD,
       passwordOptions: {
         // note that these credentials have been pre-configured in our demo firebase instance
-        email: 'eddy@x-services.nl',
+        email: 'eddyverbruggen@gmail.com',
         password: 'firebase'
       }
     }).then(
@@ -764,6 +851,42 @@ export class HelloWorldModel extends Observable {
     });
   }
 
+  public doLoginByEmailLink(): void {
+    prompt(
+        "The email address to send the link to",
+        ""
+    ).then(promptResult => {
+      if (!promptResult.result) {
+        return;
+      }
+
+      console.log(">> using promptResult.text: " + promptResult.text);
+      firebase.login({
+        // note that you need to enable phone login in your firebase instance
+        type: firebase.LoginType.EMAIL_LINK,
+        emailLinkOptions: {
+          email: promptResult.text,
+          url: "https://combidesk.com?foo=bar"
+        }
+      }).then(
+          result => {
+            alert({
+              title: "Email link sent",
+              message: "Check your email :)",
+              okButtonText: "Cool"
+            });
+          },
+          errorMessage => {
+            alert({
+              title: "Email link login error",
+              message: errorMessage,
+              okButtonText: "OK, damn shame"
+            });
+          }
+      );
+    });
+  }
+
   public doLoginByFacebook(): void {
     firebase.login({
       // note that you need to enable Facebook auth in your firebase instance
@@ -810,7 +933,7 @@ export class HelloWorldModel extends Observable {
 
   public doResetPassword(): void {
     firebase.resetPassword({
-      email: 'eddy@x-services.nl'
+      email: 'eddyverbruggen@gmail.com'
     }).then(
         result => {
           alert({
@@ -1251,7 +1374,7 @@ export class HelloWorldModel extends Observable {
     firebase.reauthenticate({
       type: firebase.LoginType.PASSWORD,
       passwordOptions: {
-        email: 'eddy@x-services.nl',
+        email: 'eddyverbruggen@gmail.com',
         password: 'firebase'
       }
     }).then(
@@ -1434,7 +1557,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doForceCrashIOS(): void {
-    assert(false);
+    Crashlytics.sharedInstance().crash();
   }
 
   public doForceCrashAndroid(): void {

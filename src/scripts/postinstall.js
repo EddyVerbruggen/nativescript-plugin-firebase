@@ -3026,7 +3026,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 4.8.0'
+`pod 'Firebase', '~> 4.11.0' 
 pod 'Firebase/Auth'
 
 # Uncomment if you want to enable Realtime DB
@@ -3261,14 +3261,11 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "11.8.0"
+    def firebaseVersion = "12.0.1"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$firebaseVersion"
     compile "com.google.firebase:firebase-auth:$firebaseVersion"
-
-    // for converting Java objects to JS
-    compile "com.google.code.gson:gson:2.8.+"
 
     // for reading google-services.json and configuration
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : firebaseVersion

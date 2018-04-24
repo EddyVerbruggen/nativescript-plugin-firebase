@@ -59,6 +59,11 @@ You can reconfigure the plugin by going to the `node_modules/nativescript-plugin
 
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
 
+#### Using Vue?
+If you're using this template: [vue-cli-template](https://github.com/nativescript-vue/vue-cli-template), then copy `firebase.nativescript.json` to the `template` folder. You could also symlink it: `firebase.nativescript.json -> template/firebase.nativescript.json`.
+
+And also, `require` the plugin before Vue.start runs (probably in `main.js`), but run `firebase.init()` afterwards (although it may work before). You could wrap it in a timeout to make sure.
+
 ### iOS (Cocoapods)
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.
 
@@ -99,7 +104,7 @@ firebase.init({
 
 #### TypeScript
 ```js
-const firebase = require("nativescript-plugin-firebase");
+import firebase = require("nativescript-plugin-firebase");
 
 firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
@@ -112,6 +117,31 @@ firebase.init({
     console.log(`firebase.init error: ${error}`);
   }
 );
+```
+
+#### Angular
+Because of the specifics of the angular bootstrap it is best to initalize firebase once the angular application is running. For example your main compoment's `ngOnInit` method:
+```js
+import firebase = require("nativescript-plugin-firebase");
+
+@Component({
+    // ...
+})
+export class AppComponent implements OnInit {
+  ngOnInit() {
+    firebase.init({
+      // Optionally pass in properties for database, authentication and cloud messaging,
+      // see their respective docs.
+    }).then(
+      instance => {
+        console.log("firebase.init done");
+      },
+      error => {
+        console.log(`firebase.init error: ${error}`);
+      }
+    );
+  }
+}
 ```
 
 ## Known issues on iOS
