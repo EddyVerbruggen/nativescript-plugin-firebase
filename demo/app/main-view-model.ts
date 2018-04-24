@@ -8,7 +8,7 @@ import * as fs from "tns-core-modules/file-system";
 const firebase = require("nativescript-plugin-firebase");
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
-declare const assert: any;
+declare const Crashlytics: any;
 
 const getCircularReplacer = () => {
   const seen = new WeakSet;
@@ -363,7 +363,7 @@ export class HelloWorldModel extends Observable {
     );
   }
 
-  public doLogAnayticsEvent(): void {
+  public doLogAnalyticsEvent(): void {
     firebase.analytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
@@ -1557,7 +1557,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doForceCrashIOS(): void {
-    assert(false);
+    Crashlytics.sharedInstance().crash();
   }
 
   public doForceCrashAndroid(): void {

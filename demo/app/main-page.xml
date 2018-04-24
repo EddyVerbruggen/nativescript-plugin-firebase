@@ -159,7 +159,7 @@
 
             <Label row="30" colSpan="2" text="Analytics" class="subtitle"/>
 
-            <Button row="31" col="0" text="log event" tap="{{ doLogAnayticsEvent }}" class="button button-analytics"/>
+            <Button row="31" col="0" text="log event" tap="{{ doLogAnalyticsEvent }}" class="button button-analytics"/>
             <Button row="31" col="1" text="set user property" tap="{{ doSetAnalyticsUserProperty }}" class="button button-analytics"/>
 
             <Button row="32" col="0" text="set Screen A" tap="{{ doSetScreenNameA }}" class="button button-analytics"/>
