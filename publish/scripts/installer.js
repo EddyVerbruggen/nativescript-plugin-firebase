@@ -286,9 +286,15 @@ pod 'Firebase/Auth'
  * @param {any} enable Is Crashlytics enbled
  */
 function writeBuildscriptHook(enable) {
+    var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
+
     if (!enable) {
+        if (fs.existsSync(scriptPath)) {
+            fs.unlinkSync(scriptPath);
+        }
         return
     }
+
     console.log("Install Crashlytics buildscript hook.");
     try {
         var scriptContent =
@@ -410,7 +416,6 @@ module.exports = function($logger, $projectData, hookArgs) {
   });
 };
 `;
-        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
         var afterPrepareDirPath = path.dirname(scriptPath);
         var hooksDirPath = path.dirname(afterPrepareDirPath);
         if (!fs.existsSync(afterPrepareDirPath)) {
