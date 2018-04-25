@@ -4,6 +4,14 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.3.0 (2018, April 25)
+
+### New
+
+- [#549](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/549) Basic integration of Crashlytics for iOS
+- [#647](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/647) Allow standalone Analytics import
+
+
 ## 5.2.0 (2018, April 2)
 
 ### New
