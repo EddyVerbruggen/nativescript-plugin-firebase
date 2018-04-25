@@ -4,7 +4,7 @@
   "firestore": true,
   "remote_config": true,
   "messaging": true,
-  "crash_reporting": true,
+  "crash_reporting": false,
   "crashlytics": true,
   "storage": true,
   "facebook_auth": true,

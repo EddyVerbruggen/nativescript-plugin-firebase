@@ -600,6 +600,7 @@ export class HelloWorldModel extends Observable {
         }]
     }).then(
         result => {
+          console.log("remote config fetched: " + JSON.stringify(result.properties));
           alert({
             title: `Fetched at ${result.lastFetch} ${result.throttled ? '(throttled)' : ''}`,
             message: JSON.stringify(result.properties),
