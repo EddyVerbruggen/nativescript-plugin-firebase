@@ -22,7 +22,7 @@
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Cloud Messaging](docs/MESSAGING.md)
 * [Storage](docs/STORAGE.md)
-* [Crash Reporting](docs/CRASHREPORTING.md)
+* [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
 * [Analytics](docs/ANALYTICS.md)
 * [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [AdMob](docs/ADMOB.md)

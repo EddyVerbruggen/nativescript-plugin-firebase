@@ -7,15 +7,18 @@
 ## 5.3.0 (2018, April 25)
 
 ### New
-
 - [#549](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/549) Basic integration of Crashlytics for iOS
 - [#647](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/647) Allow standalone Analytics import
+
+### Fixes
+- [#321](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/321) Crash reporting never fill
+- [#543](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/543) Firebase crashlytics
+- [#676](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/676) Crash logs are not appearing for android in google firebase console
 
 
 ## 5.2.0 (2018, April 2)
 
 ### New
-
 - [#648](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/648) Implement setUserId for analytics
 - [#665](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/665) Add Email Link Authentication
 - [#666](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/666) Add 'keywords' support to AdMob banners
@@ -31,14 +34,12 @@
 ## 5.1.8 (2018, March 1)
 
 ### New
-
 - [#633](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/633) The plugin is too picky about the name of the entitlements file
 
 
 ## 5.1.7 (2018, February 11)
 
 ### New
-
 - [#624](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/624) Get push key avoiding .then()
 
 
@@ -57,7 +58,6 @@
 ## 5.1.4 (2018, January 23)
 
 ### New
-
 - [#615](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/615) Conflict with nativescript-barcodescanner
 
 ### Fixes
@@ -71,10 +71,8 @@
 ## 5.1.3 (2018, January 15)
 
 ### New
-
 - [#170](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/170) Need a way to unregister push notification from Firebase
 - [#609](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/609) When Google Play Services is not available, show a dialog asking the user to install it
-
 
 ### Fixes
 - [#577](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/577) Firestore References can't be parsed
