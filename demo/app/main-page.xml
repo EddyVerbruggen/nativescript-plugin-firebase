@@ -5,7 +5,7 @@
       <TabViewItem.view>
         <ScrollView>
           <StackLayout class="tab-content">
-            <Image margin="10" src="~/res/telerik-logo.png"/>
+            <Image margin="10" src="~/images/telerik-logo.png"/>
             <Label text="Firebase plugin demo" class="title"/>
             <Label text="Create awesome realtime apps with Firebase. Make sure you provide your own Firebase URL in main-view-model.js" textWrap="true"/>
             <Label text="You can either use the Web API or Native API. Under the hoods those use the same native SDK functions. The difference is in how you interact with the plugin. You can even mix usage (fi. the Web API doesn't have push notifications, so you can use the Native API for push and the Web API for authentication)." textWrap="true" style="margin-top: 14"/>
