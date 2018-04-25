@@ -3423,9 +3423,12 @@ task copyMetadata {
   doLast {
     copy {
         from "$projectDir/src/main/assets/metadata"
-        def toDir = new File("$projectDir/build/intermediates/assets").listFiles()[0].name
-        if (toDir != 'debug' && toDir != 'release') {
+        def toDir = project.hasProperty("release") ? "release" : "debug";
+        if (new File("$projectDir/build/intermediates/assets").listFiles() != null) {
+          toDir = new File("$projectDir/build/intermediates/assets").listFiles()[0].name
+          if (toDir != 'debug' && toDir != 'release') {
             toDir += "/release"
+          }
         }
         into "$projectDir/build/intermediates/assets/" + toDir + "/metadata"
     }

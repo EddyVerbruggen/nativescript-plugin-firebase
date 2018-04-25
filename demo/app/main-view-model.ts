@@ -568,6 +568,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doGetRemoteConfig(): void {
+    // TODO downgrade to 3.4 and see if we get logging and alerts.. do this before publishing (the otherwise finished) 5.3.0 version
+    // .. hmm doesn't look like it... and neither is disabling crash reporting
     console.log(">>> doGetRemoteConfig");
     firebase.getRemoteConfig({
       developerMode: true,

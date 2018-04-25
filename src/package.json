@@ -38,10 +38,10 @@
     "config": "node scripts/postinstall.js config",
     "tsc": "tsc -skipLibCheck",
     "plugin.tscwatch": "npm run tsc -- -w",
-    "package": "cd ../publish && rm -rf ./package && ./pack.sh",
-    "demo.ios": "npm run preparedemo && cd ../demo && tns platform remove ios && tns run ios",
-    "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns platform remove ios && tns run ios",
-    "demo.android": "npm run preparedemo && cd ../demo && tns platform remove android && tns run android",
+    "package": "cd ../publish && rimraf ./package && ./pack.sh",
+    "demo.ios": "npm run preparedemo && cd ../demo && rimraf platforms/ios && tns run ios",
+    "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && rimraf platforms/ios && tns run ios",
+    "demo.android": "npm run preparedemo && cd ../demo && rimraf platforms/android && tns run android",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",
     "test": "npm run tslint && npm run tslint.demo && cd ../demo && tns build ios && tns build android",
     "test.ios": "cd ../demo && tns test ios --emulator",
@@ -105,6 +105,7 @@
     "xcode": "~0.9.0"
   },
   "devDependencies": {
+    "rimraf": "^2.6.2",
     "tns-core-modules": "~4.0.0",
     "tns-platform-declarations": "~4.0.0",
     "tslint": "^5.1.0",
