@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "removeComments": true,
+    "removeComments": false,
     "declaration": true,
     "noLib": false,
     "emitDecoratorMetadata": true,
