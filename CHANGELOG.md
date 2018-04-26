@@ -7,6 +7,7 @@
 ## 5.3.1 (2018, April 26)
 
 ### Fixes
+- [#684](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/684) [iOS] New Version in NPM has podfile error during build
 - [#685](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/685) error TS1036: Statements are not allowed in ambient contexts
 
 

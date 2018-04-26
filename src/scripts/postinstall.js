@@ -3044,14 +3044,15 @@ pod 'Firebase/Auth'
 # Uncomment if you want to enable Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Crashlytics'
+` + (!isSelected(result.crashlytics) ? `` : `
 # Crashlytics works best without bitcode
-` + (isSelected(result.crashlytics) ? `` : `#`) + `post_install do |installer|
-` + (isSelected(result.crashlytics) ? `` : `#`) + `    installer.pods_project.targets.each do |target|
-` + (isSelected(result.crashlytics) ? `` : `#`) + `        target.build_configurations.each do |config|
-` + (isSelected(result.crashlytics) ? `` : `#`) + `            config.build_settings['ENABLE_BITCODE'] = "NO"
-` + (isSelected(result.crashlytics) ? `` : `#`) + `        end
-` + (isSelected(result.crashlytics) ? `` : `#`) + `    end
-` + (isSelected(result.crashlytics) ? `` : `#`) + `end
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['ENABLE_BITCODE'] = "NO"
+        end
+    end
+end`) + `
 
 # Uncomment if you want to enable FCM (Firebase Cloud Messaging)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
