@@ -12,8 +12,7 @@
     "nativescript-plugin-firebase": "^5.0.0",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-unit-test-runner": "^0.3.4",
-    "tns-core-modules": "~4.0.0",
-    "tns-ios": "4.0.1"
+    "tns-core-modules": "~4.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "~2.8.0",
