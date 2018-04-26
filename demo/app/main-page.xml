@@ -180,7 +180,7 @@
             <Button row="38" col="0" text="topic subscribe" tap="{{ doSubscribeToTopic }}" class="button button-messaging"/>
             <Button row="38" col="1" text="topic unsubscribe" tap="{{ doUnsubscribeFromTopic }}" class="button button-messaging"/>
 
-            <Label row="39" colSpan="2" text="Firebase Crash Reporing" class="subtitle"/>
+            <Label row="39" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
 
             <Button row="40" col="0" text="log message" tap="{{ doLogMessage }}" class="button button-crash"/>
             <iOS>
