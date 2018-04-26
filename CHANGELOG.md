@@ -4,6 +4,12 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 5.3.1 (2018, April 26)
+
+### Fixes
+- [#685](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/685) error TS1036: Statements are not allowed in ambient contexts
+
+
 ## 5.3.0 (2018, April 25)
 
 ### New

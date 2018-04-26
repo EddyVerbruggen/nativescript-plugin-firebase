@@ -377,6 +377,7 @@ export class HelloWorldModel extends Observable {
         }]
     }).then(
         () => {
+          console.log("Analytics event logged");
           alert({
             title: "Analytics event pushed",
             okButtonText: "Awesome :)"

@@ -12,7 +12,8 @@
     "nativescript-plugin-firebase": "^5.0.0",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-unit-test-runner": "^0.3.4",
-    "tns-core-modules": "~4.0.0"
+    "tns-core-modules": "~4.0.0",
+    "tns-ios": "4.0.1"
   },
   "devDependencies": {
     "@types/jasmine": "~2.8.0",
@@ -37,7 +38,7 @@
     "resolve-url-loader": "~2.1.0",
     "tns-platform-declarations": "^3.4.0",
     "tslint": "~5.4.3",
-    "typescript": "~2.6.0",
+    "typescript": "~2.8.0",
     "webpack": "~3.8.1",
     "webpack-bundle-analyzer": "^2.8.2",
     "webpack-sources": "~1.0.1",
