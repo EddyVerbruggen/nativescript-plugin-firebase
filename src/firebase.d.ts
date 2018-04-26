@@ -695,8 +695,7 @@ export namespace admob {
 }
 
 // Analytics module
-import * as analytics from './analytics';
-exports.analytics = analytics;
+export * from './analytics';
 
 // Invites module
 export namespace invites {

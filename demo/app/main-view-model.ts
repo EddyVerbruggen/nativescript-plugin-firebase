@@ -5,7 +5,7 @@ import { isIOS } from "tns-core-modules/platform";
 import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 
-const firebase = require("nativescript-plugin-firebase");
+import * as firebase from"nativescript-plugin-firebase";
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 declare const Crashlytics: any;
