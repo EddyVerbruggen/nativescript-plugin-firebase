@@ -463,6 +463,10 @@ repositories {
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
 def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "12.0.1"
 
+if ( VersionNumber.parse( googlePlayServicesVersion ) < VersionNumber.parse( '9.2' ) ) {
+    throw new GradleException('Google Play services version too low, please update to at least 9.2');
+}
+
 dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
@@ -470,6 +474,7 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
+  
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$googlePlayServicesVersion"
