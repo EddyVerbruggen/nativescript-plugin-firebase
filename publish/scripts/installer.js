@@ -463,9 +463,15 @@ repositories {
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
 def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "12.0.1"
 
-if ( VersionNumber.parse( googlePlayServicesVersion ) < VersionNumber.parse( '9.2' ) ) {
-    throw new GradleException('Google Play services version too low, please update to at least 9.2');
+` + (isSelected(result.firestore) ? `
+if ( VersionNumber.parse( googlePlayServicesVersion ) < VersionNumber.parse( '11.4.2' ) ) {
+    throw new GradleException(" googlePlayServicesVersion set too low, as you want to use firestore please update to at least 11.4.2 ( currently set to $googlePlayServicesVersion )");
 }
+` : `
+if ( VersionNumber.parse( googlePlayServicesVersion ) < VersionNumber.parse( '9.2' ) ) {
+    throw new GradleException("googlePlayServicesVersion set too low, please update to at least '9.2' ( currently set to $googlePlayServicesVersion )");
+}
+`) + `
 
 dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
@@ -473,8 +479,6 @@ dependencies {
     compile "com.android.support:customtabs:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
-
-  
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:$googlePlayServicesVersion"
