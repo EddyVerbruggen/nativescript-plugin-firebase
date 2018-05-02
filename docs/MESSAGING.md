@@ -192,7 +192,7 @@ This results in a payload of:
 - App in the background: `{"gcm.message_id":"0:1522952757954843%3194ccac3194ccac", "foo":"bar", "foreground":false}`
 
 ## What if iOS doesn't show/receive notifications in the background?
-Make sure you [`require` the plugin in `app.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
+Make sure you [`require` the plugin in `app.ts` / `main.ts` / `main.aot.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
 *before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts` - not even in a timeout; move it out of `app.ts` entirely!).
 
 > Make sure to use `require`, *not* `import` in `app.ts` because TSC will remove the import in case you're not using it.
