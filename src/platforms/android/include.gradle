@@ -16,6 +16,7 @@ repositories {
 }
 
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
+def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "12.0.1"
 
 dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
@@ -24,39 +25,36 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "12.0.1"
-
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:$firebaseVersion"
-    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.google.firebase:firebase-core:$googlePlayServicesVersion"
+    compile "com.google.firebase:firebase-auth:$googlePlayServicesVersion"
 
     // for reading google-services.json and configuration
-    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : firebaseVersion
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Uncomment if you want to use the regular Database (instead of 'Cloud Firestore')
-//    compile "com.google.firebase:firebase-database:$firebaseVersion"
+//    compile "com.google.firebase:firebase-database:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Cloud Firestore'
-//    compile "com.google.firebase:firebase-firestore:$firebaseVersion"
+//    compile "com.google.firebase:firebase-firestore:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Remote Config'
-//    compile "com.google.firebase:firebase-config:$firebaseVersion"
+//    compile "com.google.firebase:firebase-config:$googlePlayServicesVersion"
 
     // Uncomment if you want to use 'Crash Reporting'
-//    compile "com.google.firebase:firebase-crash:$firebaseVersion"
+//    compile "com.google.firebase:firebase-crash:$googlePlayServicesVersion"
 
     // Uncomment if you want to enable 'Crashlytics' (1 / 2)
 //    compile 'com.crashlytics.sdk.android:crashlytics:2.9.1'
 
     // Uncomment if you want FCM (Firebase Cloud Messaging)
-//    compile "com.google.firebase:firebase-messaging:$firebaseVersion"
+//    compile "com.google.firebase:firebase-messaging:$googlePlayServicesVersion"
 
     // Uncomment if you want Google Cloud Storage
-//    compile "com.google.firebase:firebase-storage:$firebaseVersion"
+//    compile "com.google.firebase:firebase-storage:$googlePlayServicesVersion"
 
     // Uncomment if you want AdMob
-//    compile "com.google.firebase:firebase-ads:$firebaseVersion"
+//    compile "com.google.firebase:firebase-ads:$googlePlayServicesVersion"
 
     // Uncomment if you need Facebook Authentication
 //    compile ("com.facebook.android:facebook-android-sdk:4.+"){ exclude group: 'com.google.zxing' }
@@ -65,7 +63,7 @@ dependencies {
 //    compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
     // Uncomment if you need Firebase Invites or Dynamics Links
-//    compile "com.google.firebase:firebase-invites:$firebaseVersion"
+//    compile "com.google.firebase:firebase-invites:$googlePlayServicesVersion"
 }
 
 apply plugin: "com.google.gms.google-services"
