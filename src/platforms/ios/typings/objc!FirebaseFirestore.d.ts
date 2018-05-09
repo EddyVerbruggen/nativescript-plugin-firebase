@@ -44,17 +44,6 @@ declare const enum FIRDocumentChangeType {
 	Removed = 2
 }
 
-declare class FIRDocumentListenOptions extends NSObject {
-
-	static alloc(): FIRDocumentListenOptions; // inherited from NSObject
-
-	static new(): FIRDocumentListenOptions; // inherited from NSObject
-
-	static options(): FIRDocumentListenOptions;
-
-	includeMetadataChanges(includeMetadataChanges: boolean): this;
-}
-
 declare class FIRDocumentReference extends NSObject {
 
 	static alloc(): FIRDocumentReference; // inherited from NSObject
@@ -71,7 +60,7 @@ declare class FIRDocumentReference extends NSObject {
 
 	addSnapshotListener(listener: (p1: FIRDocumentSnapshot, p2: NSError) => void): FIRListenerRegistration;
 
-	addSnapshotListenerWithOptionsListener(options: FIRDocumentListenOptions, listener: (p1: FIRDocumentSnapshot, p2: NSError) => void): FIRListenerRegistration;
+	addSnapshotListenerWithIncludeMetadataChangesListener(includeMetadataChanges: boolean, listener: (p1: FIRDocumentSnapshot, p2: NSError) => void): FIRListenerRegistration;
 
 	collectionWithPath(collectionPath: string): FIRCollectionReference;
 
@@ -81,13 +70,15 @@ declare class FIRDocumentReference extends NSObject {
 
 	getDocumentWithCompletion(completion: (p1: FIRDocumentSnapshot, p2: NSError) => void): void;
 
+	getDocumentWithSourceCompletion(source: FIRFirestoreSource, completion: (p1: FIRDocumentSnapshot, p2: NSError) => void): void;
+
 	setData(documentData: NSDictionary<string, any>): void;
 
 	setDataCompletion(documentData: NSDictionary<string, any>, completion: (p1: NSError) => void): void;
 
-	setDataOptions(documentData: NSDictionary<string, any>, options: FIRSetOptions): void;
+	setDataMerge(documentData: NSDictionary<string, any>, merge: boolean): void;
 
-	setDataOptionsCompletion(documentData: NSDictionary<string, any>, options: FIRSetOptions, completion: (p1: NSError) => void): void;
+	setDataMergeCompletion(documentData: NSDictionary<string, any>, merge: boolean, completion: (p1: NSError) => void): void;
 
 	updateData(fields: NSDictionary<any, any>): void;
 
@@ -110,13 +101,13 @@ declare class FIRDocumentSnapshot extends NSObject {
 
 	data(): NSDictionary<string, any>;
 
-	dataWithOptions(options: FIRSnapshotOptions): NSDictionary<string, any>;
+	dataWithServerTimestampBehavior(serverTimestampBehavior: FIRServerTimestampBehavior): NSDictionary<string, any>;
 
 	objectForKeyedSubscript(key: any): any;
 
 	valueForField(field: any): any;
 
-	valueForFieldOptions(field: any, options: FIRSnapshotOptions): any;
+	valueForFieldServerTimestampBehavior(field: any, serverTimestampBehavior: FIRServerTimestampBehavior): any;
 }
 
 declare class FIRFieldPath extends NSObject implements NSCopying {
@@ -227,7 +218,18 @@ declare class FIRFirestoreSettings extends NSObject implements NSCopying {
 
 	sslEnabled: boolean;
 
+	timestampsInSnapshotsEnabled: boolean;
+
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
+}
+
+declare const enum FIRFirestoreSource {
+
+	Default = 0,
+
+	Server = 1,
+
+	Cache = 2
 }
 
 declare class FIRGeoPoint extends NSObject implements NSCopying {
@@ -266,9 +268,11 @@ declare class FIRQuery extends NSObject {
 
 	addSnapshotListener(listener: (p1: FIRQuerySnapshot, p2: NSError) => void): FIRListenerRegistration;
 
-	addSnapshotListenerWithOptionsListener(options: FIRQueryListenOptions, listener: (p1: FIRQuerySnapshot, p2: NSError) => void): FIRListenerRegistration;
+	addSnapshotListenerWithIncludeMetadataChangesListener(includeMetadataChanges: boolean, listener: (p1: FIRQuerySnapshot, p2: NSError) => void): FIRListenerRegistration;
 
 	getDocumentsWithCompletion(completion: (p1: FIRQuerySnapshot, p2: NSError) => void): void;
+
+	getDocumentsWithSourceCompletion(source: FIRFirestoreSource, completion: (p1: FIRQuerySnapshot, p2: NSError) => void): void;
 
 	queryEndingAtDocument(document: FIRDocumentSnapshot): FIRQuery;
 
@@ -326,19 +330,6 @@ declare class FIRQueryDocumentSnapshot extends FIRDocumentSnapshot {
 	static new(): FIRQueryDocumentSnapshot; // inherited from NSObject
 }
 
-declare class FIRQueryListenOptions extends NSObject {
-
-	static alloc(): FIRQueryListenOptions; // inherited from NSObject
-
-	static new(): FIRQueryListenOptions; // inherited from NSObject
-
-	static options(): FIRQueryListenOptions;
-
-	readonly includeDocumentMetadataChanges: boolean;
-
-	readonly includeQueryMetadataChanges: boolean;
-}
-
 declare class FIRQuerySnapshot extends NSObject {
 
 	static alloc(): FIRQuerySnapshot; // inherited from NSObject
@@ -356,6 +347,8 @@ declare class FIRQuerySnapshot extends NSObject {
 	readonly metadata: FIRSnapshotMetadata;
 
 	readonly query: FIRQuery;
+
+	documentChangesWithIncludeMetadataChanges(includeMetadataChanges: boolean): NSArray<FIRDocumentChange>;
 }
 
 declare const enum FIRServerTimestampBehavior {
@@ -367,17 +360,6 @@ declare const enum FIRServerTimestampBehavior {
 	Previous = 2
 }
 
-declare class FIRSetOptions extends NSObject {
-
-	static alloc(): FIRSetOptions; // inherited from NSObject
-
-	static merge(): FIRSetOptions;
-
-	static new(): FIRSetOptions; // inherited from NSObject
-
-	readonly merge: boolean;
-}
-
 declare class FIRSnapshotMetadata extends NSObject {
 
 	static alloc(): FIRSnapshotMetadata; // inherited from NSObject
@@ -387,15 +369,6 @@ declare class FIRSnapshotMetadata extends NSObject {
 	readonly fromCache: boolean;
 
 	readonly pendingWrites: boolean;
-}
-
-declare class FIRSnapshotOptions extends NSObject {
-
-	static alloc(): FIRSnapshotOptions; // inherited from NSObject
-
-	static new(): FIRSnapshotOptions; // inherited from NSObject
-
-	static serverTimestampBehavior(serverTimestampBehavior: FIRServerTimestampBehavior): FIRSnapshotOptions;
 }
 
 declare class FIRTimestamp extends NSObject implements NSCopying {
@@ -416,11 +389,11 @@ declare class FIRTimestamp extends NSObject implements NSCopying {
 
 	constructor(o: { seconds: number; nanoseconds: number; });
 
-	approximateDateValue(): Date;
-
 	compare(other: FIRTimestamp): NSComparisonResult;
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
+
+	dateValue(): Date;
 
 	initWithSecondsNanoseconds(seconds: number, nanoseconds: number): this;
 }
@@ -437,7 +410,7 @@ declare class FIRTransaction extends NSObject {
 
 	setDataForDocument(data: NSDictionary<string, any>, document: FIRDocumentReference): FIRTransaction;
 
-	setDataForDocumentOptions(data: NSDictionary<string, any>, document: FIRDocumentReference, options: FIRSetOptions): FIRTransaction;
+	setDataForDocumentMerge(data: NSDictionary<string, any>, document: FIRDocumentReference, merge: boolean): FIRTransaction;
 
 	updateDataForDocument(fields: NSDictionary<any, any>, document: FIRDocumentReference): FIRTransaction;
 }
@@ -456,7 +429,11 @@ declare class FIRWriteBatch extends NSObject {
 
 	setDataForDocument(data: NSDictionary<string, any>, document: FIRDocumentReference): FIRWriteBatch;
 
-	setDataForDocumentOptions(data: NSDictionary<string, any>, document: FIRDocumentReference, options: FIRSetOptions): FIRWriteBatch;
+	setDataForDocumentMerge(data: NSDictionary<string, any>, document: FIRDocumentReference, merge: boolean): FIRWriteBatch;
 
 	updateDataForDocument(fields: NSDictionary<any, any>, document: FIRDocumentReference): FIRWriteBatch;
 }
+
+declare var FirebaseFirestoreVersionNumber: number;
+
+declare var FirebaseFirestoreVersionString: interop.Reference<number>;

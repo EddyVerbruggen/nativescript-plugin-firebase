@@ -97,14 +97,14 @@ const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) 
               if (firebase._dynamicLinkCallback === null) {
                 firebase._cachedDynamicLink = {
                   url: result.getLink().toString(),
-                  matchConfidence: 1,
+                  // matchConfidence: 1,
                   minimumAppVersion: result.getMinimumAppVersion()
                 };
               } else {
                 setTimeout(() => {
                   firebase._dynamicLinkCallback({
                     url: result.getLink().toString(),
-                    matchConfidence: 1,
+                    // matchConfidence: 1,
                     minimumAppVersion: result.getMinimumAppVersion()
                   });
                 });
@@ -1911,7 +1911,7 @@ firebase.uploadFile = arg => {
             updated: new Date(metadata.getUpdatedTimeMillis()),
             bucket: metadata.getBucket(),
             size: metadata.getSizeBytes(),
-            url: metadata.getDownloadUrl().toString()
+            // url: metadata.getDownloadUrl().toString()
           });
         }
       });

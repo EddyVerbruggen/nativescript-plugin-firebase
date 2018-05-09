@@ -17,8 +17,6 @@ declare class FIRMessaging extends NSObject {
 
 	readonly isDirectChannelEstablished: boolean;
 
-	remoteMessageDelegate: FIRMessagingDelegate;
-
 	shouldEstablishDirectChannel: boolean;
 
 	appDidReceiveMessage(message: NSDictionary<any, any>): FIRMessagingMessageInfo;
@@ -37,7 +35,11 @@ declare class FIRMessaging extends NSObject {
 
 	subscribeToTopic(topic: string): void;
 
+	subscribeToTopicCompletion(topic: string, completion: (p1: NSError) => void): void;
+
 	unsubscribeFromTopic(topic: string): void;
+
+	unsubscribeFromTopicCompletion(topic: string, completion: (p1: NSError) => void): void;
 }
 
 declare const enum FIRMessagingAPNSTokenType {
@@ -53,13 +55,9 @@ declare var FIRMessagingConnectionStateChangedNotification: string;
 
 interface FIRMessagingDelegate extends NSObjectProtocol {
 
-	applicationReceivedRemoteMessage?(remoteMessage: FIRMessagingRemoteMessage): void;
-
 	messagingDidReceiveMessage?(messaging: FIRMessaging, remoteMessage: FIRMessagingRemoteMessage): void;
 
 	messagingDidReceiveRegistrationToken?(messaging: FIRMessaging, fcmToken: string): void;
-
-	messagingDidRefreshRegistrationToken?(messaging: FIRMessaging, fcmToken: string): void;
 }
 declare var FIRMessagingDelegate: {
 
@@ -115,3 +113,7 @@ declare class FIRMessagingRemoteMessage extends NSObject {
 declare var FIRMessagingSendErrorNotification: string;
 
 declare var FIRMessagingSendSuccessNotification: string;
+
+declare var FirebaseMessagingVersionNumber: number;
+
+declare var FirebaseMessagingVersionString: interop.Reference<number>;

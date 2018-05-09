@@ -1,6 +1,7 @@
 {
   "using_ios": true,
   "using_android": true,
+  "realtimedb": false,
   "firestore": true,
   "remote_config": true,
   "messaging": true,
@@ -10,5 +11,6 @@
   "facebook_auth": true,
   "google_auth": true,
   "admob": true,
-  "invites": true
+  "invites": true,
+  "ml_kit": true
 }

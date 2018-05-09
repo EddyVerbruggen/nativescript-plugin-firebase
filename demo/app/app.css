@@ -65,6 +65,10 @@ button {
   background-color: #BBBB77;
 }
 
+.button-mlkit {
+  background-color: orange;
+}
+
 .button-messaging {
   background-color: #6d996c;
 }

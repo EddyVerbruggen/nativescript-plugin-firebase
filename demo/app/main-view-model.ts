@@ -5,7 +5,10 @@ import { isIOS } from "tns-core-modules/platform";
 import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 
-import * as firebase from"nativescript-plugin-firebase";
+import * as firebase from "nativescript-plugin-firebase";
+import { MLKitRecognizeTextResult, MLKitScanBarcodesResult } from "../../src/mlkit/mlkit";
+import { ImageSource } from "tns-core-modules/image-source";
+
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 declare const Crashlytics: any;
@@ -348,7 +351,7 @@ export class HelloWorldModel extends Observable {
         setTimeout(() => {
           alert({
             title: "Dynamic Link!",
-            message: result,
+            message: JSON.stringify(result),
             okButtonText: "Awesome!"
           });
         }, 500);
@@ -390,6 +393,43 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
+  }
+
+  public recognizeText(): void {
+    const img = new ImageSource();
+    // img.fromFile("~/images/telerik-logo.png")
+    img.fromFile("~/images/please_walk_on_the_grass.jpg")
+        .then(() => {
+          firebase.mlkit.recognizeText({
+            image: img
+          }).then(
+              (result: MLKitRecognizeTextResult) => {
+                console.log("ML Kit result: " + JSON.stringify(result));
+                this.set("mlOutput", JSON.stringify(result.features));
+              }, errorMessage => {
+                console.log("ML Kit error: " + errorMessage);
+              }
+          );
+        })
+        .catch(err => console.log("Error loading image: " + img));
+  }
+
+  public scanBarcode(): void {
+    const img = new ImageSource();
+    img.fromFile("~/images/qrcode.png")
+        .then(() => {
+          firebase.mlkit.scanBarcodes({
+            image: img
+          }).then(
+              (result: MLKitScanBarcodesResult) => {
+                console.log("ML Kit result: " + JSON.stringify(result));
+                this.set("mlOutput", JSON.stringify(result.features));
+              }, errorMessage => {
+                console.log("ML Kit error: " + errorMessage);
+              }
+          );
+        })
+        .catch(err => console.log("Error loading image: " + img));
   }
 
   public doSetAnalyticsUserProperty(): void {

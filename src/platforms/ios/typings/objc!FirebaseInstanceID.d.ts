@@ -13,20 +13,9 @@ declare class FIRInstanceID extends NSObject {
 
 	getIDWithHandler(handler: (p1: string, p2: NSError) => void): void;
 
-	setAPNSTokenType(token: NSData, type: FIRInstanceIDAPNSTokenType): void;
-
 	token(): string;
 
 	tokenWithAuthorizedEntityScopeOptionsHandler(authorizedEntity: string, scope: string, options: NSDictionary<any, any>, handler: (p1: string, p2: NSError) => void): void;
-}
-
-declare const enum FIRInstanceIDAPNSTokenType {
-
-	Unknown = 0,
-
-	Sandbox = 1,
-
-	Prod = 2
 }
 
 declare const enum FIRInstanceIDError {

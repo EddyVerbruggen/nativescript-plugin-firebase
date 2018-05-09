@@ -2962,6 +2962,10 @@ function promptQuestions() {
         description: 'Are you using Firebase Google Authentication (y/n)',
         default: 'n'
     }, {
+        name: 'ml_kit',
+        description: 'Are you using ML Kit (y/n)',
+        default: 'n'
+    }, {
       name: 'admob',
       description: 'Are you using AdMob (y/n)',
       default: 'n'
@@ -3026,7 +3030,9 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase', '~> 4.11.0' 
+`platform :ios, '9.0'
+
+pod 'Firebase/Core', '~> 5.0.0' 
 pod 'Firebase/Auth'
 
 # Uncomment if you want to enable Realtime DB
@@ -3065,6 +3071,17 @@ end`) + `
 
 # Uncomment if you want to enable Invites and/or Dynamic Links
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
+
+# Uncomment if you want to enable ML Kit
+` + (isSelected(result.ml_kit) ? `` : `#`) + `pod 'Firebase/MLVision'
+# TODO we'de better make these conditional as well
+` + (!isSelected(result.ml_kit) ? `` : `
+pod 'Firebase/MLVisionBarcodeModel'
+pod 'Firebase/MLVisionFaceModel'
+pod 'Firebase/MLVisionLabelModel'
+pod 'Firebase/MLVisionTextModel'
+pod 'Firebase/MLModelInterpreter'
+`) + `
 
 # Uncomment if you want to enable Facebook Authentication
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
@@ -3259,6 +3276,11 @@ repositories {
 }
 
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
+def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "15.0.0"
+
+if ( VersionNumber.parse( googlePlayServicesVersion ) < VersionNumber.parse( '15.0.0' ) ) {
+    throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 ( currently set to $googlePlayServicesVersion )");
+}
 
 dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
@@ -3267,39 +3289,40 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
 
-    def firebaseVersion = "12.0.1"
-
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:$firebaseVersion"
-    compile "com.google.firebase:firebase-auth:$firebaseVersion"
+    compile "com.google.firebase:firebase-core:15.0.2"
+    compile "com.google.firebase:firebase-auth:15.1.0"
 
     // for reading google-services.json and configuration
-    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : firebaseVersion
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Uncomment if you want to use the regular Database
-    ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:$firebaseVersion"
+    ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:15.0.0"
 
     // Uncomment if you want to use 'Cloud Firestore'
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:$firebaseVersion"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:16.0.0"
 
     // Uncomment if you want to use 'Remote Config'
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:$firebaseVersion"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:15.0.2"
 
     // Uncomment if you want to use 'Crash Reporting'
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:$firebaseVersion"
+    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:15.0.2"
 
     // Uncomment if you want to use 'Crashlytics'
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.1"
 
-    // Uncomment if you want FCM (Firebase Cloud Messaging)
-    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:$firebaseVersion"
+    // Uncomment if you want to use FCM (Firebase Cloud Messaging)
+    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:15.0.2"
 
-    // Uncomment if you want Google Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:$firebaseVersion"
+    // Uncomment if you want to use Google Cloud Storage
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:15.0.2"
 
-    // Uncomment if you want AdMob
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:$firebaseVersion"
+    // Uncomment if you want to use AdMob
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.0"
+
+    // Uncomment if you want to use ML Kit
+    // TODO see step 3 @ https://firebase.google.com/docs/ml-kit/android/recognize-text, but that could be done with documentation
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:15.0.0"
 
     // Uncomment if you need Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.+"){ exclude group: 'com.google.zxing' }
@@ -3308,7 +3331,7 @@ dependencies {
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
     // Uncomment if you need Firebase Invites or Dynamic Links
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:$firebaseVersion"
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:$googlePlayServicesVersion"
 }
 
 apply plugin: "com.google.gms.google-services"
@@ -3402,7 +3425,7 @@ module.exports = function($logger, $projectData) {
 
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
-            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.1.2"';
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.3.1"';
             if (googleServicesPattern.test(buildGradleContent)) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {

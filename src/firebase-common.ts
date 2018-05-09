@@ -1,6 +1,7 @@
 import { prompt } from "tns-core-modules/ui/dialogs";
 import { firestore } from "./firebase";
 import * as analytics from "./analytics/analytics";
+import * as mlkit from "./mlkit/mlkit";
 import * as applicationSettings from "tns-core-modules/application-settings";
 
 export const firebase: any = {
@@ -12,6 +13,7 @@ export const firebase: any = {
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,
   analytics,
+  mlkit,
   firestore: {},
   invites: {
     MATCH_TYPE: {

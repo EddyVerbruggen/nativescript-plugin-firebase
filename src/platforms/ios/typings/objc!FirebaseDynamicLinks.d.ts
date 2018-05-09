@@ -16,8 +16,6 @@ declare class FIRDynamicLink extends NSObject {
 
 	static new(): FIRDynamicLink; // inherited from NSObject
 
-	readonly matchConfidence: FIRDynamicLinkMatchConfidence;
-
 	readonly matchType: FIRDLMatchType;
 
 	readonly minimumAppVersion: string;
@@ -159,13 +157,6 @@ declare class FIRDynamicLinkItunesConnectAnalyticsParameters extends NSObject {
 	campaignToken: string;
 
 	providerToken: string;
-}
-
-declare const enum FIRDynamicLinkMatchConfidence {
-
-	Weak = 0,
-
-	Strong = 1
 }
 
 declare class FIRDynamicLinkNavigationInfoParameters extends NSObject {
