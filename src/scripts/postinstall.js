@@ -3321,7 +3321,6 @@ dependencies {
     ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.0"
 
     // Uncomment if you want to use ML Kit
-    // TODO see step 3 @ https://firebase.google.com/docs/ml-kit/android/recognize-text, but that could be done with documentation
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:15.0.0"
 
     // Uncomment if you need Facebook Authentication

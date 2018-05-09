@@ -9,17 +9,21 @@ export interface MLKitRecognizeTextResult {
 }
 
 export interface MLKitScanBarcodesResult {
-  features: Array<{
-    text: string;
+  barcodes: Array<{
+    value: string;
+    format: number; // TODO friendly x-plat value
   }>;
 }
 
 export interface MLKitOptions {
-  engine?: "device" | "cloud"; // defaults to local, as cloud requires an additional plan
   image: Image | ImageSource;
 }
 
-export interface MLKitRecognizeTextOptions extends MLKitOptions {
+export interface MLKitMultiEngineOptions extends MLKitOptions {
+  engine?: "device" | "cloud"; // defaults to local, as cloud requires an additional plan
+}
+
+export interface MLKitRecognizeTextOptions extends MLKitMultiEngineOptions {
 }
 
 export interface MLKitScanBarcodesOptions extends MLKitOptions {

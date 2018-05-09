@@ -16,10 +16,7 @@ export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKit
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: (textBlocks) => {
-          console.log(">>> success: " + textBlocks);
           const blocks = textBlocks.getBlocks();
-          console.log(">>> blocks: " + blocks);
-          console.log(">>> blocks size: " + blocks.size());
 
           const result = <MLKitRecognizeTextResult>{
             features: []
@@ -28,17 +25,13 @@ export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKit
           // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
           for (let i = 0; i < blocks.size(); i++) {
             const textBlock = blocks.get(i);
-            console.log(">>> success textBlock: " + textBlock);
-            console.log(">>> success textBlock.getText(): " + textBlock.getText());
-
             result.features.push({
               text: textBlock.getText()
             });
           }
 
-          firebaseVisionTextDetector.close();
-
           resolve(result);
+          firebaseVisionTextDetector.close();
         }
       });
 
@@ -78,36 +71,27 @@ export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitSc
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: (barcodes) => {
-          console.log(">>> barcodes: " + barcodes);
-          console.log(">>> barcodes size: " + barcodes.size());
-
           const result = <MLKitScanBarcodesResult>{
-            features: []
+            barcodes: []
           };
 
           // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
           for (let i = 0; i < barcodes.size(); i++) {
             const barcode = barcodes.get(i);
-            console.log(">>> success barcode: " + barcode);
-            console.log(">>> success barcode.getRawValue(): " + barcode.getRawValue());
-            console.log(">>> success barcode.getDisplayValue(): " + barcode.getDisplayValue());
-
-            result.features.push({
-              text: barcode.getRawValue()
+            result.barcodes.push({
+              value: barcode.getRawValue(),
+              format: barcode.getFormat()
             });
           }
 
-          firebaseVisionBarcodeDetector.close();
-
           resolve(result);
+          firebaseVisionBarcodeDetector.close();
         }
       });
 
       const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
-
-      console.log(">>> scanBarcodes D");
 
       firebaseVisionBarcodeDetector
           .detectInImage(getImage(options))
@@ -125,4 +109,3 @@ function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.c
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 }
-

@@ -396,16 +396,20 @@ export class HelloWorldModel extends Observable {
   }
 
   public recognizeText(): void {
+    const path = "~/images/please_walk_on_the_grass.jpg";
     const img = new ImageSource();
-    // img.fromFile("~/images/telerik-logo.png")
-    img.fromFile("~/images/please_walk_on_the_grass.jpg")
+    img.fromFile(path)
         .then(() => {
           firebase.mlkit.recognizeText({
             image: img
           }).then(
               (result: MLKitRecognizeTextResult) => {
                 console.log("ML Kit result: " + JSON.stringify(result));
-                this.set("mlOutput", JSON.stringify(result.features));
+                alert({
+                  title: `See ${path}`,
+                  message: JSON.stringify(result.features),
+                  okButtonText: "OK"
+                });
               }, errorMessage => {
                 console.log("ML Kit error: " + errorMessage);
               }
@@ -415,15 +419,20 @@ export class HelloWorldModel extends Observable {
   }
 
   public scanBarcode(): void {
+    const path = "~/images/barcodes/2qrcodes.png";
     const img = new ImageSource();
-    img.fromFile("~/images/qrcode.png")
+    img.fromFile(path)
         .then(() => {
           firebase.mlkit.scanBarcodes({
             image: img
           }).then(
               (result: MLKitScanBarcodesResult) => {
                 console.log("ML Kit result: " + JSON.stringify(result));
-                this.set("mlOutput", JSON.stringify(result.features));
+                alert({
+                  title: `See ${path}`,
+                  message: JSON.stringify(result.barcodes),
+                  okButtonText: "OK"
+                });
               }, errorMessage => {
                 console.log("ML Kit error: " + errorMessage);
               }

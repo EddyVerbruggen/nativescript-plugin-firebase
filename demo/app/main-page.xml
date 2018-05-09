@@ -71,7 +71,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
 
@@ -198,9 +198,7 @@
             <Label row="43" colSpan="2" text="ML Kit" class="subtitle"/>
 
             <Button row="44" col="0" text="recognize text" tap="{{ recognizeText }}" class="button button-mlkit"/>
-            <Button row="44" col="1" text="scan barcode" tap="{{ scanBarcode }}" class="button button-mlkit"/>
-
-            <Label row="45" colSpan="2" text="{{ mlOutput }}" class="message" textWrap="true"/>
+            <Button row="44" col="1" text="scan barcodes" tap="{{ scanBarcode }}" class="button button-mlkit"/>
           </GridLayout>
 
         </ScrollView>
