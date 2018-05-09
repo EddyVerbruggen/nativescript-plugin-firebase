@@ -1107,15 +1107,17 @@ function toLoginResult(user) {
   }
 
   const providers = [];
-  for (let i = 0, l = user.providerData.count; i < l; i++) {
-    const firUserInfo = user.providerData.objectAtIndex(i);
-    const pid = firUserInfo.valueForKey("providerID");
-    // the app may have dropped Facebook support, so check if the native class is still there
-    if (pid === 'facebook.com' && typeof(FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
-      const fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
-      providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
-    } else {
-      providers.push({id: pid});
+  if (user.providerData) {
+    for (let i = 0, l = user.providerData.count; i < l; i++) {
+      const firUserInfo = user.providerData.objectAtIndex(i);
+      const pid = firUserInfo.valueForKey("providerID");
+      // the app may have dropped Facebook support, so check if the native class is still there
+      if (pid === 'facebook.com' && typeof(FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
+        const fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
+        providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
+      } else {
+        providers.push({id: pid});
+      }
     }
   }
 
