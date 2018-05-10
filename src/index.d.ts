@@ -1,3 +1,4 @@
 export * from './firebase';
 export * from './analytics';
-export * from './mlkit';
+import * as ml from './mlkit';
+export declare const mlkit: typeof ml;

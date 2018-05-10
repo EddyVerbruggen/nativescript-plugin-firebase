@@ -4,10 +4,12 @@ import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { isIOS } from "tns-core-modules/platform";
 import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
+import { ImageSource } from "tns-core-modules/image-source";
 
 import * as firebase from "nativescript-plugin-firebase";
-import { MLKitRecognizeTextResult, MLKitScanBarcodesResult } from "../../src/mlkit/mlkit";
-import { ImageSource } from "tns-core-modules/image-source";
+
+import { MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
+import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
@@ -400,13 +402,13 @@ export class HelloWorldModel extends Observable {
     const img = new ImageSource();
     img.fromFile(path)
         .then(() => {
-          firebase.mlkit.recognizeText({
+          firebase.mlkit.textrecognition.recognizeText({
             image: img
           }).then(
               (result: MLKitRecognizeTextResult) => {
                 console.log("ML Kit result: " + JSON.stringify(result));
                 alert({
-                  title: `See ${path}`,
+                  title: `Result from ${path}:`,
                   message: JSON.stringify(result.features),
                   okButtonText: "OK"
                 });
@@ -415,7 +417,7 @@ export class HelloWorldModel extends Observable {
               }
           );
         })
-        .catch(err => console.log("Error loading image: " + img));
+        .catch(err => console.log("Error in recognizeText: " + err));
   }
 
   public scanBarcode(): void {
@@ -423,13 +425,13 @@ export class HelloWorldModel extends Observable {
     const img = new ImageSource();
     img.fromFile(path)
         .then(() => {
-          firebase.mlkit.scanBarcodes({
+          firebase.mlkit.barcodescanning.scanBarcodes({
             image: img
           }).then(
               (result: MLKitScanBarcodesResult) => {
                 console.log("ML Kit result: " + JSON.stringify(result));
                 alert({
-                  title: `See ${path}`,
+                  title: `Result from ${path}:`,
                   message: JSON.stringify(result.barcodes),
                   okButtonText: "OK"
                 });
@@ -438,7 +440,7 @@ export class HelloWorldModel extends Observable {
               }
           );
         })
-        .catch(err => console.log("Error loading image: " + img));
+        .catch(err => console.log("Error in scanBarcode: " + err));
   }
 
   public doSetAnalyticsUserProperty(): void {

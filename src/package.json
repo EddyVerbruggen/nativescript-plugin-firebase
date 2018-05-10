@@ -42,6 +42,7 @@
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios",
     "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && rimraf platforms/ios && tns run ios",
     "demo.android": "npm run preparedemo && cd ../demo && rimraf platforms/android && tns run android",
+    "demo.android.linked": "npm run tsc && cd ../demo && tns run android --syncAllFiles",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",
     "test": "npm run tslint && npm run tslint.demo && cd ../demo && tns build ios && tns build android",
     "test.ios": "cd ../demo && tns test ios --emulator",
@@ -62,7 +63,8 @@
     "generate.typings.android.database": "npm run generate.typings.android --nativescript-plugin-firebase:typings=database --nativescript-plugin-firebase:typingsproject=demo",
     "generate.typings.android.firestore": "npm run generate.typings.android --nativescript-plugin-firebase:typings=firestore",
     "generate.typings.android.messaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=messaging",
-    "generate.typings.android.storage": "npm run generate.typings.android --nativescript-plugin-firebase:typings=storage"
+    "generate.typings.android.storage": "npm run generate.typings.android --nativescript-plugin-firebase:typings=storage",
+    "generate.typings.android.mlkit": "npm run generate.typings.android --nativescript-plugin-firebase:typings=mlkkit"
   },
   "repository": {
     "type": "git",

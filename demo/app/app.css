@@ -80,3 +80,13 @@ button {
 .button-invites {
   background-color: #1832d5;
 }
+
+.barcodescanner {
+  width: 320;
+  height: 260;
+  margin-top: 16;
+}
+
+Label {
+  padding: 10;
+}
