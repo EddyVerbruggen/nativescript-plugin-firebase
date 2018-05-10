@@ -3,8 +3,8 @@ import { booleanConverter } from "tns-core-modules/ui/core/view-base";
 import { Property } from "tns-core-modules/ui/core/properties";
 
 export enum BarcodeFormat {
-  UNKNOWN = -1,
-  ALL = 0,
+  // UNKNOWN = -1,
+  // ALL = 0,
   CODE_128 = 1,
   CODE_39 = 2,
   CODE_93 = 4,
@@ -23,13 +23,6 @@ export enum BarcodeFormat {
 export function getBarcodeFormatFromIndex(index: number): string {
   return BarcodeFormat[index];
 }
-
-// export const BarcodeFormats: Array<BarcodeFormat> = ["QRCODE"];
-// export const BarcodeFormatMap: Map<number, BarcodeFormat> = new Map([
-//   [1, "QRCODE"],
-//   [2, "EAN134"],
-// ]);
-// BarcodeFormats.insert(2, "EAN13");
 
 export const formatsProperty = new Property<MLKitBarcodeScanner, string>({
   name: "formats",

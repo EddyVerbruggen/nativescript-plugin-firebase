@@ -12,6 +12,11 @@ export interface MLKitScanBarcodesResult {
 }
 
 export interface MLKitScanBarcodesOptions extends MLKitOptions {
+  /**
+   * Limit to only what you need to speed up processing.
+   * If not set, we'll detect all supported formats.
+   */
+  formats?: Array<BarcodeFormat>;
 }
 
 export declare function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitScanBarcodesResult>;

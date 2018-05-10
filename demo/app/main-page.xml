@@ -144,13 +144,13 @@
                 row="2"
                 colSpan="2"
                 class="barcodescanner"
-                scanResult="onBarcodeScanResult" />
+                scanResult="onBarcodesScanResult" />
 
-            <Label row="3" text="Barcode format:" />
-            <Label row="3" col="1" text="{{ barcodeFormat }}" />
+            <!--<Label row="3" text="Barcode format:" />-->
+            <!--<Label row="3" col="1" text="{{ barcodeFormat }}" />-->
 
-            <Label row="4" text="Barcode value:" />
-            <Label row="4" col="1" text="{{ barcodeValue }}" />
+            <!--<Label row="4" text="Barcode value:" />-->
+            <Label row="3" colSpan="2" text="{{ textValue }}" textWrap="true" />
 
 
 
