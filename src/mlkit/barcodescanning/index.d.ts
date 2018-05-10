@@ -1,10 +1,10 @@
 import { MLKitOptions } from "../";
-import { ContentView } from "tns-core-modules/ui/content-view";
 import { BarcodeFormat } from "./barcodescanning-common";
+import { MLKitResult, MLKitCameraView } from "../index";
 
 export declare const BarcodeFormat: typeof BarcodeFormat;
 
-export interface MLKitScanBarcodesResult {
+export interface MLKitScanBarcodesResult extends MLKitResult {
   barcodes: Array<{
     value: string;
     format: string;
@@ -21,4 +21,4 @@ export interface MLKitScanBarcodesOptions extends MLKitOptions {
 
 export declare function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitScanBarcodesResult>;
 
-export declare class MLKitBarcodeScanner extends ContentView {}
+export declare class MLKitBarcodeScanner extends MLKitCameraView {}

@@ -1,6 +1,6 @@
-import { ContentView } from "tns-core-modules/ui/content-view";
 import { booleanConverter } from "tns-core-modules/ui/core/view-base";
 import { Property } from "tns-core-modules/ui/core/properties";
+import { MLKitCameraView } from "../mlkit-cameraview";
 
 export enum BarcodeFormat {
   // UNKNOWN = -1,
@@ -18,10 +18,6 @@ export enum BarcodeFormat {
   UPC_E = 1024,
   PDF417 = 2048,
   AZTEC = 4096,
-}
-
-export function getBarcodeFormatFromIndex(index: number): string {
-  return BarcodeFormat[index];
 }
 
 export const formatsProperty = new Property<MLKitBarcodeScanner, string>({
@@ -47,7 +43,7 @@ export const reportDuplicatesProperty = new Property<MLKitBarcodeScanner, boolea
   valueConverter: booleanConverter
 });
 
-export abstract class MLKitBarcodeScanner extends ContentView {
+export abstract class MLKitBarcodeScanner extends MLKitCameraView {
   static scanResultEvent: string = "scanResult";
 
   protected formats: string;

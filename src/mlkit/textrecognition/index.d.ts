@@ -1,6 +1,7 @@
 import { MLKitMultiEngineOptions } from "../";
+import { MLKitResult } from "../index";
 
-export interface MLKitRecognizeTextResult {
+export interface MLKitRecognizeTextResult extends MLKitResult {
   features: Array<{
     text: string;
   }>;

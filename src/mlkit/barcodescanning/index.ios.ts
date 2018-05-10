@@ -1,64 +1,18 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
+import { BarcodeFormat } from "./barcodescanning-common";
+import { MLKitCameraView as MLKitBarcodeScannerBase } from "../mlkit-cameraview";
 import { MLKitScanBarcodesOptions, MLKitScanBarcodesResult } from "./index";
 import { MLKitOptions } from "../index";
 
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
-  // private _reader: QRCodeReader;
-  // private _scanner: QRCodeReaderViewController;
-
-  constructor() {
-    super();
-    console.log("-- constr view");
+  protected createDetector(): any {
   }
 
-  createNativeView(): Object {
-    let v = super.createNativeView();
-    console.log("-- createNativeView");
-    this.initView();
-    return v;
+  protected createFailureListener(): any {
   }
 
-  initView() {
-    // const types = getBarcodeTypes(this.formats);
-    // this._reader = QRCodeReader.readerWithMetadataObjectTypes(<any>types);
-
-    let torch = false;
-    let flip = false;
-    let closeButtonLabel = null;
-    let cancelLabelBackgroundColor = null;
-
-    if (this.preferFrontCamera) {
-      // this._reader.switchDeviceInput();
-    }
-
-    // this._scanner = QRCodeReaderViewController.readerWithCancelButtonTitleCodeReaderStartScanningAtLoadShowSwitchCameraButtonShowTorchButtonCancelButtonBackgroundColor(
-    //     closeButtonLabel, this._reader, true, flip, torch, cancelLabelBackgroundColor);
-    // this._scanner.modalPresentationStyle = UIModalPresentationStyle.CurrentContext;
-
-    /*
-    const that = this;
-    let delegate = QRCodeReaderDelegateImpl.initWithOwner(new WeakRef(this));
-    delegate.setCallback(
-        this.beepOnScan,
-        true,
-        this.reportDuplicates,
-        (text: string, format: string) => {
-          that.notify({
-            eventName: BarcodeScannerBaseView.scanResultEvent,
-            object: that,
-            format: format,
-            text: text
-          });
-        });
-    this._scanner.delegate = delegate;
-
-    if (this.ios) {
-      this.ios.layer.insertSublayerAtIndex(this._reader.previewLayer, 0);
-      this._reader.startScanning();
-    }
-    */
+  protected createSuccessListener(): any {
   }
 
   // public onLayout(left: number, top: number, right: number, bottom: number): void {

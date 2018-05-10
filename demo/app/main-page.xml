@@ -1,4 +1,8 @@
-<TabView loaded="pageLoaded" class="page" xmlns:FirebaseMLKitBarcodeScanning="nativescript-plugin-firebase/mlkit/barcodescanning">
+<TabView
+    loaded="pageLoaded"
+    class="page"
+    xmlns:FirebaseMLKitBarcodeScanning="nativescript-plugin-firebase/mlkit/barcodescanning"
+    xmlns:FirebaseMLKitFaceDetection="nativescript-plugin-firebase/mlkit/facedetection">
   <TabView.items>
 
     <TabViewItem title="ML Kit">
@@ -146,11 +150,24 @@
                 class="barcodescanner"
                 scanResult="onBarcodesScanResult" />
 
-            <!--<Label row="3" text="Barcode format:" />-->
-            <!--<Label row="3" col="1" text="{{ barcodeFormat }}" />-->
+            <!--FirebaseMLKitFaceDetection:MLKitFaceDetection
+                row="2"
+                colSpan="2"
+                class="barcodescanner"
+                scanResult="onFaceDetectionResult" /-->
 
-            <!--<Label row="4" text="Barcode value:" />-->
-            <Label row="3" colSpan="2" text="{{ textValue }}" textWrap="true" />
+            <Label row="3" text="Barcode format:" />
+            <Label row="3" col="1" text="{{ barcodeFormat }}" />
+
+            <Label row="4" text="Barcode value:" />
+            <Label row="4" col="1" text="{{ barcodeValue }}" />
+
+            <!--<Label row="3" colSpan="2" text="{{ allOK }}" textWrap="true" />-->
+
+            <!--<Label row="4" text="{{ textValue }}" textWrap="true" />-->
+            <!--<Label row="4" col="1" text="If all above 70%, the image is shown here." textWrap="true" visibility="{{ lastMatch ? 'collapsed' : 'visible' }} " />-->
+            <!--<Image row="4" col="1" src="{{ lastMatch }}" visibility="{{ lastMatch ? 'visible' : 'collapsed' }} " />-->
+
 
 
 
