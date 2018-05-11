@@ -5,6 +5,13 @@
   <StackLayout class="page">
     <Label text="After pressing those buttons, check the console log" textWrap="true"></Label>
 
+    <MLKitBarcodeScanner
+        width="400"
+        height="300"
+        formats="QR_CODE, EAN_8"
+        (scanResult)="onBarcodeScanResult($event)">
+    </MLKitBarcodeScanner>
+
     <Label text="Authentication" class="h2"></Label>
     <Button text="login anonymously" (tap)="loginAnonymously()" class="button button-user"></Button>
 

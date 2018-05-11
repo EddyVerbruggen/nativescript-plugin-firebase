@@ -1,37 +1,68 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { BarcodeFormat } from "./barcodescanning-common";
-import { MLKitCameraView as MLKitBarcodeScannerBase } from "../mlkit-cameraview";
 import { MLKitScanBarcodesOptions, MLKitScanBarcodesResult } from "./index";
 import { MLKitOptions } from "../index";
+import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
 export { BarcodeFormat };
 
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
-
   protected createDetector(): any {
-  }
-
-  protected createFailureListener(): any {
+    let formats: Array<BarcodeFormat>;
+    if (this.formats) {
+      formats = [];
+      const requestedFormats = this.formats.split(",");
+      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]))
+    }
+    return getBarcodeDetector(formats);
   }
 
   protected createSuccessListener(): any {
-  }
+    return (barcodes: NSArray<FIRVisionBarcode>, error: NSError) => {
+      if (error !== null) {
+        console.log(error.localizedDescription);
 
-  // public onLayout(left: number, top: number, right: number, bottom: number): void {
-  //   super.onLayout(left, top, right, bottom);
-  //   if (this._hasSupport && this.ios) {
-  //     this._reader.previewLayer.frame = this.ios.layer.bounds;
-  //   }
-  // }
+      } else if (barcodes !== null) {
+        const result = <MLKitScanBarcodesResult>{
+          barcodes: []
+        };
+
+        for (let i = 0, l = barcodes.count; i < l; i++) {
+          const barcode: FIRVisionBarcode = barcodes.objectAtIndex(i);
+          result.barcodes.push({
+            value: barcode.rawValue,
+            format: BarcodeFormat[barcode.format]
+          });
+        }
+
+        this.notify({
+          eventName: MLKitBarcodeScanner.scanResultEvent,
+          object: this,
+          value: result
+        });
+      }
+    }
+  }
+}
+
+function getBarcodeDetector(formats?: Array<BarcodeFormat>): any {
+  if (formats && formats.length > 0) {
+    // TODO
+    const barcodeDetector: FIRVisionBarcodeDetector = FIRVision.vision().barcodeDetector();
+    return barcodeDetector;
+    // const firebaseVisionBarcodeDetectorOptions =
+    //     new com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions.Builder()
+    //         .setBarcodeFormats(formats[0], formats) // the seconds argument is a varargs.. let's make it easy and just do it like this
+    //         .build();
+    // return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionBarcodeDetector(firebaseVisionBarcodeDetectorOptions);
+  } else {
+    return FIRVision.vision().barcodeDetector();
+  }
 }
 
 export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitScanBarcodesResult> {
   return new Promise((resolve, reject) => {
     try {
-      const firVision: FIRVision = FIRVision.vision();
-      // TODO pass in formats
-      const barcodeDetector: FIRVisionBarcodeDetector = firVision.barcodeDetector();
-      // const textDetector: FIRVisionBarcodeDetector = firVision.barcodeDetectorWithOptions();
+      const barcodeDetector = getBarcodeDetector(options.formats);
 
       barcodeDetector.detectInImageCompletion(getImage(options), (barcodes: NSArray<FIRVisionBarcode>, error: NSError) => {
         if (error !== null) {

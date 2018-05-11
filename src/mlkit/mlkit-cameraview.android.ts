@@ -26,8 +26,7 @@ export abstract class MLKitCameraView extends ContentView {
   protected lastVisionImage;
 
   createNativeView(): Object {
-    let v = super.createNativeView(); // TODO required even?
-    console.log("-- createNativeView");
+    let v = super.createNativeView();
 
     if (this.hasCamera()) {
       const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
@@ -89,7 +88,6 @@ export abstract class MLKitCameraView extends ContentView {
           break;
         }
       }
-      console.log(">>> selected camera id: " + requestedCameraId);
       const camera = android.hardware.Camera.open(requestedCameraId);
 
       const sizePair = this.selectSizePair(camera, 640, 480); // TODO based on wrapping frame
@@ -106,14 +104,11 @@ export abstract class MLKitCameraView extends ContentView {
       let previewSize = sizePair.previewSize;
 
       const parameters = camera.getParameters();
-      console.log(">>> parameters: " + parameters);
 
       if (pictureSize) {
         parameters.setPictureSize(pictureSize.width, pictureSize.height);
       }
-
       parameters.setPreviewSize(previewSize.width, previewSize.height);
-
       parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
 
       this.setRotation(camera, parameters, requestedCameraId);

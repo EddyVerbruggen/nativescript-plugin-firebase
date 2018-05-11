@@ -2,6 +2,7 @@ import { Component, NgZone } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
 import { Observable } from "rxjs/Observable";
 import { City } from "../model/City";
+import { MLKitScanBarcodesResult } from "../../../src/mlkit/barcodescanning";
 
 const firebase = require("nativescript-plugin-firebase/app");
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
@@ -24,6 +25,11 @@ export class ItemsComponent {
 
   constructor(private zone: NgZone) {
     // AngularFireModule.initializeApp({});
+  }
+
+  onBarcodeScanResult(event): void {
+    const result: MLKitScanBarcodesResult = event.value;
+    console.log("Received barcode(s): " + JSON.stringify(result));
   }
 
   public loginAnonymously(): void {

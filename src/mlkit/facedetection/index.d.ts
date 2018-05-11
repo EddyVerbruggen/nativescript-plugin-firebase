@@ -1,5 +1,4 @@
 import { MLKitOptions } from "../";
-import { BarcodeFormat } from "./barcodescanning-common";
 import { MLKitCameraView, MLKitResult } from "../index";
 
 export interface MLKitDetectFacesResult extends MLKitResult {

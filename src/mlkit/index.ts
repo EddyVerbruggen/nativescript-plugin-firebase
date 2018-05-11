@@ -20,6 +20,9 @@ export interface MLKitResult {
   imageSource?: ImageSource;
 }
 
+export declare class MLKitCameraView {
+}
+
 export declare class MLKitBarcodeScanner {
 }
 

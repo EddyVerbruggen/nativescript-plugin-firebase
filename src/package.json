@@ -40,7 +40,7 @@
     "plugin.tscwatch": "npm run tsc -- -w",
     "package": "cd ../publish && rimraf ./package && ./pack.sh",
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios",
-    "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && rimraf platforms/ios && tns run ios",
+    "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns run ios",
     "demo.android": "npm run preparedemo && cd ../demo && rimraf platforms/android && tns run android",
     "demo.android.linked": "npm run tsc && cd ../demo && tns run android --syncAllFiles",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",

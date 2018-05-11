@@ -5,6 +5,12 @@ import { AppComponent } from "./app.component";
 
 import { ItemsComponent } from "./item/items.component";
 
+import { registerElement } from "nativescript-angular/element-registry";
+
+registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
+// registerElement("MLKitFaceRecognition", () => require("nativescript-plugin-firebase/mlkit/facedetection").MLKitFaceRecognition);
+// registerElement("MLKitTextRecognition", () => require("nativescript-plugin-firebase/mlkit/textrecognition").MLKitTextRecognition);
+
 @NgModule({
   bootstrap: [
     AppComponent
