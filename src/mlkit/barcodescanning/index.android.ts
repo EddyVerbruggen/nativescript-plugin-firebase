@@ -5,10 +5,18 @@ import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from ".
 
 declare const com: any;
 
+export { BarcodeFormat };
+
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
   protected createDetector(): any {
-    return getBarcodeDetector();
+    let formats: Array<BarcodeFormat>;
+    if (this.formats) {
+      formats = [];
+      const requestedFormats = this.formats.split(",");
+      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]))
+    }
+    return getBarcodeDetector(formats);
   }
 
   protected createSuccessListener(): any {
@@ -43,21 +51,10 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 }
 
 function getBarcodeDetector(formats?: Array<BarcodeFormat>): any {
-  if (formats) {
-    const nativeFormats: Array<any> = [];
-    formats.forEach(format => {
-      format === BarcodeFormat.AZTEC && nativeFormats.push(com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode.FORMAT_AZTEC);
-      format === BarcodeFormat.CODABAR && nativeFormats.push(com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode.FORMAT_CODABAR);
-      format === BarcodeFormat.QR_CODE && nativeFormats.push(com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode.FORMAT_QR_CODE);
-      // TODO other formats..
-    });
-
-    console.log("formats: " + JSON.stringify(formats));
-    console.log("nativeFormats: " + JSON.stringify(nativeFormats));
-
+  if (formats && formats.length > 0) {
     const firebaseVisionBarcodeDetectorOptions =
         new com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions.Builder()
-            .setBarcodeFormats(nativeFormats)
+            .setBarcodeFormats(formats[0], formats) // the seconds argument is a varargs.. let's make it easy and just do it like this
             .build();
     return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionBarcodeDetector(firebaseVisionBarcodeDetectorOptions);
   } else {
@@ -76,7 +73,7 @@ export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitSc
             barcodes: []
           };
 
-          // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
+          // There are more details available, see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
           for (let i = 0; i < barcodes.size(); i++) {
             const barcode = barcodes.get(i);
             result.barcodes.push({

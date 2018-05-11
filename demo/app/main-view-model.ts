@@ -8,8 +8,9 @@ import { ImageSource } from "tns-core-modules/image-source";
 
 import * as firebase from "nativescript-plugin-firebase";
 
-import { MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
+import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
@@ -406,7 +407,6 @@ export class HelloWorldModel extends Observable {
             image: img
           }).then(
               (result: MLKitRecognizeTextResult) => {
-                console.log("ML Kit result: " + JSON.stringify(result));
                 alert({
                   title: `Result from ${path}:`,
                   message: JSON.stringify(result.features),
@@ -426,10 +426,10 @@ export class HelloWorldModel extends Observable {
     img.fromFile(path)
         .then(() => {
           firebase.mlkit.barcodescanning.scanBarcodes({
-            image: img
+            image: img,
+            formats: [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13]
           }).then(
               (result: MLKitScanBarcodesResult) => {
-                console.log("ML Kit result: " + JSON.stringify(result));
                 alert({
                   title: `Result from ${path}:`,
                   message: JSON.stringify(result.barcodes),
@@ -441,6 +441,28 @@ export class HelloWorldModel extends Observable {
           );
         })
         .catch(err => console.log("Error in scanBarcode: " + err));
+  }
+
+  public detectFaces(): void {
+    const path = "~/images/faces.jpg";
+    const img = new ImageSource();
+    img.fromFile(path)
+        .then(() => {
+          firebase.mlkit.facedetection.detectFaces({
+            image: img
+          }).then(
+              (result: MLKitDetectFacesResult) => {
+                alert({
+                  title: `Result from ${path}:`,
+                  message: JSON.stringify(result.faces),
+                  okButtonText: "OK"
+                });
+              }, errorMessage => {
+                console.log("ML Kit error: " + errorMessage);
+              }
+          );
+        })
+        .catch(err => console.log("Error in detectFaces: " + err));
   }
 
   public doSetAnalyticsUserProperty(): void {

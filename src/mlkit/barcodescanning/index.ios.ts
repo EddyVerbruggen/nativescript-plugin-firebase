@@ -4,6 +4,8 @@ import { MLKitCameraView as MLKitBarcodeScannerBase } from "../mlkit-cameraview"
 import { MLKitScanBarcodesOptions, MLKitScanBarcodesResult } from "./index";
 import { MLKitOptions } from "../index";
 
+export { BarcodeFormat };
+
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
   protected createDetector(): any {

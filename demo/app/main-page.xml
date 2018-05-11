@@ -133,10 +133,8 @@
             <Button row="42" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
             <Button row="42" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
 
-            <Label row="43" colSpan="2" text="ML Kit" class="subtitle"/>
+            <Label row="43" colSpan="2" text="ML Kit" class="subtitle"/-->
 
-            <Button row="44" col="0" text="recognize text" tap="{{ recognizeText }}" class="button button-mlkit"/>
-            <Button row="44" col="1" text="scan barcodes" tap="{{ scanBarcode }}" class="button button-mlkit"/-->
 
 
 
@@ -148,6 +146,7 @@
                 row="2"
                 colSpan="2"
                 class="barcodescanner"
+                formats="QR_CODE, EAN_13"
                 scanResult="onBarcodesScanResult" />
 
             <!--FirebaseMLKitFaceDetection:MLKitFaceDetection
@@ -167,6 +166,10 @@
             <!--<Label row="4" text="{{ textValue }}" textWrap="true" />-->
             <!--<Label row="4" col="1" text="If all above 70%, the image is shown here." textWrap="true" visibility="{{ lastMatch ? 'collapsed' : 'visible' }} " />-->
             <!--<Image row="4" col="1" src="{{ lastMatch }}" visibility="{{ lastMatch ? 'visible' : 'collapsed' }} " />-->
+
+            <Button row="5" col="0" text="recognize text" tap="{{ recognizeText }}" class="button button-mlkit"/>
+            <Button row="5" col="1" text="scan barcodes" tap="{{ scanBarcode }}" class="button button-mlkit"/>
+            <Button row="6" col="0" text="detect faces" tap="{{ detectFaces }}" class="button button-mlkit"/>
 
 
 
