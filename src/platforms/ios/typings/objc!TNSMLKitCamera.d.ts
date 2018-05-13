@@ -12,6 +12,8 @@ declare class TNSMLKitCameraView extends UIViewController implements AVCaptureVi
 
   processEveryXFrames: number;
 
+  imageOrientation: UIImageOrientation;
+
   readonly debugDescription: string; // inherited from NSObjectProtocol
 
   readonly description: string; // inherited from NSObjectProtocol
@@ -57,7 +59,7 @@ declare class TNSMLKitCameraView extends UIViewController implements AVCaptureVi
 
 interface TNSMLKitCameraViewDelegate extends NSObjectProtocol {
 
-  cameraDidOutputSampleBuffer(sampleBuffer: UIImage): void;
+  cameraDidOutputImage(image: UIImage): void;
 }
 
 declare var TNSMLKitCameraViewDelegate: {

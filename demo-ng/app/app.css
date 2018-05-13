@@ -70,3 +70,12 @@ button {
 .button-invites {
   background-color: #1832d5;
 }
+
+.mlKitCamera {
+  /*border-radius: 130;*/
+  border-width: 8;
+  border-color: #ddd;
+  width: 260;
+  height: 260;
+  margin-top: 16;
+}

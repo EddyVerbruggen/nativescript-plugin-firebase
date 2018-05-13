@@ -5,12 +5,41 @@
   <StackLayout class="page">
     <Label text="After pressing those buttons, check the console log" textWrap="true"></Label>
 
-    <MLKitBarcodeScanner
-        width="400"
-        height="300"
+    <!--MLKitBarcodeScanner
+        class="mlKitCamera"
+        width="340"
+        height="340"
         formats="QR_CODE, EAN_8"
         (scanResult)="onBarcodeScanResult($event)">
+    </MLKitBarcodeScanner-->
+
+    <WrapLayout>
+      <Button text="recognize text" (tap)="recognizeText()" class="button button-mlkit"></Button>
+      <Button text="scan barcodes" (tap)="scanBarcode()" class="button button-mlkit"></Button>
+      <Button text="detect faces" (tap)="detectFaces()" class="button button-mlkit"></Button>
+    </WrapLayout>
+
+    <!--MLKitTextRecognition
+        class="mlKitCamera"
+        (scanResult)="onTextRecognitionResult($event)"
+        (scanResultImage)="onScanResultImage($event)">
+    </MLKitTextRecognition-->
+
+    <MLKitBarcodeScanner
+        class="mlKitCamera"
+        formats="QR_CODE, EAN_8, EAN_13"
+        processEveryNthFrame="3"
+        (scanResult)="onBarcodeScanResult($event)"
+        (scanResultImage)="onScanResultImage($event)">
     </MLKitBarcodeScanner>
+
+    <Label [text]="mlKitTextValue" textWrap="true"></Label>
+
+    <Label [text]="mlKitAllOK" textWrap="true"></Label>
+
+    <Image [src]="mlKitLastMatchImg" *ngIf="mlKitLastMatchImg"></Image>
+
+    <Image [src]="scannedImage" width="200" *ngIf="scannedImage"></Image>
 
     <Label text="Authentication" class="h2"></Label>
     <Button text="login anonymously" (tap)="loginAnonymously()" class="button button-user"></Button>

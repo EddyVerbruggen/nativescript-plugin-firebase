@@ -4,6 +4,7 @@ import { MLKitCameraView, MLKitResult } from "../index";
 export interface MLKitRecognizeTextResult extends MLKitResult {
   features: Array<{
     text: string;
+    // corners: any;
   }>;
 }
 

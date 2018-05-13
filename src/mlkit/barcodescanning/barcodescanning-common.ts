@@ -44,8 +44,6 @@ export const reportDuplicatesProperty = new Property<MLKitBarcodeScanner, boolea
 });
 
 export abstract class MLKitBarcodeScanner extends MLKitCameraView {
-  static scanResultEvent: string = "scanResult";
-
   protected formats: string;
   protected preferFrontCamera: boolean;
   protected beepOnScan: boolean;

@@ -4,6 +4,6 @@
 
 @protocol TNSMLKitCameraViewDelegate <NSObject>
 
-- (void)cameraDidOutputSampleBuffer:(UIImage *)sampleBuffer;
+- (void)cameraDidOutputImage:(UIImage *)image;
 
 @end

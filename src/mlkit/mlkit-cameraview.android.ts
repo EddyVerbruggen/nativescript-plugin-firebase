@@ -1,6 +1,6 @@
-import { ContentView } from "tns-core-modules/ui/content-view";
 import * as application from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
+import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
@@ -18,7 +18,7 @@ class SizePair {
 }
 
 // TODO pause/resume handling
-export abstract class MLKitCameraView extends ContentView {
+export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private surfaceView: android.view.SurfaceView;
   private bytesToByteBuffer = new Map();
   private pendingFrameData = null;
@@ -151,8 +151,7 @@ export abstract class MLKitCameraView extends ContentView {
 
           this.pendingFrameData = this.bytesToByteBuffer.get(byteArray);
 
-          // TODO this value can be controlled from options; the higher the interval the easier it is for the device.. default 1 for full speed?
-          if (throttle++ % 5 !== 0) {
+          if (throttle++ % this.processEveryNthFrame !== 0) {
             return;
           }
 

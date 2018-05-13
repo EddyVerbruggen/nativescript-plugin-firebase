@@ -2,6 +2,8 @@ import { MLKitOptions } from "../";
 import { BarcodeFormat } from "./barcodescanning-common";
 import { MLKitResult, MLKitCameraView } from "../index";
 
+export { BarcodeFormat };
+
 export interface MLKitScanBarcodesResult extends MLKitResult {
   barcodes: Array<{
     value: string;

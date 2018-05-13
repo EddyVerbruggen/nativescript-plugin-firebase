@@ -42,18 +42,17 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
       }
     }
   }
+
+  protected rotateRecording(): boolean {
+    return false;
+  }
 }
 
 function getBarcodeDetector(formats?: Array<BarcodeFormat>): any {
   if (formats && formats.length > 0) {
-    // TODO
-    const barcodeDetector: FIRVisionBarcodeDetector = FIRVision.vision().barcodeDetector();
-    return barcodeDetector;
-    // const firebaseVisionBarcodeDetectorOptions =
-    //     new com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions.Builder()
-    //         .setBarcodeFormats(formats[0], formats) // the seconds argument is a varargs.. let's make it easy and just do it like this
-    //         .build();
-    // return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionBarcodeDetector(firebaseVisionBarcodeDetectorOptions);
+    let barcodeFormats = 0;
+    formats.forEach(format => barcodeFormats |= format);
+    return FIRVision.vision().barcodeDetectorWithOptions(FIRVisionBarcodeDetectorOptions.alloc().initWithFormats(barcodeFormats));
   } else {
     return FIRVision.vision().barcodeDetector();
   }

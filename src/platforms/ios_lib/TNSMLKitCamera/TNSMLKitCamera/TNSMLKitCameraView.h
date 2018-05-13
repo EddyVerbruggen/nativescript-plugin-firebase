@@ -7,6 +7,7 @@
 
 @property (nonatomic, strong) id<TNSMLKitCameraViewDelegate> __nullable delegate;
 @property (nonatomic) int processEveryXFrames;
+@property (nonatomic) UIImageOrientation imageOrientation;
 
 - (nonnull id)initWithCaptureSession:(nonnull AVCaptureSession *)captureSession;
 
