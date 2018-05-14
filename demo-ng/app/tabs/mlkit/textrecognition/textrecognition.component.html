@@ -1,0 +1,21 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="Text recognition"></Label>
+</ActionBar>
+
+<ScrollView>
+  <StackLayout>
+
+    <MLKitTextRecognition
+        width="300"
+        height="340"
+        (scanResult)="onTextRecognitionResult($event)">
+    </MLKitTextRecognition>
+
+    <ListView [items]="features" class="m-t-20">
+      <ng-template let-item="item">
+        <Label class="m-5" [text]="item.text" horizontalAlignment="left"></Label>
+      </ng-template>
+    </ListView>
+
+  </StackLayout>
+</ScrollView>

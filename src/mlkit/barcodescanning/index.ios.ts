@@ -21,7 +21,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
       if (error !== null) {
         console.log(error.localizedDescription);
 
-      } else if (barcodes !== null) {
+      } else if (barcodes !== null && barcodes.count > 0) {
         const result = <MLKitScanBarcodesResult>{
           barcodes: []
         };

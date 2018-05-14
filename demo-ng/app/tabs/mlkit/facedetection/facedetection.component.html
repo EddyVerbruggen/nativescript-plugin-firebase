@@ -1,0 +1,34 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="Face detection"></Label>
+</ActionBar>
+
+<ScrollView>
+  <StackLayout>
+
+    <Label text="The scanner has been configured to detect faces every 5th frame. You can tweak this in your usage of the plugin." textWrap="true"></Label>
+
+    <MLKitFaceDetection
+        width="300"
+        height="340"
+        processEveryNthFrame="5"
+        (scanResult)="onFaceDetectionResult($event)">
+    </MLKitFaceDetection>
+
+    <Label [text]="mlKitAllOK" textWrap="true"></Label>
+
+    <Image [src]="mlKitLastMatchImg" *ngIf="mlKitLastMatchImg"></Image>
+
+    <!--<Image [src]="scannedImage" width="200" *ngIf="scannedImage"></Image>-->
+
+    <ListView [items]="faces" class="m-t-20">
+      <ng-template let-item="item">
+        <GridLayout columns="*, *, *">
+          <Label col="0" class="m-5" [text]="item.smilingProbability | number" horizontalAlignment="left"></Label>
+          <Label col="1" class="m-5" [text]="item.leftEyeOpenProbability | number" horizontalAlignment="left"></Label>
+          <Label col="2" class="m-5" [text]="item.rightEyeOpenProbability | number" horizontalAlignment="left"></Label>
+        </GridLayout>
+      </ng-template>
+    </ListView>
+
+  </StackLayout>
+</ScrollView>

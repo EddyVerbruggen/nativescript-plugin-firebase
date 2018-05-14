@@ -295,9 +295,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`platform :ios, '9.0'
-
-pod 'Firebase/Core', '~> 5.0.0' 
+`pod 'Firebase/Core', '~> 5.0.0' 
 pod 'Firebase/Auth'
 
 # Realtime DB
@@ -585,6 +583,7 @@ dependencies {
 
     // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:15.0.0"
+    ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:15.0.0"
 
     // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.+"){ exclude group: 'com.google.zxing' }

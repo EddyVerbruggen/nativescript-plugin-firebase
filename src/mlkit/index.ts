@@ -1,6 +1,8 @@
 import * as textrecognition from "./textrecognition";
 import * as barcodescanning from "./barcodescanning";
 import * as facedetection from "./facedetection";
+import * as imagelabeling from "./imagelabeling";
+
 import { ImageSource } from "tns-core-modules/image-source";
 import { Image } from "tns-core-modules/ui/image";
 
@@ -29,6 +31,7 @@ export declare class MLKitBarcodeScanner {
 export {
   textrecognition,
   barcodescanning,
-  facedetection
+  facedetection,
+  imagelabeling
 };
 

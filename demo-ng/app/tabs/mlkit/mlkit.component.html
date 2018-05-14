@@ -1,0 +1,11 @@
+<StackLayout class="tab-content">
+
+  <Label text="Pick the image processing source:" textWrap="true"></Label>
+
+  <StackLayout orientation="horizontal" horizontalAlignment="center">
+    <Button text="Cameraroll" (tap)="fromCameraroll()" class="button button-mlkit"></Button>
+    <Button text="Camera picture" (tap)="fromCameraPicture()" class="button button-mlkit"></Button>
+    <Button text="Camera feed" (tap)="fromCameraFeed()" class="button button-mlkit"></Button>
+  </StackLayout>
+
+</StackLayout>

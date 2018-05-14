@@ -3,14 +3,6 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { AppRoutingModule } from "./app.routing";
 import { AppComponent } from "./app.component";
 
-import { ItemsComponent } from "./item/items.component";
-
-import { registerElement } from "nativescript-angular/element-registry";
-
-registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
-registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebase/mlkit/facedetection").MLKitFaceDetection);
-registerElement("MLKitTextRecognition", () => require("nativescript-plugin-firebase/mlkit/textrecognition").MLKitTextRecognition);
-
 @NgModule({
   bootstrap: [
     AppComponent
@@ -20,8 +12,7 @@ registerElement("MLKitTextRecognition", () => require("nativescript-plugin-fireb
     AppRoutingModule
   ],
   declarations: [
-    AppComponent,
-    ItemsComponent
+    AppComponent
   ],
   schemas: [
     NO_ERRORS_SCHEMA

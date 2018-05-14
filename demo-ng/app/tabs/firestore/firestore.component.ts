@@ -2,34 +2,22 @@ import { Component, NgZone } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
 import { Observable } from "rxjs/Observable";
 import { City } from "~/model/City";
-import { ImageSource } from "tns-core-modules/image-source";
 
-import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
-import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
-import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
-import { Image } from "tns-core-modules/ui/image";
-
-const firebase = require("nativescript-plugin-firebase");
-const firebaseWebApi = require("nativescript-plugin-firebase/app");
+const firebase = require("nativescript-plugin-firebase/app");
 
 // import { AngularFireModule } from 'angularfire2';
 
 @Component({
-  selector: "ns-items",
+  selector: "firestore",
   moduleId: module.id,
-  templateUrl: "./items.component.html",
+  templateUrl: "./firestore.component.html",
 })
-export class ItemsComponent {
+export class FirestoreComponent {
 
   private listenerUnsubscribe: () => void;
 
   public myCity$: Observable<City>;
   public myCities$: Observable<Array<City>>;
-  public mlKitTextValue: string;
-  public mlKitAllOK: string;
-  public mlKitLastMatchImg: ImageSource;
-
-  public scannedImage: Image;
 
   private city: City;
   private cities: Array<City> = [];
@@ -38,121 +26,14 @@ export class ItemsComponent {
     // AngularFireModule.initializeApp({});
   }
 
-  recognizeText(): void {
-    const path = "~/images/please_walk_on_the_grass.jpg";
-    const img = new ImageSource();
-    img.fromFile(path)
-        .then(() => {
-          firebase.mlkit.textrecognition.recognizeText({
-            image: img
-          }).then(
-              (result: MLKitRecognizeTextResult) => {
-                alert({
-                  title: `Result from ${path}:`,
-                  message: JSON.stringify(result.features),
-                  okButtonText: "OK"
-                });
-              }, errorMessage => {
-                console.log("ML Kit error: " + errorMessage);
-              }
-          );
-        })
-        .catch(err => console.log("Error in recognizeText: " + err));
-  }
-
-  scanBarcode(): void {
-    const path = "~/images/barcodes/2qrcodes.png";
-    const img = new ImageSource();
-    img.fromFile(path)
-        .then(() => {
-          firebase.mlkit.barcodescanning.scanBarcodes({
-            image: img,
-            formats: [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13]
-          }).then(
-              (result: MLKitScanBarcodesResult) => {
-                alert({
-                  title: `Result from ${path}:`,
-                  message: JSON.stringify(result.barcodes),
-                  okButtonText: "OK"
-                });
-              }, errorMessage => {
-                console.log("ML Kit error: " + errorMessage);
-              }
-          );
-        })
-        .catch(err => console.log("Error in scanBarcode: " + err));
-  }
-
-  detectFaces(): void {
-    const path = "~/images/faces.jpg";
-    const img = new ImageSource();
-    img.fromFile(path)
-        .then(() => {
-          firebase.mlkit.facedetection.detectFaces({
-            image: img
-          }).then(
-              (result: MLKitDetectFacesResult) => {
-                alert({
-                  title: `Result from ${path}:`,
-                  message: JSON.stringify(result.faces),
-                  okButtonText: "OK"
-                });
-              }, errorMessage => {
-                console.log("ML Kit error: " + errorMessage);
-              }
-          );
-        })
-        .catch(err => console.log("Error in detectFaces: " + err));
-  }
-
-  onBarcodeScanResult(event): void {
-    const result: MLKitScanBarcodesResult = event.value;
-    this.mlKitTextValue = JSON.stringify(result.barcodes);
-  }
-
-  onScanResultImage(event): void {
-    this.scannedImage = event.value;
-  }
-
-  onTextRecognitionResult(scanResult: any): void {
-    const value: MLKitRecognizeTextResult = scanResult.value;
-    // this.mlKitTextValue = value.features.map(feature => feature.text).join("\n\n");
-    this.mlKitTextValue = value.features.map(feature => JSON.stringify(feature)).join("\n\n");
-  }
-
-  onFaceDetectionResult(scanResult: any): any {
-    const value: MLKitDetectFacesResult = scanResult.value;
-    if (value.faces.length > 0) {
-      let allSmilingAndEyesOpen = true;
-      value.faces.forEach(face => {
-        allSmilingAndEyesOpen = allSmilingAndEyesOpen && face.smilingProbability && face.leftEyeOpenProbability && face.rightEyeOpenProbability &&
-            face.smilingProbability > 0.7 && face.leftEyeOpenProbability > 0.7 && face.rightEyeOpenProbability > 0.7;
-      });
-      this.mlKitAllOK = `All smiling and eyes open? ${allSmilingAndEyesOpen ? 'Yes, screen grabbed:' : 'Nope. Sad.'}`;
-      // model.set("textValue", value.faces.map(face => JSON.stringify(face)).join("\n"));
-      this.mlKitTextValue = value.faces.map(face => `Smiling? ${this.round(face.smilingProbability)}%\nLeft eye open? ${this.round(face.leftEyeOpenProbability)}%\nRight eye open? ${this.round(face.rightEyeOpenProbability)}%`).join("\n\n");
-
-      if (allSmilingAndEyesOpen && value.imageSource) {
-        this.mlKitLastMatchImg = value.imageSource;
-      }
-    }
-  }
-
-  private round(input: number): number {
-    if (isNaN(input)) {
-      return 0;
-    }
-    return Math.round(input * 100);
-  }
-
   public loginAnonymously(): void {
-    firebaseWebApi.auth().signInAnonymously()
+    firebase.auth().signInAnonymously()
         .then(() => console.log("Logged in"))
         .catch(err => console.log("Login error: " + JSON.stringify(err)));
   }
 
   public firestoreAdd(): void {
-    firebaseWebApi.firestore().collection("dogs").add({name: "Fido"})
+    firebase.firestore().collection("dogs").add({name: "Fido"})
         .then((docRef: firestore.DocumentReference) => {
           console.log("Fido added, ref: " + docRef.id);
         })
@@ -160,7 +41,7 @@ export class ItemsComponent {
   }
 
   public firestoreSet(): void {
-    firebaseWebApi.firestore().collection("dogs").doc("fave")
+    firebase.firestore().collection("dogs").doc("fave")
         .set({name: "Woofie", last: "lastofwoofie", date: new Date()}, {merge: true})
         .then(() => {
           console.log("Woofie set");
@@ -169,7 +50,7 @@ export class ItemsComponent {
 
 
     // example from https://firebase.google.com/docs/firestore/query-data/get-data
-    const citiesCollection = firebaseWebApi.firestore().collection("cities");
+    const citiesCollection = firebase.firestore().collection("cities");
 
     citiesCollection.doc("SF").set({
       name: "San Francisco",
@@ -221,7 +102,7 @@ export class ItemsComponent {
   }
 
   public firestoreSetByAutoID(): void {
-    firebaseWebApi.firestore().collection("dogs").doc()
+    firebase.firestore().collection("dogs").doc()
         .set({name: "Woofie", last: "lastofwoofie", date: new Date()})
         .then(() => {
           console.log("Woofie set");
@@ -230,7 +111,7 @@ export class ItemsComponent {
   }
 
   public firestoreUpdate(): void {
-    firebaseWebApi.firestore().collection("dogs").doc("fave")
+    firebase.firestore().collection("dogs").doc("fave")
         .update({name: "Woofieupdate", last: "updatedwoofie"})
         .then(() => {
           console.log("Woofie updated");
@@ -239,7 +120,7 @@ export class ItemsComponent {
   }
 
   public firestoreGet(): void {
-    const collectionRef: firestore.CollectionReference = firebaseWebApi.firestore().collection("dogs");
+    const collectionRef: firestore.CollectionReference = firebase.firestore().collection("dogs");
     collectionRef.get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => console.log(`${doc.id} => ${JSON.stringify(doc.data())}`));
@@ -247,7 +128,7 @@ export class ItemsComponent {
         .catch(err => console.log("Get failed, error" + err));
 
     // examples from https://firebase.google.com/docs/firestore/query-data/get-data
-    const docRef: firestore.DocumentReference = firebaseWebApi.firestore().collection("cities").doc("BJ");
+    const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("BJ");
 
     docRef.get().then((doc: firestore.DocumentSnapshot) => {
       if (doc.exists) {
@@ -265,7 +146,7 @@ export class ItemsComponent {
 
   public firestoreGetNested(): void {
     const mainStreetInSFDocRef: firestore.DocumentReference =
-        firebaseWebApi.firestore()
+        firebase.firestore()
             .collection("cities")
             .doc("SF")
             .collection("streets")
@@ -286,7 +167,7 @@ export class ItemsComponent {
 
   firestoreDocumentObservable(): void {
     this.myCity$ = Observable.create(subscriber => {
-      const docRef: firestore.DocumentReference = firebaseWebApi.firestore().collection("cities").doc("SF");
+      const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
       docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
         this.zone.run(() => {
           this.city = <City>doc.data();
@@ -298,7 +179,7 @@ export class ItemsComponent {
 
   firestoreCollectionObservable(): void {
     this.myCities$ = Observable.create(subscriber => {
-      const colRef: firestore.CollectionReference = firebaseWebApi.firestore().collection("cities");
+      const colRef: firestore.CollectionReference = firebase.firestore().collection("cities");
       colRef.onSnapshot((snapshot: firestore.QuerySnapshot) => {
         this.zone.run(() => {
           this.cities = [];
@@ -315,7 +196,7 @@ export class ItemsComponent {
       return;
     }
 
-    const docRef: firestore.DocumentReference = firebaseWebApi.firestore().collection("cities").doc("SF");
+    const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
 
     this.listenerUnsubscribe = docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
       if (doc.exists) {
@@ -337,7 +218,7 @@ export class ItemsComponent {
   }
 
   public firestoreWhere(): void {
-    const query: firestore.Query = firebaseWebApi.firestore().collection("cities")
+    const query: firestore.Query = firebase.firestore().collection("cities")
         .where("state", "==", "CA")
         .where("population", "<", 550000);
 
@@ -352,7 +233,7 @@ export class ItemsComponent {
   }
 
   public firestoreWhereOrderLimit(): void {
-    const query: firestore.Query = firebaseWebApi.firestore().collection("cities")
+    const query: firestore.Query = firebase.firestore().collection("cities")
         .where("state", "==", "CA")
         .orderBy("population", "desc")
         .limit(2);
@@ -368,7 +249,7 @@ export class ItemsComponent {
   }
 
   public firestoreDelete(): void {
-    firebaseWebApi.firestore().collection("dogs").doc("fave")
+    firebase.firestore().collection("dogs").doc("fave")
         .delete()
         .then(() => {
           console.log("Woofie deleted");
@@ -378,7 +259,7 @@ export class ItemsComponent {
 
   public doWebGetValueForCompanies(): void {
     const path = "/companies";
-    firebaseWebApi.database().ref(path)
+    firebase.database().ref(path)
         .once("value")
         .then(result => {
           console.log(`${result.key} => ${JSON.stringify(result.val())}`);

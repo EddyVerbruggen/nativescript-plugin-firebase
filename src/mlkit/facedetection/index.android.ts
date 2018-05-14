@@ -13,7 +13,9 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 
   protected createSuccessListener(): any {
     return new com.google.android.gms.tasks.OnSuccessListener({
-      onSuccess: (faces) => {
+      onSuccess: faces => {
+
+        if (faces.size() === 0) return;
 
         const imageSource = new ImageSource();
         imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());

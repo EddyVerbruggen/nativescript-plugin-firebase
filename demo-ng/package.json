@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "5.2.10",
     "@angular/router": "5.2.10",
     "nativescript-angular": "~5.3.0",
+    "nativescript-camera": "^4.0.2",
+    "nativescript-imagepicker": "^6.0.1",
     "nativescript-plugin-firebase": "^5.0.0",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.10",

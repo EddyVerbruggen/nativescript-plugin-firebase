@@ -3,7 +3,6 @@ import { MLKitOptions } from "../";
 import { MLKitRecognizeTextOptions, MLKitRecognizeTextResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 
-// TODO now we need to rotate the phone 90 degrees left to make it work.. and for barcodes it's already ok..
 export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   protected createDetector(): any {
     const firVision: FIRVision = FIRVision.vision();
@@ -15,7 +14,7 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
       if (error !== null) {
         console.log(error.localizedDescription);
 
-      } else if (features !== null) {
+      } else if (features !== null && features.count > 0) {
         const result = <MLKitRecognizeTextResult>{
           features: []
         };

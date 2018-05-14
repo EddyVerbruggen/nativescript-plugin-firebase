@@ -24,6 +24,18 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private pendingFrameData = null;
   protected rotation;
   protected lastVisionImage;
+  private detector: any;
+
+  disposeNativeView(): void {
+    super.disposeNativeView();
+    if (this.detector) {
+      this.detector.close();
+      this.detector = undefined;
+    }
+    this.lastVisionImage = undefined
+    this.bytesToByteBuffer = new Map();
+    this.surfaceView = null;
+  }
 
   createNativeView(): Object {
     let v = super.createNativeView();
@@ -90,7 +102,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
       const camera = android.hardware.Camera.open(requestedCameraId);
 
-      const sizePair = this.selectSizePair(camera, 640, 480); // TODO based on wrapping frame
+    const sizePair = this.selectSizePair(camera, 800, 600); // TODO based on wrapping frame
       console.log(">>> sizePair.pictureSize: " + sizePair.pictureSize);
       console.log(">>> sizePair.pictureSize.xy: " + sizePair.pictureSize.width + " x " + sizePair.pictureSize.height);
       console.log(">>> sizePair.previewSize.xy: " + sizePair.previewSize.width + " x " + sizePair.previewSize.height);
@@ -123,7 +135,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       // TODO this setter seems odd, but it's part of the example: https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSource.java#L312
       camera.setParameters(parameters);
 
-      const detector = this.createDetector();
+      this.detector = this.createDetector();
       const onSuccessListener = this.createSuccessListener();
       const onFailureListener = this.createFailureListener();
 
@@ -160,7 +172,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
           this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
 
-          detector
+          this.detector
               .detectInImage(this.lastVisionImage)
               .addOnSuccessListener(onSuccessListener)
               .addOnFailureListener(onFailureListener);

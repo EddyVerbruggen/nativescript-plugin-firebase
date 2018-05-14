@@ -1,6 +1,7 @@
 import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import * as application from "tns-core-modules/application";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
+import { OrientationChangedEventData } from "tns-core-modules/application";
 
 // TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
@@ -9,9 +10,20 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private previewLayer: AVCaptureVideoPreviewLayer;
   private cameraView: TNSMLKitCameraView;
 
+  disposeNativeView(): void {
+    super.disposeNativeView();
+    if (this.captureSession) {
+      this.captureSession.stopRunning();
+      this.captureSession = undefined;
+    }
+    this.captureDevice = undefined;
+    this.previewLayer = undefined;
+    this.cameraView = undefined;
+    application.off("orientationChanged");
+  }
+
   createNativeView(): Object {
     let v = super.createNativeView();
-
     if (this.canUseCamera()) {
       this.initView();
     } else {
@@ -39,7 +51,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
     // begin the session
     this.captureSession = AVCaptureSession.new();
-    this.captureSession.sessionPreset = AVCaptureSessionPresetHigh; // TODO was medium
+    this.captureSession.sessionPreset = AVCaptureSessionPreset1280x720;
 
     const captureDeviceInput = AVCaptureDeviceInput.deviceInputWithDeviceError(this.captureDevice);
     this.captureSession.addInput(captureDeviceInput);
@@ -47,6 +59,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.previewLayer = AVCaptureVideoPreviewLayer.layerWithSession(this.captureSession);
     this.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 
+    // TODO use connection.videoOrientation (as this one is deprecated)
     if (iosUtils.isLandscape()) {
       this.previewLayer.orientation = AVCaptureVideoOrientation.LandscapeRight;
     } else {
@@ -54,18 +67,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     }
 
     // note that when rotating back to portrait, this event fires very late.. not much we can do I think
-    // TODO .off
-    application.on("orientationChanged", arg => {
-      if (arg.newValue === "landscape") {
-        // with both set to 1, detection works in both portr and landsc (but the image is on its side in landscape)
-        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeRight; // deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
-      } else if (arg.newValue === "portrait") {
-        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
-      }
-    });
-
-    // this doesn't do much
-    this.previewLayer.automaticallyAdjustsMirroring = true;
+    application.off("orientationChanged");
+    application.on("orientationChanged", this.rotateOnOrientationChange.bind(this));
 
     if (this.ios) {
       this.ios.layer.addSublayer(this.previewLayer);
@@ -86,6 +89,18 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         new WeakRef(this),
         data => {},
         {});
+  }
+
+  private rotateOnOrientationChange(args: OrientationChangedEventData): void {
+    console.log(">>> rotateOnOrientationChange");
+    if (this.previewLayer) {
+      if (args.newValue === "landscape") {
+        // with both set to 1, detection works in both portr and landsc (but the image is on its side in landscape)
+        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeRight; // deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
+      } else if (args.newValue === "portrait") {
+        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+      }
+    }
   }
 
   public onLayout(left: number, top: number, right: number, bottom: number): void {
@@ -138,6 +153,7 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
         fIRVisionImage.metadata = fIRVisionImageMetadata;
       }
 
+      console.log(">>> delegate.detector: " + this.detector);
       this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
 
       // TODO remove (this is for debugging only)... but we could pass the image to the UI anyway (although the rotation may need to be corrected in some cases)
