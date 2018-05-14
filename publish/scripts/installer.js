@@ -129,61 +129,97 @@ function askAndroidPromptResult(result) {
 function promptQuestions() {
     prompt.get([{
         name: 'firestore',
-        description: 'Are you using Cloud Firestore (y/n)',
+        description: 'Are you using Cloud Firestore? (y/n)',
         default: 'n'
     }, {
         name: 'realtimedb',
-        description: 'Are you using Realtime DB (y/n)',
+        description: 'Are you using Realtime DB? (y/n)',
         default: 'n'
     }, {
         name: 'remote_config',
-        description: 'Are you using Firebase RemoteConfig (y/n)',
+        description: 'Are you using Firebase RemoteConfig? (y/n)',
         default: 'n'
     }, {
         name: 'messaging',
-        description: 'Are you using Firebase Messaging (y/n)',
+        description: 'Are you using Firebase Messaging? (y/n)',
         default: 'n'
     }, {
         name: 'crashlytics',
-        description: 'Are you using Firebase Crashlytics (y/n)',
+        description: 'Are you using Firebase Crashlytics? (y/n)',
         default: 'n'
     }, {
         name: 'crash_reporting',
-        description: 'Are you using Firebase Crash Reporting (answer "n" if you want to use Crashlytics instead) (y/n)',
+        description: 'Are you using Firebase Crash Reporting? (answer "n" if you want to use Crashlytics instead) (y/n)',
         default: 'n'
     }, {
         name: 'storage',
-        description: 'Are you using Firebase Storage (y/n)',
+        description: 'Are you using Firebase Storage? (y/n)',
         default: 'n'
     }, {
         name: 'facebook_auth',
-        description: 'Are you using Firebase Facebook Authentication (y/n)',
+        description: 'Are you using Firebase Facebook Authentication? (y/n)',
         default: 'n'
     }, {
         name: 'google_auth',
-        description: 'Are you using Firebase Google Authentication (y/n)',
+        description: 'Are you using Firebase Google Authentication? (y/n)',
         default: 'n'
     }, {
-        name: 'ml_kit',
-        description: 'Are you using ML Kit (y/n)',
+        name: 'admob',
+        description: 'Are you using AdMob? (y/n)',
         default: 'n'
-    }, {
-      name: 'admob',
-      description: 'Are you using AdMob (y/n)',
-      default: 'n'
     }, {
         name: 'invites',
-        description: 'Are you using Firebase Invites and/or Dynamic Links (y/n)',
+        description: 'Are you using Firebase Invites and/or Dynamic Links? (y/n)',
         default: 'n'
+    }, {
+      name: 'ml_kit',
+      description: 'Are you using ML Kit? (y/n)',
+      default: 'n'
     }], function (err, result) {
         if (err) {
             return console.log(err);
         }
-        mergeConfig(result);
-        promptQuestionsResult(result);
-        askSaveConfigPrompt();
+        if (!isSelected(result.ml_kit)) {
+            mergeConfig(result);
+            promptQuestionsResult(result);
+            askSaveConfigPrompt();
+        } else {
+            prompt.get([{
+                name: 'ml_kit_text_recognition',
+                description: 'With Ml Kit, do you want to recognize text? (y/n)',
+                default: 'n'
+            }, {
+                name: 'ml_kit_barcode_scanning',
+                description: 'With Ml Kit, do you want to scan barcodes? (y/n)',
+                default: 'n'
+            }, {
+                name: 'ml_kit_face_detection',
+                description: 'With Ml Kit, do you want to detect faces? (y/n)',
+                default: 'n'
+            }, {
+                name: 'ml_kit_image_labeling',
+                description: 'With Ml Kit, do you want to label images? (y/n)',
+                default: 'n'
+            }, {
+                name: 'ml_kit_custom_model',
+                description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
+                default: 'n'
+            }], function (mlkitErr, mlkitResult) {
+                if (mlkitErr) {
+                    return console.log(mlkitErr);
+                }
+                console.log("result: " + JSON.stringify(result));
+                console.log("mlkitResult: " + JSON.stringify(mlkitResult));
+                for (var attrname in mlkitResult) { result[attrname] = mlkitResult[attrname]; }
+                console.log("mergedResult result: " + JSON.stringify(result));
+                mergeConfig(result);
+                promptQuestionsResult(result);
+                askSaveConfigPrompt();
+          });
+        }
     });
 }
+
 function promptQuestionsResult(result) {
     if (usingiOS) {
         writePodFile(result);
@@ -194,8 +230,35 @@ function promptQuestionsResult(result) {
         writeGradleFile(result);
         writeGoogleServiceCopyHook();
         writeGoogleServiceGradleHook(result);
+        echoAndroidManifestChanges(result);
     }
     console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
+}
+
+function echoAndroidManifestChanges(result) {
+    if (isSelected(result.ml_kit)) {
+      var selectedFeatures = [];
+      if (isSelected(result.ml_kit_text_recognition)) {
+        selectedFeatures.push("text");
+      }
+      if (isSelected(result.ml_kit_barcode_scanning)) {
+        selectedFeatures.push("barcode");
+      }
+      if (isSelected(result.ml_kit_face_detection)) {
+        selectedFeatures.push("face");
+      }
+      if (isSelected(result.ml_kit_image_labeling)) {
+        selectedFeatures.push("label");
+      }
+      if (selectedFeatures.length > 0) {
+        console.log('\n######################################################################################################');
+        console.log('Open your app\'s resources/Android/AndroidManifest.xml file and add this (see the demo for an example):');
+        console.log('<meta-data\n' +
+            '    android:name="com.google.firebase.ml.vision.DEPENDENCIES"\n' +
+            '    android:value="' + selectedFeatures.join(',') + '" />');
+        console.log('######################################################################################################\n');
+      }
+    }
 }
 
 function exposeAdMobSymbols(enable) {
@@ -237,19 +300,19 @@ function writePodFile(result) {
 pod 'Firebase/Core', '~> 5.0.0' 
 pod 'Firebase/Auth'
 
-# Uncomment if you want to enable Realtime DB
+# Realtime DB
 ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
 
-# Uncomment if you want to enable Cloud Firestore
+# Cloud Firestore
 ` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
 
-# Uncomment if you want to enable Remote Config
+# Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
 
-# Uncomment if you want to enable Crash Reporting
+# Crash Reporting
 ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
 
-# Uncomment if you want to enable Crashlytics
+# Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Crashlytics'
 ` + (!isSelected(result.crashlytics) ? `` : `
@@ -263,34 +326,31 @@ post_install do |installer|
     end
 end`) + `
 
-# Uncomment if you want to enable FCM (Firebase Cloud Messaging)
+# Firebase Cloud Messaging (FCM)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
-# Uncomment if you want to enable Firebase Storage
+# Firebase Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
 
-# Uncomment if you want to enable AdMob
+# AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Uncomment if you want to enable Invites and/or Dynamic Links
+# Invites / Dynamic Links
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
 
-# Uncomment if you want to enable ML Kit
+# ML Kit
 ` + (isSelected(result.ml_kit) ? `` : `#`) + `pod 'Firebase/MLVision'
-# TODO we'de better make these conditional as well
-` + (!isSelected(result.ml_kit) ? `` : `
-pod 'Firebase/MLVisionBarcodeModel'
-pod 'Firebase/MLVisionFaceModel'
-pod 'Firebase/MLVisionLabelModel'
-pod 'Firebase/MLVisionTextModel'
-pod 'Firebase/MLModelInterpreter'
-`) + `
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_text_recognition) ? `` : `#`) + `pod 'Firebase/MLVisionTextModel'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_barcode_scanning) ? `` : `#`) + `pod 'Firebase/MLVisionBarcodeModel'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_face_detection) ? `` : `#`) + `pod 'Firebase/MLVisionFaceModel'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
 
-# Uncomment if you want to enable Facebook Authentication
+# Facebook Authentication
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
 
-# Uncomment if you want to enable Google Authentication
+# Google Authentication
 ` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`);
         console.log('Successfully created iOS (Pod) file.');
     } catch(e) {
@@ -499,46 +559,46 @@ dependencies {
     // for reading google-services.json and configuration
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
-    // Uncomment if you want to use the regular Database
+    // Realtime DB
     ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:15.0.0"
 
-    // Uncomment if you want to use 'Cloud Firestore'
+    // Cloud Firestore
     ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:16.0.0"
 
-    // Uncomment if you want to use 'Remote Config'
+    // Remote Config
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:15.0.2"
 
-    // Uncomment if you want to use 'Crash Reporting'
+    // Crash Reporting
     ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:15.0.2"
 
-    // Uncomment if you want to use 'Crashlytics'
+    // Crashlytics
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.1"
 
-    // Uncomment if you want to use FCM (Firebase Cloud Messaging)
+    // Firebase Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:15.0.2"
 
-    // Uncomment if you want to use Google Cloud Storage
+    // Cloud Storage
     ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:15.0.2"
 
-    // Uncomment if you want to use AdMob
+    // AdMob
     ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.0"
 
-    // Uncomment if you want to use ML Kit
+    // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:15.0.0"
 
-    // Uncomment if you need Facebook Authentication
+    // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.+"){ exclude group: 'com.google.zxing' }
 
-    // Uncomment if you need Google Sign-In Authentication
+    // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
-    // Uncomment if you need Firebase Invites or Dynamic Links
+    // Firebase Invites / Dynamic Links
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:$googlePlayServicesVersion"
 }
 
 apply plugin: "com.google.gms.google-services"
 
-// Uncomment if you want to use 'Crashlytics'
+// Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `//`) + `apply plugin: "io.fabric"
 `);
         console.log('Successfully created Android (include.gradle) file.');
