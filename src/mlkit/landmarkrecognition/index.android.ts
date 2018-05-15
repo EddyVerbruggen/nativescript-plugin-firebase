@@ -1,65 +1,28 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions, } from "../";
-import { MLKitLandmarkRecognitionOptions, MLKitLandmarkRecognitionResult } from "./";
-import { MLKitLandmarkRecognition as MLKitLandmarkRecognitionBase } from "./landmarkrecognition-common";
+import { MLKitLandmarkRecognitionCloudOptions, MLKitLandmarkRecognitionCloudResult } from "./index";
+import { MLKitCloudModelType } from "../index";
 
 declare const com: any;
 
-export class MLKitLandmarkRecognition extends MLKitLandmarkRecognitionBase {
-
-  protected createDetector(): any {
-    return getDetector(this.maxResults);
-  }
-
-  protected createSuccessListener(): any {
-    return new com.google.android.gms.tasks.OnSuccessListener({
-      onSuccess: landmarks => {
-
-        if (landmarks.size() === 0) return;
-
-        // const imageSource = new ImageSource();
-        // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
-
-        const result = <MLKitLandmarkRecognitionResult>{
-          // imageSource: imageSource,
-          landmarks: []
-        };
-
-        for (let i = 0; i < landmarks.size(); i++) {
-          const landmark = landmarks.get(i);
-          result.landmarks.push({
-            name: landmark.getLandmark(),
-            confidence: landmark.getConfidence()
-          });
-        }
-
-        this.notify({
-          eventName: MLKitLandmarkRecognition.scanResultEvent,
-          object: this,
-          value: result
-        });
-      }
-    });
-  }
-}
-
-function getDetector(confidenceThreshold: number): any {
+function getDetector(modelType: MLKitCloudModelType, confidenceThreshold: number): any {
   const landmarkDetectorOptions =
       new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
-          .setMaxResults(confidenceThreshold)
+          .setModelType(modelType === "latest" ? com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.LATEST_MODEL : com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
+          .setMaxResults(confidenceThreshold || 10)
           .build();
 
   return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionCloudLandmarkDetector(landmarkDetectorOptions);
 }
 
-export function recognizeLandmark(options: MLKitLandmarkRecognitionOptions): Promise<MLKitLandmarkRecognitionResult> {
+export function recognizeLandmarksCloud(options: MLKitLandmarkRecognitionCloudOptions): Promise<MLKitLandmarkRecognitionCloudResult> {
   return new Promise((resolve, reject) => {
     try {
-      const firebaseVisionLandmarkDetector = getDetector(options.maxResults || 10);
+      const firebaseVisionLandmarkDetector = getDetector(options.modelType, options.maxResults);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: landmarks => {
-          const result = <MLKitLandmarkRecognitionResult>{
+          const result = <MLKitLandmarkRecognitionCloudResult>{
             landmarks: []
           };
 
@@ -86,7 +49,7 @@ export function recognizeLandmark(options: MLKitLandmarkRecognitionOptions): Pro
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.mlkit.recognizeLandmark: " + ex);
+      console.log("Error in firebase.mlkit.recognizeLandmarksCloud: " + ex);
       reject(ex);
     }
   });

@@ -1,6 +1,6 @@
-import { MLKitCameraView, MLKitOptions, MLKitResult } from "../index";
+import { MLKitCloudOptions, MLKitResult } from "../index";
 
-export interface MLKitLandmarkRecognitionResult extends MLKitResult {
+export interface MLKitLandmarkRecognitionCloudResult extends MLKitResult {
   // TODO add locations
   landmarks: Array<{
     name: string;
@@ -8,15 +8,7 @@ export interface MLKitLandmarkRecognitionResult extends MLKitResult {
   }>;
 }
 
-export interface MLKitLandmarkRecognitionOptions extends MLKitOptions {
-  /**
-   * 10 by default
-   */
-  maxResults?: number;
+export interface MLKitLandmarkRecognitionCloudOptions extends MLKitCloudOptions {
 }
 
-export declare function recognizeLandmarks(options: MLKitLandmarkRecognitionOptions): Promise<MLKitLandmarkRecognitionResult>;
-
-// TODO not sure this works.. but we need quite a processing threshold as this is always in the cloud..
-// .. and what about other features.. the camera should prolly always use a local model
-export declare class MLKitLandmarkRecognition extends MLKitCameraView {}
+export declare function recognizeLandmarksCloud(options: MLKitLandmarkRecognitionCloudOptions): Promise<MLKitLandmarkRecognitionCloudResult>;

@@ -3,7 +3,7 @@ import { ImageSource } from "tns-core-modules/image-source";
 
 import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { MLKitRecognizeTextLocalResult, MLKitRecognizeTextCloudResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
-import { MLKitLandmarkRecognitionResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
+import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
 import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
 import { action } from "tns-core-modules/ui/dialogs";
 import { ImageAsset } from "tns-core-modules/image-asset";
@@ -158,7 +158,7 @@ export class MLKitComponent {
       } else if (pickedItem === "Image labeling") {
         this.labelImage(imageSource);
       } else if (pickedItem === "Landmark recognition (cloud)") {
-        this.recognizeLandmark(imageSource);
+        this.recognizeLandmarkCloud(imageSource);
       }
     });
   }
@@ -193,11 +193,11 @@ export class MLKitComponent {
         .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 
-  private recognizeLandmark(imageSource: ImageSource): void {
-    firebase.mlkit.landmarkrecognition.recognizeLandmark({
+  private recognizeLandmarkCloud(imageSource: ImageSource): void {
+    firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
       image: imageSource
     }).then(
-        (result: MLKitLandmarkRecognitionResult) => {
+        (result: MLKitLandmarkRecognitionCloudResult) => {
           alert({
             title: `Result`,
             message: JSON.stringify(result.landmarks),

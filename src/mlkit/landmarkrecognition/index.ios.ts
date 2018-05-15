@@ -1,66 +1,27 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
-import { MLKitLandmarkRecognitionOptions, MLKitLandmarkRecognitionResult } from "./";
-import { MLKitLandmarkRecognition as MLKitLandmarkRecognitionBase } from "./landmarkrecognition-common";
+import { MLKitLandmarkRecognitionCloudOptions, MLKitLandmarkRecognitionCloudResult } from "./";
+import { MLKitCloudModelType } from "../index";
 
-export class MLKitLandmarkRecognition extends MLKitLandmarkRecognitionBase {
-
-  protected createDetector(): any {
-    return getDetector(this.maxResults);
-  }
-
-  protected createSuccessListener(): any {
-    return (landmarks: NSArray<FIRVisionCloudLandmark>, error: NSError) => {
-      if (error !== null) {
-        console.log(error.localizedDescription);
-
-      } else if (landmarks !== null && landmarks.count > 0) {
-        const result = <MLKitLandmarkRecognitionResult>{
-          landmarks: []
-        };
-
-        for (let i = 0, l = landmarks.count; i < l; i++) {
-          const landmark: FIRVisionCloudLandmark = landmarks.objectAtIndex(i);
-          console.log(">> detected landmark: " + landmark);
-          result.landmarks.push({
-            name: landmark.landmark,
-            confidence: landmark.confidence
-          });
-        }
-
-        console.log(">>> notify " + MLKitLandmarkRecognition.scanResultEvent + " with " + JSON.stringify(result));
-        this.notify({
-          eventName: MLKitLandmarkRecognition.scanResultEvent,
-          object: this,
-          value: result
-        });
-      }
-    }
-  }
-
-  protected rotateRecording(): boolean {
-    return false;
-  }
-}
-
-function getDetector(maxResults: number): FIRVisionCloudLandmarkDetector {
+function getDetector(modelType: MLKitCloudModelType, maxResults: number): FIRVisionCloudLandmarkDetector {
   const firVision: FIRVision = FIRVision.vision();
   const fIRVisionCloudDetectorOptions = FIRVisionCloudDetectorOptions.alloc();
-  fIRVisionCloudDetectorOptions.maxResults = maxResults;
+  fIRVisionCloudDetectorOptions.modelType = modelType === "latest" ? FIRVisionCloudModelType.Latest : FIRVisionCloudModelType.Stable;
+  fIRVisionCloudDetectorOptions.maxResults = maxResults || 10;
   return firVision.cloudLandmarkDetectorWithOptions(fIRVisionCloudDetectorOptions);
 }
 
-export function recognizeLandmark(options: MLKitLandmarkRecognitionOptions): Promise<MLKitLandmarkRecognitionResult> {
+export function recognizeLandmarksCloud(options: MLKitLandmarkRecognitionCloudOptions): Promise<MLKitLandmarkRecognitionCloudResult> {
   return new Promise((resolve, reject) => {
     try {
-      const landmarkDetector = getDetector(options.maxResults || 10);
+      const landmarkDetector = getDetector(options.modelType, options.maxResults);
 
       landmarkDetector.detectInImageCompletion(getImage(options), (landmarks: NSArray<FIRVisionCloudLandmark>, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
 
         } else if (landmarks !== null) {
-          const result = <MLKitLandmarkRecognitionResult>{
+          const result = <MLKitLandmarkRecognitionCloudResult>{
             landmarks: []
           };
 
@@ -77,7 +38,7 @@ export function recognizeLandmark(options: MLKitLandmarkRecognitionOptions): Pro
         }
       });
     } catch (ex) {
-      console.log("Error in firebase.mlkit.recognizeLandmark: " + ex);
+      console.log("Error in firebase.mlkit.recognizeLandmarksCloud: " + ex);
       reject(ex);
     }
   });

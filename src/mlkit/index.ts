@@ -11,11 +11,13 @@ export interface MLKitOptions {
   image: Image | ImageSource;
 }
 
+export type MLKitCloudModelType = "stable" | "latest";
+
 export interface MLKitCloudOptions extends MLKitOptions {
   /**
    * Defaults to "stable".
    */
-  modelType?: "stable" | "latest";
+  modelType?: MLKitCloudModelType;
   /**
    * Defaults to 10.
    */

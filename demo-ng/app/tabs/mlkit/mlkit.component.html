@@ -10,5 +10,6 @@
 
   <Image row="2" [src]="pickedImage" width="240" horizontalAlignment="center" (tap)="reusePickedImage()"></Image>
 
-  <Label row="3" text="⬆️ Tap the image to use it again" textWrap="true" horizontalAlignment="center" *ngIf="pickedImage"></Label>
+  <Label row="3" [text]="pickedImage ? '⬆️ Tap the image to use it again' : ''" textWrap="true" horizontalAlignment="center" class="m-b-20" width="100%"></Label>
+
 </GridLayout>
