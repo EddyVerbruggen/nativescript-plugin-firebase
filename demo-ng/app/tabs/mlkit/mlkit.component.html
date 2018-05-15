@@ -1,4 +1,4 @@
-<GridLayout rows="auto, auto, *" class="tab-content">
+<GridLayout rows="auto, auto, *, auto" class="tab-content">
 
   <Label row="0" text="Pick the image processing source:" textWrap="true"></Label>
 
@@ -8,5 +8,7 @@
     <Button text="Cam feed" (tap)="fromCameraFeed()" class="button"></Button>
   </StackLayout>
 
-  <Image row="2" [src]="pickedImage" width="240" horizontalAlignment="center"></Image>
+  <Image row="2" [src]="pickedImage" width="240" horizontalAlignment="center" (tap)="reusePickedImage()"></Image>
+
+  <Label row="3" text="⬆️ Tap the image to use it again" textWrap="true" horizontalAlignment="center" *ngIf="pickedImage"></Label>
 </GridLayout>

@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
-import { MLKitRecognizeTextOptions, MLKitRecognizeTextResult } from "./";
+import { MLKitRecognizeTextLocalOptions, MLKitRecognizeTextCloudOptions, MLKitRecognizeTextLocalResult, MLKitRecognizeTextCloudResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 import { MLKitRecognizeTextResultFeature } from "./index";
 
@@ -18,7 +18,7 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
         this.notify({
           eventName: MLKitTextRecognition.scanResultEvent,
           object: this,
-          value: getResult(features)
+          value: getLocalResult(features)
         });
       }
     };
@@ -28,19 +28,10 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
     return true;
   }
 
-  /*
-  private getCorners(cornerPoints: NSArray<CGPoint>) {
-    for (let i = 0, l = cornerPoints.count; i < l; i++) {
-      const point = cornerPoints.objectAtIndex(i);
-      console.log(point);
-    }
-    return {};
-  }
-  */
 }
 
-function getResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextResult {
-  const result = <MLKitRecognizeTextResult>{
+function getLocalResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextLocalResult {
+  const result = <MLKitRecognizeTextLocalResult>{
     features: []
   };
 
@@ -79,7 +70,7 @@ function getResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextResult {
   return result;
 }
 
-export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKitRecognizeTextResult> {
+export function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Promise<MLKitRecognizeTextLocalResult> {
   return new Promise((resolve, reject) => {
     try {
       const firVision: FIRVision = FIRVision.vision();
@@ -89,11 +80,37 @@ export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKit
         if (error !== null) {
           reject(error.localizedDescription);
         } else if (features !== null) {
-          resolve(getResult(features));
+          resolve(getLocalResult(features));
         }
       });
     } catch (ex) {
-      console.log("Error in firebase.mlkit.recognizeText: " + ex);
+      console.log("Error in firebase.mlkit.recognizeTextLocal: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult> {
+  return new Promise((resolve, reject) => {
+    try {
+      const fIRVisionCloudDetectorOptions = FIRVisionCloudDetectorOptions.new();
+      fIRVisionCloudDetectorOptions.modelType = options.modelType === "latest" ? FIRVisionCloudModelType.Latest : FIRVisionCloudModelType.Stable;
+      fIRVisionCloudDetectorOptions.maxResults = options.maxResults || 10;
+
+      const firVision: FIRVision = FIRVision.vision();
+      const textDetector = firVision.cloudTextDetectorWithOptions(fIRVisionCloudDetectorOptions);
+
+      textDetector.detectInImageCompletion(getImage(options), (cloudText: FIRVisionCloudText, error: NSError) => {
+        if (error !== null) {
+          reject(error.localizedDescription);
+        } else if (cloudText !== null) {
+          resolve({
+            text: cloudText.text
+          });
+        }
+      });
+    } catch (ex) {
+      console.log("Error in firebase.mlkit.recognizeTextCloud: " + ex);
       reject(ex);
     }
   });

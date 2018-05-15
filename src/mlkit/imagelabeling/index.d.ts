@@ -1,4 +1,4 @@
-import { MLKitMultiEngineOptions } from "../";
+import { MLKitOptions } from "../";
 import { MLKitCameraView, MLKitResult } from "../index";
 
 export interface MLKitImageLabelingResult extends MLKitResult {
@@ -9,7 +9,7 @@ export interface MLKitImageLabelingResult extends MLKitResult {
   }>;
 }
 
-export interface MLKitImageLabelingOptions extends MLKitMultiEngineOptions {
+export interface MLKitImageLabelingOptions extends MLKitOptions {
   /**
    * 0.5 by default
    */

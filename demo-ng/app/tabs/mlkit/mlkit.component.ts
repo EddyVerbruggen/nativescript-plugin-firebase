@@ -2,7 +2,7 @@ import { Component, NgZone } from "@angular/core";
 import { ImageSource } from "tns-core-modules/image-source";
 
 import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
-import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitRecognizeTextLocalResult, MLKitRecognizeTextCloudResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 import { MLKitLandmarkRecognitionResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
 import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
 import { action } from "tns-core-modules/ui/dialogs";
@@ -24,13 +24,20 @@ export class MLKitComponent {
 
   pickedImage: ImageSource;
 
-  // TODO once more ML plugin features support cloud, add those as (cloud) options to this list
   private mlkitFeatures: Array<string> = [
-    "Text recognition",
+    "Text recognition (local)",
+    "Text recognition (cloud)",
     "Barcode scanning",
     "Face detection",
     "Image labeling",
     "Landmark recognition (cloud)"
+  ];
+
+  private mlkitLocalFeatures: Array<string> = [
+    "Text recognition",
+    "Barcode scanning",
+    "Face detection",
+    "Image labeling"
   ];
 
   constructor(private routerExtensions: RouterExtensions,
@@ -39,9 +46,9 @@ export class MLKitComponent {
 
   fromCameraFeed(): void {
     action(
-        "Test which ML Kit feature?",
+        "Test which ML Kit feature? No cloud processing will be used.",
         "Cancel",
-        this.mlkitFeatures
+        this.mlkitLocalFeatures
     ).then((pickedItem: string) => {
       let to;
       if (pickedItem === "Text recognition") {
@@ -52,14 +59,8 @@ export class MLKitComponent {
         to = "/tabs/mlkit/facedetection";
       } else if (pickedItem === "Image labeling") {
         to = "/tabs/mlkit/imagelabeling";
-      } else if (pickedItem === "Landmark recognition (cloud)") {
-        alert({
-          title: `Not available`,
-          message: `Landmark recognition is currently cloud-only, so that would be a bit too taxing on your dataplan.`,
-          okButtonText: "Gotcha!"
-        });
-        return;
       }
+
       if (to !== undefined) {
         this.routerExtensions.navigate([to],
             {
@@ -135,15 +136,21 @@ export class MLKitComponent {
         });
   }
 
-  selectMLKitFeature(imageSource: ImageSource): void {
+  reusePickedImage(): void {
+    this.selectMLKitFeature(this.pickedImage);
+  }
+
+  private selectMLKitFeature(imageSource: ImageSource): void {
     action(
         "Use which ML Kit feature?",
         "Cancel",
         this.mlkitFeatures
     ).then((pickedItem: string) => {
       let pickedItemIndex = this.mlkitFeatures.indexOf(pickedItem);
-      if (pickedItem === "Text recognition") {
-        this.recognizeText(imageSource);
+      if (pickedItem === "Text recognition (local)") {
+        this.recognizeTextLocal(imageSource);
+      } else if (pickedItem === "Text recognition (cloud)") {
+        this.recognizeTextCloud(imageSource);
       } else if (pickedItem === "Barcode scanning") {
         this.scanBarcode(imageSource);
       } else if (pickedItem === "Face detection") {
@@ -156,14 +163,30 @@ export class MLKitComponent {
     });
   }
 
-  private recognizeText(imageSource: ImageSource): void {
-    firebase.mlkit.textrecognition.recognizeText({
+  private recognizeTextLocal(imageSource: ImageSource): void {
+    firebase.mlkit.textrecognition.recognizeTextLocal({
       image: imageSource
     }).then(
-        (result: MLKitRecognizeTextResult) => {
+        (result: MLKitRecognizeTextLocalResult) => {
           alert({
             title: `Result`,
             message: result.features.map(feature => feature.text).join(""),
+            okButtonText: "OK"
+          });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+
+  private recognizeTextCloud(imageSource: ImageSource): void {
+    firebase.mlkit.textrecognition.recognizeTextCloud({
+      image: imageSource,
+      modelType: "latest",
+      maxResults: 15
+    }).then(
+        (result: MLKitRecognizeTextCloudResult) => {
+          alert({
+            title: `Result`,
+            message: result.text,
             okButtonText: "OK"
           });
         })

@@ -1,5 +1,4 @@
-import { MLKitMultiEngineOptions } from "../";
-import { MLKitCameraView, MLKitResult } from "../index";
+import { MLKitCameraView, MLKitCloudOptions, MLKitOptions, MLKitResult } from "../index";
 
 export interface MLKitRecognizeTextResultFeature {
   text: string;
@@ -18,13 +17,23 @@ export interface MLKitRecognizeTextResultFeature {
   }>
 }
 
-export interface MLKitRecognizeTextResult extends MLKitResult {
+export interface MLKitRecognizeTextLocalResult extends MLKitResult {
   features: Array<MLKitRecognizeTextResultFeature>;
 }
 
-export interface MLKitRecognizeTextOptions extends MLKitMultiEngineOptions {
+export interface MLKitRecognizeTextCloudResult extends MLKitResult {
+  text: string;
 }
 
-export declare function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKitRecognizeTextResult>;
+export interface MLKitRecognizeTextLocalOptions extends MLKitOptions {
+}
 
-export declare class MLKitTextRecognition extends MLKitCameraView {}
+export interface MLKitRecognizeTextCloudOptions extends MLKitCloudOptions {
+}
+
+export declare function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Promise<MLKitRecognizeTextLocalResult>;
+
+export declare function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult>;
+
+export declare class MLKitTextRecognition extends MLKitCameraView {
+}

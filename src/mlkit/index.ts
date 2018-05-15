@@ -11,8 +11,15 @@ export interface MLKitOptions {
   image: Image | ImageSource;
 }
 
-export interface MLKitMultiEngineOptions extends MLKitOptions {
-  engine?: "device" | "cloud"; // defaults to local, as cloud requires an additional plan
+export interface MLKitCloudOptions extends MLKitOptions {
+  /**
+   * Defaults to "stable".
+   */
+  modelType?: "stable" | "latest";
+  /**
+   * Defaults to 10.
+   */
+  maxResults?: number
 }
 
 export interface MLKitResult {
@@ -26,8 +33,8 @@ export interface MLKitResult {
 export declare class MLKitCameraView {
 }
 
-export declare class MLKitBarcodeScanner {
-}
+// export declare class MLKitBarcodeScanner {
+// }
 
 export {
   textrecognition,

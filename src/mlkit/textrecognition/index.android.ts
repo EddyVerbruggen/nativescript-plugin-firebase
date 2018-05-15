@@ -1,8 +1,12 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions, } from "../";
-import { MLKitRecognizeTextOptions, MLKitRecognizeTextResult } from "./";
+import { MLKitRecognizeTextLocalOptions, MLKitRecognizeTextLocalResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
-import { MLKitRecognizeTextResultFeature } from "./index";
+import {
+  MLKitRecognizeTextCloudOptions,
+  MLKitRecognizeTextCloudResult,
+  MLKitRecognizeTextResultFeature
+} from "./index";
 
 declare const com: any;
 
@@ -19,7 +23,7 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
           this.notify({
             eventName: MLKitTextRecognition.scanResultEvent,
             object: this,
-            value: getResult(textBlocks.getBlocks())
+            value: getLocalResult(textBlocks.getBlocks())
           });
         }
       }
@@ -27,8 +31,8 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   }
 }
 
-function getResult(blocks: any): MLKitRecognizeTextResult {
-  const result = <MLKitRecognizeTextResult>{
+function getLocalResult(blocks: any): MLKitRecognizeTextLocalResult {
+  const result = <MLKitRecognizeTextLocalResult>{
     features: []
   };
 
@@ -68,14 +72,14 @@ function getResult(blocks: any): MLKitRecognizeTextResult {
   return result;
 }
 
-export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKitRecognizeTextResult> {
+export function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Promise<MLKitRecognizeTextLocalResult> {
   return new Promise((resolve, reject) => {
     try {
       const firebaseVisionTextDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionTextDetector();
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: textBlocks => {
-          resolve(getResult(textBlocks.getBlocks()));
+          resolve(getLocalResult(textBlocks.getBlocks()));
           firebaseVisionTextDetector.close();
         }
       });
@@ -90,13 +94,48 @@ export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKit
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.mlkit.recognizeText: " + ex);
+      console.log("Error in firebase.mlkit.recognizeTextLocal: " + ex);
       reject(ex);
     }
   });
 }
 
-// TODO move
+export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult> {
+  return new Promise((resolve, reject) => {
+    try {
+      const cloudDetectorOptions =
+          new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
+              .setModelType(options.modelType === "latest" ? com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.LATEST_MODEL : com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
+              .setMaxResults(options.maxResults || 10)
+              .build();
+
+      const firebaseVisionCloudTextDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionCloudTextDetector(cloudDetectorOptions);
+
+      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: firebaseVisionCloudText => {
+          resolve({
+            text: firebaseVisionCloudText.getText()
+          });
+          firebaseVisionCloudTextDetector.close();
+        }
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => reject(exception.getMessage())
+      });
+
+      firebaseVisionCloudTextDetector
+          .detectInImage(getImage(options))
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.mlkit.recognizeTextCloud: " + ex);
+      reject(ex);
+    }
+  });
+}
+
 function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
