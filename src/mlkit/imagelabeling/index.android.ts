@@ -1,7 +1,8 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions, } from "../";
-import { MLKitImageLabelingOptions, MLKitImageLabelingResult } from "./";
+import { MLKitImageLabelingOnDeviceOptions, MLKitImageLabelingOnDeviceResult } from "./";
 import { MLKitImageLabeling as MLKitImageLabelingBase } from "./imagelabeling-common";
+import { MLKitImageLabelingCloudOptions, MLKitImageLabelingCloudResult } from "./index";
 
 declare const com: any;
 
@@ -20,7 +21,7 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
         // const imageSource = new ImageSource();
         // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
 
-        const result = <MLKitImageLabelingResult>{
+        const result = <MLKitImageLabelingOnDeviceResult>{
           // imageSource: imageSource,
           labels: []
         };
@@ -53,14 +54,14 @@ function getDetector(confidenceThreshold: number): any {
   return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionLabelDetector(labelDetectorOptions);
 }
 
-export function labelImage(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingResult> {
+export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): Promise<MLKitImageLabelingOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const firebaseVisionLabelDetector = getDetector(options.confidenceThreshold || 0.5);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: labels => {
-          const result = <MLKitImageLabelingResult>{
+          const result = <MLKitImageLabelingOnDeviceResult>{
             labels: []
           };
 
@@ -88,7 +89,54 @@ export function labelImage(options: MLKitImageLabelingOptions): Promise<MLKitIma
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.mlkit.labelImage: " + ex);
+      console.log("Error in firebase.mlkit.labelImageOnDevice: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promise<MLKitImageLabelingCloudResult> {
+  return new Promise((resolve, reject) => {
+    try {
+      const cloudDetectorOptions =
+          new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
+              .setModelType(options.modelType === "latest" ? com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.LATEST_MODEL : com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
+              .setMaxResults(options.maxResults || 10)
+              .build();
+
+      const firebaseVisionCloudLabelDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionCloudLabelDetector(cloudDetectorOptions);
+
+      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: labels => {
+          const result = <MLKitImageLabelingCloudResult>{
+            labels: []
+          };
+
+          for (let i = 0; i < labels.size(); i++) {
+            const label = labels.get(i);
+            result.labels.push({
+              text: label.getLabel(),
+              confidence: label.getConfidence()
+            });
+          }
+
+          console.log(">>> cloud image labeling result: " + JSON.stringify(result));
+          resolve(result);
+          firebaseVisionCloudLabelDetector.close();
+        }
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => reject(exception.getMessage())
+      });
+
+      firebaseVisionCloudLabelDetector
+          .detectInImage(getImage(options))
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.mlkit.labelImageCloud: " + ex);
       reject(ex);
     }
   });

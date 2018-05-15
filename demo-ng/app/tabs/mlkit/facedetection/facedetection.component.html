@@ -8,7 +8,7 @@
 
   <MLKitFaceDetection
       row="1"
-      width="300"
+      width="260"
       height="340"
       processEveryNthFrame="30"
       (scanResult)="onFaceDetectionResult($event)">
@@ -25,9 +25,9 @@
   <ListView row="4" [items]="faces">
     <ng-template let-item="item">
       <GridLayout columns="*, *, *">
-        <Label col="0" class="mlkit-result" textWrap="true" [text]="item.smilingProbability | number"></Label>
-        <Label col="1" class="mlkit-result" textWrap="true" [text]="item.leftEyeOpenProbability | number"></Label>
-        <Label col="2" class="mlkit-result" textWrap="true" [text]="item.rightEyeOpenProbability | number"></Label>
+        <Label col="0" class="mlkit-result" [class.c-purple]="item.smilingProbability > 0.7" [text]="item.smilingProbability | number" textWrap="true"></Label>
+        <Label col="1" class="mlkit-result" [class.c-purple]="item.leftEyeOpenProbability > 0.7" [text]="item.leftEyeOpenProbability | number" textWrap="true"></Label>
+        <Label col="2" class="mlkit-result" [class.c-purple]="item.rightEyeOpenProbability > 0.7" [text]="item.rightEyeOpenProbability | number" textWrap="true"></Label>
       </GridLayout>
     </ng-template>
   </ListView>

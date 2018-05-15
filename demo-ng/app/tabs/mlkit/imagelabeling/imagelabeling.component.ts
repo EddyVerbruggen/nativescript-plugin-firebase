@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MLKitImageLabelingResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
+import { MLKitImageLabelingOnDeviceResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
 
 @Component({
   selector: "mlkit-imagelabeling",
@@ -13,7 +13,7 @@ export class ImageLabelingComponent {
   }>;
 
   onImageLabeledResult(scanResult: any): void {
-    const value: MLKitImageLabelingResult = scanResult.value;
+    const value: MLKitImageLabelingOnDeviceResult = scanResult.value;
     this.labels = value.labels;
   }
 }

@@ -1,17 +1,22 @@
 import { Component, NgZone } from "@angular/core";
+import { RouterExtensions } from "nativescript-angular";
 import { ImageSource } from "tns-core-modules/image-source";
-
-import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
-import { MLKitRecognizeTextLocalResult, MLKitRecognizeTextCloudResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
-import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
-import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
 import { action } from "tns-core-modules/ui/dialogs";
 import { ImageAsset } from "tns-core-modules/image-asset";
+import { isIOS } from "tns-core-modules/platform";
 import * as ImagePicker from "nativescript-imagepicker";
 import * as Camera from "nativescript-camera";
-import { RouterExtensions } from "nativescript-angular";
-import { isIOS } from "tns-core-modules/platform";
-import { MLKitImageLabelingResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
+import { BarcodeFormat, MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
+import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
+import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/facedetection";
+import {
+  MLKitRecognizeTextCloudResult,
+  MLKitRecognizeTextOnDeviceResult
+} from "nativescript-plugin-firebase/mlkit/textrecognition";
+import {
+  MLKitImageLabelingCloudResult,
+  MLKitImageLabelingOnDeviceResult
+} from "nativescript-plugin-firebase/mlkit/imagelabeling";
 
 const firebase = require("nativescript-plugin-firebase");
 
@@ -25,15 +30,16 @@ export class MLKitComponent {
   pickedImage: ImageSource;
 
   private mlkitFeatures: Array<string> = [
-    "Text recognition (local)",
+    "Text recognition (on device)",
     "Text recognition (cloud)",
-    "Barcode scanning",
-    "Face detection",
-    "Image labeling",
+    "Barcode scanning (on device)",
+    "Face detection (on device)",
+    "Image labeling (on device)",
+    "Image labeling (cloud)",
     "Landmark recognition (cloud)"
   ];
 
-  private mlkitLocalFeatures: Array<string> = [
+  private mlkitOnDeviceFeatures: Array<string> = [
     "Text recognition",
     "Barcode scanning",
     "Face detection",
@@ -46,9 +52,9 @@ export class MLKitComponent {
 
   fromCameraFeed(): void {
     action(
-        "Test which ML Kit feature? No cloud processing will be used.",
+        "Test which on-device ML Kit feature?",
         "Cancel",
-        this.mlkitLocalFeatures
+        this.mlkitOnDeviceFeatures
     ).then((pickedItem: string) => {
       let to;
       if (pickedItem === "Text recognition") {
@@ -83,7 +89,7 @@ export class MLKitComponent {
       width: 800,
       height: 800,
       keepAspectRatio: true,
-      saveToGallery: true,
+      saveToGallery: false,
       cameraFacing: "rear"
     }).then(imageAsset => {
       new ImageSource().fromAsset(imageAsset).then(imageSource => {
@@ -147,34 +153,34 @@ export class MLKitComponent {
         this.mlkitFeatures
     ).then((pickedItem: string) => {
       let pickedItemIndex = this.mlkitFeatures.indexOf(pickedItem);
-      if (pickedItem === "Text recognition (local)") {
-        this.recognizeTextLocal(imageSource);
+      if (pickedItem === "Text recognition (on device)") {
+        this.recognizeTextOnDevice(imageSource);
       } else if (pickedItem === "Text recognition (cloud)") {
         this.recognizeTextCloud(imageSource);
-      } else if (pickedItem === "Barcode scanning") {
-        this.scanBarcode(imageSource);
-      } else if (pickedItem === "Face detection") {
-        this.detectFaces(imageSource);
-      } else if (pickedItem === "Image labeling") {
-        this.labelImage(imageSource);
+      } else if (pickedItem === "Barcode scanning (on device)") {
+        this.scanBarcodeOnDevice(imageSource);
+      } else if (pickedItem === "Face detection (on device)") {
+        this.detectFacesOnDevice(imageSource);
+      } else if (pickedItem === "Image labeling (on device)") {
+        this.labelImageOnDevice(imageSource);
+      } else if (pickedItem === "Image labeling (cloud)") {
+        this.labelImageCloud(imageSource);
       } else if (pickedItem === "Landmark recognition (cloud)") {
         this.recognizeLandmarkCloud(imageSource);
       }
     });
   }
 
-  private recognizeTextLocal(imageSource: ImageSource): void {
-    firebase.mlkit.textrecognition.recognizeTextLocal({
+  private recognizeTextOnDevice(imageSource: ImageSource): void {
+    firebase.mlkit.textrecognition.recognizeTextOnDevice({
       image: imageSource
-    }).then(
-        (result: MLKitRecognizeTextLocalResult) => {
-          alert({
-            title: `Result`,
-            message: result.features.map(feature => feature.text).join(""),
-            okButtonText: "OK"
-          });
-        })
-        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+    }).then((result: MLKitRecognizeTextOnDeviceResult) => {
+      alert({
+        title: `Result`,
+        message: result.features.map(feature => feature.text).join(""),
+        okButtonText: "OK"
+      });
+    }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 
   private recognizeTextCloud(imageSource: ImageSource): void {
@@ -207,12 +213,13 @@ export class MLKitComponent {
         .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 
-  private scanBarcode(imageSource: ImageSource): void {
-    firebase.mlkit.barcodescanning.scanBarcodes({
+  private scanBarcodeOnDevice(imageSource: ImageSource): void {
+    console.log(">>> imageSource.rotationAngle: " + imageSource.rotationAngle);
+    firebase.mlkit.barcodescanning.scanBarcodesOnDevice({
       image: imageSource,
       formats: [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13]
     }).then(
-        (result: MLKitScanBarcodesResult) => {
+        (result: MLKitScanBarcodesOnDeviceResult) => {
           alert({
             title: `Result`,
             message: JSON.stringify(result.barcodes),
@@ -222,11 +229,11 @@ export class MLKitComponent {
         .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 
-  private detectFaces(imageSource: ImageSource): void {
-    firebase.mlkit.facedetection.detectFaces({
+  private detectFacesOnDevice(imageSource: ImageSource): void {
+    firebase.mlkit.facedetection.detectFacesOnDevice({
       image: imageSource
     }).then(
-        (result: MLKitDetectFacesResult) => {
+        (result: MLKitDetectFacesOnDeviceResult) => {
           alert({
             title: `Result`,
             message: JSON.stringify(result.faces),
@@ -236,12 +243,27 @@ export class MLKitComponent {
         .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 
-  private labelImage(imageSource: ImageSource): void {
-    firebase.mlkit.imagelabeling.labelImage({
+  private labelImageOnDevice(imageSource: ImageSource): void {
+    firebase.mlkit.imagelabeling.labelImageOnDevice({
       image: imageSource,
       confidenceThreshold: 0.3
     }).then(
-        (result: MLKitImageLabelingResult) => {
+        (result: MLKitImageLabelingOnDeviceResult) => {
+          alert({
+            title: `Result`,
+            message: JSON.stringify(result.labels),
+            okButtonText: "OK"
+          });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+
+  private labelImageCloud(imageSource: ImageSource): void {
+    firebase.mlkit.imagelabeling.labelImageCloud({
+      image: imageSource,
+      confidenceThreshold: 0.3
+    }).then(
+        (result: MLKitImageLabelingCloudResult) => {
           alert({
             title: `Result`,
             message: JSON.stringify(result.labels),

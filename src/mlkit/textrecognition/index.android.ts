@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions, } from "../";
-import { MLKitRecognizeTextLocalOptions, MLKitRecognizeTextLocalResult } from "./";
+import { MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextOnDeviceResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 import {
   MLKitRecognizeTextCloudOptions,
@@ -23,7 +23,7 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
           this.notify({
             eventName: MLKitTextRecognition.scanResultEvent,
             object: this,
-            value: getLocalResult(textBlocks.getBlocks())
+            value: getOnDeviceResult(textBlocks.getBlocks())
           });
         }
       }
@@ -31,8 +31,8 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   }
 }
 
-function getLocalResult(blocks: any): MLKitRecognizeTextLocalResult {
-  const result = <MLKitRecognizeTextLocalResult>{
+function getOnDeviceResult(blocks: any): MLKitRecognizeTextOnDeviceResult {
+  const result = <MLKitRecognizeTextOnDeviceResult>{
     features: []
   };
 
@@ -72,14 +72,14 @@ function getLocalResult(blocks: any): MLKitRecognizeTextLocalResult {
   return result;
 }
 
-export function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Promise<MLKitRecognizeTextLocalResult> {
+export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const firebaseVisionTextDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionTextDetector();
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: textBlocks => {
-          resolve(getLocalResult(textBlocks.getBlocks()));
+          resolve(getOnDeviceResult(textBlocks.getBlocks()));
           firebaseVisionTextDetector.close();
         }
       });
@@ -94,7 +94,7 @@ export function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Pro
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.mlkit.recognizeTextLocal: " + ex);
+      console.log("Error in firebase.mlkit.recognizeTextOnDevice: " + ex);
       reject(ex);
     }
   });

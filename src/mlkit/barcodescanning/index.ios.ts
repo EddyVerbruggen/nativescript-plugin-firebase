@@ -1,11 +1,12 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitScanBarcodesOptions, MLKitScanBarcodesResult } from "./index";
+import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./index";
 import { MLKitOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
 export { BarcodeFormat };
 
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
+
   protected createDetector(): any {
     let formats: Array<BarcodeFormat>;
     if (this.formats) {
@@ -22,7 +23,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
         console.log(error.localizedDescription);
 
       } else if (barcodes !== null && barcodes.count > 0) {
-        const result = <MLKitScanBarcodesResult>{
+        const result = <MLKitScanBarcodesOnDeviceResult>{
           barcodes: []
         };
 
@@ -58,7 +59,7 @@ function getBarcodeDetector(formats?: Array<BarcodeFormat>): any {
   }
 }
 
-export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitScanBarcodesResult> {
+export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions): Promise<MLKitScanBarcodesOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const barcodeDetector = getBarcodeDetector(options.formats);
@@ -68,7 +69,7 @@ export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitSc
           reject(error.localizedDescription);
 
         } else if (barcodes !== null) {
-          const result = <MLKitScanBarcodesResult>{
+          const result = <MLKitScanBarcodesOnDeviceResult>{
             barcodes: []
           };
 
@@ -83,7 +84,7 @@ export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitSc
         }
       });
     } catch (ex) {
-      console.log("Error in firebase.mlkit.scanBarcodes: " + ex);
+      console.log("Error in firebase.mlkit.scanBarcodesOnDevice: " + ex);
       reject(ex);
     }
   });

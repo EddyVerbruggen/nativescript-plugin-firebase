@@ -1,7 +1,8 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
-import { MLKitImageLabelingOptions, MLKitImageLabelingResult } from "./";
+import { MLKitImageLabelingOnDeviceOptions, MLKitImageLabelingOnDeviceResult } from "./";
 import { MLKitImageLabeling as MLKitImageLabelingBase } from "./imagelabeling-common";
+import { MLKitImageLabelingCloudOptions, MLKitImageLabelingCloudResult } from "./index";
 
 export class MLKitImageLabeling extends MLKitImageLabelingBase {
 
@@ -15,7 +16,7 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
         console.log(error.localizedDescription);
 
       } else if (labels !== null && labels.count > 0) {
-        const result = <MLKitImageLabelingResult>{
+        const result = <MLKitImageLabelingOnDeviceResult>{
           labels: []
         };
 
@@ -48,7 +49,7 @@ function getDetector(confidenceThreshold: number): FIRVisionLabelDetector {
   return firVision.labelDetectorWithOptions(fIRVisionLabelDetectorOptions);
 }
 
-export function labelImage(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingResult> {
+export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): Promise<MLKitImageLabelingOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const labelDetector = getDetector(options.confidenceThreshold || 0.5);
@@ -58,7 +59,7 @@ export function labelImage(options: MLKitImageLabelingOptions): Promise<MLKitIma
           reject(error.localizedDescription);
 
         } else if (labels !== null) {
-          const result = <MLKitImageLabelingResult>{
+          const result = <MLKitImageLabelingOnDeviceResult>{
             labels: []
           };
 
@@ -75,7 +76,44 @@ export function labelImage(options: MLKitImageLabelingOptions): Promise<MLKitIma
         }
       });
     } catch (ex) {
-      console.log("Error in firebase.mlkit.labelImage: " + ex);
+      console.log("Error in firebase.mlkit.labelImageOnDevice: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promise<MLKitImageLabelingCloudResult> {
+  return new Promise((resolve, reject) => {
+    try {
+      const fIRVisionCloudDetectorOptions = FIRVisionCloudDetectorOptions.new();
+      fIRVisionCloudDetectorOptions.modelType = options.modelType === "latest" ? FIRVisionCloudModelType.Latest : FIRVisionCloudModelType.Stable;
+      fIRVisionCloudDetectorOptions.maxResults = options.maxResults || 10;
+
+      const firVision: FIRVision = FIRVision.vision();
+      const labelDetector = firVision.cloudLabelDetectorWithOptions(fIRVisionCloudDetectorOptions);
+
+      labelDetector.detectInImageCompletion(getImage(options), (labels: NSArray<FIRVisionCloudLabel>, error: NSError) => {
+        if (error !== null) {
+          reject(error.localizedDescription);
+
+        } else if (labels !== null) {
+          const result = <MLKitImageLabelingCloudResult>{
+            labels: []
+          };
+
+          for (let i = 0, l = labels.count; i < l; i++) {
+            const label: FIRVisionCloudLabel = labels.objectAtIndex(i);
+            result.labels.push({
+              text: label.label,
+              confidence: label.confidence
+            });
+          }
+          console.log(">>> cloud image labeling result: " + JSON.stringify(result.labels));
+          resolve(result);
+        }
+      });
+    } catch (ex) {
+      console.log("Error in firebase.mlkit.labelImageCloud: " + ex);
       reject(ex);
     }
   });

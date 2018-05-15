@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
+import { MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 
 @Component({
   selector: "mlkit-barcodescanning",
@@ -13,8 +13,7 @@ export class BarcodeScanningComponent {
   }>;
 
   onBarcodeScanResult(event): void {
-    const result: MLKitScanBarcodesResult = event.value;
+    const result: MLKitScanBarcodesOnDeviceResult = event.value;
     this.barcodes = result.barcodes;
-    console.log(">>> onBarcodeScanResult, this.barcodes: " + JSON.stringify(this.barcodes));
   }
 }

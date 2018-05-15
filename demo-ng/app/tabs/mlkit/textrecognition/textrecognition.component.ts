@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MLKitRecognizeTextLocalResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitRecognizeTextOnDeviceResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 
 @Component({
   selector: "mlkit-textrecognition",
@@ -12,7 +12,7 @@ export class TextRecognitionComponent {
   }>;
 
   onTextRecognitionResult(scanResult: any): void {
-    const value: MLKitRecognizeTextLocalResult = scanResult.value;
+    const value: MLKitRecognizeTextOnDeviceResult = scanResult.value;
     this.features = value.features;
   }
 }

@@ -4,7 +4,10 @@
 
   <StackLayout row="1" orientation="horizontal" horizontalAlignment="center">
     <Button text="Cameraroll" (tap)="fromCameraroll()" class="button"></Button>
-    <Button text="Cam picture" (tap)="fromCameraPicture()" class="button"></Button>
+    <!-- the image may require rotation on Android, and permission may be required - not feeling like exposing this for now -->
+    <iOS>
+      <Button text="Cam picture" (tap)="fromCameraPicture()" class="button"></Button>
+    </iOS>
     <Button text="Cam feed" (tap)="fromCameraFeed()" class="button"></Button>
   </StackLayout>
 

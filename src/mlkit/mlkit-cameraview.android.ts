@@ -101,10 +101,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
       const camera = android.hardware.Camera.open(requestedCameraId);
 
-    const sizePair = this.selectSizePair(camera, 800, 600); // TODO based on wrapping frame
-      console.log(">>> sizePair.pictureSize: " + sizePair.pictureSize);
-      console.log(">>> sizePair.pictureSize.xy: " + sizePair.pictureSize.width + " x " + sizePair.pictureSize.height);
-      console.log(">>> sizePair.previewSize.xy: " + sizePair.previewSize.width + " x " + sizePair.previewSize.height);
+      const sizePair = this.selectSizePair(camera, 800, 600); // TODO based on wrapping frame
 
       if (!sizePair) {
         console.log("Could not find suitable preview size.");

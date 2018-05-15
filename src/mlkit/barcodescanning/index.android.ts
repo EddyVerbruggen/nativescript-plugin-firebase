@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitScanBarcodesOptions, MLKitScanBarcodesResult } from "./";
+import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./";
 import { MLKitOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
@@ -28,7 +28,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
         // const imageSource = new ImageSource();
         // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
 
-        const result = <MLKitScanBarcodesResult>{
+        const result = <MLKitScanBarcodesOnDeviceResult>{
           // imageSource: imageSource,
           barcodes: []
         };
@@ -64,14 +64,14 @@ function getBarcodeDetector(formats?: Array<BarcodeFormat>): any {
   }
 }
 
-export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitScanBarcodesResult> {
+export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions): Promise<MLKitScanBarcodesOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const firebaseVisionBarcodeDetector = getBarcodeDetector(options.formats);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: (barcodes) => {
-          const result = <MLKitScanBarcodesResult>{
+        onSuccess: barcodes => {
+          const result = <MLKitScanBarcodesOnDeviceResult>{
             barcodes: []
           };
 
@@ -99,13 +99,12 @@ export function scanBarcodes(options: MLKitScanBarcodesOptions): Promise<MLKitSc
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.mlkit.scanBarcodes: " + ex);
+      console.log("Error in firebase.mlkit.scanBarcodesOnDevice: " + ex);
       reject(ex);
     }
   });
 }
 
-// TODO move
 function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);

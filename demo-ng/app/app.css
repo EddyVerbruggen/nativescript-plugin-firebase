@@ -75,15 +75,6 @@ button {
   background-color: #1832d5;
 }
 
-.mlKitCamera {
-  /*border-radius: 20;*/
-  /*border-width: 8;*/
-  /*border-color: #ddd;*/
-  width: 280;
-  height: 280;
-  margin-top: 16;
-}
-
 Label.mlkit-result {
   margin: 5;
   text-align: left;

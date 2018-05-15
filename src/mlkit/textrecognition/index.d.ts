@@ -17,7 +17,7 @@ export interface MLKitRecognizeTextResultFeature {
   }>
 }
 
-export interface MLKitRecognizeTextLocalResult extends MLKitResult {
+export interface MLKitRecognizeTextOnDeviceResult extends MLKitResult {
   features: Array<MLKitRecognizeTextResultFeature>;
 }
 
@@ -25,13 +25,13 @@ export interface MLKitRecognizeTextCloudResult extends MLKitResult {
   text: string;
 }
 
-export interface MLKitRecognizeTextLocalOptions extends MLKitOptions {
+export interface MLKitRecognizeTextOnDeviceOptions extends MLKitOptions {
 }
 
 export interface MLKitRecognizeTextCloudOptions extends MLKitCloudOptions {
 }
 
-export declare function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Promise<MLKitRecognizeTextLocalResult>;
+export declare function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextOnDeviceResult>;
 
 export declare function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult>;
 

@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
-import { MLKitRecognizeTextLocalOptions, MLKitRecognizeTextCloudOptions, MLKitRecognizeTextLocalResult, MLKitRecognizeTextCloudResult } from "./";
+import { MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextCloudOptions, MLKitRecognizeTextOnDeviceResult, MLKitRecognizeTextCloudResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 import { MLKitRecognizeTextResultFeature } from "./index";
 
@@ -18,7 +18,7 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
         this.notify({
           eventName: MLKitTextRecognition.scanResultEvent,
           object: this,
-          value: getLocalResult(features)
+          value: getOnDeviceResult(features)
         });
       }
     };
@@ -30,8 +30,8 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
 
 }
 
-function getLocalResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextLocalResult {
-  const result = <MLKitRecognizeTextLocalResult>{
+function getOnDeviceResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextOnDeviceResult {
+  const result = <MLKitRecognizeTextOnDeviceResult>{
     features: []
   };
 
@@ -70,7 +70,7 @@ function getLocalResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextLoc
   return result;
 }
 
-export function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Promise<MLKitRecognizeTextLocalResult> {
+export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const firVision: FIRVision = FIRVision.vision();
@@ -80,11 +80,11 @@ export function recognizeTextLocal(options: MLKitRecognizeTextLocalOptions): Pro
         if (error !== null) {
           reject(error.localizedDescription);
         } else if (features !== null) {
-          resolve(getLocalResult(features));
+          resolve(getOnDeviceResult(features));
         }
       });
     } catch (ex) {
-      console.log("Error in firebase.mlkit.recognizeTextLocal: " + ex);
+      console.log("Error in firebase.mlkit.recognizeTextOnDevice: " + ex);
       reject(ex);
     }
   });
@@ -101,12 +101,16 @@ export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Pro
       const textDetector = firVision.cloudTextDetectorWithOptions(fIRVisionCloudDetectorOptions);
 
       textDetector.detectInImageCompletion(getImage(options), (cloudText: FIRVisionCloudText, error: NSError) => {
+        console.log(">>> recognizeTextCloud error? " + error + ", cloudText? " + cloudText);
         if (error !== null) {
           reject(error.localizedDescription);
         } else if (cloudText !== null) {
+          console.log(">>> recognizeTextCloud result: " + cloudText);
           resolve({
             text: cloudText.text
           });
+        } else {
+          reject("Unknown error :'(");
         }
       });
     } catch (ex) {

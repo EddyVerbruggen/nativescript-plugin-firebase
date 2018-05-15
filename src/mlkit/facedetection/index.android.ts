@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitDetectFacesOptions, MLKitDetectFacesResult } from "./";
+import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult } from "./";
 import { MLKitOptions } from "../index";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
 
@@ -20,7 +20,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
         // const imageSource = new ImageSource();
         // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
 
-        const result = <MLKitDetectFacesResult>{
+        const result = <MLKitDetectFacesOnDeviceResult>{
           // imageSource: imageSource,
           faces: []
         };
@@ -58,7 +58,7 @@ function getFaceDetector(): any {
   return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(faceDetectorOptions);
 }
 
-export function detectFaces(options: MLKitDetectFacesOptions): Promise<MLKitDetectFacesResult> {
+export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): Promise<MLKitDetectFacesOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const firebaseVisionFaceDetector = getFaceDetector();
@@ -66,7 +66,7 @@ export function detectFaces(options: MLKitDetectFacesOptions): Promise<MLKitDete
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: (faces) => {
 
-          const result = <MLKitDetectFacesResult>{
+          const result = <MLKitDetectFacesOnDeviceResult>{
             faces: []
           };
 
@@ -95,7 +95,7 @@ export function detectFaces(options: MLKitDetectFacesOptions): Promise<MLKitDete
           .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
-      console.log("Error in firebase.mlkit.detectFaces: " + ex);
+      console.log("Error in firebase.mlkit.detectFacesOnDevice: " + ex);
       reject(ex);
     }
   });

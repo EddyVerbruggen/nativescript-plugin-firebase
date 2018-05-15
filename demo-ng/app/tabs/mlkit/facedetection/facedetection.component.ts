@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
-import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
-import { ImageSource } from "tns-core-modules/image-source";
+import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/facedetection";
 
 @Component({
   selector: "mlkit-facedetection",
@@ -18,7 +17,7 @@ export class FaceDetectionComponent {
   mlKitAllOK: string;
 
   onFaceDetectionResult(scanResult: any): any {
-    const value: MLKitDetectFacesResult = scanResult.value;
+    const value: MLKitDetectFacesOnDeviceResult = scanResult.value;
     if (value.faces.length > 0) {
       this.faces = value.faces;
 
