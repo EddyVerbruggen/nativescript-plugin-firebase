@@ -32,7 +32,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.detector.close();
       this.detector = undefined;
     }
-    this.lastVisionImage = undefined
     this.bytesToByteBuffer = new Map();
     this.surfaceView = null;
   }

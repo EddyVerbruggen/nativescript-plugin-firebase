@@ -4,14 +4,8 @@ import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { isIOS } from "tns-core-modules/platform";
 import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
-import { ImageSource } from "tns-core-modules/image-source";
 
-import * as firebase from "nativescript-plugin-firebase";
-
-import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
-import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
-import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
-
+import * as firebase from"nativescript-plugin-firebase";
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 declare const Crashlytics: any;
@@ -354,7 +348,7 @@ export class HelloWorldModel extends Observable {
         setTimeout(() => {
           alert({
             title: "Dynamic Link!",
-            message: JSON.stringify(result),
+            message: result,
             okButtonText: "Awesome!"
           });
         }, 500);
@@ -396,73 +390,6 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
-  }
-
-  public recognizeText(): void {
-    const path = "~/images/please_walk_on_the_grass.jpg";
-    const img = new ImageSource();
-    img.fromFile(path)
-        .then(() => {
-          firebase.mlkit.textrecognition.recognizeText({
-            image: img
-          }).then(
-              (result: MLKitRecognizeTextResult) => {
-                alert({
-                  title: `Result from ${path}:`,
-                  message: JSON.stringify(result.features),
-                  okButtonText: "OK"
-                });
-              }, errorMessage => {
-                console.log("ML Kit error: " + errorMessage);
-              }
-          );
-        })
-        .catch(err => console.log("Error in recognizeText: " + err));
-  }
-
-  public scanBarcode(): void {
-    const path = "~/images/barcodes/2qrcodes.png";
-    const img = new ImageSource();
-    img.fromFile(path)
-        .then(() => {
-          firebase.mlkit.barcodescanning.scanBarcodes({
-            image: img,
-            formats: [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13]
-          }).then(
-              (result: MLKitScanBarcodesResult) => {
-                alert({
-                  title: `Result from ${path}:`,
-                  message: JSON.stringify(result.barcodes),
-                  okButtonText: "OK"
-                });
-              }, errorMessage => {
-                console.log("ML Kit error: " + errorMessage);
-              }
-          );
-        })
-        .catch(err => console.log("Error in scanBarcode: " + err));
-  }
-
-  public detectFaces(): void {
-    const path = "~/images/faces.jpg";
-    const img = new ImageSource();
-    img.fromFile(path)
-        .then(() => {
-          firebase.mlkit.facedetection.detectFaces({
-            image: img
-          }).then(
-              (result: MLKitDetectFacesResult) => {
-                alert({
-                  title: `Result from ${path}:`,
-                  message: JSON.stringify(result.faces),
-                  okButtonText: "OK"
-                });
-              }, errorMessage => {
-                console.log("ML Kit error: " + errorMessage);
-              }
-          );
-        })
-        .catch(err => console.log("Error in detectFaces: " + err));
   }
 
   public doSetAnalyticsUserProperty(): void {

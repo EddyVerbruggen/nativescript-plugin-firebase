@@ -14,6 +14,10 @@ export interface MLKitImageLabelingOptions extends MLKitMultiEngineOptions {
    * 0.5 by default
    */
   confidenceThreshold?: number;
+  /**
+   * 10 by default
+   */
+  maxResults?: number;
 }
 
 export declare function labelImage(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingResult>;

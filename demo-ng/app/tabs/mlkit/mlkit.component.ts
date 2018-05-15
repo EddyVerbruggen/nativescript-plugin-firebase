@@ -1,15 +1,17 @@
-import { Component, NgZone } from "@angular/core";
+import { Component } from "@angular/core";
 import { ImageSource } from "tns-core-modules/image-source";
 
 import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitLandmarkRecognitionResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
 import { MLKitDetectFacesResult } from "nativescript-plugin-firebase/mlkit/facedetection";
-import { Image } from "tns-core-modules/ui/image";
 import { action } from "tns-core-modules/ui/dialogs";
 import { ImageAsset } from "tns-core-modules/image-asset";
 import * as ImagePicker from "nativescript-imagepicker";
 import * as Camera from "nativescript-camera";
 import { RouterExtensions } from "nativescript-angular";
+import { isIOS } from "tns-core-modules/platform";
+import { MLKitImageLabelingResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
 
 const firebase = require("nativescript-plugin-firebase");
 
@@ -19,18 +21,16 @@ const firebase = require("nativescript-plugin-firebase");
   templateUrl: "./mlkit.component.html",
 })
 export class MLKitComponent {
-  public scannedImage: Image;
 
   private mlkitFeatures: Array<string> = [
     "Text recognition",
     "Barcode scanning",
     "Face detection",
     "Image labeling",
-    "Landmark recognition"
+    "Landmark recognition (cloud)"
   ];
 
-  constructor(private zone: NgZone,
-              private routerExtensions: RouterExtensions) {
+  constructor(private routerExtensions: RouterExtensions) {
   }
 
   fromCameraFeed(): void {
@@ -48,6 +48,13 @@ export class MLKitComponent {
         to = "/tabs/mlkit/facedetection";
       } else if (pickedItem === "Image labeling") {
         to = "/tabs/mlkit/imagelabeling";
+      } else if (pickedItem === "Landmark recognition (cloud)") {
+        alert({
+          title: `Not available`,
+          message: `Landmark recognition is currently cloud-only, so that would be a bit too taxing on your dataplan.`,
+          okButtonText: "Gotcha!"
+        });
+        return;
       }
       if (to !== undefined) {
         this.routerExtensions.navigate([to],
@@ -64,9 +71,12 @@ export class MLKitComponent {
   }
 
   fromCameraPicture(): void {
+    if (!isIOS) {
+      Camera.requestPermissions();
+    }
     Camera.takePicture({
-      width: 1000,
-      height: 1000,
+      width: 800,
+      height: 800,
       keepAspectRatio: true,
       saveToGallery: false,
       cameraFacing: "rear"
@@ -91,8 +101,8 @@ export class MLKitComponent {
 
           const selected = selection[0];
           console.log(">>> selected: " + selected);
-          selected.options.height = 1000;
-          selected.options.width = 1000;
+          selected.options.height = 800;
+          selected.options.width = 800;
           selected.options.keepAspectRatio = true;
           selected.getImageAsync((image: any, error: any) => {
             console.log(">>> error: " + error);
@@ -126,6 +136,8 @@ export class MLKitComponent {
         this.detectFaces(imageSource);
       } else if (pickedItem === "Image labeling") {
         this.labelImage(imageSource);
+      } else if (pickedItem === "Landmark recognition (cloud)") {
+        this.recognizeLandmark(imageSource);
       }
     });
   }
@@ -138,6 +150,20 @@ export class MLKitComponent {
           alert({
             title: `Result`,
             message: JSON.stringify(result.features),
+            okButtonText: "OK"
+          });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+
+  private recognizeLandmark(imageSource: ImageSource): void {
+    firebase.mlkit.landmarkrecognition.recognizeLandmark({
+      image: imageSource
+    }).then(
+        (result: MLKitLandmarkRecognitionResult) => {
+          alert({
+            title: `Result`,
+            message: JSON.stringify(result.landmarks),
             okButtonText: "OK"
           });
         })
@@ -178,10 +204,10 @@ export class MLKitComponent {
       image: imageSource,
       confidenceThreshold: 0.3
     }).then(
-        (result: MLKitDetectFacesResult) => {
+        (result: MLKitImageLabelingResult) => {
           alert({
             title: `Result`,
-            message: JSON.stringify(result.faces),
+            message: JSON.stringify(result.labels),
             okButtonText: "OK"
           });
         })

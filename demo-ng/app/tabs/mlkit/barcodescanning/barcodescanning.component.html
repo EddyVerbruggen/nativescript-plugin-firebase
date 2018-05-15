@@ -2,27 +2,26 @@
   <Label class="action-bar-title" text="Barcode scanning"></Label>
 </ActionBar>
 
-<ScrollView>
-  <StackLayout>
+<GridLayout rows="auto, auto, *">
 
-    <Label text="The scanner has been configured to detect QR codes, EAN 8 and EAN 13. It processes every 10th frame. These settings can be tweaked in your usage of the plugin." textWrap="true"></Label>
+  <Label row="0" text="The scanner has been configured to detect QR codes, EAN 8 and EAN 13. It processes every 10th frame. These settings can be tweaked in your usage of the plugin." textWrap="true"></Label>
 
-    <MLKitBarcodeScanner
-        width="300"
-        height="340"
-        formats="QR_CODE, EAN_8, EAN_13"
-        processEveryNthFrame="10"
-        (scanResult)="onBarcodeScanResult($event)">
-    </MLKitBarcodeScanner>
+  <MLKitBarcodeScanner
+      row="1"
+      width="300"
+      height="340"
+      formats="QR_CODE, EAN_8, EAN_13"
+      processEveryNthFrame="10"
+      (scanResult)="onBarcodeScanResult($event)">
+  </MLKitBarcodeScanner>
 
-    <ListView [items]="barcodes" class="m-t-20">
-      <ng-template let-item="item">
-        <GridLayout columns="2*, 3*">
-          <Label col="0" class="m-5" [text]="item.format" horizontalAlignment="left"></Label>
-          <Label col="1" class="m-5" [text]="item.value" horizontalAlignment="left"></Label>
-        </GridLayout>
-      </ng-template>
-    </ListView>
+  <ListView row="2" [items]="barcodes" class="m-t-20">
+    <ng-template let-item="item">
+      <GridLayout columns="2*, 3*">
+        <Label col="0" class="mlkit-result" textWrap="true" [text]="item.format"></Label>
+        <Label col="1" class="mlkit-result" textWrap="true" [text]="item.value"></Label>
+      </GridLayout>
+    </ng-template>
+  </ListView>
 
-  </StackLayout>
-</ScrollView>
+</GridLayout>

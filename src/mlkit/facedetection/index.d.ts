@@ -4,9 +4,9 @@ import { MLKitCameraView, MLKitResult } from "../index";
 export interface MLKitDetectFacesResult extends MLKitResult {
   // TODO there are more properties we can return, see https://firebase.google.com/docs/ml-kit/android/detect-faces
   faces: Array<{
-    smilingProbability: number;
-    leftEyeOpenProbability: number;
-    rightEyeOpenProbability: number;
+    smilingProbability?: number;
+    leftEyeOpenProbability?: number;
+    rightEyeOpenProbability?: number;
   }>;
 }
 

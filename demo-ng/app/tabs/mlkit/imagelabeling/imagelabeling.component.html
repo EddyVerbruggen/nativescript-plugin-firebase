@@ -2,23 +2,22 @@
   <Label class="action-bar-title" text="Image labeling"></Label>
 </ActionBar>
 
-<ScrollView>
-  <StackLayout>
+<GridLayout rows="auto, *">
 
-    <MLKitImageLabeling
-        width="300"
-        height="340"
-        (scanResult)="onImageLabeledResult($event)">
-    </MLKitImageLabeling>
+  <MLKitImageLabeling
+      row="0"
+      width="300"
+      height="340"
+      (scanResult)="onImageLabeledResult($event)">
+  </MLKitImageLabeling>
 
-    <ListView [items]="labels" class="m-t-20">
-      <ng-template let-item="item">
-        <GridLayout columns="2*, 3*">
-          <Label col="0" class="m-5" [text]="item.text" horizontalAlignment="left"></Label>
-          <Label col="1" class="m-5" [text]="item.confidence | number" horizontalAlignment="left"></Label>
-        </GridLayout>
-      </ng-template>
-    </ListView>
+  <ListView row="1" [items]="labels" class="m-t-20">
+    <ng-template let-item="item">
+      <GridLayout columns="3*, 2*">
+        <Label col="0" class="mlkit-result" textWrap="true" [text]="item.text"></Label>
+        <Label col="1" class="mlkit-result" textWrap="true" [text]="item.confidence | number"></Label>
+      </GridLayout>
+    </ng-template>
+  </ListView>
 
-  </StackLayout>
-</ScrollView>
+</GridLayout>

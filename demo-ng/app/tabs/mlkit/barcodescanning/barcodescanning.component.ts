@@ -13,7 +13,6 @@ export class BarcodeScanningComponent {
   }>;
 
   onBarcodeScanResult(event): void {
-    console.log(">>> onBarcodeScanResult");
     const result: MLKitScanBarcodesResult = event.value;
     this.barcodes = result.barcodes;
     console.log(">>> onBarcodeScanResult, this.barcodes: " + JSON.stringify(this.barcodes));

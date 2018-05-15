@@ -83,3 +83,8 @@ button {
   height: 280;
   margin-top: 16;
 }
+
+Label.mlkit-result {
+  margin: 5;
+  text-align: left;
+}

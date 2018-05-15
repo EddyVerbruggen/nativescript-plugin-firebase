@@ -40,17 +40,6 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
   protected rotateRecording(): boolean {
     return true;
   }
-
-  /*
-  private getCorners(cornerPoints: NSArray<CGPoint>) {
-    for (let i = 0, l = cornerPoints.count; i < l; i++) {
-      const point = cornerPoints.objectAtIndex(i);
-      console.log(point);
-    }
-    return {};
-  }
-  */
-
 }
 
 function getDetector(confidenceThreshold: number): FIRVisionLabelDetector {
@@ -81,17 +70,17 @@ export function labelImage(options: MLKitImageLabelingOptions): Promise<MLKitIma
               // corners: <any>feature.cornerPoints
             });
           }
+          console.log(">>> image labeling result: " + JSON.stringify(result.labels));
           resolve(result);
         }
       });
     } catch (ex) {
-      console.log("Error in firebase.mlkit.recognizeText: " + ex);
+      console.log("Error in firebase.mlkit.labelImage: " + ex);
       reject(ex);
     }
   });
 }
 
-// TODO move to a common file
 function getImage(options: MLKitOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
   return FIRVisionImage.alloc().initWithImage(image);

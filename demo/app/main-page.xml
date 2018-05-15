@@ -1,21 +1,83 @@
-<TabView
-    loaded="pageLoaded"
-    class="page"
-    xmlns:FirebaseMLKitBarcodeScanning="nativescript-plugin-firebase/mlkit/barcodescanning"
-    xmlns:FirebaseMLKitFaceDetection="nativescript-plugin-firebase/mlkit/facedetection">
+<TabView loaded="pageLoaded" class="page">
   <TabView.items>
 
-    <TabViewItem title="ML Kit">
+    <TabViewItem title="About">
+      <TabViewItem.view>
+        <ScrollView>
+          <StackLayout class="tab-content">
+            <Image margin="10" src="~/images/telerik-logo.png"/>
+            <Label text="Firebase plugin demo" class="title"/>
+            <Label text="Create awesome realtime apps with Firebase. Make sure you provide your own Firebase URL in main-view-model.js" textWrap="true"/>
+            <Label text="You can either use the Web API or Native API. Under the hoods those use the same native SDK functions. The difference is in how you interact with the plugin. You can even mix usage (fi. the Web API doesn't have push notifications, so you can use the Native API for push and the Web API for authentication)." textWrap="true" style="margin-top: 14"/>
+          </StackLayout>
+        </ScrollView>
+      </TabViewItem.view>
+    </TabViewItem>
+
+    <TabViewItem title="Web API">
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      horizontalAlignment="stretch"
+                      class="tab-content">
+            <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doWebInit }}" class="button button-positive"/>
+
+            <Label row="1" colSpan="2" text="Authentication" class="subtitle"/>
+
+            <Button row="2" col="0" text="anonymous login" tap="{{ doWebLoginAnonymously }}" class="button"/>
+            <Button row="2" col="1" text="passwd login" tap="{{ doWebLoginByPassword }}" class="button"/>
+
+            <Button row="3" col="0" text="providers for email" tap="{{ doWebFetchProvidersForEmail }}" class="button"/>
+            <Button row="3" col="1" text="email sign-in methods" tap="{{ doWebFetchSignInMethodsForEmail }}" class="button"/>
+
+            <Button row="4" col="0" text="create pwd user" tap="{{ doWebCreateUser }}" class="button"/>
+            <Button row="4" col="1" text="get current user" tap="{{ doWebGetCurrentUser }}" class="button"/>
+
+            <Button row="5" colSpan="2" text="logout" tap="{{ doWebLogout }}" class="button"/>
+
+            <Label row="7" col="0" text="User email/phone:" class="message"/>
+            <Label row="7" col="1" text="{{ userEmailOrPhone }}" class="message" textWrap="true"/>
+
+            <Label row="8" colSpan="2" text="Methods on path /companies" class="subtitle"/>
+
+            <Button row="9" col="0" text="add valuelistener" tap="{{ doWebAddValueEventListenerForCompanies }}" class="button button-company"/>
+            <Button row="9" col="1" text="store by setValue" tap="{{ doWebStoreCompaniesBySetValue }}" class="button button-company"/>
+
+            <Button row="10" col="0" text="del valuelistener" tap="{{ doWebRemoveValueEventListenersForCompanies }}" class="button button-company"/>
+            <Button row="10" col="1" text="get value" tap="{{ doWebGetValueForCompanies }}" class="button button-company"/>
+
+            <Button row="11" col="0" text="ordered query" tap="{{ doWebQueryBulgarianCompanies }}" class="button button-company"/>
+            <Button row="11" col="1" text="remove path" tap="{{ doWebRemoveCompanies }}" class="button button-company"/>
+
+            <Button row="12" col="0" text="store with key" tap="{{ doWebStoreCompanyByFirstCreatingKey }}" class="button button-company"/>
+            <Button row="12" col="1" text="get server info" tap="{{ doWebGetServerInfo }}" class="button button-company"/>
+
+            <Label row="13" col="0" text="Last update path:" class="message"/>
+            <Label row="13" col="1" text="{{ path }}" class="message" textWrap="true"/>
+
+            <Label row="14" col="0" text="Key:" class="message"/>
+            <Label row="14" col="1" text="{{ key }}" class="message" textWrap="true"/>
+
+            <Label row="15" col="0" text="Value:" class="message"/>
+            <Label row="15" col="1" text="{{ value }}" class="message" textWrap="true"/>
+
+          </GridLayout>
+        </ScrollView>
+      </TabViewItem.view>
+    </TabViewItem>
+
+    <TabViewItem title="Native API">
+      <TabViewItem.view>
+        <ScrollView>
+          <GridLayout columns="*, *"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
 
-            <!--<Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doInit }}" class="button button-positive"/>-->
+            <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doInit }}" class="button button-positive"/>
 
-            <!--Label row="1" colSpan="2" text="Remote Config" class="subtitle"/>
+            <Label row="1" colSpan="2" text="Remote Config" class="subtitle"/>
 
             <Button row="2" colSpan="2" text="get remote configuration" tap="{{ doGetRemoteConfig }}" class="button"/>
 
@@ -132,132 +194,10 @@
 
             <Button row="42" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
             <Button row="42" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
-
-            <Label row="43" colSpan="2" text="ML Kit" class="subtitle"/-->
-
-
-
-
-
-
-
-
-            <FirebaseMLKitBarcodeScanning:MLKitBarcodeScanner
-                row="2"
-                colSpan="2"
-                class="barcodescanner"
-                formats="QR_CODE, EAN_13"
-                scanResult="onBarcodesScanResult" />
-
-            <!--FirebaseMLKitFaceDetection:MLKitFaceDetection
-                row="2"
-                colSpan="2"
-                class="barcodescanner"
-                scanResult="onFaceDetectionResult" /-->
-
-            <Label row="3" text="Barcode format:" />
-            <Label row="3" col="1" text="{{ barcodeFormat }}" />
-
-            <Label row="4" text="Barcode value:" />
-            <Label row="4" col="1" text="{{ barcodeValue }}" />
-
-            <!--<Label row="3" colSpan="2" text="{{ allOK }}" textWrap="true" />-->
-
-            <!--<Label row="4" text="{{ textValue }}" textWrap="true" />-->
-            <!--<Label row="4" col="1" text="If all above 70%, the image is shown here." textWrap="true" visibility="{{ lastMatch ? 'collapsed' : 'visible' }} " />-->
-            <!--<Image row="4" col="1" src="{{ lastMatch }}" visibility="{{ lastMatch ? 'visible' : 'collapsed' }} " />-->
-
-            <Button row="5" col="0" text="recognize text" tap="{{ recognizeText }}" class="button button-mlkit"/>
-            <Button row="5" col="1" text="scan barcodes" tap="{{ scanBarcode }}" class="button button-mlkit"/>
-            <Button row="6" col="0" text="detect faces" tap="{{ detectFaces }}" class="button button-mlkit"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           </GridLayout>
 
         </ScrollView>
       </TabViewItem.view>
     </TabViewItem>
-
-    <TabViewItem title="About">
-      <TabViewItem.view>
-        <ScrollView>
-          <StackLayout class="tab-content">
-            <Image margin="10" src="~/images/telerik-logo.png"/>
-            <Label text="Firebase plugin demo" class="title"/>
-            <Label text="Create awesome realtime apps with Firebase. Make sure you provide your own Firebase URL in main-view-model.js" textWrap="true"/>
-            <Label text="You can either use the Web API or Native API. Under the hoods those use the same native SDK functions. The difference is in how you interact with the plugin. You can even mix usage (fi. the Web API doesn't have push notifications, so you can use the Native API for push and the Web API for authentication)." textWrap="true" style="margin-top: 14"/>
-          </StackLayout>
-        </ScrollView>
-      </TabViewItem.view>
-    </TabViewItem>
-
-    <TabViewItem title="Web API">
-      <TabViewItem.view>
-        <ScrollView>
-          <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
-                      horizontalAlignment="stretch"
-                      class="tab-content">
-            <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doWebInit }}" class="button button-positive"/>
-
-            <Label row="1" colSpan="2" text="Authentication" class="subtitle"/>
-
-            <Button row="2" col="0" text="anonymous login" tap="{{ doWebLoginAnonymously }}" class="button"/>
-            <Button row="2" col="1" text="passwd login" tap="{{ doWebLoginByPassword }}" class="button"/>
-
-            <Button row="3" col="0" text="providers for email" tap="{{ doWebFetchProvidersForEmail }}" class="button"/>
-            <Button row="3" col="1" text="email sign-in methods" tap="{{ doWebFetchSignInMethodsForEmail }}" class="button"/>
-
-            <Button row="4" col="0" text="create pwd user" tap="{{ doWebCreateUser }}" class="button"/>
-            <Button row="4" col="1" text="get current user" tap="{{ doWebGetCurrentUser }}" class="button"/>
-
-            <Button row="5" colSpan="2" text="logout" tap="{{ doWebLogout }}" class="button"/>
-
-            <Label row="7" col="0" text="User email/phone:" class="message"/>
-            <Label row="7" col="1" text="{{ userEmailOrPhone }}" class="message" textWrap="true"/>
-
-            <Label row="8" colSpan="2" text="Methods on path /companies" class="subtitle"/>
-
-            <Button row="9" col="0" text="add valuelistener" tap="{{ doWebAddValueEventListenerForCompanies }}" class="button button-company"/>
-            <Button row="9" col="1" text="store by setValue" tap="{{ doWebStoreCompaniesBySetValue }}" class="button button-company"/>
-
-            <Button row="10" col="0" text="del valuelistener" tap="{{ doWebRemoveValueEventListenersForCompanies }}" class="button button-company"/>
-            <Button row="10" col="1" text="get value" tap="{{ doWebGetValueForCompanies }}" class="button button-company"/>
-
-            <Button row="11" col="0" text="ordered query" tap="{{ doWebQueryBulgarianCompanies }}" class="button button-company"/>
-            <Button row="11" col="1" text="remove path" tap="{{ doWebRemoveCompanies }}" class="button button-company"/>
-
-            <Button row="12" col="0" text="store with key" tap="{{ doWebStoreCompanyByFirstCreatingKey }}" class="button button-company"/>
-            <Button row="12" col="1" text="get server info" tap="{{ doWebGetServerInfo }}" class="button button-company"/>
-
-            <Label row="13" col="0" text="Last update path:" class="message"/>
-            <Label row="13" col="1" text="{{ path }}" class="message" textWrap="true"/>
-
-            <Label row="14" col="0" text="Key:" class="message"/>
-            <Label row="14" col="1" text="{{ key }}" class="message" textWrap="true"/>
-
-            <Label row="15" col="0" text="Value:" class="message"/>
-            <Label row="15" col="1" text="{{ value }}" class="message" textWrap="true"/>
-
-          </GridLayout>
-        </ScrollView>
-      </TabViewItem.view>
-    </TabViewItem>
-
   </TabView.items>
 </TabView>

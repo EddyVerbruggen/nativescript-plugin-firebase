@@ -68,6 +68,7 @@ export function detectFaces(options: MLKitDetectFacesOptions): Promise<MLKitDete
               rightEyeOpenProbability: face.hasRightEyeOpenProbability ? face.rightEyeOpenProbability : undefined
             });
           }
+          console.log(">>> face result: " + JSON.stringify(result.faces));
           resolve(result);
         }
       });

@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: "mlkit/textrecognition", component: TextRecognitionComponent },
   { path: "mlkit/barcodescanning", component: BarcodeScanningComponent },
   { path: "mlkit/facedetection", component: FaceDetectionComponent },
-  { path: "mlkit/imagelabeling", component: ImageLabelingComponent },
+  { path: "mlkit/imagelabeling", component: ImageLabelingComponent }
 ];
 
 @NgModule({
