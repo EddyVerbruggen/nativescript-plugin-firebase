@@ -1,6 +1,6 @@
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit.png" height="84px" alt="ML Kit"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit.png" height="84px" alt="ML Kit"/>
 
-Make sure to check out [this demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) because it has almost all ML Kit features this plugin currently supports! Steps:
+Make sure to check out [this demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/issue699-mlkit-support/demo-ng) because it has almost all ML Kit features this plugin currently supports! Steps:
 
 ```bash
 git clone https://github.com/EddyVerbruggen/nativescript-plugin-firebase
@@ -18,8 +18,8 @@ then clean your platforms folder (`rm -rf platforms`) and build your app again. 
 ## ML Kit Features
 There are two ways of using ML Kit: 
 
-- *On-device*. These features have been enhanced to not only interpret still images, but you can also run ML against a live camera feed. Why? Because it's fr***ing cool! 
-- *Cloud*. The cloud has much larger and always up to date models, so results will be more accurate. Since this is a remote service reconition speed depends heavily on the size of the images you send to the cloud.
+- **On-device**. These features have been enhanced to not only interpret still images, but you can also run ML against a live camera feed. Why? Because it's fr***ing cool! 
+- **Cloud**. The cloud has much larger and always up to date models, so results will be more accurate. Since this is a remote service reconition speed depends heavily on the size of the images you send to the cloud.
 
 ### On-device configuration
 Optionally (but recommended) for Android, you can have the device automatically download the relevant ML model(s) to the device
@@ -66,8 +66,9 @@ To nbe able to use Cloud features you need to do two things:
 *) _Currently detecting faces from still images doesn't work on iOS (from the camera stream works fine tho)._
 
 ### Text recognition
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_recognition.png" height="153px" alt="ML Kit - Text recognition"/>
-[Firebase documentation](https://firebase.google.com/docs/ml-kit/recognize-text)
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_recognition.png" height="153px" alt="ML Kit - Text recognition"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/recognize-text)
 
 #### Still image (on-device)
 
@@ -107,7 +108,7 @@ Plugin-specific are the optional property `processEveryNthFrame` and optional ev
 You can `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
 Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
 
-> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
+> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/issue699-mlkit-support/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
 
 ##### Angular / Vue
 Register a custom element like so in the component/module:
@@ -133,11 +134,11 @@ Now you're able to use the registered element in the view:
 Declare a namespace at the top of the embedding page, and use it anywhere on the page:
 
 ```xml
-<Page xmlns:MLKitTextRecognition="nativescript-plugin-firebase/mlkit/textrecognition">
+<Page xmlns:FirebaseMLKitTextRecognition="nativescript-plugin-firebase/mlkit/textrecognition">
 
   <OtherTags/>
 
-  <MLKitTextRecognition:MLKitTextRecognition
+  <FirebaseMLKitTextRecognition:MLKitTextRecognition
       class="my-class"
       width="260"
       height="380"
@@ -150,8 +151,9 @@ Declare a namespace at the top of the embedding page, and use it anywhere on the
 > Note that with NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace declaration to the TabView works just as well.
 
 ### Face detection
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
-[Firebase documentation](https://firebase.google.com/docs/ml-kit/detect-faces)
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/detect-faces)
 
 #### Still image (on-device)
 
@@ -183,8 +185,9 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
 ```
 
 ### Barcode scanning
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_barcode_scanning.png" height="153px" alt="ML Kit - Barcode scanning"/>
-[Firebase documentation](https://firebase.google.com/docs/ml-kit/read-barcodes)
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_barcode_scanning.png" height="153px" alt="ML Kit - Barcode scanning"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/read-barcodes)
 
 #### Still image (on-device)
 
@@ -218,8 +221,9 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
 ```
 
 ### Image labeling
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
-[Firebase documentation](https://firebase.google.com/docs/ml-kit/label-images)
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/label-images)
 
 #### Still image (on-device)
 
@@ -268,8 +272,9 @@ registerElement("MLKitImageLabeling", () => require("nativescript-plugin-firebas
 ```
 
 ### Landmark recognition
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_landmark_recognition.png" height="153px" alt="ML Kit - Landmark recognition"/>
-[Firebase documentation](https://firebase.google.com/docs/ml-kit/recognize-landmarks)
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_landmark_recognition.png" height="153px" alt="ML Kit - Landmark recognition"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/recognize-landmarks)
 
 #### Still image (cloud)
 
@@ -287,6 +292,6 @@ firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
 ```
 
 ### Custom model inference
-[Firebase documentation](https://firebase.google.com/docs/ml-kit/use-custom-models)
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/use-custom-models)
 
 Coming soon (probably with plugin version 6.1.0).
