@@ -2,6 +2,7 @@ import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
 import { MLKitRecognizeTextOptions, MLKitRecognizeTextResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
+import { MLKitRecognizeTextResultFeature } from "./index";
 
 export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   protected createDetector(): any {
@@ -13,46 +14,14 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
     return (features: NSArray<FIRVisionText>, error: NSError) => {
       if (error !== null) {
         console.log(error.localizedDescription);
-
       } else if (features !== null && features.count > 0) {
-        const result = <MLKitRecognizeTextResult>{
-          features: []
-        };
-
-        for (let i = 0, l = features.count; i < l; i++) {
-          const feature: FIRVisionText = features.objectAtIndex(i);
-          // Note that fetching these details works, but there's currently no added value
-          /*
-            if (feature instanceof FIRVisionTextBlock) {
-              const textBlock = <FIRVisionTextBlock>feature;
-              for (let j = 0, k = textBlock.lines.count; j < k; j++) {
-                const textBlockLine: FIRVisionTextLine = textBlock.lines.objectAtIndex(j);
-                for (let a = 0, m = textBlockLine.elements.count; a < m; a++) {
-                  const element: FIRVisionTextElement = textBlockLine.elements.objectAtIndex(a);
-                  console.log("FIRVisionTextBlock text: " + element.text);
-                }
-              }
-            }
-            if (feature instanceof FIRVisionTextLine) {
-              for (let a = 0, m = feature.elements.count; a < m; a++) {
-                const element: FIRVisionTextElement = feature.elements.objectAtIndex(a);
-                console.log("FIRVisionTextLine text: " + element.text);
-              }
-            }
-          */
-          result.features.push({
-            text: feature.text,
-            // corners: this.getCorners(<any>feature.cornerPoints)
-          });
-        }
-
         this.notify({
           eventName: MLKitTextRecognition.scanResultEvent,
           object: this,
-          value: result
+          value: getResult(features)
         });
       }
-    }
+    };
   }
 
   protected rotateRecording(): boolean {
@@ -70,6 +39,46 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   */
 }
 
+function getResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextResult {
+  const result = <MLKitRecognizeTextResult>{
+    features: []
+  };
+
+  for (let i = 0, l = features.count; i < l; i++) {
+    const feature = features.objectAtIndex(i);
+    const resultFeature = <MLKitRecognizeTextResultFeature>{
+      text: feature.text,
+      elements: []
+    };
+
+    const addLineToResult = (line: FIRVisionTextLine): void => {
+      for (let a = 0, m = line.elements.count; a < m; a++) {
+        const element: FIRVisionTextElement = line.elements.objectAtIndex(a);
+        const bounds = element.frame;
+        resultFeature.elements.push({
+          text: element.text,
+          bounds: bounds,
+        });
+      }
+    };
+
+    if (feature instanceof FIRVisionTextBlock) {
+      const textBlock = <FIRVisionTextBlock>feature;
+      for (let j = 0, k = textBlock.lines.count; j < k; j++) {
+        addLineToResult(textBlock.lines.objectAtIndex(j));
+      }
+    }
+
+    if (feature instanceof FIRVisionTextLine) {
+      addLineToResult(feature);
+    }
+
+    console.log(">>> resulting resultFeature: " + JSON.stringify(resultFeature));
+    result.features.push(resultFeature);
+  }
+  return result;
+}
+
 export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKitRecognizeTextResult> {
   return new Promise((resolve, reject) => {
     try {
@@ -79,20 +88,8 @@ export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKit
       textDetector.detectInImageCompletion(getImage(options), (features: NSArray<FIRVisionText>, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
-
         } else if (features !== null) {
-          const result = <MLKitRecognizeTextResult>{
-            features: []
-          };
-
-          for (let i = 0, l = features.count; i < l; i++) {
-            const feature: FIRVisionText = features.objectAtIndex(i);
-            result.features.push({
-              text: feature.text,
-              // corners: <any>feature.cornerPoints
-            });
-          }
-          resolve(result);
+          resolve(getResult(features));
         }
       });
     } catch (ex) {

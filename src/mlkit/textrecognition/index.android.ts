@@ -2,6 +2,7 @@ import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions, } from "../";
 import { MLKitRecognizeTextOptions, MLKitRecognizeTextResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
+import { MLKitRecognizeTextResultFeature } from "./index";
 
 declare const com: any;
 
@@ -14,34 +15,57 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   protected createSuccessListener(): any {
     return new com.google.android.gms.tasks.OnSuccessListener({
       onSuccess: textBlocks => {
-
-        if (textBlocks.getBlocks().size() === 0) return;
-
-        const blocks = textBlocks.getBlocks();
-
-        // const imageSource = new ImageSource();
-        // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
-
-        const result = <MLKitRecognizeTextResult>{
-          features: []
-        };
-
-        // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
-        for (let i = 0; i < blocks.size(); i++) {
-          const textBlock = blocks.get(i);
-          result.features.push({
-            text: textBlock.getText()
+        if (textBlocks.getBlocks().size() > 0) {
+          this.notify({
+            eventName: MLKitTextRecognition.scanResultEvent,
+            object: this,
+            value: getResult(textBlocks.getBlocks())
           });
         }
-
-        this.notify({
-          eventName: MLKitTextRecognition.scanResultEvent,
-          object: this,
-          value: result
-        });
       }
     });
   }
+}
+
+function getResult(blocks: any): MLKitRecognizeTextResult {
+  const result = <MLKitRecognizeTextResult>{
+    features: []
+  };
+
+  // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
+  for (let i = 0; i < blocks.size(); i++) {
+    const textBlock = blocks.get(i);
+    const blockResult = <MLKitRecognizeTextResultFeature>{
+      text: textBlock.getText(),
+      elements: []
+    };
+
+    const lines = textBlock.getLines();
+    for (let j = 0; j < lines.size(); j++) {
+      const elements = lines.get(j).getElements();
+      for (let k = 0; k < elements.size(); k++) {
+        const element = elements.get(k);
+        const rect = element.getBoundingBox();
+        const blockElement = {
+          text: element.getText(),
+          bounds: {
+            origin: {
+              x: rect.left,
+              y: rect.top
+            },
+            size: {
+              width: rect.width(),
+              height: rect.height()
+            }
+          }
+        };
+        blockResult.elements.push(blockElement);
+      }
+    }
+
+    result.features.push(blockResult);
+  }
+  return result;
 }
 
 export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKitRecognizeTextResult> {
@@ -51,21 +75,7 @@ export function recognizeText(options: MLKitRecognizeTextOptions): Promise<MLKit
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: textBlocks => {
-          const blocks = textBlocks.getBlocks();
-
-          const result = <MLKitRecognizeTextResult>{
-            features: []
-          };
-
-          // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
-          for (let i = 0; i < blocks.size(); i++) {
-            const textBlock = blocks.get(i);
-            result.features.push({
-              text: textBlock.getText()
-            });
-          }
-
-          resolve(result);
+          resolve(getResult(textBlocks.getBlocks()));
           firebaseVisionTextDetector.close();
         }
       });

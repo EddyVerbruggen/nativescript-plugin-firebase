@@ -24,6 +24,7 @@ export class MLKitComponent {
 
   pickedImage: ImageSource;
 
+  // TODO once more ML plugin features support cloud, add those as (cloud) options to this list
   private mlkitFeatures: Array<string> = [
     "Text recognition",
     "Barcode scanning",
@@ -113,7 +114,11 @@ export class MLKitComponent {
               return;
             }
             if (!image) {
-              console.log(`This is probably an iCloud image - which won't work`);
+              alert({
+                title: `Invalid image`,
+                message: `Perhaps this is an image from cloud storage?`,
+                okButtonText: "Hmm.."
+              });
               return;
             }
             const imageSource = new ImageSource();
@@ -158,7 +163,7 @@ export class MLKitComponent {
         (result: MLKitRecognizeTextResult) => {
           alert({
             title: `Result`,
-            message: JSON.stringify(result.features),
+            message: result.features.map(feature => feature.text).join(""),
             okButtonText: "OK"
           });
         })
