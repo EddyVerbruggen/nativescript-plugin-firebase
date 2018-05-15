@@ -45,7 +45,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 }
 
 function getDetector(): FIRVisionFaceDetector {
-  // TODO make configurable
+  // TODO make configurable (see #704)
   const firVision: FIRVision = FIRVision.vision();
   const options = FIRVisionFaceDetectorOptions.new();
   options.modeType = FIRVisionFaceDetectorMode.Accurate;

@@ -120,7 +120,6 @@ export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Pro
   });
 }
 
-// TODO move to a common file
 function getImage(options: MLKitOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
   return FIRVisionImage.alloc().initWithImage(image);

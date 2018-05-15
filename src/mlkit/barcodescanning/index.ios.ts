@@ -90,7 +90,6 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
   });
 }
 
-// TODO move
 function getImage(options: MLKitOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
   return FIRVisionImage.alloc().initWithImage(image);

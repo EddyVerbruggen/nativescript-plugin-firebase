@@ -101,7 +101,6 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
   });
 }
 
-// TODO move up
 function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);

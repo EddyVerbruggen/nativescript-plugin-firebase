@@ -875,7 +875,7 @@ firebase.admob.showInterstitial = arg => {
       // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
       let delegate = GADInterstitialDelegateImpl.new().initWithCallback((ad: GADInterstitial, error: GADRequestError) => {
         if (error) {
-          reject(error); // TODO this is a platform-specific type
+          reject(error.localizedDescription);
         } else {
           // now we can safely show it
           firebase.admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
@@ -1266,6 +1266,7 @@ firebase.login = arg => {
           reject("Auth type PHONE requires a 'phoneOptions.phoneNumber' argument");
           return;
         }
+
 
         // TODO does this still work (there's a delegate now which we're not implementing)?
         FIRPhoneAuthProvider.provider().verifyPhoneNumberUIDelegateCompletion(arg.phoneOptions.phoneNumber, null, (verificationID: string, error: NSError) => {
@@ -2685,6 +2686,7 @@ class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate 
     this.callback = callback;
     return this;
   }
+
 
   // TODO test that receiving push notifications in the foreground still works
   public messagingDidReceiveMessage(messaging: FIRMessaging, remoteMessage: FIRMessagingRemoteMessage): void {
