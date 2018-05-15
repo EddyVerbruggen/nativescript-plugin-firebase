@@ -12,7 +12,7 @@ export class ImageLabelingComponent {
     confidence: number;
   }>;
 
-  onImageLabeledResult(scanResult: any): void {
+  onImageLabelingResult(scanResult: any): void {
     const value: MLKitImageLabelingOnDeviceResult = scanResult.value;
     this.labels = value.labels;
   }

@@ -201,7 +201,8 @@ export class MLKitComponent {
 
   private recognizeLandmarkCloud(imageSource: ImageSource): void {
     firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
-      image: imageSource
+      image: imageSource,
+      maxResults: 8
     }).then(
         (result: MLKitLandmarkRecognitionCloudResult) => {
           alert({
@@ -261,7 +262,8 @@ export class MLKitComponent {
   private labelImageCloud(imageSource: ImageSource): void {
     firebase.mlkit.imagelabeling.labelImageCloud({
       image: imageSource,
-      confidenceThreshold: 0.3
+      modelType: "stable",
+      maxResults: 5
     }).then(
         (result: MLKitImageLabelingCloudResult) => {
           alert({

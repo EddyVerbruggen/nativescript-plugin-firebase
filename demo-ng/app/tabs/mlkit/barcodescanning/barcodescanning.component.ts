@@ -12,7 +12,7 @@ export class BarcodeScanningComponent {
     format: string;
   }>;
 
-  onBarcodeScanResult(event): void {
+  onBarcodeScanResult(event: any): void {
     const result: MLKitScanBarcodesOnDeviceResult = event.value;
     this.barcodes = result.barcodes;
   }

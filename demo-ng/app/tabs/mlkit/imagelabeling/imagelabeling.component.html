@@ -8,7 +8,8 @@
       row="0"
       width="260"
       height="340"
-      (scanResult)="onImageLabeledResult($event)">
+      confidenceThreshold="0.6"
+      (scanResult)="onImageLabelingResult($event)">
   </MLKitImageLabeling>
 
   <ListView row="1" [items]="labels" class="m-t-20">

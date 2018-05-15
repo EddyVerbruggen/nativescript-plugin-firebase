@@ -1,9 +1,3 @@
-Just dumping a few things I should not forget to add to the doc:
-
-- see step 3 @ https://firebase.google.com/docs/ml-kit/android/recognize-text
-- For Cloud processing, enable the Vision API and upgrade your Firebase project to "Blaze" (pay as you go)
-
-
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit.png" height="84px" alt="ML Kit"/>
 
 Make sure to check out [this demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) because it has almost all ML Kit features this plugin currently supports! Steps:
@@ -22,11 +16,26 @@ In case you're upgrading and you have the `firebase.nativescript.json` file in y
 then clean your platforms folder (`rm -rf platforms`) and build your app again. You will be prompted which Firebase features you'll want to use.
 
 ## ML Kit Features
-There are two ways of using ML Kit: On-device or in the cloud. Depending on the 
+There are two ways of using ML Kit: 
 
 - *On-device*. These features have been enhanced to not only interpret still images, but you can also run ML against a live camera feed. Why? Because it's fr***ing cool! 
 - *Cloud*. The cloud has much larger and always up to date models, so results will be more accurate. Since this is a remote service reconition speed depends heavily on the size of the images you send to the cloud.
 
+### On-device configuration
+Optionally (but recommended) for Android, you can have the device automatically download the relevant ML model(s) to the device
+after your app is installed from the Play Store. Add this to your `<resources>/Android/AndroidManifest.xml`:
+
+```xml
+<meta-data
+    android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+    android:value="text,face,.." />
+```
+
+Replace `text,label,..` by whichever features you need. So if you only need Text recognitions, use `"text"`, but if you want
+to perform Text recognition, Face detection, Barcode scanning, and Image labeling on-device, use `"text,face,barcode,label"`.
+
+Note that (because of how iOS works) we bundle the models you've picked during plugin configuration with your app.
+So if you have a change of heart, re-run the configuration as explained at the top of this document. 
 
 ### Cloud configuration
 To nbe able to use Cloud features you need to do two things:
@@ -79,26 +88,200 @@ import { MLKitRecognizeTextCloudResult } from "nativescript-plugin-firebase/mlki
 const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.textrecognition.recognizeTextOnDevice({
-  image: imageSource,  // a NativeScript Image or ImageSource, see the demo for examples
+  image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
   modelType: "latest", // either "latest" or "stable" (default "stable")
-  maxResults: 15       // default 10
+  maxResults: 15 // default 10
 }).then((result: MLKitRecognizeTextCloudResult) => {
   console.log(result.text);
 }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
+
 #### Live camera feed
+The exact details of using the live camera view depend on whether you're using Angular / Vue or not.
+
+##### Angular / Vue
+Register a custom element like so in their component/module:
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitTextRecognition", () => require("nativescript-plugin-firebase/mlkit/textrecognition").MLKitTextRecognition);
+```
+
+Now you're able to use the registered element in the view:
+
+```html
+<MLKitTextRecognition
+    class="my-class"
+    width="260"
+    height="380"
+    processEveryNthFrame="10"
+    (scanResult)="onTextRecognitionResult($event)">
+</MLKitTextRecognition>
+```
+
+You can use any view-related property you like as we're extending `ContentView`.
+So things like `class`, `row`, `width`, `horizontalAlignment`, `style` are all valid properties.
+
+Plugin-specific are the optional property `processEveryNthFrame` and optional event `scanResult`.
+You can `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
+Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
+
+> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
+
+### XML 
+Declarate a namespace at the top of the embedding page, and use it somewhere on the page:
+
+```xml
+<Page xmlns:MLKitTextRecognition="nativescript-plugin-firebase/mlkit/textrecognition">
+  <OtherTags/>
+  <MLKitTextRecognition:MLKitTextRecognition
+      class="my-class"
+      width="260"
+      height="380"
+      processEveryNthFrame="3"
+      scanResult="onTextRecognitionResult" />
+  <MoreOtherTags/>
+</Page>
+```
+
+Note that with NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace
+declaration to the TabView works just as well.
+
+Also note that you can use any view-related property you like as we're extending `ContentView`.
+So things like `class`, `row`, `colspan`, `horizontalAlignment`, `style` are all valid properties.
 
 ### [Face detection](https://firebase.google.com/docs/ml-kit/detect-faces)
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
 
+#### Still image (on-device)
+
+```typescript
+import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/facedetection";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.facedetection.detectFacesOnDevice({
+  image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
+}).then((result: MLKitDetectFacesOnDeviceResult) => { // just look at this type to see what else is returned
+  console.log(JSON.stringify(result.faces));
+}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Live camera feed
+The basics are explained above for 'Text recognition', so we're only showing the differences here.
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebase/mlkit/facedetection").MLKitFaceDetection);
+```
+
+```html
+<MLKitFaceDetection
+    width="260"
+    height="380"
+    (scanResult)="onFaceDetectionResult($event)">
+</MLKitFaceDetection>
+```
+
 ### [Barcode scanning](https://firebase.google.com/docs/ml-kit/read-barcodes)
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_barcode_scanning.png" height="153px" alt="ML Kit - Barcode scanning"/>
+
+#### Still image (on-device)
+
+```typescript
+import { BarcodeFormat, MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.barcodescanning.scanBarcodesOnDevice({
+  image: imageSource,
+  formats: [BarcodeFormat.QR_CODE, BarcodeFormat.CODABAR] // limit recognition to certain formats (faster), or leave out entirely for all formats (default)
+}).then((result: MLKitScanBarcodesOnDeviceResult) => { // just look at this type to see what else is returned
+  console.log(JSON.stringify(result.barcodes));
+}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Live camera feed
+The basics are explained above for 'Text recognition', so we're only showing the differences here.
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
+```
+
+```html
+<MLKitBarcodeScanner
+    width="260"
+    height="380"
+    formats="QR_CODE, EAN_8, EAN_13"
+    (scanResult)="onBarcodeScanningResult($event)">
+</MLKitBarcodeScanner>
+```
 
 ### [Image labeling](https://firebase.google.com/docs/ml-kit/label-images)
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
 
+#### Still image (on-device)
+
+```typescript
+import { MLKitImageLabelingOnDeviceResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.imagelabeling.labelImageOnDevice({
+  image: imageSource,
+  confidenceThreshold: 0.6 // this will only return labels with at least 0.6 (60%) confidence. Default 0.5.
+}).then((result: MLKitImageLabelingOnDeviceResult) => { // just look at this type to see what else is returned
+  console.log(JSON.stringify(result.labels));
+}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Still image (cloud)
+
+```typescript
+import { MLKitImageLabelingCloudResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.imagelabeling.labelImageCloud({
+  image: imageSource,
+  modelType: "stable", // either "latest" or "stable" (default "stable")
+  maxResults: 5 // default 10
+}).then((result: MLKitImageLabelingCloudResult) => { // just look at this type to see what else is returned
+  console.log(JSON.stringify(result.labels));
+}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Live camera feed
+The basics are explained above for 'Text recognition', so we're only showing the differences here.
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitImageLabeling", () => require("nativescript-plugin-firebase/mlkit/imagelabeling").MLKitImageLabeling);
+```
+
+```html
+<MLKitImageLabeling
+    width="260"
+    height="380"
+    confidenceThreshold="0.6"
+    (scanResult)="onImageLabelingResult($event)">
+</MLKitImageLabeling>
+```
+
 ### [Landmark recognition](https://firebase.google.com/docs/ml-kit/recognize-landmarks)
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_landmark_recognition.png" height="153px" alt="ML Kit - Landmark recognition"/>
 
+#### Still image (cloud)
+
+```typescript
+import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
+  image: imageSource,
+  modelType: "latest", // either "latest" or "stable" (default "stable")
+  maxResults: 8 // default 10
+}).then((result: MLKitLandmarkRecognitionCloudResult) => { // just look at this type to see what else is returned
+  console.log(JSON.stringify(result.landmarks));
+}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
 ### [Custom model inference](https://firebase.google.com/docs/ml-kit/use-custom-models)
-Coming soon
+Coming soon (probably with plugin version 6.1.0).
