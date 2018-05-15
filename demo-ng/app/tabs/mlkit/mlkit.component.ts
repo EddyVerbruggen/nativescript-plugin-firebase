@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 import { ImageSource } from "tns-core-modules/image-source";
 
 import { BarcodeFormat, MLKitScanBarcodesResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
@@ -22,6 +22,8 @@ const firebase = require("nativescript-plugin-firebase");
 })
 export class MLKitComponent {
 
+  pickedImage: ImageSource;
+
   private mlkitFeatures: Array<string> = [
     "Text recognition",
     "Barcode scanning",
@@ -30,7 +32,8 @@ export class MLKitComponent {
     "Landmark recognition (cloud)"
   ];
 
-  constructor(private routerExtensions: RouterExtensions) {
+  constructor(private routerExtensions: RouterExtensions,
+              private zone: NgZone) {
   }
 
   fromCameraFeed(): void {
@@ -78,11 +81,13 @@ export class MLKitComponent {
       width: 800,
       height: 800,
       keepAspectRatio: true,
-      saveToGallery: false,
+      saveToGallery: true,
       cameraFacing: "rear"
     }).then(imageAsset => {
       new ImageSource().fromAsset(imageAsset).then(imageSource => {
-        this.selectMLKitFeature(imageSource);
+        this.pickedImage = imageSource;
+        // give the user some to to see the picture
+        setTimeout(() => this.selectMLKitFeature(imageSource), 500);
       });
     });
   }
@@ -96,24 +101,28 @@ export class MLKitComponent {
         .authorize()
         .then(() => imagePicker.present())
         .then((selection: Array<ImageAsset>) => {
-          console.log(">>> selection: " + selection);
           if (selection.length === 0) return;
 
           const selected = selection[0];
-          console.log(">>> selected: " + selected);
           selected.options.height = 800;
           selected.options.width = 800;
           selected.options.keepAspectRatio = true;
           selected.getImageAsync((image: any, error: any) => {
-            console.log(">>> error: " + error);
-            console.log(">>> image: " + image);
             if (error) {
-              console.log(`Error getting image source from pickerI: ${error}`);
+              console.log(`Error getting image source from picker: ${error}`);
+              return;
+            }
+            if (!image) {
+              console.log(`This is probably an iCloud image - which won't work`);
               return;
             }
             const imageSource = new ImageSource();
             imageSource.setNativeSource(image);
-            this.selectMLKitFeature(imageSource);
+            this.zone.run(() => {
+              this.pickedImage = imageSource;
+            });
+            // give the user some to to see the picture
+            setTimeout(() => this.selectMLKitFeature(imageSource), 500);
           });
         })
         .catch(e => {

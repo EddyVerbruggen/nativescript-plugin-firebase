@@ -59,15 +59,15 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.previewLayer = AVCaptureVideoPreviewLayer.layerWithSession(this.captureSession);
     this.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 
-    // TODO use connection.videoOrientation (as this one is deprecated)
     if (iosUtils.isLandscape()) {
-      this.previewLayer.orientation = AVCaptureVideoOrientation.LandscapeRight;
+      const deviceOrientation = UIDevice.currentDevice.orientation;
+      this.previewLayer.connection.videoOrientation = deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
     } else {
-      this.previewLayer.orientation = AVCaptureVideoOrientation.Portrait;
+      this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
     }
 
     // note that when rotating back to portrait, this event fires very late.. not much we can do I think
-    application.off("orientationChanged");
+    application.off("orientationChanged"); // just making sure it was off
     application.on("orientationChanged", this.rotateOnOrientationChange.bind(this));
 
     if (this.ios) {
@@ -80,7 +80,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.cameraView.processEveryXFrames = this.processEveryNthFrame;
 
     // this orientation is how the captured image is rotated (and shown)
-    // TODO do this for textrecognition, but NOT for barcode scanning (so set in subclass)
     if (this.rotateRecording()) {
       this.cameraView.imageOrientation = UIImageOrientation.Right;
     }
@@ -92,11 +91,10 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   private rotateOnOrientationChange(args: OrientationChangedEventData): void {
-    console.log(">>> rotateOnOrientationChange");
     if (this.previewLayer) {
       if (args.newValue === "landscape") {
-        // with both set to 1, detection works in both portr and landsc (but the image is on its side in landscape)
-        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeRight; // deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
+        const deviceOrientation = UIDevice.currentDevice.orientation;
+        this.previewLayer.connection.videoOrientation = deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
       } else if (args.newValue === "portrait") {
         this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
       }
@@ -107,7 +105,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     super.onLayout(left, top, right, bottom);
     if (this.ios && this.canUseCamera()) {
       this.previewLayer.frame = this.ios.layer.bounds;
-      // this.previewLayer.bounds = this.ios.layer.bounds;
     }
   }
 
@@ -127,7 +124,6 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
 
   private detector: any;
   private onSuccessListener: any;
-  private rotateRecording: boolean;
 
   public static createWithOwnerResultCallbackAndOptions(owner: WeakRef<MLKitCameraView>, callback: (message: any) => void, options?: any): TNSMLKitCameraViewDelegateImpl {
     let delegate = <TNSMLKitCameraViewDelegateImpl>TNSMLKitCameraViewDelegateImpl.new();
@@ -136,32 +132,38 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
     delegate.resultCallback = callback;
     delegate.detector = owner.get().createDetector();
     delegate.onSuccessListener = owner.get().createSuccessListener();
-    delegate.rotateRecording = owner.get().rotateRecording();
     return delegate;
   }
 
   cameraDidOutputImage(image: UIImage): void {
     if (image) {
-      // more fine grained
-      // console.log("UIDevice.current.orientation: " + UIDevice.currentDevice.orientation);
-
       const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
-      if (this.rotateRecording && !iosUtils.isLandscape()) {
-        const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
-        // TODO see detectorOrientationFrom in MLKitExample
-        fIRVisionImageMetadata.orientation = FIRVisionDetectorImageOrientation.RightTop;
-        fIRVisionImage.metadata = fIRVisionImageMetadata;
-      }
-
-      console.log(">>> delegate.detector: " + this.detector);
+      const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
+      fIRVisionImageMetadata.orientation = this.getVisionOrientation(image.imageOrientation);
+      fIRVisionImage.metadata = fIRVisionImageMetadata;
       this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+    }
+  }
 
-      // TODO remove (this is for debugging only)... but we could pass the image to the UI anyway (although the rotation may need to be corrected in some cases)
-      this.owner.get().notify({
-        eventName: "scanResultImage",
-        object: this.owner.get(),
-        value: image
-      });
+  private getVisionOrientation(imageOrientation: UIImageOrientation): FIRVisionDetectorImageOrientation {
+    if (imageOrientation === UIImageOrientation.Up) {
+      return FIRVisionDetectorImageOrientation.TopLeft;
+    } else if (imageOrientation === UIImageOrientation.Down) {
+      return FIRVisionDetectorImageOrientation.BottomRight;
+    } else if (imageOrientation === UIImageOrientation.Left) {
+      return FIRVisionDetectorImageOrientation.LeftBottom;
+    } else if (imageOrientation === UIImageOrientation.Right) {
+      return FIRVisionDetectorImageOrientation.RightTop;
+    } else if (imageOrientation === UIImageOrientation.UpMirrored) {
+      return FIRVisionDetectorImageOrientation.TopRight;
+    } else if (imageOrientation === UIImageOrientation.DownMirrored) {
+      return FIRVisionDetectorImageOrientation.BottomLeft;
+    } else if (imageOrientation === UIImageOrientation.LeftMirrored) {
+      return FIRVisionDetectorImageOrientation.LeftTop;
+    } else if (imageOrientation === UIImageOrientation.RightMirrored) {
+      return FIRVisionDetectorImageOrientation.RightBottom;
+    } else {
+      return FIRVisionDetectorImageOrientation.TopLeft;
     }
   }
 }

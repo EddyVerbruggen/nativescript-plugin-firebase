@@ -4,9 +4,9 @@ import { MLKitOptions } from "../index";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
 
 export class MLKitFaceDetection extends MLKitFaceDetectionBase {
+
   protected createDetector(): any {
-    const firVision: FIRVision = FIRVision.vision();
-    return firVision.faceDetector();
+    return getDetector();
   }
 
   protected createSuccessListener(): any {
@@ -21,9 +21,9 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 
         for (let i = 0, l = faces.count; i < l; i++) {
           const face: FIRVisionFace = faces.objectAtIndex(i);
+          console.log(">> face: " + face);
           result.faces.push({
-            // smilingProbability: face.hasSmilingProbability ? face.smilingProbability : undefined,
-            smilingProbability: face.smilingProbability,
+            smilingProbability: face.hasSmilingProbability ? face.smilingProbability : undefined,
             leftEyeOpenProbability: face.hasLeftEyeOpenProbability ? face.leftEyeOpenProbability : undefined,
             rightEyeOpenProbability: face.hasRightEyeOpenProbability ? face.rightEyeOpenProbability : undefined
           });
@@ -39,18 +39,27 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
     };
   }
 
-  // TODO only seems to work in landscape
   protected rotateRecording(): boolean {
     return false;
   }
 }
 
+function getDetector(): FIRVisionFaceDetector {
+  // TODO make configurable
+  const firVision: FIRVision = FIRVision.vision();
+  const options = FIRVisionFaceDetectorOptions.new();
+  options.modeType = FIRVisionFaceDetectorMode.Accurate;
+  options.landmarkType = FIRVisionFaceDetectorLandmark.All;
+  options.classificationType = FIRVisionFaceDetectorClassification.All;
+  options.minFaceSize = 0.1;
+  // options.isTrackingEnabled = true;
+  return firVision.faceDetectorWithOptions(options);
+}
+
 export function detectFaces(options: MLKitDetectFacesOptions): Promise<MLKitDetectFacesResult> {
   return new Promise((resolve, reject) => {
     try {
-      const firVision: FIRVision = FIRVision.vision();
-      const faceDetector: FIRVisionFaceDetector = firVision.faceDetector();
-
+      const faceDetector = getDetector();
       faceDetector.detectInImageCompletion(getImage(options), (faces: NSArray<FIRVisionFace>, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
@@ -60,15 +69,16 @@ export function detectFaces(options: MLKitDetectFacesOptions): Promise<MLKitDete
             faces: []
           };
 
+          console.log(">>> faces.count: " + faces.count);
           for (let i = 0, l = faces.count; i < l; i++) {
             const face: FIRVisionFace = faces.objectAtIndex(i);
+            console.log(">> face: " + face);
             result.faces.push({
               smilingProbability: face.hasSmilingProbability ? face.smilingProbability : undefined,
               leftEyeOpenProbability: face.hasLeftEyeOpenProbability ? face.leftEyeOpenProbability : undefined,
               rightEyeOpenProbability: face.hasRightEyeOpenProbability ? face.rightEyeOpenProbability : undefined
             });
           }
-          console.log(">>> face result: " + JSON.stringify(result.faces));
           resolve(result);
         }
       });
@@ -79,8 +89,19 @@ export function detectFaces(options: MLKitDetectFacesOptions): Promise<MLKitDete
   });
 }
 
-// TODO move
+// TODO resize the image (here), like the example app?
 function getImage(options: MLKitOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
-  return FIRVisionImage.alloc().initWithImage(image);
+  console.log(">> image.imageOrientation: " + image.imageOrientation);
+
+  const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
+  // fIRVisionImageMetadata.orientation = FIRVisionDetectorImageOrientation.TopLeft;
+
+  // const randomOrientation = Math.floor(Math.random() * 8) + 1;
+  // console.log(">>> randomOrientation: " + randomOrientation);
+  fIRVisionImageMetadata.orientation = 1;
+
+  const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
+  fIRVisionImage.metadata = fIRVisionImageMetadata;
+  return fIRVisionImage;
 }

@@ -17,11 +17,11 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
 
         if (labels.size() === 0) return;
 
-        const imageSource = new ImageSource();
-        imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
+        // const imageSource = new ImageSource();
+        // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
 
         const result = <MLKitImageLabelingResult>{
-          imageSource: imageSource,
+          // imageSource: imageSource,
           labels: []
         };
 

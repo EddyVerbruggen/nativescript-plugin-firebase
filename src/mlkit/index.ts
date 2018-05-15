@@ -20,7 +20,7 @@ export interface MLKitResult {
    * Only set when using a camera stream,
    * because when detecting from static images... you already have the image, right? :)
    */
-  imageSource?: ImageSource;
+  // imageSource?: ImageSource;
 }
 
 export declare class MLKitCameraView {

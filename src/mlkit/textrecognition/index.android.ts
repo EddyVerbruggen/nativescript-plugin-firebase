@@ -19,8 +19,8 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
 
         const blocks = textBlocks.getBlocks();
 
-        const imageSource = new ImageSource();
-        imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
+        // const imageSource = new ImageSource();
+        // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
 
         const result = <MLKitRecognizeTextResult>{
           features: []

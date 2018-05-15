@@ -17,11 +17,11 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 
         if (faces.size() === 0) return;
 
-        const imageSource = new ImageSource();
-        imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
+        // const imageSource = new ImageSource();
+        // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
 
         const result = <MLKitDetectFacesResult>{
-          imageSource: imageSource,
+          // imageSource: imageSource,
           faces: []
         };
 

@@ -3,7 +3,7 @@ import { Property } from "tns-core-modules/ui/core/properties";
 
 export const processEveryNthFrameProperty = new Property<MLKitCameraView, number>({
   name: "processEveryNthFrame",
-  defaultValue: 5,
+  defaultValue: 10,
 });
 
 export abstract class MLKitCameraView extends ContentView {
