@@ -57,16 +57,17 @@ To nbe able to use Cloud features you need to do two things:
 |Feature|On-device|Cloud
 |---|---|---
 |[Text recognition](#text-recognition)|✅|✅
-|[Face detection](face-detection)|✅*|
-|[Barcode scanning](barcode-scanning)|✅|
-|[Image labeling](image-labeling)|✅|✅
-|[Landmark recognition](landmark-recognition)||✅
-|[Custom model inference](custom-model-inference)|✅|
+|[Face detection](#face-detection)|✅*|
+|[Barcode scanning](#barcode-scanning)|✅|
+|[Image labeling](#image-labeling)|✅|✅
+|[Landmark recognition](#landmark-recognition)||✅
+|[Custom model inference](#custom-model-inference)|✅|
 
-*) _Currently detecting faces from still images doesn't work on iOS (detection from the camera stream works fine though)._
+*) _Currently detecting faces from still images doesn't work on iOS (from the camera stream works fine tho)._
 
-### [Text recognition](https://firebase.google.com/docs/ml-kit/recognize-text)
+### Text recognition
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_recognition.png" height="153px" alt="ML Kit - Text recognition"/>
+[Firebase documentation](https://firebase.google.com/docs/ml-kit/recognize-text)
 
 #### Still image (on-device)
 
@@ -87,20 +88,29 @@ firebase.mlkit.textrecognition.recognizeTextOnDevice({
 import { MLKitRecognizeTextCloudResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 const firebase = require("nativescript-plugin-firebase");
 
-firebase.mlkit.textrecognition.recognizeTextOnDevice({
+firebase.mlkit.textrecognition.recognizeTextCloud({
   image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
   modelType: "latest", // either "latest" or "stable" (default "stable")
   maxResults: 15 // default 10
-}).then((result: MLKitRecognizeTextCloudResult) => {
-  console.log(result.text);
-}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+})
+.then((result: MLKitRecognizeTextCloudResult) => console.log(result.text))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
 #### Live camera feed
-The exact details of using the live camera view depend on whether you're using Angular / Vue or not.
+The exact details of using the live camera view depend on whether or not you're using Angular / Vue.
+
+You can use any view-related property you like as we're extending `ContentView`.
+So things like `class`, `row`, `width`, `horizontalAlignment`, `style` are all valid properties.
+
+Plugin-specific are the optional property `processEveryNthFrame` and optional event `scanResult`.
+You can `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
+Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
+
+> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
 
 ##### Angular / Vue
-Register a custom element like so in their component/module:
+Register a custom element like so in the component/module:
 
 ```typescript
 import { registerElement } from "nativescript-angular/element-registry";
@@ -119,39 +129,29 @@ Now you're able to use the registered element in the view:
 </MLKitTextRecognition>
 ```
 
-You can use any view-related property you like as we're extending `ContentView`.
-So things like `class`, `row`, `width`, `horizontalAlignment`, `style` are all valid properties.
-
-Plugin-specific are the optional property `processEveryNthFrame` and optional event `scanResult`.
-You can `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
-Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
-
-> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
-
-### XML 
-Declarate a namespace at the top of the embedding page, and use it somewhere on the page:
+##### XML 
+Declare a namespace at the top of the embedding page, and use it anywhere on the page:
 
 ```xml
 <Page xmlns:MLKitTextRecognition="nativescript-plugin-firebase/mlkit/textrecognition">
+
   <OtherTags/>
+
   <MLKitTextRecognition:MLKitTextRecognition
       class="my-class"
       width="260"
       height="380"
       processEveryNthFrame="3"
       scanResult="onTextRecognitionResult" />
-  <MoreOtherTags/>
+
 </Page>
 ```
 
-Note that with NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace
-declaration to the TabView works just as well.
+> Note that with NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace declaration to the TabView works just as well.
 
-Also note that you can use any view-related property you like as we're extending `ContentView`.
-So things like `class`, `row`, `colspan`, `horizontalAlignment`, `style` are all valid properties.
-
-### [Face detection](https://firebase.google.com/docs/ml-kit/detect-faces)
+### Face detection
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
+[Firebase documentation](https://firebase.google.com/docs/ml-kit/detect-faces)
 
 #### Still image (on-device)
 
@@ -161,9 +161,9 @@ const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.facedetection.detectFacesOnDevice({
   image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
-}).then((result: MLKitDetectFacesOnDeviceResult) => { // just look at this type to see what else is returned
-  console.log(JSON.stringify(result.faces));
-}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+})
+.then((result: MLKitDetectFacesOnDeviceResult) => console.log(JSON.stringify(result.faces)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
 #### Live camera feed
@@ -182,8 +182,9 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
 </MLKitFaceDetection>
 ```
 
-### [Barcode scanning](https://firebase.google.com/docs/ml-kit/read-barcodes)
+### Barcode scanning
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_barcode_scanning.png" height="153px" alt="ML Kit - Barcode scanning"/>
+[Firebase documentation](https://firebase.google.com/docs/ml-kit/read-barcodes)
 
 #### Still image (on-device)
 
@@ -194,9 +195,9 @@ const firebase = require("nativescript-plugin-firebase");
 firebase.mlkit.barcodescanning.scanBarcodesOnDevice({
   image: imageSource,
   formats: [BarcodeFormat.QR_CODE, BarcodeFormat.CODABAR] // limit recognition to certain formats (faster), or leave out entirely for all formats (default)
-}).then((result: MLKitScanBarcodesOnDeviceResult) => { // just look at this type to see what else is returned
-  console.log(JSON.stringify(result.barcodes));
-}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+})
+.then((result: MLKitScanBarcodesOnDeviceResult) => console.log(JSON.stringify(result.barcodes)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
 #### Live camera feed
@@ -216,8 +217,9 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
 </MLKitBarcodeScanner>
 ```
 
-### [Image labeling](https://firebase.google.com/docs/ml-kit/label-images)
+### Image labeling
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
+[Firebase documentation](https://firebase.google.com/docs/ml-kit/label-images)
 
 #### Still image (on-device)
 
@@ -228,9 +230,9 @@ const firebase = require("nativescript-plugin-firebase");
 firebase.mlkit.imagelabeling.labelImageOnDevice({
   image: imageSource,
   confidenceThreshold: 0.6 // this will only return labels with at least 0.6 (60%) confidence. Default 0.5.
-}).then((result: MLKitImageLabelingOnDeviceResult) => { // just look at this type to see what else is returned
-  console.log(JSON.stringify(result.labels));
-}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+})
+.then((result: MLKitImageLabelingOnDeviceResult) => console.log(JSON.stringify(result.labels)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
 #### Still image (cloud)
@@ -243,9 +245,9 @@ firebase.mlkit.imagelabeling.labelImageCloud({
   image: imageSource,
   modelType: "stable", // either "latest" or "stable" (default "stable")
   maxResults: 5 // default 10
-}).then((result: MLKitImageLabelingCloudResult) => { // just look at this type to see what else is returned
-  console.log(JSON.stringify(result.labels));
-}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+})
+.then((result: MLKitImageLabelingCloudResult) => console.log(JSON.stringify(result.labels)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
 #### Live camera feed
@@ -265,8 +267,9 @@ registerElement("MLKitImageLabeling", () => require("nativescript-plugin-firebas
 </MLKitImageLabeling>
 ```
 
-### [Landmark recognition](https://firebase.google.com/docs/ml-kit/recognize-landmarks)
+### Landmark recognition
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_landmark_recognition.png" height="153px" alt="ML Kit - Landmark recognition"/>
+[Firebase documentation](https://firebase.google.com/docs/ml-kit/recognize-landmarks)
 
 #### Still image (cloud)
 
@@ -278,10 +281,12 @@ firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
   image: imageSource,
   modelType: "latest", // either "latest" or "stable" (default "stable")
   maxResults: 8 // default 10
-}).then((result: MLKitLandmarkRecognitionCloudResult) => { // just look at this type to see what else is returned
-  console.log(JSON.stringify(result.landmarks));
-}).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+})
+.then((result: MLKitLandmarkRecognitionCloudResult) => console.log(JSON.stringify(result.landmarks)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
-### [Custom model inference](https://firebase.google.com/docs/ml-kit/use-custom-models)
+### Custom model inference
+[Firebase documentation](https://firebase.google.com/docs/ml-kit/use-custom-models)
+
 Coming soon (probably with plugin version 6.1.0).
