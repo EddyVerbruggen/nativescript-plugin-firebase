@@ -252,3 +252,7 @@ declare class FIRTransactionResult extends NSObject {
 
 	static successWithValue(value: FIRMutableData): FIRTransactionResult;
 }
+
+declare var FirebaseDatabaseVersionNumber: number;
+
+declare var FirebaseDatabaseVersionString: interop.Reference<number>;

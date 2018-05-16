@@ -76,3 +76,12 @@ button {
 .button-invites {
   background-color: #1832d5;
 }
+
+.barcodescanner {
+  height: 420;
+  margin-top: 16;
+}
+
+Label {
+  padding: 10;
+}

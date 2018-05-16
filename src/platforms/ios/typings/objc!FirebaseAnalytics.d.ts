@@ -15,6 +15,8 @@ declare class FIRAnalytics extends NSObject {
 
 	static new(): FIRAnalytics; // inherited from NSObject
 
+	static resetAnalyticsData(): void;
+
 	static setScreenNameScreenClass(screenName: string, screenClassOverride: string): void;
 
 	static setUserID(userID: string): void;

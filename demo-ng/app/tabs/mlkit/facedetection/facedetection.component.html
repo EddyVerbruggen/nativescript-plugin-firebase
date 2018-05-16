@@ -1,0 +1,35 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="Face detection"></Label>
+</ActionBar>
+
+<GridLayout rows="auto, auto, auto, auto, *">
+
+  <Label row="0" text="The scanner has been configured to detect faces every 30th frame (default is 10). You can tweak this in your usage of the plugin." textWrap="true"></Label>
+
+  <MLKitFaceDetection
+      row="1"
+      width="260"
+      height="340"
+      processEveryNthFrame="30"
+      (scanResult)="onFaceDetectionResult($event)">
+  </MLKitFaceDetection>
+
+  <Label row="2" [text]="mlKitAllOK" textWrap="true" class="m-t-10 c-purple"></Label>
+
+  <GridLayout row="3" columns="*, *, *" class="m-t-5">
+    <Label col="0" class="mlkit-result font-weight-bold" textWrap="true" text="Smiling"></Label>
+    <Label col="1" class="mlkit-result font-weight-bold" textWrap="true" text="Left 👁 open"></Label>
+    <Label col="2" class="mlkit-result font-weight-bold" textWrap="true" text="Right 👁 open"></Label>
+  </GridLayout>
+
+  <ListView row="4" [items]="faces">
+    <ng-template let-item="item">
+      <GridLayout columns="*, *, *">
+        <Label col="0" class="mlkit-result" [class.c-purple]="item.smilingProbability > 0.7" [text]="item.smilingProbability | number" textWrap="true"></Label>
+        <Label col="1" class="mlkit-result" [class.c-purple]="item.leftEyeOpenProbability > 0.7" [text]="item.leftEyeOpenProbability | number" textWrap="true"></Label>
+        <Label col="2" class="mlkit-result" [class.c-purple]="item.rightEyeOpenProbability > 0.7" [text]="item.rightEyeOpenProbability | number" textWrap="true"></Label>
+      </GridLayout>
+    </ng-template>
+  </ListView>
+
+</GridLayout>

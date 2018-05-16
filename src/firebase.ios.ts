@@ -120,7 +120,7 @@ firebase.addAppDelegateMethods = appDelegate => {
           console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
           firebase._cachedDynamicLink = {
             url: dynamicLink.url.absoluteString,
-            matchConfidence: dynamicLink.matchConfidence,
+            // matchConfidence: dynamicLink.matchConfidence,
             minimumAppVersion: dynamicLink.minimumAppVersion
           };
           result = true;
@@ -158,13 +158,13 @@ firebase.addAppDelegateMethods = appDelegate => {
             if (firebase._dynamicLinkCallback) {
               firebase._dynamicLinkCallback({
                 url: dynamicLink.url.absoluteString,
-                matchConfidence: dynamicLink.matchConfidence,
+                // matchConfidence: dynamicLink.matchConfidence,
                 minimumAppVersion: dynamicLink.minimumAppVersion
               });
             } else {
               firebase._cachedDynamicLink = {
                 url: dynamicLink.url.absoluteString,
-                matchConfidence: dynamicLink.matchConfidence,
+                // matchConfidence: dynamicLink.matchConfidence,
                 minimumAppVersion: dynamicLink.minimumAppVersion
               };
             }
@@ -231,13 +231,13 @@ firebase.addAppDelegateMethods = appDelegate => {
               if (firebase._dynamicLinkCallback) {
                 firebase._dynamicLinkCallback({
                   url: dynamicLink.url.absoluteString,
-                  matchConfidence: dynamicLink.matchConfidence,
+                  // matchConfidence: dynamicLink.matchConfidence,
                   minimumAppVersion: dynamicLink.minimumAppVersion
                 });
               } else {
                 firebase._cachedDynamicLink = {
                   url: dynamicLink.url.absoluteString,
-                  matchConfidence: dynamicLink.matchConfidence,
+                  // matchConfidence: dynamicLink.matchConfidence,
                   minimumAppVersion: dynamicLink.minimumAppVersion
                 };
               }
@@ -519,7 +519,7 @@ firebase._registerForRemoteNotifications = () => {
         userInfoJSON.foreground = false;
       }
     });
-    FIRMessaging.messaging().remoteMessageDelegate = firebase._firebaseRemoteMessageDelegate;
+    FIRMessaging.messaging().delegate = firebase._firebaseRemoteMessageDelegate;
 
   } else {
     const notificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationActivationMode.Background;
@@ -875,7 +875,7 @@ firebase.admob.showInterstitial = arg => {
       // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
       let delegate = GADInterstitialDelegateImpl.new().initWithCallback((ad: GADInterstitial, error: GADRequestError) => {
         if (error) {
-          reject(error); // TODO this is a platform-specific type
+          reject(error.localizedDescription);
         } else {
           // now we can safely show it
           firebase.admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
@@ -1154,7 +1154,7 @@ firebase.getAuthToken = arg => {
             resolve(token);
           }
         };
-        user.getTokenForcingRefreshCompletion(arg.forceRefresh, onCompletion);
+        user.getIDTokenForcingRefreshCompletion(arg.forceRefresh, onCompletion);
       } else {
         reject("Log in first");
       }
@@ -1168,7 +1168,7 @@ firebase.getAuthToken = arg => {
 firebase.login = arg => {
   return new Promise((resolve, reject) => {
     try {
-      const onCompletion = (user: FIRUser, error?: NSError) => {
+      const onCompletionWithUser = (user: FIRUser, error?: NSError) => {
         if (error) {
           // also disconnect from Google otherwise ppl can't connect with a different account
           if (typeof(GIDSignIn) !== "undefined") {
@@ -1185,6 +1185,10 @@ firebase.login = arg => {
         }
       };
 
+      const onCompletionWithAuthResult = (authResult: FIRAuthDataResult, error?: NSError) => {
+        onCompletionWithUser(authResult.user, error);
+      };
+
       const fAuth = FIRAuth.auth();
       if (fAuth === null) {
         reject("Run init() first!");
@@ -1194,7 +1198,7 @@ firebase.login = arg => {
       firebase.moveLoginOptionsToObjects(arg);
 
       if (arg.type === firebase.LoginType.ANONYMOUS) {
-        fAuth.signInAnonymouslyWithCompletion(onCompletion);
+        fAuth.signInAnonymouslyWithCompletion(onCompletionWithAuthResult);
 
       } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
@@ -1209,15 +1213,15 @@ firebase.login = arg => {
             if (error) {
               // ignore, as this one was probably already linked, so just return the user
               log("--- linking error: " + error.localizedDescription);
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
             } else {
-              onCompletion(user);
+              onCompletionWithUser(user);
             }
           };
           fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
         } else {
-          fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletion);
+          fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletionWithAuthResult);
         }
 
       } else if (arg.type === firebase.LoginType.EMAIL_LINK) {
@@ -1263,7 +1267,9 @@ firebase.login = arg => {
           return;
         }
 
-        FIRPhoneAuthProvider.provider().verifyPhoneNumberCompletion(arg.phoneOptions.phoneNumber, (verificationID: string, error: NSError) => {
+
+        // TODO does this still work (there's a delegate now which we're not implementing)?
+        FIRPhoneAuthProvider.provider().verifyPhoneNumberUIDelegateCompletion(arg.phoneOptions.phoneNumber, null, (verificationID: string, error: NSError) => {
           if (error) {
             reject(error.localizedDescription);
             return;
@@ -1274,14 +1280,14 @@ firebase.login = arg => {
               const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
                 } else {
-                  onCompletion(user);
+                  onCompletionWithUser(user);
                 }
               };
               fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
             }
           }, arg.phoneOptions.verificationPrompt);
         });
@@ -1293,12 +1299,12 @@ firebase.login = arg => {
         }
 
         if (arg.customOptions.token) {
-          fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletion);
+          fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
               .then(
                   token => {
-                    fAuth.signInWithCustomTokenCompletion(token, onCompletion);
+                    fAuth.signInWithCustomTokenCompletion(token, onCompletionWithAuthResult);
                   },
                   error => {
                     reject(error);
@@ -1328,15 +1334,15 @@ firebase.login = arg => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   log("--- linking error: " + error.localizedDescription);
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
                 } else {
-                  onCompletion(user);
+                  onCompletionWithUser(user);
                 }
               };
               fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
             }
           }
         };
@@ -1381,15 +1387,15 @@ firebase.login = arg => {
               const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
                 } else {
-                  onCompletion(user);
+                  onCompletionWithUser(user);
                 }
               };
               fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletion);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
             }
 
           } else {
@@ -1555,12 +1561,12 @@ firebase.changePassword = arg => {
 firebase.createUser = arg => {
   return new Promise((resolve, reject) => {
     try {
-      const onCompletion = (user: FIRUser, error: NSError) => {
+      const onCompletion = (authResult: FIRAuthDataResult, error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
           resolve({
-            key: user.uid
+            key: authResult.user.uid
           });
         }
       };
@@ -1904,15 +1910,15 @@ firebase.remove = path => {
   });
 };
 
-function getStorageRef(reject, arg) {
+function getStorageRef(reject, arg): FIRStorageReference {
   if (typeof(FIRStorage) === "undefined") {
     reject("Uncomment Storage in the plugin's Podfile first");
-    return;
+    return undefined;
   }
 
   if (!arg.remoteFullPath) {
     reject("remoteFullPath is mandatory");
-    return;
+    return undefined;
   }
 
   return arg.bucket ? FIRStorage.storage().referenceForURL(arg.bucket) : firebase.storage;
@@ -1922,13 +1928,13 @@ firebase.uploadFile = arg => {
   return new Promise((resolve, reject) => {
     try {
 
-      const onCompletion = (metadata, error) => {
+      const onCompletion = (metadata: FIRStorageMetadata, error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
           resolve({
             name: metadata.name,
-            url: metadata.downloadURL() ? metadata.downloadURL().absoluteString : null,
+            // url: metadata.downloadURL() ? metadata.downloadURL().absoluteString : null,
             contentType: metadata.contentType,
             created: metadata.timeCreated,
             updated: metadata.updated,
@@ -1938,7 +1944,7 @@ firebase.uploadFile = arg => {
         }
       };
 
-      const storageRef = getStorageRef(reject, arg);
+      const storageRef: FIRStorageReference = getStorageRef(reject, arg);
 
       if (!storageRef) {
         return;
@@ -2103,6 +2109,8 @@ firebase.subscribeToTopic = topicName => {
       if (topicName.indexOf("/topics/") === -1) {
         topicName = "/topics/" + topicName;
       }
+
+      // TODO there's also (un)subscribeToTopicCompletion (resolve when completed).. perhaps this has been added to Android as well
       FIRMessaging.messaging().subscribeToTopic(topicName);
       resolve();
     } catch (ex) {
@@ -2406,7 +2414,7 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
           .documentWithPath(documentPath);
 
       if (options && options.merge) {
-        docRef.setDataOptionsCompletion(document, FIRSetOptions.merge(), (error: NSError) => {
+        docRef.setDataMergeCompletion(document, true, (error: NSError) => {
           if (error) {
             reject(error.localizedDescription);
           } else {
@@ -2679,16 +2687,15 @@ class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate 
     return this;
   }
 
-  public applicationReceivedRemoteMessage(remoteMessage: FIRMessagingRemoteMessage): void {
-    this.callback(remoteMessage.appData);
-  }
 
+  // TODO test that receiving push notifications in the foreground still works
   public messagingDidReceiveMessage(messaging: FIRMessaging, remoteMessage: FIRMessagingRemoteMessage): void {
+    console.log(">> fcm message received");
     this.callback(remoteMessage.appData);
   }
 
-  public messagingDidRefreshRegistrationToken(messaging: FIRMessaging, fcmToken: string): void {
-    console.log(">> fcmToken refreshed: " + fcmToken);
+  public messagingDidReceiveRegistrationToken(messaging: FIRMessaging, fcmToken: string): void {
+    console.log(">> fcmToken received: " + fcmToken);
     firebase._onTokenRefreshNotification(fcmToken);
   }
 }

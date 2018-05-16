@@ -14,10 +14,14 @@
 /// <reference path="./platforms/ios/typings/objc!FirebaseInstanceID.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseInvites.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseMessaging.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseMLVision.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseMLModelInterpreter.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseRemoteConfig.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseStorage.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!GoogleMobileAds.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!GoogleSignIn.d.ts" />
+
+/// <reference path="./platforms/ios/typings/objc!TNSMLKitCamera.d.ts" />
 
 /// <reference path="./platforms/android/typings/nativescript-android-lib/android.d.ts" />
 //

@@ -86,6 +86,8 @@ declare class FIRAuth extends NSObject {
 
 	languageCode: string;
 
+	settings: FIRAuthSettings;
+
 	addAuthStateDidChangeListener(listener: (p1: FIRAuth, p2: FIRUser) => void): NSObjectProtocol;
 
 	addIDTokenDidChangeListener(listener: (p1: FIRAuth, p2: FIRUser) => void): NSObjectProtocol;
@@ -102,7 +104,7 @@ declare class FIRAuth extends NSObject {
 
 	createUserAndRetrieveDataWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
-	createUserWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRUser, p2: NSError) => void): void;
+	createUserWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	fetchProvidersForEmailCompletion(email: string, completion: (p1: NSArray<string>, p2: NSError) => void): void;
 
@@ -130,17 +132,19 @@ declare class FIRAuth extends NSObject {
 
 	signInAnonymouslyAndRetrieveDataWithCompletion(completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
-	signInAnonymouslyWithCompletion(completion: (p1: FIRUser, p2: NSError) => void): void;
+	signInAnonymouslyWithCompletion(completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	signInWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRUser, p2: NSError) => void): void;
 
-	signInWithCustomTokenCompletion(token: string, completion: (p1: FIRUser, p2: NSError) => void): void;
+	signInWithCustomTokenCompletion(token: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	signInWithEmailLinkCompletion(email: string, link: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
-	signInWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRUser, p2: NSError) => void): void;
+	signInWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	signOut(): boolean;
+
+	updateCurrentUserCompletion(user: FIRUser, completion: (p1: NSError) => void): void;
 
 	useAppLanguage(): void;
 
@@ -284,6 +288,8 @@ declare const enum FIRAuthErrorCode {
 
 	WebInternalError = 17062,
 
+	NullUser = 17067,
+
 	KeychainError = 17995,
 
 	InternalError = 17999
@@ -298,7 +304,35 @@ declare var FIRAuthErrorUserInfoEmailKey: string;
 declare class FIRAuthErrors {
 }
 
+declare class FIRAuthSettings extends NSObject {
+
+	static alloc(): FIRAuthSettings; // inherited from NSObject
+
+	static new(): FIRAuthSettings; // inherited from NSObject
+
+	appVerificationDisabledForTesting: boolean;
+}
+
 declare var FIRAuthStateDidChangeNotification: string;
+
+declare class FIRAuthTokenResult extends NSObject {
+
+	static alloc(): FIRAuthTokenResult; // inherited from NSObject
+
+	static new(): FIRAuthTokenResult; // inherited from NSObject
+
+	readonly authDate: Date;
+
+	readonly claims: NSDictionary<string, any>;
+
+	readonly expirationDate: Date;
+
+	readonly issuedAtDate: Date;
+
+	readonly signInProvider: string;
+
+	readonly token: string;
+}
 
 interface FIRAuthUIDelegate extends NSObjectProtocol {
 
@@ -401,8 +435,6 @@ declare class FIRPhoneAuthProvider extends NSObject {
 
 	credentialWithVerificationIDVerificationCode(verificationID: string, verificationCode: string): FIRPhoneAuthCredential;
 
-	verifyPhoneNumberCompletion(phoneNumber: string, completion: (p1: string, p2: NSError) => void): void;
-
 	verifyPhoneNumberUIDelegateCompletion(phoneNumber: string, UIDelegate: FIRAuthUIDelegate, completion: (p1: string, p2: NSError) => void): void;
 }
 
@@ -471,11 +503,11 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	getIDTokenForcingRefreshCompletion(forceRefresh: boolean, completion: (p1: string, p2: NSError) => void): void;
 
+	getIDTokenResultForcingRefreshCompletion(forceRefresh: boolean, completion: (p1: FIRAuthTokenResult, p2: NSError) => void): void;
+
+	getIDTokenResultWithCompletion(completion: (p1: FIRAuthTokenResult, p2: NSError) => void): void;
+
 	getIDTokenWithCompletion(completion: (p1: string, p2: NSError) => void): void;
-
-	getTokenForcingRefreshCompletion(forceRefresh: boolean, completion: (p1: string, p2: NSError) => void): void;
-
-	getTokenWithCompletion(completion: (p1: string, p2: NSError) => void): void;
 
 	isEqual(object: any): boolean;
 
@@ -563,6 +595,10 @@ declare class FIRUserProfileChangeRequest extends NSObject {
 	commitChangesWithCompletion(completion: (p1: NSError) => void): void;
 }
 
+declare var FirebaseAuthVersionNum: number;
+
 declare var FirebaseAuthVersionNumber: number;
 
-declare var FirebaseAuthVersionString: string;
+declare var FirebaseAuthVersionStr: string;
+
+declare var FirebaseAuthVersionString: interop.Reference<number>;
