@@ -177,7 +177,7 @@ export class MLKitComponent {
     }).then((result: MLKitRecognizeTextOnDeviceResult) => {
       alert({
         title: `Result`,
-        message: result.features.map(feature => feature.text).join(""),
+        message: result.blocks.map(block => block.text).join(""),
         okButtonText: "OK"
       });
     }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));

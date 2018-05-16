@@ -5,7 +5,6 @@ export interface MLKitImageLabelingCloudResult extends MLKitResult {
   labels: Array<{
     text: string;
     confidence: number;
-    // corners: any;
   }>;
 }
 

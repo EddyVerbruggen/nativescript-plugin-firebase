@@ -1,10 +1,14 @@
 import { MLKitCameraView, MLKitCloudOptions, MLKitOptions, MLKitResult } from "../index";
 
 export interface MLKitRecognizeTextResultBounds {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
+  origin: {
+    x: number;
+    y: number;
+  },
+  size: {
+    width: number;
+    height: number;
+  }
 }
 
 export interface MLKitRecognizeTextResultElement {
@@ -15,17 +19,17 @@ export interface MLKitRecognizeTextResultElement {
 export interface MLKitRecognizeTextResultLine {
 	text: string;
 	bounds: MLKitRecognizeTextResultBounds;
-	elements: MLKitRecognizeTextResultElement[];
+	elements: Array<MLKitRecognizeTextResultElement>;
 }
 
 export interface MLKitRecognizeTextResultBlock {
 	text: string;
 	bounds: MLKitRecognizeTextResultBounds;
-	lines: MLKitRecognizeTextResultLine[];
+	lines: Array<MLKitRecognizeTextResultLine>;
 }
 
 export interface MLKitRecognizeTextOnDeviceResult extends MLKitResult {
-	blocks: MLKitRecognizeTextResultBlock[];
+	blocks: Array<MLKitRecognizeTextResultBlock>;
 }
 
 export interface MLKitRecognizeTextCloudResult extends MLKitResult {

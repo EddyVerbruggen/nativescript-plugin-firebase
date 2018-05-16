@@ -1,11 +1,13 @@
 import { MLKitCloudOptions, MLKitResult } from "../index";
 
+export interface MLKitLandmarkRecognitionResultLandmark {
+  // TODO add location (see #704)
+  name: string;
+  confidence: number;
+}
+
 export interface MLKitLandmarkRecognitionCloudResult extends MLKitResult {
-  // TODO add locations (see #704)
-  landmarks: Array<{
-    name: string;
-    confidence: number;
-  }>;
+  landmarks: Array<MLKitLandmarkRecognitionResultLandmark>;
 }
 
 export interface MLKitLandmarkRecognitionCloudOptions extends MLKitCloudOptions {

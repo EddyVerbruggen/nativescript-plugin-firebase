@@ -641,6 +641,9 @@ firebase.toJsObject = objCObj => {
         case 'Date':
           node[key] = new Date(val);
           break;
+        case 'FIRTimestamp':
+          node[key] = val.dateValue();
+          break;
         case 'FIRDocumentReference':
           const path = (<FIRDocumentReference>val).path;
           const lastSlashIndex = path.lastIndexOf("/");
@@ -712,6 +715,7 @@ firebase.init = arg => {
         if (arg.persist === false) {
           const fIRFirestoreSettings = FIRFirestoreSettings.new();
           fIRFirestoreSettings.persistenceEnabled = false;
+          fIRFirestoreSettings.timestampsInSnapshotsEnabled = true;
           FIRFirestore.firestore().settings = fIRFirestoreSettings;
         }
       }
@@ -844,7 +848,7 @@ firebase.admob.showBanner = arg => {
 
       view.addSubview(firebase.admob.adView);
 
-      // support rotation events (TODO we don't want to add multiple handlers)
+      // support rotation events (TODO we don't want to add multiple handlers, also: remove with .off!).. could also just have the app handle this
       application.on(application.orientationChangedEvent, data => {
         if (firebase.admob.adView !== null) {
           firebase.admob.hideBanner().then(res => {
@@ -1267,13 +1271,12 @@ firebase.login = arg => {
           return;
         }
 
-
-        // TODO does this still work (there's a delegate now which we're not implementing)?
         FIRPhoneAuthProvider.provider().verifyPhoneNumberUIDelegateCompletion(arg.phoneOptions.phoneNumber, null, (verificationID: string, error: NSError) => {
           if (error) {
             reject(error.localizedDescription);
             return;
           }
+
           firebase.requestPhoneAuthVerificationCode(userResponse => {
             const fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
             if (fAuth.currentUser) {
@@ -2687,8 +2690,6 @@ class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate 
     return this;
   }
 
-
-  // TODO test that receiving push notifications in the foreground still works
   public messagingDidReceiveMessage(messaging: FIRMessaging, remoteMessage: FIRMessagingRemoteMessage): void {
     console.log(">> fcm message received");
     this.callback(remoteMessage.appData);

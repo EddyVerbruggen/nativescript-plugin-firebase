@@ -11,7 +11,7 @@
       (scanResult)="onTextRecognitionResult($event)">
   </MLKitTextRecognition>
 
-  <ListView row="1" [items]="features" class="m-t-20">
+  <ListView row="1" [items]="blocks" class="m-t-20">
     <ng-template let-item="item">
       <Label class="mlkit-result" textWrap="true" [text]="item.text"></Label>
     </ng-template>

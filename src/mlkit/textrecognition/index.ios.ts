@@ -2,7 +2,7 @@ import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
 import { MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextCloudOptions, MLKitRecognizeTextOnDeviceResult, MLKitRecognizeTextCloudResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
-import { MLKitRecognizeTextResultFeature } from "./index";
+import { MLKitRecognizeTextResultBlock, MLKitRecognizeTextResultLine } from "./index";
 
 export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   protected createDetector(): any {
@@ -32,25 +32,31 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
 
 function getOnDeviceResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextOnDeviceResult {
   const result = <MLKitRecognizeTextOnDeviceResult>{
-    features: []
+    blocks: []
   };
 
   for (let i = 0, l = features.count; i < l; i++) {
     const feature = features.objectAtIndex(i);
-    const resultFeature = <MLKitRecognizeTextResultFeature>{
+    const resultFeature = <MLKitRecognizeTextResultBlock>{
       text: feature.text,
-      elements: []
+      bounds: feature.frame,
+      lines: []
     };
 
     const addLineToResult = (line: FIRVisionTextLine): void => {
+      const resultLine = <MLKitRecognizeTextResultLine>{
+        text: feature.text,
+        bounds: line.frame,
+        elements: []
+      };
       for (let a = 0, m = line.elements.count; a < m; a++) {
         const element: FIRVisionTextElement = line.elements.objectAtIndex(a);
-        const bounds = element.frame;
-        resultFeature.elements.push({
+        resultLine.elements.push({
           text: element.text,
-          bounds: bounds,
+          bounds: element.frame,
         });
       }
+      resultFeature.lines.push(resultLine);
     };
 
     if (feature instanceof FIRVisionTextBlock) {
@@ -64,8 +70,7 @@ function getOnDeviceResult(features: NSArray<FIRVisionText>): MLKitRecognizeText
       addLineToResult(feature);
     }
 
-    console.log(">>> resulting resultFeature: " + JSON.stringify(resultFeature));
-    result.features.push(resultFeature);
+    result.blocks.push(resultFeature);
   }
   return result;
 }

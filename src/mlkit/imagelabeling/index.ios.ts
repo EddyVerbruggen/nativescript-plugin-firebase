@@ -28,7 +28,6 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
           });
         }
 
-        console.log(">>> notify " + MLKitImageLabeling.scanResultEvent + " with " + JSON.stringify(result));
         this.notify({
           eventName: MLKitImageLabeling.scanResultEvent,
           object: this,
@@ -68,10 +67,8 @@ export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): 
             result.labels.push({
               text: label.label,
               confidence: label.confidence
-              // corners: <any>feature.cornerPoints
             });
           }
-          console.log(">>> image labeling result: " + JSON.stringify(result.labels));
           resolve(result);
         }
       });

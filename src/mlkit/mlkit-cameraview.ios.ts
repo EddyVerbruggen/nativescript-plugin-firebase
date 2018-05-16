@@ -33,8 +33,13 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   private canUseCamera() {
-    // TODO also check for availability of AVCaptureDeviceDiscoverySession (iOS 10)
-    return AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) !== null;
+    try {
+      return !!AVCaptureDeviceDiscoverySession &&
+          AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) !== null &&
+          NSProcessInfo.processInfo.environment.objectForKey("SIMULATOR_DEVICE_NAME") === null;
+    } catch (ignore) {
+      return false;
+    }
   }
 
   private initView() {

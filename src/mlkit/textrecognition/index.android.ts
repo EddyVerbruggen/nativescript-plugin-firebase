@@ -36,17 +36,21 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
 
 function boundingBoxToBounds(rect: any): MLKitRecognizeTextResultBounds {
   return {
-    x: rect.left,
-    y: rect.top,
-    width: rect.width(),
-    height: rect.height()
+    origin: {
+      x: rect.left,
+      y: rect.top
+    },
+    size: {
+      width: rect.width(),
+      height: rect.height()
+    }
   }
 }
 
 // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
 function getOnDeviceResult(blocks: any): MLKitRecognizeTextOnDeviceResult {
   const blks: MLKitRecognizeTextResultBlock[] = [];
-  
+
   for (let i = 0; i < blocks.size(); i++) {
     const block = blocks.get(i);
     const lines = block.getLines();

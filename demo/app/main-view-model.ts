@@ -348,7 +348,7 @@ export class HelloWorldModel extends Observable {
         setTimeout(() => {
           alert({
             title: "Dynamic Link!",
-            message: result,
+            message: JSON.stringify(result),
             okButtonText: "Awesome!"
           });
         }, 500);
@@ -1301,7 +1301,7 @@ export class HelloWorldModel extends Observable {
   public doUploadFile(): void {
     // let's first create a File object using the tns file module
     const appPath = fs.knownFolders.currentApp().path;
-    const logoPath = appPath + "/res/telerik-logo.png";
+    const logoPath = appPath + "/images/telerik-logo.png";
 
     firebase.uploadFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png',

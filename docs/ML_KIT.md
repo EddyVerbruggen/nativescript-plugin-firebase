@@ -1,11 +1,11 @@
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit.png" height="84px" alt="ML Kit"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit.png" height="84px" alt="ML Kit"/>
 
-Make sure to check out [this demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/issue699-mlkit-support/demo-ng) because it has almost all ML Kit features this plugin currently supports! Steps:
+Make sure to check out [this demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) because it has almost all ML Kit features this plugin currently supports! Steps:
 
 ```bash
 git clone https://github.com/EddyVerbruggen/nativescript-plugin-firebase
 cd nativescript-plugin-firebase/src
-npm i
+npm run setupandinstall
 npm run demo-ng.ios (or .android)
 ```
 
@@ -52,7 +52,7 @@ To nbe able to use Cloud features you need to do two things:
 - Select your project.
 - In the bottom left, make sure you're on the _Blaze_ plan, or hit the 'Upgrade' button.
 
-### Feature table
+### Features
 
 |Feature|On-device|Cloud
 |---|---|---
@@ -66,7 +66,7 @@ To nbe able to use Cloud features you need to do two things:
 *) _Currently detecting faces from still images doesn't work on iOS (from the camera stream works fine tho)._
 
 ### Text recognition
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_recognition.png" height="153px" alt="ML Kit - Text recognition"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_recognition.png" height="153px" alt="ML Kit - Text recognition"/>
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/recognize-text)
 
@@ -79,7 +79,7 @@ const firebase = require("nativescript-plugin-firebase");
 firebase.mlkit.textrecognition.recognizeTextOnDevice({
   image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
 }).then((result: MLKitRecognizeTextOnDeviceResult) => { // just look at this type to see what else is returned
-  console.log(result.features.map(feature => feature.text).join(""));
+  console.log(result.blocks.map(block => block.text).join(""));
 }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
@@ -108,7 +108,7 @@ Plugin-specific are the optional property `processEveryNthFrame` and optional ev
 You can `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
 Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
 
-> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/issue699-mlkit-support/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
+> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
 
 ##### Angular / Vue
 Register a custom element like so in the component/module:
@@ -151,7 +151,7 @@ Declare a namespace at the top of the embedding page, and use it anywhere on the
 > Note that with NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace declaration to the TabView works just as well.
 
 ### Face detection
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/detect-faces)
 
@@ -185,7 +185,7 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
 ```
 
 ### Barcode scanning
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_barcode_scanning.png" height="153px" alt="ML Kit - Barcode scanning"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_barcode_scanning.png" height="153px" alt="ML Kit - Barcode scanning"/>
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/read-barcodes)
 
@@ -221,7 +221,7 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
 ```
 
 ### Image labeling
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/label-images)
 
@@ -272,7 +272,7 @@ registerElement("MLKitImageLabeling", () => require("nativescript-plugin-firebas
 ```
 
 ### Landmark recognition
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/issue699-mlkit-support/docs/images/features/mlkit_text_landmark_recognition.png" height="153px" alt="ML Kit - Landmark recognition"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_landmark_recognition.png" height="153px" alt="ML Kit - Landmark recognition"/>
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/recognize-landmarks)
 
@@ -294,4 +294,4 @@ firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
 ### Custom model inference
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/use-custom-models)
 
-Coming soon (probably with plugin version 6.1.0).
+Coming soon. See issue #702.

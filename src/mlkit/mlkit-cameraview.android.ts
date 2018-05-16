@@ -85,7 +85,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
     this.nativeView.addView(this.surfaceView);
 
-    // TODO use callbacks instead: https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47
+    // Note that surfacview callbacks didn't see to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
     setTimeout(() => {
       const surfaceHolder = this.surfaceView.getHolder();
       const cameraFacingRequested = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -183,7 +183,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       camera.setPreviewDisplay(surfaceHolder);
       camera.startPreview();
 
-    }, 500);
+    }, 500); // TODO 500 works fine on my device, but would be wise to explore the boundaries
   }
 
   protected abstract createDetector(): any;
