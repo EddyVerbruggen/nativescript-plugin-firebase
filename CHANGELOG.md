@@ -4,6 +4,15 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
+## 6.0.0 (2018, May 16)
+
+### New
+- [#699](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/699) Add ML Kit support
+
+### Fixes
+- [#706](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/706) AdMob on Android may fail in NativeScript 4 because frame.topmost() is undefined
+
+
 ## 5.3.1 (2018, April 26)
 
 ### Fixes

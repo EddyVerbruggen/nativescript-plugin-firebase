@@ -126,8 +126,6 @@ declare class FIRStorageMetadata extends NSObject implements NSCopying {
 
 	customMetadata: NSDictionary<string, string>;
 
-	readonly downloadURLs: NSArray<NSURL>;
-
 	readonly file: boolean;
 
 	readonly folder: boolean;
@@ -155,8 +153,6 @@ declare class FIRStorageMetadata extends NSObject implements NSCopying {
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
 	dictionaryRepresentation(): NSDictionary<string, any>;
-
-	downloadURL(): NSURL;
 
 	initWithDictionary(dictionary: NSDictionary<string, any>): this;
 }
@@ -331,3 +327,7 @@ declare class FIRStorageUploadTask extends FIRStorageObservableTask implements F
 }
 
 declare var FIRStorageVersionString: string;
+
+declare var FirebaseStorageVersionNumber: number;
+
+declare var FirebaseStorageVersionString: interop.Reference<number>;

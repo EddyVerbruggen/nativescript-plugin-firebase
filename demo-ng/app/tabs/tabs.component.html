@@ -1,0 +1,15 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" [text]="title"></Label>
+</ActionBar>
+
+<TabView (selectedIndexChanged)="onSelectedIndexChanged($event)">
+
+  <StackLayout *tabItem="{title: 'ML Kit', iconSource: getIconSource('mlkit')}">
+    <mlkit></mlkit>
+  </StackLayout>
+
+  <StackLayout *tabItem="{title: 'Firestore', iconSource: getIconSource('firestore')}">
+    <firestore></firestore>
+  </StackLayout>
+
+</TabView>

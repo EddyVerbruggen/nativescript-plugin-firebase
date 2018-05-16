@@ -5,6 +5,8 @@ declare class FBSDKAccessToken extends NSObject implements FBSDKCopying, NSSecur
 
 	static currentAccessToken(): FBSDKAccessToken;
 
+	static currentAccessTokenIsActive(): boolean;
+
 	static new(): FBSDKAccessToken; // inherited from NSObject
 
 	static refreshCurrentAccessToken(completionHandler: (p1: FBSDKGraphRequestConnection, p2: any, p3: NSError) => void): void;
@@ -16,6 +18,8 @@ declare class FBSDKAccessToken extends NSObject implements FBSDKCopying, NSSecur
 	readonly declinedPermissions: NSSet<any>;
 
 	readonly expirationDate: Date;
+
+	readonly expired: boolean;
 
 	readonly permissions: NSSet<any>;
 
@@ -87,6 +91,8 @@ declare var FBSDKAccessTokenChangeOldKey: string;
 declare var FBSDKAccessTokenDidChangeNotification: string;
 
 declare var FBSDKAccessTokenDidChangeUserID: string;
+
+declare var FBSDKAccessTokenDidExpire: string;
 
 declare var FBSDKAppEventNameAchievedLevel: string;
 

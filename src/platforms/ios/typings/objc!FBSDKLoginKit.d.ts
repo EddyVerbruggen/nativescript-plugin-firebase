@@ -8,6 +8,129 @@ declare const enum FBSDKDefaultAudience {
 	Everyone = 2
 }
 
+declare class FBSDKDeviceLoginCodeInfo extends NSObject {
+
+	static alloc(): FBSDKDeviceLoginCodeInfo; // inherited from NSObject
+
+	static new(): FBSDKDeviceLoginCodeInfo; // inherited from NSObject
+
+	readonly expirationDate: Date;
+
+	readonly identifier: string;
+
+	readonly loginCode: string;
+
+	readonly pollingInterval: number;
+
+	readonly verificationURL: NSURL;
+}
+
+declare const enum FBSDKDeviceLoginErrorSubcode {
+
+	ExcessivePollingErrorSubcode = 1349172,
+
+	AuthorizationDeclinedErrorSubcode = 1349173,
+
+	AuthorizationPendingErrorSubcode = 1349174,
+
+	CodeExpiredErrorSubcode = 1349152
+}
+
+declare class FBSDKDeviceLoginManager extends NSObject implements NSNetServiceDelegate {
+
+	static alloc(): FBSDKDeviceLoginManager; // inherited from NSObject
+
+	static new(): FBSDKDeviceLoginManager; // inherited from NSObject
+
+	delegate: FBSDKDeviceLoginManagerDelegate;
+
+	readonly permissions: NSArray<string>;
+
+	redirectURL: NSURL;
+
+	readonly debugDescription: string; // inherited from NSObjectProtocol
+
+	readonly description: string; // inherited from NSObjectProtocol
+
+	readonly hash: number; // inherited from NSObjectProtocol
+
+	readonly isProxy: boolean; // inherited from NSObjectProtocol
+
+	readonly superclass: typeof NSObject; // inherited from NSObjectProtocol
+
+	readonly  // inherited from NSObjectProtocol
+
+	constructor(o: { permissions: NSArray<string>; enableSmartLogin: boolean; });
+
+	cancel(): void;
+
+	class(): typeof NSObject;
+
+	conformsToProtocol(aProtocol: any /* Protocol */): boolean;
+
+	initWithPermissionsEnableSmartLogin(permissions: NSArray<string>, enableSmartLogin: boolean): this;
+
+	isEqual(object: any): boolean;
+
+	isKindOfClass(aClass: typeof NSObject): boolean;
+
+	isMemberOfClass(aClass: typeof NSObject): boolean;
+
+	netServiceDidAcceptConnectionWithInputStreamOutputStream(sender: NSNetService, inputStream: NSInputStream, outputStream: NSOutputStream): void;
+
+	netServiceDidNotPublish(sender: NSNetService, errorDict: NSDictionary<string, number>): void;
+
+	netServiceDidNotResolve(sender: NSNetService, errorDict: NSDictionary<string, number>): void;
+
+	netServiceDidPublish(sender: NSNetService): void;
+
+	netServiceDidResolveAddress(sender: NSNetService): void;
+
+	netServiceDidStop(sender: NSNetService): void;
+
+	netServiceDidUpdateTXTRecordData(sender: NSNetService, data: NSData): void;
+
+	netServiceWillPublish(sender: NSNetService): void;
+
+	netServiceWillResolve(sender: NSNetService): void;
+
+	performSelector(aSelector: string): any;
+
+	performSelectorWithObject(aSelector: string, object: any): any;
+
+	performSelectorWithObjectWithObject(aSelector: string, object1: any, object2: any): any;
+
+	respondsToSelector(aSelector: string): boolean;
+
+	retainCount(): number;
+
+	self(): this;
+
+	start(): void;
+}
+
+interface FBSDKDeviceLoginManagerDelegate extends NSObjectProtocol {
+
+	deviceLoginManagerCompletedWithResultError(loginManager: FBSDKDeviceLoginManager, result: FBSDKDeviceLoginManagerResult, error: NSError): void;
+
+	deviceLoginManagerStartedWithCodeInfo(loginManager: FBSDKDeviceLoginManager, codeInfo: FBSDKDeviceLoginCodeInfo): void;
+}
+declare var FBSDKDeviceLoginManagerDelegate: {
+
+	prototype: FBSDKDeviceLoginManagerDelegate;
+};
+
+declare class FBSDKDeviceLoginManagerResult extends NSObject {
+
+	static alloc(): FBSDKDeviceLoginManagerResult; // inherited from NSObject
+
+	static new(): FBSDKDeviceLoginManagerResult; // inherited from NSObject
+
+	readonly accessToken: FBSDKAccessToken;
+
+	readonly cancelled: boolean;
+}
+
 declare const enum FBSDKLoginBehavior {
 
 	Native = 0,

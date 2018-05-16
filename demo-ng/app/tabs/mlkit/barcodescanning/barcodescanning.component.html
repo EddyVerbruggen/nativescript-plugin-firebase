@@ -1,0 +1,27 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="Barcode scanning"></Label>
+</ActionBar>
+
+<GridLayout rows="auto, auto, *">
+
+  <Label row="0" text="The scanner has been configured to detect QR codes, EAN 8 and EAN 13. It processes every 5th frame (default 10). These settings can be tweaked in your usage of the plugin." textWrap="true"></Label>
+
+  <MLKitBarcodeScanner
+      row="1"
+      width="260"
+      height="340"
+      formats="QR_CODE, EAN_8, EAN_13"
+      processEveryNthFrame="5"
+      (scanResult)="onBarcodeScanResult($event)">
+  </MLKitBarcodeScanner>
+
+  <ListView row="2" [items]="barcodes" class="m-t-20">
+    <ng-template let-item="item">
+      <GridLayout columns="2*, 3*">
+        <Label col="0" class="mlkit-result" textWrap="true" [text]="item.format"></Label>
+        <Label col="1" class="mlkit-result" textWrap="true" [text]="item.value"></Label>
+      </GridLayout>
+    </ng-template>
+  </ListView>
+
+</GridLayout>

@@ -1,0 +1,24 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="Image labeling"></Label>
+</ActionBar>
+
+<GridLayout rows="auto, *">
+
+  <MLKitImageLabeling
+      row="0"
+      width="260"
+      height="340"
+      confidenceThreshold="0.6"
+      (scanResult)="onImageLabelingResult($event)">
+  </MLKitImageLabeling>
+
+  <ListView row="1" [items]="labels" class="m-t-20">
+    <ng-template let-item="item">
+      <GridLayout columns="3*, 2*">
+        <Label col="0" class="mlkit-result" textWrap="true" [text]="item.text"></Label>
+        <Label col="1" class="mlkit-result" textWrap="true" [text]="item.confidence | number"></Label>
+      </GridLayout>
+    </ng-template>
+  </ListView>
+
+</GridLayout>

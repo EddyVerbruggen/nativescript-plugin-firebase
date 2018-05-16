@@ -516,11 +516,11 @@ Then add the following lines to your code and check for setup instructions for y
 ```
 
 #### iOS
- If you didn't choose this feature during installation you can open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the `GoogleSignIn` line.
+If you didn't choose this feature during installation you can open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the `GoogleSignIn` line.
  
- Make sure the URL Scheme for `REVERSED_CLIENT_ID` is in `app/App_Resources/iOS/Info.plist`:
+Make sure the URL Scheme for `REVERSED_CLIENT_ID` is in `app/App_Resources/iOS/Info.plist`:
  
- ```xml
+```xml
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -534,7 +534,7 @@ Then add the following lines to your code and check for setup instructions for y
 			</array>
 		</dict>
 	</array>
- ```
+```
 
 #### Android
 

@@ -97,14 +97,14 @@ const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) 
               if (firebase._dynamicLinkCallback === null) {
                 firebase._cachedDynamicLink = {
                   url: result.getLink().toString(),
-                  matchConfidence: 1,
+                  // matchConfidence: 1,
                   minimumAppVersion: result.getMinimumAppVersion()
                 };
               } else {
                 setTimeout(() => {
                   firebase._dynamicLinkCallback({
                     url: result.getLink().toString(),
-                    matchConfidence: 1,
+                    // matchConfidence: 1,
                     minimumAppVersion: result.getMinimumAppVersion()
                   });
                 });
@@ -276,7 +276,7 @@ firebase.init = arg => {
     const runInit = () => {
       arg = arg || {};
 
-      if (typeof(com.google.firebase.database) !== "undefined") {
+      if (typeof(com.google.firebase.database) !== "undefined" && typeof(com.google.firebase.database.ServerValue) !== "undefined") {
         firebase.ServerValue = {
           TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)
         };
@@ -641,10 +641,14 @@ firebase.admob.showBanner = arg => {
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-      // wrapping it in a timeout makes sure that when this function is loaded from
-      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
+      // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
+      // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(() => {
-        frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        if (frame.topmost() !== undefined) {
+          frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else {
+          appModule.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+        }
       }, 0);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
@@ -1670,7 +1674,6 @@ firebase.removeEventListeners = (listeners, path) => {
       const ref = firebase.instance.child(path);
       for (let i = 0; i < listeners.length; i++) {
         const listener = listeners[i];
-        console.log("Removing listener at path " + path + ": " + listener);
         ref.removeEventListener(listener);
       }
       resolve();
@@ -1911,7 +1914,7 @@ firebase.uploadFile = arg => {
             updated: new Date(metadata.getUpdatedTimeMillis()),
             bucket: metadata.getBucket(),
             size: metadata.getSizeBytes(),
-            url: metadata.getDownloadUrl().toString()
+            // url: metadata.getDownloadUrl().toString()
           });
         }
       });

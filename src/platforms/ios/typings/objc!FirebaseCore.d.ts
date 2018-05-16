@@ -47,26 +47,9 @@ declare class FIRConfiguration extends NSObject {
 
 	analyticsConfiguration: FIRAnalyticsConfiguration;
 
-	logLevel: FIRLogLevel;
-
 	static readonly sharedInstance: FIRConfiguration;
 
 	setLoggerLevel(loggerLevel: FIRLoggerLevel): void;
-}
-
-declare const enum FIRLogLevel {
-
-	kFIRLogLevelError = 0,
-
-	kFIRLogLevelWarning = 1,
-
-	kFIRLogLevelInfo = 2,
-
-	kFIRLogLevelDebug = 3,
-
-	kFIRLogLevelAssert = 4,
-
-	kFIRLogLevelMax = 4
 }
 
 declare const enum FIRLoggerLevel {
@@ -118,15 +101,15 @@ declare class FIROptions extends NSObject implements NSCopying {
 
 	constructor(o: { contentsOfFile: string; });
 
-	constructor(o: { googleAppID: string; bundleID: string; GCMSenderID: string; APIKey: string; clientID: string; trackingID: string; androidClientID: string; databaseURL: string; storageBucket: string; deepLinkURLScheme: string; });
-
 	constructor(o: { googleAppID: string; GCMSenderID: string; });
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
 	initWithContentsOfFile(plistPath: string): this;
 
-	initWithGoogleAppIDBundleIDGCMSenderIDAPIKeyClientIDTrackingIDAndroidClientIDDatabaseURLStorageBucketDeepLinkURLScheme(googleAppID: string, bundleID: string, GCMSenderID: string, APIKey: string, clientID: string, trackingID: string, androidClientID: string, databaseURL: string, storageBucket: string, deepLinkURLScheme: string): this;
-
 	initWithGoogleAppIDGCMSenderID(googleAppID: string, GCMSenderID: string): this;
 }
+
+declare var FirebaseCoreVersionNumber: number;
+
+declare var FirebaseCoreVersionString: interop.Reference<number>;

@@ -1,0 +1,6 @@
+framework module TNSMLKitCamera {
+  umbrella header "TNSMLKitCamera.h"
+
+  export *
+  module * { export * }
+}

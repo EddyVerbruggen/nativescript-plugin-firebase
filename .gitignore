@@ -4,14 +4,20 @@
 package-lock.json
 *.js
 !src/*-hooks.js
-*.js.map
 build/
 *.log.*
 src/**/*.d.ts
+src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/project.xcworkspace
+src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/xcuserdata
+src/platforms/ios/Podfile
+src/platforms/ios/build.xcconfig
+src/platforms/android/include.gradle
 !src/firebase.d.ts
 !src/index.d.ts
 !src/references.d.ts
 !src/analytics/analytics.d.ts
+!src/mlkit/*/index.d.ts
+!src/mlkit/mlkit-cameraview.d.ts
 !src/platforms/web/typings/firebase-webapi.d.ts
 !src/platforms/ios/typings/*.d.ts
 !src/platforms/android/typings/**/*.d.ts
@@ -30,3 +36,4 @@ demo/report/report.html
 demo/report/stats.json
 !publish/scripts/*.js
 publish/package
+/npm-debug.log

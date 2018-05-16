@@ -1,0 +1,20 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="Text recognition"></Label>
+</ActionBar>
+
+<GridLayout rows="auto, *">
+
+  <MLKitTextRecognition
+      row="0"
+      width="260"
+      height="340"
+      (scanResult)="onTextRecognitionResult($event)">
+  </MLKitTextRecognition>
+
+  <ListView row="1" [items]="blocks" class="m-t-20">
+    <ng-template let-item="item">
+      <Label class="mlkit-result" textWrap="true" [text]="item.text"></Label>
+    </ng-template>
+  </ListView>
+
+</GridLayout>

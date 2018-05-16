@@ -113,8 +113,9 @@ export interface InitOptions {
 
   /**
    * Get notified when a dynamic link was used to launch the app. Alternatively use addOnDynamicLinkReceivedCallback.
+   * TODO iOS seems to return an object; not a string
    */
-  onDynamicLinkCallback?: (url: string) => void;
+  onDynamicLinkCallback?: (data: DynamicLinkData) => void;
 }
 
 export interface QueryRangeOption {
@@ -422,6 +423,11 @@ export interface GetRemoteConfigResult {
   properties: Object;
 }
 
+export interface DynamicLinkData {
+  url: string;
+  minimumAppVersion: string;
+}
+
 /**
  * The returned object in the callback handler of the addOnMessageReceivedCallback function.
  *
@@ -493,6 +499,11 @@ export interface UploadFileOptions {
 
 export interface UploadFileResult {
   name: string;
+  contentType: string;
+  created: Date;
+  updated: Date;
+  bucket: string;
+  size: number;
 }
 
 export interface DownloadFileOptions {
@@ -693,9 +704,6 @@ export namespace admob {
 
   function hideBanner(): Promise<any>;
 }
-
-// Analytics module
-export * from './analytics';
 
 // Invites module
 export namespace invites {
