@@ -5,7 +5,10 @@ import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognit
 import {
   MLKitRecognizeTextCloudOptions,
   MLKitRecognizeTextCloudResult,
-  MLKitRecognizeTextResultFeature
+  MLKitRecognizeTextResultBlock,
+  MLKitRecognizeTextResultLine,
+  MLKitRecognizeTextResultElement,
+  MLKitRecognizeTextResultBounds
 } from "./index";
 
 declare const com: any;
@@ -31,45 +34,56 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   }
 }
 
+function boundingBoxToBounds(rect: any): MLKitRecognizeTextResultBounds {
+  return {
+    x: rect.left,
+    y: rect.top,
+    width: rect.width(),
+    height: rect.height()
+  }
+}
+
+// see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
 function getOnDeviceResult(blocks: any): MLKitRecognizeTextOnDeviceResult {
-  const result = <MLKitRecognizeTextOnDeviceResult>{
-    features: []
-  };
-
-  // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
+  const blks: MLKitRecognizeTextResultBlock[] = [];
+  
   for (let i = 0; i < blocks.size(); i++) {
-    const textBlock = blocks.get(i);
-    const blockResult = <MLKitRecognizeTextResultFeature>{
-      text: textBlock.getText(),
-      elements: []
-    };
+    const block = blocks.get(i);
+    const lines = block.getLines();
 
-    const lines = textBlock.getLines();
+    const lns:  MLKitRecognizeTextResultLine[] = [];
+
     for (let j = 0; j < lines.size(); j++) {
-      const elements = lines.get(j).getElements();
+      const line = lines.get(j);
+      const elements = line.getElements();
+
+      const elms: MLKitRecognizeTextResultElement[] = [];
+
       for (let k = 0; k < elements.size(); k++) {
         const element = elements.get(k);
-        const rect = element.getBoundingBox();
-        const blockElement = {
+        elms.push({
           text: element.getText(),
-          bounds: {
-            origin: {
-              x: rect.left,
-              y: rect.top
-            },
-            size: {
-              width: rect.width(),
-              height: rect.height()
-            }
-          }
-        };
-        blockResult.elements.push(blockElement);
+          bounds: boundingBoxToBounds(element.getBoundingBox())
+        });
       }
+
+      lns.push({
+        text: line.getText(),
+        bounds: boundingBoxToBounds(line.getBoundingBox()),
+        elements: elms
+      });
     }
 
-    result.features.push(blockResult);
+    blks.push({
+      text: block.getText(),
+      bounds: boundingBoxToBounds(block.getBoundingBox()),
+      lines: lns
+    });
   }
-  return result;
+
+  return {
+    blocks: blks
+  };
 }
 
 export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextOnDeviceResult> {
