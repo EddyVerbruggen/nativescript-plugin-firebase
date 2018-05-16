@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -88,7 +88,9 @@
     "Google",
     "AdMob",
     "Invites",
-    "Dynamic Links"
+    "Dynamic Links",
+    "ML Kit",
+    "Machine Learning"
   ],
   "author": {
     "name": "Eddy Verbruggen",

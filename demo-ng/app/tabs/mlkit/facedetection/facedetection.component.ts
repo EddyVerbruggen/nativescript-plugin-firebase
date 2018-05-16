@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/facedetection";
+import { MLKitDetectFacesOnDeviceResult, MLKitDetectFacesResultFace } from "nativescript-plugin-firebase/mlkit/facedetection";
 
 @Component({
   selector: "mlkit-facedetection",
@@ -7,12 +7,7 @@ import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlk
   templateUrl: "./facedetection.component.html",
 })
 export class FaceDetectionComponent {
-  // TODO create a type (in the plugin) for these Arrays
-  faces: Array<{
-    smilingProbability?: number;
-    leftEyeOpenProbability?: number;
-    rightEyeOpenProbability?: number;
-  }>;
+  faces: Array<MLKitDetectFacesResultFace>;
 
   mlKitAllOK: string;
 
