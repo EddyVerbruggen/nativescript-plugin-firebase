@@ -4,7 +4,13 @@
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 
-## 6.0.0 (2018, May 16)
+## 6.0.2 (2018, May 16)
+
+### Fixes
+- [#710](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/710) If ML Kit Face detection is selected, but not Text detection, then the iOS build will fail 
+
+
+## 6.0.1 (2018, May 16)
 
 ### New
 - [#699](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/699) Add ML Kit support
