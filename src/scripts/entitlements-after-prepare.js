@@ -46,7 +46,7 @@ module.exports = function (logger, platformsData, projectData, hookArgs) {
           path.join(mobileVisionPod, "TextDetector", "Resources", "GoogleMVTextDetectorResources.bundle")
       );
     }
-    if (fs.existsSync(path.join(mobileVisionPod, "TextDetector", "Resources", "GoogleMVTextDetectorResources"))) {
+    if (fs.existsSync(path.join(mobileVisionPod, "FaceDetector", "Resources", "GoogleMVFaceDetectorResources"))) {
       fsextra.copy(
           path.join(mobileVisionPod, "FaceDetector", "Resources", "GoogleMVFaceDetectorResources"),
           path.join(mobileVisionPod, "FaceDetector", "Resources", "GoogleMVFaceDetectorResources.bundle")
