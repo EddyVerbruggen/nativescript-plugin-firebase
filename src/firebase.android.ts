@@ -641,10 +641,14 @@ firebase.admob.showBanner = arg => {
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-      // wrapping it in a timeout makes sure that when this function is loaded from
-      // a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'
+      // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
+      // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(() => {
-        frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        if (frame.topmost() !== undefined) {
+          frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else {
+          appModule.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+        }
       }, 0);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
@@ -1670,7 +1674,6 @@ firebase.removeEventListeners = (listeners, path) => {
       const ref = firebase.instance.child(path);
       for (let i = 0; i < listeners.length; i++) {
         const listener = listeners[i];
-        console.log("Removing listener at path " + path + ": " + listener);
         ref.removeEventListener(listener);
       }
       resolve();
