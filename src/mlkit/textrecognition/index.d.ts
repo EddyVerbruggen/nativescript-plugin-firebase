@@ -1,24 +1,31 @@
 import { MLKitCameraView, MLKitCloudOptions, MLKitOptions, MLKitResult } from "../index";
 
-export interface MLKitRecognizeTextResultFeature {
-  text: string;
-  elements: Array<{
-    text: string;
-    bounds: {
-      origin: {
-        x: number;
-        y: number;
-      },
-      size: {
-        width: number;
-        height: number;
-      }
-    };
-  }>
+export interface MLKitRecognizeTextResultBounds {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
+export interface MLKitRecognizeTextResultElement {
+	text: string;
+	bounds: MLKitRecognizeTextResultBounds;
+}
+
+export interface MLKitRecognizeTextResultLine {
+	text: string;
+	bounds: MLKitRecognizeTextResultBounds;
+	elements: MLKitRecognizeTextResultElement[];
+}
+
+export interface MLKitRecognizeTextResultBlock {
+	text: string;
+	bounds: MLKitRecognizeTextResultBounds;
+	lines: MLKitRecognizeTextResultLine[];
 }
 
 export interface MLKitRecognizeTextOnDeviceResult extends MLKitResult {
-  features: Array<MLKitRecognizeTextResultFeature>;
+	blocks: MLKitRecognizeTextResultBlock[];
 }
 
 export interface MLKitRecognizeTextCloudResult extends MLKitResult {
