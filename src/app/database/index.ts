@@ -47,7 +47,7 @@ export module database {
             if (!Query.registeredListeners.has(this.path)) {
               Query.registeredListeners.set(this.path, []);
             }
-            Query.registeredListeners.get(this.path).push(result.listeners);
+            Query.registeredListeners.set(this.path, Query.registeredListeners.get(this.path).concat(result.listeners));
           },
           error => {
             console.log("firebase.database().on error: " + error);
@@ -64,19 +64,10 @@ export module database {
     }
 
     public off(eventType? /* TODO use */: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): any {
-      console.log("firebase.database().off: " + eventType);
-      console.log("firebase.database().off this.registeredListeners: " + Query.registeredListeners);
-      console.log("firebase.database().off this.path: " + this.path);
       if (Query.registeredListeners.has(this.path)) {
-        console.log("firebase.database().off !has");
         firebase.removeEventListeners(Query.registeredListeners.get(this.path), this.path).then(
-            result => {
-              Query.registeredListeners.delete(this.path);
-              console.log("firebase.database().off success");
-            },
-            error => {
-              console.log("firebase.database().off error: " + error);
-            }
+            result => Query.registeredListeners.delete(this.path),
+            error => console.log("firebase.database().off error: " + error)
         );
       }
       Query.registeredCallbacks.delete(this.path);

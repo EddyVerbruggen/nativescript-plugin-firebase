@@ -73,7 +73,6 @@ export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): 
             });
           }
 
-          console.log(">>> image labeling result: " + JSON.stringify(result));
           resolve(result);
           firebaseVisionLabelDetector.close();
         }
@@ -120,7 +119,6 @@ export function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promis
             });
           }
 
-          console.log(">>> cloud image labeling result: " + JSON.stringify(result));
           resolve(result);
           firebaseVisionCloudLabelDetector.close();
         }
