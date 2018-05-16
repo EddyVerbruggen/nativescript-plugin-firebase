@@ -5,7 +5,7 @@ Make sure to check out [this demo app](https://github.com/EddyVerbruggen/natives
 ```bash
 git clone https://github.com/EddyVerbruggen/nativescript-plugin-firebase
 cd nativescript-plugin-firebase/src
-npm run setupandinstall
+npm run setupandinstall (just skip through the plugin y/n prompts you'll get as those are ignored in this case)
 npm run demo-ng.ios (or .android)
 ```
 
