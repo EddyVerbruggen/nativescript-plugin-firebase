@@ -446,7 +446,7 @@ module.exports = function($logger, $projectData, hookArgs) {
             xcodeProject.parseSync();
             var options = { shellPath: '/bin/sh', shellScript: '\${PODS_ROOT}/Fabric/run' };
             xcodeProject.addBuildPhase(
-              [], 'PBXShellScriptBuildPhase', 'Configure Crashlytics', xcodeProject.getFirstTarget().uuid, options
+              [], 'PBXShellScriptBuildPhase', 'Configure Crashlytics', undefined, options
             ).buildPhase;
             fs.writeFileSync(xcodeProjectPath, xcodeProject.writeSync());
             $logger.trace('Xcode project written');
