@@ -10,7 +10,7 @@ npm run demo-ng.ios (or .android)
 ```
 
 ## Enabling ML Kit
-During plugin installation you'll be asked whether or not you use ML Kit and which of its features.
+During plugin installation you'll be asked whether or not you want to use ML Kit, and which of its features.
 
 In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, it's safest to rename it (so you can see what your old configuration was),
 then clean your platforms folder (`rm -rf platforms`) and build your app again. You will be prompted which Firebase features you'll want to use.
