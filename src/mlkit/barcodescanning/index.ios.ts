@@ -31,7 +31,8 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
           const barcode: FIRVisionBarcode = barcodes.objectAtIndex(i);
           result.barcodes.push({
             value: barcode.rawValue,
-            format: BarcodeFormat[barcode.format]
+            format: BarcodeFormat[barcode.format],
+            ios: barcode
           });
         }
 
@@ -77,7 +78,8 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
             const barcode: FIRVisionBarcode = barcodes.objectAtIndex(i);
             result.barcodes.push({
               value: barcode.rawValue,
-              format: BarcodeFormat[barcode.format]
+              format: BarcodeFormat[barcode.format],
+              ios: barcode
             });
           }
           resolve(result);

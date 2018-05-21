@@ -8,6 +8,8 @@ export interface MLKitScanBarcodesOnDeviceResult extends MLKitResult {
   barcodes: Array<{
     value: string;
     format: string;
+    ios?: any;
+    android?: any;
   }>;
 }
 

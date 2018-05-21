@@ -38,7 +38,8 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
           const barcode = barcodes.get(i);
           result.barcodes.push({
             value: barcode.getRawValue(),
-            format: BarcodeFormat[barcode.getFormat()]
+            format: BarcodeFormat[barcode.getFormat()],
+            android: barcode
           });
         }
 
@@ -80,7 +81,8 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
             const barcode = barcodes.get(i);
             result.barcodes.push({
               value: barcode.getRawValue(),
-              format: BarcodeFormat[barcode.getFormat()]
+              format: BarcodeFormat[barcode.getFormat()],
+              android: barcode
             });
           }
 
