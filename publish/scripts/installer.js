@@ -360,7 +360,7 @@ end`) + `
 /**
  * Create the iOS build script for uploading dSYM files to Crashlytics
  *
- * @param {any} enable Is Crashlytics enbled
+ * @param {any} enable Is Crashlytics enabled
  */
 function writeBuildscriptHook(enable) {
     var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
@@ -632,8 +632,14 @@ module.exports = function($logger, $projectData, hookArgs) {
                 $logger.warn("Unable to copy google-services.json.");
                 reject();
             }
+        } else if (hookArgs.platform.toLowerCase() === 'ios') {
+            var sourceGooglePlist = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
+            if (!fs.existsSync(sourceGooglePlist)) {
+                $logger.warn(sourceGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
+                return reject();
+            }
         } else {
-            resolve()
+            resolve();
         }
     });
 };
