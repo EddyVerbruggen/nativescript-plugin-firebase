@@ -627,7 +627,7 @@ module.exports = function($logger, $projectData, hookArgs) {
             if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
                 $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
                 fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
-                resolve()
+                resolve();
             } else {
                 $logger.warn("Unable to copy google-services.json.");
                 reject();
@@ -637,6 +637,8 @@ module.exports = function($logger, $projectData, hookArgs) {
             if (!fs.existsSync(sourceGooglePlist)) {
                 $logger.warn(sourceGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
                 return reject();
+            } else {
+                resolve();
             }
         } else {
             resolve();
