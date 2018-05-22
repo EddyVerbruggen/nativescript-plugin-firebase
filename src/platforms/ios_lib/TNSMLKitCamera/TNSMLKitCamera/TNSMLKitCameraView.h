@@ -10,5 +10,6 @@
 @property (nonatomic) UIImageOrientation imageOrientation;
 
 - (nonnull id)initWithCaptureSession:(nonnull AVCaptureSession *)captureSession;
++ (NSArray * _Nullable)resizeImage:(nonnull UIImage *)image;
 
 @end

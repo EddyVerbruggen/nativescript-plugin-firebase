@@ -10,6 +10,8 @@
 		A32431BD20A5DFBD00C79104 /* TNSMLKitCameraViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = A32431BC20A5DFBD00C79104 /* TNSMLKitCameraViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A32431C120A5E25900C79104 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A32431C020A5E25900C79104 /* AVFoundation.framework */; };
 		A32431C320A5E2A200C79104 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A32431C220A5E2A200C79104 /* CoreMedia.framework */; };
+		A349852320B321E200EBB136 /* UIImage+TNSMLKitCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = A349852220B321E200EBB136 /* UIImage+TNSMLKitCamera.h */; };
+		A349852520B3220000EBB136 /* UIImage+TNSMLKitCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = A349852420B3220000EBB136 /* UIImage+TNSMLKitCamera.m */; };
 		A3905B0A1EBCD37D008D0250 /* TNSMLKitCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = A3905B081EBCD37D008D0250 /* TNSMLKitCamera.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3905B111EBCD434008D0250 /* TNSMLKitCameraView.h in Headers */ = {isa = PBXBuildFile; fileRef = A3905B101EBCD434008D0250 /* TNSMLKitCameraView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3905B131EBCD44B008D0250 /* TNSMLKitCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3905B121EBCD44B008D0250 /* TNSMLKitCameraView.m */; };
@@ -19,6 +21,8 @@
 		A32431BC20A5DFBD00C79104 /* TNSMLKitCameraViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TNSMLKitCameraViewDelegate.h; sourceTree = "<group>"; };
 		A32431C020A5E25900C79104 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		A32431C220A5E2A200C79104 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		A349852220B321E200EBB136 /* UIImage+TNSMLKitCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+TNSMLKitCamera.h"; sourceTree = "<group>"; };
+		A349852420B3220000EBB136 /* UIImage+TNSMLKitCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TNSMLKitCamera.m"; sourceTree = "<group>"; };
 		A3905B051EBCD37D008D0250 /* TNSMLKitCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TNSMLKitCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3905B081EBCD37D008D0250 /* TNSMLKitCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TNSMLKitCamera.h; sourceTree = "<group>"; };
 		A3905B091EBCD37D008D0250 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -64,6 +68,8 @@
 				A3905B101EBCD434008D0250 /* TNSMLKitCameraView.h */,
 				A3905B121EBCD44B008D0250 /* TNSMLKitCameraView.m */,
 				A32431BC20A5DFBD00C79104 /* TNSMLKitCameraViewDelegate.h */,
+				A349852220B321E200EBB136 /* UIImage+TNSMLKitCamera.h */,
+				A349852420B3220000EBB136 /* UIImage+TNSMLKitCamera.m */,
 			);
 			path = TNSMLKitCamera;
 			sourceTree = "<group>";
@@ -86,6 +92,7 @@
 			files = (
 				A3905B0A1EBCD37D008D0250 /* TNSMLKitCamera.h in Headers */,
 				A3905B111EBCD434008D0250 /* TNSMLKitCameraView.h in Headers */,
+				A349852320B321E200EBB136 /* UIImage+TNSMLKitCamera.h in Headers */,
 				A32431BD20A5DFBD00C79104 /* TNSMLKitCameraViewDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,6 +130,7 @@
 					A3905B041EBCD37D008D0250 = {
 						CreatedOnToolsVersion = 8.3.2;
 						DevelopmentTeam = 8Q5F6M3TNS;
+						LastSwiftMigration = 0930;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -159,6 +167,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A349852520B3220000EBB136 /* UIImage+TNSMLKitCamera.m in Sources */,
 				A3905B131EBCD44B008D0250 /* TNSMLKitCameraView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -169,6 +178,7 @@
 		A3905B0B1EBCD37D008D0250 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -212,6 +222,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "TNSMLKitCamera-Swift.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -221,6 +232,7 @@
 		A3905B0C1EBCD37D008D0250 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -257,6 +269,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "TNSMLKitCamera-Swift.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -267,6 +280,8 @@
 		A3905B0E1EBCD37D008D0250 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8Q5F6M3TNS;
@@ -279,12 +294,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.nativescript.plugin.firebase.MLKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		A3905B0F1EBCD37D008D0250 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 8Q5F6M3TNS;
@@ -297,6 +316,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.nativescript.plugin.firebase.MLKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
