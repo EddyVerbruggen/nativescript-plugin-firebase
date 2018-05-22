@@ -167,6 +167,8 @@ export class MLKitComponent {
         this.labelImageCloud(imageSource);
       } else if (pickedItem === "Landmark recognition (cloud)") {
         this.recognizeLandmarkCloud(imageSource);
+      // } else if (pickedItem === "Custom model (on device)") {
+      //   this.customModelOnDevice(imageSource);
       }
     });
   }
@@ -258,6 +260,23 @@ export class MLKitComponent {
         })
         .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
+
+  /*
+  private customModelOnDevice(imageSource: ImageSource): void {
+    console.log("customModelOnDevice");
+    firebase.mlkit.custommodel.useCustomModel({
+      image: imageSource
+    }).then(
+        (result: MLKitCustomModelResult) => {
+          alert({
+            title: `Result`,
+            message: JSON.stringify(result.result),
+            okButtonText: "OK"
+          });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+  */
 
   private labelImageCloud(imageSource: ImageSource): void {
     firebase.mlkit.imagelabeling.labelImageCloud({

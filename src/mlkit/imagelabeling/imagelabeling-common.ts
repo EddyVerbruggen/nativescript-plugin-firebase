@@ -10,7 +10,6 @@ export abstract class MLKitImageLabeling extends MLKitCameraView {
   static scanResultEvent: string = "scanResult";
 
   protected confidenceThreshold: number;
-  protected maxResults: number;
 
   [confidenceThresholdProperty.setNative](value: number) {
     this.confidenceThreshold = value;

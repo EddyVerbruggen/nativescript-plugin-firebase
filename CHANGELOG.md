@@ -3,6 +3,11 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 6.1.0 (PENDING)
+
+### Fixes
+- [#711](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/711) Crashlytics: "Configure Crashlytics" build step phase added multiple times 
+
 
 ## 6.0.2 (2018, May 16)
 

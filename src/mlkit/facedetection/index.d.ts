@@ -6,6 +6,8 @@ export interface MLKitDetectFacesResultFace {
   smilingProbability?: number;
   leftEyeOpenProbability?: number;
   rightEyeOpenProbability?: number;
+  ios?: any;
+  android?: any;
 }
 
 export interface MLKitDetectFacesOnDeviceResult extends MLKitResult {

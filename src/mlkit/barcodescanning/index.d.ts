@@ -4,13 +4,16 @@ import { MLKitResult, MLKitCameraView } from "../index";
 
 export { BarcodeFormat };
 
+export interface MLKitScanBarcodesResultBarcode {
+  value: string;
+  format: string;
+  ios?: any;
+  android?: any;
+  // TODO details
+}
+
 export interface MLKitScanBarcodesOnDeviceResult extends MLKitResult {
-  barcodes: Array<{
-    value: string;
-    format: string;
-    ios?: any;
-    android?: any;
-  }>;
+  barcodes: Array<MLKitScanBarcodesResultBarcode>;
 }
 
 export interface MLKitScanBarcodesOnDeviceOptions extends MLKitOptions {

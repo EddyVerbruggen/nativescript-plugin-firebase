@@ -30,6 +30,8 @@ export interface MLKitRecognizeTextResultBlock {
 
 export interface MLKitRecognizeTextOnDeviceResult extends MLKitResult {
 	blocks: Array<MLKitRecognizeTextResultBlock>;
+  ios?: any;
+  android?: any;
 }
 
 export interface MLKitRecognizeTextCloudResult extends MLKitResult {

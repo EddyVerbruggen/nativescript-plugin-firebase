@@ -4,6 +4,8 @@ export interface MLKitLandmarkRecognitionResultLandmark {
   // TODO add location (see #704)
   name: string;
   confidence: number;
+  ios?: any;
+  android?: any;
 }
 
 export interface MLKitLandmarkRecognitionCloudResult extends MLKitResult {

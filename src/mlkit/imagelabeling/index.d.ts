@@ -1,11 +1,15 @@
 import { MLKitOptions } from "../";
 import { MLKitCameraView, MLKitCloudOptions, MLKitResult } from "../index";
 
+export interface MLKitImageLabelingResultLabel {
+  text: string;
+  confidence: number;
+  ios?: any;
+  android?: any;
+}
+
 export interface MLKitImageLabelingCloudResult extends MLKitResult {
-  labels: Array<{
-    text: string;
-    confidence: number;
-  }>;
+  labels: Array<MLKitImageLabelingResultLabel>;
 }
 
 export interface MLKitImageLabelingOnDeviceResult extends MLKitImageLabelingCloudResult {

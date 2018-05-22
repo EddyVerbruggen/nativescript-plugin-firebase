@@ -35,9 +35,6 @@ export interface MLKitResult {
 export declare class MLKitCameraView {
 }
 
-// export declare class MLKitBarcodeScanner {
-// }
-
 export {
   textrecognition,
   barcodescanning,
