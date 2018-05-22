@@ -3434,6 +3434,12 @@ module.exports = function($logger, $projectData, hookArgs) {
 
             $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
             fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
+        } else if (hookArgs.platform.toLowerCase() === 'ios') {
+            var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
+            if (!fs.existsSync(sourceGoogleJson)) {
+                $logger.warn(sourceGoogleJson + " does not exist. Please follow the installation instructions from the documentation");
+                return reject();
+            }            
         }
 
         resolve()
