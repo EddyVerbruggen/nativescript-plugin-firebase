@@ -1190,7 +1190,7 @@ firebase.login = arg => {
       };
 
       const onCompletionWithAuthResult = (authResult: FIRAuthDataResult, error?: NSError) => {
-        onCompletionWithUser(authResult.user, error);
+        onCompletionWithUser(authResult && authResult.user, error);
       };
 
       const fAuth = FIRAuth.auth();
