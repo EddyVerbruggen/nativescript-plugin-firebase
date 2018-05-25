@@ -413,7 +413,9 @@ firebase._processPendingNotifications = () => {
         userInfoJSON.body = userInfoJSON.aps.alert.body;
       }
       // also, to make the ts.d happy copy all properties to a data element
-      userInfoJSON.data = userInfoJSON;
+      if (!userInfoJSON.hasOwnProperty('data')) { userInfoJSON.data = {}; }
+      Object.keys(userInfoJSON).forEach((key) => { if (key!=='data') userInfoJSON.data[key] = userInfoJSON[key]; })
+
       // cleanup
       userInfoJSON.aps = undefined;
       firebase._receivedNotificationCallback(userInfoJSON);
