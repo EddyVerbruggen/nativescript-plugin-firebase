@@ -78,4 +78,64 @@ button {
 Label.mlkit-result {
   margin: 5;
   text-align: left;
+  color: white;
+}
+
+.mask {
+  background-color: rgba(0,0,0,0.2);
+}
+
+.frame-top-left {
+  border-top-width: 3;
+  border-left-width: 3;
+  border-color: #51B8ED;
+}
+
+.frame-top-right {
+  border-top-width: 3;
+  border-right-width: 3;
+  border-color: #51B8ED;
+}
+
+.frame-bottom-left {
+  border-bottom-width: 3;
+  border-left-width: 3;
+  border-color: #51B8ED;
+}
+
+.frame-bottom-right {
+  border-bottom-width: 3;
+  border-right-width: 3;
+  border-color: #51B8ED;
+}
+
+.swing {
+  animation-name: swingAnimation;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.42,0,1,1);
+}
+
+@keyframes swingAnimation {
+  0% { 
+      transform: translate(0, 0); 
+  }
+  50% { 
+      transform: translate(0, 300); 
+  }
+  100% {
+      transform: translate(0, 0);
+  }
+}
+
+.close-btn {
+  border-radius: 15;
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 25;
+  width: 25;
+  text-align: center;
+  vertical-align: top;
+  margin-top: 10;
+  color: white;
+  padding: 3;
 }

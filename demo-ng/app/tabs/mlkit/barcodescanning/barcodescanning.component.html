@@ -2,26 +2,44 @@
   <Label class="action-bar-title" text="Barcode scanning"></Label>
 </ActionBar>
 
-<GridLayout rows="auto, auto, *">
-
-  <Label row="0" text="The scanner has been configured to detect QR codes, EAN 8 and EAN 13. It processes every 5th frame (default 10). These settings can be tweaked in your usage of the plugin." textWrap="true"></Label>
-
+<GridLayout>
   <MLKitBarcodeScanner
-      row="1"
-      width="260"
-      height="340"
       formats="QR_CODE, EAN_8, EAN_13"
       processEveryNthFrame="5"
       (scanResult)="onBarcodeScanResult($event)">
   </MLKitBarcodeScanner>
-
-  <ListView row="2" [items]="barcodes" class="m-t-20">
-    <ng-template let-item="item">
-      <GridLayout columns="2*, 3*">
-        <Label col="0" class="mlkit-result" textWrap="true" [text]="item.format"></Label>
-        <Label col="1" class="mlkit-result" textWrap="true" [text]="item.value"></Label>
-      </GridLayout>
-    </ng-template>
-  </ListView>
-
+  
+  <GridLayout rows="*, 320, *" columns="*, 5/6*, *">
+    <Label class="mask" row="0" col="0" colSpan="3"></Label>		
+    <Label class="mask" row="2" col="0" colSpan="3"></Label>
+    <Label class="mask" row="1" col="0"></Label>			
+    <Label class="mask" row="1" col="2"></Label>
+    <GridLayout row="1" col="1" rows="1/6*, *, 1/6*" columns="1/6*, *, 1/6*">
+      <Label class="frame-top-left" row="0" col="0"></Label>
+      <Label class="frame-top-right" row="0" col="2"></Label>
+      <Label class="frame-bottom-left" row="2" col="0"></Label>
+      <Label class="frame-bottom-right" row="2" col="2"></Label>
+      <StackLayout class="swing" row="0" col="0" colSpan="3">
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.1)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.2)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.3)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.4)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.5)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.6)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.7)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.8)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.9)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 1)"></Label>
+      </StackLayout>
+    </GridLayout>
+    <Label row="0" col="1" class="text-center" textWrap="true" color="white" verticalAlignment="center" text="The scanner has been configured to detect QR codes, EAN 8 and EAN 13. It processes every 5th frame (default 10). These settings can be tweaked in your usage of the plugin."></Label>	
+    <ListView row="2" col="0" colSpan="3" [items]="barcodes" class="m-t-20">
+      <ng-template let-item="item">
+        <GridLayout columns="2*, 3*">
+          <Label col="0" class="mlkit-result" textWrap="true" [text]="item.format"></Label>
+          <Label col="1" class="mlkit-result" textWrap="true" [text]="item.value"></Label>
+        </GridLayout>
+      </ng-template>
+    </ListView>
+  </GridLayout>
 </GridLayout>
