@@ -143,7 +143,9 @@ export class MLKitComponent {
   }
 
   reusePickedImage(): void {
-    this.selectMLKitFeature(this.pickedImage);
+    if (this.pickedImage) {
+      this.selectMLKitFeature(this.pickedImage);
+    }
   }
 
   private selectMLKitFeature(imageSource: ImageSource): void {
