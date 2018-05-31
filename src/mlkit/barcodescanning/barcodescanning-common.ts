@@ -25,12 +25,6 @@ export const formatsProperty = new Property<MLKitBarcodeScanner, string>({
   defaultValue: null,
 });
 
-export const preferFrontCameraProperty = new Property<MLKitBarcodeScanner, boolean>({
-  name: "preferFrontCamera",
-  defaultValue: false,
-  valueConverter: booleanConverter
-});
-
 export const beepOnScanProperty = new Property<MLKitBarcodeScanner, boolean>({
   name: "beepOnScan",
   defaultValue: true,
@@ -45,16 +39,11 @@ export const reportDuplicatesProperty = new Property<MLKitBarcodeScanner, boolea
 
 export abstract class MLKitBarcodeScanner extends MLKitCameraView {
   protected formats: string;
-  protected preferFrontCamera: boolean;
   protected beepOnScan: boolean;
   protected reportDuplicates: boolean;
 
   [formatsProperty.setNative](value: string) {
     this.formats = value;
-  }
-
-  [preferFrontCameraProperty.setNative](value: boolean) {
-    this.preferFrontCamera = value;
   }
 
   [beepOnScanProperty.setNative](value: boolean) {
@@ -67,6 +56,5 @@ export abstract class MLKitBarcodeScanner extends MLKitCameraView {
 }
 
 formatsProperty.register(MLKitBarcodeScanner);
-preferFrontCameraProperty.register(MLKitBarcodeScanner);
 beepOnScanProperty.register(MLKitBarcodeScanner);
 reportDuplicatesProperty.register(MLKitBarcodeScanner);
