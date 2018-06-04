@@ -4,6 +4,7 @@
 
 <GridLayout>
   <MLKitTextRecognition
+    width="100%" height="100%"
     (scanResult)="onTextRecognitionResult($event)">
   </MLKitTextRecognition>
   
@@ -30,7 +31,7 @@
         <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 1)"></Label>
       </StackLayout>
     </GridLayout>
-    <ListView row="0" rowSpan="3" col="0" colSpan="3" [items]="blocks" class="m-t-20">
+    <ListView separatorColor="transparent" row="0" rowSpan="3" col="0" colSpan="3" [items]="blocks" class="m-t-20" backgroundColor="transparent">
       <ng-template let-item="item">
         <Label class="mlkit-result" textWrap="true" [text]="item.text"></Label>
       </ng-template>
