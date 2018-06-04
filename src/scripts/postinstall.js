@@ -1,981 +1,4 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/* unknown exports provided */
-/* all exports used */
-/*!***************************!*\
-  !*** external "readline" ***!
-  \***************************/
-/***/ (function(module, exports) {
 
-module.exports = require("readline");
-
-/***/ }),
-/* 1 */
-/* unknown exports provided */
-/* all exports used */
-/*!*************************************!*\
-  !*** ./~/prompt-lite/lib/prompt.js ***!
-  \*************************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
- * prompt.js: Simple prompt for prompting information from the command line
- *
- * (C) 2010, Nodejitsu Inc.
- *
- */
-
-var events = __webpack_require__(/*! events */ 12),
-    readline = __webpack_require__(/*! readline */ 0),
-    util = __webpack_require__(/*! util */ 14),
-    async = __webpack_require__(/*! async */ 4),
-    read = __webpack_require__(/*! read */ 9),
-    validate = __webpack_require__(/*! revalidator */ 10).validate,
-    colors = __webpack_require__(/*! colors */ 7);
-
-//
-// Monkey-punch readline.Interface to work-around
-// https://github.com/joyent/node/issues/3860
-//
-readline.Interface.prototype.setPrompt = function(prompt, length) {
-  this._prompt = prompt;
-  if (length) {
-    this._promptLength = length;
-  } else {
-    var lines = prompt.split(/[\r\n]/);
-    var lastLine = lines[lines.length - 1];
-    this._promptLength = lastLine.replace(/\u001b\[(\d+(;\d+)*)?m/g, '').length;
-  }
-};
-
-var stdin = process.stdin,
-    stdout = process.stdout,
-    history = [];
-
-var prompt = module.exports = Object.create(events.EventEmitter.prototype);
-var logger = prompt.logger = {
-  help: 'cyan',
-  error: 'red'
-};
-Object.keys(logger).forEach(function (lvl) {
-  var color = logger[lvl];
-
-  logger[lvl] = function () {
-
-    var argv = [].slice.call(arguments),
-        str = argv.shift(),
-        head = lvl;
-
-    if (prompt.colors) {
-      head = lvl[color] || lvl;
-    }
-
-    head += ': ';
-
-    argv.unshift(head + (str || ''));
-
-    //
-    // For compatibility with prompt's use of winston.
-    //
-    // TODO: Writing to an uncontrolled stream is wrong.
-    //
-    if (lvl === 'error') {
-      return console.error.apply(null, argv);
-    }
-
-    stdout.write(util.format.apply(null, argv) + '\n');
-  }
-});
-
-prompt.started    = false;
-prompt.paused     = false;
-prompt.allowEmpty = false;
-prompt.message    = 'prompt';
-prompt.delimiter  = ': ';
-prompt.colors     = true;
-
-//
-// Create an empty object for the properties
-// known to `prompt`
-//
-prompt.properties = {};
-
-//
-// ### function start (options)
-// #### @options {Object} **Optional** Options to consume by prompt
-// Starts the prompt by listening to the appropriate events on `options.stdin`
-// and `options.stdout`. If no streams are supplied, then `process.stdin`
-// and `process.stdout` are used, respectively.
-//
-prompt.start = function (options) {
-  if (prompt.started) {
-    return;
-  }
-
-  options = options        || {};
-  stdin   = options.stdin  || process.stdin;
-  stdout  = options.stdout || process.stdout;
-
-  //
-  // By default: Remember the last `10` prompt property /
-  // answer pairs and don't allow empty responses globally.
-  //
-  prompt.memory     = options.memory     || 10;
-  prompt.allowEmpty = options.allowEmpty || false;
-  prompt.message    = options.message    || prompt.message;
-  prompt.delimiter  = options.delimiter  || prompt.delimiter;
-  prompt.colors     = options.colors     || prompt.colors;
-
-  if (process.platform !== 'win32') {
-    // windows falls apart trying to deal with SIGINT
-    process.on('SIGINT', function () {
-      stdout.write('\n');
-      process.exit(1);
-    });
-  }
-
-  prompt.emit('start');
-  prompt.started = true;
-  return prompt;
-};
-
-//
-// ### function pause ()
-// Pauses input coming in from stdin
-//
-prompt.pause = function () {
-  if (!prompt.started || prompt.paused) {
-    return;
-  }
-
-  stdin.pause();
-  prompt.emit('pause');
-  prompt.paused = true;
-  return prompt;
-};
-
-//
-// ### function resume ()
-// Resumes input coming in from stdin
-//
-prompt.resume = function () {
-  if (!prompt.started || !prompt.paused) {
-    return;
-  }
-
-  stdin.resume();
-  prompt.emit('resume');
-  prompt.paused = false;
-  return prompt;
-};
-
-//
-// ### function history (search)
-// #### @search {Number|string} Index or property name to find.
-// Returns the `property:value` pair from within the prompts
-// `history` array.
-//
-prompt.history = function (search) {
-  if (typeof search === 'number') {
-    return history[search] || {};
-  }
-
-  var names = history.map(function (pair) {
-    return typeof pair.property === 'string'
-      ? pair.property
-      : pair.property.name;
-  });
-
-  if (~names.indexOf(search)) {
-    return null;
-  }
-
-  return history.filter(function (pair) {
-    return typeof pair.property === 'string'
-      ? pair.property === search
-      : pair.property.name === search;
-  })[0];
-};
-
-//
-// ### function get (schema, callback)
-// #### @schema {Array|Object|string} Set of variables to get input for.
-// #### @callback {function} Continuation to pass control to when complete.
-// Gets input from the user via stdin for the specified message(s) `msg`.
-//
-prompt.get = function (schema, callback) {
-  //
-  // Transforms a full JSON-schema into an array describing path and sub-schemas.
-  // Used for iteration purposes.
-  //
-  function untangle(schema, path) {
-    var results = [];
-    path = path || [];
-
-    if (schema.properties) {
-      //
-      // Iterate over the properties in the schema and use recursion
-      // to process sub-properties.
-      //
-      Object.keys(schema.properties).forEach(function (key) {
-        var obj = {};
-        obj[key] = schema.properties[key];
-
-        //
-        // Concat a sub-untangling to the results.
-        //
-        results = results.concat(untangle(obj[key], path.concat(key)));
-      });
-
-      // Return the results.
-      return results;
-    }
-
-    //
-    // This is a schema "leaf".
-    //
-    return {
-      path: path,
-      schema: schema
-    };
-  }
-
-  //
-  // Iterate over the values in the schema, represented as
-  // a legit single-property object subschemas. Accepts `schema`
-  // of the forms:
-  //
-  //    'prop-name'
-  //
-  //    ['string-name', { path: ['or-well-formed-subschema'], properties: ... }]
-  //
-  //    { path: ['or-well-formed-subschema'], properties: ... ] }
-  //
-  //    { properties: { 'schema-with-no-path' } }
-  //
-  // And transforms them all into
-  //
-  //    { path: ['path', 'to', 'property'], properties: { path: { to: ...} } }
-  //
-  function iterate(schema, get, done) {
-    var iterator = [],
-        result = {};
-
-    if (typeof schema === 'string') {
-      //
-      // We can iterate over a single string.
-      //
-      iterator.push({
-        path: [schema],
-        schema: prompt.properties[schema.toLowerCase()] || {}
-      });
-    }
-    else if (Array.isArray(schema)) {
-      //
-      // An array of strings and/or single-prop schema and/or no-prop schema.
-      //
-      iterator = schema.map(function (element) {
-        if (typeof element === 'string') {
-          return {
-            path: [element],
-            schema: prompt.properties[element.toLowerCase()] || {}
-          };
-        }
-        else if (element.properties) {
-          return {
-            path: [Object.keys(element.properties)[0]],
-            schema: element.properties[Object.keys(element.properties)[0]]
-          };
-        }
-        else if (element.path && element.schema) {
-          return element;
-        }
-        else {
-          return {
-            path: [element.name || 'question'],
-            schema: element
-          };
-        }
-      });
-    }
-    else if (schema.properties) {
-      //
-      // Or a complete schema `untangle` it for use.
-      //
-      iterator = untangle(schema);
-    }
-    else {
-      //
-      // Or a partial schema and path.
-      // TODO: Evaluate need for this option.
-      //
-      iterator = [{
-        schema: schema.schema ? schema.schema : schema,
-        path: schema.path || [schema.name || 'question']
-      }];
-    }
-
-    //
-    // Now, iterate and assemble the result.
-    //
-    async.forEachSeries(iterator, function (branch, next) {
-      get(branch, function assembler(err, line) {
-        if (err) {
-          return next(err);
-        }
-
-        function build(path, line) {
-          var obj = {};
-          if (path.length) {
-            obj[path[0]] = build(path.slice(1), line);
-            return obj;
-          }
-
-          return line;
-        }
-
-        function attach(obj, attr) {
-          var keys;
-          if (typeof attr !== 'object' || attr instanceof Array) {
-            return attr;
-          }
-
-          keys = Object.keys(attr);
-          if (keys.length) {
-            if (!obj[keys[0]]) {
-              obj[keys[0]] = {};
-            }
-            obj[keys[0]] = attach(obj[keys[0]], attr[keys[0]]);
-          }
-
-          return obj;
-        }
-
-        result = attach(result, build(branch.path, line));
-        next();
-      });
-    }, function (err) {
-      return err ? done(err) : done(null, result);
-    });
-  }
-
-  iterate(schema, function get(target, next) {
-    prompt.getInput(target, function (err, line) {
-      return err ? next(err) : next(null, line);
-    });
-  }, callback);
-
-  return prompt;
-};
-
-//
-// ### function confirm (msg, callback)
-// #### @msg {Array|Object|string} set of message to confirm
-// #### @callback {function} Continuation to pass control to when complete.
-// Confirms a single or series of messages by prompting the user for a Y/N response.
-// Returns `true` if ALL messages are answered in the affirmative, otherwise `false`
-//
-// `msg` can be a string, or object (or array of strings/objects).
-// An object may have the following properties:
-//
-//    {
-//      description: 'yes/no' // message to prompt user
-//      pattern: /^[yntf]{1}/i // optional - regex defining acceptable responses
-//      yes: /^[yt]{1}/i // optional - regex defining `affirmative` responses
-//      message: 'yes/no' // optional - message to display for invalid responses
-//    }
-//
-prompt.confirm = function (/* msg, options, callback */) {
-  var args     = Array.prototype.slice.call(arguments),
-      msg      = args.shift(),
-      callback = args.pop(),
-      opts     = args.shift(),
-      vars     = !Array.isArray(msg) ? [msg] : msg,
-      RX_Y     = /^[yt]{1}/i,
-      RX_YN    = /^[yntf]{1}/i;
-
-  function confirm(target, next) {
-    var yes = target.yes || RX_Y,
-      options = mixin({
-        description: typeof target === 'string' ? target : target.description||'yes/no',
-        pattern: target.pattern || RX_YN,
-        name: 'confirm',
-        message: target.message || 'yes/no'
-      }, opts || {});
-
-
-    prompt.get([options], function (err, result) {
-      next(err ? false : yes.test(result[options.name]));
-    });
-  }
-
-  async.rejectSeries(vars, confirm, function(result) {
-    callback(null, result.length===0);
-  });
-};
-
-
-// Variables needed outside of getInput for multiline arrays.
-var tmp = [];
-
-
-// ### function getInput (prop, callback)
-// #### @prop {Object|string} Variable to get input for.
-// #### @callback {function} Continuation to pass control to when complete.
-// Gets input from the user via stdin for the specified message `msg`.
-//
-prompt.getInput = function (prop, callback) {
-  var schema = prop.schema || prop,
-      propName = prop.path && prop.path.join(':') || prop,
-      storedSchema = prompt.properties[propName.toLowerCase()],
-      delim = prompt.delimiter,
-      defaultLine,
-      against,
-      hidden,
-      length,
-      valid,
-      name,
-      raw,
-      msg;
-
-  //
-  // If there is a stored schema for `propName` in `propmpt.properties`
-  // then use it.
-  //
-  if (schema instanceof Object && !Object.keys(schema).length &&
-    typeof storedSchema !== 'undefined') {
-    schema = storedSchema;
-  }
-
-  //
-  // Build a proper validation schema if we just have a string
-  // and no `storedSchema`.
-  //
-  if (typeof prop === 'string' && !storedSchema) {
-    schema = {};
-  }
-
-  schema = convert(schema);
-  defaultLine = schema.default;
-  name = prop.description || schema.description || propName;
-  raw = prompt.colors
-    ? [prompt.message, delim + name.grey, delim.grey]
-    : [prompt.message, delim + name, delim];
-
-  prop = {
-    schema: schema,
-    path: propName.split(':')
-  };
-
-  //
-  // If the schema has no `properties` value then set
-  // it to an object containing the current schema
-  // for `propName`.
-  //
-  if (!schema.properties) {
-    schema = (function () {
-      var obj = { properties: {} };
-      obj.properties[propName] = schema;
-      return obj;
-    })();
-  }
-
-  //
-  // Handle overrides here.
-  // TODO: Make overrides nestable
-  //
-  if (prompt.override && prompt.override[propName]) {
-    if (prompt._performValidation(name, prop, prompt.override, schema, -1, callback)) {
-      return callback(null, prompt.override[propName]);
-    }
-
-    delete prompt.override[propName];
-  }
-
-  var type = (schema.properties && schema.properties[name] &&
-              schema.properties[name].type || '').toLowerCase().trim(),
-      wait = type === 'array';
-
-  if (type === 'array') {
-    length = prop.schema.maxItems;
-    if (length) {
-      msg = (tmp.length + 1).toString() + '/' + length.toString();
-    }
-    else {
-      msg = (tmp.length + 1).toString();
-    }
-    msg += delim;
-    raw.push(prompt.colors ? msg.grey : msg);
-  }
-
-  //
-  // Calculate the raw length and colorize the prompt
-  //
-  length = raw.join('').length;
-  raw[0] = raw[0];
-  msg = raw.join('');
-
-  if (schema.help) {
-    schema.help.forEach(function (line) {
-      logger.help(line);
-    });
-  }
-
-  //
-  // Emit a "prompting" event
-  //
-  prompt.emit('prompt', prop);
-
-  //
-  // If there is no default line, set it to an empty string
-  //
-  if(typeof defaultLine === 'undefined') {
-    defaultLine = '';
-  }
-
-  //
-  // set to string for readline ( will not accept Numbers )
-  //
-  defaultLine = defaultLine.toString();
-
-  //
-  // Make the actual read
-  //
-  read({
-    prompt: msg,
-    silent: prop.schema && prop.schema.hidden,
-    default: defaultLine,
-    input: stdin,
-    output: stdout
-  }, function (err, line) {
-    if (err && wait === false) {
-      return callback(err);
-    }
-
-    var against = {},
-        numericInput,
-        isValid;
-
-    if (line !== '') {
-
-      if (schema.properties[propName]) {
-        var type = (schema.properties[propName].type || '').toLowerCase().trim() || undefined;
-
-        //
-        // Attempt to parse input as a float if the schema expects a number.
-        //
-        if (type == 'number') {
-          numericInput = parseFloat(line, 10);
-          if (!isNaN(numericInput)) {
-            line = numericInput;
-          }
-        }
-
-        //
-        // Attempt to parse input as a boolean if the schema expects a boolean
-        //
-        if (type == 'boolean') {
-          if(line === "true") {
-            line = true;
-          }
-          if(line === "false") {
-            line = false;
-          }
-        }
-
-        //
-        // If the type is an array, wait for the end. Fixes #54
-        //
-        if (type == 'array') {
-          var length = prop.schema.maxItems;
-          if (err) {
-            if (err.message == 'canceled') {
-              wait = false;
-              stdout.write('\n');
-            }
-          }
-          else {
-            if (length) {
-              if (tmp.length + 1 < length) {
-                isValid = false;
-                wait = true;
-              }
-              else {
-                isValid = true;
-                wait = false;
-              }
-            }
-            else {
-              isValid = false;
-              wait = true;
-            }
-            tmp.push(line);
-          }
-          line = tmp;
-        }
-      }
-
-      against[propName] = line;
-    }
-
-    if (prop && prop.schema.before) {
-      line = prop.schema.before(line);
-    }
-
-    // Validate
-    if (isValid === undefined) isValid = prompt._performValidation(name, prop, against, schema, line, callback);
-
-    if (!isValid) {
-      return prompt.getInput(prop, callback);
-    }
-
-    //
-    // Append this `property:value` pair to the history for `prompt`
-    // and respond to the callback.
-    //
-    prompt._remember(propName, line);
-    callback(null, line);
-
-    // Make sure `tmp` is emptied
-    tmp = [];
-  });
-};
-
-//
-// ### function performValidation (name, prop, against, schema, line, callback)
-// #### @name {Object} Variable name
-// #### @prop {Object|string} Variable to get input for.
-// #### @against {Object} Input
-// #### @schema {Object} Validation schema
-// #### @line {String|Boolean} Input line
-// #### @callback {function} Continuation to pass control to when complete.
-// Perfoms user input validation, print errors if needed and returns value according to validation
-//
-prompt._performValidation = function (name, prop, against, schema, line, callback) {
-  var numericInput, valid, msg;
-
-  try {
-    valid = validate(against, schema);
-  }
-  catch (err) {
-    return (line !== -1) ? callback(err) : false;
-  }
-
-  if (!valid.valid) {
-    msg = line !== -1 ? 'Invalid input for ' : 'Invalid command-line input for ';
-
-    if (prompt.colors) {
-      logger.error(msg + name.grey);
-    }
-    else {
-      logger.error(msg + name);
-    }
-
-    if (prop.schema.message) {
-      logger.error(prop.schema.message);
-    }
-
-    prompt.emit('invalid', prop, line);
-  }
-
-  return valid.valid;
-};
-
-//
-// ### function addProperties (obj, properties, callback)
-// #### @obj {Object} Object to add properties to
-// #### @properties {Array} List of properties to get values for
-// #### @callback {function} Continuation to pass control to when complete.
-// Prompts the user for values each of the `properties` if `obj` does not already
-// have a value for the property. Responds with the modified object.
-//
-prompt.addProperties = function (obj, properties, callback) {
-  properties = properties.filter(function (prop) {
-    return typeof obj[prop] === 'undefined';
-  });
-
-  if (properties.length === 0) {
-    return callback(obj);
-  }
-
-  prompt.get(properties, function (err, results) {
-    if (err) {
-      return callback(err);
-    }
-    else if (!results) {
-      return callback(null, obj);
-    }
-
-    function putNested (obj, path, value) {
-      var last = obj, key;
-
-      while (path.length > 1) {
-        key = path.shift();
-        if (!last[key]) {
-          last[key] = {};
-        }
-
-        last = last[key];
-      }
-
-      last[path.shift()] = value;
-    }
-
-    Object.keys(results).forEach(function (key) {
-      putNested(obj, key.split('.'), results[key]);
-    });
-
-    callback(null, obj);
-  });
-
-  return prompt;
-};
-
-//
-// ### @private function _remember (property, value)
-// #### @property {Object|string} Property that the value is in response to.
-// #### @value {string} User input captured by `prompt`.
-// Prepends the `property:value` pair into the private `history` Array
-// for `prompt` so that it can be accessed later.
-//
-prompt._remember = function (property, value) {
-  history.unshift({
-    property: property,
-    value: value
-  });
-
-  //
-  // If the length of the `history` Array
-  // has exceeded the specified length to remember,
-  // `prompt.memory`, truncate it.
-  //
-  if (history.length > prompt.memory) {
-    history.splice(prompt.memory, history.length - prompt.memory);
-  }
-};
-
-//
-// ### @private function convert (schema)
-// #### @schema {Object} Schema for a property
-// Converts the schema into new format if it is in old format
-//
-function convert(schema) {
-  var newProps = Object.keys(validate.messages),
-      newSchema = false,
-      key;
-
-  newProps = newProps.concat(['description', 'dependencies']);
-
-  for (key in schema) {
-    if (newProps.indexOf(key) > 0) {
-      newSchema = true;
-      break;
-    }
-  }
-
-  if (!newSchema || schema.validator || schema.warning || typeof schema.empty !== 'undefined') {
-    schema.description = schema.message;
-    schema.message = schema.warning;
-
-    if (typeof schema.validator === 'function') {
-      schema.conform = schema.validator;
-    } else {
-      schema.pattern = schema.validator;
-    }
-
-    if (typeof schema.empty !== 'undefined') {
-      schema.required = !(schema.empty);
-    }
-
-    delete schema.warning;
-    delete schema.validator;
-    delete schema.empty;
-  }
-
-  return schema;
-}
-
-//
-// The only piece of utile I need
-//
-// ### function mixin (target [source0, source1, ...])
-// Copies enumerable properties from `source0 ... sourceN`
-// onto `target` and returns the resulting object.
-//
-function mixin(target) {
-  [].slice.call(arguments, 1).forEach(function (o) {
-    Object.getOwnPropertyNames(o).forEach(function(attr) {
-      var getter = Object.getOwnPropertyDescriptor(o, attr).get,
-          setter = Object.getOwnPropertyDescriptor(o, attr).set;
-
-      if (!getter && !setter) {
-        target[attr] = o[attr];
-      }
-      else {
-        Object.defineProperty(target, attr, {
-          get: getter,
-          set: setter
-        });
-      }
-    });
-  });
-
-  return target;
-};
-
-
-/***/ }),
-/* 2 */
-/* unknown exports provided */
-/* all exports used */
-/*!*********************!*\
-  !*** external "fs" ***!
-  \*********************/
-/***/ (function(module, exports) {
-
-module.exports = require("fs");
-
-/***/ }),
-/* 3 */
-/* unknown exports provided */
-/* all exports used */
-/*!***********************!*\
-  !*** external "path" ***!
-  \***********************/
-/***/ (function(module, exports) {
-
-module.exports = require("path");
-
-/***/ }),
-/* 4 */
-/* unknown exports provided */
-/* all exports used */
-/*!**************************!*\
-  !*** ./~/async/index.js ***!
-  \**************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-// This file is just added for convenience so this repository can be
-// directly checked out into a project's deps folder
-module.exports = __webpack_require__(/*! ./lib/async */ 5);
-
-
-/***/ }),
-/* 5 */
-/* unknown exports provided */
-/* all exports used */
-/*!******************************!*\
-  !*** ./~/async/lib/async.js ***!
-  \******************************/
-/***/ (function(module, exports) {
-
-/*global setTimeout: false, console: false */
-(function () {
-
-    var async = {};
-
-    // global on the server, window in the browser
-    var root = this,
-        previous_async = root.async;
-
-    if (typeof module !== 'undefined' && module.exports) {
-        module.exports = async;
-    }
-    else {
-        root.async = async;
-    }
-
-    async.noConflict = function () {
-        root.async = previous_async;
-        return async;
-    };
-
-    //// cross-browser compatiblity functions ////
-
-    var _forEach = function (arr, iterator) {
-        if (arr.forEach) {
-            return arr.forEach(iterator);
-        }
-        for (var i = 0; i < arr.length; i += 1) {
-            iterator(arr[i], i, arr);
-        }
-    };
-
-    var _map = function (arr, iterator) {
-        if (arr.map) {
-            return arr.map(iterator);
-        }
-        var results = [];
-        _forEach(arr, function (x, i, a) {
-            results.push(iterator(x, i, a));
         });
         return results;
     };
@@ -1660,22 +683,17 @@ webpackEmptyContext.id = 6;
 
 /*
 colors.js
-
 Copyright (c) 2010
-
 Marak Squires
 Alexis Sellier (cloudhead)
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -1683,7 +701,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
 */
 
 var isHeadless = false;
@@ -3095,19 +2112,14 @@ function writePodFile(result) {
         fs.writeFileSync(directories.ios + '/Podfile',
 `pod 'Firebase/Core', '~> 5.0.0' 
 pod 'Firebase/Auth'
-
 # Realtime DB
 ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
-
 # Cloud Firestore
 ` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
-
 # Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
-
 # Crash Reporting
 ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
-
 # Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Crashlytics'
@@ -3121,19 +2133,14 @@ post_install do |installer|
         end
     end
 end`) + `
-
 # Firebase Cloud Messaging (FCM)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
-
 # Firebase Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
-
 # AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
-
 # Invites / Dynamic Links
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
-
 # ML Kit
 ` + (isSelected(result.ml_kit) ? `` : `#`) + `pod 'Firebase/MLVision'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_text_recognition) ? `` : `#`) + `pod 'Firebase/MLVisionTextModel'
@@ -3141,11 +2148,9 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_face_detection) ? `` : `#`) + `pod 'Firebase/MLVisionFaceModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
-
 # Facebook Authentication
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
-
 # Google Authentication
 ` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`);
         console.log('Successfully created iOS (Pod) file.');
@@ -3176,11 +2181,9 @@ function writeBuildscriptHook(enable) {
 `const fs = require('fs-extra');
 const path = require('path');
 const xcode = require('xcode');
-
 const pattern1 = /\\n\\s*\\/\\/Crashlytics 1 BEGIN[\\s\\S]*\\/\\/Crashlytics 1 END.*\\n/m;
 const pattern2 = /\\n\\s*\\/\\/Crashlytics 2 BEGIN[\\s\\S]*\\/\\/Crashlytics 2 END.*\\n/m;
 const pattern3 = /\\n\\s*\\/\\/Crashlytics 3 BEGIN[\\s\\S]*\\/\\/Crashlytics 3 END.*\\n/m;
-
 const string1 = \`
 //Crashlytics 1 BEGIN
 #else
@@ -3188,7 +2191,6 @@ const string1 = \`
 #endif
 //Crashlytics 1 END
 \`;
-
 const string2 = \`
 //Crashlytics 2 BEGIN
 #if DEBUG
@@ -3197,18 +2199,15 @@ static int redirect_cls(const char *prefix, const char *buffer, int size) {
   CLSLog(@"%s: %.*s", prefix, size, buffer);
   return size;
 }
-
 static int stderr_redirect(void *inFD, const char *buffer, int size) {
   return redirect_cls("stderr", buffer, size);
 }
-
 static int stdout_redirect(void *inFD, const char *buffer, int size) {
   return redirect_cls("stdout", buffer, size);
 }
 #endif
 //Crashlytics 2 END
 \`;
-
 const string3 = \`
 //Crashlytics 3 BEGIN
 #if DEBUG
@@ -3226,7 +2225,6 @@ const string3 = \`
 #endif
 //Crashlytics 3 END
 \`;
-
 module.exports = function($logger, $projectData, hookArgs) {
   const platform = hookArgs.platform.toLowerCase();
   return new Promise(function(resolve, reject) {
@@ -3235,7 +2233,6 @@ module.exports = function($logger, $projectData, hookArgs) {
       try {
         if (platform === 'ios') {
           const sanitizedAppName = path.basename($projectData.projectDir).split('').filter((c) => /[a-zA-Z0-9]/.test(c)).join('');
-
           // write buildscript for dSYM upload
           const xcodeProjectPath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcodeproj', 'project.pbxproj');
           $logger.trace('Using Xcode project', xcodeProjectPath);
@@ -3252,7 +2249,6 @@ module.exports = function($logger, $projectData, hookArgs) {
             $logger.error(xcodeProjectPath + ' is missing.');
             reject()
           }
-
           // Logging from stdout/stderr
           $logger.out('Add iOS crash logging');
           const mainmPath = path.join($projectData.platformsDir, 'ios', 'internal', 'main.m');
@@ -3275,7 +2271,6 @@ module.exports = function($logger, $projectData, hookArgs) {
             $logger.error(mainmPath + ' is missing.');
             reject()
           }
-
           resolve();
         } else {
           resolve();
@@ -3325,7 +2320,6 @@ android {
         }
     }
 }
-
 repositories {
     jcenter()
     mavenCentral()
@@ -3333,68 +2327,49 @@ repositories {
         url "https://maven.google.com"
     }
 }
-
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
 def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "15.0.0"
-
 if ( VersionNumber.parse( googlePlayServicesVersion ) < VersionNumber.parse( '15.0.0' ) ) {
     throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 ( currently set to $googlePlayServicesVersion )");
 }
-
 dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.android.support:customtabs:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-compat:$supportVersion"
-
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:15.0.2"
     compile "com.google.firebase:firebase-auth:15.1.0"
-
     // for reading google-services.json and configuration
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
-
     // Realtime DB
     ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:15.0.0"
-
     // Cloud Firestore
     ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:16.0.0"
-
     // Remote Config
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:15.0.2"
-
     // Crash Reporting
     ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:15.0.2"
-
     // Crashlytics
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.1"
-
     // Firebase Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:15.0.2"
-
     // Cloud Storage
     ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:15.0.2"
-
     // AdMob
     ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.0"
-
     // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:15.0.0"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:15.0.0"
-
     // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.+"){ exclude group: 'com.google.zxing' }
-
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
-
     // Firebase Invites / Dynamic Links
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:$googlePlayServicesVersion"
 }
-
 apply plugin: "com.google.gms.google-services"
-
 // Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `//`) + `apply plugin: "io.fabric"
 `);
@@ -3415,9 +2390,7 @@ function writeGoogleServiceCopyHook() {
 `
 var path = require("path");
 var fs = require("fs");
-
 module.exports = function($logger, $projectData, hookArgs) {
-
     return new Promise(function(resolve, reject) {
         if (hookArgs.platform.toLowerCase() === 'android') {
             var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json");
@@ -3467,29 +2440,24 @@ function writeGoogleServiceGradleHook(result) {
 `
 var path = require("path");
 var fs = require("fs");
-
 module.exports = function($logger, $projectData) {
-
     return new Promise(function(resolve, reject) {
         $logger.out("Configure firebase");
         let projectBuildGradlePath = path.join($projectData.platformsDir, "android", "build.gradle");
         if (fs.existsSync(projectBuildGradlePath)) {
             let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
-
             if (buildGradleContent.indexOf("fabric.io") === -1) {
                 let repositoriesNode = buildGradleContent.indexOf("repositories", 0);
                 if (repositoriesNode > -1) {
                     repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
                     buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '	    maven { url "https://maven.fabric.io/public" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
                 }
-
                 let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
                 if (dependenciesNode > -1) {
                     dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
                     buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.25.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
                 }
             }
-
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
             let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:3.3.1"';
@@ -3503,7 +2471,6 @@ module.exports = function($logger, $projectData) {
     
             fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
         }
-
         let projectAppBuildGradlePath = path.join($projectData.platformsDir, "android", "app", "build.gradle");
         if (fs.existsSync(projectAppBuildGradlePath)) {
           let appBuildGradleContent = fs.readFileSync(projectAppBuildGradlePath).toString();
@@ -3528,7 +2495,6 @@ task copyMetadata {
             fs.writeFileSync(projectAppBuildGradlePath, appBuildGradleContent);
           }
         }
-
         resolve();
     });
 };
