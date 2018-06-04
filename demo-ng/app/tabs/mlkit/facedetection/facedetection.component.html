@@ -47,9 +47,9 @@
   <ListView backgroundColor="black" row="1" [items]="faces">
     <ng-template let-item="item">
       <GridLayout columns="*, *, *">
-        <Label col="0" class="mlkit-result c-black" [class.c-purple]="item.smilingProbability > 0.7" [text]="item.smilingProbability | number" textWrap="true"></Label>
-        <Label col="1" class="mlkit-result c-black" [class.c-purple]="item.leftEyeOpenProbability > 0.7" [text]="item.leftEyeOpenProbability | number" textWrap="true"></Label>
-        <Label col="2" class="mlkit-result c-black" [class.c-purple]="item.rightEyeOpenProbability > 0.7" [text]="item.rightEyeOpenProbability | number" textWrap="true"></Label>
+        <Label col="0" class="mlkit-result c-white" [class.c-purple]="item.smilingProbability > 0.7" [text]="item.smilingProbability | number" textWrap="true"></Label>
+        <Label col="1" class="mlkit-result c-white" [class.c-purple]="item.leftEyeOpenProbability > 0.7" [text]="item.leftEyeOpenProbability | number" textWrap="true"></Label>
+        <Label col="2" class="mlkit-result c-white" [class.c-purple]="item.rightEyeOpenProbability > 0.7" [text]="item.rightEyeOpenProbability | number" textWrap="true"></Label>
       </GridLayout>
     </ng-template>
   </ListView>
