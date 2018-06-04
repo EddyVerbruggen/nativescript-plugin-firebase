@@ -25,6 +25,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   protected rotation;
   protected lastVisionImage;
   private detector: any;
+  private camera;
 
   disposeNativeView(): void {
     super.disposeNativeView();
@@ -34,6 +35,18 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     }
     this.bytesToByteBuffer = new Map();
     this.surfaceView = null;
+    
+    if (this.camera != null) {
+      this.camera.stopPreview();
+      this.camera.setPreviewCallbackWithBuffer(null);
+      try {
+        this.camera.setPreviewDisplay(null);
+      } catch (e) {
+        console.log(e);
+      }
+      this.camera.release();
+      this.camera = null;
+    }
   }
 
   createNativeView(): Object {
@@ -99,9 +112,9 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
           break;
         }
       }
-      const camera = android.hardware.Camera.open(requestedCameraId);
+      this.camera = android.hardware.Camera.open(requestedCameraId);
 
-      const sizePair = this.selectSizePair(camera, 800, 600); // TODO based on wrapping frame
+      const sizePair = this.selectSizePair(this.camera, 800, 600); // TODO based on wrapping frame
 
       if (!sizePair) {
         console.log("Could not find suitable preview size.");
@@ -111,7 +124,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       let pictureSize = sizePair.pictureSize;
       let previewSize = sizePair.previewSize;
 
-      const parameters = camera.getParameters();
+      const parameters = this.camera.getParameters();
 
       if (pictureSize) {
         parameters.setPictureSize(pictureSize.width, pictureSize.height);
@@ -119,7 +132,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       parameters.setPreviewSize(previewSize.width, previewSize.height);
       parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
 
-      this.setRotation(camera, parameters, requestedCameraId);
+      this.setRotation(this.camera, parameters, requestedCameraId);
 
       if (parameters.getSupportedFocusModes().contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
         parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
@@ -129,7 +142,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
 
       // TODO this setter seems odd, but it's part of the example: https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSource.java#L312
-      camera.setParameters(parameters);
+      this.camera.setParameters(parameters);
 
       this.detector = this.createDetector();
       const onSuccessListener = this.createSuccessListener();
@@ -144,7 +157,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
               .build();
 
       let throttle = 0;
-      camera.setPreviewCallbackWithBuffer(new android.hardware.Camera.PreviewCallback({
+      this.camera.setPreviewCallbackWithBuffer(new android.hardware.Camera.PreviewCallback({
         onPreviewFrame: (byteArray, camera) => {
 
           if (this.pendingFrameData !== null) {
@@ -175,13 +188,13 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         }
       }));
 
-      camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
-      camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
-      camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
-      camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
 
-      camera.setPreviewDisplay(surfaceHolder);
-      camera.startPreview();
+      this.camera.setPreviewDisplay(surfaceHolder);
+      this.camera.startPreview();
 
     }, 500); // TODO 500 works fine on my device, but would be wise to explore the boundaries
   }
