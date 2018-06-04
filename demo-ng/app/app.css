@@ -112,7 +112,7 @@ Label.mlkit-result {
 .swing {
   animation-name: swingAnimation;
   animation-duration: 6s;
-  animation-iteration-count: infinite;
+  animation-iteration-count: 10;
   animation-timing-function: cubic-bezier(0.42,0,1,1);
 }
 
