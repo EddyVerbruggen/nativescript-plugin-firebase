@@ -2118,6 +2118,7 @@ firebase.subscribeToTopic = topicName => {
         return;
       }
 
+      // TODO since Cloud Messaging 17.0.0 this returns a Task instead of void (so we can resolve onSuccess)
       com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic(topicName);
       resolve();
     } catch (ex) {

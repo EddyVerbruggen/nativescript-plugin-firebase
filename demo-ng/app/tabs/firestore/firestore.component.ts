@@ -1,6 +1,6 @@
 import { Component, NgZone } from "@angular/core";
 import { firestore } from "nativescript-plugin-firebase";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { City } from "~/model/City";
 
 const firebase = require("nativescript-plugin-firebase/app");

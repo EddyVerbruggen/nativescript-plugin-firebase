@@ -6,38 +6,54 @@
   "nativescript": {
     "id": "org.nativescript.firebasedemo.firestore",
     "tns-android": {
-      "version": "4.0.0-rc-2018.4.2.1"
+      "version": "4.1.1"
     },
     "tns-ios": {
-      "version": "4.0.1"
+      "version": "4.1.0"
     }
   },
   "dependencies": {
-    "@angular/animations": "5.2.10",
-    "@angular/common": "5.2.10",
-    "@angular/compiler": "5.2.10",
-    "@angular/core": "5.2.10",
-    "@angular/forms": "5.2.10",
-    "@angular/http": "5.2.10",
-    "@angular/platform-browser": "5.2.10",
-    "@angular/platform-browser-dynamic": "5.2.10",
-    "@angular/router": "5.2.10",
-    "nativescript-angular": "~5.3.0",
+    "@angular/animations": "~6.0.0",
+    "@angular/common": "~6.0.0",
+    "@angular/compiler": "~6.0.0",
+    "@angular/core": "~6.0.0",
+    "@angular/forms": "~6.0.0",
+    "@angular/http": "~6.0.0",
+    "@angular/platform-browser": "~6.0.0",
+    "@angular/platform-browser-dynamic": "~6.0.0",
+    "@angular/router": "~6.0.0",
+    "nativescript-angular": "^6.0.0",
     "nativescript-camera": "^4.0.2",
     "nativescript-imagepicker": "^6.0.1",
     "nativescript-plugin-firebase": "^6.0.0",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.10",
-    "rxjs": "~5.5.0",
-    "tns-core-modules": "~4.0.0",
-    "zone.js": "~0.8.18"
+    "rxjs": "~6.0.0 || >=6.1.0",
+    "tns-core-modules": "~4.1.0",
+    "zone.js": "~0.8.26"
   },
   "devDependencies": {
+    "@angular-devkit/core": "~0.6.3",
+    "@angular/compiler-cli": "~6.0.0",
+    "@ngtools/webpack": "~6.0.3",
     "babel-traverse": "6.26.0",
     "babel-types": "6.26.0",
     "babylon": "6.18.0",
+    "clean-webpack-plugin": "~0.1.19",
+    "copy-webpack-plugin": "~4.5.1",
+    "css-loader": "~0.28.11",
+    "extract-text-webpack-plugin": "~3.0.2",
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "~0.7.1",
-    "typescript": "~2.8.0"
+    "nativescript-dev-webpack": "^0.12.0",
+    "nativescript-worker-loader": "~0.9.0",
+    "raw-loader": "~0.5.1",
+    "resolve-url-loader": "~2.3.0",
+    "typescript": "~2.7.2",
+    "uglifyjs-webpack-plugin": "~1.2.5",
+    "webpack": "~4.6.0",
+    "webpack-bundle-analyzer": "~2.13.0",
+    "webpack-cli": "~2.1.3",
+    "webpack-sources": "~1.1.0"
   }
 }

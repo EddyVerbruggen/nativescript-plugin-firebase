@@ -9,7 +9,7 @@ In many cases you may want to use the NativeScript core theme instead
 of writing your own CSS rules. For a full list of class names in the theme
 refer to http://docs.nativescript.org/ui/theme.
 */
-@import 'nativescript-theme-core/css/core.light.css';
+@import '~nativescript-theme-core/css/core.light.css';
 
 .tab-content {
   margin: 8;
@@ -117,11 +117,11 @@ Label.mlkit-result {
 }
 
 @keyframes swingAnimation {
-  0% { 
-      transform: translate(0, 0); 
+  0% {
+      transform: translate(0, 0);
   }
-  50% { 
-      transform: translate(0, 300); 
+  50% {
+      transform: translate(0, 300);
   }
   100% {
       transform: translate(0, 0);
