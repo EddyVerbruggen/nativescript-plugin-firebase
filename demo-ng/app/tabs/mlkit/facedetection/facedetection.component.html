@@ -5,11 +5,12 @@
 <GridLayout rows="6/8*, 2/8*">
   <GridLayout row="0">
     <MLKitFaceDetection
+        width="100%" height="100%"
         processEveryNthFrame="30"
         (scanResult)="onFaceDetectionResult($event)">
     </MLKitFaceDetection>
     
-    <GridLayout rows="*, 320, *" columns="*, 5/6*, *">
+    <GridLayout rows="*, 250, *" columns="*, 5/6*, *">
       <Label class="mask" row="0" col="0" colSpan="3"></Label>		
       <Label class="mask" row="2" col="0" colSpan="3"></Label>
       <Label class="mask" row="1" col="0"></Label>			
@@ -32,13 +33,13 @@
           <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 1)"></Label>
         </StackLayout>
       </GridLayout>
-      <Label row="0" col="1" class="text-center" textWrap="true" color="white" verticalAlignment="center" text="The scanner has been configured to detect faces every 30th frame (default is 10). You can tweak this in your usage of the plugin."></Label>	
+      <Label row="0" col="1" class="text-center c-white" textWrap="true" color="white" verticalAlignment="center" text="The scanner has been configured to detect faces every 30th frame (default is 10). You can tweak this in your usage of the plugin."></Label>	
       <StackLayout row="2" col="0" colSpan="3">
           <Label [text]="mlKitAllOK" textWrap="true" class="m-t-5 c-purple"></Label>
-          <GridLayout columns="*, *, *" class="m-t-5">
-            <Label col="0" class="mlkit-result font-weight-bold" textWrap="true" text="Smiling"></Label>
-            <Label col="1" class="mlkit-result font-weight-bold" textWrap="true" text="Left 👁 open"></Label>
-            <Label col="2" class="mlkit-result font-weight-bold" textWrap="true" text="Right 👁 open"></Label>
+          <GridLayout row="auto" columns="*, *, *" class="m-t-5">
+            <Label row="0" col="0" class="mlkit-result font-weight-bold" textWrap="true" text="Smiling"></Label>
+            <Label row="0" col="1" class="mlkit-result font-weight-bold" textWrap="true" text="Left 👁 open"></Label>
+            <Label row="0" col="2" class="mlkit-result font-weight-bold" textWrap="true" text="Right 👁 open"></Label>
           </GridLayout>
         </StackLayout>
     </GridLayout>
@@ -46,9 +47,9 @@
   <ListView backgroundColor="black" row="1" [items]="faces">
     <ng-template let-item="item">
       <GridLayout columns="*, *, *">
-        <Label col="0" class="mlkit-result" [class.c-purple]="item.smilingProbability > 0.7" [text]="item.smilingProbability | number" textWrap="true"></Label>
-        <Label col="1" class="mlkit-result" [class.c-purple]="item.leftEyeOpenProbability > 0.7" [text]="item.leftEyeOpenProbability | number" textWrap="true"></Label>
-        <Label col="2" class="mlkit-result" [class.c-purple]="item.rightEyeOpenProbability > 0.7" [text]="item.rightEyeOpenProbability | number" textWrap="true"></Label>
+        <Label col="0" class="mlkit-result c-black" [class.c-purple]="item.smilingProbability > 0.7" [text]="item.smilingProbability | number" textWrap="true"></Label>
+        <Label col="1" class="mlkit-result c-black" [class.c-purple]="item.leftEyeOpenProbability > 0.7" [text]="item.leftEyeOpenProbability | number" textWrap="true"></Label>
+        <Label col="2" class="mlkit-result c-black" [class.c-purple]="item.rightEyeOpenProbability > 0.7" [text]="item.rightEyeOpenProbability | number" textWrap="true"></Label>
       </GridLayout>
     </ng-template>
   </ListView>
