@@ -15,6 +15,15 @@ During plugin installation you'll be asked whether or not you want to use ML Kit
 In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, it's safest to rename it (so you can see what your old configuration was),
 then clean your platforms folder (`rm -rf platforms`) and build your app again. You will be prompted which Firebase features you'll want to use.
 
+## Required Android permissions
+In case you want to detect images from the camera, add these to your app resources `AndroidManifest.xml`:
+
+```xml
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-feature android:name="android.hardware.camera" android:required="false" />
+  <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+```
+
 ## ML Kit Features
 There are two ways of using ML Kit: 
 

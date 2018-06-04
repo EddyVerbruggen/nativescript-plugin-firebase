@@ -1,11 +1,6 @@
 <manifest package="org.nativescript.plugins.firebase"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <!-- for ML Kit -->
-  <uses-permission android:name="android.permission.CAMERA"/>
-  <uses-permission android:name="android.permission.FLASHLIGHT"/>
-  <uses-feature android:name="android.hardware.camera" android:required="false" />
-
   <!-- for Messaging -->
   <application>
     <service android:name=".MyFirebaseMessagingService">
