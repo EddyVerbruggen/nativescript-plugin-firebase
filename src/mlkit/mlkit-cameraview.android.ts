@@ -19,7 +19,7 @@ class SizePair {
 
 // TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
-  private surfaceView: android.view.SurfaceView;
+  private surfaceView: any; // android.view.SurfaceView;
   private bytesToByteBuffer = new Map();
   private pendingFrameData = null;
   protected rotation;
@@ -29,24 +29,27 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   disposeNativeView(): void {
     super.disposeNativeView();
-    if (this.detector) {
-      this.detector.close();
-      this.detector = undefined;
-    }
-    this.bytesToByteBuffer = new Map();
     this.surfaceView = null;
-    
+
     if (this.camera != null) {
       this.camera.stopPreview();
       this.camera.setPreviewCallbackWithBuffer(null);
       try {
         this.camera.setPreviewDisplay(null);
       } catch (e) {
-        console.log(e);
+        console.log("Error cleaning up the ML Kit camera (you can probably ignore this): " + e);
       }
       this.camera.release();
       this.camera = null;
     }
+    this.bytesToByteBuffer.clear();
+
+    if (this.detector) {
+      this.detector.close();
+      this.detector = undefined;
+    }
+    this.lastVisionImage = null;
+    this.pendingFrameData = null;
   }
 
   createNativeView(): Object {
