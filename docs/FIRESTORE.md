@@ -152,13 +152,17 @@ citiesCollection.doc("LA").set({
 ```
 
 ### `collection.doc().update()`
-Update any number of properties of a document:
+Update any number of properties of a document.
+
+Use the special property `firebase.firestore().FieldValue().serverTimestamp()` to update a server timestamp
+(as opposed to a local timestamp, which would be different for every client).
 
 ```typescript
 const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
 
 sanFranciscoDocument.update({
-  population: 860001
+  population: 860001,
+  updateTimestamp: firebase.firestore().FieldValue().serverTimestamp()
 }).then(() => {
   console.log("SF population updated");
 });

@@ -1,3 +1,5 @@
+export declare const FIRESTORE_SERVER_TS = "SERVER_TIMESTAMP";
+
 /**
  * The allowed values for LoginOptions.type.
  */
@@ -825,6 +827,10 @@ export namespace firestore {
     doc(documentPath?: string): DocumentReference;
 
     add(data: DocumentData): Promise<DocumentReference>;
+  }
+
+  export class FieldValue {
+    static serverTimestamp: () => FIRESTORE_SERVER_TS
   }
 
   export interface QuerySnapshot {

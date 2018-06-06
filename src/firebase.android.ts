@@ -1,13 +1,13 @@
 import { DocumentSnapshot, firebase, QuerySnapshot } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
-import * as utils from "tns-core-modules/utils/utils";
+import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
-import * as frame from "tns-core-modules/ui/frame";
-import * as fs from "tns-core-modules/file-system";
-import { firestore } from "./firebase";
+import { topmost } from "tns-core-modules/ui/frame";
+import { File } from "tns-core-modules/file-system";
+import { firestore, FIRESTORE_SERVER_TS } from "./firebase";
 
-declare const com, org: any;
+declare const android, com, org: any;
 
 firebase._launchNotification = null;
 firebase._cachedDynamicLink = null;
@@ -126,12 +126,16 @@ firebase.toHashMap = obj => {
       if (obj[property] === null) {
         node.put(property, null);
       } else {
-        if (obj[property] instanceof Date) {
+        // note that the Android Firestore SDK only supports this for 'update' (not for 'set')
+        if (obj[property] === FIRESTORE_SERVER_TS) {
+          node.put(property, com.google.firebase.firestore.FieldValue.serverTimestamp());
+        } else if (obj[property] instanceof Date) {
           node.put(property, new java.util.Date(obj[property].getTime()));
         } else if (Array.isArray(obj[property])) {
           node.put(property, firebase.toJavaArray(obj[property]));
         } else {
           switch (typeof obj[property]) {
+            case 'object':
             case 'object':
               node.put(property, firebase.toHashMap(obj[property], node));
               break;
@@ -616,7 +620,7 @@ firebase.admob.showBanner = arg => {
       const ad = firebase.admob._buildAdRequest(settings);
       firebase.admob.adView.loadAd(ad);
 
-      const density = utils.layout.getDisplayDensity(),
+      const density = layout.getDisplayDensity(),
           top = settings.margins.top * density,
           bottom = settings.margins.bottom * density;
 
@@ -644,8 +648,8 @@ firebase.admob.showBanner = arg => {
       // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(() => {
-        if (frame.topmost() !== undefined) {
-          frame.topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        if (topmost() !== undefined) {
+          topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
         } else {
           appModule.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
         }
@@ -1154,7 +1158,7 @@ firebase.login = arg => {
             arg.phoneOptions.phoneNumber,
             60, // timeout (in seconds, because of the next argument)
             java.util.concurrent.TimeUnit.SECONDS,
-            appModule.android.foregroundActivity, // or utils.ad.getApplicationContext()
+            appModule.android.foregroundActivity,
             new OnVerificationStateChangedCallbacks());
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
@@ -1215,7 +1219,7 @@ firebase.login = arg => {
         if (arg.facebookOptions && arg.facebookOptions.scope) {
           scope = arg.facebookOptions.scope;
         }
-        const permissions = utils.ad.collections.stringArrayToStringSet(scope);
+        const permissions = AndroidUtils.collections.stringArrayToStringSet(scope);
 
         const activity = appModule.android.foregroundActivity;
         fbLoginManager.logInWithReadPermissions(activity, permissions);
@@ -1226,8 +1230,8 @@ firebase.login = arg => {
           return;
         }
 
-        const clientStringId = utils.ad.resources.getStringId("default_web_client_id");
-        const clientId = utils.ad.getApplicationContext().getResources().getString(clientStringId);
+        const clientStringId = AndroidUtils.resources.getStringId("default_web_client_id");
+        const clientId = AndroidUtils.getApplicationContext().getResources().getString(clientStringId);
 
         // Configure Google Sign In
         const googleSignInOptionsBuilder = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -1967,7 +1971,7 @@ firebase.uploadFile = arg => {
 
       } else if (arg.localFullPath) {
 
-        if (!fs.File.exists(arg.localFullPath)) {
+        if (!File.exists(arg.localFullPath)) {
           reject("File does not exist: " + arg.localFullPath);
           return;
         }

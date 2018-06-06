@@ -1359,6 +1359,7 @@ export class HelloWorldModel extends Observable {
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
     }).then(
         theUrl => {
+          console.log("Download url: " + theUrl);
           alert({
             title: "File download URL determined",
             message: "You can download the file at: " + theUrl,

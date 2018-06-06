@@ -42,7 +42,16 @@ export class FirestoreComponent {
 
   public firestoreSet(): void {
     firebase.firestore().collection("dogs").doc("fave")
-        .set({name: "Woofie", last: "lastofwoofie", date: new Date()}, {merge: true})
+        .set({
+              name: "Woofie",
+              last: "lastofwoofie",
+          // note that this only works on iOS (there's a limitation in the Firestore Android SDK)
+              // updateTsSet: firebase.firestore().FieldValue().serverTimestamp()
+            },
+            {
+              merge: true
+            }
+        )
         .then(() => {
           console.log("Woofie set");
         })
@@ -112,7 +121,11 @@ export class FirestoreComponent {
 
   public firestoreUpdate(): void {
     firebase.firestore().collection("dogs").doc("fave")
-        .update({name: "Woofieupdate", last: "updatedwoofie"})
+        .update({
+          name: "Woofieupdate",
+          last: "updatedwoofie!",
+          updateTs: firebase.firestore().FieldValue().serverTimestamp()
+        })
         .then(() => {
           console.log("Woofie updated");
         })

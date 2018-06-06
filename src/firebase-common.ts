@@ -1,8 +1,13 @@
 import { prompt } from "tns-core-modules/ui/dialogs";
-import { firestore } from "./firebase";
+import { getString, setString } from "tns-core-modules/application-settings";
+import { firestore, FIRESTORE_SERVER_TS } from "./firebase";
 import * as analytics from "./analytics/analytics";
 import * as mlkit from "./mlkit";
-import * as applicationSettings from "tns-core-modules/application-settings";
+
+// note that this implementation is overridden for iOS
+export class FieldValue {
+  serverTimestamp = () => FIRESTORE_SERVER_TS;
+}
 
 export const firebase: any = {
   initialized: false,
@@ -14,7 +19,9 @@ export const firebase: any = {
   _dynamicLinkCallback: null,
   analytics,
   mlkit,
-  firestore: {},
+  firestore: {
+    FieldValue
+  },
   invites: {
     MATCH_TYPE: {
       WEAK: 0,
@@ -103,10 +110,10 @@ export const firebase: any = {
     });
   },
   rememberEmailForEmailLinkLogin: (email: string) => {
-    applicationSettings.setString("FirebasePlugin.EmailLinkLogin", email);
+    setString("FirebasePlugin.EmailLinkLogin", email);
   },
   getRememberedEmailForEmailLinkLogin: () => {
-    return applicationSettings.getString("FirebasePlugin.EmailLinkLogin");
+    return getString("FirebasePlugin.EmailLinkLogin");
   },
   strongTypeify: value => {
     if (value === "true") {

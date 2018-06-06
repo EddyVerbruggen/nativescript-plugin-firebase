@@ -1,11 +1,10 @@
 import { firebase, DocumentSnapshot, QuerySnapshot } from "./firebase-common";
 import * as application from "tns-core-modules/application";
-import * as applicationSettings from "tns-core-modules/application-settings";
-import * as utils from "tns-core-modules/utils/utils";
-import * as types from "tns-core-modules/utils/types";
-import * as platform from "tns-core-modules/platform";
+import { ios as iOSUtils } from "tns-core-modules/utils/utils";
+import { getClass } from "tns-core-modules/utils/types";
+import { device } from "tns-core-modules/platform";
 import { DeviceType } from "tns-core-modules/ui/enums";
-import { firestore } from "./firebase";
+import { firestore, FIRESTORE_SERVER_TS } from "./firebase";
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -31,8 +30,8 @@ const invokeOnRunLoop = (() => {
 })();
 
 firebase._addObserver = (eventName, callback) => {
-  const queue = utils.ios.getter(NSOperationQueue, NSOperationQueue.mainQueue);
-  return utils.ios.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
+  const queue = iOSUtils.getter(NSOperationQueue, NSOperationQueue.mainQueue);
+  return iOSUtils.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
 };
 
 const handleRemoteNotification = (app, userInfo) => {
@@ -387,7 +386,7 @@ firebase.unregisterForPushNotifications = () => {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
-      utils.ios.getter(UIApplication, UIApplication.sharedApplication).unregisterForRemoteNotifications();
+      iOSUtils.getter(UIApplication, UIApplication.sharedApplication).unregisterForRemoteNotifications();
       resolve();
     } catch (ex) {
       console.log("Error in firebase.unregisterForPushNotifications: " + ex);
@@ -397,7 +396,7 @@ firebase.unregisterForPushNotifications = () => {
 };
 
 firebase._processPendingNotifications = () => {
-  const app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+  const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
     application.on("launch", () => {
       firebase._processPendingNotifications();
@@ -456,7 +455,7 @@ firebase._onTokenRefreshNotification = token => {
 firebase._registerForRemoteNotificationsRanThisSession = false;
 
 firebase._registerForRemoteNotifications = () => {
-  let app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+  let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
     application.on("launch", () => {
       firebase._registerForRemoteNotifications();
@@ -469,14 +468,13 @@ firebase._registerForRemoteNotifications = () => {
   }
   firebase._registerForRemoteNotificationsRanThisSession = true;
 
-  if (parseInt(platform.device.osVersion) >= 10) {
+  if (parseInt(device.osVersion) >= 10) {
     const authorizationOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge;
-    const curNotCenter = utils.ios.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
+    const curNotCenter = iOSUtils.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
     curNotCenter.requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, (granted, error) => {
       if (!error) {
-        // applicationSettings.setBoolean("registered", true);
         if (app === null) {
-          app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+          app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
         }
         if (app !== null) {
           invokeOnRunLoop(() => {
@@ -511,7 +509,7 @@ firebase._registerForRemoteNotifications = () => {
         userInfoJSON.body = asJs.body;
       }
 
-      const app = utils.ios.getter(UIApplication, UIApplication.sharedApplication);
+      const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
       if (app.applicationState === UIApplicationState.Active) {
         userInfoJSON.foreground = true;
         if (firebase._receivedNotificationCallback !== null) {
@@ -556,11 +554,7 @@ function prepAppDelegate() {
     firebase._addObserver("com.firebase.iid.notif.refresh-token", notification => firebase._onTokenRefreshNotification(notification.object));
 
     firebase._addObserver(UIApplicationDidFinishLaunchingNotification, appNotification => {
-      // guarded this with a preference so the popup "this app wants to send notifications"
-      // is not shown until the dev intentionally wired a listener (see other usages of _registerForRemoteNotifications())
-      if (applicationSettings.getBoolean("registered", false)) {
-        firebase._registerForRemoteNotifications();
-      }
+      firebase._registerForRemoteNotifications();
     });
 
     firebase._addObserver(UIApplicationDidBecomeActiveNotification, appNotification => {
@@ -621,7 +615,7 @@ firebase.toJsObject = objCObj => {
         continue;
       }
 
-      switch (types.getClass(val)) {
+      switch (getClass(val)) {
         case 'NSArray':
         case 'NSMutableArray':
           node[key] = firebase.toJsObject(val);
@@ -658,7 +652,7 @@ firebase.toJsObject = objCObj => {
           };
           break;
         default:
-          console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + types.getClass(val) + "'. Casting to String as a fallback.");
+          console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + getClass(val) + "'. Casting to String as a fallback.");
           node[key] = String(val);
       }
     }
@@ -698,7 +692,7 @@ firebase.init = arg => {
 
       // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
       if (FIROptions.defaultOptions() !== null) {
-        FIROptions.defaultOptions().deepLinkURLScheme = utils.ios.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
+        FIROptions.defaultOptions().deepLinkURLScheme = iOSUtils.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
       }
 
       if (!firebase._configured) {
@@ -806,7 +800,7 @@ firebase.admob.showBanner = arg => {
         firebase.admob.adView = null;
       }
 
-      firebase.admob.defaults.view = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
+      firebase.admob.defaults.view = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
       const settings = firebase.merge(arg, firebase.admob.defaults);
       const view = settings.view;
       const bannerType = firebase.admob._getBannerType(settings.size);
@@ -840,8 +834,8 @@ firebase.admob.showBanner = arg => {
         adRequest.keywords = settings.keywords;
       }
 
-      firebase.admob.adView.rootViewController = utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
-      // var statusbarFrame = utils.ios.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
+      firebase.admob.adView.rootViewController = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
+      // var statusbarFrame = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
 
       firebase.admob.adView.loadRequest(adRequest);
 
@@ -884,7 +878,7 @@ firebase.admob.showInterstitial = arg => {
           reject(error.localizedDescription);
         } else {
           // now we can safely show it
-          firebase.admob.interstitialView.presentFromRootViewController(utils.ios.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+          firebase.admob.interstitialView.presentFromRootViewController(iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
           resolve();
         }
         CFRelease(delegate);
@@ -954,8 +948,8 @@ firebase.admob._getBannerType = size => {
     // return kGADAdSizeSkyscraper;
     return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size === firebase.admob.AD_SIZE.SMART_BANNER || size === firebase.admob.AD_SIZE.FLUID) {
-    const orientation = utils.ios.getter(UIDevice, UIDevice.currentDevice).orientation;
-    const isIPad = platform.device.deviceType === DeviceType.Tablet;
+    const orientation = iOSUtils.getter(UIDevice, UIDevice.currentDevice).orientation;
+    const isIPad = device.deviceType === DeviceType.Tablet;
     if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
@@ -2414,6 +2408,8 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
         return;
       }
 
+      fixServerTimestamp(document);
+
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
           .documentWithPath(documentPath);
@@ -2444,6 +2440,14 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
   });
 };
 
+function fixServerTimestamp(item) {
+  for (let k in item) {
+    if (item.hasOwnProperty(k) && item[k] === FIRESTORE_SERVER_TS) {
+      item[k] = FIRFieldValue.fieldValueForServerTimestamp();
+    }
+  }
+}
+
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
   return new Promise((resolve, reject) => {
     try {
@@ -2452,11 +2456,13 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
         return;
       }
 
+      fixServerTimestamp(document);
+
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
           .documentWithPath(documentPath);
 
-      docRef.updateDataCompletion(document, (error: NSError) => {
+        docRef.updateDataCompletion(document, (error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
