@@ -236,7 +236,10 @@ export class MLKitComponent {
 
   private detectFacesOnDevice(imageSource: ImageSource): void {
     firebase.mlkit.facedetection.detectFacesOnDevice({
-      image: imageSource
+      image: imageSource,
+      detectionMode: "accurate",
+      enableFaceTracking: false,
+      minimumFaceSize: 0.25
     }).then(
         (result: MLKitDetectFacesOnDeviceResult) => {
           alert({

@@ -171,7 +171,10 @@ import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlk
 const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.facedetection.detectFacesOnDevice({
-  image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
+  image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
+  detectionMode: "accurate", // default "fast"
+  enableFaceTracking: true, // default false
+  minimumFaceSize: 0.25 // default 0.1 (which means the face must be at least 10% of the image)
 })
 .then((result: MLKitDetectFacesOnDeviceResult) => console.log(JSON.stringify(result.faces)))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
@@ -189,6 +192,9 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
 <MLKitFaceDetection
     width="260"
     height="380"
+    detectionMode="accurate"
+    enableFaceTracking="true"
+    minimumFaceSize="0.2"
     (scanResult)="onFaceDetectionResult($event)">
 </MLKitFaceDetection>
 ```

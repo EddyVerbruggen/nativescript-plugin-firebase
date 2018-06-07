@@ -8,7 +8,7 @@ import { ImageSource } from "tns-core-modules/image-source";
 import { Image } from "tns-core-modules/ui/image";
 
 export interface MLKitOptions {
-  image: Image | ImageSource;
+  image?: Image | ImageSource;
 }
 
 export type MLKitCloudModelType = "stable" | "latest";

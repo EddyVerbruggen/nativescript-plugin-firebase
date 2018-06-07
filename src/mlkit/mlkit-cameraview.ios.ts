@@ -115,6 +115,28 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   abstract rotateRecording(): boolean;
 
+  getVisionOrientation(imageOrientation: UIImageOrientation): FIRVisionDetectorImageOrientation {
+    if (imageOrientation === UIImageOrientation.Up) {
+      return FIRVisionDetectorImageOrientation.TopLeft;
+    } else if (imageOrientation === UIImageOrientation.Down) {
+      return FIRVisionDetectorImageOrientation.BottomRight;
+    } else if (imageOrientation === UIImageOrientation.Left) {
+      return FIRVisionDetectorImageOrientation.LeftBottom;
+    } else if (imageOrientation === UIImageOrientation.Right) {
+      return FIRVisionDetectorImageOrientation.RightTop;
+    } else if (imageOrientation === UIImageOrientation.UpMirrored) {
+      return FIRVisionDetectorImageOrientation.TopRight;
+    } else if (imageOrientation === UIImageOrientation.DownMirrored) {
+      return FIRVisionDetectorImageOrientation.BottomLeft;
+    } else if (imageOrientation === UIImageOrientation.LeftMirrored) {
+      return FIRVisionDetectorImageOrientation.LeftTop;
+    } else if (imageOrientation === UIImageOrientation.RightMirrored) {
+      return FIRVisionDetectorImageOrientation.RightBottom;
+    } else {
+      return FIRVisionDetectorImageOrientation.TopLeft;
+    }
+  }
+
   abstract createDetector(): any;
 
   abstract createSuccessListener(): any;
@@ -144,31 +166,9 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
     if (image) {
       const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
       const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
-      fIRVisionImageMetadata.orientation = this.getVisionOrientation(image.imageOrientation);
+      fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
       fIRVisionImage.metadata = fIRVisionImageMetadata;
       this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
-    }
-  }
-
-  private getVisionOrientation(imageOrientation: UIImageOrientation): FIRVisionDetectorImageOrientation {
-    if (imageOrientation === UIImageOrientation.Up) {
-      return FIRVisionDetectorImageOrientation.TopLeft;
-    } else if (imageOrientation === UIImageOrientation.Down) {
-      return FIRVisionDetectorImageOrientation.BottomRight;
-    } else if (imageOrientation === UIImageOrientation.Left) {
-      return FIRVisionDetectorImageOrientation.LeftBottom;
-    } else if (imageOrientation === UIImageOrientation.Right) {
-      return FIRVisionDetectorImageOrientation.RightTop;
-    } else if (imageOrientation === UIImageOrientation.UpMirrored) {
-      return FIRVisionDetectorImageOrientation.TopRight;
-    } else if (imageOrientation === UIImageOrientation.DownMirrored) {
-      return FIRVisionDetectorImageOrientation.BottomLeft;
-    } else if (imageOrientation === UIImageOrientation.LeftMirrored) {
-      return FIRVisionDetectorImageOrientation.LeftTop;
-    } else if (imageOrientation === UIImageOrientation.RightMirrored) {
-      return FIRVisionDetectorImageOrientation.RightBottom;
-    } else {
-      return FIRVisionDetectorImageOrientation.TopLeft;
     }
   }
 }
