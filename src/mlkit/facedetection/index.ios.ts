@@ -62,8 +62,8 @@ function getDetector(options: MLKitDetectFacesOnDeviceOptions): FIRVisionFaceDet
   const firVision: FIRVision = FIRVision.vision();
   const firOptions = FIRVisionFaceDetectorOptions.new();
   firOptions.modeType = options.detectionMode === "accurate" ? FIRVisionFaceDetectorMode.Accurate : FIRVisionFaceDetectorMode.Fast;
-  // firOptions.landmarkType = FIRVisionFaceDetectorLandmark.All; // TODO
-  // firOptions.classificationType = FIRVisionFaceDetectorClassification.All; // TODO
+  firOptions.landmarkType = FIRVisionFaceDetectorLandmark.All; // TODO make configurable
+  firOptions.classificationType = FIRVisionFaceDetectorClassification.All; // TODO make configurable
   firOptions.minFaceSize = options.minimumFaceSize;
   firOptions.isTrackingEnabled = options.enableFaceTracking === true;
   return firVision.faceDetectorWithOptions(firOptions);

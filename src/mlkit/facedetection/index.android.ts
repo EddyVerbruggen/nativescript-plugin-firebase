@@ -54,8 +54,8 @@ function getFaceDetector(options: MLKitDetectFacesOnDeviceOptions): any {
   const faceDetectorOptions =
       new com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.Builder()
           .setModeType(options.detectionMode === "accurate" ? com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ACCURATE_MODE : com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.FAST_MODE)
-          // .setLandmarkType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS) // TODO
-          // .setClassificationType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS) // TODO
+          .setLandmarkType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS) // TODO make configurable
+          .setClassificationType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS) // TODO make configurable
           .setMinFaceSize(options.minimumFaceSize)
           .setTrackingEnabled(options.enableFaceTracking === true)
           .build();
