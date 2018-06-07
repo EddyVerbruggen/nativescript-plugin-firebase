@@ -1367,7 +1367,8 @@ firebase.login = arg => {
         }
 
         const sIn = GIDSignIn.sharedInstance();
-        sIn.uiDelegate = application.ios.rootController;
+        // allow custom controller for variety of use cases
+        sIn.uiDelegate = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {

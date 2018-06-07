@@ -536,6 +536,32 @@ Make sure the URL Scheme for `REVERSED_CLIENT_ID` is in `app/App_Resources/iOS/I
 	</array>
 ```
 
+*NOTE:* iOS 10 and below issue for Google Auth when opening from a modal.
+
+If you are planning to open Google Auth from a modal view you may encounter this error resulting in nothing happening (no google auth dialog) on iOS 10 and below:
+
+```
+Warning: Attempt to present <SFSafariViewController: 0x7fa575968470> on <UILayoutViewController: 0x7fa575e3d710> whose view is not in the window hierarchy!
+```
+
+To solve, you will want to pass in the appropriate iOS controller of the active view. This can be accomplished as follows:
+
+```js
+  firebase.login({
+    type: firebase.LoginType.GOOGLE,
+    ios: {
+      controller: topmost().ios.controller
+    }
+  }).then(
+      function (result) {
+        JSON.stringify(result);
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
 #### Android
 
 1. If you didn't choose this feature during installation you can uncomment `google-services-auth` in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`

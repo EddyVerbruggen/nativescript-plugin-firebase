@@ -236,6 +236,10 @@ export interface FirebaseCustomLoginOptions {
   tokenProviderFn?: () => Promise<String>;
 }
 
+export interface LoginIOSOptions {
+  controller?: any;
+}
+
 /**
  * The options object passed into the login function.
  */
@@ -247,6 +251,7 @@ export interface LoginOptions {
   googleOptions?: FirebaseGoogleLoginOptions;
   facebookOptions?: FirebaseFacebookLoginOptions;
   customOptions?: FirebaseCustomLoginOptions;
+  ios?: LoginIOSOptions;
 
   /**
    * @deprecated Please use the 'passwordOptions?: FirebasePasswordLoginOptions' object instead.
