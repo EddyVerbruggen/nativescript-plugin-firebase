@@ -830,7 +830,7 @@ export namespace firestore {
   }
 
   export class FieldValue {
-    static serverTimestamp: () => FIRESTORE_SERVER_TS
+    static serverTimestamp: () => "SERVER_TIMESTAMP"
   }
 
   export interface QuerySnapshot {
