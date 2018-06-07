@@ -23,8 +23,6 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
     return new com.google.android.gms.tasks.OnSuccessListener({
       onSuccess: barcodes => {
 
-        if (barcodes.size() === 0) return;
-
         // const imageSource = new ImageSource();
         // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
 
