@@ -412,8 +412,12 @@ firebase._processPendingNotifications = () => {
         userInfoJSON.body = userInfoJSON.aps.alert.body;
       }
       // also, to make the ts.d happy copy all properties to a data element
-      if (!userInfoJSON.hasOwnProperty('data')) { userInfoJSON.data = {}; }
-      Object.keys(userInfoJSON).forEach((key) => { if (key!=='data') userInfoJSON.data[key] = userInfoJSON[key]; })
+      if (!userInfoJSON.hasOwnProperty('data')) {
+        userInfoJSON.data = {};
+      }
+      Object.keys(userInfoJSON).forEach((key) => {
+        if (key !== 'data') userInfoJSON.data[key] = userInfoJSON[key];
+      });
 
       // cleanup
       userInfoJSON.aps = undefined;
@@ -2463,7 +2467,7 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
           .collectionWithPath(collectionPath)
           .documentWithPath(documentPath);
 
-        docRef.updateDataCompletion(document, (error: NSError) => {
+      docRef.updateDataCompletion(document, (error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
