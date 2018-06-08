@@ -55,31 +55,36 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   createNativeView(): Object {
     let v = super.createNativeView();
 
-    if (this.hasCamera()) {
-      const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
-        if (args.requestCode === CAMERA_PERMISSION_REQUEST_CODE) {
-          application.android.off(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
+    if (this.hasCamera()) {      
+      if (android.support.v4.content.ContextCompat.checkSelfPermission(application.android.foregroundActivity || application.android.startActivity, android.Manifest.permission.CAMERA) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+        const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
+          
+          if (args.requestCode === CAMERA_PERMISSION_REQUEST_CODE) {
+            application.android.off(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
-          for (let i = 0; i < args.permissions.length; i++) {
-            if (args.grantResults[i] === android.content.pm.PackageManager.PERMISSION_DENIED) {
-              console.log("Camera permission denied");
-              return;
+            for (let i = 0; i < args.permissions.length; i++) {
+              if (args.grantResults[i] === android.content.pm.PackageManager.PERMISSION_DENIED) {
+                console.log("Camera permission denied");
+                return;
+              }
             }
+
+            this.initView();
           }
+        };
 
-          this.initView();
-        }
-      };
+        // grab the permission dialog result
+        application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
-      // grab the permission dialog result
-      application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
-
-      // invoke the permission dialog
-      (android.support.v4.app.ActivityCompat as any).requestPermissions(
-          application.android.foregroundActivity || application.android.startActivity,
-          [android.Manifest.permission.CAMERA],
-          CAMERA_PERMISSION_REQUEST_CODE
-      );
+        // invoke the permission dialog
+        (android.support.v4.app.ActivityCompat as any).requestPermissions(
+            application.android.foregroundActivity || application.android.startActivity,
+            [android.Manifest.permission.CAMERA],
+            CAMERA_PERMISSION_REQUEST_CODE
+        );
+      }else{
+        setTimeout(() => {this.initView()}, 500);
+      }
     } else {
       console.log("There's no Camera on this device :(");
     }
