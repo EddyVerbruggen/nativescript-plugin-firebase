@@ -3,8 +3,12 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
-## 6.1.0 (PENDING)
-[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/57)
+## 6.1.1 (2018, June 8)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/60?closed=1)
+
+
+## 6.1.0 (2018, June 7)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/57?closed=1)
 
 
 ## 6.0.2 (2018, May 16)
