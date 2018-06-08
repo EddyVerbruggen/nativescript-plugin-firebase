@@ -4,7 +4,7 @@ import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
 import { device } from "tns-core-modules/platform";
 import { DeviceType } from "tns-core-modules/ui/enums";
-import { firestore, FIRESTORE_SERVER_TS } from "./firebase";
+import { firestore } from "./firebase";
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -2447,7 +2447,7 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
 
 function fixServerTimestamp(item) {
   for (let k in item) {
-    if (item.hasOwnProperty(k) && item[k] === FIRESTORE_SERVER_TS) {
+    if (item.hasOwnProperty(k) && item[k] === "SERVER_TIMESTAMP") {
       item[k] = FIRFieldValue.fieldValueForServerTimestamp();
     }
   }

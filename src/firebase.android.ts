@@ -5,7 +5,7 @@ import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import { topmost } from "tns-core-modules/ui/frame";
 import { File } from "tns-core-modules/file-system";
-import { firestore, FIRESTORE_SERVER_TS } from "./firebase";
+import { firestore } from "./firebase";
 
 declare const android, com, org: any;
 
@@ -127,7 +127,7 @@ firebase.toHashMap = obj => {
         node.put(property, null);
       } else {
         // note that the Android Firestore SDK only supports this for 'update' (not for 'set')
-        if (obj[property] === FIRESTORE_SERVER_TS) {
+        if (obj[property] === "SERVER_TIMESTAMP") {
           node.put(property, com.google.firebase.firestore.FieldValue.serverTimestamp());
         } else if (obj[property] instanceof Date) {
           node.put(property, new java.util.Date(obj[property].getTime()));

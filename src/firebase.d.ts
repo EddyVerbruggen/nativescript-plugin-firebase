@@ -1,5 +1,3 @@
-export declare const FIRESTORE_SERVER_TS = "SERVER_TIMESTAMP";
-
 /**
  * The allowed values for LoginOptions.type.
  */

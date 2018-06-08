@@ -1,5 +1,4 @@
 import * as firebase from "../../firebase";
-import { FIRESTORE_SERVER_TS } from "../../firebase";
 
 export module firestore {
   export class Firestore {
@@ -8,7 +7,7 @@ export module firestore {
     }
     FieldValue(): firebase.firestore.FieldValue {
       return {
-        serverTimestamp: () => FIRESTORE_SERVER_TS
+        serverTimestamp: () => "SERVER_TIMESTAMP"
       }
     }
   }
