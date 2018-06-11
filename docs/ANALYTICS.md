@@ -8,6 +8,20 @@ _Beware that your Analytics events in the Firebase console dashboards are update
 
 ## Functions
 
+### analytics.setScreenName
+By default Firebase will log the classname, but since all your NativeScript screens run inside the same `UIViewController` (iOS) / `Activity` (Android),
+the screenlogs won't be of much use. That's where this function comes in. Simply call `setScreenName` on every page your app routes to.
+
+```js
+  firebase.analytics.setScreenName({
+    screenName: "User settings"
+  }).then(
+      function () {
+        console.log("Screen name set");
+      }
+  );
+```
+
 ### analytics.logEvent
 Events can be used to analyze what is happening in your app, such as user actions, system events, or errors.
 
