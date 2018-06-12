@@ -16,9 +16,9 @@ export interface LogEventOptions {
    * Example:
    *
    *  parameters: [{
-             *    key: "item_name",
-             *    value: "abc"
-             *  }, ..]
+   *    key: "item_name",
+   *    value: "abc"
+   *  }, ..]
    */
   parameters?: Array<LogEventParameter>;
 }
