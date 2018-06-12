@@ -529,11 +529,11 @@ android {
 }
 
 repositories {
-    jcenter()
     mavenCentral()
     maven {
         url "https://maven.google.com"
     }
+    jcenter()
 }
 
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
