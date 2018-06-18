@@ -2055,7 +2055,6 @@ firebase.downloadFile = arg => {
 firebase.getDownloadUrl = arg => {
   return new Promise((resolve, reject) => {
     try {
-
       const onCompletion = (url, error) => {
         if (error) {
           reject(error.localizedDescription);
@@ -2073,7 +2072,6 @@ firebase.getDownloadUrl = arg => {
       const fIRStorageReference = storageRef.child(arg.remoteFullPath);
 
       fIRStorageReference.downloadURLWithCompletion(onCompletion);
-
     } catch (ex) {
       console.log("Error in firebase.getDownloadUrl: " + ex);
       reject(ex);

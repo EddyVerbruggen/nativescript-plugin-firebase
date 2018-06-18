@@ -892,7 +892,7 @@ export function hasAuthStateListener(listener: AuthStateChangeListener): boolean
 
 export function getCurrentUser(): Promise<User>;
 
-// FCM
+// Messaging
 export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) => void): Promise<any>;
 
 export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
@@ -900,6 +900,10 @@ export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: strin
 export function getCurrentPushToken(): Promise<string>;
 
 export function unregisterForPushNotifications(): Promise<void>;
+
+export function subscribeToTopic(topicName): Promise<any>;
+
+export function unsubscribeFromTopic(topicName): Promise<any>;
 
 // dynamic links
 export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBackData: dynamicLinks.DynamicLinkCallbackData) => void): Promise<any>;
@@ -910,15 +914,11 @@ export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRem
 // storage
 export function uploadFile(options: UploadFileOptions): Promise<UploadFileResult>;
 
-export function downloadFile(options: DownloadFileOptions): Promise<any>;
+export function downloadFile(options: DownloadFileOptions): Promise<string>;
 
 export function getDownloadUrl(options: GetDownloadUrlOptions): Promise<string>;
 
-export function deleteFile(options: DeleteFileOptions): Promise<any>;
-
-export function subscribeToTopic(topicName): Promise<any>;
-
-export function unsubscribeFromTopic(topicName): Promise<any>;
+export function deleteFile(options: DeleteFileOptions): Promise<void>;
 
 // crash logging
 export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;

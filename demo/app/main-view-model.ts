@@ -5,7 +5,8 @@ import { isIOS } from "tns-core-modules/platform";
 import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 
-import * as firebase from"nativescript-plugin-firebase";
+import * as firebase from "nativescript-plugin-firebase";
+
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 declare const Crashlytics: any;
@@ -58,7 +59,9 @@ export class HelloWorldModel extends Observable {
   }
 
   public doWebInit(): void {
-    firebaseWebApi.initializeApp();
+    firebaseWebApi.initializeApp({
+      storageBucket: 'gs://n-plugin-test.appspot.com',
+    });
   }
 
   public doWebLoginAnonymously(): void {
@@ -305,6 +308,76 @@ export class HelloWorldModel extends Observable {
       this.set("key", newCompanyKey);
       this.set("value", JSON.stringify(value));
     });
+  }
+
+  public doWebUploadFile(): void {
+    // let's first create a File object using the tns file module
+    const appPath = fs.knownFolders.currentApp().path;
+    const logoPath = appPath + "/images/telerik-logo.png";
+
+    const storageRef = firebaseWebApi.storage().ref();
+    const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+    childRef.put(fs.File.fromPath(logoPath)).then(
+        uploadedFile => {
+          console.log("Uploaded! " + JSON.stringify(uploadedFile));
+          this.set("storageFeedback", "Uploaded!");
+        },
+        error => {
+          console.log("firebase.doWebUploadFile error: " + error);
+          this.set("storageFeedback", "Error: " + error);
+        }
+    );
+  }
+
+  public doWebDownloadFile(): void {
+    const storageRef = firebaseWebApi.storage().ref();
+    const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+    // let's first determine where we'll create the file using the 'file-system' module
+    const documents = fs.knownFolders.documents();
+    const logoPath = documents.path + "/telerik-logo-downloaded.png";
+
+    childRef.download(logoPath)
+        .then(() => {
+          console.log("The file has been downloaded");
+          this.set("storageFeedback", "The file has been downloaded");
+        })
+        .catch(error => {
+          console.log("Download error: " + error);
+          this.set("storageFeedback", "Error: " + error);
+        });
+  }
+
+  public doWebGetDownloadUrl(): void {
+    const storageRef = firebaseWebApi.storage().ref();
+    const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+    childRef.getDownloadURL()
+        .then(theUrl => {
+          console.log("Download url: " + theUrl);
+          this.set("storageFeedback", "Download URL: " + theUrl);
+        })
+        .catch(error => {
+          console.log("Download error: " + error);
+          this.set("storageFeedback", "Error: " + error);
+        });
+  }
+
+  public doWebDeleteFile(): void {
+    const storageRef = firebaseWebApi.storage().ref();
+    const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+    childRef.delete().then(
+        () => {
+          console.log("Deleted file");
+          this.set("storageFeedback", "File deleted");
+        },
+        error => {
+          console.log("Error deleting file: " + error);
+          this.set("storageFeedback", "Error deleting file: " + error);
+        }
+    );
   }
 
 
@@ -1376,6 +1449,27 @@ export class HelloWorldModel extends Observable {
     );
   }
 
+  public doDeleteFile(): void {
+    firebase.deleteFile({
+      remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
+    }).then(
+        theUrl => {
+          alert({
+            title: "File deleted",
+            message: "Enjoy your day!",
+            okButtonText: "Thanks ;)"
+          });
+        },
+        error => {
+          alert({
+            title: "File deletion error",
+            message: error,
+            okButtonText: "OK"
+          });
+        }
+    );
+  }
+
   public doReauthenticatePwdUser(): void {
     firebase.reauthenticate({
       type: firebase.LoginType.PASSWORD,
@@ -1433,27 +1527,6 @@ export class HelloWorldModel extends Observable {
         error => {
           alert({
             title: "Re-authenticate error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
-  }
-
-  public doDeleteFile(): void {
-    firebase.deleteFile({
-      remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
-    }).then(
-        theUrl => {
-          alert({
-            title: "File deleted",
-            message: "Enjoy your day!",
-            okButtonText: "Thanks ;)"
-          });
-        },
-        error => {
-          alert({
-            title: "File deletion error",
             message: error,
             okButtonText: "OK"
           });

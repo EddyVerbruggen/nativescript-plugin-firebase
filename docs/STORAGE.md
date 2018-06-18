@@ -20,21 +20,40 @@ You can either pass it to the `init()` function as shown below,
 or pass it as a property any time you're using a storage feature.
 In theory the former is a little more efficient because it's cached by the plugin.
 
+> Should I use the *Native API* or the *Web API*? Whichever syntax you like most - the underlying implementation is the same.
+ 
+<details>
+ <summary>Native API</summary>
+
 ```js
   firebase.init({
     storageBucket: 'gs://n-plugin-test.appspot.com'
     // any other options
   });
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebaseWebApi.initializeApp({
+    storageBucket: 'gs://n-plugin-test.appspot.com'
+  });
+```
+</details>
 
 ## Functions
 
 ### uploadFile
 You can either pass in a full local path to a file, or (as a convenience) use the `file-system` module that comes shipped with {N} as standard.
 
+<details>
+ <summary>Native API</summary>
+
 ```js
   // init the file-system module
-  var fs = require("file-system");
+  var fs = require("tns-core-modules/file-system");
 
   // grab a reference to the app folder
   var appPath = fs.knownFolders.currentApp().path;
@@ -66,15 +85,41 @@ You can either pass in a full local path to a file, or (as a convenience) use th
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+#### TypeScript
+
+```typescript
+  import * as fs from "tns-core-modules/file-system";
+
+  // let's first create a File object using the tns file module
+  const appPath = fs.knownFolders.currentApp().path;
+  const logoPath = appPath + "/images/telerik-logo.png";
+
+  const storageRef = firebaseWebApi.storage().ref();
+  const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+  childRef.put(fs.File.fromPath(logoPath)).then(
+      uploadedFile => console.log("Uploaded! " + JSON.stringify(uploadedFile)),
+      error => console.log("firebase.doWebUploadFile error: " + error)
+  );
+```
+</details>
 
 ### downloadFile
 As with `uploadFile` you can either pass in a full local path to a file, or (as a convenience) use the `file-system` module that comes shipped with {N} as standard.
 
 In this example we'll download the previously uploaded file to a certain path on the local filesystem.
 
+<details>
+ <summary>Native API</summary>
+
 ```js
   // init the file-system module
-  var fs = require("file-system");
+  var fs = require("tns-core-modules/file-system");
 
   // let's first determine where we'll create the file using the 'file-system' module
   var documents = fs.knownFolders.documents();
@@ -102,11 +147,36 @@ In this example we'll download the previously uploaded file to a certain path on
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+#### TypeScript
+
+```typescript
+  import * as fs from "tns-core-modules/file-system";
+
+  const storageRef = firebaseWebApi.storage().ref();
+  const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+  // let's first determine where we'll create the file using the 'file-system' module
+  const documents = fs.knownFolders.documents();
+  const logoPath = documents.path + "/telerik-logo-downloaded.png";
+
+  childRef.download(logoPath)
+      .then(() => console.log("The file has been downloaded"))
+      .catch(error => console.log("Download error: " + error));
+```
+</details>
 
 ### getDownloadUrl
 If you just want to know the remote URL of a file in remote storage so you can either share it or download the file by any other means than `downloadFile` then use this method.
 
 In this example we'll determine the remote URL of the previously uploaded file.
+
+<details>
+ <summary>Native API</summary>
 
 ```js
   firebase.getDownloadUrl({
@@ -123,9 +193,28 @@ In this example we'll determine the remote URL of the previously uploaded file.
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+#### TypeScript
+
+```typescript
+  const storageRef = firebaseWebApi.storage().ref();
+  const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+  childRef.getDownloadURL()
+      .then(theUrl => console.log("Download url: " + theUrl))
+      .catch(error => console.log("Download error: " + error));
+```
+</details>
 
 ### deleteFile
 You can pass in remote file path to delete it.
+
+<details>
+ <summary>Native API</summary>
 
 ```js
   firebase.deleteFile({
@@ -142,3 +231,20 @@ You can pass in remote file path to delete it.
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+#### TypeScript
+
+```typescript
+  const storageRef = firebaseWebApi.storage().ref();
+  const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
+
+  childRef.delete().then(
+      () => console.log("Deleted file"),
+      error => console.log("Error deleting file: " + error)
+      );
+```
+</details>

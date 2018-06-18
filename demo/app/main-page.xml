@@ -18,7 +18,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
             <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doWebInit }}" class="button button-positive"/>
@@ -61,6 +61,16 @@
 
             <Label row="15" col="0" text="Value:" class="message"/>
             <Label row="15" col="1" text="{{ value }}" class="message" textWrap="true"/>
+
+            <Label row="16" colSpan="2" text="Google Cloud Storage" class="subtitle"/>
+
+            <Button row="17" col="0" text="upload file" tap="{{ doWebUploadFile }}" class="button button-storage"/>
+            <Button row="17" col="1" text="download file" tap="{{ doWebDownloadFile }}" class="button button-storage"/>
+
+            <Button row="18" col="0" text="get download url" tap="{{ doWebGetDownloadUrl }}" class="button button-storage"/>
+            <Button row="18" col="1" text="delete remote file" tap="{{ doWebDeleteFile }}" class="button button-storage"/>
+
+            <Label row="19" colSpan="2" text="{{ storageFeedback }}" class="message" textWrap="true"/>
 
           </GridLayout>
         </ScrollView>
