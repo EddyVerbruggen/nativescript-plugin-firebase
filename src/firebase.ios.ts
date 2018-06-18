@@ -4,7 +4,7 @@ import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
 import { device } from "tns-core-modules/platform";
 import { DeviceType } from "tns-core-modules/ui/enums";
-import { firestore } from "./firebase";
+import { admob, firestore } from "./firebase";
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -16,11 +16,6 @@ firebase._configured = false;
 
 // Note that FIRApp.configure must be called only once, but not here (see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564)
 
-/**
- * Workaround function to call the `dispatch_get_main_queue(...)` for iOS
- * thanks to Alexander Ziskind found on:
- * http://nuvious.com/Blog/2016/7/5/calling-dispatch_async-in-nativescript
- */
 const invokeOnRunLoop = (() => {
   const runloop = CFRunLoopGetMain();
   return func => {
@@ -852,7 +847,7 @@ firebase.admob.showBanner = arg => {
 
       view.addSubview(firebase.admob.adView);
 
-      // support rotation events 
+      // support rotation events
       // tear down first if this had been called already to avoid multiple event bindings
       application.off(application.orientationChangedEvent, firebase.admob.orientationHandler);
       application.on(application.orientationChangedEvent, firebase.admob.orientationHandler);
