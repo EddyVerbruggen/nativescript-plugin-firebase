@@ -791,6 +791,9 @@ firebase.init = arg => {
   });
 };
 
+// helps global app behavior (ie: orientation handling)
+firebase.admob.bannerOptions = null;
+
 firebase.admob.showBanner = arg => {
   return new Promise((resolve, reject) => {
     try {
@@ -806,6 +809,7 @@ firebase.admob.showBanner = arg => {
 
       firebase.admob.defaults.view = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
       const settings = firebase.merge(arg, firebase.admob.defaults);
+      firebase.admob.bannerOptions = settings;
       const view = settings.view;
       const bannerType = firebase.admob._getBannerType(settings.size);
 
@@ -848,14 +852,10 @@ firebase.admob.showBanner = arg => {
 
       view.addSubview(firebase.admob.adView);
 
-      // support rotation events (TODO we don't want to add multiple handlers, also: remove with .off!).. could also just have the app handle this
-      application.on(application.orientationChangedEvent, data => {
-        if (firebase.admob.adView !== null) {
-          firebase.admob.hideBanner().then(res => {
-            firebase.admob.createBanner(arg);
-          });
-        }
-      });
+      // support rotation events 
+      // tear down first if this had been called already to avoid multiple event bindings
+      application.off(application.orientationChangedEvent, firebase.admob.orientationHandler);
+      application.on(application.orientationChangedEvent, firebase.admob.orientationHandler);
 
       resolve();
     } catch (ex) {
@@ -863,6 +863,20 @@ firebase.admob.showBanner = arg => {
       reject(ex);
     }
   });
+};
+
+firebase.admob.orientationHandler = data => {
+  if (firebase.admob.adView !== null) {
+    firebase.admob.hideBanner().then(res => {
+      try {
+        firebase.admob.showBanner(firebase.admob.bannerOptions || firebase.admob.defaults);
+      } catch (err) {
+        console.log("Error in orientationHandler - firebase.admob.showBanner: " + err);
+      }
+    }, err => {
+      console.log("Error in orientationHandler - firebase.admob.hideBanner: " + err);
+    });
+  }
 };
 
 firebase.admob.showInterstitial = arg => {
