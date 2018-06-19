@@ -239,12 +239,10 @@ You can pass in remote file path to delete it.
 #### TypeScript
 
 ```typescript
-  const storageRef = firebaseWebApi.storage().ref();
-  const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
-
-  childRef.delete().then(
-      () => console.log("Deleted file"),
-      error => console.log("Error deleting file: " + error)
-      );
+  firebaseWebApi.storage().ref()
+      .child("uploads/images/telerik-logo-uploaded.png")
+      .delete()
+      .then(() => console.log("Deleted file"))
+      .catch(error => console.log("Error deleting file: " + error));
 ```
 </details>

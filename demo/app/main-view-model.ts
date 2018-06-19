@@ -365,19 +365,17 @@ export class HelloWorldModel extends Observable {
   }
 
   public doWebDeleteFile(): void {
-    const storageRef = firebaseWebApi.storage().ref();
-    const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
-
-    childRef.delete().then(
-        () => {
+    firebaseWebApi.storage().ref()
+        .child("uploads/images/telerik-logo-uploaded.png")
+        .delete()
+        .then(() => {
           console.log("Deleted file");
           this.set("storageFeedback", "File deleted");
-        },
-        error => {
+        })
+        .catch(error => {
           console.log("Error deleting file: " + error);
           this.set("storageFeedback", "Error deleting file: " + error);
-        }
-    );
+        });
   }
 
 
