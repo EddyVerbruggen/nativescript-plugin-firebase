@@ -1,6 +1,6 @@
-import * as firebase from "../../firebase";
-import { UploadFileResult } from "../../firebase";
 import { File } from "tns-core-modules/file-system"
+import * as firebaseStorage from "../../storage/storage";
+import { UploadFileResult } from "../../storage/storage";
 
 export module storage {
 
@@ -32,20 +32,20 @@ export module storage {
     }
 
     delete(): Promise<void> {
-      return firebase.deleteFile({
+      return firebaseStorage.deleteFile({
         remoteFullPath: this.path
       });
     }
 
     getDownloadURL(): Promise<string> {
-      return firebase.getDownloadUrl({
+      return firebaseStorage.getDownloadUrl({
         remoteFullPath: this.path
       });
     }
 
     public put(data: File | string /* path */, metadata?: any /* ignored */): Promise<UploadTaskSnapshot> {
       return new Promise((resolve, reject) => {
-        firebase.uploadFile({
+        firebaseStorage.uploadFile({
           localFile: data instanceof File ? data : undefined,
           localFullPath: !(data instanceof File) ? data : undefined,
           remoteFullPath: this.path,
@@ -64,7 +64,7 @@ export module storage {
 
     // Note that this is not part of the web API, but prolly super convenient ;)
     public download(downloadToPath: string): Promise<any> {
-      return firebase.downloadFile({
+      return firebaseStorage.downloadFile({
         localFullPath: downloadToPath,
         remoteFullPath: this.path
       });

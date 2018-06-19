@@ -4,7 +4,7 @@ import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
 import { device } from "tns-core-modules/platform";
 import { DeviceType } from "tns-core-modules/ui/enums";
-import { admob, firestore } from "./firebase";
+import { firestore } from "./firebase";
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -775,7 +775,7 @@ firebase.init = arg => {
           reject("Uncomment Storage in the plugin's Podfile first");
           return;
         }
-        firebase.storage = FIRStorage.storage().referenceForURL(arg.storageBucket);
+        firebase.storageBucket = FIRStorage.storage().referenceForURL(arg.storageBucket);
       }
 
       resolve(typeof (FIRDatabase) !== "undefined" ? FIRDatabase.database().reference() : undefined);
@@ -1918,191 +1918,6 @@ firebase.remove = path => {
       resolve();
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-function getStorageRef(reject, arg): FIRStorageReference {
-  if (typeof(FIRStorage) === "undefined") {
-    reject("Uncomment Storage in the plugin's Podfile first");
-    return undefined;
-  }
-
-  if (!arg.remoteFullPath) {
-    reject("remoteFullPath is mandatory");
-    return undefined;
-  }
-
-  return arg.bucket ? FIRStorage.storage().referenceForURL(arg.bucket) : firebase.storage;
-}
-
-firebase.uploadFile = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-
-      const onCompletion = (metadata: FIRStorageMetadata, error: NSError) => {
-        if (error) {
-          reject(error.localizedDescription);
-        } else {
-          resolve({
-            name: metadata.name,
-            // url: metadata.downloadURL() ? metadata.downloadURL().absoluteString : null,
-            contentType: metadata.contentType,
-            created: metadata.timeCreated,
-            updated: metadata.updated,
-            bucket: metadata.bucket,
-            size: metadata.size
-          });
-        }
-      };
-
-      const storageRef: FIRStorageReference = getStorageRef(reject, arg);
-
-      if (!storageRef) {
-        return;
-      }
-
-      const fIRStorageReference = storageRef.child(arg.remoteFullPath);
-      let fIRStorageUploadTask = null;
-
-      if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
-          reject("localFile argument must be a File object; use file-system module to create one");
-          return;
-        }
-
-        // using 'putFile' (not 'putData') so Firebase can infer the mimetype
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFile.path), null, onCompletion);
-
-      } else if (arg.localFullPath) {
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFullPath), null, onCompletion);
-
-      } else {
-        reject("One of localFile or localFullPath is required");
-        return;
-      }
-
-      if (fIRStorageUploadTask !== null) {
-        // Add a progress observer to an upload task
-        const fIRStorageHandle = fIRStorageUploadTask.observeStatusHandler(FIRStorageTaskStatus.Progress, snapshot => {
-          if (!snapshot.error && typeof(arg.onProgress) === "function") {
-            arg.onProgress({
-              fractionCompleted: snapshot.progress.fractionCompleted,
-              percentageCompleted: Math.round(snapshot.progress.fractionCompleted * 100)
-            });
-          }
-        });
-      }
-
-    } catch (ex) {
-      console.log("Error in firebase.uploadFile: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.downloadFile = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-
-      const onCompletion = (url, error) => {
-        console.log(">>> download complete, error: " + error);
-        if (error) {
-          reject(error.localizedDescription);
-        } else {
-          resolve(url.absoluteString);
-        }
-      };
-
-      const storageRef = getStorageRef(reject, arg);
-
-      if (!storageRef) {
-        return;
-      }
-
-      const fIRStorageReference = storageRef.child(arg.remoteFullPath);
-
-      let localFilePath;
-
-      if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
-          reject("localFile argument must be a File object; use file-system module to create one");
-          return;
-        }
-        localFilePath = arg.localFile.path;
-
-      } else if (arg.localFullPath) {
-        localFilePath = arg.localFullPath;
-
-      } else {
-        reject("One of localFile or localFullPath is required");
-        return;
-      }
-
-      // Create local filesystem URL
-      const localFileUrl = NSURL.fileURLWithPath(localFilePath);
-
-      const fIRStorageDownloadTask = fIRStorageReference.writeToFileCompletion(localFileUrl, onCompletion);
-
-    } catch (ex) {
-      console.log("Error in firebase.downloadFile: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.getDownloadUrl = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-      const onCompletion = (url, error) => {
-        if (error) {
-          reject(error.localizedDescription);
-        } else {
-          resolve(url.absoluteString);
-        }
-      };
-
-      const storageRef = getStorageRef(reject, arg);
-
-      if (!storageRef) {
-        return;
-      }
-
-      const fIRStorageReference = storageRef.child(arg.remoteFullPath);
-
-      fIRStorageReference.downloadURLWithCompletion(onCompletion);
-    } catch (ex) {
-      console.log("Error in firebase.getDownloadUrl: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.deleteFile = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-
-      const onCompletion = error => {
-        if (error) {
-          reject(error.localizedDescription);
-        } else {
-          resolve();
-        }
-      };
-
-      const storageRef = getStorageRef(reject, arg);
-
-      if (!storageRef) {
-        return;
-      }
-
-      const fIRStorageFileRef = storageRef.child(arg.remoteFullPath);
-
-      fIRStorageFileRef.deleteWithCompletion(onCompletion);
-
-    } catch (ex) {
-      console.log("Error in firebase.deleteFile: " + ex);
       reject(ex);
     }
   });

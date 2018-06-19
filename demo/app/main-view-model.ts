@@ -2,10 +2,9 @@ import { Observable } from "tns-core-modules/data/observable";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
 import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { isIOS } from "tns-core-modules/platform";
-import { AddEventListenerResult, User } from "nativescript-plugin-firebase";
-import * as fs from "tns-core-modules/file-system";
-
 import * as firebase from "nativescript-plugin-firebase";
+import { AddEventListenerResult, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
+import * as fs from "tns-core-modules/file-system";
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
@@ -356,7 +355,7 @@ export class HelloWorldModel extends Observable {
     childRef.getDownloadURL()
         .then(theUrl => {
           console.log("Download url: " + theUrl);
-          this.set("storageFeedback", "Download URL: " + theUrl);
+          this.set("storageFeedback", "Download URL logged to the console");
         })
         .catch(error => {
           console.log("Download error: " + error);
@@ -1374,7 +1373,7 @@ export class HelloWorldModel extends Observable {
     const appPath = fs.knownFolders.currentApp().path;
     const logoPath = appPath + "/images/telerik-logo.png";
 
-    firebase.uploadFile({
+    firebaseStorage.uploadFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png',
       localFile: fs.File.fromPath(logoPath), // use this (a file-system module File object)
       // localFullPath: logoPath, // or this, a full file path
@@ -1403,7 +1402,7 @@ export class HelloWorldModel extends Observable {
     // this will create or overwrite a local file in the app's documents folder
     const localLogoFile = documents.getFile("telerik-logo-downloaded.png");
 
-    firebase.downloadFile({
+    firebaseStorage.downloadFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png',
       // localFile: localLogoFile // use this (a file-system module File object)
       localFullPath: logoPath // or this, a full file path
@@ -1426,7 +1425,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doGetDownloadUrl(): void {
-    firebase.getDownloadUrl({
+    firebaseStorage.getDownloadUrl({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
     }).then(
         theUrl => {
@@ -1448,7 +1447,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doDeleteFile(): void {
-    firebase.deleteFile({
+    firebaseStorage.deleteFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
     }).then(
         theUrl => {

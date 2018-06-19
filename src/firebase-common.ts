@@ -2,6 +2,7 @@ import { prompt } from "tns-core-modules/ui/dialogs";
 import { getString, setString } from "tns-core-modules/application-settings";
 import { firestore } from "./firebase";
 import * as analytics from "./analytics/analytics";
+import * as storage from "./storage/storage";
 import * as mlkit from "./mlkit";
 
 // note that this implementation is overridden for iOS
@@ -12,12 +13,12 @@ export class FieldValue {
 export const firebase: any = {
   initialized: false,
   instance: null,
-  storage: null,
   firebaseRemoteConfig: null,
   authStateListeners: [],
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,
   analytics,
+  storage,
   mlkit,
   firestore: {
     FieldValue

@@ -1,5 +1,6 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/storage.png" height="85px" alt="Storage"/>
 
+> NOTE: since plugin version 6.2.0 you have to use `firebase.storage.xxx` instead of `firebase.xxx`, because I've extracted storage-related functions into a separate module.
 
 ## Enabling Storage
 Since plugin version 3.4.0 you can use Firebase _Storage_ features.
@@ -62,7 +63,7 @@ You can either pass in a full local path to a file, or (as a convenience) use th
   var logoPath = appPath + "/res/telerik-logo.png";
 
   // now upload the file with either of the options below:
-  firebase.uploadFile({
+  firebase.storage.uploadFile({
     // optional, can also be passed during init() as 'storageBucket' param so we can cache it (find it in the Firebase console)
     bucket: 'gs://n-plugin-test.appspot.com',
     // the full path of the file in your Firebase storage (folders will be created)
@@ -129,7 +130,7 @@ In this example we'll download the previously uploaded file to a certain path on
   var localLogoFile = documents.getFile("telerik-logo-downloaded.png");
 
   // now download the file with either of the options below:
-  firebase.downloadFile({
+  firebase.storage.downloadFile({
     // optional, can also be passed during init() as 'storageBucket' param so we can cache it
     bucket: 'gs://n-plugin-test.appspot.com',
     // the full path of an existing file in your Firebase storage
@@ -179,7 +180,7 @@ In this example we'll determine the remote URL of the previously uploaded file.
  <summary>Native API</summary>
 
 ```js
-  firebase.getDownloadUrl({
+  firebase.storage.getDownloadUrl({
     // optional, can also be passed during init() as 'storageBucket' param so we can cache it
     bucket: 'gs://n-plugin-test.appspot.com',
     // the full path of an existing file in your Firebase storage
@@ -217,7 +218,7 @@ You can pass in remote file path to delete it.
  <summary>Native API</summary>
 
 ```js
-  firebase.deleteFile({
+  firebase.storage.deleteFile({
     // optional, can also be passed during init() as 'storageBucket' param so we can cache it
     bucket: 'gs://n-plugin-test.appspot.com',
     // the full path of an existing file in your Firebase storage
