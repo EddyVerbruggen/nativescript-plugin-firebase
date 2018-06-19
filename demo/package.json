@@ -2,7 +2,7 @@
   "nativescript": {
     "id": "org.nativescript.firebasedemo",
     "tns-ios": {
-      "version": "4.0.1"
+      "version": "4.1.0"
     },
     "tns-android": {
       "version": "4.1.3"
