@@ -5,7 +5,7 @@ import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import { topmost } from "tns-core-modules/ui/frame";
 import { File } from "tns-core-modules/file-system";
-import { firestore } from "./firebase";
+import {firestore, User} from "./firebase";
 
 declare const android, com, org: any;
 
@@ -316,7 +316,7 @@ firebase.init = arg => {
             const user = fbAuth.getCurrentUser();
             arg.onAuthStateChanged({
               loggedIn: user !== null,
-              user: toLoginResult(user)
+              user: toLoginResult(user, null)
             });
           }
         });
@@ -330,7 +330,7 @@ firebase.init = arg => {
             const user = fbAuth.getCurrentUser();
             firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
-              user: toLoginResult(user)
+              user: toLoginResult(user, null)
             });
           }
         });
@@ -882,7 +882,7 @@ firebase.getCurrentUser = arg => {
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
-        resolve(toLoginResult(user));
+        resolve(toLoginResult(user, null));
       } else {
         reject();
       }
@@ -974,9 +974,9 @@ firebase.getAuthToken = arg => {
   });
 };
 
-function toLoginResult(user) {
+function toLoginResult(user, additionalUserInfo): User {
   if (user === null) {
-    return false;
+    return null;
   }
 
   // for convenience return the result in multiple formats
@@ -992,18 +992,33 @@ function toLoginResult(user) {
     }
   }
 
-  return {
-    uid: user.getUid(),
-    name: user.getDisplayName(),
-    email: user.getEmail(),
-    emailVerified: user.isEmailVerified(),
-    // provider: user.getProviderId(), // always 'firebase'
-    providers: providers,
-    anonymous: user.isAnonymous(),
-    isAnonymous: user.isAnonymous(),
-    phoneNumber: user.getPhoneNumber(),
-    profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null
-  };
+    const loginResult: User = {
+        uid: user.getUid(),
+        name: user.getDisplayName(),
+        email: user.getEmail(),
+        emailVerified: user.isEmailVerified(),
+        // provider: user.getProviderId(), // always 'firebase'
+        providers: providers,
+        anonymous: user.isAnonymous(),
+        isAnonymous: user.isAnonymous(),
+        phoneNumber: user.getPhoneNumber(),
+        profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null,
+        metadata: {
+            creationTimestamp: new Date(user.getMetadata().getCreationTimestamp() as number),
+            lastSignInTimestamp: new Date(user.getMetadata().getLastSignInTimestamp() as number)
+        }
+    };
+
+    if (additionalUserInfo !== null) {
+        loginResult.additionalUserInfo = {
+            profile: additionalUserInfo.getProfile(),
+            providerId: additionalUserInfo.getProviderId(),
+            username: additionalUserInfo.getUsername(),
+            isNewUser: additionalUserInfo.isNewUser()
+        };
+    }
+
+    return loginResult;
 }
 
 firebase.login = arg => {
@@ -1032,7 +1047,8 @@ firebase.login = arg => {
             this.reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           } else {
             const user = task.getResult().getUser();
-            this.resolve(toLoginResult(user));
+            const additionalUserInfo = task.getResult().getAdditionalUserInfo();
+            this.resolve(toLoginResult(user, additionalUserInfo));
           }
         }
       });
@@ -1106,7 +1122,7 @@ firebase.login = arg => {
 
         if (user && firebase._alreadyLinkedToAuthProvider(user, "phone")) {
           // skip sending an SMS if user is already linked to the phone-provider
-          resolve(toLoginResult(user));
+          resolve(toLoginResult(user, null));
           return;
         }
 

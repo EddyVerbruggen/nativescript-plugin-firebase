@@ -4,7 +4,7 @@ import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
 import { device } from "tns-core-modules/platform";
 import { DeviceType } from "tns-core-modules/ui/enums";
-import { firestore } from "./firebase";
+import {firestore, User} from "./firebase";
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -730,7 +730,7 @@ firebase.init = arg => {
         firebase.authStateListener = (auth, user) => {
           arg.onAuthStateChanged({
             loggedIn: user !== null,
-            user: toLoginResult(user)
+            user: toLoginResult(user, null)
           });
         };
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
@@ -741,7 +741,7 @@ firebase.init = arg => {
         firebase.authStateListener = (auth, user) => {
           firebase.notifyAuthStateListeners({
             loggedIn: user !== null,
-            user: toLoginResult(user)
+            user: toLoginResult(user, null)
           });
         };
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
@@ -1052,7 +1052,7 @@ firebase.getCurrentUser = arg => {
 
       const user = fAuth.currentUser;
       if (user) {
-        resolve(toLoginResult(user));
+        resolve(toLoginResult(user, null));
       } else {
         reject();
       }
@@ -1114,9 +1114,9 @@ firebase.logout = arg => {
   });
 };
 
-function toLoginResult(user) {
+function toLoginResult(user, additionalUserInfo): User {
   if (!user) {
-    return false;
+    return null;
   }
 
   const providers = [];
@@ -1134,19 +1134,34 @@ function toLoginResult(user) {
     }
   }
 
-  return {
-    uid: user.uid,
-    anonymous: user.anonymous,
-    isAnonymous: user.anonymous,
-    // provider: user.providerID, // always 'Firebase'
-    providers: providers,
-    profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
-    email: user.email,
-    emailVerified: user.emailVerified,
-    name: user.displayName,
-    phoneNumber: user.phoneNumber,
-    refreshToken: user.refreshToken
+  const loginResult: User = {
+      uid: user.uid,
+      anonymous: user.anonymous,
+      isAnonymous: user.anonymous,
+      // provider: user.providerID, // always 'Firebase'
+      providers: providers,
+      profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      name: user.displayName,
+      phoneNumber: user.phoneNumber,
+      refreshToken: user.refreshToken,
+      metadata: {
+        creationTimestamp: user.metadata.creationDate as Date,
+        lastSignInTimestamp: user.metadata.lastSignInDate as Date
+      }
   };
+
+    if (additionalUserInfo !== null) {
+        loginResult.additionalUserInfo = {
+            profile: additionalUserInfo.profile,
+            providerId: additionalUserInfo.providerID,
+            username: additionalUserInfo.username,
+            isNewUser: additionalUserInfo.newUser
+        };
+    }
+
+  return loginResult;
 }
 
 firebase.getAuthToken = arg => {
@@ -1181,25 +1196,21 @@ firebase.getAuthToken = arg => {
 firebase.login = arg => {
   return new Promise((resolve, reject) => {
     try {
-      const onCompletionWithUser = (user: FIRUser, error?: NSError) => {
-        if (error) {
-          // also disconnect from Google otherwise ppl can't connect with a different account
-          if (typeof(GIDSignIn) !== "undefined") {
-            GIDSignIn.sharedInstance().disconnect();
-          }
-          reject(error.localizedDescription);
-        } else {
-          resolve(toLoginResult(user));
-
-          firebase.notifyAuthStateListeners({
-            loggedIn: true,
-            user: user
-          });
-        }
-      };
-
       const onCompletionWithAuthResult = (authResult: FIRAuthDataResult, error?: NSError) => {
-        onCompletionWithUser(authResult && authResult.user, error);
+          if (error) {
+              // also disconnect from Google otherwise ppl can't connect with a different account
+              if (typeof(GIDSignIn) !== "undefined") {
+                  GIDSignIn.sharedInstance().disconnect();
+              }
+              reject(error.localizedDescription);
+          } else {
+              resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
+
+              firebase.notifyAuthStateListeners({
+                  loggedIn: true,
+                  user: authResult.user
+              });
+          }
       };
 
       const fAuth = FIRAuth.auth();
@@ -1222,16 +1233,16 @@ firebase.login = arg => {
         const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailPassword(arg.passwordOptions.email, arg.passwordOptions.password);
         if (fAuth.currentUser) {
           // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
-          const onCompletionLink = (user: FIRUser, error: NSError) => {
+          const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
             if (error) {
               // ignore, as this one was probably already linked, so just return the user
               log("--- linking error: " + error.localizedDescription);
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
+              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             } else {
-              onCompletionWithUser(user);
+                onCompletionWithAuthResult(authData, error);
             }
           };
-          fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+          fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
         } else {
           fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletionWithAuthResult);
@@ -1289,17 +1300,17 @@ firebase.login = arg => {
           firebase.requestPhoneAuthVerificationCode(userResponse => {
             const fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
             if (fAuth.currentUser) {
-              const onCompletionLink = (user, error) => {
+              const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
+                  fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
-                  onCompletionWithUser(user);
+                    onCompletionWithAuthResult(authData, error);
                 }
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
+              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }, arg.phoneOptions.verificationPrompt);
         });
@@ -1311,12 +1322,12 @@ firebase.login = arg => {
         }
 
         if (arg.customOptions.token) {
-          fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
+          fAuth.signInAndRetrieveDataWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
               .then(
                   token => {
-                    fAuth.signInWithCustomTokenCompletion(token, onCompletionWithAuthResult);
+                    fAuth.signInAndRetrieveDataWithCustomTokenCompletion(token, onCompletionWithAuthResult);
                   },
                   error => {
                     reject(error);
@@ -1342,19 +1353,19 @@ firebase.login = arg => {
             const fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString);
             if (fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
-              const onCompletionLink = (user, error) => {
+              const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   log("--- linking error: " + error.localizedDescription);
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
+                  fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
-                  onCompletionWithUser(user);
+                   onCompletionWithAuthResult(authData);
                 }
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
+              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }
         };
@@ -1400,15 +1411,15 @@ firebase.login = arg => {
               const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
+                  fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
-                  onCompletionWithUser(user);
+                  onCompletionWithAuthResult(user);
                 }
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithUser);
+              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
 
           } else {
