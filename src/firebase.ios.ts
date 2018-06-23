@@ -4,7 +4,7 @@ import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
 import { device } from "tns-core-modules/platform";
 import { DeviceType } from "tns-core-modules/ui/enums";
-import {firestore, User} from "./firebase";
+import { firestore, User } from "./firebase";
 
 firebase._messagingConnected = null;
 firebase._pendingNotifications = [];
@@ -730,7 +730,7 @@ firebase.init = arg => {
         firebase.authStateListener = (auth, user) => {
           arg.onAuthStateChanged({
             loggedIn: user !== null,
-            user: toLoginResult(user, null)
+            user: toLoginResult(user)
           });
         };
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
@@ -741,7 +741,7 @@ firebase.init = arg => {
         firebase.authStateListener = (auth, user) => {
           firebase.notifyAuthStateListeners({
             loggedIn: user !== null,
-            user: toLoginResult(user, null)
+            user: toLoginResult(user)
           });
         };
         FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
@@ -1052,7 +1052,7 @@ firebase.getCurrentUser = arg => {
 
       const user = fAuth.currentUser;
       if (user) {
-        resolve(toLoginResult(user, null));
+        resolve(toLoginResult(user));
       } else {
         reject();
       }
@@ -1114,7 +1114,7 @@ firebase.logout = arg => {
   });
 };
 
-function toLoginResult(user, additionalUserInfo): User {
+function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
   if (!user) {
     return null;
   }
@@ -1135,31 +1135,31 @@ function toLoginResult(user, additionalUserInfo): User {
   }
 
   const loginResult: User = {
-      uid: user.uid,
-      anonymous: user.anonymous,
-      isAnonymous: user.anonymous,
-      // provider: user.providerID, // always 'Firebase'
-      providers: providers,
-      profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
-      email: user.email,
-      emailVerified: user.emailVerified,
-      name: user.displayName,
-      phoneNumber: user.phoneNumber,
-      refreshToken: user.refreshToken,
-      metadata: {
-        creationTimestamp: user.metadata.creationDate as Date,
-        lastSignInTimestamp: user.metadata.lastSignInDate as Date
-      }
+    uid: user.uid,
+    anonymous: user.anonymous,
+    isAnonymous: user.anonymous,
+    // provider: user.providerID, // always 'Firebase'
+    providers: providers,
+    profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    name: user.displayName,
+    phoneNumber: user.phoneNumber,
+    refreshToken: user.refreshToken,
+    metadata: {
+      creationTimestamp: user.metadata.creationDate as Date,
+      lastSignInTimestamp: user.metadata.lastSignInDate as Date
+    }
   };
 
-    if (additionalUserInfo !== null) {
-        loginResult.additionalUserInfo = {
-            profile: additionalUserInfo.profile,
-            providerId: additionalUserInfo.providerID,
-            username: additionalUserInfo.username,
-            isNewUser: additionalUserInfo.newUser
-        };
+  if (additionalUserInfo) {
+    loginResult.additionalUserInfo = {
+      providerId: additionalUserInfo.providerID,
+      username: additionalUserInfo.username,
+      isNewUser: additionalUserInfo.newUser,
+      profile: firebase.toJsObject(additionalUserInfo.profile)
     }
+  }
 
   return loginResult;
 }
@@ -1197,20 +1197,20 @@ firebase.login = arg => {
   return new Promise((resolve, reject) => {
     try {
       const onCompletionWithAuthResult = (authResult: FIRAuthDataResult, error?: NSError) => {
-          if (error) {
-              // also disconnect from Google otherwise ppl can't connect with a different account
-              if (typeof(GIDSignIn) !== "undefined") {
-                  GIDSignIn.sharedInstance().disconnect();
-              }
-              reject(error.localizedDescription);
-          } else {
-              resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
-
-              firebase.notifyAuthStateListeners({
-                  loggedIn: true,
-                  user: authResult.user
-              });
+        if (error) {
+          // also disconnect from Google otherwise ppl can't connect with a different account
+          if (typeof(GIDSignIn) !== "undefined") {
+            GIDSignIn.sharedInstance().disconnect();
           }
+          reject(error.localizedDescription);
+        } else {
+          resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
+
+          firebase.notifyAuthStateListeners({
+            loggedIn: true,
+            user: authResult.user
+          });
+        }
       };
 
       const fAuth = FIRAuth.auth();
@@ -1239,7 +1239,7 @@ firebase.login = arg => {
               log("--- linking error: " + error.localizedDescription);
               fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             } else {
-                onCompletionWithAuthResult(authData, error);
+              onCompletionWithAuthResult(authData, error);
             }
           };
           fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
@@ -1305,7 +1305,7 @@ firebase.login = arg => {
                   // ignore, as this one was probably already linked, so just return the user
                   fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
-                    onCompletionWithAuthResult(authData, error);
+                  onCompletionWithAuthResult(authData, error);
                 }
               };
               fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
@@ -1359,7 +1359,7 @@ firebase.login = arg => {
                   log("--- linking error: " + error.localizedDescription);
                   fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
-                   onCompletionWithAuthResult(authData);
+                  onCompletionWithAuthResult(authData);
                 }
               };
               fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);

@@ -5,7 +5,7 @@ import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import { topmost } from "tns-core-modules/ui/frame";
 import { File } from "tns-core-modules/file-system";
-import {firestore, User} from "./firebase";
+import { firestore, User } from "./firebase";
 
 declare const android, com, org: any;
 
@@ -20,7 +20,6 @@ let fbCallbackManager = null;
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
 
-// const gson = lazy(() => typeof(com.google.gson) === "undefined" ? null : new com.google.gson.Gson());
 const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "undefined");
 const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
 
@@ -199,21 +198,7 @@ firebase.toValue = val => {
   return returnVal;
 };
 
-// no longer using Gson as fi Firestore's DocumentReference isn't serialized (also removed it from the dependencies)
 firebase.toJsObject = javaObj => {
-  // if (gson() !== null) {
-  //   try {
-  //     return JSON.parse(gson().toJson(javaObj)); // this may fail if fi a DocumentReference is encountered
-  //   } catch (ignore) {
-  //     return firebase.toJsObjectLegacy(javaObj);
-  //   }
-  // } else {
-  // fallback for folks not having fetched gson yet in their build for some reason
-  return firebase.toJsObjectLegacy(javaObj);
-  // }
-};
-
-firebase.toJsObjectLegacy = javaObj => {
   if (javaObj === null || typeof javaObj !== "object") {
     return javaObj;
   }
@@ -242,7 +227,7 @@ firebase.toJsObjectLegacy = javaObj => {
     case 'java.util.ArrayList':
       node = [];
       for (let i = 0; i < javaObj.size(); i++) {
-        node[i] = firebase.toJsObjectLegacy(javaObj.get(i));
+        node[i] = firebase.toJsObject(javaObj.get(i));
       }
       break;
     default:
@@ -251,7 +236,7 @@ firebase.toJsObjectLegacy = javaObj => {
         const iterator = javaObj.entrySet().iterator();
         while (iterator.hasNext()) {
           const item = iterator.next();
-          node[item.getKey()] = firebase.toJsObjectLegacy(item.getValue());
+          node[item.getKey()] = firebase.toJsObject(item.getValue());
         }
       } catch (e) {
         console.log("PLEASE REPORT THIS AT https://github.com/NativeScript/NativeScript/issues: Tried to serialize an unsupported type: javaObj.getClass().getName(), error: " + e);
@@ -316,7 +301,7 @@ firebase.init = arg => {
             const user = fbAuth.getCurrentUser();
             arg.onAuthStateChanged({
               loggedIn: user !== null,
-              user: toLoginResult(user, null)
+              user: toLoginResult(user)
             });
           }
         });
@@ -330,7 +315,7 @@ firebase.init = arg => {
             const user = fbAuth.getCurrentUser();
             firebase.notifyAuthStateListeners({
               loggedIn: user !== null,
-              user: toLoginResult(user, null)
+              user: toLoginResult(user)
             });
           }
         });
@@ -882,7 +867,7 @@ firebase.getCurrentUser = arg => {
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
-        resolve(toLoginResult(user, null));
+        resolve(toLoginResult(user));
       } else {
         reject();
       }
@@ -974,7 +959,7 @@ firebase.getAuthToken = arg => {
   });
 };
 
-function toLoginResult(user, additionalUserInfo): User {
+function toLoginResult(user, additionalUserInfo?): User {
   if (user === null) {
     return null;
   }
@@ -992,33 +977,33 @@ function toLoginResult(user, additionalUserInfo): User {
     }
   }
 
-    const loginResult: User = {
-        uid: user.getUid(),
-        name: user.getDisplayName(),
-        email: user.getEmail(),
-        emailVerified: user.isEmailVerified(),
-        // provider: user.getProviderId(), // always 'firebase'
-        providers: providers,
-        anonymous: user.isAnonymous(),
-        isAnonymous: user.isAnonymous(),
-        phoneNumber: user.getPhoneNumber(),
-        profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null,
-        metadata: {
-            creationTimestamp: new Date(user.getMetadata().getCreationTimestamp() as number),
-            lastSignInTimestamp: new Date(user.getMetadata().getLastSignInTimestamp() as number)
-        }
-    };
-
-    if (additionalUserInfo !== null) {
-        loginResult.additionalUserInfo = {
-            profile: additionalUserInfo.getProfile(),
-            providerId: additionalUserInfo.getProviderId(),
-            username: additionalUserInfo.getUsername(),
-            isNewUser: additionalUserInfo.isNewUser()
-        };
+  const loginResult: User = {
+    uid: user.getUid(),
+    name: user.getDisplayName(),
+    email: user.getEmail(),
+    emailVerified: user.isEmailVerified(),
+    // provider: user.getProviderId(), // always 'firebase'
+    providers: providers,
+    anonymous: user.isAnonymous(),
+    isAnonymous: user.isAnonymous(),
+    phoneNumber: user.getPhoneNumber(),
+    profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null,
+    metadata: {
+      creationTimestamp: new Date(user.getMetadata().getCreationTimestamp() as number),
+      lastSignInTimestamp: new Date(user.getMetadata().getLastSignInTimestamp() as number)
     }
+  };
 
-    return loginResult;
+  if (additionalUserInfo) {
+    loginResult.additionalUserInfo = {
+      providerId: additionalUserInfo.getProviderId(),
+      username: additionalUserInfo.getUsername(),
+      isNewUser: additionalUserInfo.isNewUser(),
+      profile: firebase.toJsObject(additionalUserInfo.getProfile())
+    }
+  }
+
+  return loginResult;
 }
 
 firebase.login = arg => {
@@ -1086,7 +1071,7 @@ firebase.login = arg => {
         }
 
         const actionCodeSettings = com.google.firebase.auth.ActionCodeSettings.newBuilder()
-            // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
+        // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
             .setUrl(arg.emailLinkOptions.url)
             .setHandleCodeInApp(true)
             .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : appModule.android.context.getPackageName())
@@ -1122,7 +1107,7 @@ firebase.login = arg => {
 
         if (user && firebase._alreadyLinkedToAuthProvider(user, "phone")) {
           // skip sending an SMS if user is already linked to the phone-provider
-          resolve(toLoginResult(user, null));
+          resolve(toLoginResult(user));
           return;
         }
 

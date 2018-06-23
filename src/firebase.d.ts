@@ -300,7 +300,7 @@ export interface User {
   providers: Array<Provider>;
   profileImageURL?: string;
   metadata: UserMetadata;
-  additionalUserInfo?: AdditionalUserInfo
+  additionalUserInfo?: AdditionalUserInfo;
   /** iOS only */
   refreshToken?: string;
 }
@@ -309,18 +309,18 @@ export interface User {
  * The metadata of the user
  */
 export interface UserMetadata {
-  creationTimestamp: Date,
-  lastSignInTimestamp: Date
+  creationTimestamp: Date;
+  lastSignInTimestamp: Date;
 }
 
 /**
  * Contains additional user information
  */
 export interface AdditionalUserInfo {
-    profile: Map<string, any>;
-    providerId: string;
-    username: string;
-    isNewUser: boolean
+  profile: Map<string, any>;
+  providerId: string;
+  username: string;
+  isNewUser: boolean;
 }
 
 /**
@@ -416,9 +416,9 @@ export interface GetRemoteConfigOptions {
   /**
    * The configuration properties to retrieve for your app. Specify as:
    *  properties: [{
-         *    key: "holiday_promo_enabled",
-         *    default: false
-         *  }, ..]
+   *    key: "holiday_promo_enabled",
+   *    default: false
+   *  }, ..]
    */
   properties: Array<RemoteConfigProperty>;
 }
@@ -441,9 +441,9 @@ export interface GetRemoteConfigResult {
    * A JS Object with properties and values.
    * If you previously requested keys ["foo", "is_enabled"] then this will be like:
    *   properties: {
-       *     foo: "bar",
-       *     is_enabled: true
-       *   }
+   *     foo: "bar",
+   *     is_enabled: true
+   *   }
    */
   properties: Object;
 }
@@ -726,7 +726,9 @@ export namespace firestore {
     get: () => Promise<DocumentSnapshot>;
     update: (document: any) => Promise<void>;
     delete: () => Promise<void>;
+
     onSnapshot(callback: (doc: DocumentSnapshot) => void): () => void;
+
     android?: any;
     ios?: any;
   }

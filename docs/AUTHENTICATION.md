@@ -27,7 +27,24 @@ All login functions below, as well as `getCurrentUser` return a 'User' object wi
 |`profileImageURL`|yes|A string containing a link to a user image on the web
 |`phoneNumber`|yes|The user's phone number
 |`refreshToken`|yes|iOS only
+|`additionalUserInfo`|no|See `AdditionalUserInfo` below
+|`metadata`|no|See `UserMetadata` below
 
+### `AdditionalUserInfo`
+
+|param|optional|description
+|---|---|---
+|`profile`|yes|Any profile data the auth provider may supply. Type is `Map<string, any>`.
+|`providerId`|no|The provider that was used to login this time. Example: `password` or `google.com`.
+|`username`|yes|The username, usually `null`.
+|`isNewUser`|no|Whether or not the user was just created.
+
+### `UserMetadata`
+
+|param|optional|description
+|---|---|---
+|`creationTimestamp`|no|Type is `Date`.
+|`lastSignInTimestamp`|no|Type is `Date`.
 
 ## Functions
 You can either use the Native API, or the Web API. It's just a matter of personal background or preference. Under the hood the implementations are identical.

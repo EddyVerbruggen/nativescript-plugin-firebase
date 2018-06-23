@@ -121,7 +121,7 @@
             <Button row="12" col="1" text="send email conf" tap="{{ doSendEmailVerification }}" class="button"/>
 
             <Button row="13" col="0" text="get current user" tap="{{ doGetCurrentUser }}" class="button"/>
-            <Button row="13" col="1" text="logout" tap="{{ doLogout }}" class="button"/>
+            <Button row="13" col="1" text="logout" tap="{{ doLogout }}" class="button button-user"/>
 
             <Label row="14" colSpan="2" text="Methods on path /users" class="subtitle"/>
 

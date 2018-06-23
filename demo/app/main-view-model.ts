@@ -733,6 +733,7 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.ANONYMOUS
     }).then(
         result => {
+          console.log("Anonymous login OK: " + JSON.stringify(result));
           alert({
             title: "Login OK",
             message: JSON.stringify(result),
@@ -862,6 +863,7 @@ export class HelloWorldModel extends Observable {
       }
     }).then(
         result => {
+          console.log("Password login OK: " + JSON.stringify(result));
           alert({
             title: "Login OK",
             message: JSON.stringify(result),
@@ -881,6 +883,8 @@ export class HelloWorldModel extends Observable {
           );
         },
         errorMessage => {
+          console.log("Login error: " + errorMessage);
+          this.set("userEmailOrPhone", errorMessage);
           alert({
             title: "Login error",
             message: errorMessage,
@@ -909,6 +913,7 @@ export class HelloWorldModel extends Observable {
         }
       }).then(
           result => {
+            console.log("Phone login OK: " + JSON.stringify(result));
             alert({
               title: "Phone login OK",
               message: JSON.stringify(result),
@@ -945,6 +950,7 @@ export class HelloWorldModel extends Observable {
         }
       }).then(
           result => {
+            console.log("Email link sent");
             alert({
               title: "Email link sent",
               message: "Check your email :)",
@@ -968,6 +974,7 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.FACEBOOK
     }).then(
         result => {
+          console.log("Facebook login OK: " + JSON.stringify(result));
           alert({
             title: "Login OK",
             message: JSON.stringify(result),
@@ -990,6 +997,7 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.GOOGLE
     }).then(
         result => {
+          console.log("Google login OK: " + JSON.stringify(result));
           alert({
             title: "Login OK",
             message: JSON.stringify(result),
@@ -1010,13 +1018,16 @@ export class HelloWorldModel extends Observable {
     firebase.resetPassword({
       email: 'eddyverbruggen@gmail.com'
     }).then(
-        result => {
+        () => {
+          console.log("Password reset. Check your email.");
+          this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
           alert({
             title: "Password reset. Check your email.",
             okButtonText: "OK, nice!"
           });
         },
         error => {
+          console.log("Password reset error: " + error);
           alert({
             title: "Password reset error",
             message: error,
@@ -1048,12 +1059,14 @@ export class HelloWorldModel extends Observable {
     firebase.logout().then(
         () => {
           this.set("userEmailOrPhone", null);
+          console.log("Logout OK");
           alert({
             title: "Logout OK",
             okButtonText: "OK, bye!"
           });
         },
         error => {
+          console.log("Logout error: " + error);
           alert({
             title: "Logout error",
             message: error,
