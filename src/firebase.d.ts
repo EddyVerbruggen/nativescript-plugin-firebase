@@ -299,8 +299,28 @@ export interface User {
   isAnonymous: boolean; // This is used by the web API
   providers: Array<Provider>;
   profileImageURL?: string;
+  metadata: UserMetadata;
+  additionalUserInfo?: AdditionalUserInfo
   /** iOS only */
   refreshToken?: string;
+}
+
+/**
+ * The metadata of the user
+ */
+export interface UserMetadata {
+  creationTimestamp: Date,
+  lastSignInTimestamp: Date
+}
+
+/**
+ * Contains additional user information
+ */
+export interface AdditionalUserInfo {
+    profile: Map<string, any>;
+    providerId: string;
+    username: string;
+    isNewUser: boolean
 }
 
 /**
