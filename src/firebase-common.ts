@@ -10,6 +10,11 @@ export class FieldValue {
   serverTimestamp = () => "SERVER_TIMESTAMP";
 }
 
+export class GeoPoint {
+  constructor(public latitude: number, public longitude: number) {
+  }
+}
+
 export const firebase: any = {
   initialized: false,
   instance: null,
@@ -21,7 +26,8 @@ export const firebase: any = {
   storage,
   mlkit,
   firestore: {
-    FieldValue
+    FieldValue,
+    GeoPoint: (latitude: number, longitude: number) => new GeoPoint(latitude, longitude)
   },
   invites: {
     MATCH_TYPE: {

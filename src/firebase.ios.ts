@@ -1,4 +1,4 @@
-import { firebase, DocumentSnapshot, QuerySnapshot } from "./firebase-common";
+import { firebase, DocumentSnapshot, QuerySnapshot, GeoPoint } from "./firebase-common";
 import * as application from "tns-core-modules/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
@@ -645,10 +645,10 @@ firebase.toJsObject = objCObj => {
           node[key] = firebase.firestore._getDocumentReference(val, path.substring(0, lastSlashIndex), path.substring(lastSlashIndex + 1));
           break;
         case 'FIRGeoPoint':
-          node[key] = {
-            latitude: (<FIRGeoPoint>val).latitude,
-            longitude: (<FIRGeoPoint>val).longitude
-          };
+          node[key] = firestore.GeoPoint(
+              (<FIRGeoPoint>val).latitude,
+              (<FIRGeoPoint>val).longitude
+          );
           break;
         default:
           console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + getClass(val) + "'. Casting to String as a fallback.");
@@ -2246,7 +2246,7 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
         return;
       }
 
-      fixServerTimestamp(document);
+      fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
@@ -2278,10 +2278,18 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
   });
 };
 
-function fixServerTimestamp(item) {
+function fixSpecialFields(item) {
   for (let k in item) {
-    if (item.hasOwnProperty(k) && item[k] === "SERVER_TIMESTAMP") {
-      item[k] = FIRFieldValue.fieldValueForServerTimestamp();
+    if (item.hasOwnProperty(k)) {
+      if (item[k] === "SERVER_TIMESTAMP") {
+        item[k] = FIRFieldValue.fieldValueForServerTimestamp();
+      } else if (item[k] instanceof GeoPoint) {
+        const geo = <GeoPoint>item[k];
+        item[k] = new FIRGeoPoint({
+          latitude: geo.latitude,
+          longitude: geo.longitude
+        });
+      }
     }
   }
 }
@@ -2294,7 +2302,7 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
         return;
       }
 
-      fixServerTimestamp(document);
+      fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
@@ -2307,7 +2315,6 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
           resolve();
         }
       });
-
     } catch (ex) {
       console.log("Error in firebase.firestore.update: " + ex);
       reject(ex);

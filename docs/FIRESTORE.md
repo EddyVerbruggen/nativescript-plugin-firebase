@@ -122,7 +122,8 @@ citiesCollection.add({
   state: "CA",
   country: "USA",
   capital: false,
-  population: 860000
+  population: 860000,
+  location: firebase.firestore().GeoPoint(4.34, 5.67)
 }).then(documentRef => {
   console.log(`San Francisco added with auto-generated ID: ${documentRef.id}`);
 });
@@ -162,7 +163,8 @@ const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF")
 
 sanFranciscoDocument.update({
   population: 860001,
-  updateTimestamp: firebase.firestore().FieldValue().serverTimestamp()
+  updateTimestamp: firebase.firestore().FieldValue().serverTimestamp(),
+  location: firebase.firestore().GeoPoint(4.34, 5.67)
 }).then(() => {
   console.log("SF population updated");
 });

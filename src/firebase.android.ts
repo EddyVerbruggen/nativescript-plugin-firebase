@@ -1,10 +1,9 @@
-import { DocumentSnapshot, firebase, QuerySnapshot } from "./firebase-common";
+import { DocumentSnapshot, firebase, GeoPoint, QuerySnapshot } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import { topmost } from "tns-core-modules/ui/frame";
-import { File } from "tns-core-modules/file-system";
 import { firestore, User } from "./firebase";
 
 declare const android, com, org: any;
@@ -130,11 +129,13 @@ firebase.toHashMap = obj => {
           node.put(property, com.google.firebase.firestore.FieldValue.serverTimestamp());
         } else if (obj[property] instanceof Date) {
           node.put(property, new java.util.Date(obj[property].getTime()));
+        } else if (obj[property] instanceof GeoPoint) {
+          const geo = <GeoPoint>obj[property];
+          node.put(property, new com.google.firebase.firestore.GeoPoint(geo.latitude, geo.longitude));
         } else if (Array.isArray(obj[property])) {
           node.put(property, firebase.toJavaArray(obj[property]));
         } else {
           switch (typeof obj[property]) {
-            case 'object':
             case 'object':
               node.put(property, firebase.toHashMap(obj[property], node));
               break;

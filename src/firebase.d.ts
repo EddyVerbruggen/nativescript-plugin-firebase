@@ -708,6 +708,13 @@ export namespace firestore {
   export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>';
   export type OrderByDirection = 'desc' | 'asc';
 
+  export interface GeoPoint {
+    longitude: number;
+    latitude: number;
+  }
+
+  export function GeoPoint(latitude: number, longitude: number): GeoPoint;
+
   export interface SetOptions {
     merge?: boolean;
   }

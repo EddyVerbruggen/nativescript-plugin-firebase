@@ -113,9 +113,7 @@ export class FirestoreComponent {
   public firestoreSetByAutoID(): void {
     firebase.firestore().collection("dogs").doc()
         .set({name: "Woofie", last: "lastofwoofie", date: new Date()})
-        .then(() => {
-          console.log("Woofie set");
-        })
+        .then(() => console.log("Woofie set"))
         .catch(err => console.log("Setting Woofie failed, error: " + err));
   }
 
@@ -124,11 +122,10 @@ export class FirestoreComponent {
         .update({
           name: "Woofieupdate",
           last: "updatedwoofie!",
-          updateTs: firebase.firestore().FieldValue().serverTimestamp()
+          updateTs: firebase.firestore().FieldValue().serverTimestamp(),
+          lastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67)
         })
-        .then(() => {
-          console.log("Woofie updated");
-        })
+        .then(() => console.log("Woofie updated"))
         .catch(err => console.log("Updating Woofie failed, error: " + JSON.stringify(err)));
   }
 
@@ -176,7 +173,6 @@ export class FirestoreComponent {
       console.log("Error getting document:", error);
     });
   }
-
 
   firestoreDocumentObservable(): void {
     this.myCity$ = Observable.create(subscriber => {
