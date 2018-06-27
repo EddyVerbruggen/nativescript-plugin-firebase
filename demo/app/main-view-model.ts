@@ -169,16 +169,19 @@ export class HelloWorldModel extends Observable {
   }
 
   public doWebCreateUser(): void {
-    firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
-        .then(result => {
+    firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen+firebasewebapi@gmail.com', 'firebase')
+        .then((user: User) => {
+          console.log("User created: " + JSON.stringify(user));
+          this.set("userEmailOrPhone", user.email);
           alert({
             title: "User created",
-            message: JSON.stringify(result),
+            message: JSON.stringify(user),
             okButtonText: "Nice!"
           });
         })
         .catch(
             error => {
+              console.log("Error creating user: " + error);
               alert({
                 title: "No user created",
                 message: JSON.stringify(error),
@@ -191,12 +194,15 @@ export class HelloWorldModel extends Observable {
   public doWebGetCurrentUser(): void {
     const user = firebaseWebApi.auth().currentUser;
     if (user) {
+      console.log("Current user: " + JSON.stringify(user));
+      this.set("userEmailOrPhone", user.email);
       alert({
         title: "Current user",
         message: JSON.stringify(user),
         okButtonText: "Nice!"
       });
     } else {
+      console.log("No current user");
       alert({
         title: "No current user",
         okButtonText: "OK, thanks"
@@ -690,10 +696,11 @@ export class HelloWorldModel extends Observable {
 
   public doGetCurrentUser(): void {
     firebase.getCurrentUser().then(
-        result => {
+        user => {
+          this.set("userEmailOrPhone", user.email);
           alert({
             title: "Current user",
-            message: JSON.stringify(result),
+            message: JSON.stringify(user),
             okButtonText: "Nice!"
           });
         },
@@ -814,20 +821,23 @@ export class HelloWorldModel extends Observable {
 
   public doCreateUser(): void {
     firebase.createUser({
-      email: 'eddyverbruggen@gmail.com',
+      email: 'eddyverbruggen+firebasetest@gmail.com',
       password: 'firebase'
     }).then(
-        result => {
+        (user: User) => {
+          console.log("User created: " + JSON.stringify(user));
+          this.set("userEmailOrPhone", user.email);
           alert({
             title: "User created",
-            message: JSON.stringify(result),
+            message: JSON.stringify(user),
             okButtonText: "Nice!"
           });
         },
-        errorMessage => {
+        error => {
+          console.log("Error creating user: " + error);
           alert({
             title: "No user created",
-            message: errorMessage,
+            message: error,
             okButtonText: "OK, got it"
           });
         }

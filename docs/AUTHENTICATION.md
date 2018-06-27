@@ -333,10 +333,10 @@ This may not work on an (Android) simulator. See #463.
     email: 'eddyverbruggen@gmail.com',
     password: 'firebase'
   }).then(
-      function (result) {
+      function (user) {
         dialogs.alert({
           title: "User created",
-          message: "userid: " + result.key,
+          message: "email: " + user.email,
           okButtonText: "Nice!"
         })
       },
@@ -355,12 +355,13 @@ This may not work on an (Android) simulator. See #463.
  <summary>Web API</summary>
 
 ```typescript
-  firebaseWebApi.auth().signOut()
-      .then(() => console.log("Logout OK"))
-      .catch(error => "Logout error: " + JSON.stringify(error));
+  firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
+      .then((user: User) => {
+        console.log("User created: " + JSON.stringify(user));
+      })
+      .catch(error => console.log("Error creating user: " + error));
 ```
 </details>
-
 
 
 #### Resetting a password

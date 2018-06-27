@@ -339,13 +339,6 @@ export interface AddEventListenerResult {
 }
 
 /**
- * The returned object from the createUser function.
- */
-export interface CreateUserResult {
-  key: string;
-}
-
-/**
  * The options object passed into the createUser function.
  */
 export interface CreateUserOptions {
@@ -802,7 +795,7 @@ export function fetchSignInMethodsForEmail(email: string): Promise<Array<string>
 
 export function sendEmailVerification(): Promise<any>;
 
-export function createUser(options: CreateUserOptions): Promise<CreateUserResult>;
+export function createUser(options: CreateUserOptions): Promise<User>;
 
 export function deleteUser(): Promise<any>;
 

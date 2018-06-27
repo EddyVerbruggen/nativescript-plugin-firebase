@@ -1589,9 +1589,7 @@ firebase.createUser = arg => {
         if (error) {
           reject(error.localizedDescription);
         } else {
-          resolve({
-            key: authResult.user.uid
-          });
+          resolve(toLoginResult(authResult.user, authResult.additionalUserInfo));
         }
       };
 

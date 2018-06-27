@@ -70,11 +70,16 @@ export module auth {
       });
     }
 
-    public createUserWithEmailAndPassword(email: string, password: string): Promise<any> {
-      return firebase.createUser({
-        email: email,
-        password: password
-      });
+    public createUserWithEmailAndPassword(email: string, password: string): Promise<User> {
+      return new Promise((resolve, reject) => {
+        firebase.createUser({
+          email: email,
+          password: password
+        }).then((user: User) => {
+          this.currentUser = user;
+          resolve(user);
+        }).catch(err => reject(err));
+      })
     }
 
     public signInAnonymously(): Promise<any> {

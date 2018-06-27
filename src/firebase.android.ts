@@ -1470,7 +1470,8 @@ firebase.createUser = arg => {
               reject("Creating a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
             } else {
               const user = task.getResult().getUser();
-              resolve({key: user.getUid()});
+              const additionalUserInfo = task.getResult().getAdditionalUserInfo();
+              resolve(toLoginResult(user, additionalUserInfo));
             }
           }
         });
