@@ -24,6 +24,15 @@ In case you want to detect images from the camera, add these to your app resourc
   <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 ```
 
+## Required iOS permission
+In case you're using the camera on iOS, open `iOS/Info.plist` in your app resources folder,
+and add this somewhere in the file (if it's not already there):
+
+```xml
+  <key>NSCameraUsageDescription</key>
+  <string>Your reason here</string> <!-- better change this 😎 -->
+```
+
 ## ML Kit Features
 There are two ways of using ML Kit: 
 

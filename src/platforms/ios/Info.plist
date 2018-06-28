@@ -3,6 +3,6 @@
 <plist version="1.0">
   <dict>
     <key>NSCameraUsageDescription</key>
-    <string/>
+    <string> </string>
   </dict>
 </plist>
