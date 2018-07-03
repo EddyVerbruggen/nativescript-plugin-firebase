@@ -73,7 +73,7 @@ const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) 
                 const authResult = task.getResult();
                 firebase.notifyAuthStateListeners({
                   loggedIn: true,
-                  user: authResult.getUser()
+                  user: toLoginResult(authResult.getUser())
                 });
               }
             }
