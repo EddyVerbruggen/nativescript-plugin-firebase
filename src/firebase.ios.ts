@@ -645,7 +645,7 @@ firebase.toJsObject = objCObj => {
           node[key] = firebase.firestore._getDocumentReference(val, path.substring(0, lastSlashIndex), path.substring(lastSlashIndex + 1));
           break;
         case 'FIRGeoPoint':
-          node[key] = firestore.GeoPoint(
+          node[key] = firebase.firestore.GeoPoint(
               (<FIRGeoPoint>val).latitude,
               (<FIRGeoPoint>val).longitude
           );
@@ -1158,7 +1158,7 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       username: additionalUserInfo.username,
       isNewUser: additionalUserInfo.newUser,
       profile: firebase.toJsObject(additionalUserInfo.profile)
-    }
+    };
   }
 
   return loginResult;
