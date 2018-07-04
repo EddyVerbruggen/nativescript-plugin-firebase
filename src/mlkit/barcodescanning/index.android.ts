@@ -27,14 +27,16 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
           barcodes: []
         };
 
-        // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
-        for (let i = 0; i < barcodes.size(); i++) {
-          const barcode = barcodes.get(i);
-          result.barcodes.push({
-            value: barcode.getRawValue(),
-            format: BarcodeFormat[barcode.getFormat()],
-            android: barcode
-          });
+        if (barcodes) {
+          // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
+          for (let i = 0; i < barcodes.size(); i++) {
+            const barcode = barcodes.get(i);
+            result.barcodes.push({
+              value: barcode.getRawValue(),
+              format: BarcodeFormat[barcode.getFormat()],
+              android: barcode
+            });
+          }
         }
 
         this.notify({
@@ -70,14 +72,16 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
             barcodes: []
           };
 
-          // There are more details available, see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
-          for (let i = 0; i < barcodes.size(); i++) {
-            const barcode = barcodes.get(i);
-            result.barcodes.push({
-              value: barcode.getRawValue(),
-              format: BarcodeFormat[barcode.getFormat()],
-              android: barcode
-            });
+          if (barcodes) {
+            // There are more details available, see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
+            for (let i = 0; i < barcodes.size(); i++) {
+              const barcode = barcodes.get(i);
+              result.barcodes.push({
+                value: barcode.getRawValue(),
+                format: BarcodeFormat[barcode.getFormat()],
+                android: barcode
+              });
+            }
           }
 
           resolve(result);

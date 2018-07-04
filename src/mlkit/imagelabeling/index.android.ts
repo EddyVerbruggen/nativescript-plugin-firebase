@@ -65,12 +65,14 @@ export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): 
             labels: []
           };
 
-          for (let i = 0; i < labels.size(); i++) {
-            const label = labels.get(i);
-            result.labels.push({
-              text: label.getLabel(),
-              confidence: label.getConfidence()
-            });
+          if (labels) {
+            for (let i = 0; i < labels.size(); i++) {
+              const label = labels.get(i);
+              result.labels.push({
+                text: label.getLabel(),
+                confidence: label.getConfidence()
+              });
+            }
           }
 
           resolve(result);
@@ -111,12 +113,14 @@ export function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promis
             labels: []
           };
 
-          for (let i = 0; i < labels.size(); i++) {
-            const label = labels.get(i);
-            result.labels.push({
-              text: label.getLabel(),
-              confidence: label.getConfidence()
-            });
+          if (labels) {
+            for (let i = 0; i < labels.size(); i++) {
+              const label = labels.get(i);
+              result.labels.push({
+                text: label.getLabel(),
+                confidence: label.getConfidence()
+              });
+            }
           }
 
           resolve(result);

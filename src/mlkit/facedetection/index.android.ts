@@ -19,7 +19,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
     return new com.google.android.gms.tasks.OnSuccessListener({
       onSuccess: faces => {
 
-        if (faces.size() === 0) return;
+        if (!faces || faces.size() === 0) return;
 
         // const imageSource = new ImageSource();
         // imageSource.setNativeSource(this.lastVisionImage.getBitmapForDebugging());
@@ -69,21 +69,23 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
       const firebaseVisionFaceDetector = getFaceDetector(options);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: (faces) => {
+        onSuccess: faces => {
 
           const result = <MLKitDetectFacesOnDeviceResult>{
             faces: []
           };
 
-          // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
-          for (let i = 0; i < faces.size(); i++) {
-            const face = faces.get(i);
-            result.faces.push({
-              smilingProbability: face.getSmilingProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getSmilingProbability() : undefined,
-              leftEyeOpenProbability: face.getLeftEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getLeftEyeOpenProbability() : undefined,
-              rightEyeOpenProbability: face.getRightEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getRightEyeOpenProbability() : undefined,
-              trackingId: face.getTrackingId() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.INVALID_ID ? face.getTrackingId() : undefined
-            });
+          if (faces) {
+            // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
+            for (let i = 0; i < faces.size(); i++) {
+              const face = faces.get(i);
+              result.faces.push({
+                smilingProbability: face.getSmilingProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getSmilingProbability() : undefined,
+                leftEyeOpenProbability: face.getLeftEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getLeftEyeOpenProbability() : undefined,
+                rightEyeOpenProbability: face.getRightEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getRightEyeOpenProbability() : undefined,
+                trackingId: face.getTrackingId() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.INVALID_ID ? face.getTrackingId() : undefined
+              });
+            }
           }
 
           resolve(result);

@@ -26,12 +26,14 @@ export function recognizeLandmarksCloud(options: MLKitLandmarkRecognitionCloudOp
             landmarks: []
           };
 
-          for (let i = 0; i < landmarks.size(); i++) {
-            const landmark = landmarks.get(i);
-            result.landmarks.push({
-              name: landmark.getLandmark(),
-              confidence: landmark.getConfidence()
-            });
+          if (landmarks) {
+            for (let i = 0; i < landmarks.size(); i++) {
+              const landmark = landmarks.get(i);
+              result.landmarks.push({
+                name: landmark.getLandmark(),
+                confidence: landmark.getConfidence()
+              });
+            }
           }
 
           resolve(result);

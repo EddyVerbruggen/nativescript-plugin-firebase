@@ -132,7 +132,7 @@ export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Pro
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: firebaseVisionCloudText => {
           resolve({
-            text: firebaseVisionCloudText.getText()
+            text: firebaseVisionCloudText ? firebaseVisionCloudText.getText() : null
           });
           firebaseVisionCloudTextDetector.close();
         }
