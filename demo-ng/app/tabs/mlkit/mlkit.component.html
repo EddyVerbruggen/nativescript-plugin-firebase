@@ -3,10 +3,11 @@
   <Label row="0" text="Pick the image processing source:" textWrap="true"></Label>
 
   <FlexboxLayout row="1" flexDirection="row" justifyContent="space-around">
-    <Button text="Cameraroll" textWrap="true" (tap)="fromCameraroll()" class="button"></Button>
+    <Button text="Puppy" textWrap="true" (tap)="fromAppFolder()" class="button"></Button>
+    <Button text="Cam roll" textWrap="true" (tap)="fromCameraroll()" class="button"></Button>
     <!-- the image may require rotation on Android, and permission may be required - not feeling like exposing this for now -->
     <iOS>
-      <Button text="Cam picture" textWrap="true" (tap)="fromCameraPicture()" class="button"></Button>
+      <Button text="Cam pic" textWrap="true" (tap)="fromCameraPicture()" class="button"></Button>
     </iOS>
     <Button text="Cam feed" textWrap="true" (tap)="fromCameraFeed()" class="button"></Button>
   </FlexboxLayout>

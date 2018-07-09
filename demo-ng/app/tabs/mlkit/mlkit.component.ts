@@ -1,6 +1,7 @@
 import { Component, NgZone } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular";
-import { ImageSource } from "tns-core-modules/image-source";
+import { fromFile, ImageSource } from "tns-core-modules/image-source";
+import * as fileSystemModule from "tns-core-modules/file-system";
 import { action } from "tns-core-modules/ui/dialogs";
 import { ImageAsset } from "tns-core-modules/image-asset";
 import { isIOS } from "tns-core-modules/platform";
@@ -81,6 +82,18 @@ export class MLKitComponent {
     });
   }
 
+  fromAppFolder(): void {
+    const folder = fileSystemModule.knownFolders.currentApp();
+    const path = fileSystemModule.path.join(folder.path, "/images/puppy.jpg");
+    const exists = fileSystemModule.File.exists(path);
+    console.log(`Does it exist: ${exists}`);
+
+    const imageSource = fromFile(path);
+    this.pickedImage = imageSource;
+    // give the user some time to to see the picture
+    setTimeout(() => this.selectMLKitFeature(imageSource), 500);
+  }
+
   fromCameraPicture(): void {
     if (!isIOS) {
       Camera.requestPermissions();
@@ -94,7 +107,7 @@ export class MLKitComponent {
     }).then(imageAsset => {
       new ImageSource().fromAsset(imageAsset).then(imageSource => {
         this.pickedImage = imageSource;
-        // give the user some to to see the picture
+        // give the user some time to to see the picture
         setTimeout(() => this.selectMLKitFeature(imageSource), 500);
       });
     });
@@ -133,7 +146,7 @@ export class MLKitComponent {
             this.zone.run(() => {
               this.pickedImage = imageSource;
             });
-            // give the user some to to see the picture
+            // give the user some time to to see the picture
             setTimeout(() => this.selectMLKitFeature(imageSource), 500);
           });
         })
