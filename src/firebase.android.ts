@@ -177,6 +177,9 @@ firebase.toValue = val => {
     if (Array.isArray(val)) {
       return firebase.toJavaArray(val);
     }
+    if (val instanceof GeoPoint) {
+      return new com.google.firebase.firestore.GeoPoint(val.latitude, val.longitude);
+    }
 
     switch (typeof val) {
       case 'object':
@@ -1001,7 +1004,7 @@ function toLoginResult(user, additionalUserInfo?): User {
       username: additionalUserInfo.getUsername(),
       isNewUser: additionalUserInfo.isNewUser(),
       profile: firebase.toJsObject(additionalUserInfo.getProfile())
-    }
+    };
   }
 
   return loginResult;

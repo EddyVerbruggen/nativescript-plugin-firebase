@@ -2445,6 +2445,9 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
     }
 
     query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
+    value = value instanceof GeoPoint
+      ? new FIRGeoPoint({ latitude: value.latitude, longitude: value.longitude })
+      : value;
 
     if (opStr === "<") {
       query = query.queryWhereFieldIsLessThan(fieldPath, value);
