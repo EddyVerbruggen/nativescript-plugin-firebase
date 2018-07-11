@@ -993,8 +993,8 @@ function toLoginResult(user, additionalUserInfo?): User {
     phoneNumber: user.getPhoneNumber(),
     profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null,
     metadata: {
-      creationTimestamp: new Date(user.getMetadata().getCreationTimestamp() as number),
-      lastSignInTimestamp: new Date(user.getMetadata().getLastSignInTimestamp() as number)
+      creationTimestamp: user.getMetadata() ? new Date(user.getMetadata().getCreationTimestamp() as number) : null,
+      lastSignInTimestamp: user.getMetadata() ? new Date(user.getMetadata().getLastSignInTimestamp() as number) : null
     }
   };
 
