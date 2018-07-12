@@ -22,7 +22,7 @@ src/platforms/android/include.gradle
 !src/platforms/web/typings/firebase-webapi.d.ts
 !src/platforms/ios/typings/*.d.ts
 !src/platforms/android/typings/**/*.d.ts
-!src/scripts/entitlements*.js
+!src/scripts/*.js
 !demo/karma.conf.js
 demo/*.d.ts
 demo-ng/*.d.ts
