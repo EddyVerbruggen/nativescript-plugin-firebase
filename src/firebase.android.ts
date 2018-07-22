@@ -1703,10 +1703,14 @@ firebase.push = (path, val) => {
       }
 
       const pushInstance = firebase.instance.child(path).push();
-      pushInstance.setValue(firebase.toValue(val));
-      resolve({
-        key: pushInstance.getKey()
+
+      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
+        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
+          error ? reject(error.getMessage()) : resolve({ key: pushInstance.getKey() });
+        }
       });
+
+      pushInstance.setValue(firebase.toValue(val), onCompletionListener);
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
       reject(ex);
@@ -1722,8 +1726,13 @@ firebase.setValue = (path, val) => {
         return;
       }
 
-      firebase.instance.child(path).setValue(firebase.toValue(val));
-      resolve();
+      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
+        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
+          error ? reject(error.getMessage()) : resolve();
+        }
+      });
+
+      firebase.instance.child(path).setValue(firebase.toValue(val), onCompletionListener);
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
       reject(ex);
@@ -1739,16 +1748,21 @@ firebase.update = (path, val) => {
         return;
       }
 
+      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
+        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
+          error ? reject(error.getMessage()) : resolve();
+        }
+      });
+
       if (typeof val === "object") {
-        firebase.instance.child(path).updateChildren(firebase.toHashMap(val));
+        firebase.instance.child(path).updateChildren(firebase.toHashMap(val), onCompletionListener);
       } else {
         const lastPartOfPath = path.lastIndexOf("/");
         const pathPrefix = path.substring(0, lastPartOfPath);
         const pathSuffix = path.substring(lastPartOfPath + 1);
         const updateObject = '{"' + pathSuffix + '" : "' + val + '"}';
-        firebase.instance.child(pathPrefix).updateChildren(firebase.toHashMap(JSON.parse(updateObject)));
+        firebase.instance.child(pathPrefix).updateChildren(firebase.toHashMap(JSON.parse(updateObject)), onCompletionListener);
       }
-      resolve();
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
       reject(ex);
@@ -1879,8 +1893,14 @@ firebase.remove = path => {
         reject("Run init() first!");
         return;
       }
-      firebase.instance.child(path).setValue(null);
-      resolve();
+
+      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
+        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
+          error ? reject(error.getMessage()) : resolve();
+        }
+      });
+
+      firebase.instance.child(path).setValue(null, onCompletionListener);
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
       reject(ex);

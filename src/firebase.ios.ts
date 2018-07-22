@@ -1777,9 +1777,8 @@ firebase.push = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
       const ref = FIRDatabase.database().reference().childByAppendingPath(path).childByAutoId();
-      ref.setValue(val);
-      resolve({
-        key: ref.key
+      ref.setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
+        error ? reject(error.localizedDescription) : resolve({ key: ref.key });
       });
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
@@ -1791,8 +1790,9 @@ firebase.push = (path, val) => {
 firebase.setValue = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      FIRDatabase.database().reference().childByAppendingPath(path).setValue(val);
-      resolve();
+      FIRDatabase.database().reference().childByAppendingPath(path).setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
+        error ? reject(error.localizedDescription) : resolve();
+      });
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
       reject(ex);
@@ -1804,16 +1804,18 @@ firebase.update = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof val === "object") {
-        FIRDatabase.database().reference().childByAppendingPath(path).updateChildValues(val);
+        FIRDatabase.database().reference().childByAppendingPath(path).updateChildValuesWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
       } else {
         const lastPartOfPath = path.lastIndexOf("/");
         const pathPrefix = path.substring(0, lastPartOfPath);
         const pathSuffix = path.substring(lastPartOfPath + 1);
         const updateObject = '{"' + pathSuffix + '" : "' + val + '"}';
-        FIRDatabase.database().reference().childByAppendingPath(pathPrefix).updateChildValues(JSON.parse(updateObject));
+        FIRDatabase.database().reference().childByAppendingPath(pathPrefix).updateChildValuesWithCompletionBlock(JSON.parse(updateObject), (error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
       }
-
-      resolve();
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
       reject(ex);
@@ -1923,8 +1925,9 @@ firebase.query = (updateCallback, path, options) => {
 firebase.remove = path => {
   return new Promise((resolve, reject) => {
     try {
-      FIRDatabase.database().reference().childByAppendingPath(path).setValue(null);
-      resolve();
+      FIRDatabase.database().reference().childByAppendingPath(path).setValueWithCompletionBlock(null, (error: NSError, dbRef: FIRDatabaseReference) => {
+        error ? reject(error.localizedDescription) : resolve();
+      });
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
       reject(ex);
