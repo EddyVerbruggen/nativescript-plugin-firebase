@@ -1648,7 +1648,7 @@ firebase.updateProfile = arg => {
         return;
       }
 
-      if (!arg.displayName && !arg.photoURL) {
+      if (!arg.displayName || !arg.photoURL) {
         reject("Updating a profile requires a displayName and / or a photoURL argument");
       } else {
         const user = fAuth.currentUser;
