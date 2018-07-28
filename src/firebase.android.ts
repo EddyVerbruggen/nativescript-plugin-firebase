@@ -1704,13 +1704,14 @@ firebase.push = (path, val) => {
 
       const pushInstance = firebase.instance.child(path).push();
 
-      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
-        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
-          error ? reject(error.getMessage()) : resolve({ key: pushInstance.getKey() });
-        }
-      });
+      pushInstance.setValue(firebase.toValue(val))
+          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            onSuccess: () => resolve({key: pushInstance.getKey()})
+          }))
+          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            onFailure: exception => reject(exception.getMessage())
+          }));
 
-      pushInstance.setValue(firebase.toValue(val), onCompletionListener);
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
       reject(ex);
@@ -1726,13 +1727,14 @@ firebase.setValue = (path, val) => {
         return;
       }
 
-      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
-        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
-          error ? reject(error.getMessage()) : resolve();
-        }
-      });
+      firebase.instance.child(path).setValue(firebase.toValue(val))
+          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            onSuccess: () => resolve()
+          }))
+          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            onFailure: exception => reject(exception.getMessage())
+          }));
 
-      firebase.instance.child(path).setValue(firebase.toValue(val), onCompletionListener);
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
       reject(ex);
@@ -1748,20 +1750,26 @@ firebase.update = (path, val) => {
         return;
       }
 
-      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
-        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
-          error ? reject(error.getMessage()) : resolve();
-        }
+      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        onSuccess: () => resolve()
+      });
+
+      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => reject(exception.getMessage())
       });
 
       if (typeof val === "object") {
-        firebase.instance.child(path).updateChildren(firebase.toHashMap(val), onCompletionListener);
+        firebase.instance.child(path).updateChildren(firebase.toHashMap(val))
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
       } else {
         const lastPartOfPath = path.lastIndexOf("/");
         const pathPrefix = path.substring(0, lastPartOfPath);
         const pathSuffix = path.substring(lastPartOfPath + 1);
         const updateObject = '{"' + pathSuffix + '" : "' + val + '"}';
-        firebase.instance.child(pathPrefix).updateChildren(firebase.toHashMap(JSON.parse(updateObject)), onCompletionListener);
+        firebase.instance.child(pathPrefix).updateChildren(firebase.toHashMap(JSON.parse(updateObject)))
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
       }
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
@@ -1894,13 +1902,13 @@ firebase.remove = path => {
         return;
       }
 
-      const onCompletionListener = new com.google.firebase.database.DatabaseReference.CompletionListener({
-        onComplete: (error: any /* com.google.firebase.database.DatabaseError */, dbRef: any /* com.google.firebase.database.DatabaseReference */) => {
-          error ? reject(error.getMessage()) : resolve();
-        }
-      });
-
-      firebase.instance.child(path).setValue(null, onCompletionListener);
+      firebase.instance.child(path).setValue(null)
+          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            onSuccess: () => resolve()
+          }))
+          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            onFailure: exception => reject(exception.getMessage())
+          }));
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
       reject(ex);
