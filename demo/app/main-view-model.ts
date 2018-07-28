@@ -1254,34 +1254,22 @@ export class HelloWorldModel extends Observable {
           }
         ]
     ).then(
-        () => {
-          console.log("firebase.setValue done");
-        },
-        error => {
-          console.log("firebase.setValue error: " + error);
-        }
+        () => console.log("firebase.setValue done"),
+        error => console.log("firebase.setValue error: " + error)
     );
   }
 
   public doRemoveUsers(): void {
     firebase.remove("/users").then(
-        () => {
-          console.log("firebase.remove done");
-        },
-        error => {
-          console.log("firebase.remove error: " + error);
-        }
+        () => console.log("firebase.remove done"),
+        error => console.log("firebase.remove error: " + error)
     );
   }
 
   public doRemoveCompanies(): void {
     firebase.remove("/companies").then(
-        () => {
-          console.log("firebase.remove done");
-        },
-        error => {
-          console.log("firebase.remove error: " + error);
-        }
+        () => console.log("firebase.remove done"),
+        error => console.log("firebase.remove error: " + error)
     );
   }
 
@@ -1336,9 +1324,7 @@ export class HelloWorldModel extends Observable {
           }
         }
     ).then(
-        result => {
-          console.log("firebase.doQueryBulgarianCompanies done; added a listener");
-        },
+        result => console.log("firebase.doQueryBulgarianCompanies done; added a listener"),
         errorMessage => {
           alert({
             title: "Query error",
