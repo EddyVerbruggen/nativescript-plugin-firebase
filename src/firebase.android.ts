@@ -1519,7 +1519,7 @@ firebase.deleteUser = arg => {
 firebase.updateProfile = arg => {
   return new Promise((resolve, reject) => {
     try {
-      if (!arg.displayName && !arg.photoURL) {
+      if (!arg.displayName || !arg.photoURL) {
         reject("Updating a profile requires a displayName and / or a photoURL argument");
       } else {
         const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
