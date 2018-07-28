@@ -214,6 +214,7 @@ firebase.toJsObject = javaObj => {
       return Boolean(!!(str === "True" || str === "true"));
     case 'java.lang.String':
       return String(javaObj);
+    case 'java.lang.Integer':
     case 'java.lang.Long':
     case 'java.lang.Double':
       return Number(String(javaObj));
@@ -243,7 +244,7 @@ firebase.toJsObject = javaObj => {
           node[item.getKey()] = firebase.toJsObject(item.getValue());
         }
       } catch (e) {
-        console.log("PLEASE REPORT THIS AT https://github.com/NativeScript/NativeScript/issues: Tried to serialize an unsupported type: javaObj.getClass().getName(), error: " + e);
+        console.log("PLEASE REPORT THIS AT https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: Tried to serialize an unsupported type: " + javaObj.getClass().getName() + ", error: " + e);
       }
   }
   return node;
