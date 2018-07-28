@@ -155,8 +155,23 @@ citiesCollection.doc("LA").set({
 ### `collection.doc().update()`
 Update any number of properties of a document.
 
-Use the special property `firebase.firestore().FieldValue().serverTimestamp()` to update a server timestamp
-(as opposed to a local timestamp, which would be different for every client).
+Note that you can use the special `serverTimestamp()` function to update a server timestamp (as opposed to a local timestamp, which would be different for every client):
+
+#### Web API
+```typescript
+const firebase = require("nativescript-plugin-firebase/app");
+
+firebase.firestore().FieldValue().serverTimestamp()
+```
+
+#### Native API
+```typescript
+import { firestore } from "nativescript-plugin-firebase";
+
+firestore.FieldValue.serverTimestamp()
+```
+
+And this is what an update would look like, using the Web API:
 
 ```typescript
 const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
