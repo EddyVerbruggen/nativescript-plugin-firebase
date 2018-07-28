@@ -122,7 +122,8 @@ export class FirestoreComponent {
         .update({
           name: "Woofieupdate",
           last: "updatedwoofie!",
-          updateTs: firebase.firestore().FieldValue().serverTimestamp(),
+          updateTs: firestore.FieldValue.serverTimestamp(),
+          updateTsAlt: firebase.firestore().FieldValue().serverTimestamp(),
           lastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67)
         })
         .then(() => console.log("Woofie updated"))

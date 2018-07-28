@@ -26,7 +26,9 @@ export const firebase: any = {
   storage,
   mlkit,
   firestore: {
-    FieldValue,
+    FieldValue: {
+      serverTimestamp: () => "SERVER_TIMESTAMP"
+    },
     GeoPoint: (latitude: number, longitude: number) => new GeoPoint(latitude, longitude)
   },
   invites: {
