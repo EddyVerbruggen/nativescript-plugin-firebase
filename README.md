@@ -51,6 +51,10 @@ tns plugin add nativescript-plugin-firebase
 This will launch an install script which will guide you through installing additional components.
 Check the doc links above to see what's what. You can always change your choices later.
 
+> Using [NativeScript SideKick](https://www.nativescript.org/nativescript-sidekick)? Then the aforementioned install script
+will not (be able to) run. In that case, running the app for Android will result in [this issue](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/829#issuecomment-409870671).
+To fix that, see [this comment](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/829#issuecomment-409855611).
+
 ### Config
 If you choose to save your config during the installation, the supported options may be saved in the `firebase.nativescript.json` at the root of your app.
 This is to ensure your app may roundtrip source control and installation on CI won't prompt for user input during installation.
