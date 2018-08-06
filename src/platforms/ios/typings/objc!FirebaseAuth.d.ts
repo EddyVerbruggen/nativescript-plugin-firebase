@@ -292,7 +292,9 @@ declare const enum FIRAuthErrorCode {
 
 	KeychainError = 17995,
 
-	InternalError = 17999
+	InternalError = 17999,
+
+	MalformedJWT = 18000
 }
 
 declare var FIRAuthErrorDomain: string;

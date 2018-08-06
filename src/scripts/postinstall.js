@@ -3093,7 +3093,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase/Core', '~> 5.1.0' 
+`pod 'Firebase/Core', '~> 5.5.0' 
 pod 'Firebase/Auth'
 
 # Realtime DB

@@ -39,15 +39,15 @@ declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
 
 	static new(): FIRModelDownloadConditions; // inherited from NSObject
 
-	readonly isIdleRequired: boolean;
+	readonly canDownloadInBackground: boolean;
 
 	readonly isWiFiRequired: boolean;
 
-	constructor(o: { wiFiRequired: boolean; idleRequired: boolean; });
+	constructor(o: { isWiFiRequired: boolean; canDownloadInBackground: boolean; });
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	initWithWiFiRequiredIdleRequired(isWiFiRequired: boolean, isIdleRequired: boolean): this;
+	initWithIsWiFiRequiredCanDownloadInBackground(isWiFiRequired: boolean, canDownloadInBackground: boolean): this;
 }
 
 declare const enum FIRModelElementType {
@@ -90,6 +90,8 @@ declare class FIRModelInterpreter extends NSObject {
 	static modelInterpreterWithOptions(options: FIRModelOptions): FIRModelInterpreter;
 
 	static new(): FIRModelInterpreter; // inherited from NSObject
+
+	statsCollectionEnabled: boolean;
 
 	inputIndexForOpCompletion(opName: string, completion: (p1: number, p2: NSError) => void): void;
 

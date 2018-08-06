@@ -8,11 +8,13 @@ declare class TNSMLKitCameraView extends UIViewController implements AVCaptureVi
 
   static new(): TNSMLKitCameraView; // inherited from NSObject
 
+  static resizeImage(image: UIImage): NSArray<any>;
+
   delegate: TNSMLKitCameraViewDelegate;
 
-  processEveryXFrames: number;
-
   imageOrientation: UIImageOrientation;
+
+  processEveryXFrames: number;
 
   readonly debugDescription: string; // inherited from NSObjectProtocol
 

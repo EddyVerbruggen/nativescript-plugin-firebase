@@ -30,6 +30,8 @@ declare class FIRApp extends NSObject {
 
 	static new(): FIRApp; // inherited from NSObject
 
+	dataCollectionDefaultEnabled: boolean;
+
 	readonly name: string;
 
 	readonly options: FIROptions;

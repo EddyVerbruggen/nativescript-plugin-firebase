@@ -80,6 +80,10 @@ declare class FIRDocumentReference extends NSObject {
 
 	setDataMergeCompletion(documentData: NSDictionary<string, any>, merge: boolean, completion: (p1: NSError) => void): void;
 
+	setDataMergeFields(documentData: NSDictionary<string, any>, mergeFields: NSArray<any>): void;
+
+	setDataMergeFieldsCompletion(documentData: NSDictionary<string, any>, mergeFields: NSArray<any>, completion: (p1: NSError) => void): void;
+
 	updateData(fields: NSDictionary<any, any>): void;
 
 	updateDataCompletion(fields: NSDictionary<any, any>, completion: (p1: NSError) => void): void;
@@ -128,6 +132,10 @@ declare class FIRFieldPath extends NSObject implements NSCopying {
 declare class FIRFieldValue extends NSObject {
 
 	static alloc(): FIRFieldValue; // inherited from NSObject
+
+	static fieldValueForArrayRemove(elements: NSArray<any>): FIRFieldValue;
+
+	static fieldValueForArrayUnion(elements: NSArray<any>): FIRFieldValue;
 
 	static fieldValueForDelete(): FIRFieldValue;
 
@@ -302,6 +310,8 @@ declare class FIRQuery extends NSObject {
 
 	queryStartingAtValues(fieldValues: NSArray<any>): FIRQuery;
 
+	queryWhereFieldArrayContains(field: string, value: any): FIRQuery;
+
 	queryWhereFieldIsEqualTo(field: string, value: any): FIRQuery;
 
 	queryWhereFieldIsGreaterThan(field: string, value: any): FIRQuery;
@@ -311,6 +321,8 @@ declare class FIRQuery extends NSObject {
 	queryWhereFieldIsLessThan(field: string, value: any): FIRQuery;
 
 	queryWhereFieldIsLessThanOrEqualTo(field: string, value: any): FIRQuery;
+
+	queryWhereFieldPathArrayContains(path: FIRFieldPath, value: any): FIRQuery;
 
 	queryWhereFieldPathIsEqualTo(path: FIRFieldPath, value: any): FIRQuery;
 
@@ -412,6 +424,8 @@ declare class FIRTransaction extends NSObject {
 
 	setDataForDocumentMerge(data: NSDictionary<string, any>, document: FIRDocumentReference, merge: boolean): FIRTransaction;
 
+	setDataForDocumentMergeFields(data: NSDictionary<string, any>, document: FIRDocumentReference, mergeFields: NSArray<any>): FIRTransaction;
+
 	updateDataForDocument(fields: NSDictionary<any, any>, document: FIRDocumentReference): FIRTransaction;
 }
 
@@ -430,6 +444,8 @@ declare class FIRWriteBatch extends NSObject {
 	setDataForDocument(data: NSDictionary<string, any>, document: FIRDocumentReference): FIRWriteBatch;
 
 	setDataForDocumentMerge(data: NSDictionary<string, any>, document: FIRDocumentReference, merge: boolean): FIRWriteBatch;
+
+	setDataForDocumentMergeFields(data: NSDictionary<string, any>, document: FIRDocumentReference, mergeFields: NSArray<any>): FIRWriteBatch;
 
 	updateDataForDocument(fields: NSDictionary<any, any>, document: FIRDocumentReference): FIRWriteBatch;
 }
