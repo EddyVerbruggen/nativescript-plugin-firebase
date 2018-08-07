@@ -2462,6 +2462,8 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
       query = query.queryWhereFieldIsGreaterThanOrEqualTo(fieldPath, value);
     } else if (opStr === ">") {
       query = query.queryWhereFieldIsGreaterThan(fieldPath, value);
+    } else if (opStr === "array-contains") {
+      query = query.queryWhereFieldArrayContains(fieldPath, value);
     } else {
       console.log("Illegal argument for opStr: " + opStr);
       return null;
