@@ -13,11 +13,11 @@ the relevant lines to add the SDK's to your app in
 
 Just uncomment the relevant lines (one for each platform) to add the SDK's to your app.
 
-### Setting the storage bucket
-You need to tell Firebase what your storage bucket is. You can retrieve it
-from the Firebase console by pressing 'Storage' in the menu.
+### Setting the storage bucket (optional since plugin version 6.5.0)
+If (in the odd situation) the storage bucket URL you want to use is different than the one in the downloaded config file,
+you can tell Firebase what it should use instead.
 
-You can either pass it to the `init()` function as shown below,
+In this case, you can either pass it to the `init()` function as shown below,
 or pass it as a property any time you're using a storage feature.
 In theory the former is a little more efficient because it's cached by the plugin.
 
@@ -64,7 +64,7 @@ You can either pass in a full local path to a file, or (as a convenience) use th
 
   // now upload the file with either of the options below:
   firebase.storage.uploadFile({
-    // optional, can also be passed during init() as 'storageBucket' param so we can cache it (find it in the Firebase console)
+    // optional, can be omitted since 6.5.0, and also be passed during init() as 'storageBucket' param so we can cache it (find it in the Firebase console)
     bucket: 'gs://n-plugin-test.appspot.com',
     // the full path of the file in your Firebase storage (folders will be created)
     remoteFullPath: 'uploads/images/telerik-logo-uploaded.png',
