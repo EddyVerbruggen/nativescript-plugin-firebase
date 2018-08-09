@@ -21,7 +21,13 @@ function getStorageRef(reject, arg) {
     return;
   }
 
-  return arg.bucket ? com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket) : firebase.storageBucket;
+  if (arg.bucket) {
+    return com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
+  } else if (firebase.storageBucket) {
+    return firebase.storageBucket;
+  } else {
+    return com.google.firebase.storage.FirebaseStorage.getInstance().getReference();
+  }
 }
 
 export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {

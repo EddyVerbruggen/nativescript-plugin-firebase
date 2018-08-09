@@ -58,9 +58,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doWebInit(): void {
-    firebaseWebApi.initializeApp({
-      storageBucket: 'gs://n-plugin-test.appspot.com',
-    });
+    firebaseWebApi.initializeApp();
   }
 
   public doWebLoginAnonymously(): void {
@@ -390,7 +388,7 @@ export class HelloWorldModel extends Observable {
 
   public doInit(): void {
     firebase.init({
-      storageBucket: 'gs://n-plugin-test.appspot.com',
+      // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");

@@ -18,7 +18,13 @@ function getStorageRef(reject, arg): FIRStorageReference {
     return undefined;
   }
 
-  return arg.bucket ? FIRStorage.storage().referenceForURL(arg.bucket) : firebase.storageBucket;
+  if (arg.bucket) {
+    return FIRStorage.storage().referenceForURL(arg.bucket);
+  } else if (firebase.storageBucket) {
+    return firebase.storageBucket;
+  } else {
+    return FIRStorage.storage().reference();
+  }
 }
 
 export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
