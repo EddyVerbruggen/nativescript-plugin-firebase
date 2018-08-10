@@ -136,7 +136,7 @@ export class FirestoreComponent {
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => console.log(`${doc.id} => ${JSON.stringify(doc.data())}`));
         })
-        .catch(err => console.log("Get failed, error" + err));
+        .catch(err => console.log("Get failed, error: " + err));
 
     // examples from https://firebase.google.com/docs/firestore/query-data/get-data
     const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("BJ");
@@ -239,7 +239,7 @@ export class FirestoreComponent {
             console.log(`Relatively small Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
           });
         })
-        .catch(err => console.log("Where-get failed, error" + err));
+        .catch(err => console.log("Where-get failed, error: " + err));
   }
 
   public firestoreWhereOrderLimit(): void {
@@ -255,7 +255,21 @@ export class FirestoreComponent {
             console.log(`Large Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
           });
         })
-        .catch(err => console.log("firestoreWhereOrderLimit failed, error" + err));
+        .catch(err => console.log("firestoreWhereOrderLimit failed, error: " + err));
+  }
+
+  public firestoreWhereCityHasALake(): void {
+    const query: firestore.Query = firebase.firestore().collection("cities")
+        .where("landmarks", "array-contains", "lake");
+
+    query
+        .get()
+        .then((querySnapshot: firestore.QuerySnapshot) => {
+          querySnapshot.forEach(doc => {
+            console.log(`city with a lake: ${doc.id} => ${JSON.stringify(doc.data())}`);
+          });
+        })
+        .catch(err => console.log("firestoreWhereCityHasALake failed, error: " + err));
   }
 
   public firestoreDelete(): void {
@@ -264,7 +278,7 @@ export class FirestoreComponent {
         .then(() => {
           console.log("Woofie deleted");
         })
-        .catch(err => console.log("Delete failed, error" + err));
+        .catch(err => console.log("Delete failed, error: " + err));
   }
 
   public doWebGetValueForCompanies(): void {
