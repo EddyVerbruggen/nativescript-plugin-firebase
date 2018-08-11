@@ -7,18 +7,18 @@ import { MLKitRecognizeTextResultBlock, MLKitRecognizeTextResultLine } from "./i
 export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   protected createDetector(): any {
     const firVision: FIRVision = FIRVision.vision();
-    return firVision.textDetector();
+    return firVision.onDeviceTextRecognizer();
   }
 
   protected createSuccessListener(): any {
-    return (features: NSArray<FIRVisionText>, error: NSError) => {
+    return (visionText: FIRVisionText, error: NSError) => {
       if (error !== null) {
         console.log(error.localizedDescription);
-      } else if (features !== null && features.count > 0) {
+      } else if (visionText !== null) {
         this.notify({
           eventName: MLKitTextRecognition.scanResultEvent,
           object: this,
-          value: getOnDeviceResult(features)
+          value: getOnDeviceResult(visionText)
         });
       }
     };
@@ -30,13 +30,14 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
 
 }
 
-function getOnDeviceResult(features: NSArray<FIRVisionText>): MLKitRecognizeTextOnDeviceResult {
+function getOnDeviceResult(visionText: FIRVisionText): MLKitRecognizeTextOnDeviceResult {
   const result = <MLKitRecognizeTextOnDeviceResult>{
+    text: visionText.text,
     blocks: []
   };
 
-  for (let i = 0, l = features.count; i < l; i++) {
-    const feature = features.objectAtIndex(i);
+  for (let i = 0, l = visionText.blocks.count; i < l; i++) {
+    const feature: FIRVisionTextBlock = visionText.blocks.objectAtIndex(i);
     const resultFeature = <MLKitRecognizeTextResultBlock>{
       text: feature.text,
       bounds: feature.frame,
@@ -59,6 +60,7 @@ function getOnDeviceResult(features: NSArray<FIRVisionText>): MLKitRecognizeText
       resultFeature.lines.push(resultLine);
     };
 
+    // TODO
     if (feature instanceof FIRVisionTextBlock) {
       const textBlock = <FIRVisionTextBlock>feature;
       for (let j = 0, k = textBlock.lines.count; j < k; j++) {
@@ -66,6 +68,7 @@ function getOnDeviceResult(features: NSArray<FIRVisionText>): MLKitRecognizeText
       }
     }
 
+    // TODO
     if (feature instanceof FIRVisionTextLine) {
       addLineToResult(feature);
     }
@@ -79,13 +82,13 @@ export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions
   return new Promise((resolve, reject) => {
     try {
       const firVision: FIRVision = FIRVision.vision();
-      const textDetector: FIRVisionTextDetector = firVision.textDetector();
+      const textDetector: FIRVisionTextRecognizer = firVision.onDeviceTextRecognizer();
 
-      textDetector.detectInImageCompletion(getImage(options), (features: NSArray<FIRVisionText>, error: NSError) => {
+      textDetector.processImageCompletion(getImage(options), (visionText: FIRVisionText, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
-        } else if (features !== null) {
-          resolve(getOnDeviceResult(features));
+        } else if (visionText !== null) {
+          resolve(getOnDeviceResult(visionText));
         }
       });
     } catch (ex) {
@@ -98,21 +101,21 @@ export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions
 export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult> {
   return new Promise((resolve, reject) => {
     try {
-      const fIRVisionCloudDetectorOptions = FIRVisionCloudDetectorOptions.new();
-      fIRVisionCloudDetectorOptions.modelType = options.modelType === "latest" ? FIRVisionCloudModelType.Latest : FIRVisionCloudModelType.Stable;
-      fIRVisionCloudDetectorOptions.maxResults = options.maxResults || 10;
+      const fIRVisionCloudDetectorOptions = FIRVisionCloudTextRecognizerOptions.new();
+      fIRVisionCloudDetectorOptions.modelType = FIRVisionCloudTextModelType.Sparse;
+      // fIRVisionCloudDetectorOptions.modelType = options.modelType === "latest" ? FIRVisionCloudModelType.Latest : FIRVisionCloudModelType.Stable;
+      // fIRVisionCloudDetectorOptions.maxResults = options.maxResults || 10;
 
       const firVision: FIRVision = FIRVision.vision();
-      const textDetector = firVision.cloudTextDetectorWithOptions(fIRVisionCloudDetectorOptions);
+      const textDetector = firVision.cloudTextRecognizerWithOptions(fIRVisionCloudDetectorOptions);
 
-      textDetector.detectInImageCompletion(getImage(options), (cloudText: FIRVisionCloudText, error: NSError) => {
-        console.log(">>> recognizeTextCloud error? " + error + ", cloudText? " + cloudText);
+      textDetector.processImageCompletion(getImage(options), (visionText: FIRVisionText, error: NSError) => {
+        console.log(">>> recognizeTextCloud error? " + error + ", visionText? " + visionText);
         if (error !== null) {
           reject(error.localizedDescription);
-        } else if (cloudText !== null) {
-          console.log(">>> recognizeTextCloud result: " + cloudText);
+        } else if (visionText !== null) {
           resolve({
-            text: cloudText.text
+            text: visionText.text
           });
         } else {
           reject("Unknown error :'(");

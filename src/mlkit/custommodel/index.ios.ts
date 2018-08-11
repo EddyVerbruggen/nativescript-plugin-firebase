@@ -37,7 +37,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
 }
 
 function getInterpreter(): FIRModelInterpreter {
-  const fIRModelDownloadConditions = FIRModelDownloadConditions.alloc().initWithWiFiRequiredIdleRequired(false, false);
+  const fIRModelDownloadConditions = FIRModelDownloadConditions.alloc().initWithIsWiFiRequiredCanDownloadInBackground(false, true);
 
   const fIRCloudModelSource = FIRCloudModelSource.alloc().initWithModelNameEnableModelUpdatesInitialConditionsUpdateConditions(
       "my-custom-model",

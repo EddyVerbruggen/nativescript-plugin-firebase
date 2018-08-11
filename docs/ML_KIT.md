@@ -109,8 +109,6 @@ const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.textrecognition.recognizeTextCloud({
   image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
-  modelType: "latest", // either "latest" or "stable" (default "stable")
-  maxResults: 15 // default 10
 })
 .then((result: MLKitRecognizeTextCloudResult) => console.log(result.text))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));

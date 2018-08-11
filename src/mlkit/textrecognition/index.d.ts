@@ -38,6 +38,8 @@ export interface MLKitRecognizeTextCloudResult extends MLKitResult {
   text: string;
 }
 
+// TODO see 'setLanguageHints' at https://firebase.google.com/docs/ml-kit/android/recognize-text
+
 export interface MLKitRecognizeTextOnDeviceOptions extends MLKitOptions {
 }
 
