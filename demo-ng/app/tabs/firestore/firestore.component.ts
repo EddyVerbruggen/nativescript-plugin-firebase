@@ -318,12 +318,15 @@ export class FirestoreComponent {
   */
 
   public writeBatch(): void {
+    // one batch can update multiple docs
     const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+    const sacDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SAC");
 
     firebase.firestore().batch()
         .set(sfDocRef, {capital: false}, {merge: true})
         // .delete(sfDocRef) // Want to verify batches are atomic? With this line enabled, the next line will fail and the entire batch is rolled back correctly 👍
-        .update(sfDocRef, {population: 5})
+        .update(sfDocRef, {population: 860100})
+        .update(sacDocRef, {population: 6500100})
         .commit()
         .then(() => console.log(`Batch successfully committed`))
         .catch(error => console.log("Batch error: " + error));

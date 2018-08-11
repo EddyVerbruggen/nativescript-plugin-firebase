@@ -242,12 +242,14 @@ To perform a (mixed) sequence of `set`, `update`, and/or `delete` operations in 
 (everything is rolled back if 1 operation fails), use the `batch` feature.
 
 ```typescript
+// one batch can set/update/delete multiple documents
 const sanFranciscoDocumentReference: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+const sacramentoDocumentReference: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SAC");
 
 firebase.firestore().batch()
     .set(sanFranciscoDocumentReference, {capital: false}, {merge: true})
     .update(sanFranciscoDocumentReference, {population: 5})
-    .update(sanFranciscoDocumentReference, {population: 6})
+    .update(sacramentoDocumentReference, {population: 6})
     .commit()
     .then(() => console.log("Batch successfully committed"))
     .catch(error => console.log("Batch error: " + error));
