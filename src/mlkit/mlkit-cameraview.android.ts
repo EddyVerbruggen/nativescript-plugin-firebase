@@ -139,9 +139,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
       if (parameters.getSupportedFocusModes().contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
         parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-        console.log("Camera auto focus is supported.");
-      } else {
-        console.log("Camera auto focus is not supported on this device.");
       }
 
       // TODO this setter seems odd, but it's part of the example: https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSource.java#L312
