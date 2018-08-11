@@ -753,6 +753,42 @@ export namespace firestore {
     add(data: DocumentData): Promise<DocumentReference>;
   }
 
+  export type UpdateData = { [fieldPath: string]: any };
+
+  export class FieldPath {
+    /**
+     * Creates a FieldPath from the provided field names. If more than one field
+     * name is provided, the path will point to a nested field in a document.
+     *
+     * @param fieldNames A list of field names.
+     */
+    constructor(...fieldNames: string[]);
+
+    /**
+     * Returns a special sentinel FieldPath to refer to the ID of a document.
+     * It can be used in queries to sort or filter by the document ID.
+     */
+    static documentId(): FieldPath;
+  }
+
+  /*
+  export interface Transaction {
+    get(documentRef: DocumentReference): DocumentSnapshot;
+    set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): Transaction;
+    update(documentRef: DocumentReference, data: UpdateData): Transaction;
+    update(documentRef: DocumentReference, field: string | FieldPath, value: any, ...moreFieldsAndValues: any[]): Transaction;
+    delete(documentRef: DocumentReference): Transaction;
+  }
+  */
+
+  export interface WriteBatch {
+    set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): WriteBatch;
+    update(documentRef: DocumentReference, data: UpdateData): WriteBatch;
+    update(documentRef: DocumentReference, field: string | FieldPath, value: any, ...moreFieldsAndValues: any[]): WriteBatch;
+    delete(documentRef: DocumentReference): WriteBatch;
+    commit(): Promise<void>;
+  }
+
   export class FieldValue {
     static serverTimestamp: () => "SERVER_TIMESTAMP";
   }
@@ -776,6 +812,10 @@ export namespace firestore {
   function getDocument(collectionPath: string, documentPath: string): Promise<DocumentSnapshot>;
 
   function update(collectionPath: string, documentPath: string, document: any): Promise<void>;
+
+  // function runTransaction(updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void>;
+
+  function batch(): firestore.WriteBatch;
 }
 
 // Auth

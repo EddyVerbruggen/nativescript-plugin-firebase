@@ -1778,7 +1778,7 @@ firebase.push = (path, val) => {
     try {
       const ref = FIRDatabase.database().reference().childByAppendingPath(path).childByAutoId();
       ref.setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
-        error ? reject(error.localizedDescription) : resolve({ key: ref.key });
+        error ? reject(error.localizedDescription) : resolve({key: ref.key});
       });
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
@@ -2108,6 +2108,88 @@ firebase.invites.getInvitation = () => {
   });
 };
 
+firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.WriteBatch => {
+  class FirestoreWriteBatch implements firestore.WriteBatch {
+    constructor() {
+    }
+
+    public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.WriteBatch => {
+      fixSpecialFields(data);
+      nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
+      return this;
+    };
+
+    public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
+      fixSpecialFields(data);
+      nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
+      return this;
+    };
+
+    public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
+      nativeWriteBatch.deleteDocument(documentRef.ios);
+      return this;
+    };
+
+    commit(): Promise<void> {
+      return new Promise((resolve, reject) => {
+        nativeWriteBatch.commitWithCompletion((error: NSError) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      });
+    }
+  }
+
+  return new FirestoreWriteBatch();
+};
+
+firebase.firestore.batch = (): firestore.WriteBatch => {
+  return new firebase.firestore.WriteBatch(FIRFirestore.firestore().batch());
+};
+
+/*
+firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.Transaction => {
+  class FirestoreTransaction implements firestore.Transaction {
+    constructor() {
+    }
+
+    public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
+      const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError(documentRef.ios);
+      return new DocumentSnapshot(docSnapshot.exists ? docSnapshot.documentID : null, docSnapshot.exists, firebase.toJsObject(docSnapshot.data()));
+    };
+
+    public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
+      fixSpecialFields(data);
+      nativeTransaction.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
+      return this;
+    };
+
+    public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
+      fixSpecialFields(data);
+      nativeTransaction.updateDataForDocument(<any>data, documentRef.ios);
+      return this;
+    };
+
+    public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
+      nativeTransaction.deleteDocument(documentRef.ios);
+      return this;
+    }
+  }
+
+  return new FirestoreTransaction();
+};
+
+firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    FIRFirestore.firestore().runTransactionWithBlockCompletion(
+        (nativeTransaction: FIRTransaction, err: any) => {
+          const tx = new firebase.firestore.Transaction(nativeTransaction);
+          return updateFunction(tx);
+        },
+        (result, error: NSError) => error ? reject(error.localizedDescription) : resolve());
+  });
+};
+*/
+
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {
     if (typeof(FIRFirestore) === "undefined") {
@@ -2176,7 +2258,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
   }
 };
 
-firebase.firestore._getDocumentReference = (fIRDocumentReference, collectionPath, documentPath): firestore.DocumentReference => {
+firebase.firestore._getDocumentReference = (fIRDocumentReference, collectionPath: string, documentPath: string): firestore.DocumentReference => {
   return {
     id: fIRDocumentReference.documentID,
     collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
@@ -2449,8 +2531,8 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
 
     query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
     value = value instanceof GeoPoint
-      ? new FIRGeoPoint({ latitude: value.latitude, longitude: value.longitude })
-      : value;
+        ? new FIRGeoPoint({latitude: value.latitude, longitude: value.longitude})
+        : value;
 
     if (opStr === "<") {
       query = query.queryWhereFieldIsLessThan(fieldPath, value);

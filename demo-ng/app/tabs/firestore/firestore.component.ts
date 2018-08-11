@@ -45,16 +45,14 @@ export class FirestoreComponent {
         .set({
               name: "Woofie",
               last: "lastofwoofie",
-          // note that this only works on iOS (there's a limitation in the Firestore Android SDK)
+              // note that this only works on iOS (there's a limitation in the Firestore Android SDK)
               // updateTsSet: firebase.firestore().FieldValue().serverTimestamp()
             },
             {
               merge: true
             }
         )
-        .then(() => {
-          console.log("Woofie set");
-        })
+        .then(() => console.log("Woofie set"))
         .catch(err => console.log("Setting Woofie failed, error: " + err));
 
 
@@ -74,7 +72,8 @@ export class FirestoreComponent {
       state: "CA",
       country: "USA",
       capital: false,
-      population: 3900000
+      population: 3900000,
+      landmarks: ["lake", "mountain"]
     });
 
     citiesCollection.doc("SAC").set({
@@ -82,7 +81,8 @@ export class FirestoreComponent {
       state: "CA",
       country: "USA",
       capital: true,
-      population: 500000
+      population: 500000,
+      landmarks: ["mountain"]
     });
 
     citiesCollection.doc("DC").set({
@@ -90,7 +90,8 @@ export class FirestoreComponent {
       state: "WA",
       country: "USA",
       capital: true,
-      population: 680000
+      population: 680000,
+      landmarks: ["airport", "lake"]
     });
 
     citiesCollection.doc("TOK").set({
@@ -289,5 +290,42 @@ export class FirestoreComponent {
           console.log(`${result.key} => ${JSON.stringify(result.val())}`);
         })
         .catch(error => console.log("doWebGetValueForCompanies error: " + error));
+  }
+
+  /*
+  public transactionalUpdate(): void {
+    const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
+    firebase.firestore().runTransaction(transaction => {
+      const sfDoc = transaction.get(sfDocRef);
+      if (!sfDoc.exists) {
+        console.log("City SF doesn't exist");
+      } else {
+        const newPopulation = sfDoc.data().population + 1;
+        console.log(`Updating city 'SF' to a new population of: ${newPopulation}, and flipping the 'capital' state to ${sfDoc.data().capital}.`);
+
+        // this should fail
+        transaction
+            .set(sfDocRef, {capital: !sfDoc.data().capital}, {merge: true})
+            // .delete(sfDocRef) // with this line enabled, the next line will fail and the entire tx is rolled back 👍
+            .update(sfDocRef, {population: newPopulation})
+      }
+      return null;
+    })
+        .then(() => console.log(`Transaction successfully committed`))
+        .catch(error => console.log("doTransaction error: " + error));
+  }
+  */
+
+  public writeBatch(): void {
+    const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
+    firebase.firestore().batch()
+        .set(sfDocRef, {capital: false}, {merge: true})
+        // .delete(sfDocRef) // Want to verify batches are atomic? With this line enabled, the next line will fail and the entire batch is rolled back correctly 👍
+        .update(sfDocRef, {population: 5})
+        .commit()
+        .then(() => console.log(`Batch successfully committed`))
+        .catch(error => console.log("Batch error: " + error));
   }
 }

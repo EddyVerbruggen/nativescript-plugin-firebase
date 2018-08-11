@@ -2115,6 +2115,159 @@ firebase.invites.getInvitation = () => {
   });
 };
 
+class FirestoreWriteBatch implements firestore.WriteBatch {
+
+  public nativeWriteBatch: com.google.firebase.firestore.WriteBatch;
+
+  public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.WriteBatch => {
+    if (options && options.merge) {
+      this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data), com.google.firebase.firestore.SetOptions.merge());
+    } else {
+      this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
+    }
+    return this;
+  };
+
+  public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
+    this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
+    return this;
+  };
+
+  public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
+    this.nativeWriteBatch.delete(documentRef.android);
+    return this;
+  };
+
+  public commit(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task => {
+          if (!task.isSuccessful()) {
+            const ex = task.getException();
+            reject(ex && ex.getReason ? ex.getReason() : ex);
+          } else {
+            resolve();
+          }
+        }
+      });
+      this.nativeWriteBatch.commit().addOnCompleteListener(onCompleteListener);
+    });
+  };
+}
+
+firebase.firestore.batch = (): firestore.WriteBatch => {
+  const batch = new FirestoreWriteBatch();
+  batch.nativeWriteBatch = com.google.firebase.firestore.FirebaseFirestore.getInstance().batch();
+  return batch;
+};
+
+/*
+class FirestoreTransaction implements firestore.Transaction {
+
+  public nativeTransaction: com.google.firebase.firestore.Transaction;
+
+  public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
+    const docSnapshot: com.google.firebase.firestore.DocumentSnapshot = this.nativeTransaction.get(documentRef.android);
+    return new DocumentSnapshot(docSnapshot ? docSnapshot.getId() : null, docSnapshot.exists(), firebase.toJsObject(docSnapshot.getData()));
+  };
+
+  public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
+    console.log(">>> in tx.set");
+    if (options && options.merge) {
+      this.nativeTransaction.set(documentRef.android, firebase.toValue(data), com.google.firebase.firestore.SetOptions.merge());
+    } else {
+      this.nativeTransaction.set(documentRef.android, firebase.toValue(data));
+    }
+    return this;
+  };
+
+  public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
+    console.log(">>> in tx.update");
+    this.nativeTransaction.update(documentRef.android, firebase.toValue(data));
+    return this;
+  };
+
+  public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
+    console.log(">>> in tx.delete");
+    this.nativeTransaction.delete(documentRef.android);
+    return this;
+  }
+};
+
+firebase.firestore.Transaction = (nativeTransaction: com.google.firebase.firestore.Transaction): firestore.Transaction => {
+  const tx = new FirestoreTransaction();
+  tx.nativeTransaction = nativeTransaction;
+  return tx;
+};
+
+firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
+  return new Promise((resolve, reject) => {
+
+    const onSuccessListenert = new com.google.android.gms.tasks.OnSuccessListener({
+      onSuccess: () => {
+        const i = 1;
+      }
+    });
+
+    const l = new java.util.ArrayList();
+    l.add("foooo");
+    l.add("barrr");
+    org.nativescript.plugins.firebase.FirebaseFirestore.STATE = onSuccessListenert; // for this assignment to 'stick', this needs to be a real Java object
+    org.nativescript.plugins.firebase.FirebaseFirestore.UPDATE_FUNCTION = updateFunction;
+    console.log(">>> STATE: " + org.nativescript.plugins.firebase.FirebaseFirestore.STATE);
+    console.log(">>> UPDATE_FUNCTION: " + org.nativescript.plugins.firebase.FirebaseFirestore.UPDATE_FUNCTION);
+
+    let worker;
+    if (global['TNS_WEBPACK']) {
+      const WorkerScript = require('nativescript-worker-loader!./android-firestoretx-worker.js');
+      worker = new WorkerScript();
+    } else {
+      worker = new Worker('./android-firestoretx-worker.js');
+    }
+
+    (<any>global).theUpdateFunction = updateFunction;
+
+    worker.onmessage = msg => {
+      console.log(">>> msg from worker, stringified: " + JSON.stringify(msg));
+    };
+
+    worker.onerror = err => {
+      console.log(">>> worker err: " + JSON.stringify(err));
+    };
+
+    worker.postMessage({
+      in: "innn",
+      someArray: l,
+      onSuccessListenert: onSuccessListenert
+      // updateFunction: updateFunction
+    });
+
+    const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      onSuccess: resolve // TODO does this syntax work? if so: refactor other instances... otherwise use: onSuccess: () => resolve()
+    });
+
+    const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      onFailure: exception => reject(exception.getMessage())
+    });
+
+    // TODO apply is called from java to js, so that makes it run on the main/UI thread.. so doesn't work
+    // .. can we share native objects via appcontext (for a worker)?
+    const txFunction = new com.google.firebase.firestore.Transaction.Function({
+      apply: (nativeTransaction: com.google.firebase.firestore.Transaction) => {
+        const tx = new firebase.firestore.Transaction(nativeTransaction);
+        return updateFunction(tx);
+      }
+    });
+
+    com.google.firebase.firestore.FirebaseFirestore.getInstance().runTransaction(txFunction)
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener);
+
+    // org.nativescript.plugins.firebase.FirebaseFirestore.runTransaction(txFunction, onSuccessListener, onFailureListener);
+  });
+};
+*/
+
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {
 

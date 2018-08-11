@@ -237,5 +237,29 @@ query
     });
 ```
 
-## Future work
-Need something else that's not supported yet? Please open an Issue or PR 😚
+### `batch()`
+To perform a (mixed) sequence of `set`, `update`, and/or `delete` operations in an atomic fashion
+(everything is rolled back if 1 operation fails), use the `batch` feature.
+
+```typescript
+const sanFranciscoDocumentReference: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
+firebase.firestore().batch()
+    .set(sanFranciscoDocumentReference, {capital: false}, {merge: true})
+    .update(sanFranciscoDocumentReference, {population: 5})
+    .update(sanFranciscoDocumentReference, {population: 6})
+    .commit()
+    .then(() => console.log("Batch successfully committed"))
+    .catch(error => console.log("Batch error: " + error));
+```
+
+Need proof these batches are atomic? Try deleting and then updating a document 😉
+
+```typescript
+firebase.firestore().batch()
+    .delete(sanFranciscoDocumentReference)
+    .update(sanFranciscoDocumentReference, {population: 7})
+    .commit()
+    .then(() => console.log("Batch successfully committed"))
+    .catch(error => console.log("Batch error: " + error));
+```
