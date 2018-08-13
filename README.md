@@ -250,21 +250,21 @@ Update your local Android SDKs:
 Just run `$ANDROID_HOME/tools/bin/sdkmanager --update` from a command prompt
 or launch the SDK manager from Android Studio, expand `Extras` and install any pending updates.
 
-#### Found play-services:10.A.B, but version 11.X.Y is needed..
+#### Found play-services:A.C.D, but version B.X.Y is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
 #### `include.gradle`: Failed to apply plugin .. For input string: "+"
 You probably have another plugin depending on Google Play Services (Google Maps, perhaps).
 We need to pin to a specific play services version to play nice with others, so open `app/App_Resources/Android/app.gradle` and add:
 
-```
+```js
 android {  
   // other stuff here
 
   project.ext {
-    googlePlayServicesVersion = "11.8.0"
+    googlePlayServicesVersion = "15.0.0"
   }
 }
 ```
 
-Where `"11.8.0"` is best set to the same value as the `firebaseVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle).
+Where `"15.0.0"` is best set to the same value as the `googlePlayServicesVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/48a99ccd2a0f590c37080b1a252173ea9b996e9f/publish/scripts/installer.js#L540).
