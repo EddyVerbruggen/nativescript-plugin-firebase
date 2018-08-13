@@ -90,7 +90,8 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
               smilingProbability: face.hasSmilingProbability ? face.smilingProbability : undefined,
               leftEyeOpenProbability: face.hasLeftEyeOpenProbability ? face.leftEyeOpenProbability : undefined,
               rightEyeOpenProbability: face.hasRightEyeOpenProbability ? face.rightEyeOpenProbability : undefined,
-              trackingId: face.hasTrackingID ? face.trackingID : undefined
+              trackingId: face.hasTrackingID ? face.trackingID : undefined,
+              bounds: face.frame
             });
           }
           resolve(result);

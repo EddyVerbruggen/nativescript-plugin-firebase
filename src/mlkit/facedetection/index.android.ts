@@ -33,6 +33,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
         for (let i = 0; i < faces.size(); i++) {
           const face = faces.get(i);
           result.faces.push({
+            bounds: boundingBoxToBounds(face.getBoundingBox()),
             smilingProbability: face.getSmilingProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getSmilingProbability() : undefined,
             leftEyeOpenProbability: face.getLeftEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getLeftEyeOpenProbability() : undefined,
             rightEyeOpenProbability: face.getRightEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getRightEyeOpenProbability() : undefined,
