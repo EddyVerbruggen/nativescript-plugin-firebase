@@ -771,7 +771,6 @@ export namespace firestore {
     static documentId(): FieldPath;
   }
 
-  /*
   export interface Transaction {
     get(documentRef: DocumentReference): DocumentSnapshot;
     set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): Transaction;
@@ -779,7 +778,6 @@ export namespace firestore {
     update(documentRef: DocumentReference, field: string | FieldPath, value: any, ...moreFieldsAndValues: any[]): Transaction;
     delete(documentRef: DocumentReference): Transaction;
   }
-  */
 
   export interface WriteBatch {
     set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): WriteBatch;
@@ -813,7 +811,7 @@ export namespace firestore {
 
   function update(collectionPath: string, documentPath: string, document: any): Promise<void>;
 
-  // function runTransaction(updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void>;
+  function runTransaction(updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void>;
 
   function batch(): firestore.WriteBatch;
 }

@@ -16,9 +16,9 @@ export module firestore {
       return firebase.firestore.GeoPoint(latitude, longitude);
     }
 
-    // runTransaction<T>(updateFunction: (transaction: firebase.firestore.Transaction) => Promise<any>): Promise<void> {
-    //   return firebase.firestore.runTransaction(updateFunction);
-    // }
+    runTransaction<T>(updateFunction: (transaction: firebase.firestore.Transaction) => Promise<any>): Promise<void> {
+      return firebase.firestore.runTransaction(updateFunction);
+    }
 
     batch(): firebase.firestore.WriteBatch {
       return firebase.firestore.batch();

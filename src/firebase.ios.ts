@@ -2146,7 +2146,6 @@ firebase.firestore.batch = (): firestore.WriteBatch => {
   return new firebase.firestore.WriteBatch(FIRFirestore.firestore().batch());
 };
 
-/*
 firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.Transaction => {
   class FirestoreTransaction implements firestore.Transaction {
     constructor() {
@@ -2188,7 +2187,6 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
         (result, error: NSError) => error ? reject(error.localizedDescription) : resolve());
   });
 };
-*/
 
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {

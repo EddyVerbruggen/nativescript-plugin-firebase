@@ -286,36 +286,9 @@ export class FirestoreComponent {
     const path = "/companies";
     firebase.database().ref(path)
         .once("value")
-        .then(result => {
-          console.log(`${result.key} => ${JSON.stringify(result.val())}`);
-        })
+        .then(result => console.log(`${result.key} => ${JSON.stringify(result.val())}`))
         .catch(error => console.log("doWebGetValueForCompanies error: " + error));
   }
-
-  /*
-  public transactionalUpdate(): void {
-    const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
-
-    firebase.firestore().runTransaction(transaction => {
-      const sfDoc = transaction.get(sfDocRef);
-      if (!sfDoc.exists) {
-        console.log("City SF doesn't exist");
-      } else {
-        const newPopulation = sfDoc.data().population + 1;
-        console.log(`Updating city 'SF' to a new population of: ${newPopulation}, and flipping the 'capital' state to ${sfDoc.data().capital}.`);
-
-        // this should fail
-        transaction
-            .set(sfDocRef, {capital: !sfDoc.data().capital}, {merge: true})
-            // .delete(sfDocRef) // with this line enabled, the next line will fail and the entire tx is rolled back 👍
-            .update(sfDocRef, {population: newPopulation})
-      }
-      return null;
-    })
-        .then(() => console.log(`Transaction successfully committed`))
-        .catch(error => console.log("doTransaction error: " + error));
-  }
-  */
 
   public writeBatch(): void {
     // one batch can update multiple docs
@@ -330,5 +303,27 @@ export class FirestoreComponent {
         .commit()
         .then(() => console.log(`Batch successfully committed`))
         .catch(error => console.log("Batch error: " + error));
+  }
+
+  public transactionalUpdate(): void {
+    const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
+    firebase.firestore().runTransaction(transaction => {
+      const sfDoc = transaction.get(sfDocRef);
+      if (!sfDoc.exists) {
+        console.log("City SF doesn't exist");
+      } else {
+        const newPopulation = sfDoc.data().population + 1;
+        console.log(`Updating city 'SF' to a new population of: ${newPopulation}, and flipping the 'capital' state to ${sfDoc.data().capital}.`);
+
+        transaction
+            .set(sfDocRef, {capital: !sfDoc.data().capital}, {merge: true})
+            // .delete(sfDocRef) // with this line enabled, the next line will fail and the entire tx is rolled back 👍
+            .update(sfDocRef, {population: newPopulation})
+      }
+      return null;
+    })
+        .then(() => console.log(`Transaction successfully committed`))
+        .catch(error => console.log("doTransaction error: " + error));
   }
 }

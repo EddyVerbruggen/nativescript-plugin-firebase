@@ -2161,6 +2161,13 @@ firebase.firestore.batch = (): firestore.WriteBatch => {
   return batch;
 };
 
+firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    // Why? See the note in the commented 'runTransaction' function below.
+    reject("Not supported on Android. If you need a x-platform implementation, use 'batch' instead.");
+  });
+};
+
 /*
 class FirestoreTransaction implements firestore.Transaction {
 
@@ -2172,7 +2179,6 @@ class FirestoreTransaction implements firestore.Transaction {
   };
 
   public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
-    console.log(">>> in tx.set");
     if (options && options.merge) {
       this.nativeTransaction.set(documentRef.android, firebase.toValue(data), com.google.firebase.firestore.SetOptions.merge());
     } else {
@@ -2182,13 +2188,11 @@ class FirestoreTransaction implements firestore.Transaction {
   };
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
-    console.log(">>> in tx.update");
     this.nativeTransaction.update(documentRef.android, firebase.toValue(data));
     return this;
   };
 
   public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
-    console.log(">>> in tx.delete");
     this.nativeTransaction.delete(documentRef.android);
     return this;
   }
@@ -2209,49 +2213,16 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
       }
     });
 
-    const l = new java.util.ArrayList();
-    l.add("foooo");
-    l.add("barrr");
-    org.nativescript.plugins.firebase.FirebaseFirestore.STATE = onSuccessListenert; // for this assignment to 'stick', this needs to be a real Java object
-    org.nativescript.plugins.firebase.FirebaseFirestore.UPDATE_FUNCTION = updateFunction;
-    console.log(">>> STATE: " + org.nativescript.plugins.firebase.FirebaseFirestore.STATE);
-    console.log(">>> UPDATE_FUNCTION: " + org.nativescript.plugins.firebase.FirebaseFirestore.UPDATE_FUNCTION);
-
-    let worker;
-    if (global['TNS_WEBPACK']) {
-      const WorkerScript = require('nativescript-worker-loader!./android-firestoretx-worker.js');
-      worker = new WorkerScript();
-    } else {
-      worker = new Worker('./android-firestoretx-worker.js');
-    }
-
-    (<any>global).theUpdateFunction = updateFunction;
-
-    worker.onmessage = msg => {
-      console.log(">>> msg from worker, stringified: " + JSON.stringify(msg));
-    };
-
-    worker.onerror = err => {
-      console.log(">>> worker err: " + JSON.stringify(err));
-    };
-
-    worker.postMessage({
-      in: "innn",
-      someArray: l,
-      onSuccessListenert: onSuccessListenert
-      // updateFunction: updateFunction
-    });
-
     const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-      onSuccess: resolve // TODO does this syntax work? if so: refactor other instances... otherwise use: onSuccess: () => resolve()
+      onSuccess: () => resolve()
     });
 
     const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
       onFailure: exception => reject(exception.getMessage())
     });
 
-    // TODO apply is called from java to js, so that makes it run on the main/UI thread.. so doesn't work
-    // .. can we share native objects via appcontext (for a worker)?
+    // NOTE: Here's the problem: 'apply' is called from java to js, so that makes it run on the main/UI thread,
+    // which is not allowed by Firebase.. so doesn't work in {N}
     const txFunction = new com.google.firebase.firestore.Transaction.Function({
       apply: (nativeTransaction: com.google.firebase.firestore.Transaction) => {
         const tx = new firebase.firestore.Transaction(nativeTransaction);
@@ -2262,8 +2233,6 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
     com.google.firebase.firestore.FirebaseFirestore.getInstance().runTransaction(txFunction)
         .addOnSuccessListener(onSuccessListener)
         .addOnFailureListener(onFailureListener);
-
-    // org.nativescript.plugins.firebase.FirebaseFirestore.runTransaction(txFunction, onSuccessListener, onFailureListener);
   });
 };
 */

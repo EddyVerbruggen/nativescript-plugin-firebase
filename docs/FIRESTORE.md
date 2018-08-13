@@ -237,7 +237,7 @@ query
     });
 ```
 
-### `batch()`
+### Batched Writes: `batch()`
 To perform a (mixed) sequence of `set`, `update`, and/or `delete` operations in an atomic fashion
 (everything is rolled back if 1 operation fails), use the `batch` feature.
 
@@ -263,5 +263,32 @@ firebase.firestore().batch()
     .update(sanFranciscoDocumentReference, {population: 7})
     .commit()
     .then(() => console.log("Batch successfully committed"))
-    .catch(error => console.log("Batch error: " + error));
+    .catch(error => console.log(`Batch error: ${error}`));
+```
+
+### Transactional Updates: `runTransaction()` (iOS only)
+> There's a technical hurdle which prevents this from working on Android.
+
+In contrast to `batch` you can `runTransaction` to also be able to use `get`, but only use `get`
+before calling `set`, `update`, or `delete` (or the transaction will fail).
+
+```typescript
+const sanFranciscoDocumentReference: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
+firebase.firestore().runTransaction(transaction => {
+  const doc = transaction.get(sanFranciscoDocumentReference);
+  if (!doc.exists) {
+    console.log("City SF doesn't exist");
+  } else {
+    const newPopulation = doc.data().population + 1;
+    console.log(`Updating city 'SF' to a new population of: ${newPopulation}, and flipping the 'capital' state to ${sfDoc.data().capital}.`);
+
+    transaction
+        .set(sanFranciscoDocumentReference, {capital: !doc.data().capital}, {merge: true})
+        .update(sanFranciscoDocumentReference, {population: newPopulation})
+  }
+  return null;
+})
+   .then(() => console.log("Transaction successfully committed"))
+   .catch(error => console.log(`Transaction error: ${error}`));
 ```
