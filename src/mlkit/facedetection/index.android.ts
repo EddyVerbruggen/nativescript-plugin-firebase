@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult } from "./";
+import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult, MLKitDetectFacesResultBounds } from "./";
 import { MLKitOptions } from "../index";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
 
@@ -63,6 +63,19 @@ function getFaceDetector(options: MLKitDetectFacesOnDeviceOptions): any {
   return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(faceDetectorOptions);
 }
 
+function boundingBoxToBounds(rect: any): MLKitDetectFacesResultBounds {
+  return {
+    origin: {
+      x: rect.left,
+      y: rect.top
+    },
+    size: {
+      width: rect.width(),
+      height: rect.height()
+    }
+  }
+}
+
 export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): Promise<MLKitDetectFacesOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
@@ -80,6 +93,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
             for (let i = 0; i < faces.size(); i++) {
               const face = faces.get(i);
               result.faces.push({
+                bounds: boundingBoxToBounds(face.getBoundingBox()),
                 smilingProbability: face.getSmilingProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getSmilingProbability() : undefined,
                 leftEyeOpenProbability: face.getLeftEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getLeftEyeOpenProbability() : undefined,
                 rightEyeOpenProbability: face.getRightEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getRightEyeOpenProbability() : undefined,

@@ -1,6 +1,17 @@
 import { MLKitOptions } from "../";
 import { MLKitCameraView, MLKitResult } from "../index";
 
+export interface MLKitDetectFacesResultBounds {
+  origin: {
+    x: number;
+    y: number;
+  },
+  size: {
+    width: number;
+    height: number;
+  }
+}
+
 export interface MLKitDetectFacesResultFace {
   smilingProbability?: number;
   leftEyeOpenProbability?: number;
@@ -8,6 +19,7 @@ export interface MLKitDetectFacesResultFace {
   trackingId?: number;
   ios?: any;
   android?: any;
+  bounds?: MLKitDetectFacesResultBounds;
 }
 
 export interface MLKitDetectFacesOnDeviceResult extends MLKitResult {
