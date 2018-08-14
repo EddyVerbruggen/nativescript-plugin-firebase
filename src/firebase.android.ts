@@ -2620,7 +2620,8 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
     } else if (opStr === ">") {
       query = query.whereGreaterThan(fieldPath, firebase.toValue(value));
     } else if (opStr === "array-contains") {
-      // TODO
+      // TODO remove 'any' when typings have been updated
+      query = (<any>query).whereArrayContains(fieldPath, firebase.toValue(value));
     } else {
       console.log("Illegal argument for opStr: " + opStr);
       return null;
