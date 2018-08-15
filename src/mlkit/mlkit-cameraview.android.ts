@@ -53,37 +53,41 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   createNativeView(): Object {
-    let v = super.createNativeView();
+    let nativeView = super.createNativeView();
 
     if (this.hasCamera()) {
-      const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
-        if (args.requestCode === CAMERA_PERMISSION_REQUEST_CODE) {
-          application.android.off(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
+      // no permission required for older Android versions
+      if (android.os.Build.VERSION.SDK_INT < 23) {
+        this.initView(nativeView);
+      } else {
+        const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
+          if (args.requestCode === CAMERA_PERMISSION_REQUEST_CODE) {
+            application.android.off(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
-          for (let i = 0; i < args.permissions.length; i++) {
-            if (args.grantResults[i] === android.content.pm.PackageManager.PERMISSION_DENIED) {
-              console.log("Camera permission denied");
-              return;
+            for (let i = 0; i < args.permissions.length; i++) {
+              if (args.grantResults[i] === android.content.pm.PackageManager.PERMISSION_DENIED) {
+                console.log("Camera permission denied");
+                return;
+              }
             }
+
+            this.initView(nativeView);
           }
+        };
 
-          this.initView();
-        }
-      };
+        // grab the permission dialog result
+        application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
-      // grab the permission dialog result
-      application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
-
-      // invoke the permission dialog
-      (android.support.v4.app.ActivityCompat as any).requestPermissions(
-          application.android.foregroundActivity || application.android.startActivity,
-          [android.Manifest.permission.CAMERA],
-          CAMERA_PERMISSION_REQUEST_CODE
-      );
+        // invoke the permission dialog
+        (android.support.v4.app.ActivityCompat as any).requestPermissions(
+            application.android.foregroundActivity || application.android.startActivity,
+            [android.Manifest.permission.CAMERA],
+            CAMERA_PERMISSION_REQUEST_CODE);
+      }
     } else {
       console.log("There's no Camera on this device :(");
     }
-    return v;
+    return nativeView;
   }
 
   private hasCamera() {
@@ -93,15 +97,15 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         .hasSystemFeature("android.hardware.camera");
   }
 
-  private initView() {
+  private initView(nativeView) {
     // if (this.preferFrontCamera) {
     // this._reader.switchDeviceInput();
     // }
 
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
-    this.nativeView.addView(this.surfaceView);
+    nativeView.addView(this.surfaceView);
 
-    // Note that surfacview callbacks didn't see to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
+    // Note that surfaceview callbacks didn't seem to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
     setTimeout(() => {
       const surfaceHolder = this.surfaceView.getHolder();
       const cameraFacingRequested = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
