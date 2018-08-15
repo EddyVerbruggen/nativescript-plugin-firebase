@@ -11,8 +11,8 @@ export abstract class MLKitImageLabeling extends MLKitCameraView {
 
   protected confidenceThreshold: number;
 
-  [confidenceThresholdProperty.setNative](value: number) {
-    this.confidenceThreshold = value;
+  [confidenceThresholdProperty.setNative](value: any) {
+    this.confidenceThreshold = parseFloat(value);
   }
 }
 
