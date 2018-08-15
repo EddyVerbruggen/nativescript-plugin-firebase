@@ -1,4 +1,4 @@
-import { firebase, DocumentSnapshot, QuerySnapshot, GeoPoint } from "./firebase-common";
+import { firebase, DocumentSnapshot as DocumentSnapshotBase, QuerySnapshot, GeoPoint } from "./firebase-common";
 import * as application from "tns-core-modules/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
@@ -13,6 +13,14 @@ firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 firebase._configured = false;
+
+class DocumentSnapshot extends DocumentSnapshotBase {
+  ios: FIRDocumentSnapshot;
+  constructor(snapshot: FIRDocumentSnapshot) {
+    super(snapshot.documentID, snapshot.exists, firebase.toJsObject(snapshot.data()));
+    this.ios = snapshot;
+  }
+}
 
 // Note that FIRApp.configure must be called only once, but not here (see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/564)
 
@@ -2205,7 +2213,9 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
       orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, fIRCollectionReference),
       limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, fIRCollectionReference),
-      onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(fIRCollectionReference, callback)
+      onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(fIRCollectionReference, callback),
+      startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, fIRCollectionReference),
+      startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, fIRCollectionReference),
     };
 
   } catch (ex) {
@@ -2216,7 +2226,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 
 firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
-    callback(new DocumentSnapshot(snapshot.documentID, snapshot.exists, firebase.toJsObject(snapshot.data())));
+    callback(new DocumentSnapshot(snapshot));
   });
 
   // There's a bug resulting this function to be undefined..
@@ -2236,7 +2246,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
     const docSnapshots: Array<firestore.DocumentSnapshot> = [];
     for (let i = 0, l = snapshot.documents.count; i < l; i++) {
       const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-      docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
+      docSnapshots.push(new DocumentSnapshot(document));
     }
 
     const snap = new QuerySnapshot();
@@ -2448,7 +2458,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
               const docSnapshots: Array<firestore.DocumentSnapshot> = [];
               for (let i = 0, l = snapshot.documents.count; i < l; i++) {
                 const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-                docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
+                docSnapshots.push(new DocumentSnapshot(document));
               }
               const snap = new QuerySnapshot();
               snap.docSnapshots = docSnapshots;
@@ -2483,7 +2493,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
               reject(error.localizedDescription);
             } else {
               const exists = snapshot.exists;
-              resolve(new DocumentSnapshot(exists ? snapshot.documentID : null, exists, firebase.toJsObject(snapshot.data())));
+              resolve(new DocumentSnapshot(snapshot));
             }
           });
 
@@ -2505,7 +2515,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0, l = snapshot.documents.count; i < l; i++) {
             const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
-            docSnapshots.push(new DocumentSnapshot(document.documentID, true, firebase.toJsObject(document.data())));
+            docSnapshots.push(new DocumentSnapshot(document));
           }
           const snap = new QuerySnapshot();
           snap.docSnapshots = docSnapshots;
@@ -2516,7 +2526,9 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
     where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
-    onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback)
+    onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback),
+    startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, query),
+    startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, query),
   };
 };
 
@@ -2564,6 +2576,17 @@ firebase.firestore.orderBy = (collectionPath: string, fieldPath: string, directi
 
 firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQuery): firestore.Query => {
   query = query.queryLimitedTo(limit);
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.startAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
+  query = query.queryStartingAtDocument(document.ios);
+  return firebase.firestore._getQuery(collectionPath, query);
+
+}
+
+firebase.firestore.startAfter = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
+  query = query.queryStartingAfterDocument(document.ios);
   return firebase.firestore._getQuery(collectionPath, query);
 };
 

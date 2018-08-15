@@ -713,9 +713,10 @@ export namespace firestore {
   }
 
   export interface DocumentSnapshot {
+    ios?: FIRDocumentSnapshot;
+    android?: com.google.firebase.firestore.DocumentSnapshot;
     id: string;
     exists: boolean;
-
     data(): DocumentData;
   }
 
@@ -743,6 +744,12 @@ export namespace firestore {
     limit(limit: number): Query;
 
     onSnapshot(callback: (snapshot: QuerySnapshot) => void): () => void;
+
+    startAt(snapshot: DocumentSnapshot): Query;
+
+    startAfter(snapshot: DocumentSnapshot): Query;
+
+    // endBefore(snapshot: DocumentSnapshot): Query;
   }
 
   export interface CollectionReference extends Query {

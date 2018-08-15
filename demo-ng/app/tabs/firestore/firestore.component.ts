@@ -326,4 +326,17 @@ export class FirestoreComponent {
         .then(() => console.log(`Transaction successfully committed`))
         .catch(error => console.log("doTransaction error: " + error));
   }
+
+  public firestoreStartAfter(): void {
+    const beijingSnapshot = firebase.firestore().collection('cities')
+      .doc('BJ')
+      .get()
+      .then(doc => {
+        firebase.firestore().collection('cities')
+          .orderBy('country', 'asc')
+          .startAfter(doc)
+          .get()
+          .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+      });
+  }
 }
