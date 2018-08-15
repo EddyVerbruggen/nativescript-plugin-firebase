@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import {
-  MLKitRecognizeTextOnDeviceResult,
+  MLKitRecognizeTextResult,
   MLKitRecognizeTextResultBlock
 } from "nativescript-plugin-firebase/mlkit/textrecognition";
 
@@ -13,7 +13,7 @@ export class TextRecognitionComponent {
   blocks: Array<MLKitRecognizeTextResultBlock>;
 
   onTextRecognitionResult(scanResult: any): void {
-    const value: MLKitRecognizeTextOnDeviceResult = scanResult.value;
+    const value: MLKitRecognizeTextResult = scanResult.value;
     this.blocks = value.blocks;
   }
 }

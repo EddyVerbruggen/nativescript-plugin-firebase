@@ -46,11 +46,11 @@ after your app is installed from the Play Store. Add this to your `<resources>/A
 ```xml
 <meta-data
     android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-    android:value="text,face,.." />
+    android:value="ocr,face,.." />
 ```
 
-Replace `text,label,..` by whichever features you need. So if you only need Text recognitions, use `"text"`, but if you want
-to perform Text recognition, Face detection, Barcode scanning, and Image labeling on-device, use `"text,face,barcode,label"`.
+Replace `ocr,label,..` by whichever features you need. So if you only need Text recognitions, use `"ocr"`, but if you want
+to perform Text recognition, Face detection, Barcode scanning, and Image labeling on-device, use `"ocr,face,barcode,label"`.
 
 Note that (because of how iOS works) we bundle the models you've picked during plugin configuration with your app.
 So if you have a change of heart, re-run the configuration as explained at the top of this document. 
@@ -91,26 +91,26 @@ To be able to use Cloud features you need to do two things:
 #### Still image (on-device)
 
 ```typescript
-import { MLKitRecognizeTextOnDeviceResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.textrecognition.recognizeTextOnDevice({
   image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
-}).then((result: MLKitRecognizeTextOnDeviceResult) => { // just look at this type to see what else is returned
-  console.log(result.blocks.map(block => block.text).join(""));
+}).then((result: MLKitRecognizeTextResult) => { // just look at this type to see what else is returned
+  console.log(result.text ? result.text : "");
 }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
 #### Still image (cloud)
 
 ```typescript
-import { MLKitRecognizeTextCloudResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.textrecognition.recognizeTextCloud({
   image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
 })
-.then((result: MLKitRecognizeTextCloudResult) => console.log(result.text))
+.then((result: MLKitRecognizeTextResult) => console.log(result.text ? result.text : ""))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 

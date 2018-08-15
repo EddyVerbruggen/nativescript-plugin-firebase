@@ -10,10 +10,7 @@ import * as Camera from "nativescript-camera";
 import { BarcodeFormat, MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
 import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/facedetection";
-import {
-  MLKitRecognizeTextCloudResult,
-  MLKitRecognizeTextOnDeviceResult
-} from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 import {
   MLKitImageLabelingCloudResult,
   MLKitImageLabelingOnDeviceResult
@@ -102,7 +99,7 @@ export class MLKitComponent {
       width: 800,
       height: 800,
       keepAspectRatio: true,
-      saveToGallery: false,
+      saveToGallery: true,
       cameraFacing: "rear"
     }).then(imageAsset => {
       new ImageSource().fromAsset(imageAsset).then(imageSource => {
@@ -182,8 +179,8 @@ export class MLKitComponent {
         this.labelImageCloud(imageSource);
       } else if (pickedItem === "Landmark recognition (cloud)") {
         this.recognizeLandmarkCloud(imageSource);
-      // } else if (pickedItem === "Custom model (on device)") {
-      //   this.customModelOnDevice(imageSource);
+        // } else if (pickedItem === "Custom model (on device)") {
+        //   this.customModelOnDevice(imageSource);
       }
     });
   }
@@ -191,10 +188,11 @@ export class MLKitComponent {
   private recognizeTextOnDevice(imageSource: ImageSource): void {
     firebase.mlkit.textrecognition.recognizeTextOnDevice({
       image: imageSource
-    }).then((result: MLKitRecognizeTextOnDeviceResult) => {
+    }).then((result: MLKitRecognizeTextResult) => {
+      console.log("recognizeTextOnDevice result: " + JSON.stringify(result));
       alert({
         title: `Result`,
-        message: result.blocks.map(block => block.text).join(""),
+        message: result.text ? result.text : "",
         okButtonText: "OK"
       });
     }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
@@ -206,10 +204,11 @@ export class MLKitComponent {
       modelType: "latest",
       maxResults: 15
     }).then(
-        (result: MLKitRecognizeTextCloudResult) => {
+        (result: MLKitRecognizeTextResult) => {
+          console.log("recognizeTextCloud result: " + JSON.stringify(result));
           alert({
             title: `Result`,
-            message: result.text,
+            message: result.text ? result.text : "",
             okButtonText: "OK"
           });
         })

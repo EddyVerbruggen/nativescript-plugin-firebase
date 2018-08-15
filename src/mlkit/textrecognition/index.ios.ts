@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
-import { MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextCloudOptions, MLKitRecognizeTextOnDeviceResult, MLKitRecognizeTextCloudResult } from "./";
+import { MLKitRecognizeTextCloudOptions, MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 import { MLKitRecognizeTextResultBlock, MLKitRecognizeTextResultLine } from "./index";
 
@@ -18,7 +18,7 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
         this.notify({
           eventName: MLKitTextRecognition.scanResultEvent,
           object: this,
-          value: getOnDeviceResult(visionText)
+          value: getResult(visionText)
         });
       }
     };
@@ -30,10 +30,15 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
 
 }
 
-function getOnDeviceResult(visionText: FIRVisionText): MLKitRecognizeTextOnDeviceResult {
-  const result = <MLKitRecognizeTextOnDeviceResult>{
+function getResult(visionText: FIRVisionText): MLKitRecognizeTextResult {
+  if (visionText === null) {
+    return {};
+  }
+
+  const result = <MLKitRecognizeTextResult>{
     text: visionText.text,
-    blocks: []
+    blocks: [],
+    ios: visionText
   };
 
   for (let i = 0, l = visionText.blocks.count; i < l; i++) {
@@ -78,7 +83,7 @@ function getOnDeviceResult(visionText: FIRVisionText): MLKitRecognizeTextOnDevic
   return result;
 }
 
-export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextOnDeviceResult> {
+export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextResult> {
   return new Promise((resolve, reject) => {
     try {
       const firVision: FIRVision = FIRVision.vision();
@@ -87,8 +92,8 @@ export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions
       textDetector.processImageCompletion(getImage(options), (visionText: FIRVisionText, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
-        } else if (visionText !== null) {
-          resolve(getOnDeviceResult(visionText));
+        } else {
+          resolve(getResult(visionText));
         }
       });
     } catch (ex) {
@@ -98,7 +103,7 @@ export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions
   });
 }
 
-export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult> {
+export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextResult> {
   return new Promise((resolve, reject) => {
     try {
       const fIRVisionCloudDetectorOptions = FIRVisionCloudTextRecognizerOptions.new();
@@ -114,9 +119,7 @@ export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Pro
         if (error !== null) {
           reject(error.localizedDescription);
         } else if (visionText !== null) {
-          resolve({
-            text: visionText.text
-          });
+          resolve(getResult(visionText));
         } else {
           reject("Unknown error :'(");
         }

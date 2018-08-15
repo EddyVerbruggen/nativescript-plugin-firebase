@@ -3037,7 +3037,7 @@ function echoAndroidManifestChanges(result) {
     if (isSelected(result.ml_kit)) {
       var selectedFeatures = [];
       if (isSelected(result.ml_kit_text_recognition)) {
-        selectedFeatures.push("text");
+        selectedFeatures.push("ocr");
       }
       if (isSelected(result.ml_kit_barcode_scanning)) {
         selectedFeatures.push("barcode");

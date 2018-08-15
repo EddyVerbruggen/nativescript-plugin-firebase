@@ -28,14 +28,11 @@ export interface MLKitRecognizeTextResultBlock {
 	lines: Array<MLKitRecognizeTextResultLine>;
 }
 
-export interface MLKitRecognizeTextOnDeviceResult extends MLKitResult {
-	blocks: Array<MLKitRecognizeTextResultBlock>;
+export interface MLKitRecognizeTextResult extends MLKitResult {
+  text?: string;
+	blocks?: Array<MLKitRecognizeTextResultBlock>;
   ios?: any;
   android?: any;
-}
-
-export interface MLKitRecognizeTextCloudResult extends MLKitResult {
-  text: string;
 }
 
 // TODO see 'setLanguageHints' at https://firebase.google.com/docs/ml-kit/android/recognize-text
@@ -46,9 +43,9 @@ export interface MLKitRecognizeTextOnDeviceOptions extends MLKitOptions {
 export interface MLKitRecognizeTextCloudOptions extends MLKitCloudOptions {
 }
 
-export declare function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextOnDeviceResult>;
+export declare function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextResult>;
 
-export declare function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult>;
+export declare function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextResult>;
 
 export declare class MLKitTextRecognition extends MLKitCameraView {
 }

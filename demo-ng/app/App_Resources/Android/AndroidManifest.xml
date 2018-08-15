@@ -36,7 +36,7 @@
 
 		<meta-data
 				android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-				android:value="text,barcode,face,label" />
+				android:value="ocr,barcode,face,label" />
 
 		<activity
 			android:name="com.tns.NativeScriptActivity"

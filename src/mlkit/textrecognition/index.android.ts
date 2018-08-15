@@ -1,32 +1,30 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions, } from "../";
-import { MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextOnDeviceResult } from "./";
+import { MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 import {
   MLKitRecognizeTextCloudOptions,
-  MLKitRecognizeTextCloudResult,
-  MLKitRecognizeTextResultBlock,
-  MLKitRecognizeTextResultLine,
+  MLKitRecognizeTextResultBounds,
   MLKitRecognizeTextResultElement,
-  MLKitRecognizeTextResultBounds
+  MLKitRecognizeTextResultLine
 } from "./index";
 
 declare const com: any;
 
 export class MLKitTextRecognition extends MLKitTextRecognitionBase {
 
-  protected createDetector(): any {
-    return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionTextDetector();
+  protected createDetector(): any /* FirebaseVisionTextRecognizer */ {
+    return com.google.firebase.ml.vision.FirebaseVision.getInstance().getOnDeviceTextRecognizer();
   }
 
   protected createSuccessListener(): any {
     return new com.google.android.gms.tasks.OnSuccessListener({
-      onSuccess: textBlocks => {
-        if (textBlocks.getBlocks().size() > 0) {
+      onSuccess: firebaseVisionText => {
+        if (firebaseVisionText.getTextBlocks().size() > 0) {
           this.notify({
             eventName: MLKitTextRecognition.scanResultEvent,
             object: this,
-            value: getOnDeviceResult(textBlocks.getBlocks())
+            value: getResult(firebaseVisionText)
           });
         }
       }
@@ -48,17 +46,29 @@ function boundingBoxToBounds(rect: any): MLKitRecognizeTextResultBounds {
 }
 
 // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
-function getOnDeviceResult(blocks: any): MLKitRecognizeTextOnDeviceResult {
-  const blks: MLKitRecognizeTextResultBlock[] = [];
+function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
+  if (firebaseVisionText === null) {
+    return {};
+  }
 
-  for (let i = 0; i < blocks.size(); i++) {
-    const block = blocks.get(i);
-    const lines = block.getLines();
+  const result = <MLKitRecognizeTextResult>{ // TODO rename the return type
+    text: firebaseVisionText.getText(),
+    blocks: [],
+    android: firebaseVisionText
+  };
 
-    const lns:  MLKitRecognizeTextResultLine[] = [];
+  for (let i = 0; i < firebaseVisionText.getTextBlocks().size(); i++) {
+    const textBlock = firebaseVisionText.getTextBlocks().get(i);
+    // const blockText: string = textBlock.getText();
+    // const blockConfidence: number = textBlock.getConfidence();
+    const lines = textBlock.getLines();
+
+    const lns: MLKitRecognizeTextResultLine[] = [];
 
     for (let j = 0; j < lines.size(); j++) {
       const line = lines.get(j);
+      // const lineText = line.getText();
+      // const lineConfidence = line.getConfidence();
       const elements = line.getElements();
 
       const elms: MLKitRecognizeTextResultElement[] = [];
@@ -78,27 +88,25 @@ function getOnDeviceResult(blocks: any): MLKitRecognizeTextOnDeviceResult {
       });
     }
 
-    blks.push({
-      text: block.getText(),
-      bounds: boundingBoxToBounds(block.getBoundingBox()),
+    result.blocks.push({
+      text: textBlock.getText(),
+      bounds: boundingBoxToBounds(textBlock.getBoundingBox()),
       lines: lns
     });
   }
 
-  return {
-    blocks: blks
-  };
+  return result;
 }
 
-export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextOnDeviceResult> {
+export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions): Promise<MLKitRecognizeTextResult> {
   return new Promise((resolve, reject) => {
     try {
-      const firebaseVisionTextDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionTextDetector();
+      const firebaseVisionTextRecognizer = com.google.firebase.ml.vision.FirebaseVision.getInstance().getOnDeviceTextRecognizer();
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: textBlocks => {
-          resolve(getOnDeviceResult(textBlocks.getBlocks()));
-          firebaseVisionTextDetector.close();
+        onSuccess: firebaseVisionText => {
+          resolve(getResult(firebaseVisionText));
+          firebaseVisionTextRecognizer.close();
         }
       });
 
@@ -106,8 +114,8 @@ export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions
         onFailure: exception => reject(exception.getMessage())
       });
 
-      firebaseVisionTextDetector
-          .detectInImage(getImage(options))
+      firebaseVisionTextRecognizer
+          .processImage(getImage(options))
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 
@@ -118,23 +126,22 @@ export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions
   });
 }
 
-export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextCloudResult> {
+export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextResult> {
   return new Promise((resolve, reject) => {
     try {
-      const cloudDetectorOptions =
+      const firebaseVisionCloudTextRecognizerOptions =
           new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
-              .setModelType(options.modelType === "latest" ? com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.LATEST_MODEL : com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
-              .setMaxResults(options.maxResults || 10)
+          // TODO see 'setLanguageHints' at https://firebase.google.com/docs/ml-kit/android/recognize-text
+          // .setModelType(options.modelType === "latest" ? com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.LATEST_MODEL : com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
+          // .setMaxResults(options.maxResults || 10)
               .build();
 
-      const firebaseVisionCloudTextDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionCloudTextDetector(cloudDetectorOptions);
+      const firebaseVisionCloudTextRecognizer = com.google.firebase.ml.vision.FirebaseVision.getInstance().getCloudTextRecognizer(firebaseVisionCloudTextRecognizerOptions);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: firebaseVisionCloudText => {
-          resolve({
-            text: firebaseVisionCloudText ? firebaseVisionCloudText.getText() : null
-          });
-          firebaseVisionCloudTextDetector.close();
+        onSuccess: firebaseVisionText => {
+          resolve(getResult(firebaseVisionText));
+          firebaseVisionCloudTextRecognizer.close();
         }
       });
 
@@ -142,8 +149,8 @@ export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Pro
         onFailure: exception => reject(exception.getMessage())
       });
 
-      firebaseVisionCloudTextDetector
-          .detectInImage(getImage(options))
+      firebaseVisionCloudTextRecognizer
+          .processImage(getImage(options))
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 

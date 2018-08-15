@@ -185,10 +185,17 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
           this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
 
-          this.detector
-              .detectInImage(this.lastVisionImage)
-              .addOnSuccessListener(onSuccessListener)
-              .addOnFailureListener(onFailureListener);
+          if (this.detector.processImage) {
+            this.detector
+                .processImage(this.lastVisionImage)
+                .addOnSuccessListener(onSuccessListener)
+                .addOnFailureListener(onFailureListener);
+          } else {
+            this.detector
+                .detectInImage(this.lastVisionImage)
+                .addOnSuccessListener(onSuccessListener)
+                .addOnFailureListener(onFailureListener);
+          }
         }
       }));
 
