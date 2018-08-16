@@ -32,7 +32,9 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
             leftEyeOpenProbability: face.hasLeftEyeOpenProbability ? face.leftEyeOpenProbability : undefined,
             rightEyeOpenProbability: face.hasRightEyeOpenProbability ? face.rightEyeOpenProbability : undefined,
             trackingId: face.hasTrackingID ? face.trackingID : undefined,
-            bounds: face.frame
+            bounds: face.frame,
+            headEulerAngleY: face.headEulerAngleY,
+            headEulerAngleZ: face.headEulerAngleZ
           });
         }
 
@@ -91,7 +93,9 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
               leftEyeOpenProbability: face.hasLeftEyeOpenProbability ? face.leftEyeOpenProbability : undefined,
               rightEyeOpenProbability: face.hasRightEyeOpenProbability ? face.rightEyeOpenProbability : undefined,
               trackingId: face.hasTrackingID ? face.trackingID : undefined,
-              bounds: face.frame
+              bounds: face.frame,
+              headEulerAngleY: face.headEulerAngleY,
+              headEulerAngleZ: face.headEulerAngleZ
             });
           }
           resolve(result);

@@ -20,6 +20,8 @@ export interface MLKitDetectFacesResultFace {
   ios?: any;
   android?: any;
   bounds?: MLKitDetectFacesResultBounds;
+  headEulerAngleZ?: number;
+  headEulerAngleY?: number;
 }
 
 export interface MLKitDetectFacesOnDeviceResult extends MLKitResult {
