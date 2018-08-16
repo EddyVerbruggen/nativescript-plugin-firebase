@@ -749,7 +749,9 @@ export namespace firestore {
 
     startAfter(snapshot: DocumentSnapshot): Query;
 
-    // endBefore(snapshot: DocumentSnapshot): Query;
+    endAt(snaptshot: DocumentSnapshot): Query;
+
+    endBefore(snapshot: DocumentSnapshot): Query;
   }
 
   export interface CollectionReference extends Query {

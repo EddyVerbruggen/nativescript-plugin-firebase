@@ -2216,6 +2216,8 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(fIRCollectionReference, callback),
       startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, fIRCollectionReference),
       startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, fIRCollectionReference),
+      endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, fIRCollectionReference),
+      endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, fIRCollectionReference),
     };
 
   } catch (ex) {
@@ -2529,6 +2531,8 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
     onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback),
     startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, query),
     startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, query),
+    endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, query),
+    endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, query),
   };
 };
 
@@ -2582,11 +2586,20 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQue
 firebase.firestore.startAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
   query = query.queryStartingAtDocument(document.ios);
   return firebase.firestore._getQuery(collectionPath, query);
-
 }
 
 firebase.firestore.startAfter = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
   query = query.queryStartingAfterDocument(document.ios);
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.endAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
+  query = query.queryEndingAtDocument(document.ios);
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.endBefore = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
+  query = query.queryEndingBeforeDocument(document.ios);
   return firebase.firestore._getQuery(collectionPath, query);
 };
 
