@@ -168,7 +168,12 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
       const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
       fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
       fIRVisionImage.metadata = fIRVisionImageMetadata;
-      this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+
+      if (this.detector.detectInImageCompletion) {
+        this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+      } else {
+        this.detector.processImageCompletion(fIRVisionImage, this.onSuccessListener);
+      }
     }
   }
 }
