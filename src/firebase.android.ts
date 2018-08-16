@@ -362,11 +362,13 @@ firebase.init = arg => {
       if (typeof(com.facebook) !== "undefined" && typeof(com.facebook.FacebookSdk) !== "undefined") {
         com.facebook.FacebookSdk.sdkInitialize(com.tns.NativeScriptApplication.getInstance());
         fbCallbackManager = com.facebook.CallbackManager.Factory.create();
-        appModule.android.on(appModule.AndroidApplication.activityResultEvent, (eventData: AndroidActivityResultEventData) => {
+        const callback = (eventData: AndroidActivityResultEventData) => {
           if (eventData.requestCode !== GOOGLE_SIGNIN_INTENT_ID) {
+            appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
             fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
           }
-        });
+        };
+        appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
       }
 
       // Firebase AdMob
@@ -1272,8 +1274,9 @@ firebase.login = arg => {
 
         appModule.android.currentContext.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
 
-        appModule.android.on(appModule.AndroidApplication.activityResultEvent, (eventData: AndroidActivityResultEventData) => {
+        const callback = (eventData: AndroidActivityResultEventData) => {
           if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
+            appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
             const googleSignInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(eventData.intent);
             const success = googleSignInResult.isSuccess();
             if (success) {
@@ -1299,7 +1302,8 @@ firebase.login = arg => {
               reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
             }
           }
-        });
+        };
+        appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
 
       } else {
         reject("Unsupported auth type: " + arg.type);
@@ -2020,8 +2024,9 @@ firebase.invites.sendInvitation = arg => {
 
       appModule.android.foregroundActivity.startActivityForResult(firebaseInviteIntent, REQUEST_INVITE_INTENT_ID);
 
-      appModule.android.on(appModule.AndroidApplication.activityResultEvent, (eventData: AndroidActivityResultEventData) => {
+      const callback = (eventData: AndroidActivityResultEventData) => {
         if (eventData.requestCode === REQUEST_INVITE_INTENT_ID) {
+          appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
           if (eventData.resultCode === android.app.Activity.RESULT_OK) {
             // Get the invitation IDs of all sent messages
             const ids = com.google.android.gms.appinvite.AppInviteInvitation.getInvitationIds(eventData.resultCode, eventData.intent);
@@ -2043,7 +2048,8 @@ firebase.invites.sendInvitation = arg => {
             }
           }
         }
-      });
+      };
+      appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
 
     } catch (ex) {
       console.log("Error in firebase.sendInvitation: " + ex);
