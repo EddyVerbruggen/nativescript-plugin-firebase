@@ -54,6 +54,10 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         AVCaptureDevicePosition.Back
     ).devices.firstObject;
 
+    if (this.torchOn) {
+      this.updateTorch();
+    }
+
     // begin the session
     this.captureSession = AVCaptureSession.new();
     this.captureSession.sessionPreset = AVCaptureSessionPreset640x480;
@@ -134,6 +138,20 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       return FIRVisionDetectorImageOrientation.RightBottom;
     } else {
       return FIRVisionDetectorImageOrientation.TopLeft;
+    }
+  }
+
+  protected updateTorch(): void {
+    const device = this.captureDevice;
+    if (device && device.lockForConfiguration()) {
+      if (this.torchOn) {
+        device.torchMode = AVCaptureTorchMode.On;
+        device.flashMode = AVCaptureFlashMode.On;
+      } else {
+        device.torchMode = AVCaptureTorchMode.Off;
+        device.flashMode = AVCaptureFlashMode.Off;
+      }
+      device.unlockForConfiguration();
     }
   }
 

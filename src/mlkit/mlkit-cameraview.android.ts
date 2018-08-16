@@ -145,7 +145,10 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
       }
 
-      // TODO this setter seems odd, but it's part of the example: https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSource.java#L312
+      if (this.torchOn) {
+        parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+      }
+
       this.camera.setParameters(parameters);
 
       this.detector = this.createDetector();
@@ -208,6 +211,14 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.camera.startPreview();
 
     }, 500); // TODO 500 works fine on my device, but would be wise to explore the boundaries
+  }
+
+  protected updateTorch(): void {
+    if (this.camera) {
+      const parameters = this.camera.getParameters();
+      parameters.setFlashMode(this.torchOn ? android.hardware.Camera.Parameters.FLASH_MODE_TORCH : android.hardware.Camera.Parameters.FLASH_MODE_OFF);
+      this.camera.setParameters(parameters);
+    }
   }
 
   protected abstract createDetector(): any;
