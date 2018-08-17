@@ -2216,6 +2216,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 
 firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
+    if (!snapshot) return;
     callback(new DocumentSnapshot(snapshot.documentID, snapshot.exists, firebase.toJsObject(snapshot.data())));
   });
 
