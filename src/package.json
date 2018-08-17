@@ -45,6 +45,7 @@
     "demo.android": "npm run preparedemo && cd ../demo && rimraf platforms/android && tns run android",
     "demo.android.linked": "npm run tsc && cd ../demo && tns run android --syncAllFiles",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",
+    "demo-ng.android.bundled": "npm run preparedemo-ng && cd ../demo-ng && tns run android --bundle",
     "test": "npm run tslint && npm run tslint.demo && cd ../demo && tns build ios && tns build android",
     "test.ios": "cd ../demo && tns test ios --emulator",
     "test.ios.device": "cd ../demo && tns platform remove ios && tns test ios",
