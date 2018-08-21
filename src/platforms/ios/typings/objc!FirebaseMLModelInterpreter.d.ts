@@ -47,7 +47,7 @@ declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	initWithWiFiRequiredIdleRequired(isWiFiRequired: boolean, isIdleRequired: boolean): this;
+	initWithIsWiFiRequiredCanDownloadInBackground(isWiFiRequired: boolean, canDownloadInBackground: boolean): this;
 }
 
 declare const enum FIRModelElementType {

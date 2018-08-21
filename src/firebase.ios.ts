@@ -1718,7 +1718,7 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
     };
 
     commit(): Promise<void> {
-      return new Promise((resolve, reject) => {
+      return new Promise<void>((resolve, reject) => {
         nativeWriteBatch.commitWithCompletion((error: NSError) => {
           error ? reject(error.localizedDescription) : resolve();
         });
@@ -1765,7 +1765,7 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
 };
 
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     FIRFirestore.firestore().runTransactionWithBlockCompletion(
         (nativeTransaction: FIRTransaction, err: any) => {
           const tx = new firebase.firestore.Transaction(nativeTransaction);
@@ -1913,7 +1913,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 };
 
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
       if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
@@ -1969,7 +1969,7 @@ function fixSpecialFields(item) {
 }
 
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
       if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
@@ -1997,7 +1997,7 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 };
 
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
       if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");

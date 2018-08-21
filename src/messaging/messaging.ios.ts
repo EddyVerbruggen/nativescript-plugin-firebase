@@ -143,7 +143,7 @@ export function registerForInteractivePush(model?: any) {
     nativeActions.push(nativeAction);
   });
 
-  let actions: NSArray<UNNotificationAction> = NSArray.arrayWithArray(<any>nativeActions);
+  let actions: NSArray<UNNotificationAction> = <NSArray<UNNotificationAction>>NSArray.arrayWithArray(<any>nativeActions);
   let nativeCategories: Array<UNNotificationCategory> = [];
 
   model.iosSettings.interactiveSettings.categories.forEach(category => {
@@ -153,7 +153,8 @@ export function registerForInteractivePush(model?: any) {
   });
 
   const center = iOSUtils.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
-  center.setNotificationCategories(new NSSet(<any>nativeCategories));
+  const nsSetCategories = <NSSet<UNNotificationCategory>>new NSSet(<any>nativeCategories);
+  center.setNotificationCategories(nsSetCategories);
 
   if (model.onNotificationActionTakenCallback) {
     _addOnNotificationActionTakenCallback(model.onNotificationActionTakenCallback);

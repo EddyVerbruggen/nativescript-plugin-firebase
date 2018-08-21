@@ -29,13 +29,15 @@ declare class FIRVision extends NSObject {
 
 	static visionForApp(app: FIRApp): FIRVision;
 
+	statsCollectionEnabled: boolean;
+
 	barcodeDetector(): FIRVisionBarcodeDetector;
 
 	barcodeDetectorWithOptions(options: FIRVisionBarcodeDetectorOptions): FIRVisionBarcodeDetector;
 
-	cloudDocumentTextDetector(): FIRVisionCloudDocumentTextDetector;
+	cloudDocumentTextRecognizer(): FIRVisionDocumentTextRecognizer;
 
-	cloudDocumentTextDetectorWithOptions(options: FIRVisionCloudDetectorOptions): FIRVisionCloudDocumentTextDetector;
+	cloudDocumentTextRecognizerWithOptions(options: FIRVisionCloudDocumentTextRecognizerOptions): FIRVisionDocumentTextRecognizer;
 
 	cloudLabelDetector(): FIRVisionCloudLabelDetector;
 
@@ -45,9 +47,9 @@ declare class FIRVision extends NSObject {
 
 	cloudLandmarkDetectorWithOptions(options: FIRVisionCloudDetectorOptions): FIRVisionCloudLandmarkDetector;
 
-	cloudTextDetector(): FIRVisionCloudTextDetector;
+	cloudTextRecognizer(): FIRVisionTextRecognizer;
 
-	cloudTextDetectorWithOptions(options: FIRVisionCloudDetectorOptions): FIRVisionCloudTextDetector;
+	cloudTextRecognizerWithOptions(options: FIRVisionCloudTextRecognizerOptions): FIRVisionTextRecognizer;
 
 	faceDetector(): FIRVisionFaceDetector;
 
@@ -57,7 +59,7 @@ declare class FIRVision extends NSObject {
 
 	labelDetectorWithOptions(options: FIRVisionLabelDetectorOptions): FIRVisionLabelDetector;
 
-	textDetector(): FIRVisionTextDetector;
+	onDeviceTextRecognizer(): FIRVisionTextRecognizer;
 }
 
 declare class FIRVisionBarcode extends NSObject {
@@ -404,93 +406,28 @@ declare const enum FIRVisionBarcodeWiFiEncryptionType {
 	WEP = 3
 }
 
-declare class FIRVisionCloudBlock extends NSObject {
-
-	static alloc(): FIRVisionCloudBlock; // inherited from NSObject
-
-	static new(): FIRVisionCloudBlock; // inherited from NSObject
-
-	readonly confidence: number;
-
-	readonly frame: CGRect;
-
-	readonly paragraphs: NSArray<FIRVisionCloudParagraph>;
-
-	readonly textProperty: FIRVisionCloudTextProperty;
-
-	readonly type: FIRVisionCloudBlockType;
-}
-
-declare const enum FIRVisionCloudBlockType {
-
-	Unknown = 0,
-
-	Barcode = 1,
-
-	Picture = 2,
-
-	Ruler = 3,
-
-	Table = 4,
-
-	Text = 5
-}
-
-declare class FIRVisionCloudDetectedBreak extends NSObject {
-
-	static alloc(): FIRVisionCloudDetectedBreak; // inherited from NSObject
-
-	static new(): FIRVisionCloudDetectedBreak; // inherited from NSObject
-
-	readonly isPrefix: number;
-
-	readonly type: FIRVisionCloudDetectedBreakType;
-}
-
-declare const enum FIRVisionCloudDetectedBreakType {
-
-	Unknown = 0,
-
-	LineWrap = 1,
-
-	Hyphen = 2,
-
-	LineBreak = 3,
-
-	Space = 4,
-
-	SureSpace = 5
-}
-
-declare class FIRVisionCloudDetectedLanguage extends NSObject {
-
-	static alloc(): FIRVisionCloudDetectedLanguage; // inherited from NSObject
-
-	static new(): FIRVisionCloudDetectedLanguage; // inherited from NSObject
-
-	readonly confidence: number;
-
-	readonly languageCode: string;
-}
-
 declare class FIRVisionCloudDetectorOptions extends NSObject {
 
 	static alloc(): FIRVisionCloudDetectorOptions; // inherited from NSObject
 
 	static new(): FIRVisionCloudDetectorOptions; // inherited from NSObject
 
+	APIKeyOverride: string;
+
 	maxResults: number;
 
 	modelType: FIRVisionCloudModelType;
 }
 
-declare class FIRVisionCloudDocumentTextDetector extends NSObject {
+declare class FIRVisionCloudDocumentTextRecognizerOptions extends NSObject {
 
-	static alloc(): FIRVisionCloudDocumentTextDetector; // inherited from NSObject
+	static alloc(): FIRVisionCloudDocumentTextRecognizerOptions; // inherited from NSObject
 
-	static new(): FIRVisionCloudDocumentTextDetector; // inherited from NSObject
+	static new(): FIRVisionCloudDocumentTextRecognizerOptions; // inherited from NSObject
 
-	detectInImageCompletion(image: FIRVisionImage, completion: (p1: FIRVisionCloudText, p2: NSError) => void): void;
+	APIKeyOverride: string;
+
+	languageHints: NSArray<string>;
 }
 
 declare class FIRVisionCloudLabel extends NSObject {
@@ -548,97 +485,24 @@ declare const enum FIRVisionCloudModelType {
 	Latest = 1
 }
 
-declare class FIRVisionCloudPage extends NSObject {
+declare const enum FIRVisionCloudTextModelType {
 
-	static alloc(): FIRVisionCloudPage; // inherited from NSObject
+	Sparse = 0,
 
-	static new(): FIRVisionCloudPage; // inherited from NSObject
-
-	readonly blocks: NSArray<FIRVisionCloudBlock>;
-
-	readonly confidence: number;
-
-	readonly height: number;
-
-	readonly textProperty: FIRVisionCloudTextProperty;
-
-	readonly width: number;
+	Dense = 1
 }
 
-declare class FIRVisionCloudParagraph extends NSObject {
+declare class FIRVisionCloudTextRecognizerOptions extends NSObject {
 
-	static alloc(): FIRVisionCloudParagraph; // inherited from NSObject
+	static alloc(): FIRVisionCloudTextRecognizerOptions; // inherited from NSObject
 
-	static new(): FIRVisionCloudParagraph; // inherited from NSObject
+	static new(): FIRVisionCloudTextRecognizerOptions; // inherited from NSObject
 
-	readonly confidence: number;
+	APIKeyOverride: string;
 
-	readonly frame: CGRect;
+	languageHints: NSArray<string>;
 
-	readonly textProperty: FIRVisionCloudTextProperty;
-
-	readonly words: NSArray<FIRVisionCloudWord>;
-}
-
-declare class FIRVisionCloudSymbol extends NSObject {
-
-	static alloc(): FIRVisionCloudSymbol; // inherited from NSObject
-
-	static new(): FIRVisionCloudSymbol; // inherited from NSObject
-
-	readonly confidence: number;
-
-	readonly frame: CGRect;
-
-	readonly text: string;
-
-	readonly textProperty: FIRVisionCloudTextProperty;
-}
-
-declare class FIRVisionCloudText extends NSObject {
-
-	static alloc(): FIRVisionCloudText; // inherited from NSObject
-
-	static new(): FIRVisionCloudText; // inherited from NSObject
-
-	readonly pages: NSArray<FIRVisionCloudPage>;
-
-	readonly text: string;
-}
-
-declare class FIRVisionCloudTextDetector extends NSObject {
-
-	static alloc(): FIRVisionCloudTextDetector; // inherited from NSObject
-
-	static new(): FIRVisionCloudTextDetector; // inherited from NSObject
-
-	detectInImageCompletion(image: FIRVisionImage, completion: (p1: FIRVisionCloudText, p2: NSError) => void): void;
-}
-
-declare class FIRVisionCloudTextProperty extends NSObject {
-
-	static alloc(): FIRVisionCloudTextProperty; // inherited from NSObject
-
-	static new(): FIRVisionCloudTextProperty; // inherited from NSObject
-
-	readonly detectedBreak: FIRVisionCloudDetectedBreak;
-
-	readonly detectedLanguages: NSArray<FIRVisionCloudDetectedLanguage>;
-}
-
-declare class FIRVisionCloudWord extends NSObject {
-
-	static alloc(): FIRVisionCloudWord; // inherited from NSObject
-
-	static new(): FIRVisionCloudWord; // inherited from NSObject
-
-	readonly confidence: number;
-
-	readonly frame: CGRect;
-
-	readonly symbols: NSArray<FIRVisionCloudSymbol>;
-
-	readonly textProperty: FIRVisionCloudTextProperty;
+	modelType: FIRVisionCloudTextModelType;
 }
 
 declare const enum FIRVisionDetectorImageOrientation {
@@ -658,6 +522,117 @@ declare const enum FIRVisionDetectorImageOrientation {
 	RightBottom = 7,
 
 	LeftBottom = 8
+}
+
+declare class FIRVisionDocumentText extends NSObject {
+
+	static alloc(): FIRVisionDocumentText; // inherited from NSObject
+
+	static new(): FIRVisionDocumentText; // inherited from NSObject
+
+	readonly blocks: NSArray<FIRVisionDocumentTextBlock>;
+
+	readonly text: string;
+}
+
+declare class FIRVisionDocumentTextBlock extends NSObject {
+
+	static alloc(): FIRVisionDocumentTextBlock; // inherited from NSObject
+
+	static new(): FIRVisionDocumentTextBlock; // inherited from NSObject
+
+	readonly confidence: number;
+
+	readonly frame: CGRect;
+
+	readonly paragraphs: NSArray<FIRVisionDocumentTextParagraph>;
+
+	readonly recognizedBreak: FIRVisionTextRecognizedBreak;
+
+	readonly recognizedLanguages: NSArray<FIRVisionTextRecognizedLanguage>;
+
+	readonly text: string;
+
+	readonly type: FIRVisionDocumentTextBlockType;
+}
+
+declare const enum FIRVisionDocumentTextBlockType {
+
+	Unknown = 0,
+
+	Barcode = 1,
+
+	Picture = 2,
+
+	Ruler = 3,
+
+	Table = 4,
+
+	Text = 5
+}
+
+declare class FIRVisionDocumentTextParagraph extends NSObject {
+
+	static alloc(): FIRVisionDocumentTextParagraph; // inherited from NSObject
+
+	static new(): FIRVisionDocumentTextParagraph; // inherited from NSObject
+
+	readonly confidence: number;
+
+	readonly frame: CGRect;
+
+	readonly recognizedBreak: FIRVisionTextRecognizedBreak;
+
+	readonly recognizedLanguages: NSArray<FIRVisionTextRecognizedLanguage>;
+
+	readonly text: string;
+
+	readonly words: NSArray<FIRVisionDocumentTextWord>;
+}
+
+declare class FIRVisionDocumentTextRecognizer extends NSObject {
+
+	static alloc(): FIRVisionDocumentTextRecognizer; // inherited from NSObject
+
+	static new(): FIRVisionDocumentTextRecognizer; // inherited from NSObject
+
+	processImageCompletion(image: FIRVisionImage, completion: (p1: FIRVisionDocumentText, p2: NSError) => void): void;
+}
+
+declare class FIRVisionDocumentTextSymbol extends NSObject {
+
+	static alloc(): FIRVisionDocumentTextSymbol; // inherited from NSObject
+
+	static new(): FIRVisionDocumentTextSymbol; // inherited from NSObject
+
+	readonly confidence: number;
+
+	readonly frame: CGRect;
+
+	readonly recognizedBreak: FIRVisionTextRecognizedBreak;
+
+	readonly recognizedLanguages: NSArray<FIRVisionTextRecognizedLanguage>;
+
+	readonly text: string;
+}
+
+declare class FIRVisionDocumentTextWord extends NSObject {
+
+	static alloc(): FIRVisionDocumentTextWord; // inherited from NSObject
+
+	static new(): FIRVisionDocumentTextWord; // inherited from NSObject
+
+	readonly confidence: number;
+
+	readonly frame: CGRect;
+
+	readonly recognizedBreak: FIRVisionTextRecognizedBreak;
+
+	readonly recognizedLanguages: NSArray<FIRVisionTextRecognizedLanguage>;
+
+	readonly symbols: NSArray<FIRVisionDocumentTextSymbol>;
+
+	readonly text: string;
 }
 
 declare class FIRVisionFace extends NSObject {
@@ -846,169 +821,121 @@ declare class FIRVisionPoint extends NSObject {
 	readonly z: number;
 }
 
-interface FIRVisionText extends NSObjectProtocol {
+declare class FIRVisionText extends NSObject {
 
-	cornerPoints: NSArray<NSValue>;
+	static alloc(): FIRVisionText; // inherited from NSObject
 
-	frame: CGRect;
+	static new(): FIRVisionText; // inherited from NSObject
 
-	text: string;
+	readonly blocks: NSArray<FIRVisionTextBlock>;
+
+	readonly text: string;
 }
-declare var FIRVisionText: {
 
-	prototype: FIRVisionText;
-};
-
-declare class FIRVisionTextBlock extends NSObject implements FIRVisionText {
+declare class FIRVisionTextBlock extends NSObject {
 
 	static alloc(): FIRVisionTextBlock; // inherited from NSObject
 
 	static new(): FIRVisionTextBlock; // inherited from NSObject
 
+	readonly confidence: number;
+
+	readonly cornerPoints: NSArray<NSValue>;
+
+	readonly frame: CGRect;
+
 	readonly lines: NSArray<FIRVisionTextLine>;
 
-	readonly cornerPoints: NSArray<NSValue>; // inherited from FIRVisionText
+	readonly recognizedLanguages: NSArray<FIRVisionTextRecognizedLanguage>;
 
-	readonly debugDescription: string; // inherited from NSObjectProtocol
-
-	readonly description: string; // inherited from NSObjectProtocol
-
-	readonly frame: CGRect; // inherited from FIRVisionText
-
-	readonly hash: number; // inherited from NSObjectProtocol
-
-	readonly isProxy: boolean; // inherited from NSObjectProtocol
-
-	readonly superclass: typeof NSObject; // inherited from NSObjectProtocol
-
-	readonly text: string; // inherited from FIRVisionText
-
-	readonly  // inherited from NSObjectProtocol
-
-	class(): typeof NSObject;
-
-	conformsToProtocol(aProtocol: any /* Protocol */): boolean;
-
-	isEqual(object: any): boolean;
-
-	isKindOfClass(aClass: typeof NSObject): boolean;
-
-	isMemberOfClass(aClass: typeof NSObject): boolean;
-
-	performSelector(aSelector: string): any;
-
-	performSelectorWithObject(aSelector: string, object: any): any;
-
-	performSelectorWithObjectWithObject(aSelector: string, object1: any, object2: any): any;
-
-	respondsToSelector(aSelector: string): boolean;
-
-	retainCount(): number;
-
-	self(): this;
+	readonly text: string;
 }
 
-declare class FIRVisionTextDetector extends NSObject {
-
-	static alloc(): FIRVisionTextDetector; // inherited from NSObject
-
-	static new(): FIRVisionTextDetector; // inherited from NSObject
-
-	detectInImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionText>, p2: NSError) => void): void;
-}
-
-declare class FIRVisionTextElement extends NSObject implements FIRVisionText {
+declare class FIRVisionTextElement extends NSObject {
 
 	static alloc(): FIRVisionTextElement; // inherited from NSObject
 
 	static new(): FIRVisionTextElement; // inherited from NSObject
 
-	readonly cornerPoints: NSArray<NSValue>; // inherited from FIRVisionText
+	readonly confidence: number;
 
-	readonly debugDescription: string; // inherited from NSObjectProtocol
+	readonly cornerPoints: NSArray<NSValue>;
 
-	readonly description: string; // inherited from NSObjectProtocol
+	readonly frame: CGRect;
 
-	readonly frame: CGRect; // inherited from FIRVisionText
+	readonly recognizedLanguages: NSArray<FIRVisionTextRecognizedLanguage>;
 
-	readonly hash: number; // inherited from NSObjectProtocol
-
-	readonly isProxy: boolean; // inherited from NSObjectProtocol
-
-	readonly superclass: typeof NSObject; // inherited from NSObjectProtocol
-
-	readonly text: string; // inherited from FIRVisionText
-
-	readonly  // inherited from NSObjectProtocol
-
-	class(): typeof NSObject;
-
-	conformsToProtocol(aProtocol: any /* Protocol */): boolean;
-
-	isEqual(object: any): boolean;
-
-	isKindOfClass(aClass: typeof NSObject): boolean;
-
-	isMemberOfClass(aClass: typeof NSObject): boolean;
-
-	performSelector(aSelector: string): any;
-
-	performSelectorWithObject(aSelector: string, object: any): any;
-
-	performSelectorWithObjectWithObject(aSelector: string, object1: any, object2: any): any;
-
-	respondsToSelector(aSelector: string): boolean;
-
-	retainCount(): number;
-
-	self(): this;
+	readonly text: string;
 }
 
-declare class FIRVisionTextLine extends NSObject implements FIRVisionText {
+declare class FIRVisionTextLine extends NSObject {
 
 	static alloc(): FIRVisionTextLine; // inherited from NSObject
 
 	static new(): FIRVisionTextLine; // inherited from NSObject
 
+	readonly confidence: number;
+
+	readonly cornerPoints: NSArray<NSValue>;
+
 	readonly elements: NSArray<FIRVisionTextElement>;
 
-	readonly cornerPoints: NSArray<NSValue>; // inherited from FIRVisionText
+	readonly frame: CGRect;
 
-	readonly debugDescription: string; // inherited from NSObjectProtocol
+	readonly recognizedLanguages: NSArray<FIRVisionTextRecognizedLanguage>;
 
-	readonly description: string; // inherited from NSObjectProtocol
+	readonly text: string;
+}
 
-	readonly frame: CGRect; // inherited from FIRVisionText
+declare class FIRVisionTextRecognizedBreak extends NSObject {
 
-	readonly hash: number; // inherited from NSObjectProtocol
+	static alloc(): FIRVisionTextRecognizedBreak; // inherited from NSObject
 
-	readonly isProxy: boolean; // inherited from NSObjectProtocol
+	static new(): FIRVisionTextRecognizedBreak; // inherited from NSObject
 
-	readonly superclass: typeof NSObject; // inherited from NSObjectProtocol
+	readonly isPrefix: boolean;
 
-	readonly text: string; // inherited from FIRVisionText
+	readonly type: FIRVisionTextRecognizedBreakType;
+}
 
-	readonly  // inherited from NSObjectProtocol
+declare const enum FIRVisionTextRecognizedBreakType {
 
-	class(): typeof NSObject;
+	Unknown = 0,
 
-	conformsToProtocol(aProtocol: any /* Protocol */): boolean;
+	LineWrap = 1,
 
-	isEqual(object: any): boolean;
+	Hyphen = 2,
 
-	isKindOfClass(aClass: typeof NSObject): boolean;
+	LineBreak = 3,
 
-	isMemberOfClass(aClass: typeof NSObject): boolean;
+	Space = 4,
 
-	performSelector(aSelector: string): any;
+	SureSpace = 5
+}
 
-	performSelectorWithObject(aSelector: string, object: any): any;
+declare class FIRVisionTextRecognizedLanguage extends NSObject {
 
-	performSelectorWithObjectWithObject(aSelector: string, object1: any, object2: any): any;
+	static alloc(): FIRVisionTextRecognizedLanguage; // inherited from NSObject
 
-	respondsToSelector(aSelector: string): boolean;
+	static new(): FIRVisionTextRecognizedLanguage; // inherited from NSObject
 
-	retainCount(): number;
+	readonly languageCode: string;
+}
 
-	self(): this;
+declare class FIRVisionTextRecognizer extends NSObject {
+
+	static alloc(): FIRVisionTextRecognizer; // inherited from NSObject
+
+	static new(): FIRVisionTextRecognizer; // inherited from NSObject
+
+	readonly type: FIRVisionTextRecognizerType;
+
+	processImageCompletion(image: FIRVisionImage, completion: (p1: FIRVisionText, p2: NSError) => void): void;
+}
+
+declare const enum FIRVisionTextRecognizerType {
+
+	OnDevice = 0,
+
+	Cloud = 1
 }

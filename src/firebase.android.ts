@@ -2008,20 +2008,20 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
       this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
     }
     return this;
-  };
+  }
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
     this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
     return this;
-  };
+  }
 
   public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
     this.nativeWriteBatch.delete(documentRef.android);
     return this;
-  };
+  }
 
   public commit(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
@@ -2044,7 +2044,7 @@ firebase.firestore.batch = (): firestore.WriteBatch => {
 };
 
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     // Why? See the note in the commented 'runTransaction' function below.
     reject("Not supported on Android. If you need a x-platform implementation, use 'batch' instead.");
   });
@@ -2218,7 +2218,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<firestore.DocumentReference>((resolve, reject) => {
     try {
 
       if (typeof (com.google.firebase.firestore) === "undefined") {
@@ -2260,7 +2260,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 };
 
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
 
       if (typeof (com.google.firebase.firestore) === "undefined") {
@@ -2299,7 +2299,7 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
 };
 
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
 
       if (typeof (com.google.firebase.firestore) === "undefined") {
@@ -2331,7 +2331,7 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 };
 
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
 
       if (typeof (com.google.firebase.firestore) === "undefined") {
@@ -2363,7 +2363,7 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 };
 
 firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<firestore.QuerySnapshot>((resolve, reject) => {
     try {
 
       if (typeof (com.google.firebase.firestore) === "undefined") {
@@ -2415,7 +2415,7 @@ firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapsh
 };
 
 firebase.firestore.getDocument = (collectionPath: string, documentPath: string): Promise<firestore.DocumentSnapshot> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<firestore.DocumentSnapshot>((resolve, reject) => {
     try {
 
       if (typeof (com.google.firebase.firestore) === "undefined") {
