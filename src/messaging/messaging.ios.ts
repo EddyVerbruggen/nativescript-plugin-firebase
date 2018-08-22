@@ -8,7 +8,7 @@ let _notificationActionTakenCallback: Function;
 let _pendingNotifications: Array<any> = [];
 let _pushToken: any;
 let _receivedPushTokenCallback: Function;
-let _receivedNotificationCallback: Function;
+let _receivedNotificationCallback: Function = null;
 let _registerForRemoteNotificationsRanThisSession = false;
 let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
 let _messagingConnected: boolean = null;
@@ -339,7 +339,6 @@ function _registerForRemoteNotifications() {
       const userInfo = unnotification.request.content.userInfo;
       const userInfoJSON = firebaseUtils.toJsObject(userInfo);
 
-      console.log(actionIdentifier ? ">>>>>" + actionIdentifier : ">>>>>> NO actionIdentifier");
       if (actionIdentifier && _notificationActionTakenCallback) {
         // TODO: THIS CODE DOWN IS DUPLICATE, REFACTOR!!!!
         // move the most relevant properties (if set) so it's according to the TS definition and aligned with Android

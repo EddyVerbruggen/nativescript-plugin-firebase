@@ -62,9 +62,7 @@ export class MessagingViewModel {
       ];
 
       model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message) => {
-        console.log(`onNotificationActionTakenCallback fired!`);
-        console.log(">>>>> Action taken: " + actionIdentifier);
-        console.log(">>>>> message: " + JSON.stringify(message));
+        console.log(`onNotificationActionTakenCallback fired! \n\r Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}`);
 
         alert({
           title: "Interactive push action",
