@@ -866,6 +866,8 @@ export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) 
 
 export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
 
+export function registerForInteractivePush(model: any): void;
+
 export function getCurrentPushToken(): Promise<string>;
 
 export function unregisterForPushNotifications(): Promise<void>;

@@ -250,6 +250,56 @@ export const onTokenRefreshNotification = token => {
   _messagingConnectWithCompletion();
 };
 
+export class IosInteractivePushSettings {
+  actions: Array<IosInteractiveNotificationAction>;
+  categories: Array<IosInteractiveNotificationCategory>;
+
+  constructor() {
+
+  }
+}
+
+export enum IosInteractiveNotificationActionOptions {
+  authenticationRequired = 1,
+  destructive = 2,
+  foreground = 4,
+}
+
+export interface IosInteractiveNotificationAction {
+  identifier: string;
+  title: string;
+  // activationMode?: string;
+  // destructive?: boolean;
+  // authenticationRequired?: boolean;
+  options?: IosInteractiveNotificationActionOptions;
+  behavior?: string;
+}
+
+export interface IosInteractiveNotificationCategory {
+  identifier: string;
+  actionsForDefaultContext?: string[];
+  actionsForMinimalContext?: string[];
+}
+
+export class IOSPushSettings {
+  badge: boolean;
+  sound: boolean;
+  alert: boolean;
+  notificationCallback: Function;
+  interactiveSettings: IosInteractivePushSettings;
+
+  constructor() {
+
+  }
+}
+
+export class PushNotificationModel {
+  androidSettings: any;
+  iosSettings: IOSPushSettings;
+  onNotificationActionTakenCallback: Function;
+}
+
+
 function _registerForRemoteNotifications() {
   let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
@@ -481,3 +531,4 @@ class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate 
     onTokenRefreshNotification(fcmToken);
   }
 }
+
