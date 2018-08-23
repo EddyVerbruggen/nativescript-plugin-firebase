@@ -464,7 +464,10 @@ function _processPendingNotifications() {
       _receivedNotificationCallback(userInfoJSON);
     }
     _pendingNotifications = [];
-    app.applicationIconBadgeNumber = 0;
+
+    if (app.applicationState === UIApplicationState.Active) {
+      app.applicationIconBadgeNumber = 0;
+    }
   }
 }
 
