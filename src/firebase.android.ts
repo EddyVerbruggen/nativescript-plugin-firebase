@@ -427,13 +427,13 @@ firebase.fetchSignInMethodsForEmail = email => {
   });
 };
 
-firebase.getCurrentPushToken = () => firebaseMessaging.getCurrentPushToken();
-firebase.addOnMessageReceivedCallback = callback => firebaseMessaging.addOnMessageReceivedCallback(callback);
-firebase.addOnPushTokenReceivedCallback = callback => firebaseMessaging.addOnPushTokenReceivedCallback(callback);
-firebase.unregisterForPushNotifications = () => firebaseMessaging.unregisterForPushNotifications();
-firebase.subscribeToTopic = topicName => firebaseMessaging.subscribeToTopic(topicName);
-firebase.unsubscribeFromTopic = topicName => firebaseMessaging.unsubscribeFromTopic(topicName);
-
+firebase.getCurrentPushToken = firebaseMessaging.getCurrentPushToken;
+firebase.addOnMessageReceivedCallback = firebaseMessaging.addOnMessageReceivedCallback;
+firebase.addOnPushTokenReceivedCallback = firebaseMessaging.addOnPushTokenReceivedCallback;
+firebase.unregisterForPushNotifications = firebaseMessaging.unregisterForPushNotifications;
+firebase.subscribeToTopic = firebaseMessaging.subscribeToTopic;
+firebase.unsubscribeFromTopic = firebaseMessaging.unsubscribeFromTopic;
+firebase.areNotificationsEnabled = firebaseMessaging.areNotificationsEnabled;
 
 firebase.addOnDynamicLinkReceivedCallback = callback => {
   return new Promise((resolve, reject) => {

@@ -876,6 +876,8 @@ export function subscribeToTopic(topicName): Promise<any>;
 
 export function unsubscribeFromTopic(topicName): Promise<any>;
 
+export function areNotificationsEnabled(): boolean;
+
 // dynamic links
 export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBackData: dynamicLinks.DynamicLinkCallbackData) => void): Promise<any>;
 

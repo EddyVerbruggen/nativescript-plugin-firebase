@@ -1,5 +1,6 @@
 import { alert } from "tns-core-modules/ui/dialogs";
 import { isIOS } from "tns-core-modules/platform";
+import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebase from "nativescript-plugin-firebase";
 import { IOSPushSettings, IosInteractiveNotificationActionOptions, IosInteractivePushSettings, PushNotificationModel } from "nativescript-plugin-firebase/messaging/messaging";
 
@@ -152,5 +153,13 @@ export class MessagingViewModel {
         });
       }
     );
+  }
+
+  public doGetAreNotificationsEnabled(): void {
+    alert({
+      title: "AreNotificationsEnabled",
+      message: "" + firebase.areNotificationsEnabled(),
+      okButtonText: "Okay, very interesting"
+    });
   }
 }

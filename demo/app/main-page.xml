@@ -81,7 +81,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
 
@@ -191,23 +191,24 @@
             <Button row="38" col="1" text="topic unsubscribe" tap="{{ messaging.doUnsubscribeFromTopic }}" class="button button-messaging"/>
             <iOS>
               <Button row="39" colSpan="2" text="register interactive push" tap="{{ messaging.doRegisterForInteractivePush }}" class="button button-messaging"/>
+              <Button row="40" colSpan="2" text="are notifications enabled" tap="{{ messaging.doGetAreNotificationsEnabled }}" class="button button-messaging"/>
             </iOS>
             <!-- <Button row="39" col="1" text="topic unsubscribe" tap="{{ doUnsubscribeFromTopic }}" class="button button-messaging"/> -->
 
-            <Label row="40" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
+            <Label row="41" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
 
-            <Button row="41" col="0" text="log message" tap="{{ doLogMessage }}" class="button button-crash"/>
+            <Button row="42" col="0" text="log message" tap="{{ doLogMessage }}" class="button button-crash"/>
             <iOS>
-              <Button row="41" col="1" text="force crash :)" tap="{{ doForceCrashIOS }}" class="button button-crash"/>
+              <Button row="43" col="1" text="force crash :)" tap="{{ doForceCrashIOS }}" class="button button-crash"/>
             </iOS>
             <Android>
-              <Button row="41" col="1" text="force crash :)" tap="{{ doForceCrashAndroid }}" class="button button-crash"/>
+              <Button row="44" col="1" text="force crash :)" tap="{{ doForceCrashAndroid }}" class="button button-crash"/>
             </Android>
 
-            <Label row="42" colSpan="2" text="Firebase Invites" class="subtitle"/>
+            <Label row="45" colSpan="2" text="Firebase Invites" class="subtitle"/>
 
-            <Button row="43" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
-            <Button row="43" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
+            <Button row="46" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
+            <Button row="46" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
           </GridLayout>
 
         </ScrollView>

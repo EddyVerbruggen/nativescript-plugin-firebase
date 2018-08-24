@@ -22,6 +22,7 @@ firebase.getCurrentPushToken = firebaseMessaging.getCurrentPushToken;
 firebase.registerForInteractivePush = firebaseMessaging.registerForInteractivePush;
 firebase.subscribeToTopic = firebaseMessaging.subscribeToTopic;
 firebase.unsubscribeFromTopic = firebaseMessaging.unsubscribeFromTopic;
+firebase.areNotificationsEnabled = firebaseMessaging.areNotificationsEnabled;
 
 firebase.addAppDelegateMethods = appDelegate => {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
@@ -1409,7 +1410,7 @@ firebase.push = (path, val) => {
     try {
       const ref = FIRDatabase.database().reference().childByAppendingPath(path).childByAutoId();
       ref.setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
-        error ? reject(error.localizedDescription) : resolve({key: ref.key});
+        error ? reject(error.localizedDescription) : resolve({ key: ref.key });
       });
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
@@ -1767,11 +1768,11 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     FIRFirestore.firestore().runTransactionWithBlockCompletion(
-        (nativeTransaction: FIRTransaction, err: any) => {
-          const tx = new firebase.firestore.Transaction(nativeTransaction);
-          return updateFunction(tx);
-        },
-        (result, error: NSError) => error ? reject(error.localizedDescription) : resolve());
+      (nativeTransaction: FIRTransaction, err: any) => {
+        const tx = new firebase.firestore.Transaction(nativeTransaction);
+        return updateFunction(tx);
+      },
+      (result, error: NSError) => error ? reject(error.localizedDescription) : resolve());
   });
 };
 
@@ -2122,8 +2123,8 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
 
     query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
     value = value instanceof GeoPoint
-        ? new FIRGeoPoint({latitude: value.latitude, longitude: value.longitude})
-        : value;
+      ? new FIRGeoPoint({ latitude: value.latitude, longitude: value.longitude })
+      : value;
 
     if (opStr === "<") {
       query = query.queryWhereFieldIsLessThan(fieldPath, value);

@@ -165,3 +165,9 @@ export function unsubscribeFromTopic(topicName) {
     }
   });
 }
+
+export function areNotificationsEnabled() {
+  // TODO: implement this correctly, also handle if platform is not supported (i.e. Android version is below 24.1.0):
+  // return com.android.support.v4.app.NotificationManagerCompat.areNotificationsEnabled();
+  return true;
+}

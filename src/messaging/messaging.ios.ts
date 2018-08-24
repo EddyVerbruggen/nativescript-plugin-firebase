@@ -299,6 +299,13 @@ export class PushNotificationModel {
   onNotificationActionTakenCallback: Function;
 }
 
+export function areNotificationsEnabled() {
+  let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+
+  // to check if also the app is registered use app.registeredForRemoteNotifications,
+  // this below checks if user has enabled notifications for the app
+  return app.currentUserNotificationSettings.types > 0;
+}
 
 function _registerForRemoteNotifications() {
   let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
