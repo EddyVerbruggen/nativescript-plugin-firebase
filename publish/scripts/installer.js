@@ -299,7 +299,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase/Core', '~> 5.5.0' 
+`pod 'Firebase/Core', '~> 5.6.0' 
 pod 'Firebase/Auth'
 
 # Realtime DB
@@ -558,7 +558,7 @@ dependencies {
     compile "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:16.0.1"
+    compile "com.google.firebase:firebase-core:16.0.3"
     compile "com.google.firebase:firebase-auth:16.0.3"
 
     // for reading google-services.json and configuration
@@ -574,7 +574,7 @@ dependencies {
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.0.0"
 
     // Crash Reporting
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.0.1"
+    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.2.0"
 
     // Crashlytics
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.3"
@@ -602,7 +602,7 @@ dependencies {
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.3"
 
     // Firebase Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.11"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.1"
 }
 
 apply plugin: "com.google.gms.google-services"

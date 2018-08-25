@@ -2967,7 +2967,11 @@ function promptQuestions() {
         default: 'n'
     }, {
         name: 'invites',
-        description: 'Are you using Firebase Invites and/or Dynamic Links? (y/n)',
+        description: 'Are you using Firebase Invites? (y/n)',
+        default: 'n'
+    }, {
+        name: 'dynamic_links',
+        description: 'Are you using Firebase Dynamic Links? (y/n)',
         default: 'n'
     }, {
       name: 'ml_kit',
@@ -3093,7 +3097,7 @@ function writePodFile(result) {
     }
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase/Core', '~> 5.5.0' 
+`pod 'Firebase/Core', '~> 5.6.0' 
 pod 'Firebase/Auth'
 
 # Realtime DB
@@ -3131,8 +3135,11 @@ end`) + `
 # AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Invites / Dynamic Links
+# Invites
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
+
+# Dynamic Links
+` + (isSelected(result.dynamic_links) ? `` : `#`) + `pod 'Firebase/DynamicLinks'
 
 # ML Kit
 ` + (isSelected(result.ml_kit) ? `` : `#`) + `pod 'Firebase/MLVision'
@@ -3349,7 +3356,7 @@ dependencies {
     compile "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:16.0.1"
+    compile "com.google.firebase:firebase-core:16.0.3"
     compile "com.google.firebase:firebase-auth:16.0.3"
 
     // for reading google-services.json and configuration
@@ -3365,7 +3372,7 @@ dependencies {
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.0.0"
 
     // Crash Reporting
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.0.1"
+    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.2.0"
 
     // Crashlytics
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.3"
@@ -3389,8 +3396,11 @@ dependencies {
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
-    // Firebase Invites / Dynamic Links
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.1"
+    // Firebase Invites
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.3"
+
+    // Firebase Dynamic Links
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.1"
 }
 
 apply plugin: "com.google.gms.google-services"
