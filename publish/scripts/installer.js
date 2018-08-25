@@ -169,7 +169,11 @@ function promptQuestions() {
         default: 'n'
     }, {
         name: 'invites',
-        description: 'Are you using Firebase Invites and/or Dynamic Links? (y/n)',
+        description: 'Are you using Firebase Invites? (y/n)',
+        default: 'n'
+    }, {
+        name: 'dynamic_links',
+        description: 'Are you using Firebase Dynamic Links? (y/n)',
         default: 'n'
     }, {
       name: 'ml_kit',
@@ -333,8 +337,11 @@ end`) + `
 # AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Invites / Dynamic Links
+# Invites
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
+
+# Dynamic Links
+` + (isSelected(result.dynamic_links) ? `` : `#`) + `pod 'Firebase/DynamicLinks'
 
 # ML Kit
 ` + (isSelected(result.ml_kit) ? `` : `#`) + `pod 'Firebase/MLVision'
@@ -591,8 +598,11 @@ dependencies {
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
-    // Firebase Invites / Dynamic Links
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.1"
+    // Firebase Invites
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.3"
+
+    // Firebase Dynamic Links
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.11"
 }
 
 apply plugin: "com.google.gms.google-services"
