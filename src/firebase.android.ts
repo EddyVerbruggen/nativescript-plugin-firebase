@@ -20,7 +20,7 @@ const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
 
 const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "undefined");
-const dynamicLinksEnabled = lazy(() => typeof(com.google.android.gms.appinvite) !== "undefined");
+const dynamicLinksEnabled = lazy(() => typeof(com.google.firebase.dynamiclinks) !== "undefined");
 
 (() => {
   // note that this means we need to 'require()' the plugin before the app is loaded
@@ -499,8 +499,8 @@ firebase.addOnMessageReceivedCallback = callback => {
 firebase.addOnDynamicLinkReceivedCallback = callback => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(com.google.android.gms.appinvite) === "undefined") {
-        reject("Uncomment invites in the plugin's include.gradle first");
+      if (typeof(com.google.firebase.dynamiclinks) === "undefined") {
+        reject("Uncomment dynamic links in the plugin's include.gradle first");
         return;
       }
 

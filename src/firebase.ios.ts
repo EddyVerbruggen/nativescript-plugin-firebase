@@ -329,7 +329,7 @@ firebase.addOnDynamicLinkReceivedCallback = callback => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRDynamicLink) === "undefined") {
-        reject("Enable FIRInvites in Podfile first");
+        reject("Enable FIRInvites in the Podfile first");
         return;
       }
 
