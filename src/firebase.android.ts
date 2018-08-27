@@ -1,4 +1,4 @@
-import { DocumentSnapshot, firebase, GeoPoint, QuerySnapshot, isDocumentReference } from "./firebase-common";
+import { DocumentSnapshot as DocumentSnapshotBase, firebase, GeoPoint, QuerySnapshot, isDocumentReference } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
@@ -7,6 +7,15 @@ import { topmost } from "tns-core-modules/ui/frame";
 import { firestore, User } from "./firebase";
 
 declare const android, com, org: any;
+
+class DocumentSnapshot extends DocumentSnapshotBase {
+  android: com.google.firebase.firestore.DocumentSnapshot;
+
+  constructor(public snapshot: com.google.firebase.firestore.DocumentSnapshot) {
+    super(snapshot ? snapshot.getId() : null, snapshot.exists(), firebase.toJsObject(snapshot.getData()));
+    this.android = snapshot;
+  }
+}
 
 firebase._launchNotification = null;
 firebase._cachedDynamicLink = null;
@@ -2264,7 +2273,11 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
       orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, collectionRef),
       limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef),
-      onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, callback)
+      onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, callback),
+      startAfter: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshot, collectionRef),
+      startAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAt(collectionPath, snapshot, collectionRef),
+      endAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.endAt(collectionPath, snapshot, collectionRef),
+      endBefore: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshot, collectionRef),
     };
 
   } catch (ex) {
@@ -2277,7 +2290,7 @@ firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.D
   const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
         onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
           if (exception === null) {
-            callback(new DocumentSnapshot(snapshot ? snapshot.getId() : null, snapshot.exists(), firebase.toJsObject(snapshot.getData())));
+            callback(new DocumentSnapshot(snapshot));
           }
         })
       })
@@ -2296,7 +2309,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0; i < snapshot.size(); i++) {
             const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = snapshot.getDocuments().get(i);
-            docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
+            docSnapshots.push(new DocumentSnapshot(documentSnapshot));
           }
           const snap = new QuerySnapshot();
           snap.docSnapshots = docSnapshots;
@@ -2505,7 +2518,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;
@@ -2554,8 +2567,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
             reject(ex && ex.getReason ? ex.getReason() : ex);
           } else {
             const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
-            const exists = result.exists();
-            resolve(new DocumentSnapshot(exists ? result.getId() : null, exists, firebase.toJsObject(result.getData())));
+            resolve(new DocumentSnapshot(result));
           }
         }
       });
@@ -2592,7 +2604,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
             const docSnapshots: Array<firestore.DocumentSnapshot> = [];
             for (let i = 0; i < result.size(); i++) {
               const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = result.getDocuments().get(i);
-              docSnapshots.push(new DocumentSnapshot(documentSnapshot.getId(), true, firebase.toJsObject(documentSnapshot.getData())));
+              docSnapshots.push(new DocumentSnapshot(documentSnapshot));
             }
             const snap = new QuerySnapshot();
             snap.docSnapshots = docSnapshots;
@@ -2605,7 +2617,11 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
     where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
-    onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback)
+    onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback),
+    startAfter: (snapshot: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, snapshot, query),
+    startAt: (snapshot: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, snapshot, query),
+    endAt: (snapshot: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, snapshot, query),
+    endBefore: (snapshot: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, snapshot, query),
   };
 };
 
@@ -2654,5 +2670,23 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: com.go
   query = query.limit(limit);
   return firebase.firestore._getQuery(collectionPath, query);
 };
+
+firebase.firestore.startAfter = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
+  query = query.startAt(snapshot.android);
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.startAt = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.endAt = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
+firebase.firestore.endBefore = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
+  return firebase.firestore._getQuery(collectionPath, query);
+};
+
 
 module.exports = firebase;
