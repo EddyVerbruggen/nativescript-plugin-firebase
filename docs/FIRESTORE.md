@@ -239,6 +239,24 @@ query
     });
 ```
 
+### Paginate data with query cursors
+You can use `startAt`, `startAfter`, `endAt`, and `endBefore` as documented for 'WEB' [here](https://firebase.google.com/docs/firestore/query-data/query-cursors).
+
+Here's an example, grabbing cities ordered by name, starting after 'LA':
+
+```typescript
+firebase.firestore().collection('cities')
+  .doc('LA')
+  .get()
+  .then(doc => {
+    firebase.firestore().collection('cities')
+      .orderBy('name', 'asc')
+      .startAfter(doc)
+      .get()
+      .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+  });
+```
+
 ### Batched Writes: `batch()`
 To perform a (mixed) sequence of `set`, `update`, and/or `delete` operations in an atomic fashion
 (everything is rolled back if 1 operation fails), use the `batch` feature.

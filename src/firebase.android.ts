@@ -2672,20 +2672,19 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: com.go
 };
 
 firebase.firestore.startAfter = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
-  query = query.startAt(snapshot.android);
-  return firebase.firestore._getQuery(collectionPath, query);
+  return firebase.firestore._getQuery(collectionPath, query.startAfter(snapshot.android));
 };
 
 firebase.firestore.startAt = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
-  return firebase.firestore._getQuery(collectionPath, query);
+  return firebase.firestore._getQuery(collectionPath, query.startAt(snapshot.android));
 };
 
 firebase.firestore.endAt = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
-  return firebase.firestore._getQuery(collectionPath, query);
+  return firebase.firestore._getQuery(collectionPath, query.endAt(snapshot.android));
 };
 
 firebase.firestore.endBefore = (collectionPath: string, snapshot: DocumentSnapshot, query: com.google.firebase.firestore.Query): firestore.Query => {
-  return firebase.firestore._getQuery(collectionPath, query);
+  return firebase.firestore._getQuery(collectionPath, query.endBefore(snapshot.android));
 };
 
 

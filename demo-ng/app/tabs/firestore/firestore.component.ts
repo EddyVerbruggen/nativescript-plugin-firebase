@@ -345,13 +345,26 @@ export class FirestoreComponent {
         .catch(error => console.log("doTransaction error: " + error));
   }
 
-  public firestoreStartAfter(): void {
-    const beijingSnapshot = firebase.firestore().collection('cities')
-      .doc('BJ')
+  public firestoreStartAt(): void {
+    firebase.firestore().collection('cities')
+      .doc('LA')
       .get()
       .then(doc => {
         firebase.firestore().collection('cities')
-          .orderBy('country', 'asc')
+          .orderBy('name', 'asc')
+          .startAt(doc)
+          .get()
+          .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+      });
+  }
+
+  public firestoreStartAfter(): void {
+    firebase.firestore().collection('cities')
+      .doc('LA')
+      .get()
+      .then(doc => {
+        firebase.firestore().collection('cities')
+          .orderBy('name', 'asc')
           .startAfter(doc)
           .get()
           .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));

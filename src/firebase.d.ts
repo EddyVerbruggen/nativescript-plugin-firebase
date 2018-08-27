@@ -713,8 +713,8 @@ export namespace firestore {
   }
 
   export interface DocumentSnapshot {
-    ios?: FIRDocumentSnapshot;
-    android?: com.google.firebase.firestore.DocumentSnapshot;
+    ios?: any; /* FIRDocumentSnapshot */
+    android?: any; /* com.google.firebase.firestore.DocumentSnapshot */
     id: string;
     exists: boolean;
     data(): DocumentData;
@@ -750,7 +750,7 @@ export namespace firestore {
 
     startAfter(snapshot: DocumentSnapshot): Query;
 
-    endAt(snaptshot: DocumentSnapshot): Query;
+    endAt(snapshot: DocumentSnapshot): Query;
 
     endBefore(snapshot: DocumentSnapshot): Query;
   }

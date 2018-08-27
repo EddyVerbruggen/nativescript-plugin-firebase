@@ -2161,7 +2161,7 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
 
     public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
       const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError(documentRef.ios);
-      return new DocumentSnapshot(docSnapshot.exists ? docSnapshot.documentID : null, docSnapshot.exists, firebase.toJsObject(docSnapshot.data()));
+      return new DocumentSnapshot(docSnapshot);
     };
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
@@ -2590,23 +2590,19 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQue
 };
 
 firebase.firestore.startAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  query = query.queryStartingAtDocument(document.ios);
-  return firebase.firestore._getQuery(collectionPath, query);
-}
+  return firebase.firestore._getQuery(collectionPath, query.queryStartingAtDocument(document.ios));
+};
 
 firebase.firestore.startAfter = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  query = query.queryStartingAfterDocument(document.ios);
-  return firebase.firestore._getQuery(collectionPath, query);
+  return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterDocument(document.ios));
 };
 
 firebase.firestore.endAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  query = query.queryEndingAtDocument(document.ios);
-  return firebase.firestore._getQuery(collectionPath, query);
+  return firebase.firestore._getQuery(collectionPath, query.queryEndingAtDocument(document.ios));
 };
 
 firebase.firestore.endBefore = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  query = query.queryEndingBeforeDocument(document.ios);
-  return firebase.firestore._getQuery(collectionPath, query);
+  return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeDocument(document.ios));
 };
 
 // see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc
