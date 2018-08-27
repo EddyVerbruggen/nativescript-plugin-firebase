@@ -1,4 +1,4 @@
-import { DocumentSnapshot, firebase, GeoPoint, QuerySnapshot } from "./firebase-common";
+import { DocumentSnapshot, firebase, GeoPoint, QuerySnapshot, isDocumentReference } from "./firebase-common";
 import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
@@ -132,6 +132,8 @@ firebase.toHashMap = obj => {
         } else if (obj[property] instanceof GeoPoint) {
           const geo = <GeoPoint>obj[property];
           node.put(property, new com.google.firebase.firestore.GeoPoint(geo.latitude, geo.longitude));
+        } else if (isDocumentReference(obj[property])) {
+          node.put(property, obj[property].android);
         } else if (Array.isArray(obj[property])) {
           node.put(property, firebase.toJavaArray(obj[property]));
         } else {
@@ -2308,6 +2310,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore
 
 firebase.firestore._getDocumentReference = (javaObj, collectionPath, documentPath): firestore.DocumentReference => {
   return {
+    discriminator: "docRef",
     id: javaObj.getId(),
     collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
     set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, javaObj.getId(), data, options),
@@ -2350,6 +2353,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: (docRef: com.google.firebase.firestore.DocumentReference) => {
           resolve({
+            discriminator: "docRef",
             id: docRef.getId(),
             collection: cp => firebase.firestore.collection(cp),
             set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),

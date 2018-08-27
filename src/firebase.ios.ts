@@ -1,4 +1,4 @@
-import { firebase, DocumentSnapshot, QuerySnapshot, GeoPoint } from "./firebase-common";
+import { firebase, DocumentSnapshot, QuerySnapshot, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as application from "tns-core-modules/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
@@ -2260,6 +2260,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
 
 firebase.firestore._getDocumentReference = (fIRDocumentReference, collectionPath: string, documentPath: string): firestore.DocumentReference => {
   return {
+    discriminator: "docRef",
     id: fIRDocumentReference.documentID,
     collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
     set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
@@ -2303,6 +2304,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
               reject(error.localizedDescription);
             } else {
               resolve({
+                discriminator: "docRef",
                 id: fIRDocumentReference.documentID,
                 collection: cp => firebase.firestore.collection(cp),
                 set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
@@ -2372,6 +2374,8 @@ function fixSpecialFields(item) {
           latitude: geo.latitude,
           longitude: geo.longitude
         });
+      } else if (isDocumentReference(item[k])) {
+        item[k] = item[k].ios;
       }
     }
   }

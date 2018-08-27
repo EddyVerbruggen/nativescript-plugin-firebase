@@ -720,6 +720,7 @@ export namespace firestore {
   }
 
   export interface DocumentReference {
+    discriminator: "docRef";
     id: string;
     collection: (collectionPath: string) => CollectionReference;
     set: (document: any, options?: SetOptions) => Promise<void>;

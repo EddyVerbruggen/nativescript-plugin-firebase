@@ -133,10 +133,14 @@ export class FirestoreComponent {
   }
 
   public firestoreUpdate(): void {
+    // get a document reference so we can add a city reference to our favourite dog
+    const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
     firebase.firestore().collection("dogs").doc("fave")
         .update({
           name: "Woofieupdate",
           last: "updatedwoofie!",
+          city: sfDocRef,
           updateTs: firestore.FieldValue.serverTimestamp(),
           updateTsAlt: firebase.firestore().FieldValue().serverTimestamp(),
           lastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67)

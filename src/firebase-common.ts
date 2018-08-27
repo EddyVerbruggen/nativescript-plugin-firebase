@@ -222,6 +222,10 @@ export class DocumentSnapshot implements firestore.DocumentSnapshot {
   }
 }
 
+export function isDocumentReference(object: any): object is firestore.DocumentReference {
+  return object && object.discriminator === "docRef";
+}
+
 export class QuerySnapshot implements firestore.QuerySnapshot {
   public docSnapshots: firestore.DocumentSnapshot[];
 
