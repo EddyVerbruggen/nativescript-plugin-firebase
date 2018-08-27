@@ -245,6 +245,9 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
 </MLKitBarcodeScanner>
 ```
 
+Note that `formats` is optional but recommended for better recognition performance. Supported types:
+`CODE_128`, `CODE_39`, `CODE_93`, `CODABAR`, `DATA_MATRIX`, `EAN_13`, `EAN_8`, `ITF`, `QR_CODE`, `UPC_A`, `UPC_E`, `PDF417`, `AZTEC`.
+
 ### Image labeling
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
 

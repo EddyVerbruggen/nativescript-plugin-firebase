@@ -1,4 +1,4 @@
-import { firebase, DocumentSnapshot as DocumentSnapshotBase, QuerySnapshot, GeoPoint } from "./firebase-common";
+import { firebase, DocumentSnapshot as DocumentSnapshotBase, QuerySnapshot, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as application from "tns-core-modules/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { getClass } from "tns-core-modules/utils/types";
@@ -337,7 +337,7 @@ firebase.addOnDynamicLinkReceivedCallback = callback => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof(FIRDynamicLink) === "undefined") {
-        reject("Enable FIRInvites in Podfile first");
+        reject("Enable FIRInvites in the Podfile first");
         return;
       }
 
@@ -2228,7 +2228,9 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 
 firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
-    callback(new DocumentSnapshot(snapshot));
+    if (!error && snapshot) {
+      callback(new DocumentSnapshot(snapshot));
+    }
   });
 
   // There's a bug resulting this function to be undefined..
@@ -2270,6 +2272,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callb
 
 firebase.firestore._getDocumentReference = (fIRDocumentReference, collectionPath: string, documentPath: string): firestore.DocumentReference => {
   return {
+    discriminator: "docRef",
     id: fIRDocumentReference.documentID,
     collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
     set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
@@ -2313,6 +2316,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
               reject(error.localizedDescription);
             } else {
               resolve({
+                discriminator: "docRef",
                 id: fIRDocumentReference.documentID,
                 collection: cp => firebase.firestore.collection(cp),
                 set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
@@ -2382,6 +2386,8 @@ function fixSpecialFields(item) {
           latitude: geo.latitude,
           longitude: geo.longitude
         });
+      } else if (isDocumentReference(item[k])) {
+        item[k] = item[k].ios;
       }
     }
   }

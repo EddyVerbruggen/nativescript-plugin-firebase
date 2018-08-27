@@ -26,9 +26,23 @@ export class FirestoreComponent {
     // AngularFireModule.initializeApp({});
   }
 
+  public issue854(): void {
+    const helloRef: firestore.DocumentReference =
+        firebase.firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("availability")
+            .doc("hello");
+
+    helloRef.get().then(snapshot => console.log(snapshot.data()))
+  }
+
   public loginAnonymously(): void {
     firebase.auth().signInAnonymously()
-        .then(() => console.log("Logged in"))
+        .then(() => {
+          const user = firebase.auth().currentUser;
+          firebase.firestore().collection("users").doc(user.uid).set(user);
+        })
         .catch(err => console.log("Login error: " + JSON.stringify(err)));
   }
 
@@ -119,10 +133,14 @@ export class FirestoreComponent {
   }
 
   public firestoreUpdate(): void {
+    // get a document reference so we can add a city reference to our favourite dog
+    const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
     firebase.firestore().collection("dogs").doc("fave")
         .update({
           name: "Woofieupdate",
           last: "updatedwoofie!",
+          city: sfDocRef,
           updateTs: firestore.FieldValue.serverTimestamp(),
           updateTsAlt: firebase.firestore().FieldValue().serverTimestamp(),
           lastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67)

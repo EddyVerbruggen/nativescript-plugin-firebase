@@ -60,7 +60,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
     // begin the session
     this.captureSession = AVCaptureSession.new();
-    this.captureSession.sessionPreset = AVCaptureSessionPreset640x480;
+    this.captureSession.sessionPreset = AVCaptureSessionPreset1280x720;
 
     const captureDeviceInput = AVCaptureDeviceInput.deviceInputWithDeviceError(this.captureDevice);
     this.captureSession.addInput(captureDeviceInput);

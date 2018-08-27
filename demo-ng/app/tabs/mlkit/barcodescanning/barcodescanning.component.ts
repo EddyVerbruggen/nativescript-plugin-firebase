@@ -13,14 +13,9 @@ export class BarcodeScanningComponent extends AbstractMLKitViewComponent {
     format: string;
   }>;
 
-  constructor() {
-    super();
-    // let's start with the torch on, just for show
-    this.torchOn = true;
-  }
-
   onBarcodeScanResult(event: any): void {
     const result: MLKitScanBarcodesOnDeviceResult = event.value;
     this.barcodes = result.barcodes;
+    console.log("this.barcodes: " + JSON.stringify(this.barcodes));
   }
 }
