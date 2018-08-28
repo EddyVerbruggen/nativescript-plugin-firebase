@@ -2247,6 +2247,10 @@ firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, callback:
 
 firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, callback: (snapshot: QuerySnapshot) => void): () => void => {
   const listener = colRef.addSnapshotListener((snapshot: FIRQuerySnapshot, error: NSError) => {
+    if (error || !snapshot) {
+      return;
+    }
+
     const docSnapshots: Array<firestore.DocumentSnapshot> = [];
     for (let i = 0, l = snapshot.documents.count; i < l; i++) {
       const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
