@@ -1136,6 +1136,8 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       if (pid === 'facebook.com' && typeof(FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
         const fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
         providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
+      } else if (pid === 'google.com' && typeof(GIDAuthentication) !== "undefined") {
+        providers.push({id: pid, token: firebase._gIDAuthentication ? (<GIDAuthentication>firebase._gIDAuthentication).accessToken : null});
       } else {
         providers.push({id: pid});
       }

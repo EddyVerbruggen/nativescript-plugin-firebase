@@ -533,7 +533,7 @@ Then add the following lines to your code and check for setup instructions for y
   );
 ```
 
-#### Google Access Token (Android only, iOS Coming soon)
+#### Google Access Token
 Upon successful authentication, Google creates an access token that can be obtained from the login method's result object. This access token can then be used for Google API:
 
 ```js
