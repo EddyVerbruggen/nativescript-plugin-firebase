@@ -996,6 +996,8 @@ function toLoginResult(user, additionalUserInfo?): User {
     const pid = providerData.get(i).getProviderId();
     if (pid === 'facebook.com') {
       providers.push({id: pid, token: firebase._facebookAccessToken});
+    } else if (pid === 'google.com') {
+      providers.push({id: pid, token: firebase._googleSignInIdToken});
     }
     else {
       providers.push({id: pid});
