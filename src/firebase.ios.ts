@@ -2523,7 +2523,6 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
         if (error) {
           reject(error.localizedDescription);
         } else {
-          console.log(">> .where, snapshot: " + snapshot);
           const docSnapshots: Array<firestore.DocumentSnapshot> = [];
           for (let i = 0, l = snapshot.documents.count; i < l; i++) {
             const document: FIRQueryDocumentSnapshot = snapshot.documents.objectAtIndex(i);
