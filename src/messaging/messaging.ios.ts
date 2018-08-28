@@ -281,7 +281,7 @@ export interface IosInteractiveNotificationCategory {
   actionsForMinimalContext?: string[];
 }
 
-export class IOSPushSettings {
+export class IosPushSettings {
   badge: boolean;
   sound: boolean;
   alert: boolean;
@@ -295,7 +295,7 @@ export class IOSPushSettings {
 
 export class PushNotificationModel {
   androidSettings: any;
-  iosSettings: IOSPushSettings;
+  iosSettings: IosPushSettings;
   onNotificationActionTakenCallback: Function;
 }
 

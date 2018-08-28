@@ -1,8 +1,7 @@
 import { alert } from "tns-core-modules/ui/dialogs";
 import { isIOS } from "tns-core-modules/platform";
-import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebase from "nativescript-plugin-firebase";
-import { IOSPushSettings, IosInteractiveNotificationActionOptions, IosInteractivePushSettings, PushNotificationModel } from "nativescript-plugin-firebase/messaging/messaging";
+import { messaging } from "nativescript-plugin-firebase/messaging";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet;
@@ -32,26 +31,26 @@ export class MessagingViewModel {
 
   public doRegisterForInteractivePush(): void {
     if (isIOS) {
-      let model = new PushNotificationModel();
-      model.iosSettings = new IOSPushSettings();
+      let model = new messaging.PushNotificationModel();
+      model.iosSettings = new messaging.IosPushSettings();
       model.iosSettings.badge = false;
       model.iosSettings.alert = true;
-      model.iosSettings.interactiveSettings = new IosInteractivePushSettings();
+      model.iosSettings.interactiveSettings = new messaging.IosInteractivePushSettings();
       model.iosSettings.interactiveSettings.actions = [
         {
           identifier: "OPEN_ACTION",
           title: "Open",
-          options: IosInteractiveNotificationActionOptions.foreground
+          options: messaging.IosInteractiveNotificationActionOptions.foreground
         },
         {
           identifier: "IGNORE_ACTION",
           title: "Ignore",
-          options: IosInteractiveNotificationActionOptions.foreground
+          options: messaging.IosInteractiveNotificationActionOptions.foreground
         },
         {
           identifier: "DELETE_ACTION",
           title: "Delete",
-          options: IosInteractiveNotificationActionOptions.foreground | IosInteractiveNotificationActionOptions.destructive
+          options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.destructive
         }
       ];
       model.iosSettings.interactiveSettings.categories = [

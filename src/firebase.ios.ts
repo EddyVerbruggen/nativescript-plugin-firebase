@@ -1804,13 +1804,9 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 
 firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener((snapshot: FIRDocumentSnapshot, error: NSError) => {
-<<<<<<< HEAD
     if (!error && snapshot) {
       callback(new DocumentSnapshot(snapshot.documentID, snapshot.exists, firebase.toJsObject(snapshot.data())));
     }
-=======
-    callback(new DocumentSnapshot(snapshot.documentID, snapshot.exists, firebaseUtils.toJsObject(snapshot.data())));
->>>>>>> refactor: extract messaging logic from ios in a separate ts
   });
 
   // There's a bug resulting this function to be undefined..
