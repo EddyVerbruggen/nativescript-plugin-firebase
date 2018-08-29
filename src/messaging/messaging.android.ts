@@ -1,5 +1,6 @@
 import { firebase } from "../firebase-common";
 import * as appModule from "tns-core-modules/application";
+import * as application from "tns-core-modules/application/application";
 
 declare const android, com, org: any;
 
@@ -167,7 +168,5 @@ export function unsubscribeFromTopic(topicName) {
 }
 
 export function areNotificationsEnabled() {
-  // TODO: implement this correctly, also handle if platform is not supported (i.e. Android version is below 24.1.0):
-  // return com.android.support.v4.app.NotificationManagerCompat.areNotificationsEnabled();
-  return true;
+  return android.support.v4.app.NotificationManagerCompat.from(application.android.currentContext).areNotificationsEnabled();
 }

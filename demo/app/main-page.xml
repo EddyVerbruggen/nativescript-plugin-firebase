@@ -191,8 +191,8 @@
             <Button row="38" col="1" text="topic unsubscribe" tap="{{ messaging.doUnsubscribeFromTopic }}" class="button button-messaging"/>
             <iOS>
               <Button row="39" colSpan="2" text="register interactive push" tap="{{ messaging.doRegisterForInteractivePush }}" class="button button-messaging"/>
-              <Button row="40" colSpan="2" text="are notifications enabled" tap="{{ messaging.doGetAreNotificationsEnabled }}" class="button button-messaging"/>
             </iOS>
+            <Button row="40" colSpan="2" text="are notifications enabled" tap="{{ messaging.doGetAreNotificationsEnabled }}" class="button button-messaging"/>
             <!-- <Button row="39" col="1" text="topic unsubscribe" tap="{{ doUnsubscribeFromTopic }}" class="button button-messaging"/> -->
 
             <Label row="41" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
