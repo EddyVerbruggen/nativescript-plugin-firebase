@@ -199,16 +199,15 @@
 
             <Button row="42" col="0" text="log message" tap="{{ doLogMessage }}" class="button button-crash"/>
             <iOS>
-              <Button row="43" col="1" text="force crash :)" tap="{{ doForceCrashIOS }}" class="button button-crash"/>
+              <Button row="42" col="1" text="force crash :)" tap="{{ doForceCrashIOS }}" class="button button-crash"/>
             </iOS>
             <Android>
-              <Button row="44" col="1" text="force crash :)" tap="{{ doForceCrashAndroid }}" class="button button-crash"/>
+              <Button row="42" col="1" text="force crash :)" tap="{{ doForceCrashAndroid }}" class="button button-crash"/>
             </Android>
 
-            <Label row="45" colSpan="2" text="Firebase Invites" class="subtitle"/>
-
-            <Button row="46" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
-            <Button row="46" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
+            <Label row="43" colSpan="2" text="Firebase Invites" class="subtitle"/>
+            <Button row="44" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
+            <Button row="44" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
           </GridLayout>
 
         </ScrollView>
