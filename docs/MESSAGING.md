@@ -191,6 +191,16 @@ This results in a payload of:
 - App in the foreground: `{"gcm.message_id":"0:1522952782882471%3194ccac3194ccac", "foo":"bar", "foreground":true}`
 - App in the background: `{"gcm.message_id":"0:1522952757954843%3194ccac3194ccac", "foo":"bar", "foreground":false}`
 
+### (iOS) interactive notification example
+
+- To register the app to receive interactive pushes you need to call `firebase.registerForInteractivePush(model)`. See example code in the demo project.
+- You may hook to the `model.onNotificationActionTakenCallback` callback to know what action did the user take after interacting with the notification.
+- To send an interactive push add "click_action" property in the notification, with value coresponding to the category defined in the model you've registered in the app:
+
+```bash
+curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiUkNY3nrti4st4WOUs_w1A0Rttcx31U90YGv-p3U4Oql-vh-FzZzWUUPEwl47uvwhI4tB5yz4wwzrJA2fVqLEKZpDU42AQppYnU2-dsURqkyc9sKcjay2egWbfyNK2b-G2JQCqrLVA" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"notification\": {\"title\": \"My title\", \"text\": \"My text\", \"click_action\":\"GENERAL\"}, \"content_available\":true, \"to\": \"exbKSYOGbto:APA91bHqFX9EA6SxY7NkVKV3ajea9xYn9_2dPz2jS7DGuymoE3fMDhPZLVbTXxbQ5_tS6nxmjdmfAEACM4_L-egNneXInuvg8JfRjrCVICTa8vnccTBq8cAnIx6cME1FvER9WIDC3dC4\"}"
+```
+
 ## What if iOS doesn't show/receive notifications in the background?
 Make sure you [`require` the plugin in `app.ts` / `main.ts` / `main.aot.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
 *before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts` - not even in a timeout; move it out of `app.ts` entirely!).
