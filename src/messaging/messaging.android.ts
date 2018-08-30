@@ -168,5 +168,12 @@ export function unsubscribeFromTopic(topicName) {
 }
 
 export function areNotificationsEnabled() {
-  return android.support.v4.app.NotificationManagerCompat.from(application.android.currentContext).areNotificationsEnabled();
+  const androidSdkVersion = android.os.Build.VERSION.SDK_INT;
+
+  if (androidSdkVersion >= 24) { // android.os.Build.VERSION_CODES.N
+    return android.support.v4.app.NotificationManagerCompat.from(application.android.currentContext).areNotificationsEnabled();
+  } else {
+    console.log("NotificationManagerCompat.areNotificationsEnabled() is not supported in Android SDK VERSION " + androidSdkVersion);
+    return true;
+  }
 }

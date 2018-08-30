@@ -1,5 +1,5 @@
 import { alert } from "tns-core-modules/ui/dialogs";
-import { isIOS } from "tns-core-modules/platform";
+import * as platform from "tns-core-modules/platform";
 import * as firebase from "nativescript-plugin-firebase";
 import { messaging } from "nativescript-plugin-firebase/messaging";
 
@@ -30,7 +30,7 @@ export class MessagingViewModel {
   }
 
   public doRegisterForInteractivePush(): void {
-    if (isIOS) {
+    if (platform.isIOS) {
       let model = new messaging.PushNotificationModel();
       model.iosSettings = new messaging.IosPushSettings();
       model.iosSettings.badge = false;
