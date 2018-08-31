@@ -80,6 +80,12 @@ export enum ServerValue {
  */
 export interface InitOptions {
   /**
+   * Allow the app to send analytics data to Firebase.
+   * Can also be set later with analytics.setAnalyticsCollectionEnabled.
+   * Default true.
+   */
+  analyticsCollectionEnabled?: boolean;
+  /**
    * Allow disk persistence. Default true for Firestore, false for regular Firebase DB.
    */
   persist?: boolean;

@@ -43,3 +43,5 @@ export declare function setUserId(options: SetUserIdOptions): Promise<void>;
 export declare function setUserProperty(options: SetUserPropertyOptions): Promise<void>;
 
 export declare function setScreenName(options: SetScreenNameOptions): Promise<void>;
+
+export declare function setAnalyticsCollectionEnabled(enabled: boolean): void;

@@ -261,6 +261,10 @@ firebase.init = arg => {
     const runInit = () => {
       arg = arg || {};
 
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+          appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+      ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled || false);
+
       if (typeof (com.google.firebase.database) !== "undefined" && typeof (com.google.firebase.database.ServerValue) !== "undefined") {
         firebase.ServerValue = {
           TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)

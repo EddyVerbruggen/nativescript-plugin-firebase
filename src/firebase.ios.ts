@@ -341,6 +341,8 @@ firebase.init = arg => {
         FIROptions.defaultOptions().deepLinkURLScheme = iOSUtils.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
       }
 
+      FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled || false);
+
       if (!firebase._configured) {
         firebase._configured = true;
         FIRApp.configure();

@@ -378,6 +378,7 @@ export class HelloWorldModel extends Observable {
     firebase.init({
       // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
+      analyticsCollectionEnabled: true,
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
         if (data.loggedIn) {
@@ -425,6 +426,24 @@ export class HelloWorldModel extends Observable {
         console.log("firebase.init error: " + error);
       }
     );
+  }
+
+  public doEnableAnalytics(): void {
+    firebase.analytics.setAnalyticsCollectionEnabled(true);
+    alert({
+      title: "Analytics collection",
+      message: "ENABLED",
+      okButtonText: "OK"
+    });
+  }
+
+  public doDisableAnalytics(): void {
+    firebase.analytics.setAnalyticsCollectionEnabled(false);
+    alert({
+      title: "Analytics collection",
+      message: "DISABLED",
+      okButtonText: "OK"
+    });
   }
 
   public doLogAnalyticsEvent(): void {

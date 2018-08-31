@@ -85,3 +85,7 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
     }
   });
 }
+
+export function setAnalyticsCollectionEnabled(enabled: boolean): void {
+  FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(enabled);
+}
