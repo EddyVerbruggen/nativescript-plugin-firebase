@@ -195,9 +195,15 @@ This results in a payload of:
 To register the app to receive interactive pushes you need to call `firebase.registerForInteractivePush(model)`.
 And you may hook to the `model.onNotificationActionTakenCallback` callback to know what action the user took interacting with the notification.
 
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive01.png" height="270px" alt="Interactive Notification, part 1"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive02.png" height="270px" alt="Interactive Notification, part 2"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive03.png" height="270px" alt="Interactive Notification, part 3"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive04.png" height="270px" alt="Interactive Notification, part 4"/>
+Each action has either type `button` or `input`, and you can set `options` to do any or all of:
+- Launch the app: `foreground`.
+- Only allow the action when the device is unlocked: `authenticationRequired`.
+- Make the text red to indicate something will be removed/deleted/killed: `destructive`.
 
-The example shown above was created with the code below.
+Consider this example, where an interactive push notification is received which the user expands and picks the fourth option.
+He then types his reply, and (because of how the action was configured) the app launches and captures the reply.
+
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive01.png" height="270px" alt="Interactive Notification, part 1"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive02.png" height="270px" alt="Interactive Notification, part 2"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive03.png" height="270px" alt="Interactive Notification, part 3"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive04.png" height="270px" alt="Interactive Notification, part 4"/>
 
 ```typescript
 import { messaging } from "nativescript-plugin-firebase/messaging";
