@@ -17,6 +17,7 @@ src/platforms/android/include.gradle
 !src/references.d.ts
 !src/analytics/analytics.d.ts
 !src/storage/storage.d.ts
+!src/messaging/messaging.d.ts
 !src/mlkit/*/index.d.ts
 !src/mlkit/mlkit-cameraview.d.ts
 !src/platforms/web/typings/firebase-webapi.d.ts

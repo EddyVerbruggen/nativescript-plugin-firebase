@@ -39,11 +39,11 @@ declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
 
 	static new(): FIRModelDownloadConditions; // inherited from NSObject
 
-	readonly canDownloadInBackground: boolean;
+	readonly isIdleRequired: boolean;
 
 	readonly isWiFiRequired: boolean;
 
-	constructor(o: { isWiFiRequired: boolean; canDownloadInBackground: boolean; });
+	constructor(o: { wiFiRequired: boolean; idleRequired: boolean; });
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
@@ -90,8 +90,6 @@ declare class FIRModelInterpreter extends NSObject {
 	static modelInterpreterWithOptions(options: FIRModelOptions): FIRModelInterpreter;
 
 	static new(): FIRModelInterpreter; // inherited from NSObject
-
-	statsCollectionEnabled: boolean;
 
 	inputIndexForOpCompletion(opName: string, completion: (p1: number, p2: NSError) => void): void;
 

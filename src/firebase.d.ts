@@ -866,6 +866,8 @@ export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) 
 
 export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
 
+export function registerForInteractivePush(model: any): void;
+
 export function getCurrentPushToken(): Promise<string>;
 
 export function unregisterForPushNotifications(): Promise<void>;
@@ -873,6 +875,8 @@ export function unregisterForPushNotifications(): Promise<void>;
 export function subscribeToTopic(topicName): Promise<any>;
 
 export function unsubscribeFromTopic(topicName): Promise<any>;
+
+export function areNotificationsEnabled(): boolean;
 
 // dynamic links
 export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBackData: dynamicLinks.DynamicLinkCallbackData) => void): Promise<any>;
