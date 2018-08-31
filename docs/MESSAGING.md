@@ -201,6 +201,23 @@ This results in a payload of:
 curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiUkNY3nrti4st4WOUs_w1A0Rttcx31U90YGv-p3U4Oql-vh-FzZzWUUPEwl47uvwhI4tB5yz4wwzrJA2fVqLEKZpDU42AQppYnU2-dsURqkyc9sKcjay2egWbfyNK2b-G2JQCqrLVA" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"notification\": {\"title\": \"My title\", \"text\": \"My text\", \"click_action\":\"GENERAL\"}, \"content_available\":true, \"to\": \"exbKSYOGbto:APA91bHqFX9EA6SxY7NkVKV3ajea9xYn9_2dPz2jS7DGuymoE3fMDhPZLVbTXxbQ5_tS6nxmjdmfAEACM4_L-egNneXInuvg8JfRjrCVICTa8vnccTBq8cAnIx6cME1FvER9WIDC3dC4\"}"
 ```
 
+### (iOS) showing a notification while the app is in the foreground
+Add the `showWhenInForeground` flag in your payload as shown below (the other properties are just for show):
+
+```json
+{
+  "notification": {
+    "showWhenInForeground": true,
+    "title": "My title",
+    "text": "My text",
+    "click_action": "GENERAL",
+    "badge": "1",
+    "sound": "default"
+  },
+  ..
+}
+```
+
 ## What if iOS doesn't show/receive notifications in the background?
 Make sure you [`require` the plugin in `app.ts` / `main.ts` / `main.aot.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)
 *before* `application.start()`, and do `init()` *after* the app has started (not in `app.ts` - not even in a timeout; move it out of `app.ts` entirely!).
