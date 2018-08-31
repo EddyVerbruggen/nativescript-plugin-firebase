@@ -30,15 +30,15 @@ export declare class IosInteractivePushSettings {
     foreground = 4,
   }
   
-  export declare interface IosInteractiveNotificationAction {
+  export interface IosInteractiveNotificationAction {
     identifier: string;
     title: string;
-    // activationMode?: string;
-    // destructive?: boolean;
-    // authenticationRequired?: boolean;
+    type: string;
+    submitLabel: string;
+    placeholder: string;
     options?: IosInteractiveNotificationActionOptions;
     behavior?: string;
-  }
+}
   
   export declare interface IosInteractiveNotificationCategory {
     identifier: string;

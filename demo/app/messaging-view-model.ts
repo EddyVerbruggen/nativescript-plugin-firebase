@@ -48,6 +48,14 @@ export class MessagingViewModel {
           options: messaging.IosInteractiveNotificationActionOptions.authenticationRequired
         },
         {
+          identifier: "INPUT_ACTION",
+          title: "Reply",
+          options: messaging.IosInteractiveNotificationActionOptions.foreground,
+          type: "input",
+          submitLabel: "Fire!",
+          placeholder: "Load the gun..."
+        },
+        {
           identifier: "DELETE_ACTION",
           title: "Delete and open",
           options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.destructive
@@ -56,17 +64,15 @@ export class MessagingViewModel {
       model.iosSettings.interactiveSettings.categories = [
         {
           identifier: "GENERAL"
-          // actionsForDefaultContext: ['OPEN_ACTION', 'IGNORE_ACTION', 'DELETE_ACTION'],
-          // actionsForMinimalContext: ['OPEN_ACTION', 'IGNORE_ACTION', 'DELETE_ACTION']
         }
       ];
 
-      model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message) => {
+      model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message, inputText?: string) => {
         console.log(`onNotificationActionTakenCallback fired! \n\r Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}`);
 
         alert({
           title: "Interactive push action",
-          message: `Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}`,
+          message: `Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}` + (inputText ? `, \n\r Input text: ${inputText}` : ""),
           okButtonText: "Nice!"
         });
       };

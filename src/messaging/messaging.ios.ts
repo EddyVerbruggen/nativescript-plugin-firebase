@@ -143,14 +143,32 @@ export function addBackgroundRemoteNotificationHandler(appDelegate) {
   };
 }
 
-export function registerForInteractivePush(model?: any) {
+export function registerForInteractivePush(model?: PushNotificationModel) {
   let nativeActions: Array<UNNotificationAction> = [];
 
-  model.iosSettings.interactiveSettings.actions.forEach(action => {
-    let nativeAction = UNNotificationAction.actionWithIdentifierTitleOptions(action.identifier, action.title, action.options | UNNotificationActionOptionNone);
+  model.iosSettings.interactiveSettings.actions.forEach(((action: IosInteractiveNotificationAction) => {
+    let notificationActionOptions: UNNotificationActionOptions = action.options ? <UNNotificationActionOptions>action.options.valueOf() : UNNotificationActionOptionNone;
+    let actionType = action.type || "button";
+    let nativeAction: UNNotificationAction;
+
+    if (actionType === "input") {
+      nativeAction = UNTextInputNotificationAction.actionWithIdentifierTitleOptionsTextInputButtonTitleTextInputPlaceholder(
+        action.identifier,
+        action.title,
+        notificationActionOptions,
+        action.submitLabel || "Submit",
+        action.placeholder);
+    } else if (actionType === "button") {
+      nativeAction = UNNotificationAction.actionWithIdentifierTitleOptions(
+        action.identifier,
+        action.title,
+        notificationActionOptions);
+    } else {
+      console.log("Unsupported action type: " + action.type);
+    }
 
     nativeActions.push(nativeAction);
-  });
+  }));
 
   let actions: NSArray<UNNotificationAction> = <NSArray<UNNotificationAction>>NSArray.arrayWithArray(<any>nativeActions);
   let nativeCategories: Array<UNNotificationCategory> = [];
@@ -273,6 +291,9 @@ export enum IosInteractiveNotificationActionOptions {
 export interface IosInteractiveNotificationAction {
   identifier: string;
   title: string;
+  type: string;
+  submitLabel: string;
+  placeholder: string;
   // activationMode?: string;
   // destructive?: boolean;
   // authenticationRequired?: boolean;
@@ -299,6 +320,11 @@ export class IosPushSettings {
 }
 
 export class PushNotificationModel {
+  androidSettings: any;
+  iosSettings: IosPushSettings;
+  onNotificationActionTakenCallback: Function;
+}
+export class NotificationActionResponse {
   androidSettings: any;
   iosSettings: IosPushSettings;
   onNotificationActionTakenCallback: Function;
@@ -345,7 +371,7 @@ function _registerForRemoteNotifications() {
       }
     });
 
-    _userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback((unnotification, actionIdentifier?) => {
+    _userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback((unnotification, actionIdentifier?, inputText?) => {
       // if the app is in the foreground then this method will receive the notification
       // if the app is in the background, and user has responded to interactive notification, then this method will receive the notification
       // if the app is in the background, and user views a notification, applicationDidReceiveRemoteNotificationFetchCompletionHandler will receive it
@@ -371,7 +397,7 @@ function _registerForRemoteNotifications() {
         userInfoJSON.aps = undefined;
         // TODO: THIS CODE UP IS DUPLICATE, REFACTOR!!!!
 
-        _notificationActionTakenCallback(actionIdentifier, userInfoJSON);
+        _notificationActionTakenCallback(actionIdentifier, userInfoJSON, inputText);
       }
 
       userInfoJSON.foreground = true;
@@ -500,9 +526,9 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
     return <UNUserNotificationCenterDelegateImpl>super.new();
   }
 
-  private callback: (unnotification: UNNotification, actionIdentifier?: string) => void;
+  private callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void;
 
-  public initWithCallback(callback: (unnotification: UNNotification, actionIdentifier?: string) => void): UNUserNotificationCenterDelegateImpl {
+  public initWithCallback(callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void): UNUserNotificationCenterDelegateImpl {
     this.callback = callback;
     return this;
   }
@@ -524,9 +550,10 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
   }
 
   public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void): void {
-    console.log(">>>>>>>>>>> Handle push");
+    console.log("Notification action response");
     console.log(response);
-    this.callback(response.notification, response.actionIdentifier);
+
+    this.callback(response.notification, response.actionIdentifier, (<UNTextInputNotificationResponse>response).userText);
     completionHandler();
   }
 }
