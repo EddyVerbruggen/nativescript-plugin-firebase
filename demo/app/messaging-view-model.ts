@@ -39,33 +39,39 @@ export class MessagingViewModel {
       model.iosSettings.interactiveSettings.actions = [
         {
           identifier: "OPEN_ACTION",
-          title: "Open the app",
+          title: "Open the app (if closed)",
           options: messaging.IosInteractiveNotificationActionOptions.foreground
         },
         {
           identifier: "AUTH",
-          title: "Not on lock screen",
-          options: messaging.IosInteractiveNotificationActionOptions.authenticationRequired
+          title: "Open the app, but only if device is not locked with a passcode",
+          options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.authenticationRequired
         },
         {
           identifier: "INPUT_ACTION",
-          title: "Reply",
-          options: messaging.IosInteractiveNotificationActionOptions.foreground,
+          title: "Tap to reply without opening the app",
           type: "input",
           submitLabel: "Fire!",
           placeholder: "Load the gun..."
         },
         {
-          identifier: "DELETE_ACTION",
-          title: "Delete and open",
-          options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.destructive
-        }
-      ];
-      model.iosSettings.interactiveSettings.categories = [
+          identifier: "INPUT_ACTION",
+          title: "Tap to reply and open the app",
+          options: messaging.IosInteractiveNotificationActionOptions.foreground,
+          type: "input",
+          submitLabel: "OK, send it",
+          placeholder: "Type here, baby!"
+        },
         {
-          identifier: "GENERAL"
+          identifier: "DELETE_ACTION",
+          title: "Delete without opening the app",
+          options: messaging.IosInteractiveNotificationActionOptions.destructive
         }
       ];
+
+      model.iosSettings.interactiveSettings.categories = [{
+        identifier: "GENERAL"
+      }];
 
       model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message, inputText?: string) => {
         console.log(`onNotificationActionTakenCallback fired! \n\r Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}`);
@@ -78,6 +84,7 @@ export class MessagingViewModel {
       };
 
       firebase.registerForInteractivePush(model);
+      console.log("Registered for interactive push");
     } else {
       console.log("Interactive push messaging is iOS-only!");
     }
@@ -87,26 +94,26 @@ export class MessagingViewModel {
   // The benefit being your user will not be confronted with the "Allow notifications" consent popup when 'init' runs.
   public doRegisterPushHandlers(): void {
     firebase.addOnPushTokenReceivedCallback(
-      token => {
-        // you can use this token to send to your own backend server,
-        // so you can send notifications to this specific device
-        console.log("Firebase plugin received a push token: " + token);
-        // var pasteboard = utils.ios.getter(UIPasteboard, UIPasteboard.generalPasteboard);
-        // pasteboard.setValueForPasteboardType(token, kUTTypePlainText);
-      }
+        token => {
+          // you can use this token to send to your own backend server,
+          // so you can send notifications to this specific device
+          console.log("Firebase plugin received a push token: " + token);
+          // var pasteboard = utils.ios.getter(UIPasteboard, UIPasteboard.generalPasteboard);
+          // pasteboard.setValueForPasteboardType(token, kUTTypePlainText);
+        }
     );
     firebase.addOnMessageReceivedCallback(
-      message => {
-        console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
+        message => {
+          console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
 
-        setTimeout(() => {
-          alert({
-            title: "Push message!",
-            message: (message.title !== undefined ? message.title : ""),
-            okButtonText: "Sw33t"
-          });
-        }, 500);
-      }
+          setTimeout(() => {
+            alert({
+              title: "Push message!",
+              message: (message.title !== undefined ? message.title : ""),
+              okButtonText: "Sw33t"
+            });
+          }, 500);
+        }
     ).then(() => {
       console.log("Added addOnMessageReceivedCallback");
     }, err => {
@@ -116,50 +123,50 @@ export class MessagingViewModel {
 
   public doUnregisterForPushNotifications(): void {
     firebase.unregisterForPushNotifications().then(
-      () => {
-        alert({
-          title: "Unregistered",
-          message: "If you were registered, that is.",
-          okButtonText: "Got it, thanks!"
+        () => {
+          alert({
+            title: "Unregistered",
+            message: "If you were registered, that is.",
+            okButtonText: "Got it, thanks!"
+          });
         });
-      });
   }
 
   public doSubscribeToTopic(): void {
     firebase.subscribeToTopic("demo").then(
-      () => {
-        alert({
-          title: "Subscribed",
-          message: ".. to the 'demo' topic",
-          okButtonText: "Okay, interesting"
-        });
-      },
-      error => {
-        alert({
-          title: "Subscribe error",
-          message: error,
-          okButtonText: "OK"
-        });
-      }
+        () => {
+          alert({
+            title: "Subscribed",
+            message: ".. to the 'demo' topic",
+            okButtonText: "Okay, interesting"
+          });
+        },
+        error => {
+          alert({
+            title: "Subscribe error",
+            message: error,
+            okButtonText: "OK"
+          });
+        }
     );
   }
 
   public doUnsubscribeFromTopic(): void {
     firebase.unsubscribeFromTopic("demo").then(
-      () => {
-        alert({
-          title: "Unsubscribed",
-          message: ".. from the 'demo' topic",
-          okButtonText: "Okay, very interesting"
-        });
-      },
-      error => {
-        alert({
-          title: "Unsubscribe error",
-          message: error,
-          okButtonText: "OK"
-        });
-      }
+        () => {
+          alert({
+            title: "Unsubscribed",
+            message: ".. from the 'demo' topic",
+            okButtonText: "Okay, very interesting"
+          });
+        },
+        error => {
+          alert({
+            title: "Unsubscribe error",
+            message: error,
+            okButtonText: "OK"
+          });
+        }
     );
   }
 

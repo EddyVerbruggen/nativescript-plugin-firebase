@@ -193,7 +193,11 @@ This results in a payload of:
 
 ### Interactive notifications (iOS only for now)
 To register the app to receive interactive pushes you need to call `firebase.registerForInteractivePush(model)`.
-And you may hook to the `model.onNotificationActionTakenCallback` callback to know what action the user took interacting with the notification:
+And you may hook to the `model.onNotificationActionTakenCallback` callback to know what action the user took interacting with the notification.
+
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive01.png" height="270px" alt="Interactive Notification, part 1"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive02.png" height="270px" alt="Interactive Notification, part 2"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive03.png" height="270px" alt="Interactive Notification, part 3"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive04.png" height="270px" alt="Interactive Notification, part 4"/>
+
+The example shown above was created with the code below.
 
 ```typescript
 import { messaging } from "nativescript-plugin-firebase/messaging";
@@ -207,18 +211,33 @@ model.iosSettings.interactiveSettings = new messaging.IosInteractivePushSettings
 model.iosSettings.interactiveSettings.actions = [
   {
     identifier: "OPEN_ACTION",
-    title: "Open the app",
+    title: "Open the app (if closed)",
     options: messaging.IosInteractiveNotificationActionOptions.foreground
   },
   {
     identifier: "AUTH",
-    title: "Not on lock screen",
-    options: messaging.IosInteractiveNotificationActionOptions.authenticationRequired
+    title: "Open the app, but only if device is not locked with a passcode",
+    options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.authenticationRequired
+  },
+  {
+    identifier: "INPUT_ACTION",
+    title: "Tap to reply without opening the app",
+    type: "input",
+    submitLabel: "Fire!",
+    placeholder: "Load the gun..."
+  },
+  {
+    identifier: "INPUT_ACTION",
+    title: "Tap to reply and open the app",
+    options: messaging.IosInteractiveNotificationActionOptions.foreground,
+    type: "input",
+    submitLabel: "OK, send it",
+    placeholder: "Type here, baby!"
   },
   {
     identifier: "DELETE_ACTION",
-    title: "Delete and open",
-    options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.destructive
+    title: "Delete without opening the app",
+    options: messaging.IosInteractiveNotificationActionOptions.destructive
   }
 ];
 
@@ -233,10 +252,27 @@ model.onNotificationActionTakenCallback = (actionIdentifier: string, message: fi
 firebase.registerForInteractivePush(model);
 ```
 
-To send an interactive push, add the `"click_action"` property to the notification, with a value corresponding to the `category` defined in the model you've registered in the app:
+To send an interactive push, add the `"click_action"` property to the notification, with a value corresponding to the `category` defined in the model you've registered in the app.
+The payload to trigger the notification in the screenshots above is:
 
-```bash
-curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiUkNY3nrti4st4WOUs_w1A0Rttcx31U90YGv-p3U4Oql-vh-FzZzWUUPEwl47uvwhI4tB5yz4wwzrJA2fVqLEKZpDU42AQppYnU2-dsURqkyc9sKcjay2egWbfyNK2b-G2JQCqrLVA" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"notification\": {\"title\": \"My title\", \"text\": \"My text\", \"click_action\":\"GENERAL\"}, \"content_available\":true, \"to\": \"exbKSYOGbto:APA91bHqFX9EA6SxY7NkVKV3ajea9xYn9_2dPz2jS7DGuymoE3fMDhPZLVbTXxbQ5_tS6nxmjdmfAEACM4_L-egNneXInuvg8JfRjrCVICTa8vnccTBq8cAnIx6cME1FvER9WIDC3dC4\"}"
+```json
+{
+  "notification": {
+    "title": "I DEMAND YOUR ATTENTION",
+    "subtitle": "Just kidding, but not really",
+    "text": "Sorry to bother you I meant, please pick an option below..",
+    "click_action": "GENERAL",
+    "badge": "1",
+    "sound": "default",
+    "showWhenInForeground": true
+  },
+  "content_available": false,
+  "data": {
+    "foo": "bar"
+  },
+  "priority": "High",
+  "to": "DEVICE_PUSH_KEY>"
+}
 ```
 
 ### (iOS) showing a notification while the app is in the foreground

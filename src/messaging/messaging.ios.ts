@@ -1,9 +1,14 @@
-import { firebase } from "../firebase-common";
 import * as application from "tns-core-modules/application/application";
 import * as applicationSettings from "tns-core-modules/application-settings";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { device } from "tns-core-modules/platform/platform";
 import { firebaseUtils } from "../utils";
+import { firebase } from "../firebase-common";
+import {
+  IosInteractiveNotificationAction,
+  IosInteractiveNotificationCategory,
+  IosInteractiveNotificationType
+} from "./messaging";
 
 let _notificationActionTakenCallback: Function;
 let _pendingNotifications: Array<any> = [];
@@ -148,21 +153,21 @@ export function registerForInteractivePush(model?: PushNotificationModel) {
 
   model.iosSettings.interactiveSettings.actions.forEach(((action: IosInteractiveNotificationAction) => {
     let notificationActionOptions: UNNotificationActionOptions = action.options ? <UNNotificationActionOptions>action.options.valueOf() : UNNotificationActionOptionNone;
-    let actionType = action.type || "button";
+    let actionType: IosInteractiveNotificationType = action.type || "button";
     let nativeAction: UNNotificationAction;
 
     if (actionType === "input") {
       nativeAction = UNTextInputNotificationAction.actionWithIdentifierTitleOptionsTextInputButtonTitleTextInputPlaceholder(
-        action.identifier,
-        action.title,
-        notificationActionOptions,
-        action.submitLabel || "Submit",
-        action.placeholder);
+          action.identifier,
+          action.title,
+          notificationActionOptions,
+          action.submitLabel || "Submit",
+          action.placeholder);
     } else if (actionType === "button") {
       nativeAction = UNNotificationAction.actionWithIdentifierTitleOptions(
-        action.identifier,
-        action.title,
-        notificationActionOptions);
+          action.identifier,
+          action.title,
+          notificationActionOptions);
     } else {
       console.log("Unsupported action type: " + action.type);
     }
@@ -288,25 +293,6 @@ export enum IosInteractiveNotificationActionOptions {
   foreground = 4,
 }
 
-export interface IosInteractiveNotificationAction {
-  identifier: string;
-  title: string;
-  type: string;
-  submitLabel: string;
-  placeholder: string;
-  // activationMode?: string;
-  // destructive?: boolean;
-  // authenticationRequired?: boolean;
-  options?: IosInteractiveNotificationActionOptions;
-  behavior?: string;
-}
-
-export interface IosInteractiveNotificationCategory {
-  identifier: string;
-  actionsForDefaultContext?: string[];
-  actionsForMinimalContext?: string[];
-}
-
 export class IosPushSettings {
   badge: boolean;
   sound: boolean;
@@ -324,6 +310,7 @@ export class PushNotificationModel {
   iosSettings: IosPushSettings;
   onNotificationActionTakenCallback: Function;
 }
+
 export class NotificationActionResponse {
   androidSettings: any;
   iosSettings: IosPushSettings;
