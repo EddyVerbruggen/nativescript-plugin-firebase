@@ -216,13 +216,9 @@ export function subscribeToTopic(topicName) {
         return;
       }
 
-      if (topicName.indexOf("/topics/") === -1) {
-        topicName = "/topics/" + topicName;
-      }
-
-      // TODO there's also (un)subscribeToTopicCompletion (resolve when completed).. perhaps this has been added to Android as well
-      FIRMessaging.messaging().subscribeToTopic(topicName);
-      resolve();
+      FIRMessaging.messaging().subscribeToTopicCompletion(topicName, (error: NSError) => {
+        error ? reject(error.localizedDescription) : resolve();
+      });
     } catch (ex) {
       console.log("Error in firebase.subscribeToTopic: " + ex);
       reject(ex);
@@ -239,11 +235,9 @@ export function unsubscribeFromTopic(topicName) {
         return;
       }
 
-      if (topicName.indexOf("/topics/") === -1) {
-        topicName = "/topics/" + topicName;
-      }
-      FIRMessaging.messaging().unsubscribeFromTopic(topicName);
-      resolve();
+      FIRMessaging.messaging().unsubscribeFromTopicCompletion(topicName, error => {
+        error ? reject(error.localizedDescription) : resolve();
+      });
     } catch (ex) {
       console.log("Error in firebase.unsubscribeFromTopic: " + ex);
       reject(ex);

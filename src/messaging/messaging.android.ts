@@ -139,9 +139,13 @@ export function subscribeToTopic(topicName) {
         return;
       }
 
-      // TODO since Cloud Messaging 17.0.0 this returns a Task instead of void (so we can resolve onSuccess)
-      com.google.firebase.messaging.FirebaseMessaging.getInstance().subscribeToTopic(topicName);
-      resolve();
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task => task.isSuccessful() ? resolve() : reject(task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException())
+      });
+
+      com.google.firebase.messaging.FirebaseMessaging.getInstance()
+          .subscribeToTopic(topicName)
+          .addOnCompleteListener(onCompleteListener);
     } catch (ex) {
       console.log("Error in firebase.subscribeToTopic: " + ex);
       reject(ex);
@@ -158,8 +162,13 @@ export function unsubscribeFromTopic(topicName) {
         return;
       }
 
-      com.google.firebase.messaging.FirebaseMessaging.getInstance().unsubscribeFromTopic(topicName);
-      resolve();
+      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task => task.isSuccessful() ? resolve() : reject(task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException())
+      });
+
+      com.google.firebase.messaging.FirebaseMessaging.getInstance()
+          .unsubscribeFromTopic(topicName)
+          .addOnCompleteListener(onCompleteListener);
     } catch (ex) {
       console.log("Error in firebase.unsubscribeFromTopic: " + ex);
       reject(ex);
