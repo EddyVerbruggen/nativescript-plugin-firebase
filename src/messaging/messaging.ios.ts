@@ -138,7 +138,7 @@ export function registerForInteractivePush(model?: any) {
   let nativeActions: Array<UNNotificationAction> = [];
 
   model.iosSettings.interactiveSettings.actions.forEach(action => {
-    let nativeAction = UNNotificationAction.actionWithIdentifierTitleOptions(action.identifier, action.title, action.options);
+    let nativeAction = UNNotificationAction.actionWithIdentifierTitleOptions(action.identifier, action.title, action.options | UNNotificationActionOptionNone);
 
     nativeActions.push(nativeAction);
   });

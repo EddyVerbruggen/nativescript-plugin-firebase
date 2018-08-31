@@ -191,30 +191,62 @@ This results in a payload of:
 - App in the foreground: `{"gcm.message_id":"0:1522952782882471%3194ccac3194ccac", "foo":"bar", "foreground":true}`
 - App in the background: `{"gcm.message_id":"0:1522952757954843%3194ccac3194ccac", "foo":"bar", "foreground":false}`
 
-### (iOS) interactive notification example
+### Interactive notifications (iOS only for now)
+To register the app to receive interactive pushes you need to call `firebase.registerForInteractivePush(model)`.
+And you may hook to the `model.onNotificationActionTakenCallback` callback to know what action the user took interacting with the notification:
 
-- To register the app to receive interactive pushes you need to call `firebase.registerForInteractivePush(model)`. See example code in the demo project.
-- You may hook to the `model.onNotificationActionTakenCallback` callback to know what action did the user take after interacting with the notification.
-- To send an interactive push add "click_action" property in the notification, with value coresponding to the category defined in the model you've registered in the app:
+```typescript
+import { messaging } from "nativescript-plugin-firebase/messaging";
+
+const model = new messaging.PushNotificationModel();
+model.iosSettings = new messaging.IosPushSettings();
+model.iosSettings.badge = false;
+model.iosSettings.alert = true;
+
+model.iosSettings.interactiveSettings = new messaging.IosInteractivePushSettings();
+model.iosSettings.interactiveSettings.actions = [
+  {
+    identifier: "OPEN_ACTION",
+    title: "Open the app",
+    options: messaging.IosInteractiveNotificationActionOptions.foreground
+  },
+  {
+    identifier: "AUTH",
+    title: "Not on lock screen",
+    options: messaging.IosInteractiveNotificationActionOptions.authenticationRequired
+  },
+  {
+    identifier: "DELETE_ACTION",
+    title: "Delete and open",
+    options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.destructive
+  }
+];
+
+model.iosSettings.interactiveSettings.categories = [{
+  identifier: "GENERAL"
+}];
+
+model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message) => {
+  console.log(`onNotificationActionTakenCallback fired! Message: ${JSON.stringify(message)}, Action taken: ${actionIdentifier}`);
+};
+
+firebase.registerForInteractivePush(model);
+```
+
+To send an interactive push, add the `"click_action"` property to the notification, with a value corresponding to the `category` defined in the model you've registered in the app:
 
 ```bash
 curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiUkNY3nrti4st4WOUs_w1A0Rttcx31U90YGv-p3U4Oql-vh-FzZzWUUPEwl47uvwhI4tB5yz4wwzrJA2fVqLEKZpDU42AQppYnU2-dsURqkyc9sKcjay2egWbfyNK2b-G2JQCqrLVA" --Header "Content-Type: application/json" https://fcm.googleapis.com/fcm/send -d "{\"data\":{\"foo\":\"bar\"}, \"priority\": \"High\", \"notification\": {\"title\": \"My title\", \"text\": \"My text\", \"click_action\":\"GENERAL\"}, \"content_available\":true, \"to\": \"exbKSYOGbto:APA91bHqFX9EA6SxY7NkVKV3ajea9xYn9_2dPz2jS7DGuymoE3fMDhPZLVbTXxbQ5_tS6nxmjdmfAEACM4_L-egNneXInuvg8JfRjrCVICTa8vnccTBq8cAnIx6cME1FvER9WIDC3dC4\"}"
 ```
 
 ### (iOS) showing a notification while the app is in the foreground
-Add the `showWhenInForeground` flag in your payload as shown below (the other properties are just for show):
+Add the `showWhenInForeground` flag to your payload:
 
 ```json
 {
   "notification": {
-    "showWhenInForeground": true,
-    "title": "My title",
-    "text": "My text",
-    "click_action": "GENERAL",
-    "badge": "1",
-    "sound": "default"
-  },
-  ..
+    "showWhenInForeground": true
+  }
 }
 ```
 

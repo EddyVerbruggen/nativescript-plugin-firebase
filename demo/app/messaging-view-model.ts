@@ -31,7 +31,7 @@ export class MessagingViewModel {
 
   public doRegisterForInteractivePush(): void {
     if (platform.isIOS) {
-      let model = new messaging.PushNotificationModel();
+      const model = new messaging.PushNotificationModel();
       model.iosSettings = new messaging.IosPushSettings();
       model.iosSettings.badge = false;
       model.iosSettings.alert = true;
@@ -39,17 +39,17 @@ export class MessagingViewModel {
       model.iosSettings.interactiveSettings.actions = [
         {
           identifier: "OPEN_ACTION",
-          title: "Open",
+          title: "Open the app",
           options: messaging.IosInteractiveNotificationActionOptions.foreground
         },
         {
-          identifier: "IGNORE_ACTION",
-          title: "Ignore",
-          options: messaging.IosInteractiveNotificationActionOptions.foreground
+          identifier: "AUTH",
+          title: "Not on lock screen",
+          options: messaging.IosInteractiveNotificationActionOptions.authenticationRequired
         },
         {
           identifier: "DELETE_ACTION",
-          title: "Delete",
+          title: "Delete and open",
           options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.destructive
         }
       ];
