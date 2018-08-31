@@ -77,7 +77,8 @@ export class MessagingViewModel {
     }
   }
 
-  // You would normally add these handlers in 'init', but if you want you can do it seperately as well:
+  // You would normally add these handlers in 'init', but if you want you can do it seperately as well.
+  // The benefit being your user will not be confronted with the "Allow notifications" consent popup when 'init' runs.
   public doRegisterPushHandlers(): void {
     firebase.addOnPushTokenReceivedCallback(
       token => {
@@ -92,11 +93,13 @@ export class MessagingViewModel {
       message => {
         console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
 
-        // alert({
-        //   title: "Push message!",
-        //   message: (message.title !== undefined ? message.title : ""),
-        //   okButtonText: "Sw33t"
-        // });
+        setTimeout(() => {
+          alert({
+            title: "Push message!",
+            message: (message.title !== undefined ? message.title : ""),
+            okButtonText: "Sw33t"
+          });
+        }, 500);
       }
     ).then(() => {
       console.log("Added addOnMessageReceivedCallback");

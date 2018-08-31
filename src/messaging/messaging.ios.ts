@@ -1,5 +1,6 @@
 import { firebase } from "../firebase-common";
 import * as application from "tns-core-modules/application/application";
+import * as applicationSettings from "tns-core-modules/application-settings";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { device } from "tns-core-modules/platform/platform";
 import { firebaseUtils } from "../utils";
@@ -13,6 +14,10 @@ let _registerForRemoteNotificationsRanThisSession = false;
 let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
 let _messagingConnected: boolean = null;
 let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
+
+// Track whether or not registration for remote notifications was request.
+// This way we can suppress the "Allow notifications" consent popup until the listeners are passed in.
+const NOTIFICATIONS_REGISTRATION_KEY = "Firebase-RegisterForRemoteNotifications";
 
 export function init(arg) {
   if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
@@ -32,6 +37,8 @@ export function addOnMessageReceivedCallback(callback: Function) {
         reject("Enable FIRMessaging in Podfile first");
         return;
       }
+      applicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
+
       _receivedNotificationCallback = callback;
       _registerForRemoteNotifications();
       _processPendingNotifications();
@@ -68,6 +75,7 @@ export function unregisterForPushNotifications() {
         return;
       }
       iOSUtils.getter(UIApplication, UIApplication.sharedApplication).unregisterForRemoteNotifications();
+      applicationSettings.remove(NOTIFICATIONS_REGISTRATION_KEY);
       resolve();
     } catch (ex) {
       console.log("Error in firebase.unregisterForPushNotifications: " + ex);
@@ -109,6 +117,7 @@ export function addOnPushTokenReceivedCallback(callback) {
         callback(_pushToken);
       }
 
+      applicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
       _registerForRemoteNotifications();
       _processPendingNotifications();
 
@@ -166,7 +175,9 @@ export function prepAppDelegate() {
   _addObserver("com.firebase.iid.notif.refresh-token", notification => onTokenRefreshNotification(notification.object));
 
   _addObserver(UIApplicationDidFinishLaunchingNotification, appNotification => {
-    _registerForRemoteNotifications();
+    if (applicationSettings.getBoolean(NOTIFICATIONS_REGISTRATION_KEY, false)) {
+      _registerForRemoteNotifications();
+    }
   });
 
   _addObserver(UIApplicationDidBecomeActiveNotification, appNotification => {
@@ -315,10 +326,11 @@ function _registerForRemoteNotifications() {
     });
     return;
   }
+
   if (_registerForRemoteNotificationsRanThisSession) {
-    // ignore
-    // return;
+    return;
   }
+
   _registerForRemoteNotificationsRanThisSession = true;
 
   if (parseInt(device.osVersion) >= 10) {

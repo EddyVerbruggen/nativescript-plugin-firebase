@@ -384,7 +384,8 @@ export class HelloWorldModel extends Observable {
           this.set("userEmailOrPhone", data.user.email ? data.user.email : (data.user.phoneNumber ? data.user.phoneNumber : "N/A"));
         }
       },
-      // testing push wiring in init for iOS:
+      // uncomment in order to testi push wiring during 'init' for iOS (instead of adding these callbacks later):
+      /*
       onPushTokenReceivedCallback: token => {
         // you can use this token to send to your own backend server,
         // so you can send notifications to this specific device
@@ -405,6 +406,7 @@ export class HelloWorldModel extends Observable {
           });
         }, 500);
       },
+      */
       onDynamicLinkCallback: result => {
         console.log("dynamic link callback invoked with: " + result);
         setTimeout(() => {
