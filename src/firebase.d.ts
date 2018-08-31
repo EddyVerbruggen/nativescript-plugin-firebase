@@ -713,13 +713,15 @@ export namespace firestore {
   }
 
   export interface DocumentSnapshot {
+    ios?: any; /* FIRDocumentSnapshot */
+    android?: any; /* com.google.firebase.firestore.DocumentSnapshot */
     id: string;
     exists: boolean;
-
     data(): DocumentData;
   }
 
   export interface DocumentReference {
+    discriminator: "docRef";
     id: string;
     collection: (collectionPath: string) => CollectionReference;
     set: (document: any, options?: SetOptions) => Promise<void>;
@@ -743,6 +745,14 @@ export namespace firestore {
     limit(limit: number): Query;
 
     onSnapshot(callback: (snapshot: QuerySnapshot) => void): () => void;
+
+    startAt(snapshot: DocumentSnapshot): Query;
+
+    startAfter(snapshot: DocumentSnapshot): Query;
+
+    endAt(snapshot: DocumentSnapshot): Query;
+
+    endBefore(snapshot: DocumentSnapshot): Query;
   }
 
   export interface CollectionReference extends Query {

@@ -13,6 +13,12 @@ export const preferFrontCameraProperty = new Property<MLKitCameraView, boolean>(
   valueConverter: booleanConverter
 });
 
+export const torchOnProperty = new Property<MLKitCameraView, boolean>({
+  name: "torchOn",
+  defaultValue: false,
+  valueConverter: booleanConverter
+});
+
 export abstract class MLKitCameraView extends ContentView {
   static scanResultEvent: string = "scanResult";
 
@@ -20,6 +26,7 @@ export abstract class MLKitCameraView extends ContentView {
 
   protected processEveryNthFrame: number;
   protected preferFrontCamera: boolean;
+  protected torchOn: boolean;
 
   [processEveryNthFrameProperty.setNative](value: number) {
     this.processEveryNthFrame = value;
@@ -28,7 +35,17 @@ export abstract class MLKitCameraView extends ContentView {
   [preferFrontCameraProperty.setNative](value: boolean) {
     this.preferFrontCamera = value;
   }
+
+  [torchOnProperty.setNative](value: boolean) {
+    this.torchOn = value;
+    this.updateTorch();
+  }
+
+  protected updateTorch(): void {
+    // implemented in concrete classes
+  };
 }
 
 processEveryNthFrameProperty.register(MLKitCameraView);
 preferFrontCameraProperty.register(MLKitCameraView);
+torchOnProperty.register(MLKitCameraView);

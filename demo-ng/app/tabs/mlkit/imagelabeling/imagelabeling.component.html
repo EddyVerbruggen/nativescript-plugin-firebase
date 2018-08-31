@@ -42,4 +42,10 @@
       </ng-template>
     </ListView>
   </GridLayout>
+
+  <GridLayout rows="auto" columns="auto, auto" horizontalAlignment="right" class="m-t-4 m-r-8">
+    <Label col="0" text="Torch" class="c-white" [class.disabled]="!torchOn"></Label>
+    <Switch col="1" [checked]="torchOn" (checkedChange)="toggleTorch($event)"></Switch>
+  </GridLayout>
+
 </GridLayout>

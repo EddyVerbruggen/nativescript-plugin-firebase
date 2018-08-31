@@ -1,12 +1,13 @@
 import { Component } from "@angular/core";
 import { MLKitDetectFacesOnDeviceResult, MLKitDetectFacesResultFace } from "nativescript-plugin-firebase/mlkit/facedetection";
+import { AbstractMLKitViewComponent } from "~/tabs/mlkit/abstract.mlkitview.component";
 
 @Component({
   selector: "mlkit-facedetection",
   moduleId: module.id,
   templateUrl: "./facedetection.component.html",
 })
-export class FaceDetectionComponent {
+export class FaceDetectionComponent extends AbstractMLKitViewComponent {
   faces: Array<MLKitDetectFacesResultFace>;
 
   mlKitAllOK: string;

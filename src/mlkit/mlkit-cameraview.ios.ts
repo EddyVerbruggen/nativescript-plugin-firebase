@@ -54,9 +54,13 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         AVCaptureDevicePosition.Back
     ).devices.firstObject;
 
+    if (this.torchOn) {
+      this.updateTorch();
+    }
+
     // begin the session
     this.captureSession = AVCaptureSession.new();
-    this.captureSession.sessionPreset = AVCaptureSessionPreset640x480;
+    this.captureSession.sessionPreset = AVCaptureSessionPreset1280x720;
 
     const captureDeviceInput = AVCaptureDeviceInput.deviceInputWithDeviceError(this.captureDevice);
     this.captureSession.addInput(captureDeviceInput);
@@ -137,6 +141,20 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     }
   }
 
+  protected updateTorch(): void {
+    const device = this.captureDevice;
+    if (device && device.lockForConfiguration()) {
+      if (this.torchOn) {
+        device.torchMode = AVCaptureTorchMode.On;
+        device.flashMode = AVCaptureFlashMode.On;
+      } else {
+        device.torchMode = AVCaptureTorchMode.Off;
+        device.flashMode = AVCaptureFlashMode.Off;
+      }
+      device.unlockForConfiguration();
+    }
+  }
+
   abstract createDetector(): any;
 
   abstract createSuccessListener(): any;
@@ -168,7 +186,12 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
       const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
       fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
       fIRVisionImage.metadata = fIRVisionImageMetadata;
-      this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+
+      if (this.detector.detectInImageCompletion) {
+        this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+      } else {
+        this.detector.processImageCompletion(fIRVisionImage, this.onSuccessListener);
+      }
     }
   }
 }
