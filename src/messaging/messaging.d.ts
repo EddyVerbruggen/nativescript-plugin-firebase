@@ -30,10 +30,6 @@ export declare function onAppModuleLaunchEvent(intent: any): void;
 export declare class IosInteractivePushSettings {
   actions: Array<IosInteractiveNotificationAction>;
   categories: Array<IosInteractiveNotificationCategory>;
-
-  constructor() {
-
-  }
 }
 
 export declare enum IosInteractiveNotificationActionOptions {
@@ -68,10 +64,6 @@ export declare class IosPushSettings {
   alert: boolean;
   notificationCallback: Function;
   interactiveSettings: IosInteractivePushSettings;
-
-  constructor() {
-
-  }
 }
 
 export declare class PushNotificationModel {
