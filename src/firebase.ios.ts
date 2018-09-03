@@ -1,4 +1,10 @@
-import { firebase, DocumentSnapshot as DocumentSnapshotBase, QuerySnapshot, GeoPoint, isDocumentReference } from "./firebase-common";
+import {
+  firebase,
+  DocumentSnapshot as DocumentSnapshotBase,
+  QuerySnapshot,
+  GeoPoint,
+  isDocumentReference
+} from "./firebase-common";
 import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
@@ -14,8 +20,9 @@ firebase._configured = false;
 
 class DocumentSnapshot extends DocumentSnapshotBase {
   ios: FIRDocumentSnapshot;
+
   constructor(snapshot: FIRDocumentSnapshot) {
-    super(snapshot.documentID, snapshot.exists, firebase.toJsObject(snapshot.data()));
+    super(snapshot.documentID, snapshot.exists, firebaseUtils.toJsObject(snapshot.data()));
     this.ios = snapshot;
   }
 }
@@ -100,17 +107,17 @@ firebase.addAppDelegateMethods = appDelegate => {
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
-          application,
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+            application,
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
         result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -586,35 +593,35 @@ firebase.admob._getBannerType = size => {
   // see nativescript-admob's iOS sourcecode for why we're not using SDK-provided constants here
   if (size === firebase.admob.AD_SIZE.BANNER) {
     // return kGADAdSizeBanner;
-    return { "size": { "width": 320, "height": 50 }, "flags": 0 };
+    return {"size": {"width": 320, "height": 50}, "flags": 0};
   } else if (size === firebase.admob.AD_SIZE.LARGE_BANNER) {
     // return kGADAdSizeLargeBanner;
-    return { "size": { "width": 320, "height": 100 }, "flags": 0 };
+    return {"size": {"width": 320, "height": 100}, "flags": 0};
   } else if (size === firebase.admob.AD_SIZE.MEDIUM_RECTANGLE) {
     // return kGADAdSizeMediumRectangle;
-    return { "size": { "width": 300, "height": 250 }, "flags": 0 };
+    return {"size": {"width": 300, "height": 250}, "flags": 0};
   } else if (size === firebase.admob.AD_SIZE.FULL_BANNER) {
     // return kGADAdSizeFullBanner;
-    return { "size": { "width": 468, "height": 60 }, "flags": 0 };
+    return {"size": {"width": 468, "height": 60}, "flags": 0};
   } else if (size === firebase.admob.AD_SIZE.LEADERBOARD) {
     // return kGADAdSizeLeaderboard;
-    return { "size": { "width": 728, "height": 90 }, "flags": 0 };
+    return {"size": {"width": 728, "height": 90}, "flags": 0};
   } else if (size === firebase.admob.AD_SIZE.SKYSCRAPER) {
     // return kGADAdSizeSkyscraper;
-    return { "size": { "width": 120, "height": 600 }, "flags": 0 };
+    return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size === firebase.admob.AD_SIZE.SMART_BANNER || size === firebase.admob.AD_SIZE.FLUID) {
     const orientation = iOSUtils.getter(UIDevice, UIDevice.currentDevice).orientation;
     const isIPad = device.deviceType === DeviceType.Tablet;
     if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
-      return { "size": { "width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50 }, "flags": 18 };
+      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
     } else {
       // return kGADAdSizeSmartBannerLandscape;
-      return { "size": { "width": 0, "height": 0, "smartHeight": isIPad ? 90 : 32 }, "flags": 26 };
+      return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 32}, "flags": 26};
     }
   } else {
     // return kGADAdSizeInvalid;
-    return { "size": { "width": -1, "height": -1 }, "flags": 0 };
+    return {"size": {"width": -1, "height": -1}, "flags": 0};
   }
 };
 
@@ -635,7 +642,7 @@ firebase.getRemoteConfig = arg => {
       const firebaseRemoteConfig = FIRRemoteConfig.remoteConfig();
 
       // Enable developer mode to allow for frequent refreshes of the cache
-      firebaseRemoteConfig.configSettings = new FIRRemoteConfigSettings({ developerModeEnabled: arg.developerMode || false });
+      firebaseRemoteConfig.configSettings = new FIRRemoteConfigSettings({developerModeEnabled: arg.developerMode || false});
 
       const dic: any = NSMutableDictionary.new();
       for (let p in arg.properties) {
@@ -648,7 +655,7 @@ firebase.getRemoteConfig = arg => {
 
       const onCompletion = (remoteConfigFetchStatus, error) => {
         if (remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Success ||
-          remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Throttled) {
+            remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Throttled) {
 
           const activated = firebaseRemoteConfig.activateFetched();
 
@@ -769,9 +776,9 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       // the app may have dropped Facebook support, so check if the native class is still there
       if (pid === 'facebook.com' && typeof (FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
         const fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
-        providers.push({ id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null });
+        providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
       } else {
-        providers.push({ id: pid });
+        providers.push({id: pid});
       }
     }
   }
@@ -908,22 +915,22 @@ firebase.login = arg => {
         firActionCodeSettings.handleCodeInApp = true;
         firActionCodeSettings.setIOSBundleID(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : NSBundle.mainBundle.bundleIdentifier);
         firActionCodeSettings.setAndroidPackageNameInstallIfNotAvailableMinimumVersion(
-          arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
-          arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
-          arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
         fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
-          arg.emailLinkOptions.email,
-          firActionCodeSettings,
-          (error: NSError) => {
-            if (error) {
-              reject(error.localizedDescription);
-              return;
+            arg.emailLinkOptions.email,
+            firActionCodeSettings,
+            (error: NSError) => {
+              if (error) {
+                reject(error.localizedDescription);
+                return;
+              }
+              // The link was successfully sent.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
+              resolve();
             }
-            // The link was successfully sent.
-            // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
-            firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
-            resolve();
-          }
         );
 
       } else if (arg.type === firebase.LoginType.PHONE) {
@@ -967,14 +974,14 @@ firebase.login = arg => {
           fAuth.signInAndRetrieveDataWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
-            .then(
-              token => {
-                fAuth.signInAndRetrieveDataWithCustomTokenCompletion(token, onCompletionWithAuthResult);
-              },
-              error => {
-                reject(error);
-              }
-            );
+              .then(
+                  token => {
+                    fAuth.signInAndRetrieveDataWithCustomTokenCompletion(token, onCompletionWithAuthResult);
+                  },
+                  error => {
+                    reject(error);
+                  }
+              );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
@@ -1022,9 +1029,9 @@ firebase.login = arg => {
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-          scope,
-          null, // the viewcontroller param can be null since by default topmost is taken
-          onFacebookCompletion);
+            scope,
+            null, // the viewcontroller param can be null since by default topmost is taken
+            onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (typeof (GIDSignIn) === "undefined") {
@@ -1360,15 +1367,15 @@ firebase.addValueEventListener = (updateCallback, path) => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       const listener = where.observeEventTypeWithBlockWithCancelBlock(
-        FIRDataEventType.Value,
-        snapshot => {
-          updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
-        },
-        firebaseError => {
-          updateCallback({
-            error: firebaseError.localizedDescription
+          FIRDataEventType.Value,
+          snapshot => {
+            updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+          },
+          firebaseError => {
+            updateCallback({
+              error: firebaseError.localizedDescription
+            });
           });
-        });
       resolve({
         path: path,
         listeners: [listener]
@@ -1385,13 +1392,13 @@ firebase.getValue = path => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       const listener = where.observeSingleEventOfTypeWithBlockWithCancelBlock(
-        FIRDataEventType.Value,
-        snapshot => {
-          resolve(firebase.getCallbackData('ValueChanged', snapshot));
-        },
-        firebaseError => {
-          reject(firebaseError.localizedDescription);
-        });
+          FIRDataEventType.Value,
+          snapshot => {
+            resolve(firebase.getCallbackData('ValueChanged', snapshot));
+          },
+          firebaseError => {
+            reject(firebaseError.localizedDescription);
+          });
     } catch (ex) {
       console.log("Error in firebase.getValue: " + ex);
       reject(ex);
@@ -1420,7 +1427,7 @@ firebase.push = (path, val) => {
     try {
       const ref = FIRDatabase.database().reference().childByAppendingPath(path).childByAutoId();
       ref.setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
-        error ? reject(error.localizedDescription) : resolve({ key: ref.key });
+        error ? reject(error.localizedDescription) : resolve({key: ref.key});
       });
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
@@ -1972,18 +1979,24 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
 function fixSpecialFields(item) {
   for (let k in item) {
     if (item.hasOwnProperty(k)) {
-      if (item[k] === "SERVER_TIMESTAMP") {
-        item[k] = FIRFieldValue.fieldValueForServerTimestamp();
-      } else if (item[k] instanceof GeoPoint) {
-        const geo = <GeoPoint>item[k];
-        item[k] = new FIRGeoPoint({
-          latitude: geo.latitude,
-          longitude: geo.longitude
-        });
-      } else if (isDocumentReference(item[k])) {
-        item[k] = item[k].ios;
-      }
+      item[k] = fixSpecialField(item[k]);
     }
+  }
+}
+
+function fixSpecialField(item): any {
+  if (item === "SERVER_TIMESTAMP") {
+    return FIRFieldValue.fieldValueForServerTimestamp();
+  } else if (item instanceof GeoPoint) {
+    const geo = <GeoPoint>item;
+    return new FIRGeoPoint({
+      latitude: geo.latitude,
+      longitude: geo.longitude
+    });
+  } else if (isDocumentReference(item)) {
+    return item.ios;
+  } else {
+    return item;
   }
 }
 
@@ -2143,9 +2156,7 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
     }
 
     query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
-    value = value instanceof GeoPoint
-        ? new FIRGeoPoint({latitude: value.latitude, longitude: value.longitude})
-        : value;
+    value = fixSpecialField(value);
 
     if (opStr === "<") {
       query = query.queryWhereFieldIsLessThan(fieldPath, value);
