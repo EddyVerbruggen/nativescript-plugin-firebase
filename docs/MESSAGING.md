@@ -133,24 +133,23 @@ Based on the publish/subscribe model, FCM topic messaging allows you to send a m
 
 Client apps can subscribe to any existing topic, or they can create a new topic. When a client app subscribes to a new topic name (one that does not already exist for your Firebase project), a new topic of that name is created in FCM and any client can subsequently subscribe to it.
 
-```js
-  firebase.subscribeToTopic("news");
+```typescript
+  firebase.subscribeToTopic("news").then(() => console.log("Subscribed to topic"));
 ```
 
 and:
 
-```js
-  firebase.unsubscribeFromTopic("news");
+```typescript
+  firebase.unsubscribeFromTopic("news").then(() => console.log("Unsubscribed from topic"));
 ```
 
 ### Retrieving the push registration token
 If - for some reason - you need to manually retrieve the current push registration token of the device, you can do:
 
-##### TypeScript
 ```typescript
   firebase.getCurrentPushToken().then((token: string) => {
     // may be null if not known yet
-    console.log("Current push token: " + token);
+    console.log(`Current push token: ${token}`);
   });
 ```
 
