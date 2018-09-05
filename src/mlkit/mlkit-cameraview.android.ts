@@ -53,7 +53,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   createNativeView(): Object {
-    console.log("lolik1");
     let nativeView = super.createNativeView();
 
     if (this.hasCamera()) {
@@ -92,9 +91,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   initNativeView(): void {
-    console.log("initing view from init view");
     application.on("resume", arg => {
-      console.log("resumed from death.");
       this.runCamera();
     } );
     super.initNativeView();
@@ -111,7 +108,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     // if (this.preferFrontCamera) {
     // this._reader.switchDeviceInput();
     // }
-    console.log("initing view");
 
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
     nativeView.addView(this.surfaceView);
