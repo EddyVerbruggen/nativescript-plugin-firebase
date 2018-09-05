@@ -247,11 +247,10 @@ export class FirestoreComponent {
   }
 
   public firestoreWhere(): void {
-    const query: firestore.Query = firebase.firestore().collection("cities")
-        .where("state", "==", "CA")
-        .where("population", "<", 550000);
+    const cityDocRef = firebase.firestore().collection("cities").doc("SF");
 
-    query
+    firebase.firestore().collection("dogs")
+        .where("city", "==", cityDocRef)
         .get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => {
@@ -264,6 +263,7 @@ export class FirestoreComponent {
   public firestoreWhereOrderLimit(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
         .where("state", "==", "CA")
+        .where("population", "<", 99999999)
         .orderBy("population", "desc")
         .limit(2);
 

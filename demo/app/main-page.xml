@@ -81,7 +81,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
 
@@ -169,41 +169,48 @@
 
             <Label row="30" colSpan="2" text="Analytics" class="subtitle"/>
 
-            <Button row="31" col="0" text="log event" tap="{{ doLogAnalyticsEvent }}" class="button button-analytics"/>
-            <Button row="31" col="1" text="set user property" tap="{{ doSetAnalyticsUserProperty }}" class="button button-analytics"/>
+            <Button row="31" col="0" text="collection on" tap="{{ doEnableAnalytics }}" class="button button-analytics"/>
+            <Button row="31" col="1" text="collection off" tap="{{ doDisableAnalytics }}" class="button button-analytics"/>
 
-            <Button row="32" col="0" text="set Screen A" tap="{{ doSetScreenNameA }}" class="button button-analytics"/>
-            <Button row="32" col="1" text="set Screen B" tap="{{ doSetScreenNameB }}" class="button button-analytics"/>
+            <Button row="32" col="0" text="log event" tap="{{ doLogAnalyticsEvent }}" class="button button-analytics"/>
+            <Button row="32" col="1" text="set user property" tap="{{ doSetAnalyticsUserProperty }}" class="button button-analytics"/>
 
-            <Label row="33" colSpan="2" text="AdMob" class="subtitle"/>
+            <Button row="33" col="0" text="set Screen A" tap="{{ doSetScreenNameA }}" class="button button-analytics"/>
+            <Button row="33" col="1" text="set Screen B" tap="{{ doSetScreenNameB }}" class="button button-analytics"/>
 
-            <Button row="34" col="0" text="show banner" tap="{{ doShowAdMobBanner }}" class="button button-admob"/>
-            <Button row="34" col="1" text="show interstitial" tap="{{ doShowAdMobInterstitial }}" class="button button-admob"/>
+            <Label row="34" colSpan="2" text="AdMob" class="subtitle"/>
 
-            <Button row="35" colSpan="2" text="hide banner" tap="{{ doHideAdMobBanner }}" class="button button-admob"/>
+            <Button row="35" col="0" text="show banner" tap="{{ doShowAdMobBanner }}" class="button button-admob"/>
+            <Button row="35" col="1" text="show interstitial" tap="{{ doShowAdMobInterstitial }}" class="button button-admob"/>
 
-            <Label row="36" colSpan="2" text="Firebase Cloud Messaging" class="subtitle"/>
+            <Button row="36" colSpan="2" text="hide banner" tap="{{ doHideAdMobBanner }}" class="button button-admob"/>
 
-            <Button row="37" col="0" text="add push handlers" tap="{{ doRegisterPushHandlers }}" class="button button-messaging"/>
-            <Button row="37" col="1" text="get current token" tap="{{ doGetCurrentPushToken }}" class="button button-messaging"/>
+            <Label row="37" colSpan="2" text="Firebase Cloud Messaging" class="subtitle"/>
 
-            <Button row="38" col="0" text="topic subscribe" tap="{{ doSubscribeToTopic }}" class="button button-messaging"/>
-            <Button row="38" col="1" text="topic unsubscribe" tap="{{ doUnsubscribeFromTopic }}" class="button button-messaging"/>
+            <Button row="38" col="0" text="add push handlers" tap="{{ messaging.doRegisterPushHandlers }}" class="button button-messaging"/>
+            <Button row="38" col="1" text="get current token" tap="{{ messaging.doGetCurrentPushToken }}" class="button button-messaging"/>
 
-            <Label row="39" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
-
-            <Button row="40" col="0" text="log message" tap="{{ doLogMessage }}" class="button button-crash"/>
+            <Button row="39" col="0" text="topic subscribe" tap="{{ messaging.doSubscribeToTopic }}" class="button button-messaging"/>
+            <Button row="39" col="1" text="topic unsubscribe" tap="{{ messaging.doUnsubscribeFromTopic }}" class="button button-messaging"/>
             <iOS>
-              <Button row="40" col="1" text="force crash :)" tap="{{ doForceCrashIOS }}" class="button button-crash"/>
+              <Button row="40" colSpan="2" text="register interactive push" tap="{{ messaging.doRegisterForInteractivePush }}" class="button button-messaging"/>
+            </iOS>
+            <Button row="41" colSpan="2" text="are notifications enabled" tap="{{ messaging.doGetAreNotificationsEnabled }}" class="button button-messaging"/>
+            <!-- <Button row="39" col="1" text="topic unsubscribe" tap="{{ doUnsubscribeFromTopic }}" class="button button-messaging"/> -->
+
+            <Label row="42" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
+
+            <Button row="43" col="0" text="log message" tap="{{ doLogMessage }}" class="button button-crash"/>
+            <iOS>
+              <Button row="43" col="1" text="force crash :)" tap="{{ doForceCrashIOS }}" class="button button-crash"/>
             </iOS>
             <Android>
-              <Button row="40" col="1" text="force crash :)" tap="{{ doForceCrashAndroid }}" class="button button-crash"/>
+              <Button row="43" col="1" text="force crash :)" tap="{{ doForceCrashAndroid }}" class="button button-crash"/>
             </Android>
 
-            <Label row="41" colSpan="2" text="Firebase Invites" class="subtitle"/>
-
-            <Button row="42" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
-            <Button row="42" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
+            <Label row="44" colSpan="2" text="Firebase Invites" class="subtitle"/>
+            <Button row="45" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
+            <Button row="45" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
           </GridLayout>
 
         </ScrollView>

@@ -5,31 +5,19 @@ import { isIOS } from "tns-core-modules/platform";
 import * as firebase from "nativescript-plugin-firebase";
 import { AddEventListenerResult, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
+import { MessagingViewModel } from './messaging-view-model';
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
 declare const Crashlytics: any;
 
-const getCircularReplacer = () => {
-  const seen = new WeakSet;
-  return (key, value) => {
-    if (typeof value === "object" && value !== null) {
-      if (seen.has(value)) {
-        return;
-      }
-      seen.add(value);
-    }
-    return value;
-  };
-};
-
 export class HelloWorldModel extends Observable {
 
+  public messaging = new MessagingViewModel();
   public userEmailOrPhone: string;
   private userListenerWrapper: AddEventListenerResult;
   private companiesListenerWrapper: AddEventListenerResult;
   private onAuthStateChangedHandlerSet = false;
-
 
   /***********************************************
    * Web API usage examples
@@ -64,29 +52,29 @@ export class HelloWorldModel extends Observable {
   public doWebLoginAnonymously(): void {
     this.ensureWebOnAuthChangedHandler();
     firebaseWebApi.auth().signInAnonymously()
-        .then(() => console.log("User logged in"))
-        .catch(err => {
-              alert({
-                title: "Login error",
-                message: JSON.stringify(err),
-                okButtonText: "OK, pity"
-              });
-            }
-        );
+      .then(() => console.log("User logged in"))
+      .catch(err => {
+        alert({
+          title: "Login error",
+          message: JSON.stringify(err),
+          okButtonText: "OK, pity"
+        });
+      }
+      );
   }
 
   public doWebLoginByPassword(): void {
     this.ensureWebOnAuthChangedHandler();
     firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
-        .then(() => console.log("User logged in"))
-        .catch(err => {
-              alert({
-                title: "Login error",
-                message: JSON.stringify(err),
-                okButtonText: "OK, pity"
-              });
-            }
-        );
+      .then(() => console.log("User logged in"))
+      .catch(err => {
+        alert({
+          title: "Login error",
+          message: JSON.stringify(err),
+          okButtonText: "OK, pity"
+        });
+      }
+      );
   }
 
   public doWebFetchProvidersForEmail(): void {
@@ -101,20 +89,20 @@ export class HelloWorldModel extends Observable {
     }
 
     firebaseWebApi.auth().fetchProvidersForEmail(user.email).then(
-        result => {
-          alert({
-            title: `Providers for ${user.email}`,
-            message: JSON.stringify(result), // likely to be ["password"]
-            okButtonText: "Thanks!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Fetch Providers for Email error",
-            message: errorMessage,
-            okButtonText: "OK, pity.."
-          });
-        }
+      result => {
+        alert({
+          title: `Providers for ${user.email}`,
+          message: JSON.stringify(result), // likely to be ["password"]
+          okButtonText: "Thanks!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Fetch Providers for Email error",
+          message: errorMessage,
+          okButtonText: "OK, pity.."
+        });
+      }
     );
   }
 
@@ -130,63 +118,63 @@ export class HelloWorldModel extends Observable {
     }
 
     firebaseWebApi.auth().fetchSignInMethodsForEmail(user.email).then(
-        result => {
-          alert({
-            title: `Sign-in methods for ${user.email}`,
-            message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
-            okButtonText: "Thanks!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Sign-in methods for Email error",
-            message: errorMessage,
-            okButtonText: "OK, pity.."
-          });
-        }
+      result => {
+        alert({
+          title: `Sign-in methods for ${user.email}`,
+          message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
+          okButtonText: "Thanks!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Sign-in methods for Email error",
+          message: errorMessage,
+          okButtonText: "OK, pity.."
+        });
+      }
     );
   }
 
   public doWebLogout(): void {
     firebaseWebApi.auth().signOut()
-        .then(() => {
-          this.set("userEmailOrPhone", null);
-          alert({
-            title: "Logout OK",
-            okButtonText: "OK, bye!"
-          });
-        })
-        .catch(error => {
-              alert({
-                title: "Logout error",
-                message: JSON.stringify(error),
-                okButtonText: "Hmmkay"
-              });
-            }
-        );
+      .then(() => {
+        this.set("userEmailOrPhone", null);
+        alert({
+          title: "Logout OK",
+          okButtonText: "OK, bye!"
+        });
+      })
+      .catch(error => {
+        alert({
+          title: "Logout error",
+          message: JSON.stringify(error),
+          okButtonText: "Hmmkay"
+        });
+      }
+      );
   }
 
   public doWebCreateUser(): void {
     firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen+firebasewebapi@gmail.com', 'firebase')
-        .then((user: User) => {
-          console.log("User created: " + JSON.stringify(user));
-          this.set("userEmailOrPhone", user.email);
+      .then((user: User) => {
+        console.log("User created: " + JSON.stringify(user));
+        this.set("userEmailOrPhone", user.email);
+        alert({
+          title: "User created",
+          message: JSON.stringify(user),
+          okButtonText: "Nice!"
+        });
+      })
+      .catch(
+        error => {
+          console.log("Error creating user: " + error);
           alert({
-            title: "User created",
-            message: JSON.stringify(user),
-            okButtonText: "Nice!"
+            title: "No user created",
+            message: JSON.stringify(error),
+            okButtonText: "OK, got it"
           });
-        })
-        .catch(
-            error => {
-              console.log("Error creating user: " + error);
-              alert({
-                title: "No user created",
-                message: JSON.stringify(error),
-                okButtonText: "OK, got it"
-              });
-            }
-        );
+        }
+      );
   }
 
   public doWebGetCurrentUser(): void {
@@ -235,76 +223,76 @@ export class HelloWorldModel extends Observable {
   public doWebGetServerInfo(): void {
     const path = ".info";
     firebaseWebApi.database().ref(path)
-        .once("value")
-        .then(result => {
-          this.set("path", path);
-          this.set("key", result.key);
-          this.set("value", JSON.stringify(result.val()));
-        })
-        .catch(error => console.log("doWebGetServerTime error: " + error));
+      .once("value")
+      .then(result => {
+        this.set("path", path);
+        this.set("key", result.key);
+        this.set("value", JSON.stringify(result.val()));
+      })
+      .catch(error => console.log("doWebGetServerTime error: " + error));
   }
 
   public doWebGetValueForCompanies(): void {
     const path = "/companies";
     firebaseWebApi.database().ref(path)
-        .once("value")
-        .then(result => {
-          this.set("path", path);
-          this.set("key", result.key);
-          this.set("value", JSON.stringify(result.val()));
-        })
-        .catch(error => console.log("doWebGetValueForCompanies error: " + error));
+      .once("value")
+      .then(result => {
+        this.set("path", path);
+        this.set("key", result.key);
+        this.set("value", JSON.stringify(result.val()));
+      })
+      .catch(error => console.log("doWebGetValueForCompanies error: " + error));
   }
 
   public doWebStoreCompaniesBySetValue(): void {
     firebaseWebApi.database().ref("/companies")
-        .set([
-              {
-                name: 'Telerik (web)',
-                country: 'Bulgaria',
-                since: 2000,
-                updateTs: firebase.ServerValue.TIMESTAMP
-              },
-              {
-                name: 'Google (web)',
-                country: 'USA',
-                since: 1900,
-                updateTs: firebase.ServerValue.TIMESTAMP
-              }
-            ]
-        )
-        .then(() => console.log("firebase.setValue done"))
-        .catch(error => console.log("firebase.setValue error: " + error));
+      .set([
+        {
+          name: 'Telerik (web)',
+          country: 'Bulgaria',
+          since: 2000,
+          updateTs: firebase.ServerValue.TIMESTAMP
+        },
+        {
+          name: 'Google (web)',
+          country: 'USA',
+          since: 1900,
+          updateTs: firebase.ServerValue.TIMESTAMP
+        }
+      ]
+      )
+      .then(() => console.log("firebase.setValue done"))
+      .catch(error => console.log("firebase.setValue error: " + error));
   }
 
   public doWebRemoveCompanies(): void {
     firebaseWebApi.database().ref("/companies").remove()
-        .then(() => console.log("firebase.remove done"))
-        .catch((err) => console.log("firebase.remove error: " + err));
+      .then(() => console.log("firebase.remove done"))
+      .catch((err) => console.log("firebase.remove error: " + err));
   }
 
   public doWebQueryBulgarianCompanies(): void {
     const path = "/companies";
     const child = "name";
     firebaseWebApi.database().ref(path).orderByChild(child)
-        .once("value")
-        .then(result => {
-          this.set("path", path);
-          this.set("key", result.key);
-          this.set("value", JSON.stringify(result.val()));
-        })
-        .catch(error => console.log("doWebQueryBulgarianCompanies error: " + error));
+      .once("value")
+      .then(result => {
+        this.set("path", path);
+        this.set("key", result.key);
+        this.set("value", JSON.stringify(result.val()));
+      })
+      .catch(error => console.log("doWebQueryBulgarianCompanies error: " + error));
   }
 
   public doWebStoreCompanyByFirstCreatingKey(): void {
     const path = "companies",
-        companyRef = firebaseWebApi.database().ref().child(path),
-        newCompanyKey = companyRef.push().key,
-        storeAtPath = `/${path}/${newCompanyKey}`,
-        value = {
-          name: `Company with key ${newCompanyKey}`,
-          updateTs: firebase.ServerValue.TIMESTAMP
-        };
+      companyRef = firebaseWebApi.database().ref().child(path),
+      newCompanyKey = companyRef.push().key,
+      storeAtPath = `/${path}/${newCompanyKey}`,
+      value = {
+        name: `Company with key ${newCompanyKey}`,
+        updateTs: firebase.ServerValue.TIMESTAMP
+      };
 
     firebaseWebApi.database().ref(storeAtPath).set(value).then(() => {
       this.set("path", storeAtPath);
@@ -322,14 +310,14 @@ export class HelloWorldModel extends Observable {
     const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
     childRef.put(fs.File.fromPath(logoPath)).then(
-        uploadedFile => {
-          console.log("Uploaded! " + JSON.stringify(uploadedFile));
-          this.set("storageFeedback", "Uploaded!");
-        },
-        error => {
-          console.log("firebase.doWebUploadFile error: " + error);
-          this.set("storageFeedback", "Error: " + error);
-        }
+      uploadedFile => {
+        console.log("Uploaded! " + JSON.stringify(uploadedFile));
+        this.set("storageFeedback", "Uploaded!");
+      },
+      error => {
+        console.log("firebase.doWebUploadFile error: " + error);
+        this.set("storageFeedback", "Error: " + error);
+      }
     );
   }
 
@@ -342,14 +330,14 @@ export class HelloWorldModel extends Observable {
     const logoPath = documents.path + "/telerik-logo-downloaded.png";
 
     childRef.download(logoPath)
-        .then(() => {
-          console.log("The file has been downloaded");
-          this.set("storageFeedback", "The file has been downloaded");
-        })
-        .catch(error => {
-          console.log("Download error: " + error);
-          this.set("storageFeedback", "Error: " + error);
-        });
+      .then(() => {
+        console.log("The file has been downloaded");
+        this.set("storageFeedback", "The file has been downloaded");
+      })
+      .catch(error => {
+        console.log("Download error: " + error);
+        this.set("storageFeedback", "Error: " + error);
+      });
   }
 
   public doWebGetDownloadUrl(): void {
@@ -357,28 +345,28 @@ export class HelloWorldModel extends Observable {
     const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
     childRef.getDownloadURL()
-        .then(theUrl => {
-          console.log("Download url: " + theUrl);
-          this.set("storageFeedback", "Download URL logged to the console");
-        })
-        .catch(error => {
-          console.log("Download error: " + error);
-          this.set("storageFeedback", "Error: " + error);
-        });
+      .then(theUrl => {
+        console.log("Download url: " + theUrl);
+        this.set("storageFeedback", "Download URL logged to the console");
+      })
+      .catch(error => {
+        console.log("Download error: " + error);
+        this.set("storageFeedback", "Error: " + error);
+      });
   }
 
   public doWebDeleteFile(): void {
     firebaseWebApi.storage().ref()
-        .child("uploads/images/telerik-logo-uploaded.png")
-        .delete()
-        .then(() => {
-          console.log("Deleted file");
-          this.set("storageFeedback", "File deleted");
-        })
-        .catch(error => {
-          console.log("Error deleting file: " + error);
-          this.set("storageFeedback", "Error deleting file: " + error);
-        });
+      .child("uploads/images/telerik-logo-uploaded.png")
+      .delete()
+      .then(() => {
+        console.log("Deleted file");
+        this.set("storageFeedback", "File deleted");
+      })
+      .catch(error => {
+        console.log("Error deleting file: " + error);
+        this.set("storageFeedback", "Error deleting file: " + error);
+      });
   }
 
 
@@ -390,13 +378,15 @@ export class HelloWorldModel extends Observable {
     firebase.init({
       // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
+      analyticsCollectionEnabled: true,
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
         if (data.loggedIn) {
           this.set("userEmailOrPhone", data.user.email ? data.user.email : (data.user.phoneNumber ? data.user.phoneNumber : "N/A"));
         }
       },
-      // testing push wiring in init for iOS:
+      // uncomment in order to testi push wiring during 'init' for iOS (instead of adding these callbacks later):
+      /*
       onPushTokenReceivedCallback: token => {
         // you can use this token to send to your own backend server,
         // so you can send notifications to this specific device
@@ -417,6 +407,7 @@ export class HelloWorldModel extends Observable {
           });
         }, 500);
       },
+      */
       onDynamicLinkCallback: result => {
         console.log("dynamic link callback invoked with: " + result);
         setTimeout(() => {
@@ -428,13 +419,31 @@ export class HelloWorldModel extends Observable {
         }, 500);
       }
     }).then(
-        () => {
-          console.log("Firebase is ready");
-        },
-        error => {
-          console.log("firebase.init error: " + error);
-        }
+      () => {
+        console.log("Firebase is ready");
+      },
+      error => {
+        console.log("firebase.init error: " + error);
+      }
     );
+  }
+
+  public doEnableAnalytics(): void {
+    firebase.analytics.setAnalyticsCollectionEnabled(true);
+    alert({
+      title: "Analytics collection",
+      message: "ENABLED",
+      okButtonText: "OK"
+    });
+  }
+
+  public doDisableAnalytics(): void {
+    firebase.analytics.setAnalyticsCollectionEnabled(false);
+    alert({
+      title: "Analytics collection",
+      message: "DISABLED",
+      okButtonText: "OK"
+    });
   }
 
   public doLogAnalyticsEvent(): void {
@@ -445,24 +454,24 @@ export class HelloWorldModel extends Observable {
         key: "item_id",
         value: "p7654"
       },
-        {
-          key: "item_name",
-          value: "abc"
-        }]
+      {
+        key: "item_name",
+        value: "abc"
+      }]
     }).then(
-        () => {
-          console.log("Analytics event logged");
-          alert({
-            title: "Analytics event pushed",
-            okButtonText: "Awesome :)"
-          });
-        }, errorMessage => {
-          alert({
-            title: "Analytics error",
-            message: errorMessage,
-            okButtonText: "Ehh, OK"
-          });
-        }
+      () => {
+        console.log("Analytics event logged");
+        alert({
+          title: "Analytics event pushed",
+          okButtonText: "Awesome :)"
+        });
+      }, errorMessage => {
+        alert({
+          title: "Analytics error",
+          message: errorMessage,
+          okButtonText: "Ehh, OK"
+        });
+      }
     );
   }
 
@@ -471,19 +480,19 @@ export class HelloWorldModel extends Observable {
       key: "origin", // note that this needs to be preregistered, see https://support.google.com/firebase/answer/6317519?hl=en&ref_topic=6317489#create-property
       value: "demoapp"
     }).then(
-        () => {
-          alert({
-            title: "Analytics user property set",
-            okButtonText: "Great :P"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Analytics error",
-            message: errorMessage,
-            okButtonText: "Ehhmmm, OK"
-          });
-        }
+      () => {
+        alert({
+          title: "Analytics user property set",
+          okButtonText: "Great :P"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Analytics error",
+          message: errorMessage,
+          okButtonText: "Ehhmmm, OK"
+        });
+      }
     );
   }
 
@@ -499,19 +508,19 @@ export class HelloWorldModel extends Observable {
     firebase.analytics.setScreenName({
       screenName
     }).then(
-        () => {
-          alert({
-            title: "Analytics screen name set to: " + name,
-            okButtonText: "Great!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Analytics error",
-            message: errorMessage,
-            okButtonText: "Ehhmmm, OK"
-          });
-        }
+      () => {
+        alert({
+          title: "Analytics screen name set to: " + name,
+          okButtonText: "Great!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Analytics error",
+          message: errorMessage,
+          okButtonText: "Ehhmmm, OK"
+        });
+      }
     );
   }
 
@@ -531,20 +540,20 @@ export class HelloWorldModel extends Observable {
       ],
       keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
     }).then(
-        () => {
-          alert({
-            title: "Ad loaded successfully",
-            message: "Should now be showing..",
-            okButtonText: "Hmmkay"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "AdMob error",
-            message: errorMessage,
-            okButtonText: "Hmmkay"
-          });
-        }
+      () => {
+        alert({
+          title: "Ad loaded successfully",
+          message: "Should now be showing..",
+          okButtonText: "Hmmkay"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "AdMob error",
+          message: errorMessage,
+          okButtonText: "Hmmkay"
+        });
+      }
     );
   }
 
@@ -559,16 +568,16 @@ export class HelloWorldModel extends Observable {
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
       ]
     }).then(
-        () => {
-          console.log("AdMob interstitial showing");
-        },
-        errorMessage => {
-          alert({
-            title: "AdMob error",
-            message: errorMessage,
-            okButtonText: "Hmmkay"
-          });
-        }
+      () => {
+        console.log("AdMob interstitial showing");
+      },
+      errorMessage => {
+        alert({
+          title: "AdMob error",
+          message: errorMessage,
+          okButtonText: "Hmmkay"
+        });
+      }
     );
   }
 
@@ -578,68 +587,17 @@ export class HelloWorldModel extends Observable {
    */
   public doHideAdMobBanner(): void {
     firebase.admob.hideBanner().then(
-        () => {
-          console.log("AdMob banner hidden");
-        },
-        errorMessage => {
-          alert({
-            title: "AdMob error",
-            message: errorMessage,
-            okButtonText: "Hmmkay"
-          });
-        }
-    );
-  }
-
-  public doGetCurrentPushToken(): void {
-    firebase.getCurrentPushToken().then(token => {
-      // may be null if not known yet
-      console.log("Current push token: " + token);
-      alert({
-        title: "Current Push Token",
-        message: (token === null ? "Not received yet" : token),
-        okButtonText: "OK, thx"
-      });
-    });
-  }
-
-  // You would normally add these handlers in 'init', but if you want you can do it seperately as well:
-  public doRegisterPushHandlers(): void {
-    firebase.addOnPushTokenReceivedCallback(
-        token => {
-          // you can use this token to send to your own backend server,
-          // so you can send notifications to this specific device
-          console.log("Firebase plugin received a push token: " + token);
-          // var pasteboard = utils.ios.getter(UIPasteboard, UIPasteboard.generalPasteboard);
-          // pasteboard.setValueForPasteboardType(token, kUTTypePlainText);
-        }
-    );
-    firebase.addOnMessageReceivedCallback(
-        message => {
-          console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
-
-          // alert({
-          //   title: "Push message!",
-          //   message: (message.title !== undefined ? message.title : ""),
-          //   okButtonText: "Sw33t"
-          // });
-        }
-    ).then(() => {
-      console.log("Added addOnMessageReceivedCallback");
-    }, err => {
-      console.log("Failed to add addOnMessageReceivedCallback: " + err);
-    });
-  }
-
-  public doUnregisterForPushNotifications(): void {
-    firebase.unregisterForPushNotifications().then(
-        () => {
-          alert({
-            title: "Unregistered",
-            message: "If you were registered, that is.",
-            okButtonText: "Got it, thanks!"
-          });
+      () => {
+        console.log("AdMob banner hidden");
+      },
+      errorMessage => {
+        alert({
+          title: "AdMob error",
+          message: errorMessage,
+          okButtonText: "Hmmkay"
         });
+      }
+    );
   }
 
   public doGetRemoteConfig(): void {
@@ -653,62 +611,62 @@ export class HelloWorldModel extends Observable {
         "key": "holiday_promo_enabled",
         "default": false
       },
-        {
-          "key": "default_only_prop",
-          "default": 77
-        },
-        {
-          "key": "coupons_left",
-          "default": 100
-        },
-        {
-          "key": "origin",
-          "default": "client"
-        },
-        {
-          "key": "double_test",
-          "default": 9.99
-        },
-        {
-          "key": "int_test",
-          "default": 11
-        }]
+      {
+        "key": "default_only_prop",
+        "default": 77
+      },
+      {
+        "key": "coupons_left",
+        "default": 100
+      },
+      {
+        "key": "origin",
+        "default": "client"
+      },
+      {
+        "key": "double_test",
+        "default": 9.99
+      },
+      {
+        "key": "int_test",
+        "default": 11
+      }]
     }).then(
-        result => {
-          console.log("remote config fetched: " + JSON.stringify(result.properties));
-          alert({
-            title: `Fetched at ${result.lastFetch} ${result.throttled ? '(throttled)' : ''}`,
-            message: JSON.stringify(result.properties),
-            okButtonText: "Nice!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Remote Config error",
-            message: errorMessage,
-            okButtonText: "OK, thanks"
-          });
-        }
+      result => {
+        console.log("remote config fetched: " + JSON.stringify(result.properties));
+        alert({
+          title: `Fetched at ${result.lastFetch} ${result.throttled ? '(throttled)' : ''}`,
+          message: JSON.stringify(result.properties),
+          okButtonText: "Nice!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Remote Config error",
+          message: errorMessage,
+          okButtonText: "OK, thanks"
+        });
+      }
     );
   }
 
   public doGetCurrentUser(): void {
     firebase.getCurrentUser().then(
-        user => {
-          this.set("userEmailOrPhone", user.email);
-          alert({
-            title: "Current user",
-            message: JSON.stringify(user),
-            okButtonText: "Nice!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "No current user",
-            message: errorMessage,
-            okButtonText: "OK, thanks"
-          });
-        }
+      user => {
+        this.set("userEmailOrPhone", user.email);
+        alert({
+          title: "Current user",
+          message: JSON.stringify(user),
+          okButtonText: "Nice!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "No current user",
+          message: errorMessage,
+          okButtonText: "OK, thanks"
+        });
+      }
     );
   }
 
@@ -717,19 +675,19 @@ export class HelloWorldModel extends Observable {
       displayName: `Name UpdateTS ${new Date().getTime()}`,
       photoURL: 'https://avatars2.githubusercontent.com/u/1426370?v=3&u=9661f01efde3c412e19650c9b632297970cbe6ed&s=400'
     }).then(
-        () => {
-          alert({
-            title: "Profile updated",
-            okButtonText: "Nice!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Profile update error",
-            message: errorMessage,
-            okButtonText: "OK.."
-          });
-        }
+      () => {
+        alert({
+          title: "Profile updated",
+          okButtonText: "Nice!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Profile update error",
+          message: errorMessage,
+          okButtonText: "OK.."
+        });
+      }
     );
   }
 
@@ -737,84 +695,84 @@ export class HelloWorldModel extends Observable {
     firebase.login({
       type: firebase.LoginType.ANONYMOUS
     }).then(
-        result => {
-          console.log("Anonymous login OK: " + JSON.stringify(result));
-          alert({
-            title: "Login OK",
-            message: JSON.stringify(result),
-            okButtonText: "Nice!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Login error",
-            message: errorMessage,
-            okButtonText: "OK, pity"
-          });
-        }
+      result => {
+        console.log("Anonymous login OK: " + JSON.stringify(result));
+        alert({
+          title: "Login OK",
+          message: JSON.stringify(result),
+          okButtonText: "Nice!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Login error",
+          message: errorMessage,
+          okButtonText: "OK, pity"
+        });
+      }
     );
   }
 
   public doFetchProvidersForEmail(): void {
     firebase.getCurrentUser().then(
-        user => {
-          if (!user || !user.email) {
-            alert({
-              title: "Can't fetch providers",
-              message: "No user with emailaddress logged in.",
-              okButtonText: "OK, makes sense.."
-            });
-            return;
-          }
+      user => {
+        if (!user || !user.email) {
+          alert({
+            title: "Can't fetch providers",
+            message: "No user with emailaddress logged in.",
+            okButtonText: "OK, makes sense.."
+          });
+          return;
+        }
 
-          firebase.fetchProvidersForEmail(user.email).then(
-              result => {
-                alert({
-                  title: `Providers for ${user.email}`,
-                  message: JSON.stringify(result), // likely to be ["password"]
-                  okButtonText: "Thanks!"
-                });
-              },
-              errorMessage => {
-                alert({
-                  title: "Fetch Providers for Email error",
-                  message: errorMessage,
-                  okButtonText: "OK, pity.."
-                });
-              }
-          );
-        });
+        firebase.fetchProvidersForEmail(user.email).then(
+          result => {
+            alert({
+              title: `Providers for ${user.email}`,
+              message: JSON.stringify(result), // likely to be ["password"]
+              okButtonText: "Thanks!"
+            });
+          },
+          errorMessage => {
+            alert({
+              title: "Fetch Providers for Email error",
+              message: errorMessage,
+              okButtonText: "OK, pity.."
+            });
+          }
+        );
+      });
   }
 
   public doFetchSignInMethodsForEmail(): void {
     firebase.getCurrentUser().then(
-        user => {
-          if (!user || !user.email) {
-            alert({
-              title: "Can't fetch providers",
-              message: "No user with emailaddress logged in.",
-              okButtonText: "OK, makes sense.."
-            });
-            return;
-          }
+      user => {
+        if (!user || !user.email) {
+          alert({
+            title: "Can't fetch providers",
+            message: "No user with emailaddress logged in.",
+            okButtonText: "OK, makes sense.."
+          });
+          return;
+        }
 
-          firebase.fetchSignInMethodsForEmail(user.email).then(
-              result => {
-                alert({
-                  title: `Sign-in methods for ${user.email}`,
-                  message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
-                  okButtonText: "Thanks!"
-                });
-              },
-              errorMessage => {
-                alert({
-                  title: "Fetch Sign-in methods for Email error",
-                  message: errorMessage,
-                  okButtonText: "OK, pity.."
-                });
-              }
-          );
-        });
+        firebase.fetchSignInMethodsForEmail(user.email).then(
+          result => {
+            alert({
+              title: `Sign-in methods for ${user.email}`,
+              message: JSON.stringify(result), //  ["password"], ["emailLink"], or ["password", "emailLink']
+              okButtonText: "Thanks!"
+            });
+          },
+          errorMessage => {
+            alert({
+              title: "Fetch Sign-in methods for Email error",
+              message: errorMessage,
+              okButtonText: "OK, pity.."
+            });
+          }
+        );
+      });
   }
 
   public doCreateUser(): void {
@@ -822,41 +780,41 @@ export class HelloWorldModel extends Observable {
       email: 'eddyverbruggen+firebasetest@gmail.com',
       password: 'firebase'
     }).then(
-        (user: User) => {
-          console.log("User created: " + JSON.stringify(user));
-          this.set("userEmailOrPhone", user.email);
-          alert({
-            title: "User created",
-            message: JSON.stringify(user),
-            okButtonText: "Nice!"
-          });
-        },
-        error => {
-          console.log("Error creating user: " + error);
-          alert({
-            title: "No user created",
-            message: error,
-            okButtonText: "OK, got it"
-          });
-        }
+      (user: User) => {
+        console.log("User created: " + JSON.stringify(user));
+        this.set("userEmailOrPhone", user.email);
+        alert({
+          title: "User created",
+          message: JSON.stringify(user),
+          okButtonText: "Nice!"
+        });
+      },
+      error => {
+        console.log("Error creating user: " + error);
+        alert({
+          title: "No user created",
+          message: error,
+          okButtonText: "OK, got it"
+        });
+      }
     );
   }
 
   public doDeleteUser(): void {
     firebase.deleteUser().then(
-        () => {
-          alert({
-            title: "User deleted",
-            okButtonText: "Nice!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "User not deleted",
-            message: errorMessage,
-            okButtonText: "OK, got it"
-          });
-        }
+      () => {
+        alert({
+          title: "User deleted",
+          okButtonText: "Nice!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "User not deleted",
+          message: errorMessage,
+          okButtonText: "OK, got it"
+        });
+      }
     );
   }
 
@@ -870,42 +828,42 @@ export class HelloWorldModel extends Observable {
         password: 'firebase'
       }
     }).then(
-        result => {
-          console.log("Password login OK: " + JSON.stringify(result));
-          alert({
-            title: "Login OK",
-            message: JSON.stringify(result),
-            okButtonText: "Nice!"
-          });
+      result => {
+        console.log("Password login OK: " + JSON.stringify(result));
+        alert({
+          title: "Login OK",
+          message: JSON.stringify(result),
+          okButtonText: "Nice!"
+        });
 
-          // now retrieve an auth token we can use to access Firebase from our server
-          firebase.getAuthToken({
-            forceRefresh: false
-          }).then(
-              token => {
-                console.log("Auth token retrieved: " + token);
-              },
-              errorMessage => {
-                console.log("Auth token retrieval error: " + errorMessage);
-              }
-          );
-        },
-        errorMessage => {
-          console.log("Login error: " + errorMessage);
-          this.set("userEmailOrPhone", errorMessage);
-          alert({
-            title: "Login error",
-            message: errorMessage,
-            okButtonText: "OK, pity"
-          });
-        }
+        // now retrieve an auth token we can use to access Firebase from our server
+        firebase.getAuthToken({
+          forceRefresh: false
+        }).then(
+          token => {
+            console.log("Auth token retrieved: " + token);
+          },
+          errorMessage => {
+            console.log("Auth token retrieval error: " + errorMessage);
+          }
+        );
+      },
+      errorMessage => {
+        console.log("Login error: " + errorMessage);
+        this.set("userEmailOrPhone", errorMessage);
+        alert({
+          title: "Login error",
+          message: errorMessage,
+          okButtonText: "OK, pity"
+        });
+      }
     );
   }
 
   public doLoginByPhone(): void {
     prompt(
-        "Your phone number",
-        "+31612345678"
+      "Your phone number",
+      "+31612345678"
     ).then(promptResult => {
       if (!promptResult.result) {
         return;
@@ -920,29 +878,29 @@ export class HelloWorldModel extends Observable {
           verificationPrompt: "The received verification code" // default "Verification code"
         }
       }).then(
-          result => {
-            console.log("Phone login OK: " + JSON.stringify(result));
-            alert({
-              title: "Phone login OK",
-              message: JSON.stringify(result),
-              okButtonText: "Cool"
-            });
-          },
-          errorMessage => {
-            alert({
-              title: "Phone login error",
-              message: errorMessage,
-              okButtonText: "OK, damn shame"
-            });
-          }
+        result => {
+          console.log("Phone login OK: " + JSON.stringify(result));
+          alert({
+            title: "Phone login OK",
+            message: JSON.stringify(result),
+            okButtonText: "Cool"
+          });
+        },
+        errorMessage => {
+          alert({
+            title: "Phone login error",
+            message: errorMessage,
+            okButtonText: "OK, damn shame"
+          });
+        }
       );
     });
   }
 
   public doLoginByEmailLink(): void {
     prompt(
-        "The email address to send the link to",
-        ""
+      "The email address to send the link to",
+      ""
     ).then(promptResult => {
       if (!promptResult.result) {
         return;
@@ -957,21 +915,21 @@ export class HelloWorldModel extends Observable {
           url: "https://combidesk.com?foo=bar"
         }
       }).then(
-          result => {
-            console.log("Email link sent");
-            alert({
-              title: "Email link sent",
-              message: "Check your email :)",
-              okButtonText: "Cool"
-            });
-          },
-          errorMessage => {
-            alert({
-              title: "Email link login error",
-              message: errorMessage,
-              okButtonText: "OK, damn shame"
-            });
-          }
+        result => {
+          console.log("Email link sent");
+          alert({
+            title: "Email link sent",
+            message: "Check your email :)",
+            okButtonText: "Cool"
+          });
+        },
+        errorMessage => {
+          alert({
+            title: "Email link login error",
+            message: errorMessage,
+            okButtonText: "OK, damn shame"
+          });
+        }
       );
     });
   }
@@ -981,21 +939,21 @@ export class HelloWorldModel extends Observable {
       // note that you need to enable Facebook auth in your firebase instance
       type: firebase.LoginType.FACEBOOK
     }).then(
-        result => {
-          console.log("Facebook login OK: " + JSON.stringify(result));
-          alert({
-            title: "Login OK",
-            message: JSON.stringify(result),
-            okButtonText: "Nice!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Login error",
-            message: errorMessage,
-            okButtonText: "OK, pity"
-          });
-        }
+      result => {
+        console.log("Facebook login OK: " + JSON.stringify(result));
+        alert({
+          title: "Login OK",
+          message: JSON.stringify(result),
+          okButtonText: "Nice!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Login error",
+          message: errorMessage,
+          okButtonText: "OK, pity"
+        });
+      }
     );
   }
 
@@ -1004,21 +962,21 @@ export class HelloWorldModel extends Observable {
       // note that you need to enable Google auth in your firebase instance
       type: firebase.LoginType.GOOGLE
     }).then(
-        result => {
-          console.log("Google login OK: " + JSON.stringify(result));
-          alert({
-            title: "Login OK",
-            message: JSON.stringify(result),
-            okButtonText: "Nice!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Login error",
-            message: errorMessage,
-            okButtonText: "OK, pity"
-          });
-        }
+      result => {
+        console.log("Google login OK: " + JSON.stringify(result));
+        alert({
+          title: "Login OK",
+          message: JSON.stringify(result),
+          okButtonText: "Nice!"
+        });
+      },
+      errorMessage => {
+        alert({
+          title: "Login error",
+          message: errorMessage,
+          okButtonText: "OK, pity"
+        });
+      }
     );
   }
 
@@ -1026,83 +984,83 @@ export class HelloWorldModel extends Observable {
     firebase.resetPassword({
       email: 'eddyverbruggen@gmail.com'
     }).then(
-        () => {
-          console.log("Password reset. Check your email.");
-          this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
-          alert({
-            title: "Password reset. Check your email.",
-            okButtonText: "OK, nice!"
-          });
-        },
-        error => {
-          console.log("Password reset error: " + error);
-          alert({
-            title: "Password reset error",
-            message: error,
-            okButtonText: "Hmmkay :("
-          });
-        }
+      () => {
+        console.log("Password reset. Check your email.");
+        this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
+        alert({
+          title: "Password reset. Check your email.",
+          okButtonText: "OK, nice!"
+        });
+      },
+      error => {
+        console.log("Password reset error: " + error);
+        alert({
+          title: "Password reset error",
+          message: error,
+          okButtonText: "Hmmkay :("
+        });
+      }
     );
   }
 
   public doSendEmailVerification(): void {
     firebase.sendEmailVerification().then(
-        () => {
-          alert({
-            title: "Email sent!",
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "Error sending email verification",
-            message: error,
-            okButtonText: "Hmmmkay"
-          });
-        }
+      () => {
+        alert({
+          title: "Email sent!",
+          okButtonText: "Okay"
+        });
+      },
+      error => {
+        alert({
+          title: "Error sending email verification",
+          message: error,
+          okButtonText: "Hmmmkay"
+        });
+      }
     );
   }
 
   public doLogout(): void {
     firebase.logout().then(
-        () => {
-          this.set("userEmailOrPhone", null);
-          console.log("Logout OK");
-          alert({
-            title: "Logout OK",
-            okButtonText: "OK, bye!"
-          });
-        },
-        error => {
-          console.log("Logout error: " + error);
-          alert({
-            title: "Logout error",
-            message: error,
-            okButtonText: "Hmmkay"
-          });
-        }
+      () => {
+        this.set("userEmailOrPhone", null);
+        console.log("Logout OK");
+        alert({
+          title: "Logout OK",
+          okButtonText: "OK, bye!"
+        });
+      },
+      error => {
+        console.log("Logout error: " + error);
+        alert({
+          title: "Logout error",
+          message: error,
+          okButtonText: "Hmmkay"
+        });
+      }
     );
   }
 
   public doKeepUsersInSyncOn(): void {
     firebase.keepInSync("/users", true).then(
-        () => {
-          console.log("firebase.keepInSync ON");
-        },
-        error => {
-          console.log("firebase.keepInSync error: " + error);
-        }
+      () => {
+        console.log("firebase.keepInSync ON");
+      },
+      error => {
+        console.log("firebase.keepInSync error: " + error);
+      }
     );
   }
 
   public doKeepUsersInSyncOff(): void {
     firebase.keepInSync("/users", false).then(
-        () => {
-          console.log("firebase.keepInSync OFF");
-        },
-        error => {
-          console.log("firebase.keepInSync error: " + error);
-        }
+      () => {
+        console.log("firebase.keepInSync OFF");
+      },
+      error => {
+        console.log("firebase.keepInSync error: " + error);
+      }
     );
   }
 
@@ -1115,13 +1073,13 @@ export class HelloWorldModel extends Observable {
     };
 
     firebase.addChildEventListener(onChildEvent, "/users").then(
-        result => {
-          this.userListenerWrapper = result;
-          console.log("firebase.addChildEventListener added");
-        },
-        error => {
-          console.log("firebase.addChildEventListener error: " + error);
-        }
+      result => {
+        this.userListenerWrapper = result;
+        console.log("firebase.addChildEventListener added");
+      },
+      error => {
+        console.log("firebase.addChildEventListener error: " + error);
+      }
     );
   }
 
@@ -1131,16 +1089,16 @@ export class HelloWorldModel extends Observable {
     }
 
     firebase.removeEventListeners(this.userListenerWrapper.listeners, this.userListenerWrapper.path).then(
-        () => {
-          console.log("firebase.doRemoveChildEventListenerForUsers success");
-          alert({
-            title: "Listener removed",
-            okButtonText: "OK"
-          });
-        },
-        error => {
-          console.log("firebase.removeEventListeners error: " + error);
-        }
+      () => {
+        console.log("firebase.doRemoveChildEventListenerForUsers success");
+        alert({
+          title: "Listener removed",
+          okButtonText: "OK"
+        });
+      },
+      error => {
+        console.log("firebase.removeEventListeners error: " + error);
+      }
     );
   }
 
@@ -1162,13 +1120,13 @@ export class HelloWorldModel extends Observable {
     };
 
     firebase.addValueEventListener(onValueEvent, path).then(
-        result => {
-          this.companiesListenerWrapper = result;
-          console.log("firebase.addValueEventListener added");
-        },
-        error => {
-          console.log("firebase.addValueEventListener error: " + error);
-        }
+      result => {
+        this.companiesListenerWrapper = result;
+        console.log("firebase.addValueEventListener added");
+      },
+      error => {
+        console.log("firebase.addValueEventListener error: " + error);
+      }
     );
   }
 
@@ -1178,96 +1136,96 @@ export class HelloWorldModel extends Observable {
     }
 
     firebase.removeEventListeners(this.companiesListenerWrapper.listeners, this.companiesListenerWrapper.path).then(
-        () => {
-          console.log("firebase.doRemoveValueEventListenersForCompanies success");
-          alert({
-            title: "Listener removed",
-            okButtonText: "OK"
-          });
-        },
-        error => {
-          console.log("firebase.removeEventListeners error.");
-        }
+      () => {
+        console.log("firebase.doRemoveValueEventListenersForCompanies success");
+        alert({
+          title: "Listener removed",
+          okButtonText: "OK"
+        });
+      },
+      error => {
+        console.log("firebase.removeEventListeners error.");
+      }
     );
   }
 
   public doGetValueForCompanies(): void {
     firebase.getValue('/companies').then(
-        result => {
-          alert({
-            title: "Value retrieved",
-            message: JSON.stringify(result),
-            okButtonText: "OK"
-          });
-        },
-        error => {
-          console.log("doGetValueForCompanies error: " + error);
-        }
+      result => {
+        alert({
+          title: "Value retrieved",
+          message: JSON.stringify(result),
+          okButtonText: "OK"
+        });
+      },
+      error => {
+        console.log("doGetValueForCompanies error: " + error);
+      }
     );
   }
 
   public doUserStoreByPush(): void {
     firebase.push(
-        '/users',
-        {
-          'first': 'Eddy',
-          'last': 'Verbruggen',
-          'birthYear': 1977,
-          'isMale': true,
-          'address': {
-            'street': 'foostreet',
-            'number': 123
-          }
+      '/users',
+      {
+        'first': 'Eddy',
+        'last': 'Verbruggen',
+        'birthYear': 1977,
+        'isMale': true,
+        'address': {
+          'street': 'foostreet',
+          'number': 123
         }
+      }
     ).then(
-        result => {
-          console.log("firebase.push done, created key: " + result.key);
-        },
-        error => {
-          console.log("firebase.push error: " + error);
-        }
+      result => {
+        console.log("firebase.push done, created key: " + result.key);
+      },
+      error => {
+        console.log("firebase.push error: " + error);
+      }
     );
   }
 
   public doStoreCompaniesBySetValue(): void {
     firebase.setValue(
-        '/companies',
+      '/companies',
 
-        // you can store a JSON object
-        // {'foo':'bar'}
+      // you can store a JSON object
+      // {'foo':'bar'}
 
-        // or even an array of JSON objects
-        [
-          {
-            name: 'Telerik',
-            country: 'Bulgaria',
-            since: 2000,
-            updateTs: firebase.ServerValue.TIMESTAMP
-          },
-          {
-            name: 'Google',
-            country: 'USA',
-            since: 1900,
-            updateTs: firebase.ServerValue.TIMESTAMP
-          }
-        ]
+      // or even an array of JSON objects
+      [
+        {
+          name: 'Telerik',
+          country: 'Bulgaria',
+          since: 2000,
+          updateTs: firebase.ServerValue.TIMESTAMP
+        },
+        {
+          name: 'Google',
+          country: 'USA',
+          since: 1900,
+          updateTs: firebase.ServerValue.TIMESTAMP
+        }
+      ]
     ).then(
-        () => console.log("firebase.setValue done"),
-        error => console.log("firebase.setValue error: " + error)
+      () => console.log("firebase.setValue done"),
+      error => console.log("firebase.setValue error: " + error)
     );
   }
 
   public doRemoveUsers(): void {
     firebase.remove("/users").then(
-        () => console.log("firebase.remove done"),
-        error => console.log("firebase.remove error: " + error)
+      () => console.log("firebase.remove done"),
+      error => console.log("firebase.remove error: " + error)
     );
   }
 
   public doRemoveCompanies(): void {
     firebase.remove("/companies").then(
-        () => console.log("firebase.remove done"),
-        error => console.log("firebase.remove error: " + error)
+      () => console.log("firebase.remove done"),
+      error => console.log("firebase.remove error: " + error)
     );
   }
 
@@ -1291,45 +1249,45 @@ export class HelloWorldModel extends Observable {
       }
     };
     firebase.query(
-        onValueEvent,
-        path,
-        {
-          // order by company.country
-          orderBy: {
-            type: firebase.QueryOrderByType.CHILD,
-            value: 'since' // mandatory when type is 'child'
+      onValueEvent,
+      path,
+      {
+        // order by company.country
+        orderBy: {
+          type: firebase.QueryOrderByType.CHILD,
+          value: 'since' // mandatory when type is 'child'
+        },
+        // but only companies 'since' a certain year (Telerik's value is 2000, which is imaginary btw)
+        // .. we're using 'ranges', but you could also use 'range' with type firebase.QueryRangeType.EQUAL_TO and value 2000
+        ranges: [
+          {
+            type: firebase.QueryRangeType.START_AT,
+            value: 1999
           },
-          // but only companies 'since' a certain year (Telerik's value is 2000, which is imaginary btw)
-          // .. we're using 'ranges', but you could also use 'range' with type firebase.QueryRangeType.EQUAL_TO and value 2000
-          ranges: [
-            {
-              type: firebase.QueryRangeType.START_AT,
-              value: 1999
-            },
-            {
-              type: firebase.QueryRangeType.END_AT,
-              value: 2000
-            }
-          ],
-          // range: {
-          //   type: firebase.QueryRangeType.EQUAL_TO,
-          //   value: null
-          // },
-          // only the first 2 matches (not that there's only 1 in this case anyway)
-          limit: {
-            type: firebase.QueryLimitType.LAST,
-            value: 2
+          {
+            type: firebase.QueryRangeType.END_AT,
+            value: 2000
           }
+        ],
+        // range: {
+        //   type: firebase.QueryRangeType.EQUAL_TO,
+        //   value: null
+        // },
+        // only the first 2 matches (not that there's only 1 in this case anyway)
+        limit: {
+          type: firebase.QueryLimitType.LAST,
+          value: 2
         }
+      }
     ).then(
-        result => console.log("firebase.doQueryBulgarianCompanies done; added a listener"),
-        errorMessage => {
-          alert({
-            title: "Query error",
-            message: errorMessage,
-            okButtonText: "OK, pity"
-          });
-        }
+      result => console.log("firebase.doQueryBulgarianCompanies done; added a listener"),
+      errorMessage => {
+        alert({
+          title: "Query error",
+          message: errorMessage,
+          okButtonText: "OK, pity"
+        });
+      }
     );
   }
 
@@ -1353,25 +1311,25 @@ export class HelloWorldModel extends Observable {
       }
     };
     firebase.query(
-        onValueEvent,
-        path,
-        {
-          singleEvent: true,
-          orderBy: {
-            type: firebase.QueryOrderByType.KEY
-          }
+      onValueEvent,
+      path,
+      {
+        singleEvent: true,
+        orderBy: {
+          type: firebase.QueryOrderByType.KEY
         }
+      }
     ).then(
-        result => {
-          console.log("This 'result' should be available since singleEvent is true: " + JSON.stringify(result));
-        },
-        errorMessage => {
-          alert({
-            title: "Query error",
-            message: errorMessage,
-            okButtonText: "OK, pity!"
-          });
-        }
+      result => {
+        console.log("This 'result' should be available since singleEvent is true: " + JSON.stringify(result));
+      },
+      errorMessage => {
+        alert({
+          title: "Query error",
+          message: errorMessage,
+          okButtonText: "OK, pity!"
+        });
+      }
     );
   }
 
@@ -1388,16 +1346,16 @@ export class HelloWorldModel extends Observable {
         console.log("Uploaded fraction: " + status.fractionCompleted + " (" + status.percentageCompleted + "%)");
       }
     }).then(
-        uploadedFile => {
-          alert({
-            title: "File upload successful!",
-            message: JSON.stringify(uploadedFile),
-            okButtonText: "Cool!"
-          });
-        },
-        error => {
-          console.log("firebase.doUploadFile error: " + error);
-        }
+      uploadedFile => {
+        alert({
+          title: "File upload successful!",
+          message: JSON.stringify(uploadedFile),
+          okButtonText: "Cool!"
+        });
+      },
+      error => {
+        console.log("firebase.doUploadFile error: " + error);
+      }
     );
   }
 
@@ -1414,20 +1372,20 @@ export class HelloWorldModel extends Observable {
       // localFile: localLogoFile // use this (a file-system module File object)
       localFullPath: logoPath // or this, a full file path
     }).then(
-        () => {
-          alert({
-            title: "File download successful!",
-            message: "The file has been downloaded to the requested location",
-            okButtonText: "OK"
-          });
-        },
-        error => {
-          alert({
-            title: "File download error",
-            message: error,
-            okButtonText: "Mmkay!"
-          });
-        }
+      () => {
+        alert({
+          title: "File download successful!",
+          message: "The file has been downloaded to the requested location",
+          okButtonText: "OK"
+        });
+      },
+      error => {
+        alert({
+          title: "File download error",
+          message: error,
+          okButtonText: "Mmkay!"
+        });
+      }
     );
   }
 
@@ -1435,21 +1393,21 @@ export class HelloWorldModel extends Observable {
     firebaseStorage.getDownloadUrl({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
     }).then(
-        theUrl => {
-          console.log("Download url: " + theUrl);
-          alert({
-            title: "File download URL determined",
-            message: "You can download the file at: " + theUrl,
-            okButtonText: "OK!"
-          });
-        },
-        error => {
-          alert({
-            title: "File download URL error",
-            message: error,
-            okButtonText: "Mmkay"
-          });
-        }
+      theUrl => {
+        console.log("Download url: " + theUrl);
+        alert({
+          title: "File download URL determined",
+          message: "You can download the file at: " + theUrl,
+          okButtonText: "OK!"
+        });
+      },
+      error => {
+        alert({
+          title: "File download URL error",
+          message: error,
+          okButtonText: "Mmkay"
+        });
+      }
     );
   }
 
@@ -1457,20 +1415,20 @@ export class HelloWorldModel extends Observable {
     firebaseStorage.deleteFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png'
     }).then(
-        theUrl => {
-          alert({
-            title: "File deleted",
-            message: "Enjoy your day!",
-            okButtonText: "Thanks ;)"
-          });
-        },
-        error => {
-          alert({
-            title: "File deletion error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
+      theUrl => {
+        alert({
+          title: "File deleted",
+          message: "Enjoy your day!",
+          okButtonText: "Thanks ;)"
+        });
+      },
+      error => {
+        alert({
+          title: "File deletion error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
     );
   }
 
@@ -1482,19 +1440,19 @@ export class HelloWorldModel extends Observable {
         password: 'firebase'
       }
     }).then(
-        () => {
-          alert({
-            title: "Re-authenticated password user",
-            okButtonText: "OK"
-          });
-        },
-        error => {
-          alert({
-            title: "Re-authenticate error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
+      () => {
+        alert({
+          title: "Re-authenticated password user",
+          okButtonText: "OK"
+        });
+      },
+      error => {
+        alert({
+          title: "Re-authenticate error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
     );
   }
 
@@ -1502,19 +1460,19 @@ export class HelloWorldModel extends Observable {
     firebase.reauthenticate({
       type: firebase.LoginType.GOOGLE
     }).then(
-        () => {
-          alert({
-            title: "Re-authenticated Google user",
-            okButtonText: "OK"
-          });
-        },
-        error => {
-          alert({
-            title: "Re-authenticate error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
+      () => {
+        alert({
+          title: "Re-authenticated Google user",
+          okButtonText: "OK"
+        });
+      },
+      error => {
+        alert({
+          title: "Re-authenticate error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
     );
   }
 
@@ -1522,57 +1480,19 @@ export class HelloWorldModel extends Observable {
     firebase.reauthenticate({
       type: firebase.LoginType.FACEBOOK
     }).then(
-        () => {
-          alert({
-            title: "Re-authenticated Facebook user",
-            okButtonText: "OK"
-          });
-        },
-        error => {
-          alert({
-            title: "Re-authenticate error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
-  }
-
-  public doSubscribeToTopic(): void {
-    firebase.subscribeToTopic("demo").then(
-        () => {
-          alert({
-            title: "Subscribed",
-            message: ".. to the 'demo' topic",
-            okButtonText: "Okay, interesting"
-          });
-        },
-        error => {
-          alert({
-            title: "Subscribe error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
-  }
-
-  public doUnsubscribeFromTopic(): void {
-    firebase.unsubscribeFromTopic("demo").then(
-        () => {
-          alert({
-            title: "Unsubscribed",
-            message: ".. from the 'demo' topic",
-            okButtonText: "Okay, very interesting"
-          });
-        },
-        error => {
-          alert({
-            title: "Unsubscribe error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
+      () => {
+        alert({
+          title: "Re-authenticated Facebook user",
+          okButtonText: "OK"
+        });
+      },
+      error => {
+        alert({
+          title: "Re-authenticate error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
     );
   }
 
@@ -1581,39 +1501,39 @@ export class HelloWorldModel extends Observable {
       title: "Invite title here",
       message: "Invite message here"
     }).then(
-        result => { // SendInvitationResult
-          alert({
-            title: result.count + " invitations sent",
-            message: "ID's: " + JSON.stringify(result.invitationIds),
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "sendInvitation error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
+      result => { // SendInvitationResult
+        alert({
+          title: result.count + " invitations sent",
+          message: "ID's: " + JSON.stringify(result.invitationIds),
+          okButtonText: "Okay"
+        });
+      },
+      error => {
+        alert({
+          title: "sendInvitation error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
     );
   }
 
   public getInvitation(): void {
     firebase.invites.getInvitation().then(
-        result => { // GetInvitationResult
-          alert({
-            title: "Invitation result",
-            message: JSON.stringify(result),
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "getInvitation error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
+      result => { // GetInvitationResult
+        alert({
+          title: "Invitation result",
+          message: JSON.stringify(result),
+          okButtonText: "Okay"
+        });
+      },
+      error => {
+        alert({
+          title: "getInvitation error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
     );
   }
 
@@ -1622,20 +1542,20 @@ export class HelloWorldModel extends Observable {
       message: "Hey, I was logged!",
       showInConsole: true
     }).then(
-        () => {
-          alert({
-            title: "Message logged",
-            message: "Check the Firebase console",
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "Logging error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
+      () => {
+        alert({
+          title: "Message logged",
+          message: "Check the Firebase console",
+          okButtonText: "Okay"
+        });
+      },
+      error => {
+        alert({
+          title: "Logging error",
+          message: error,
+          okButtonText: "OK"
+        });
+      }
     );
   }
 
