@@ -53,6 +53,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   createNativeView(): Object {
+    console.log("lolik1");
     let nativeView = super.createNativeView();
 
     if (this.hasCamera()) {
@@ -90,6 +91,15 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     return nativeView;
   }
 
+  initNativeView(): void {
+    console.log("initing view from init view");
+    application.on("resume", arg => {
+      console.log("resumed from death.");
+      this.runCamera();
+    } );
+    super.initNativeView();
+  }
+
   private hasCamera() {
     return !!utils.ad
         .getApplicationContext()
@@ -101,11 +111,16 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     // if (this.preferFrontCamera) {
     // this._reader.switchDeviceInput();
     // }
+    console.log("initing view");
 
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
     nativeView.addView(this.surfaceView);
 
     // Note that surfaceview callbacks didn't seem to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
+    this.runCamera();
+  }
+
+  private runCamera(): void {
     setTimeout(() => {
       const surfaceHolder = this.surfaceView.getHolder();
       const cameraFacingRequested = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -232,7 +247,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     return new com.google.android.gms.tasks.OnFailureListener({
       onFailure: exception => console.log(exception.getMessage())
     });
-  };
+  }
 
   private generateValidPreviewSizeList(camera): Array<SizePair> {
     let parameters = camera.getParameters();
