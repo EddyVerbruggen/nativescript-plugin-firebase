@@ -1908,7 +1908,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
-
+      fixSpecialFields(document);
       const defaultFirestore = FIRFirestore.firestore();
       const fIRDocumentReference = defaultFirestore
           .collectionWithPath(collectionPath)
