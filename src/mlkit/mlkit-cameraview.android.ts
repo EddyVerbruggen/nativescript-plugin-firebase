@@ -17,7 +17,6 @@ class SizePair {
   };
 }
 
-// TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private surfaceView: any; // android.view.SurfaceView;
   private bytesToByteBuffer = new Map();
@@ -91,10 +90,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   initNativeView(): void {
-    application.on("resume", arg => {
-      this.runCamera();
-    } );
     super.initNativeView();
+    application.on("resume", arg => this.runCamera());
   }
 
   private hasCamera() {
@@ -112,11 +109,11 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
     nativeView.addView(this.surfaceView);
 
-    // Note that surfaceview callbacks didn't seem to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
     this.runCamera();
   }
 
   private runCamera(): void {
+    // Note that surfaceview callbacks didn't seem to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
     setTimeout(() => {
       const surfaceHolder = this.surfaceView.getHolder();
       const cameraFacingRequested = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -224,7 +221,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.camera.setPreviewDisplay(surfaceHolder);
       this.camera.startPreview();
 
-    }, 500); // TODO 500 works fine on my device, but would be wise to explore the boundaries
+    }, 500);
   }
 
   protected updateTorch(): void {
