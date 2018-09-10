@@ -5,7 +5,7 @@ You can sign in a user either
 
 * [anonymously](#anonymous-login),
 * by [email and password](#email-password-login),
-* by [email link](#email-link),
+* by [email link](#email-link-login),
 * by [phone verification](#phone-verification),
 * using a [custom token](#custom-login),
 * using [Facebook](#facebook-login),
@@ -263,7 +263,7 @@ Enable email-password login in your firebase instance, and flip the "E-mail link
 This login type allows your users to login without providing a password. They can simply click a link
 and get redirected to the app. The app may even run on a different device.
 
-Enable dynamic links, as described in the [Dynamic Links readme]("./INVITES_DYNAMICLINKS.md"), because the user
+Enable dynamic links, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md), because the user
 that receives the link will need to be redirected to your app.
 
 #### iOS configuration
@@ -271,7 +271,7 @@ that receives the link will need to be redirected to your app.
 
 #### Android configuration
 - Specify the package name of your app in the Firebase console.
-- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme]("./INVITES_DYNAMICLINKS.md").
+- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md).
 - Also add an `android:host` for the `emailLinkOptions.url` to your `app/App_Resources/Android/AndroidManifest.xml` file as described in that readme.
 
 <details>
@@ -513,6 +513,8 @@ Upon successful authentication, Facebook creates an access token that can be obt
 ### Google Sign-In
 
 First, enable Google Sign-In in your firebase instance and add the _Web SDK configuration_.
+
+Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
 
 Then add the following lines to your code and check for setup instructions for your platform below.
 
