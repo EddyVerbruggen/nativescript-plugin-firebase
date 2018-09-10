@@ -3,7 +3,6 @@ import * as application from "tns-core-modules/application";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 import { OrientationChangedEventData } from "tns-core-modules/application";
 
-// TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private captureSession: AVCaptureSession;
   private captureDevice: AVCaptureDevice;
