@@ -2927,12 +2927,16 @@ function askAndroidPromptResult(result) {
 function promptQuestions() {
     prompt.get([{
         name: 'firestore',
-        description: 'Are you using Cloud Firestore? (y/n)',
+        description: 'Are you using Firestore? (y/n)',
         default: 'n'
     }, {
         name: 'realtimedb',
         description: 'Are you using Realtime DB? (y/n)',
         default: 'n'
+    }, {
+        name: 'authentication',
+        description: 'Are you using Firebase Authentication (pretty likely if you use Firestore or Realtime DB)? (y/n)',
+        default: 'y'
     }, {
         name: 'remote_config',
         description: 'Are you using Firebase RemoteConfig? (y/n)',
@@ -3098,7 +3102,9 @@ function writePodFile(result) {
     try {
         fs.writeFileSync(directories.ios + '/Podfile',
 `pod 'Firebase/Core', '~> 5.6.0' 
-pod 'Firebase/Auth'
+
+# Authentication
+` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
 
 # Realtime DB
 ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
@@ -3357,10 +3363,12 @@ dependencies {
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
     compile "com.google.firebase:firebase-core:16.0.3"
-    compile "com.google.firebase:firebase-auth:16.0.3"
 
     // for reading google-services.json and configuration
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+
+    // Authentication
+    ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.3"
 
     // Realtime DB
     ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.1"
