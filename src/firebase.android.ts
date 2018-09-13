@@ -35,6 +35,7 @@ let fbCallbackManager = null;
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
 
+const authEnabled = lazy(() => typeof(com.google.firebase.auth) !== "undefined");
 const messagingEnabled = lazy(() => typeof(com.google.firebase.messaging) !== "undefined");
 const dynamicLinksEnabled = lazy(() => typeof(com.google.firebase.dynamiclinks) !== "undefined");
 
@@ -298,33 +299,35 @@ firebase.init = arg => {
         }
       }
 
-      const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      if (authEnabled()) {
+        const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
-      if (arg.onAuthStateChanged) {
-        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-          onAuthStateChanged: fbAuth => {
-            const user = fbAuth.getCurrentUser();
-            arg.onAuthStateChanged({
-              loggedIn: user !== null,
-              user: toLoginResult(user)
-            });
-          }
-        });
-        firebaseAuth.addAuthStateListener(firebase.authStateListener);
-      }
+        if (arg.onAuthStateChanged) {
+          firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+            onAuthStateChanged: fbAuth => {
+              const user = fbAuth.getCurrentUser();
+              arg.onAuthStateChanged({
+                loggedIn: user !== null,
+                user: toLoginResult(user)
+              });
+            }
+          });
+          firebaseAuth.addAuthStateListener(firebase.authStateListener);
+        }
 
-      // Listen to auth state changes
-      if (!firebase.authStateListener) {
-        firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-          onAuthStateChanged: fbAuth => {
-            const user = fbAuth.getCurrentUser();
-            firebase.notifyAuthStateListeners({
-              loggedIn: user !== null,
-              user: toLoginResult(user)
-            });
-          }
-        });
-        firebaseAuth.addAuthStateListener(firebase.authStateListener);
+        // Listen to auth state changes
+        if (!firebase.authStateListener) {
+          firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
+            onAuthStateChanged: fbAuth => {
+              const user = fbAuth.getCurrentUser();
+              firebase.notifyAuthStateListeners({
+                loggedIn: user !== null,
+                user: toLoginResult(user)
+              });
+            }
+          });
+          firebaseAuth.addAuthStateListener(firebase.authStateListener);
+        }
       }
 
       // Firebase notifications (FCM)

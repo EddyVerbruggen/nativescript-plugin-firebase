@@ -371,36 +371,38 @@ firebase.init = arg => {
         }
       }
 
-      if (arg.iOSEmulatorFlush) {
-        try {
-          // Attempt to sign out before initializing, useful in case previous
-          // project token is cached which leads to following type of error:
-          // "[FirebaseDatabase] Authentication failed: invalid_token ..."
-          FIRAuth.auth().signOut();
-        } catch (signOutErr) {
-          console.log('Sign out of Firebase error: ' + signOutErr);
+      if (typeof (FIRAuth) !== "undefined") {
+        if (arg.iOSEmulatorFlush) {
+          try {
+            // Attempt to sign out before initializing, useful in case previous
+            // project token is cached which leads to following type of error:
+            // "[FirebaseDatabase] Authentication failed: invalid_token ..."
+            FIRAuth.auth().signOut();
+          } catch (signOutErr) {
+            console.log('Sign out of Firebase error: ' + signOutErr);
+          }
         }
-      }
 
-      if (arg.onAuthStateChanged) {
-        firebase.authStateListener = (auth, user) => {
-          arg.onAuthStateChanged({
-            loggedIn: user !== null,
-            user: toLoginResult(user)
-          });
-        };
-        FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
-      }
+        if (arg.onAuthStateChanged) {
+          firebase.authStateListener = (auth, user) => {
+            arg.onAuthStateChanged({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          };
+          FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
+        }
 
-      // Listen to auth state changes
-      if (!firebase.authStateListener) {
-        firebase.authStateListener = (auth, user) => {
-          firebase.notifyAuthStateListeners({
-            loggedIn: user !== null,
-            user: toLoginResult(user)
-          });
-        };
-        FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
+        // Listen to auth state changes
+        if (!firebase.authStateListener) {
+          firebase.authStateListener = (auth, user) => {
+            firebase.notifyAuthStateListeners({
+              loggedIn: user !== null,
+              user: toLoginResult(user)
+            });
+          };
+          FIRAuth.auth().addAuthStateDidChangeListener(firebase.authStateListener);
+        }
       }
 
       // Firebase DynamicLink
