@@ -70,11 +70,6 @@ export function getCurrentPushToken() {
 export function addOnMessageReceivedCallback(callback) {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (com.google.firebase.messaging) === "undefined") {
-        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
-        return;
-      }
-
       firebase._receivedNotificationCallback = callback;
 
       org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
@@ -102,11 +97,6 @@ export function addOnMessageReceivedCallback(callback) {
 export function addOnPushTokenReceivedCallback(callback) {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (com.google.firebase.messaging) === "undefined") {
-        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
-        return;
-      }
-
       org.nativescript.plugins.firebase.FirebasePlugin.setOnPushTokenReceivedCallback(
         new org.nativescript.plugins.firebase.FirebasePluginListener({
           success: token => {
