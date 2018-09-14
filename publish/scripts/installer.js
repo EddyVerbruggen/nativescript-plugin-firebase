@@ -567,7 +567,7 @@ dependencies {
     compile "com.google.firebase:firebase-core:16.0.3"
 
     // for reading google-services.json and configuration
-    compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+    compile "com.google.android.gms:play-services-base:15.0.1"
 
     // Authentication
     ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.3"
@@ -604,7 +604,7 @@ dependencies {
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }
 
     // Google Sign-In Authentication
-    ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
+    ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:16.0.0"
 
     // Firebase Invites
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.3"
