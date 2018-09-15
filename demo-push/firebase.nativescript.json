@@ -1,0 +1,18 @@
+{
+    "using_ios": true,
+    "using_android": true,
+    "firestore": false,
+    "realtimedb": false,
+    "authentication": false,
+    "remote_config": false,
+    "messaging": false,
+    "crashlytics": false,
+    "crash_reporting": false,
+    "storage": false,
+    "facebook_auth": false,
+    "google_auth": false,
+    "admob": false,
+    "invites": false,
+    "dynamic_links": false,
+    "ml_kit": false
+}
