@@ -31,7 +31,7 @@ export class HelloWorldModel extends Observable {
           console.log("Current push token: " + token);
           alert({
             title: "Current Push Token",
-            message: (token === null ? "Not received yet" : token + (" (see the console.log if you want to copy-paste it)")),
+            message: (token === null ? "Not received yet" : token + ("\n\nSee the console log if you want to copy-paste it.")),
             okButtonText: "OK, thx"
           });
         })

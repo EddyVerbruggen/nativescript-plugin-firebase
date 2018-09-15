@@ -23,7 +23,7 @@ export class MessagingViewModel {
       console.log("Current push token: " + token);
       alert({
         title: "Current Push Token",
-        message: (token === null ? "Not received yet" : token),
+        message: (token === null ? "Not received yet" : token + ("\n\nSee the console log if you want to copy-paste it.")),
         okButtonText: "OK, thx"
       });
     });

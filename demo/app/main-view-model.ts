@@ -1,6 +1,5 @@
 import { Observable } from "tns-core-modules/data/observable";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
-import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { isIOS } from "tns-core-modules/platform";
 import * as firebase from "nativescript-plugin-firebase";
 import { AddEventListenerResult, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
