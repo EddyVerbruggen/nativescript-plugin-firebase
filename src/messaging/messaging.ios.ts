@@ -12,9 +12,10 @@ import {
 
 let _notificationActionTakenCallback: Function;
 let _pendingNotifications: Array<any> = [];
+let _pendingActionTakenNotifications: Array<any> = [];
 let _pushToken: any;
 let _receivedPushTokenCallback: Function;
-let _receivedNotificationCallback: Function = null;
+let _receivedNotificationCallback: Function;
 let _registerForRemoteNotificationsRanThisSession = false;
 let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
 let _messagingConnected: boolean = null;
@@ -24,7 +25,7 @@ let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
 // This way we can suppress the "Allow notifications" consent popup until the listeners are passed in.
 const NOTIFICATIONS_REGISTRATION_KEY = "Firebase-RegisterForRemoteNotifications";
 
-export function init(arg) {
+export function initFirebaseMessaging(arg) {
   if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
     if (arg.onMessageReceivedCallback !== undefined) {
       addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
@@ -38,10 +39,6 @@ export function init(arg) {
 export function addOnMessageReceivedCallback(callback: Function) {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRMessaging) === "undefined") {
-        reject("Enable FIRMessaging in Podfile first");
-        return;
-      }
       applicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
 
       _receivedNotificationCallback = callback;
@@ -50,7 +47,7 @@ export function addOnMessageReceivedCallback(callback: Function) {
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      console.log("Error in messaging.addOnMessageReceivedCallback: " + ex);
       reject(ex);
     }
   });
@@ -59,31 +56,43 @@ export function addOnMessageReceivedCallback(callback: Function) {
 export function getCurrentPushToken() {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRMessaging) === "undefined") {
-        reject("Enable FIRMessaging in Podfile first");
-        return;
+      if (typeof (FIRMessaging) !== "undefined") {
+        resolve(FIRMessaging.messaging().FCMToken);
+      } else {
+        resolve(_pushToken);
       }
-
-      resolve(FIRMessaging.messaging().FCMToken);
     } catch (ex) {
-      console.log("Error in firebase.getCurrentPushToken: " + ex);
+      console.log("Error in messaging.getCurrentPushToken: " + ex);
       reject(ex);
     }
   });
 }
 
-export function unregisterForPushNotifications() {
+export function registerForPushNotifications(): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRMessaging) === "undefined") {
-        reject("Enable FIRMessaging in Podfile first");
-        return;
-      }
-      iOSUtils.getter(UIApplication, UIApplication.sharedApplication).unregisterForRemoteNotifications();
-      applicationSettings.remove(NOTIFICATIONS_REGISTRATION_KEY);
+      _registerForRemoteNotificationsRanThisSession = false;
+      _registerForRemoteNotifications();
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.unregisterForPushNotifications: " + ex);
+      console.log("Error in messaging.registerForPushNotifications: " + ex);
+      reject(ex);
+    }
+  });
+}
+export function unregisterForPushNotifications(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      UIApplication.sharedApplication.unregisterForRemoteNotifications();
+
+      // Note that we're not removing this key, because upon restart it would re-register the device.
+      // I mean, if the dev uses 'unregisterForPushNotifications', he will likely also want to explicitly use 'registerForPushNotifications'.
+
+      // applicationSettings.remove(NOTIFICATIONS_REGISTRATION_KEY);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in messaging.unregisterForPushNotifications: " + ex);
       reject(ex);
     }
   });
@@ -100,10 +109,11 @@ export function handleRemoteNotification(app, userInfo) {
     }
   }
 
+  userInfoJSON.foreground = app.applicationState === UIApplicationState.Active;
+  updateUserInfo(userInfoJSON);
   _pendingNotifications.push(userInfoJSON);
 
-  userInfoJSON.foreground = app.applicationState === UIApplicationState.Active;
-  if (_receivedNotificationCallback !== null) {
+  if (_receivedNotificationCallback) {
     _processPendingNotifications();
   }
 }
@@ -111,10 +121,6 @@ export function handleRemoteNotification(app, userInfo) {
 export function addOnPushTokenReceivedCallback(callback) {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRMessaging) === "undefined") {
-        reject("Enable FIRMessaging in Podfile first");
-        return;
-      }
       _receivedPushTokenCallback = callback;
 
       // may already be present
@@ -128,14 +134,21 @@ export function addOnPushTokenReceivedCallback(callback) {
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.addOnPushTokenReceivedCallback: " + ex);
+      console.log("Error in messaging.addOnPushTokenReceivedCallback: " + ex);
       reject(ex);
     }
   });
 }
 
 export function addBackgroundRemoteNotificationHandler(appDelegate) {
-  // appDelegate.prototype.app
+  appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = (application: UIApplication, deviceToken: NSData) => {
+    const token = deviceToken.description.replace(/[< >]/g, "");
+    _pushToken = token;
+    if (_receivedPushTokenCallback) {
+      _receivedPushTokenCallback(token);
+    }
+  };
+
   appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
     // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
     if (firebase._configured && FIRAuth.auth().canHandleNotification(notification)) {
@@ -243,7 +256,7 @@ export function subscribeToTopic(topicName) {
         error ? reject(error.localizedDescription) : resolve();
       });
     } catch (ex) {
-      console.log("Error in firebase.subscribeToTopic: " + ex);
+      console.log("Error in messaging.subscribeToTopic: " + ex);
       reject(ex);
     }
   });
@@ -262,7 +275,7 @@ export function unsubscribeFromTopic(topicName) {
         error ? reject(error.localizedDescription) : resolve();
       });
     } catch (ex) {
-      console.log("Error in firebase.unsubscribeFromTopic: " + ex);
+      console.log("Error in messaging.unsubscribeFromTopic: " + ex);
       reject(ex);
     }
   });
@@ -325,6 +338,24 @@ export function areNotificationsEnabled() {
   return app.currentUserNotificationSettings.types > 0;
 }
 
+const updateUserInfo = userInfoJSON => {
+  // move the most relevant properties (if set) so it's according to the TS definition and aligned with Android
+  if (userInfoJSON.aps && userInfoJSON.aps.alert) {
+    userInfoJSON.title = userInfoJSON.aps.alert.title;
+    userInfoJSON.body = userInfoJSON.aps.alert.body;
+  }
+  // also, to make the ts.d happy copy all properties to a data element
+  if (!userInfoJSON.hasOwnProperty("data")) {
+    userInfoJSON.data = {};
+  }
+  Object.keys(userInfoJSON).forEach(key => {
+    if (key !== "data") userInfoJSON.data[key] = userInfoJSON[key];
+  });
+
+  // cleanup
+  userInfoJSON.aps = undefined;
+};
+
 function _registerForRemoteNotifications() {
   let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
@@ -349,9 +380,7 @@ function _registerForRemoteNotifications() {
           app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
         }
         if (app !== null) {
-          firebaseUtils.invokeOnRunLoop(() => {
-            app.registerForRemoteNotifications();
-          });
+          firebaseUtils.invokeOnRunLoop(() => app.registerForRemoteNotifications());
         }
       } else {
         console.log("Error requesting push notification auth: " + error);
@@ -364,59 +393,52 @@ function _registerForRemoteNotifications() {
       // if the app is in the background, and user views a notification, applicationDidReceiveRemoteNotificationFetchCompletionHandler will receive it
       const userInfo = unnotification.request.content.userInfo;
       const userInfoJSON = firebaseUtils.toJsObject(userInfo);
+      updateUserInfo(userInfoJSON);
 
-      if (actionIdentifier && _notificationActionTakenCallback) {
-        // TODO: THIS CODE DOWN IS DUPLICATE, REFACTOR!!!!
-        // move the most relevant properties (if set) so it's according to the TS definition and aligned with Android
-        if (userInfoJSON.aps && userInfoJSON.aps.alert) {
-          userInfoJSON.title = userInfoJSON.aps.alert.title;
-          userInfoJSON.body = userInfoJSON.aps.alert.body;
-        }
-        // also, to make the ts.d happy copy all properties to a data element
-        if (!userInfoJSON.hasOwnProperty('data')) {
-          userInfoJSON.data = {};
-        }
-        Object.keys(userInfoJSON).forEach((key) => {
-          if (key !== 'data') userInfoJSON.data[key] = userInfoJSON[key];
+      if (actionIdentifier) {
+        _pendingActionTakenNotifications.push({
+          actionIdentifier,
+          userInfoJSON,
+          inputText
         });
-
-        // cleanup
-        userInfoJSON.aps = undefined;
-        // TODO: THIS CODE UP IS DUPLICATE, REFACTOR!!!!
-
-        _notificationActionTakenCallback(actionIdentifier, userInfoJSON, inputText);
+        if (_notificationActionTakenCallback) {
+          _processPendingActionTakenNotifications();
+        }
       }
 
       userInfoJSON.foreground = true;
       _pendingNotifications.push(userInfoJSON);
-      if (_receivedNotificationCallback !== null) {
+      if (_receivedNotificationCallback) {
         _processPendingNotifications();
       }
     });
 
     curNotCenter.delegate = _userNotificationCenterDelegate;
 
-    _firebaseRemoteMessageDelegate = FIRMessagingDelegateImpl.new().initWithCallback((appDataDictionary: NSDictionary<any, any>) => {
-      const userInfoJSON = firebaseUtils.toJsObject(appDataDictionary);
-      _pendingNotifications.push(userInfoJSON);
+    if (typeof (FIRMessaging) !== "undefined") {
+      _firebaseRemoteMessageDelegate = FIRMessagingDelegateImpl.new().initWithCallback((appDataDictionary: NSDictionary<any, any>) => {
+        const userInfoJSON = firebaseUtils.toJsObject(appDataDictionary);
+        updateUserInfo(userInfoJSON);
+        _pendingNotifications.push(userInfoJSON);
 
-      const asJs = firebaseUtils.toJsObject(appDataDictionary.objectForKey("notification"));
-      if (asJs) {
-        userInfoJSON.title = asJs.title;
-        userInfoJSON.body = asJs.body;
-      }
-
-      const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
-      if (app.applicationState === UIApplicationState.Active) {
-        userInfoJSON.foreground = true;
-        if (_receivedNotificationCallback !== null) {
-          _processPendingNotifications();
+        const asJs = firebaseUtils.toJsObject(appDataDictionary.objectForKey("notification"));
+        if (asJs) {
+          userInfoJSON.title = asJs.title;
+          userInfoJSON.body = asJs.body;
         }
-      } else {
-        userInfoJSON.foreground = false;
-      }
-    });
-    FIRMessaging.messaging().delegate = _firebaseRemoteMessageDelegate;
+
+        const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+        if (app.applicationState === UIApplicationState.Active) {
+          userInfoJSON.foreground = true;
+          if (_receivedNotificationCallback) {
+            _processPendingNotifications();
+          }
+        } else {
+          userInfoJSON.foreground = false;
+        }
+      });
+      FIRMessaging.messaging().delegate = _firebaseRemoteMessageDelegate;
+    }
 
   } else {
     const notificationTypes = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationActivationMode.Background;
@@ -448,14 +470,11 @@ function _messagingConnectWithCompletion() {
 function _addOnNotificationActionTakenCallback(callback: Function) {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRMessaging) === "undefined") {
-        reject("Enable FIRMessaging in Podfile first");
-        return;
-      }
       _notificationActionTakenCallback = callback;
+      _processPendingActionTakenNotifications();
       resolve();
     } catch (ex) {
-      console.log("Error in firebase._addOnNotificationActionTakenCallback: " + ex);
+      console.log("Error in messaging._addOnNotificationActionTakenCallback: " + ex);
       reject(ex);
     }
   });
@@ -464,32 +483,32 @@ function _addOnNotificationActionTakenCallback(callback: Function) {
 function _processPendingNotifications() {
   const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
-    application.on("launch", () => {
-      _processPendingNotifications();
-    });
+    application.on("launch", () => _processPendingNotifications());
     return;
   }
-  if (_receivedNotificationCallback !== null) {
+  if (_receivedNotificationCallback) {
     for (let p in _pendingNotifications) {
-      const userInfoJSON = _pendingNotifications[p];
-      // move the most relevant properties (if set) so it's according to the TS definition and aligned with Android
-      if (userInfoJSON.aps && userInfoJSON.aps.alert) {
-        userInfoJSON.title = userInfoJSON.aps.alert.title;
-        userInfoJSON.body = userInfoJSON.aps.alert.body;
-      }
-      // also, to make the ts.d happy copy all properties to a data element
-      if (!userInfoJSON.hasOwnProperty('data')) {
-        userInfoJSON.data = {};
-      }
-      Object.keys(userInfoJSON).forEach((key) => {
-        if (key !== 'data') userInfoJSON.data[key] = userInfoJSON[key];
-      });
-
-      // cleanup
-      userInfoJSON.aps = undefined;
-      _receivedNotificationCallback(userInfoJSON);
+      _receivedNotificationCallback(_pendingNotifications[p]);
     }
     _pendingNotifications = [];
+
+    if (app.applicationState === UIApplicationState.Active) {
+      app.applicationIconBadgeNumber = 0;
+    }
+  }
+}
+
+function _processPendingActionTakenNotifications() {
+  const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+  if (!app) {
+    application.on("launch", () => _processPendingNotifications());
+    return;
+  }
+  if (_notificationActionTakenCallback) {
+    for (let p in _pendingActionTakenNotifications) {
+      _notificationActionTakenCallback(_pendingActionTakenNotifications[p].actionIdentifier, _pendingActionTakenNotifications[p].userInfoJSON, _pendingActionTakenNotifications[p].inputText);
+    }
+    _pendingActionTakenNotifications = [];
 
     if (app.applicationState === UIApplicationState.Active) {
       app.applicationIconBadgeNumber = 0;
@@ -521,12 +540,13 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
   }
 
   public userNotificationCenterWillPresentNotificationWithCompletionHandler(center: UNUserNotificationCenter, notification: UNNotification, completionHandler: (p1: UNNotificationPresentationOptions) => void): void {
-    console.log(">>>>>>>>>>> Handle push from foreground");
-
     const userInfo = notification.request.content.userInfo;
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
 
-    if (userInfoJSON["gcm.notification.showWhenInForeground"] === "true") {
+    if (userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // this is for FCM
+        userInfoJSON["showWhenInForeground"] === true || // this is for non-FCM,
+        (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // and this as well (so users can choose where to put it)
+    ) {
       // don't invoke the callback here, since the app shouldn't fi. navigate to a new page unless the user pressed the notification
       completionHandler(UNNotificationPresentationOptions.Alert | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Badge);
     } else {
@@ -537,8 +557,11 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
   }
 
   public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void): void {
-    console.log("Notification action response");
-    console.log(response);
+    // let's ignore "dismiss" actions
+    if (response && response.actionIdentifier === UNNotificationDismissActionIdentifier) {
+      completionHandler();
+      return;
+    }
 
     this.callback(response.notification, response.actionIdentifier, (<UNTextInputNotificationResponse>response).userText);
     completionHandler();
@@ -563,12 +586,10 @@ class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate 
   }
 
   public messagingDidReceiveMessage(messaging: FIRMessaging, remoteMessage: FIRMessagingRemoteMessage): void {
-    console.log(">> fcm message received");
     this.callback(remoteMessage.appData);
   }
 
   public messagingDidReceiveRegistrationToken(messaging: FIRMessaging, fcmToken: string): void {
-    console.log(">> fcmToken received: " + fcmToken);
     onTokenRefreshNotification(fcmToken);
   }
 }

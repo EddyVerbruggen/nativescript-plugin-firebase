@@ -1,10 +1,12 @@
-export declare function init(arg: any): void;
+export declare function initFirebaseMessaging(arg: any): void;
 
 export declare function addOnMessageReceivedCallback(callback: Function): Promise<{}>;
 
 export declare function getCurrentPushToken(): Promise<{}>;
 
-export declare function unregisterForPushNotifications(): Promise<{}>;
+export declare function registerForPushNotifications(): Promise<void>;
+
+export declare function unregisterForPushNotifications(): Promise<void>;
 
 export declare function handleRemoteNotification(app: any, userInfo: any): void;
 
@@ -22,7 +24,7 @@ export declare function unsubscribeFromTopic(topicName: any): Promise<{}>;
 
 export declare function areNotificationsEnabled(): boolean;
 
-export declare const onTokenRefreshNotification: (token: any) => void;
+export declare const onTokenRefreshNotification: (token: string) => void;
 
 // android. ...
 export declare function onAppModuleLaunchEvent(intent: any): void;

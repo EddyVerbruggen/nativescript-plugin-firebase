@@ -6,7 +6,7 @@ declare const android, com, org: any;
 
 let _launchNotification = null;
 
-export function init(arg) {
+export function initFirebaseMessaging(arg) {
   if (arg.onMessageReceivedCallback !== undefined) {
     addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
   }
@@ -116,7 +116,11 @@ export function addOnPushTokenReceivedCallback(callback) {
   });
 }
 
-export function unregisterForPushNotifications() {
+export function registerForPushNotifications(): Promise<void> {
+  return Promise.reject("Not supported on Android");
+}
+
+export function unregisterForPushNotifications(): Promise<void> {
   return Promise.reject("Not supported on Android");
 }
 

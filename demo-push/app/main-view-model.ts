@@ -147,6 +147,17 @@ export class HelloWorldModel extends Observable {
         });
   }
 
+  public doRegisterForPushNotificationsAgain(): void {
+    firebase.registerForPushNotifications().then(
+        () => {
+          alert({
+            title: "Registered again",
+            message: "You should now use the new push token which was received in 'addOnPushTokenReceivedCallback, or call 'getCurrentPushToken'.",
+            okButtonText: "Got it."
+          });
+        });
+  }
+
   public doSubscribeToTopic(): void {
     firebase.subscribeToTopic("demo").then(
         () => {

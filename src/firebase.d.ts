@@ -876,6 +876,8 @@ export function registerForInteractivePush(model: any): void;
 
 export function getCurrentPushToken(): Promise<string>;
 
+export function registerForPushNotifications(): Promise<void>;
+
 export function unregisterForPushNotifications(): Promise<void>;
 
 export function subscribeToTopic(topicName): Promise<any>;

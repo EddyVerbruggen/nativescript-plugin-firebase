@@ -332,7 +332,7 @@ firebase.init = arg => {
 
       // Firebase notifications (FCM)
       if (messagingEnabled()) {
-        firebaseMessaging.init(arg);
+        firebaseMessaging.initFirebaseMessaging(arg);
       }
 
       // Firebase DynamicLink
@@ -442,6 +442,7 @@ firebase.fetchSignInMethodsForEmail = email => {
 firebase.getCurrentPushToken = firebaseMessaging.getCurrentPushToken;
 firebase.addOnMessageReceivedCallback = firebaseMessaging.addOnMessageReceivedCallback;
 firebase.addOnPushTokenReceivedCallback = firebaseMessaging.addOnPushTokenReceivedCallback;
+firebase.registerForPushNotifications = firebaseMessaging.registerForPushNotifications;
 firebase.unregisterForPushNotifications = firebaseMessaging.unregisterForPushNotifications;
 firebase.subscribeToTopic = firebaseMessaging.subscribeToTopic;
 firebase.unsubscribeFromTopic = firebaseMessaging.unsubscribeFromTopic;

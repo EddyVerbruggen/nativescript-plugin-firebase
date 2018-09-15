@@ -18,6 +18,8 @@ firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 firebase._configured = false;
 
+const useExternalPushProvider = NSBundle.mainBundle.infoDictionary.objectForKey("UseExternalPushProvider") === true;
+
 class DocumentSnapshot extends DocumentSnapshotBase {
   ios: FIRDocumentSnapshot;
 
@@ -32,6 +34,7 @@ class DocumentSnapshot extends DocumentSnapshotBase {
 firebase.authStateListener = null;
 firebase.addOnMessageReceivedCallback = firebaseMessaging.addOnMessageReceivedCallback;
 firebase.addOnPushTokenReceivedCallback = firebaseMessaging.addOnPushTokenReceivedCallback;
+firebase.registerForPushNotifications = firebaseMessaging.registerForPushNotifications;
 firebase.unregisterForPushNotifications = firebaseMessaging.unregisterForPushNotifications;
 firebase.getCurrentPushToken = firebaseMessaging.getCurrentPushToken;
 firebase.registerForInteractivePush = firebaseMessaging.registerForInteractivePush;
@@ -44,10 +47,12 @@ firebase.addAppDelegateMethods = appDelegate => {
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
     if (!firebase._configured) {
       firebase._configured = true;
-      FIRApp.configure();
+      if (typeof (FIRApp) !== "undefined") {
+        FIRApp.configure();
+      }
     }
     // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
-    if (launchOptions && typeof (FIRMessaging) !== "undefined") {
+    if (launchOptions) {
       const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
       if (remoteNotification) {
         firebaseMessaging.handleRemoteNotification(application, remoteNotification);
@@ -220,7 +225,8 @@ firebase.addAppDelegateMethods = appDelegate => {
     };
   }
 
-  if (typeof (FIRMessaging) !== "undefined") {
+  // only add the push notification delegate methods if either FIRMessaging is enabled, or an external push provider is being used
+  if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
     firebaseMessaging.addBackgroundRemoteNotificationHandler(appDelegate);
   }
 };
@@ -293,7 +299,7 @@ firebase.addOnDynamicLinkReceivedCallback = callback => {
   });
 };
 
-if (typeof (FIRMessaging) !== "undefined") {
+if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
   firebaseMessaging.prepAppDelegate();
 }
 
@@ -352,7 +358,9 @@ firebase.init = arg => {
 
       if (!firebase._configured) {
         firebase._configured = true;
-        FIRApp.configure();
+        if (typeof (FIRApp) !== "undefined") {
+          FIRApp.configure();
+        }
       }
 
       if (typeof (FIRDatabase) !== "undefined") {
@@ -417,7 +425,7 @@ firebase.init = arg => {
 
       // Firebase notifications (FCM)
       if (typeof (FIRMessaging) !== "undefined") {
-        firebaseMessaging.init(arg);
+        firebaseMessaging.initFirebaseMessaging(arg);
       }
 
       // Firebase storage
