@@ -839,8 +839,8 @@ var copyPlist = function(copyPlistOpts) {
                 fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistDev));
                 return true;
             }
-        } else if (!fs.existsSync(sourceGooglePlist)) { // single GoogleService-Info.plist modus but missing
-            copyPlistOpts.$logger.warn("nativescript-plugin-firebase: " + sourceGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
+        } else if (!fs.existsSync(destinationGooglePlist)) { // single GoogleService-Info.plist modus but missing
+            copyPlistOpts.$logger.warn("nativescript-plugin-firebase: " + destinationGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
             return false;
         } else {
             return true; // single GoogleService-Info.plist modus
