@@ -3407,22 +3407,68 @@ apply plugin: "com.google.gms.google-services"
 
 /**
  * Installs an after-prepare build hook to copy the app/App_Resources/Android/google-services.json to platform/android on build.
+ * Installs before-checkForChange build hook to detect changes in environment and copy GoogleServices.plist on build
  */
 function writeGoogleServiceCopyHook() {
-    console.log("Install google-service.json copy hook.");
+
+    /*
+       Install after-prepare hook
+    */
+
+    console.log("Install google-service.json after-prepare copy hook.");
     try {
-        var scriptContent =
+        var afterPrepareScriptContent =
 `
 var path = require("path");
 var fs = require("fs");
 
 module.exports = function($logger, $projectData, hookArgs) {
 
-    return new Promise(function(resolve, reject) {
+return new Promise(function(resolve, reject) {
+
+        /* Decide whether to prepare for dev or prod environment */
+
+        var isReleaseBuild = (hookArgs.appFilesUpdaterOptions && hookArgs.appFilesUpdaterOptions.release) ? true : false;
+        var validProdEnvs = ['prod','production'];
+        var isProdEnv = false; // building with --env.prod or --env.production flag
+
+        if (hookArgs.platformSpecificData.env) {
+            Object.keys(hookArgs.platformSpecificData.env).forEach((key) => {
+                if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
+            });
+        }
+
+        var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+
+        /* Create info file in platforms dir so we can detect changes in environment and force prepare if needed */
+
+        var npfInfoPath = path.join($projectData.platformsDir, hookArgs.platform.toLowerCase(), ".pluginfirebaseinfo");
+        var npfInfo = {
+            buildType: buildType,
+        };
+
+        try { fs.writeFileSync(npfInfoPath, JSON.stringify(npfInfo)); }
+        catch (err) {
+            $logger.info('nativescript-plugin-firebase: unable to create '+npfInfoPath+', prepare will be forced next time!');
+        }
+
+
+        /* Handle preparing of Google Services files */
+
         if (hookArgs.platform.toLowerCase() === 'android') {
-            var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json");
             var destinationGoogleJson = path.join($projectData.platformsDir, "android", "app", "google-services.json");
             var destinationGoogleJsonAlt = path.join($projectData.platformsDir, "android", "google-services.json");
+            var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json");
+            var sourceGoogleJsonProd = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json.prod");
+            var sourceGoogleJsonDev = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json.dev");
+
+            // ensure we have both dev/prod versions so we never overwrite singlular google-services.json
+            if (fs.existsSync(sourceGoogleJsonProd) && fs.existsSync(sourceGoogleJsonDev)) {
+                if (buildType==='production') { sourceGoogleJson = sourceGoogleJsonProd; } // use prod version
+                else { sourceGoogleJson = sourceGoogleJsonDev; } // use dev version
+            }
+
+            // copy correct version to destination
             if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
                 $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
                 fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
@@ -3437,11 +3483,16 @@ module.exports = function($logger, $projectData, hookArgs) {
                 reject();
             }
         } else if (hookArgs.platform.toLowerCase() === 'ios') {
-            var sourceGooglePlist = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
-            if (!fs.existsSync(sourceGooglePlist)) {
-                $logger.warn(sourceGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
-                return reject();
-            } else {
+            // we have copied our GoogleService-Info.plist during before-checkForChanges hook, here we delete it to avoid changes in git
+            var destinationGooglePlist = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
+            var sourceGooglePlistProd = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.prod");
+            var sourceGooglePlistDev = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.dev");
+
+            // if we have both dev/prod versions, let's remove GoogleService-Info.plist in destination dir
+            if (fs.existsSync(sourceGooglePlistProd) && fs.existsSync(sourceGooglePlistDev)) {
+                if (fs.existsSync(destinationGooglePlist)) { fs.unlinkSync(destinationGooglePlist); }
+                resolve();
+            } else { // single GoogleService-Info.plist modus
                 resolve();
             }
         } else {
@@ -3459,9 +3510,118 @@ module.exports = function($logger, $projectData, hookArgs) {
             }
             fs.mkdirSync(afterPrepareDirPath);
         }
-        fs.writeFileSync(scriptPath, scriptContent);
+        fs.writeFileSync(scriptPath, afterPrepareScriptContent);
     } catch(e) {
-        console.log("Failed to install google-service.json copy hook.");
+        console.log("Failed to install google-service.json after-prepare copy hook.");
+        console.log(e);
+    }
+
+    /*
+       Install before-checkForChanges hook
+    */
+
+    console.log("Install google-service.json before-checkForChanges copy hook.");
+    try {
+        var beforeCheckForChangesContent =
+`
+var path = require("path");
+var fs = require("fs");
+
+module.exports = function($logger, $projectData, hookArgs) {
+    return new Promise(function(resolve, reject) {
+
+        /* Decide whether to prepare for dev or prod environment */
+
+        var isReleaseBuild = hookArgs['checkForChangesOpts']['projectData']['$options']['argv']['release'] || false;
+        var validProdEnvs = ['prod','production'];
+        var isProdEnv = false; // building with --env.prod or --env.production flag
+
+        var env = hookArgs['checkForChangesOpts']['projectData']['$options']['argv']['env'];
+        if (env) {
+            Object.keys(env).forEach((key) => {
+                if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
+            });
+        }
+
+        var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+
+        /*
+            Detect if we have nativescript-plugin-firebase temp file created during after-prepare hook, so we know
+            for which environment {development|prod} the project was prepared. If needed, we delete the NS .nsprepareinfo
+            file so we force a new prepare
+        */
+        var platform = hookArgs['checkForChangesOpts']['platform'].toLowerCase(); // ios | android
+        var platformsDir = hookArgs['checkForChangesOpts']['projectData']['platformsDir'];
+        var appResourcesDirectoryPath = hookArgs['checkForChangesOpts']['projectData']['appResourcesDirectoryPath'];
+        var forcePrepare = true; // whether to force NS to run prepare
+        var npfInfoPath = path.join(platformsDir, platform, ".pluginfirebaseinfo");
+        var nsPrepareInfoPath = path.join(platformsDir, platform, ".nsprepareinfo");
+        var copyPlistOpts = { platform, appResourcesDirectoryPath, buildType, $logger }
+
+        if (fs.existsSync(npfInfoPath)) {
+            var npfInfo = undefined;
+            try { npfInfo = JSON.parse(fs.readFileSync(npfInfoPath, 'utf8')); }
+            catch (e) { $logger.info('nativescript-plugin-firebase: error reading '+npfInfoPath); }
+
+            if (npfInfo && npfInfo.hasOwnProperty('buildType') && npfInfo.buildType===buildType) {
+                $logger.info('nativescript-plugin-firebase: building for same environment, not forcing prepare.');
+                forcePrepare=false;
+            }
+        } else { $logger.info('nativescript-plugin-firebase: '+npfInfoPath+' not found, forcing prepare!'); }
+
+        if (forcePrepare && fs.existsSync(nsPrepareInfoPath)) {
+            $logger.info('nativescript-plugin-firebase: running release build or change in environment detected, forcing prepare!');
+
+            if (fs.existsSync(npfInfoPath)) { fs.unlinkSync(npfInfoPath); }
+            fs.unlinkSync(nsPrepareInfoPath);
+
+            if (copyPlist(copyPlistOpts)) { resolve(); } else { reject(); }
+        } else { if (copyPlist(copyPlistOpts)) { resolve(); } else { reject(); } }
+    });
+};
+
+/*
+    Handle preparing of Google Services files for iOS
+*/
+var copyPlist = function(copyPlistOpts) {
+    if (copyPlistOpts.platform === 'android') { return true; }
+    else if (copyPlistOpts.platform === 'ios') {
+        var sourceGooglePlistProd = path.join(copyPlistOpts.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.prod");
+        var sourceGooglePlistDev = path.join(copyPlistOpts.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.dev");
+        var destinationGooglePlist = path.join(copyPlistOpts.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
+
+        // if we have both dev/prod versions, we copy (or overwrite) GoogleService-Info.plist in destination dir
+        if (fs.existsSync(sourceGooglePlistProd) && fs.existsSync(sourceGooglePlistDev)) {
+            if (copyPlistOpts.buildType==='production') { // use prod version
+                copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistProd + " to " + destinationGooglePlist + ".");
+                fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistProd));
+                return true;
+            } else { // use dev version
+                copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistDev + " to " + destinationGooglePlist + ".");
+                fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistDev));
+                return true;
+            }
+        } else if (!fs.existsSync(sourceGooglePlist)) { // single GoogleService-Info.plist modus but missing
+            copyPlistOpts.$logger.warn("nativescript-plugin-firebase: " + sourceGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
+            return false;
+        } else {
+            return true; // single GoogleService-Info.plist modus
+        }
+    } else { return true; }
+}
+`;
+        var scriptPath = path.join(appRoot, "hooks", "before-checkForChanges", "firebase-copy-google-services.js");
+        var afterPrepareDirPath = path.dirname(scriptPath);
+        var hooksDirPath = path.dirname(afterPrepareDirPath);
+        if (!fs.existsSync(afterPrepareDirPath)) {
+            if (!fs.existsSync(hooksDirPath)) {
+                fs.mkdirSync(hooksDirPath);
+            }
+            fs.mkdirSync(afterPrepareDirPath);
+        }
+        fs.writeFileSync(scriptPath, beforeCheckForChangesContent);
+    } catch(e) {
+        console.log("Failed to install google-service.json before-checkForChanges copy hook.");
         console.log(e);
     }
 }
