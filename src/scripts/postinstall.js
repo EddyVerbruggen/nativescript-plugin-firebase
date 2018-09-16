@@ -3447,18 +3447,14 @@ apply plugin: "com.google.gms.google-services"
 
 /**
  * Installs an after-prepare build hook to copy the app/App_Resources/Android/google-services.json to platform/android on build.
- * Installs before-checkForChange build hook to detect changes in environment and copy GoogleServices.plist on build
+ * Installs before-checkForChange build hook to detect changes in environment and copy GoogleServices.plist on build.
  */
 function writeGoogleServiceCopyHook() {
-
-    /*
-       Install after-prepare hook
-    */
-
-    console.log("Install google-service.json after-prepare copy hook.");
-    try {
-        var afterPrepareScriptContent =
-`
+  // Install after-prepare hook
+  console.log("Install google-service.json after-prepare copy hook.");
+  try {
+    var afterPrepareScriptContent =
+        `
 var path = require("path");
 var fs = require("fs");
 
@@ -3541,29 +3537,29 @@ return new Promise(function(resolve, reject) {
     });
 };
 `;
-        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
-        var afterPrepareDirPath = path.dirname(scriptPath);
-        var hooksDirPath = path.dirname(afterPrepareDirPath);
-        if (!fs.existsSync(afterPrepareDirPath)) {
-            if (!fs.existsSync(hooksDirPath)) {
-                fs.mkdirSync(hooksDirPath);
-            }
-            fs.mkdirSync(afterPrepareDirPath);
-        }
-        fs.writeFileSync(scriptPath, afterPrepareScriptContent);
-    } catch(e) {
-        console.log("Failed to install google-service.json after-prepare copy hook.");
-        console.log(e);
+    var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
+    var afterPrepareDirPath = path.dirname(scriptPath);
+    var hooksDirPath = path.dirname(afterPrepareDirPath);
+    if (!fs.existsSync(afterPrepareDirPath)) {
+      if (!fs.existsSync(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+      }
+      fs.mkdirSync(afterPrepareDirPath);
     }
+    fs.writeFileSync(scriptPath, afterPrepareScriptContent);
+  } catch (e) {
+    console.log("Failed to install google-service.json after-prepare copy hook.");
+    console.log(e);
+  }
 
-    /*
-       Install before-checkForChanges hook
-    */
+  /*
+     Install before-checkForChanges hook
+  */
 
-    console.log("Install google-service.json before-checkForChanges copy hook.");
-    try {
-        var beforeCheckForChangesContent =
-`
+  console.log("Install google-service.json before-checkForChanges copy hook.");
+  try {
+    var beforeCheckForChangesContent =
+        `
 var path = require("path");
 var fs = require("fs");
 
@@ -3650,20 +3646,20 @@ var copyPlist = function(copyPlistOpts) {
     } else { return true; }
 }
 `;
-        var scriptPath = path.join(appRoot, "hooks", "before-checkForChanges", "firebase-copy-google-services.js");
-        var afterPrepareDirPath = path.dirname(scriptPath);
-        var hooksDirPath = path.dirname(afterPrepareDirPath);
-        if (!fs.existsSync(afterPrepareDirPath)) {
-            if (!fs.existsSync(hooksDirPath)) {
-                fs.mkdirSync(hooksDirPath);
-            }
-            fs.mkdirSync(afterPrepareDirPath);
-        }
-        fs.writeFileSync(scriptPath, beforeCheckForChangesContent);
-    } catch(e) {
-        console.log("Failed to install google-service.json before-checkForChanges copy hook.");
-        console.log(e);
+    var scriptPath = path.join(appRoot, "hooks", "before-checkForChanges", "firebase-copy-google-services.js");
+    var afterPrepareDirPath = path.dirname(scriptPath);
+    var hooksDirPath = path.dirname(afterPrepareDirPath);
+    if (!fs.existsSync(afterPrepareDirPath)) {
+      if (!fs.existsSync(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+      }
+      fs.mkdirSync(afterPrepareDirPath);
     }
+    fs.writeFileSync(scriptPath, beforeCheckForChangesContent);
+  } catch (e) {
+    console.log("Failed to install google-service.json before-checkForChanges copy hook.");
+    console.log(e);
+  }
 }
 
 function writeGoogleServiceGradleHook(result) {
