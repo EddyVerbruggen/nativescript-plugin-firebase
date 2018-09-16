@@ -26,9 +26,23 @@ export class FirestoreComponent {
     // AngularFireModule.initializeApp({});
   }
 
+  public issue854(): void {
+    const helloRef: firestore.DocumentReference =
+        firebase.firestore()
+            .collection("users")
+            .doc(firebase.auth().currentUser.uid)
+            .collection("availability")
+            .doc("hello");
+
+    helloRef.get().then(snapshot => console.log(snapshot.data()))
+  }
+
   public loginAnonymously(): void {
     firebase.auth().signInAnonymously()
-        .then(() => console.log("Logged in"))
+        .then(() => {
+          const user = firebase.auth().currentUser;
+          firebase.firestore().collection("users").doc(user.uid).set(user);
+        })
         .catch(err => console.log("Login error: " + JSON.stringify(err)));
   }
 
@@ -119,10 +133,14 @@ export class FirestoreComponent {
   }
 
   public firestoreUpdate(): void {
+    // get a document reference so we can add a city reference to our favourite dog
+    const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+
     firebase.firestore().collection("dogs").doc("fave")
         .update({
           name: "Woofieupdate",
           last: "updatedwoofie!",
+          city: sfDocRef,
           updateTs: firestore.FieldValue.serverTimestamp(),
           updateTsAlt: firebase.firestore().FieldValue().serverTimestamp(),
           lastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67)
@@ -229,11 +247,10 @@ export class FirestoreComponent {
   }
 
   public firestoreWhere(): void {
-    const query: firestore.Query = firebase.firestore().collection("cities")
-        .where("state", "==", "CA")
-        .where("population", "<", 550000);
+    const cityDocRef = firebase.firestore().collection("cities").doc("SF");
 
-    query
+    firebase.firestore().collection("dogs")
+        .where("city", "==", cityDocRef)
         .get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => {
@@ -246,6 +263,7 @@ export class FirestoreComponent {
   public firestoreWhereOrderLimit(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
         .where("state", "==", "CA")
+        .where("population", "<", 99999999)
         .orderBy("population", "desc")
         .limit(2);
 
@@ -325,5 +343,31 @@ export class FirestoreComponent {
     })
         .then(() => console.log(`Transaction successfully committed`))
         .catch(error => console.log("doTransaction error: " + error));
+  }
+
+  public firestoreStartAt(): void {
+    firebase.firestore().collection('cities')
+      .doc('LA')
+      .get()
+      .then(doc => {
+        firebase.firestore().collection('cities')
+          .orderBy('name', 'asc')
+          .startAt(doc)
+          .get()
+          .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+      });
+  }
+
+  public firestoreStartAfter(): void {
+    firebase.firestore().collection('cities')
+      .doc('LA')
+      .get()
+      .then(doc => {
+        firebase.firestore().collection('cities')
+          .orderBy('name', 'asc')
+          .startAfter(doc)
+          .get()
+          .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+      });
   }
 }

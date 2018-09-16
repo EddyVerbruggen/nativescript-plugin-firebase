@@ -3,7 +3,6 @@ import * as application from "tns-core-modules/application";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 import { OrientationChangedEventData } from "tns-core-modules/application";
 
-// TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private captureSession: AVCaptureSession;
   private captureDevice: AVCaptureDevice;
@@ -60,7 +59,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
     // begin the session
     this.captureSession = AVCaptureSession.new();
-    this.captureSession.sessionPreset = AVCaptureSessionPreset640x480;
+    this.captureSession.sessionPreset = AVCaptureSessionPreset1280x720;
 
     const captureDeviceInput = AVCaptureDeviceInput.deviceInputWithDeviceError(this.captureDevice);
     this.captureSession.addInput(captureDeviceInput);

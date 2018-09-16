@@ -133,24 +133,23 @@ Based on the publish/subscribe model, FCM topic messaging allows you to send a m
 
 Client apps can subscribe to any existing topic, or they can create a new topic. When a client app subscribes to a new topic name (one that does not already exist for your Firebase project), a new topic of that name is created in FCM and any client can subsequently subscribe to it.
 
-```js
-  firebase.subscribeToTopic("news");
+```typescript
+  firebase.subscribeToTopic("news").then(() => console.log("Subscribed to topic"));
 ```
 
 and:
 
-```js
-  firebase.unsubscribeFromTopic("news");
+```typescript
+  firebase.unsubscribeFromTopic("news").then(() => console.log("Unsubscribed from topic"));
 ```
 
 ### Retrieving the push registration token
 If - for some reason - you need to manually retrieve the current push registration token of the device, you can do:
 
-##### TypeScript
 ```typescript
   firebase.getCurrentPushToken().then((token: string) => {
     // may be null if not known yet
-    console.log("Current push token: " + token);
+    console.log(`Current push token: ${token}`);
   });
 ```
 
@@ -190,6 +189,107 @@ curl -X POST --header "Authorization: key=AAAA9SHtZvM:APA91bGoY0H2nS8GlzzypDXSiU
 This results in a payload of:
 - App in the foreground: `{"gcm.message_id":"0:1522952782882471%3194ccac3194ccac", "foo":"bar", "foreground":true}`
 - App in the background: `{"gcm.message_id":"0:1522952757954843%3194ccac3194ccac", "foo":"bar", "foreground":false}`
+
+### Interactive notifications (iOS only for now)
+To register the app to receive interactive pushes you need to call `firebase.registerForInteractivePush(model)`.
+And you may hook to the `model.onNotificationActionTakenCallback` callback to know what action the user took interacting with the notification.
+
+Each action has either type `button` or `input`, and you can set `options` to do any or all of:
+- Launch the app: `foreground`.
+- Only allow the action when the device is unlocked: `authenticationRequired`.
+- Make the text red to indicate something will be removed/deleted/killed: `destructive`.
+
+Consider this example, where an interactive push notification is received which the user expands and picks the fourth option.
+He then types his reply, and (because of how the action was configured) the app launches and captures the reply.
+
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive01.png" height="270px" alt="Interactive Notification, part 1"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive02.png" height="270px" alt="Interactive Notification, part 2"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive03.png" height="270px" alt="Interactive Notification, part 3"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive04.png" height="270px" alt="Interactive Notification, part 4"/>
+
+```typescript
+import { messaging } from "nativescript-plugin-firebase/messaging";
+
+const model = new messaging.PushNotificationModel();
+model.iosSettings = new messaging.IosPushSettings();
+model.iosSettings.badge = false;
+model.iosSettings.alert = true;
+
+model.iosSettings.interactiveSettings = new messaging.IosInteractivePushSettings();
+model.iosSettings.interactiveSettings.actions = [
+  {
+    identifier: "OPEN_ACTION",
+    title: "Open the app (if closed)",
+    options: messaging.IosInteractiveNotificationActionOptions.foreground
+  },
+  {
+    identifier: "AUTH",
+    title: "Open the app, but only if device is not locked with a passcode",
+    options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.authenticationRequired
+  },
+  {
+    identifier: "INPUT_ACTION",
+    title: "Tap to reply without opening the app",
+    type: "input",
+    submitLabel: "Fire!",
+    placeholder: "Load the gun..."
+  },
+  {
+    identifier: "INPUT_ACTION",
+    title: "Tap to reply and open the app",
+    options: messaging.IosInteractiveNotificationActionOptions.foreground,
+    type: "input",
+    submitLabel: "OK, send it",
+    placeholder: "Type here, baby!"
+  },
+  {
+    identifier: "DELETE_ACTION",
+    title: "Delete without opening the app",
+    options: messaging.IosInteractiveNotificationActionOptions.destructive
+  }
+];
+
+model.iosSettings.interactiveSettings.categories = [{
+  identifier: "GENERAL"
+}];
+
+model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message) => {
+  console.log(`onNotificationActionTakenCallback fired! Message: ${JSON.stringify(message)}, Action taken: ${actionIdentifier}`);
+};
+
+firebase.registerForInteractivePush(model);
+```
+
+To send an interactive push, add the `"click_action"` property to the notification, with a value corresponding to the `category` defined in the model you've registered in the app.
+The payload to trigger the notification in the screenshots above is:
+
+```json
+{
+  "notification": {
+    "title": "I DEMAND YOUR ATTENTION",
+    "subtitle": "Just kidding, but not really",
+    "text": "Sorry to bother you I meant, please pick an option below..",
+    "click_action": "GENERAL",
+    "badge": "1",
+    "sound": "default",
+    "showWhenInForeground": true
+  },
+  "content_available": false,
+  "data": {
+    "foo": "bar"
+  },
+  "priority": "High",
+  "to": "DEVICE_PUSH_KEY>"
+}
+```
+
+### (iOS) showing a notification while the app is in the foreground
+Add the `showWhenInForeground` flag to your payload:
+
+```json
+{
+  "notification": {
+    "showWhenInForeground": true
+  }
+}
+```
 
 ## What if iOS doesn't show/receive notifications in the background?
 Make sure you [`require` the plugin in `app.ts` / `main.ts` / `main.aot.ts`](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/55cfb4f69cf8939f9101712fed22383196b08d36/demo/app/app.ts#L5)

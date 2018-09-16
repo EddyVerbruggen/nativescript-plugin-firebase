@@ -17,7 +17,6 @@ class SizePair {
   };
 }
 
-// TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private surfaceView: any; // android.view.SurfaceView;
   private bytesToByteBuffer = new Map();
@@ -90,6 +89,11 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     return nativeView;
   }
 
+  initNativeView(): void {
+    super.initNativeView();
+    application.on("resume", arg => this.runCamera());
+  }
+
   private hasCamera() {
     return !!utils.ad
         .getApplicationContext()
@@ -105,6 +109,10 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
     nativeView.addView(this.surfaceView);
 
+    this.runCamera();
+  }
+
+  private runCamera(): void {
     // Note that surfaceview callbacks didn't seem to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
     setTimeout(() => {
       const surfaceHolder = this.surfaceView.getHolder();
@@ -121,15 +129,18 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
       this.camera = android.hardware.Camera.open(requestedCameraId);
 
-      const sizePair = this.selectSizePair(this.camera, 800, 600); // TODO based on wrapping frame
+      let sizePair = this.selectSizePair(this.camera, 1400, 1200); // TODO based on wrapping frame
 
       if (!sizePair) {
         console.log("Could not find suitable preview size.");
         return;
       }
 
-      let pictureSize = sizePair.pictureSize;
-      let previewSize = sizePair.previewSize;
+      const pictureSize = sizePair.pictureSize;
+      const previewSize = sizePair.previewSize;
+
+      // console.log("sizePair.pictureSize @ 1400x1400: " + pictureSize.width + "x" + pictureSize.height);
+      // console.log("sizePair.previewSize @ 1400x1400: " + previewSize.width + "x" + previewSize.height);
 
       const parameters = this.camera.getParameters();
 
@@ -210,7 +221,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.camera.setPreviewDisplay(surfaceHolder);
       this.camera.startPreview();
 
-    }, 500); // TODO 500 works fine on my device, but would be wise to explore the boundaries
+    }, 500);
   }
 
   protected updateTorch(): void {
@@ -229,7 +240,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     return new com.google.android.gms.tasks.OnFailureListener({
       onFailure: exception => console.log(exception.getMessage())
     });
-  };
+  }
 
   private generateValidPreviewSizeList(camera): Array<SizePair> {
     let parameters = camera.getParameters();

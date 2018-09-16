@@ -129,14 +129,14 @@ export function recognizeTextOnDevice(options: MLKitRecognizeTextOnDeviceOptions
 export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Promise<MLKitRecognizeTextResult> {
   return new Promise((resolve, reject) => {
     try {
-      const firebaseVisionCloudTextRecognizerOptions =
-          new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
+      // const firebaseVisionCloudTextRecognizerOptions =
+      //     new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
           // TODO see 'setLanguageHints' at https://firebase.google.com/docs/ml-kit/android/recognize-text
           // .setModelType(options.modelType === "latest" ? com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.LATEST_MODEL : com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
           // .setMaxResults(options.maxResults || 10)
-              .build();
+          //     .build();
 
-      const firebaseVisionCloudTextRecognizer = com.google.firebase.ml.vision.FirebaseVision.getInstance().getCloudTextRecognizer(firebaseVisionCloudTextRecognizerOptions);
+      const firebaseVisionCloudTextRecognizer = com.google.firebase.ml.vision.FirebaseVision.getInstance().getCloudTextRecognizer();
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: firebaseVisionText => {

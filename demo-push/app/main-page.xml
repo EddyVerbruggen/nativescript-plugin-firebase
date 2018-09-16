@@ -1,0 +1,35 @@
+<TabView loaded="pageLoaded" class="page">
+  <TabView.items>
+
+    <TabViewItem title="About">
+      <TabViewItem.view>
+        <ScrollView>
+          <StackLayout class="tab-content">
+            <Image margin="10" src="~/images/telerik-logo.png"/>
+            <Label text="Push Notification demo" class="title"/>
+            <Label text="This app demonstrates how to use the Firebase plugin with a third party push service (not Firebase), like Azure, or your own backend." textWrap="true" style="margin-top: 14"/>
+          </StackLayout>
+        </ScrollView>
+      </TabViewItem.view>
+    </TabViewItem>
+
+    <TabViewItem title="Push demo">
+      <TabViewItem.view>
+        <ScrollView>
+          <GridLayout rows="auto, auto, auto, auto, auto, auto, auto" horizontalAlignment="stretch" class="tab-content" marginTop="20">
+            <Label row="0" text="Note that none of these functions work on the simulator. Use a real device!" textWrap="true" />
+            <Button row="1" text="Are notifications enabled?" tap="{{ doGetAreNotificationsEnabled }}" class="button button-messaging"/>
+            <Button row="2" text="Get current push token" tap="{{ doGetCurrentPushToken }}" class="button button-messaging"/>
+            <iOS>
+              <Button row="3" text="Register for interactive push" tap="{{ doRegisterForInteractivePush }}" class="button button-messaging"/>
+
+              <Button row="4" text="Unregister for push" tap="{{ doUnregisterForPushNotifications }}" class="button button-messaging"/>
+              <Label row="5" text="After unregistering you can register again with this function:" textWrap="true" />
+              <Button row="6" text="Register for push again" tap="{{ doRegisterForPushNotificationsAgain }}" class="button button-messaging"/>
+            </iOS>
+          </GridLayout>
+        </ScrollView>
+      </TabViewItem.view>
+    </TabViewItem>
+  </TabView.items>
+</TabView>

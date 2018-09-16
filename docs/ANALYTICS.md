@@ -81,3 +81,21 @@ Want to log a user ID with your analytics data? Go ahead:
       }
   );
 ```
+
+### analytics.setAnalyticsCollectionEnabled
+By default Firebase collects analytics data. If you don't want this (or first get user consent),
+you can disable/enable this at runtime:
+
+```js
+  firebase.analytics.setAnalyticsCollectionEnabled(false);
+```
+
+You can also pass this property during `init()`:
+
+```typescript
+  firebase.init({
+    analyticsCollectionEnabled: false
+  });
+```
+
+> If you want to disable collection without calling this function programmatically, then you can add a flag to your `App_Resources/iOS/Info.plist` and `App_Resources/Android/AndroidManifest.xml`, see [Firebase's documentation](https://firebase.google.com/support/guides/disable-analytics) for details.

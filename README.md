@@ -86,7 +86,10 @@ project.ext {
 ## Usage
 
 ### Demo app
-If you want a quickstart, clone the repo, `cd src`, and `npm run demo.ios` or `npm run demo.android`.
+If you want a quickstart, clone the repo, then:
+- `cd src`.
+- `npm i` (just answer 'n' to any prompts as they are ignored anyway).
+- `npm run demo.ios` or `npm run demo.android` (answer 'n' again if prompted).
 
 ### Start-up wiring
 We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:

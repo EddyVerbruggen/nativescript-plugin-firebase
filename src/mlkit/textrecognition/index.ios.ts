@@ -27,7 +27,6 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   protected rotateRecording(): boolean {
     return true;
   }
-
 }
 
 function getResult(visionText: FIRVisionText): MLKitRecognizeTextResult {

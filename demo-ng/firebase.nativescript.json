@@ -12,6 +12,7 @@
   "google_auth": false,
   "admob": false,
   "invites": false,
+  "dynamic_links": false,
   "ml_kit": true,
   "ml_kit_text_recognition": true,
   "ml_kit_barcode_scanning": true,

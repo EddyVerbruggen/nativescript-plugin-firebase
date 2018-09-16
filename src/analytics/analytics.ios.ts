@@ -1,7 +1,7 @@
 import { LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from "./analytics";
 
 export function logEvent(options: LogEventOptions): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
       if (options.key === undefined) {
         reject("Argument 'key' is missing");
@@ -29,7 +29,7 @@ export function logEvent(options: LogEventOptions): Promise<void> {
 }
 
 export function setUserId(arg): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
       if (arg.userId === undefined) {
         reject("Argument 'userId' is missing");
@@ -47,7 +47,7 @@ export function setUserId(arg): Promise<void> {
 }
 
 export function setUserProperty(options: SetUserPropertyOptions): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
       if (options.key === undefined) {
         reject("Argument 'key' is missing");
@@ -69,7 +69,7 @@ export function setUserProperty(options: SetUserPropertyOptions): Promise<void> 
 }
 
 export function setScreenName(options: SetScreenNameOptions): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
       if (options.screenName === undefined) {
         reject("Argument 'screenName' is missing");
@@ -84,4 +84,8 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
       reject(ex);
     }
   });
+}
+
+export function setAnalyticsCollectionEnabled(enabled: boolean): void {
+  FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(enabled);
 }
