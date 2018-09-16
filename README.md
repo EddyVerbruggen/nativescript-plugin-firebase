@@ -37,7 +37,7 @@ Open your Firebase project at the Google console and click 'Add app' to add an i
 
 * Android: `google-services.json` which you'll add to your NativeScript project at `app/App_Resources/Android/google-services.json`
 
-Note: for using separate versions of these files for dev/prod environments see [this section](#separation-of-environments)
+Note: for using separate versions of these files for development and production environments see [this section](#separation-of-environments)
 
 ## Installation
 If you rather watch a (slightly outdated) video explaining the steps then check out this step-by-step guide - you'll also learn how to
@@ -292,9 +292,9 @@ It is possible to use different development and production environments by using
 Note: if you currently have the `storageBucket` property in the `firebase.init()` then remove it (not mandatory anymore as of version `6.5.0` of this plugin), so it will be taken automatically from the relevant google services `plist` and `json` files.
 
 ### Build
-The after-prepare hook of this plugin will now choose either the `dev` or the `prod` version of your google services `plist` and `json` files depending on how you run your build:
+The build hooks of this plugin will now choose either the `dev` or the `prod` version of your google services `plist` and `json` files depending on how you run your build:
 
 * `prod` will be selected if you run with either the `--release`, `--env.prod` or `--env.production` flags
-* `dev` will be selected if you do not run with the above flags
+* `dev` will be selected if you do not run with any of the above flags
 
 Note: if you do not have both `dev` and `prod` files in place, the regular `GoogleService-Info.plist` and `google-services.json` files will be used.
