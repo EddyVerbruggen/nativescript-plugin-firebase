@@ -1,8 +1,9 @@
 import { Observable } from "tns-core-modules/data/observable";
 import * as firebase from "nativescript-plugin-firebase";
 import { messaging } from "nativescript-plugin-firebase/messaging";
-import { alert } from "tns-core-modules/ui/dialogs";
+import { alert, confirm } from "tns-core-modules/ui/dialogs";
 import * as platform from "tns-core-modules/platform";
+import * as applicationSettings from "tns-core-modules/application-settings";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet;
@@ -17,21 +18,38 @@ const getCircularReplacer = () => {
   };
 };
 
-export class HelloWorldModel extends Observable {
+export class PushViewModel extends Observable {
+
+  private static APP_REGISTERED_FOR_NOTIFICATIONS = "APP_REGISTERED_FOR_NOTIFICATIONS";
 
   constructor() {
     super();
-    this.doRegisterPushHandlers();
+    if (applicationSettings.getBoolean(PushViewModel.APP_REGISTERED_FOR_NOTIFICATIONS, false)) {
+      this.doRegisterPushHandlers();
+    }
+  }
+
+  public doRequestConsent(): void {
+    confirm({
+      title: "We'd like to send notifications",
+      message: "Do you agree? Please do, we won't spam you. Promised.",
+      okButtonText: "Yep!",
+      cancelButtonText: "Nooo"
+    }).then(pushAllowed => {
+      if (pushAllowed) {
+        applicationSettings.setBoolean(PushViewModel.APP_REGISTERED_FOR_NOTIFICATIONS, true);
+        this.doRegisterPushHandlers();
+      }
+    });
   }
 
   public doGetCurrentPushToken(): void {
     firebase.getCurrentPushToken()
         .then(token => {
-          // may be null if not known yet
-          console.log("Current push token: " + token);
+          // may be null/undefined if not known yet
           alert({
             title: "Current Push Token",
-            message: (token === null ? "Not received yet" : token + ("\n\nSee the console log if you want to copy-paste it.")),
+            message: (!token ? "Not received yet (note that on iOS this does not work on a simulator)" : token + ("\n\nSee the console log if you want to copy-paste it.")),
             okButtonText: "OK, thx"
           });
         })
