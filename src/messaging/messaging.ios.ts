@@ -20,12 +20,17 @@ let _registerForRemoteNotificationsRanThisSession = false;
 let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
 let _messagingConnected: boolean = null;
 let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
+let _displayNotifications: boolean = true;
+let _showWhenInForeground: boolean = false;
 
 // Track whether or not registration for remote notifications was request.
 // This way we can suppress the "Allow notifications" consent popup until the listeners are passed in.
 const NOTIFICATIONS_REGISTRATION_KEY = "Firebase-RegisterForRemoteNotifications";
 
 export function initFirebaseMessaging(arg) {
+  _displayNotifications = arg.displayNotifications === undefined ? _displayNotifications : !!arg.displayNotifications;
+  _showWhenInForeground = arg.showWhenInForeground === undefined ? _showWhenInForeground : !!arg.showWhenInForeground;
+
   if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
     if (arg.onMessageReceivedCallback !== undefined) {
       addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
@@ -387,33 +392,35 @@ function _registerForRemoteNotifications() {
       }
     });
 
-    _userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback((unnotification, actionIdentifier?, inputText?) => {
-      // if the app is in the foreground then this method will receive the notification
-      // if the app is in the background, and user has responded to interactive notification, then this method will receive the notification
-      // if the app is in the background, and user views a notification, applicationDidReceiveRemoteNotificationFetchCompletionHandler will receive it
-      const userInfo = unnotification.request.content.userInfo;
-      const userInfoJSON = firebaseUtils.toJsObject(userInfo);
-      updateUserInfo(userInfoJSON);
+    if (_displayNotifications) {
+      _userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback((unnotification, actionIdentifier?, inputText?) => {
+        // if the app is in the foreground then this method will receive the notification
+        // if the app is in the background, and user has responded to interactive notification, then this method will receive the notification
+        // if the app is in the background, and user views a notification, applicationDidReceiveRemoteNotificationFetchCompletionHandler will receive it
+        const userInfo = unnotification.request.content.userInfo;
+        const userInfoJSON = firebaseUtils.toJsObject(userInfo);
+        updateUserInfo(userInfoJSON);
 
-      if (actionIdentifier) {
-        _pendingActionTakenNotifications.push({
-          actionIdentifier,
-          userInfoJSON,
-          inputText
-        });
-        if (_notificationActionTakenCallback) {
-          _processPendingActionTakenNotifications();
+        if (actionIdentifier) {
+          _pendingActionTakenNotifications.push({
+            actionIdentifier,
+            userInfoJSON,
+            inputText
+          });
+          if (_notificationActionTakenCallback) {
+            _processPendingActionTakenNotifications();
+          }
         }
-      }
 
-      userInfoJSON.foreground = true;
-      _pendingNotifications.push(userInfoJSON);
-      if (_receivedNotificationCallback) {
-        _processPendingNotifications();
-      }
-    });
+        userInfoJSON.foreground = true;
+        _pendingNotifications.push(userInfoJSON);
+        if (_receivedNotificationCallback) {
+          _processPendingNotifications();
+        }
+      });
 
-    curNotCenter.delegate = _userNotificationCenterDelegate;
+      curNotCenter.delegate = _userNotificationCenterDelegate;
+    }
 
     if (typeof (FIRMessaging) !== "undefined") {
       _firebaseRemoteMessageDelegate = FIRMessagingDelegateImpl.new().initWithCallback((appDataDictionary: NSDictionary<any, any>) => {
@@ -543,9 +550,10 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
     const userInfo = notification.request.content.userInfo;
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
 
-    if (userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // this is for FCM
-        userInfoJSON["showWhenInForeground"] === true || // this is for non-FCM,
-        (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // and this as well (so users can choose where to put it)
+    if ( _showWhenInForeground || // Default value, in case we always want to show when in foreground.
+      userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
+      userInfoJSON["showWhenInForeground"] === true || // ...this is for non-FCM...
+      (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // ...and this as well (so users can choose where to put it).
     ) {
       // don't invoke the callback here, since the app shouldn't fi. navigate to a new page unless the user pressed the notification
       completionHandler(UNNotificationPresentationOptions.Alert | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Badge);
