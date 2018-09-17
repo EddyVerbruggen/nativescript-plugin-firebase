@@ -11,5 +11,6 @@ Steps to update the `.aar` file:
 * Open the Gradle toolwindow
 * Run `firebase > Tasks > build > build`
 * The (release) `.aar` will be generated in `firebase/build/outputs/aar`
-* Copy that to the `platforms/android` folder, replacing the old `.aar`
+* Copy that to the `platforms/android` folder, replacing the old `.aar`. So start a Terminal in Android Studio, and run `cp firebase/build/outputs/aar/firebase-release.aar ../`.
+* Test the libb by removing the platforms/android folder of the demo project, rebuild, test, etc.
 * Commit and push the changes as usual

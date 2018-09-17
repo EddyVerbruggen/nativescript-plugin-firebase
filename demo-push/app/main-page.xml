@@ -23,12 +23,12 @@
             <Label row="2" text="Note that none of these functions work on the simulator. Use a real device!" textWrap="true" />
             <Button row="3" text="Are notifications enabled?" tap="{{ doGetAreNotificationsEnabled }}" class="button button-messaging"/>
             <Button row="4" text="Get current push token" tap="{{ doGetCurrentPushToken }}" class="button button-messaging"/>
-            <iOS>
-              <Button row="5" text="Register for interactive push" tap="{{ doRegisterForInteractivePush }}" class="button button-messaging"/>
-              <Button row="6" text="Unregister for push" tap="{{ doUnregisterForPushNotifications }}" class="button button-messaging"/>
-              <Label row="7" text="After unregistering you can register again with this function:" textWrap="true" />
-              <Button row="8" text="Register for push again" tap="{{ doRegisterForPushNotificationsAgain }}" class="button button-messaging"/>
-            </iOS>
+
+            <Button row="5" text="Register for interactive push (iOS)" tap="{{ doRegisterForInteractivePush }}" class="button button-messaging"/>
+
+            <Button row="6" text="Unregister for push" tap="{{ doUnregisterForPushNotifications }}" class="button button-messaging"/>
+            <Label row="7" text="After unregistering you can register again with this function:" textWrap="true" />
+            <Button row="8" text="Register for push again" tap="{{ doRegisterForPushNotificationsAgain }}" class="button button-messaging"/>
           </GridLayout>
         </ScrollView>
       </TabViewItem.view>

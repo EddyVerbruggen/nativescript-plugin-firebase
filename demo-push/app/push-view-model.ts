@@ -57,75 +57,76 @@ export class PushViewModel extends Observable {
   }
 
   public doRegisterForInteractivePush(): void {
-    if (platform.isIOS) {
-      const model = new messaging.PushNotificationModel();
-      model.iosSettings = new messaging.IosPushSettings();
-      model.iosSettings.badge = false;
-      model.iosSettings.alert = true;
-      model.iosSettings.interactiveSettings = new messaging.IosInteractivePushSettings();
-      model.iosSettings.interactiveSettings.actions = [
-        {
-          identifier: "OPEN_ACTION",
-          title: "Open the app (if closed)",
-          options: messaging.IosInteractiveNotificationActionOptions.foreground
-        },
-        {
-          identifier: "AUTH",
-          title: "Open the app, but only if device is not locked with a passcode",
-          options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.authenticationRequired
-        },
-        {
-          identifier: "INPUT_ACTION",
-          title: "Tap to reply without opening the app",
-          type: "input",
-          submitLabel: "Fire!",
-          placeholder: "Load the gun..."
-        },
-        {
-          identifier: "INPUT_ACTION",
-          title: "Tap to reply and open the app",
-          options: messaging.IosInteractiveNotificationActionOptions.foreground,
-          type: "input",
-          submitLabel: "OK, send it",
-          placeholder: "Type here, baby!"
-        },
-        {
-          identifier: "DELETE_ACTION",
-          title: "Delete without opening the app",
-          options: messaging.IosInteractiveNotificationActionOptions.destructive
-        }
-      ];
-
-      model.iosSettings.interactiveSettings.categories = [{
-        identifier: "GENERAL"
-      }];
-
-      model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message, inputText?: string) => {
-        console.log(`onNotificationActionTakenCallback fired! \n\r Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}`);
-
-        alert({
-          title: "Interactive push action",
-          message: `Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}` + (inputText ? `, \n\r Input text: ${inputText}` : ""),
-          okButtonText: "Nice!"
-        });
-      };
-
-      firebase.registerForInteractivePush(model);
-
-      console.log("Registered for interactive push");
-      alert({
-        title: "Registered for interactive push",
-        okButtonText: "Thx!"
-      });
-
-    } else {
-      console.log("Interactive push messaging is iOS-only!");
+    if (!platform.isIOS) {
+      console.log("##### Interactive push messaging is currently iOS-only!");
+      console.log("##### Also, please make sure you don't include the 'click_action' notification property when pusing to Android.");
     }
+
+    const model = new messaging.PushNotificationModel();
+    model.iosSettings = new messaging.IosPushSettings();
+    model.iosSettings.badge = false;
+    model.iosSettings.alert = true;
+    model.iosSettings.interactiveSettings = new messaging.IosInteractivePushSettings();
+    model.iosSettings.interactiveSettings.actions = [
+      {
+        identifier: "OPEN_ACTION",
+        title: "Open the app (if closed)",
+        options: messaging.IosInteractiveNotificationActionOptions.foreground
+      },
+      {
+        identifier: "AUTH",
+        title: "Open the app, but only if device is not locked with a passcode",
+        options: messaging.IosInteractiveNotificationActionOptions.foreground | messaging.IosInteractiveNotificationActionOptions.authenticationRequired
+      },
+      {
+        identifier: "INPUT_ACTION",
+        title: "Tap to reply without opening the app",
+        type: "input",
+        submitLabel: "Fire!",
+        placeholder: "Load the gun..."
+      },
+      {
+        identifier: "INPUT_ACTION",
+        title: "Tap to reply and open the app",
+        options: messaging.IosInteractiveNotificationActionOptions.foreground,
+        type: "input",
+        submitLabel: "OK, send it",
+        placeholder: "Type here, baby!"
+      },
+      {
+        identifier: "DELETE_ACTION",
+        title: "Delete without opening the app",
+        options: messaging.IosInteractiveNotificationActionOptions.destructive
+      }
+    ];
+
+    model.iosSettings.interactiveSettings.categories = [{
+      identifier: "GENERAL"
+    }];
+
+    model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message, inputText?: string) => {
+      console.log(`onNotificationActionTakenCallback fired! \n\r Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}`);
+
+      alert({
+        title: "Interactive push action",
+        message: `Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}` + (inputText ? `, \n\r Input text: ${inputText}` : ""),
+        okButtonText: "Nice!"
+      });
+    };
+
+    firebase.registerForInteractivePush(model);
+
+    console.log("Registered for interactive push");
+    alert({
+      title: "Registered for interactive push",
+      okButtonText: "Thx!"
+    });
   }
 
   // You would normally add these handlers in 'init', but if you want you can do it seperately as well.
   // The benefit being your user will not be confronted with the "Allow notifications" consent popup when 'init' runs.
   public doRegisterPushHandlers(): void {
+    // note that this will implicitly register for push notifications, so there's no need to call 'registerForPushNotifications'
     firebase.addOnPushTokenReceivedCallback(
         token => {
           // you can use this token to send to your own backend server,
@@ -137,7 +138,7 @@ export class PushViewModel extends Observable {
     );
     firebase.addOnMessageReceivedCallback(
         message => {
-          console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
+          console.log("Push message received in push-view-model: " + JSON.stringify(message, getCircularReplacer()));
 
           setTimeout(() => {
             alert({

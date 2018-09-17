@@ -2,7 +2,7 @@ export declare function initFirebaseMessaging(arg: any): void;
 
 export declare function addOnMessageReceivedCallback(callback: Function): Promise<{}>;
 
-export declare function getCurrentPushToken(): Promise<{}>;
+export declare function getCurrentPushToken(): Promise<string>;
 
 export declare function registerForPushNotifications(): Promise<void>;
 

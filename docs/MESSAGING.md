@@ -5,32 +5,14 @@ Version 3.3.0 of this plugin added FCM support (which is the successor of GCM).
 
 Although using push messages in your Firebase app is really easy setting it up is not. Traditionally, especially for iOS.
 
+If you didn't choose this feature during installation you can add `"messaging": true` to `<app-root>/firebase.nativescript.json` and remove the `<app-root>/platforms` folder.
+
 ### Android
-If you didn't choose this feature during installation you can uncomment `firebase-messaging` in [include.gradle](../platforms/android/include.gradle)
+No additional setup required.
 
-You will not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
-
-Add the following services in the `app/App_Resources/Android/AndroidManifest.xml` to enable advanced FCM messaging:
-```
-<manifest ... >
-    <application ... >
-        ...
-        <service android:name="org.nativescript.plugins.firebase.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-        <service android:name="org.nativescript.plugins.firebase.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-    </application>
-</manifest>
-```
+There is a little quirk: you will currently not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
 
 ### iOS
-If you didn't choose this feature during installation you can run the "post install" script again (see the main readme) to add messaging support.
 
 #### Enable push support in Xcode
 
@@ -279,6 +261,8 @@ The payload to trigger the notification in the screenshots above is:
   "to": "DEVICE_PUSH_KEY>"
 }
 ```
+
+> *IMPORTANT* Use the `click_action` only for push notifications on iOS. When such a message is tapped in the Android notification center the app WON'T be opened. This will probably be fixed in the future.
 
 ### (iOS) showing a notification while the app is in the foreground
 Add the `showWhenInForeground` flag to your payload:

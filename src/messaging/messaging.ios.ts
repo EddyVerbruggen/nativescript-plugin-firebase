@@ -53,7 +53,7 @@ export function addOnMessageReceivedCallback(callback: Function) {
   });
 }
 
-export function getCurrentPushToken() {
+export function getCurrentPushToken(): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       if (typeof (FIRMessaging) !== "undefined") {
@@ -88,6 +88,7 @@ export function unregisterForPushNotifications(): Promise<void> {
       // Note that we're not removing this key, because upon restart it would re-register the device.
       // I mean, if the dev uses 'unregisterForPushNotifications', he will likely also want to explicitly use 'registerForPushNotifications'.
 
+      // TODO toch de key maar verwijderen?
       // applicationSettings.remove(NOTIFICATIONS_REGISTRATION_KEY);
 
       resolve();

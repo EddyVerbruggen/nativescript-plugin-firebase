@@ -5,6 +5,7 @@ import * as application from "tns-core-modules/application/application";
 declare const android, com, org: any;
 
 let _launchNotification = null;
+let _senderId = 0;
 
 export function initFirebaseMessaging(arg) {
   if (arg.onMessageReceivedCallback !== undefined) {
@@ -17,6 +18,14 @@ export function initFirebaseMessaging(arg) {
 
 export function onAppModuleLaunchEvent(args: any) {
   org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
+
+  const senderIdResourceId = application.android.context.getResources().getIdentifier("gcm_defaultSenderId", "string", application.android.context.getPackageName());
+  if (senderIdResourceId === 0) {
+    console.log("####################### Seems like you did not include 'google-services.json' in your project! Firebase Messaging will not work properly. #######################");
+    return;
+  }
+
+  _senderId = application.android.context.getString(senderIdResourceId);
 
   const intent = args.android;
   const isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();
@@ -51,17 +60,24 @@ export function onAppModuleLaunchEvent(args: any) {
   }
 }
 
-export function getCurrentPushToken() {
+export function getCurrentPushToken(): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (com.google.firebase.messaging || com.google.firebase.iid) === "undefined") {
+      if (typeof (com.google.firebase.messaging || com.google.firebase.iid) === "undefined" || _senderId === 0) {
         reject("Uncomment firebase-messaging in the plugin's include.gradle first");
         return;
       }
 
-      resolve(com.google.firebase.iid.FirebaseInstanceId.getInstance().getToken());
+      org.nativescript.plugins.firebase.FirebasePlugin.getCurrentPushToken(
+          _senderId,
+          new org.nativescript.plugins.firebase.FirebasePluginListener({
+            success: token => resolve(token),
+            error: err => reject(err)
+          })
+      );
+
     } catch (ex) {
-      console.log("Error in firebase.getCurrentPushToken: " + ex);
+      console.log("Error in messaging.getCurrentPushToken: " + ex);
       reject(ex);
     }
   });
@@ -73,11 +89,9 @@ export function addOnMessageReceivedCallback(callback) {
       firebase._receivedNotificationCallback = callback;
 
       org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
-        new org.nativescript.plugins.firebase.FirebasePluginListener({
-          success: notification => {
-            callback(JSON.parse(notification));
-          }
-        })
+          new org.nativescript.plugins.firebase.FirebasePluginListener({
+            success: notification => callback(JSON.parse(notification))
+          })
       );
 
       // if the app was launched from a notification, process it now
@@ -88,7 +102,7 @@ export function addOnMessageReceivedCallback(callback) {
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.addOnMessageReceivedCallback: " + ex);
+      console.log("Error in messaging.addOnMessageReceivedCallback: " + ex);
       reject(ex);
     }
   });
@@ -98,30 +112,53 @@ export function addOnPushTokenReceivedCallback(callback) {
   return new Promise((resolve, reject) => {
     try {
       org.nativescript.plugins.firebase.FirebasePlugin.setOnPushTokenReceivedCallback(
-        new org.nativescript.plugins.firebase.FirebasePluginListener({
-          success: token => {
-            callback(token);
-          },
-          error: err => {
-            console.log("addOnPushTokenReceivedCallback error: " + err);
-          }
-        })
+          new org.nativescript.plugins.firebase.FirebasePluginListener({
+            success: token => callback(token),
+            error: err => console.log("addOnPushTokenReceivedCallback error: " + err)
+          })
       );
 
       resolve();
     } catch (ex) {
-      console.log("Error in firebase.addOnPushTokenReceivedCallback: " + ex);
+      console.log("Error in messaging.addOnPushTokenReceivedCallback: " + ex);
       reject(ex);
     }
   });
 }
 
 export function registerForPushNotifications(): Promise<void> {
-  return Promise.reject("Not supported on Android");
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof (com.google.firebase.messaging) === "undefined" || _senderId === 0) {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
+      org.nativescript.plugins.firebase.FirebasePlugin.registerForPushNotifications(_senderId);
+
+    } catch (ex) {
+      console.log("Error in messaging.registerForPushNotifications: " + ex);
+      reject(ex);
+    }
+  });
 }
 
 export function unregisterForPushNotifications(): Promise<void> {
-  return Promise.reject("Not supported on Android");
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof (com.google.firebase.messaging) === "undefined") {
+        reject("Uncomment firebase-messaging in the plugin's include.gradle first");
+        return;
+      }
+
+      org.nativescript.plugins.firebase.FirebasePlugin.unregisterForPushNotifications(_senderId);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in messaging.unregisterForPushNotifications: " + ex);
+      reject(ex);
+    }
+  });
 }
 
 export function subscribeToTopic(topicName) {
@@ -141,7 +178,7 @@ export function subscribeToTopic(topicName) {
           .subscribeToTopic(topicName)
           .addOnCompleteListener(onCompleteListener);
     } catch (ex) {
-      console.log("Error in firebase.subscribeToTopic: " + ex);
+      console.log("Error in messaging.subscribeToTopic: " + ex);
       reject(ex);
     }
   });
@@ -164,7 +201,7 @@ export function unsubscribeFromTopic(topicName) {
           .unsubscribeFromTopic(topicName)
           .addOnCompleteListener(onCompleteListener);
     } catch (ex) {
-      console.log("Error in firebase.unsubscribeFromTopic: " + ex);
+      console.log("Error in messaging.unsubscribeFromTopic: " + ex);
       reject(ex);
     }
   });
@@ -174,7 +211,7 @@ export function areNotificationsEnabled() {
   const androidSdkVersion = android.os.Build.VERSION.SDK_INT;
 
   if (androidSdkVersion >= 24) { // android.os.Build.VERSION_CODES.N
-    return android.support.v4.app.NotificationManagerCompat.from(application.android.currentContext).areNotificationsEnabled();
+    return android.support.v4.app.NotificationManagerCompat.from(application.android.context).areNotificationsEnabled();
   } else {
     console.log("NotificationManagerCompat.areNotificationsEnabled() is not supported in Android SDK VERSION " + androidSdkVersion);
     return true;

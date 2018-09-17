@@ -3052,7 +3052,6 @@ function promptQuestionsResult(result) {
     writeBuildscriptHook(isSelected(result.crashlytics));
   }
 
-  // TODO figure out what we need for externalPushClientOnly==true.. but this is prolly ok:
   if (usingAndroid) {
     writeGradleFile(result);
     writeGoogleServiceCopyHook();
@@ -3408,7 +3407,7 @@ dependencies {
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.3"
 
     // Firebase Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.0"
+    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.0"
 
     // Cloud Storage
     ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.1"

@@ -50,16 +50,6 @@
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-
-      <!-- For Firebase Dynamic Links -->
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:host="www.coolapp.com" android:scheme="http"/>
-        <data android:host="www.coolapp.com" android:scheme="https"/>
-      </intent-filter>
-
 		</activity>
 		<activity android:name="com.tns.ErrorReportActivity"/>
 	</application>
