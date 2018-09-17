@@ -110,6 +110,34 @@ Similarly to the message callback you can either wire this through `init` or as 
   );
 ```
 
+### Disable automatic notification creation
+
+By default, this plugin will display a notification every time it receives one. If you want to disable this
+behaviour and handle the notifications yourself on the `onMessageReceivedCallback`, you need to set the
+`displayNotifications` option to `false`:
+
+```js
+firebase.init({
+  displayNotifications: false,
+});
+```
+
+You can display or schedule notifications yourself using the plugin [`nativescript-local-notifications`](https://github.com/EddyVerbruggen/nativescript-local-notifications).
+
+This might be helpful too if you or some other plugin you use is already setting the current notification center
+`delegate` property, as in that case adding another plugin that does that would result in a conflict.
+
+### Always show notifications when the application is in foreground
+
+If you always want to display notifications while the application is in foreground withouth sending additional
+parameters/data when sending the push notification, you need to set the `showWhenInForeground` option to `true`:
+
+```js
+firebase.init({
+  showWhenInForeground: true,
+});
+```
+
 ### Send messages to Topics
 Based on the publish/subscribe model, FCM topic messaging allows you to send a message to multiple devices that have opted in to a particular topic. You compose topic messages as needed, and FCM handles routing and delivering the message reliably to the right devices.
 
