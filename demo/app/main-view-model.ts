@@ -534,8 +534,8 @@ export class HelloWorldModel extends Observable {
       testing: true,
       // Android automatically adds the connected device as test device with testing:true, iOS does not
       iosTestDeviceIds: [
-        "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
-        "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
+        "fee4cf319a242eab4701543e4c16db89c722731f",  // Eddy's iPad Pro
+        "a4cbb499e279054b55c206528f8510ff7fbf20c8",  // Eddy's iPhone X
       ],
       keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
     }).then(

@@ -506,31 +506,12 @@ firebase.admob.showBanner = arg => {
 
       view.addSubview(firebase.admob.adView);
 
-      // support rotation events
-      // tear down first if this had been called already to avoid multiple event bindings
-      application.off(application.orientationChangedEvent, firebase.admob.orientationHandler);
-      application.on(application.orientationChangedEvent, firebase.admob.orientationHandler);
-
       resolve();
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
       reject(ex);
     }
   });
-};
-
-firebase.admob.orientationHandler = data => {
-  if (firebase.admob.adView !== null) {
-    firebase.admob.hideBanner().then(res => {
-      try {
-        firebase.admob.showBanner(firebase.admob.bannerOptions || firebase.admob.defaults);
-      } catch (err) {
-        console.log("Error in orientationHandler - firebase.admob.showBanner: " + err);
-      }
-    }, err => {
-      console.log("Error in orientationHandler - firebase.admob.hideBanner: " + err);
-    });
-  }
 };
 
 firebase.admob.showInterstitial = arg => {
