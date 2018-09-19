@@ -5,6 +5,10 @@
 //	compile 'com.android.support:recyclerview-v7:+'
 //}
 
+//project.ext {
+//  googlePlayServicesVersion = "15.0.1"
+//}
+
 android {
   defaultConfig {
     generatedDensities = []

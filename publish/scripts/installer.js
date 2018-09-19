@@ -573,8 +573,8 @@ repositories {
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
 def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "15.0.1"
 
-if (VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.1')) {
-    throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.1 (currently set to $googlePlayServicesVersion)");
+if (VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.+')) {
+    throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 / 15.0.+ (currently set to $googlePlayServicesVersion)");
 }
 
 dependencies {
