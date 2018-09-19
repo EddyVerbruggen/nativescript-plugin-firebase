@@ -19,7 +19,8 @@
 * [Firestore](docs/FIRESTORE.md)
 * [Authentication](docs/AUTHENTICATION.md)
 * [Remote Config](docs/REMOTECONFIG.md)
-* [Cloud Messaging](docs/MESSAGING.md)
+* [Firebase Cloud Messaging](docs/MESSAGING.md)
+* [Non-Firebase Push Messaging](docs/NON_FIREBASE_MESSAGING.md) 🆕
 * [Storage](docs/STORAGE.md)
 * [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
 * [Analytics](docs/ANALYTICS.md)
@@ -52,6 +53,8 @@ tns plugin add nativescript-plugin-firebase
 
 This will launch an install script which will guide you through installing additional components.
 Check the doc links above to see what's what. You can always change your choices later.
+
+> Want to use this plugin with an *external push notification provider* and **not** use any Firebase feature? Just answer 'y' to the first question to skip most of them, and️ [hop on over to the Push Notification](docs/NON_FIREBASE_MESSAGING.md).
 
 > Using [NativeScript SideKick](https://www.nativescript.org/nativescript-sidekick)? Then the aforementioned install script
 will not (be able to) run. In that case, running the app for Android will result in [this issue](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/829#issuecomment-409870671).

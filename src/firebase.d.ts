@@ -75,10 +75,34 @@ export enum ServerValue {
   TIMESTAMP
 }
 
+export interface MessagingOptions {
+  /**
+   * For Messaging, either pass in this callback function here, or use addOnMessageReceivedCallback.
+   */
+  onPushTokenReceivedCallback?: (token: string) => void;
+
+  /**
+   * For Messaging, either pass in this callback function here, or use addOnPushTokenReceivedCallback.
+   */
+  onMessageReceivedCallback?: (message: Message) => void;
+
+  /**
+   * For Messaging (Push Notifications). Whether you want this plugin to automatically display the notifications or just notify the callback.
+   * Currently used on iOS only. Default true.
+   */
+  showNotifications: boolean;
+
+  /**
+   * For Messaging (Push Notifications). Whether you want this plugin to always handle the notifications when the app is in foreground.
+   * Currently used on iOS only. Default false.
+   */
+  showNotificationsWhenInForeground: boolean;
+}
+
 /**
  * The options object passed into the init function.
  */
-export interface InitOptions {
+export interface InitOptions extends MessagingOptions {
   /**
    * Allow the app to send analytics data to Firebase.
    * Can also be set later with analytics.setAnalyticsCollectionEnabled.
@@ -106,26 +130,6 @@ export interface InitOptions {
    * Can be found in the firebase console.
    */
   storageBucket?: string;
-
-  /**
-   * For FCM either pass in this callback function here, or use addOnMessageReceivedCallback.
-   */
-  onPushTokenReceivedCallback?: (data: string) => void;
-
-  /**
-   * For FCM either pass in this callback function here, or use addOnPushTokenReceivedCallback.
-   */
-  onMessageReceivedCallback?: (data: Message) => void;
-
-  /**
-   * For Messaging (Push Notifications). Whether you want this plugin to automatically display the notifications or just notify the callback.
-   */
-  showNotifications: boolean;
-
-  /**
-   * For Messaging (Push Notifications). Whether you want this plugin to always handle the notifications when the app is in foreground.
-   */
-  showNotificationsWhenInForeground: boolean;
 
   /**
    * Get notified when a dynamic link was used to launch the app. Alternatively use addOnDynamicLinkReceivedCallback.

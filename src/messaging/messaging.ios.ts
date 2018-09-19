@@ -9,6 +9,7 @@ import {
   IosInteractiveNotificationCategory,
   IosInteractiveNotificationType
 } from "./messaging";
+import { MessagingOptions } from "../firebase";
 
 let _notificationActionTakenCallback: Function;
 let _pendingNotifications: Array<any> = [];
@@ -27,16 +28,19 @@ let _showNotificationsWhenInForeground: boolean = false;
 // This way we can suppress the "Allow notifications" consent popup until the listeners are passed in.
 const NOTIFICATIONS_REGISTRATION_KEY = "Firebase-RegisterForRemoteNotifications";
 
-export function initFirebaseMessaging(arg) {
-  _showNotifications = arg.showNotifications === undefined ? _showNotifications : !!arg.showNotifications;
-  _showNotificationsWhenInForeground = arg.showNotificationsWhenInForeground === undefined ? _showNotificationsWhenInForeground : !!arg.showNotificationsWhenInForeground;
+export function initFirebaseMessaging(options) {
+  if (!options) {
+    return;
+  }
+  _showNotifications = options.showNotifications === undefined ? _showNotifications : !!options.showNotifications;
+  _showNotificationsWhenInForeground = options.showNotificationsWhenInForeground === undefined ? _showNotificationsWhenInForeground : !!options.showNotificationsWhenInForeground;
 
-  if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
-    if (arg.onMessageReceivedCallback !== undefined) {
-      addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+  if (options.onMessageReceivedCallback !== undefined || options.onPushTokenReceivedCallback !== undefined) {
+    if (options.onMessageReceivedCallback !== undefined) {
+      addOnMessageReceivedCallback(options.onMessageReceivedCallback);
     }
-    if (arg.onPushTokenReceivedCallback !== undefined) {
-      addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
+    if (options.onPushTokenReceivedCallback !== undefined) {
+      addOnPushTokenReceivedCallback(options.onPushTokenReceivedCallback);
     }
   }
 }
@@ -73,9 +77,10 @@ export function getCurrentPushToken(): Promise<string> {
   });
 }
 
-export function registerForPushNotifications(): Promise<void> {
+export function registerForPushNotifications(options?: MessagingOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
+      initFirebaseMessaging(options);
       _registerForRemoteNotificationsRanThisSession = false;
       _registerForRemoteNotifications();
       resolve();
@@ -167,7 +172,7 @@ export function addBackgroundRemoteNotificationHandler(appDelegate) {
   };
 }
 
-export function registerForInteractivePush(model?: PushNotificationModel) {
+export function registerForInteractivePush(model?: PushNotificationModel): void {
   let nativeActions: Array<UNNotificationAction> = [];
 
   model.iosSettings.interactiveSettings.actions.forEach(((action: IosInteractiveNotificationAction) => {

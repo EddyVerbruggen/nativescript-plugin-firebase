@@ -1,6 +1,5 @@
 import { Observable } from "tns-core-modules/data/observable";
-import * as firebase from "nativescript-plugin-firebase";
-import { messaging } from "nativescript-plugin-firebase/messaging";
+import { messaging, Message } from "nativescript-plugin-firebase/messaging";
 import { alert, confirm } from "tns-core-modules/ui/dialogs";
 import * as platform from "tns-core-modules/platform";
 import * as applicationSettings from "tns-core-modules/application-settings";
@@ -38,13 +37,13 @@ export class PushViewModel extends Observable {
     }).then(pushAllowed => {
       if (pushAllowed) {
         applicationSettings.setBoolean(PushViewModel.APP_REGISTERED_FOR_NOTIFICATIONS, true);
-        this.doRegisterPushHandlers();
+        this.doRegisterForPushNotifications();
       }
     });
   }
 
   public doGetCurrentPushToken(): void {
-    firebase.getCurrentPushToken()
+    messaging.getCurrentPushToken()
         .then(token => {
           // may be null/undefined if not known yet
           alert({
@@ -60,6 +59,7 @@ export class PushViewModel extends Observable {
     if (!platform.isIOS) {
       console.log("##### Interactive push messaging is currently iOS-only!");
       console.log("##### Also, please make sure you don't include the 'click_action' notification property when pusing to Android.");
+      return;
     }
 
     const model = new messaging.PushNotificationModel();
@@ -104,7 +104,7 @@ export class PushViewModel extends Observable {
       identifier: "GENERAL"
     }];
 
-    model.onNotificationActionTakenCallback = (actionIdentifier: string, message: firebase.Message, inputText?: string) => {
+    model.onNotificationActionTakenCallback = (actionIdentifier: string, message: Message, inputText?: string) => {
       console.log(`onNotificationActionTakenCallback fired! \n\r Message: ${JSON.stringify(message)}, \n\r Action taken: ${actionIdentifier}`);
 
       alert({
@@ -114,7 +114,7 @@ export class PushViewModel extends Observable {
       });
     };
 
-    firebase.registerForInteractivePush(model);
+    messaging.registerForInteractivePush(model);
 
     console.log("Registered for interactive push");
     alert({
@@ -123,11 +123,11 @@ export class PushViewModel extends Observable {
     });
   }
 
-  // You would normally add these handlers in 'init', but if you want you can do it seperately as well.
+  // You could add these handlers in 'init', but if you want you can do it seperately as well.
   // The benefit being your user will not be confronted with the "Allow notifications" consent popup when 'init' runs.
   public doRegisterPushHandlers(): void {
     // note that this will implicitly register for push notifications, so there's no need to call 'registerForPushNotifications'
-    firebase.addOnPushTokenReceivedCallback(
+    messaging.addOnPushTokenReceivedCallback(
         token => {
           // you can use this token to send to your own backend server,
           // so you can send notifications to this specific device
@@ -136,7 +136,7 @@ export class PushViewModel extends Observable {
           // pasteboard.setValueForPasteboardType(token, kUTTypePlainText);
         }
     );
-    firebase.addOnMessageReceivedCallback(
+    messaging.addOnMessageReceivedCallback(
         message => {
           console.log("Push message received in push-view-model: " + JSON.stringify(message, getCircularReplacer()));
 
@@ -156,7 +156,7 @@ export class PushViewModel extends Observable {
   }
 
   public doUnregisterForPushNotifications(): void {
-    firebase.unregisterForPushNotifications().then(
+    messaging.unregisterForPushNotifications().then(
         () => {
           alert({
             title: "Unregistered",
@@ -166,19 +166,34 @@ export class PushViewModel extends Observable {
         });
   }
 
-  public doRegisterForPushNotificationsAgain(): void {
-    firebase.registerForPushNotifications().then(
-        () => {
+  public doRegisterForPushNotifications(): void {
+    messaging.registerForPushNotifications({
+      onPushTokenReceivedCallback: (token: string): void => {
+        console.log("Firebase plugin received a push token: " + token);
+      },
+
+      onMessageReceivedCallback: (message: Message) => {
+        console.log("Push message received in push-view-model: " + JSON.stringify(message, getCircularReplacer()));
+
+        setTimeout(() => {
           alert({
-            title: "Registered again",
-            message: "You should now use the new push token which was received in 'addOnPushTokenReceivedCallback, or call 'getCurrentPushToken'.",
-            okButtonText: "Got it."
+            title: "Push message!",
+            message: (message !== undefined && message.title !== undefined ? message.title : ""),
+            okButtonText: "Sw33t"
           });
-        });
+        }, 500);
+      },
+
+      // Whether you want this plugin to automatically display the notifications or just notify the callback. Currently used on iOS only. Default true.
+      showNotifications: true,
+
+      // Whether you want this plugin to always handle the notifications when the app is in foreground. Currently used on iOS only. Default false.
+      showNotificationsWhenInForeground: true
+    }).then(() => console.log("Registered for push"));
   }
 
   public doSubscribeToTopic(): void {
-    firebase.subscribeToTopic("demo").then(
+    messaging.subscribeToTopic("demo").then(
         () => {
           alert({
             title: "Subscribed",
@@ -197,7 +212,7 @@ export class PushViewModel extends Observable {
   }
 
   public doUnsubscribeFromTopic(): void {
-    firebase.unsubscribeFromTopic("demo").then(
+    messaging.unsubscribeFromTopic("demo").then(
         () => {
           alert({
             title: "Unsubscribed",
@@ -218,7 +233,7 @@ export class PushViewModel extends Observable {
   public doGetAreNotificationsEnabled(): void {
     alert({
       title: "AreNotificationsEnabled",
-      message: "" + firebase.areNotificationsEnabled(),
+      message: "" + messaging.areNotificationsEnabled(),
       okButtonText: "Okay, very interesting"
     });
   }

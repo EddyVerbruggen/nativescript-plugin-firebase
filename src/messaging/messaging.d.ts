@@ -1,16 +1,18 @@
-export declare function initFirebaseMessaging(arg: any): void;
+import { Message, MessagingOptions } from "../firebase";
 
-export declare function addOnMessageReceivedCallback(callback: Function): Promise<{}>;
+export declare function initFirebaseMessaging(options?: MessagingOptions): void;
+
+export declare function addOnMessageReceivedCallback(callback: (message: Message) => void): Promise<{}>;
 
 export declare function getCurrentPushToken(): Promise<string>;
 
-export declare function registerForPushNotifications(): Promise<void>;
+export declare function registerForPushNotifications(options?: MessagingOptions): Promise<void>;
 
 export declare function unregisterForPushNotifications(): Promise<void>;
 
 export declare function handleRemoteNotification(app: any, userInfo: any): void;
 
-export declare function addOnPushTokenReceivedCallback(callback: any): Promise<{}>;
+export declare function addOnPushTokenReceivedCallback(callback: (token: string) => void): Promise<{}>;
 
 export declare function addBackgroundRemoteNotificationHandler(appDelegate: any): void;
 

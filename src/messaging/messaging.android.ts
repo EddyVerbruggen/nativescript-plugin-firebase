@@ -1,18 +1,23 @@
 import { firebase } from "../firebase-common";
 import * as appModule from "tns-core-modules/application";
 import * as application from "tns-core-modules/application/application";
+import { PushNotificationModel } from "./messaging.ios";
+import { MessagingOptions } from "../firebase";
 
 declare const android, com, org: any;
 
 let _launchNotification = null;
 let _senderId = 0;
 
-export function initFirebaseMessaging(arg) {
-  if (arg.onMessageReceivedCallback !== undefined) {
-    addOnMessageReceivedCallback(arg.onMessageReceivedCallback);
+export function initFirebaseMessaging(options?: MessagingOptions) {
+  if (!options) {
+    return;
   }
-  if (arg.onPushTokenReceivedCallback !== undefined) {
-    addOnPushTokenReceivedCallback(arg.onPushTokenReceivedCallback);
+  if (options.onMessageReceivedCallback !== undefined) {
+    addOnMessageReceivedCallback(options.onMessageReceivedCallback);
+  }
+  if (options.onPushTokenReceivedCallback !== undefined) {
+    addOnPushTokenReceivedCallback(options.onPushTokenReceivedCallback);
   }
 }
 
@@ -58,6 +63,10 @@ export function onAppModuleLaunchEvent(args: any) {
       }
     }
   }
+}
+
+export function registerForInteractivePush(model?: PushNotificationModel): void {
+  console.log("'registerForInteractivePush' is not currently implemented on Android");
 }
 
 export function getCurrentPushToken(): Promise<string> {
@@ -126,7 +135,7 @@ export function addOnPushTokenReceivedCallback(callback) {
   });
 }
 
-export function registerForPushNotifications(): Promise<void> {
+export function registerForPushNotifications(options?: MessagingOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (typeof (com.google.firebase.messaging) === "undefined" || _senderId === 0) {
@@ -134,8 +143,8 @@ export function registerForPushNotifications(): Promise<void> {
         return;
       }
 
+      initFirebaseMessaging(options);
       org.nativescript.plugins.firebase.FirebasePlugin.registerForPushNotifications(_senderId);
-
     } catch (ex) {
       console.log("Error in messaging.registerForPushNotifications: " + ex);
       reject(ex);
