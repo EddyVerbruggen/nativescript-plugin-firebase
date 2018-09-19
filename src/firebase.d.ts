@@ -118,14 +118,14 @@ export interface InitOptions {
   onMessageReceivedCallback?: (data: Message) => void;
 
   /**
-   * For FCM. Whether you want this plugin to automatically display the notifications or just notify the callback.
+   * For Messaging (Push Notifications). Whether you want this plugin to automatically display the notifications or just notify the callback.
    */
-  displayNotifications: boolean;
+  showNotifications: boolean;
 
   /**
-   * For FCM. Whether you want this plugin to always handle the notifications when the app is in foreground.
+   * For Messaging (Push Notifications). Whether you want this plugin to always handle the notifications when the app is in foreground.
    */
-  showWhenInForeground: boolean;
+  showNotificationsWhenInForeground: boolean;
 
   /**
    * Get notified when a dynamic link was used to launch the app. Alternatively use addOnDynamicLinkReceivedCallback.

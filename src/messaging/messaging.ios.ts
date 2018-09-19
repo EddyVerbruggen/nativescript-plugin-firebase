@@ -20,16 +20,16 @@ let _registerForRemoteNotificationsRanThisSession = false;
 let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
 let _messagingConnected: boolean = null;
 let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
-let _displayNotifications: boolean = true;
-let _showWhenInForeground: boolean = false;
+let _showNotifications: boolean = true;
+let _showNotificationsWhenInForeground: boolean = false;
 
 // Track whether or not registration for remote notifications was request.
 // This way we can suppress the "Allow notifications" consent popup until the listeners are passed in.
 const NOTIFICATIONS_REGISTRATION_KEY = "Firebase-RegisterForRemoteNotifications";
 
 export function initFirebaseMessaging(arg) {
-  _displayNotifications = arg.displayNotifications === undefined ? _displayNotifications : !!arg.displayNotifications;
-  _showWhenInForeground = arg.showWhenInForeground === undefined ? _showWhenInForeground : !!arg.showWhenInForeground;
+  _showNotifications = arg.showNotifications === undefined ? _showNotifications : !!arg.showNotifications;
+  _showNotificationsWhenInForeground = arg.showNotificationsWhenInForeground === undefined ? _showNotificationsWhenInForeground : !!arg.showNotificationsWhenInForeground;
 
   if (arg.onMessageReceivedCallback !== undefined || arg.onPushTokenReceivedCallback !== undefined) {
     if (arg.onMessageReceivedCallback !== undefined) {
@@ -393,7 +393,7 @@ function _registerForRemoteNotifications() {
       }
     });
 
-    if (_displayNotifications) {
+    if (_showNotifications) {
       _userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback((unnotification, actionIdentifier?, inputText?) => {
         // if the app is in the foreground then this method will receive the notification
         // if the app is in the background, and user has responded to interactive notification, then this method will receive the notification
@@ -551,7 +551,7 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
     const userInfo = notification.request.content.userInfo;
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
 
-    if ( _showWhenInForeground || // Default value, in case we always want to show when in foreground.
+    if (_showNotificationsWhenInForeground || // Default value, in case we always want to show when in foreground.
       userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
       userInfoJSON["showWhenInForeground"] === true || // ...this is for non-FCM...
       (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // ...and this as well (so users can choose where to put it).

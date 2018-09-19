@@ -114,11 +114,11 @@ Similarly to the message callback you can either wire this through `init` or as 
 
 By default, this plugin will display a notification every time it receives one. If you want to disable this
 behaviour and handle the notifications yourself on the `onMessageReceivedCallback`, you need to set the
-`displayNotifications` option to `false`:
+`showNotifications` option to `false`:
 
 ```js
 firebase.init({
-  displayNotifications: false,
+  showNotifications: false,
 });
 ```
 
@@ -130,11 +130,11 @@ This might be helpful too if you or some other plugin you use is already setting
 ### Always show notifications when the application is in foreground
 
 If you always want to display notifications while the application is in foreground withouth sending additional
-parameters/data when sending the push notification, you need to set the `showWhenInForeground` option to `true`:
+parameters/data when sending the push notification, you need to set the `showNotificationsWhenInForeground` option to `true`:
 
 ```js
 firebase.init({
-  showWhenInForeground: true,
+  showNotificationsWhenInForeground: true,
 });
 ```
 

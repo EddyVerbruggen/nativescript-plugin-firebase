@@ -34,7 +34,7 @@ export class PushViewModel extends Observable {
       title: "We'd like to send notifications",
       message: "Do you agree? Please do, we won't spam you. Promised.",
       okButtonText: "Yep!",
-      cancelButtonText: "Nooo"
+      cancelButtonText: "Maybe later"
     }).then(pushAllowed => {
       if (pushAllowed) {
         applicationSettings.setBoolean(PushViewModel.APP_REGISTERED_FOR_NOTIFICATIONS, true);
