@@ -208,4 +208,4 @@ For testing notifications on iOS the easiest tool I found is [Pusher](https://gi
 ### Android
 For testing on Android I prefer using [Postman](https://www.getpostman.com/) to *POST* to the FCM REST API. Look at which headers you need to set, and how the payload needs to be added:
 
-<img src="images/messaging/postman-headers.png" width="450px" alt="Postman headers"/>  <img src="images/messaging/postman-payload.png" width="450px" alt="Postman body"/>
+<img src="images/messaging/postman-headers.png" width="440px" alt="Postman headers"/>  <img src="images/messaging/postman-payload.png" width="440px" alt="Postman body"/>
