@@ -588,7 +588,7 @@ dependencies {
     compile "com.google.firebase:firebase-core:16.0.3"
 
     // for reading google-services.json and configuration
-    compile "com.google.android.gms:play-services-base:15.0.1"
+    compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
     ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.3"
