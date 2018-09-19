@@ -171,27 +171,25 @@ model.onNotificationActionTakenCallback = (actionIdentifier: string, message: Me
 messaging.registerForInteractivePush(model);
 ```
 
-To send an interactive push, add the `"click_action"` property to the notification, with a value corresponding to the `category` defined in the model you've registered in the app.
+To send an interactive push, add the `"category"` property to the notification, with a value corresponding to the `category` defined in the model you've registered in the app.
 The payload to trigger the notification in the screenshots above is:
 
 ```json
 {
-  "notification": {
-    "title": "I DEMAND YOUR ATTENTION",
-    "subtitle": "Just kidding, but not really",
-    "text": "Sorry to bother you I meant, please pick an option below..",
-    "click_action": "GENERAL",
-    "badge": "1",
+  "aps": {
+    "alert": {
+      "title": "Realtime Custom Push Notifications",
+      "subtitle": "Now with iOS 10 support!",
+      "body": "Add multimedia content to your notifications"
+    },
     "sound": "default",
-    "showWhenInForeground": true // this can go either here..
-  },
-  "showWhenInForeground": true, // .. or here
-  "content_available": false,
-  "data": {
-    "foo": "bar"
-  },
-  "priority": "High",
-  "to": "DEVICE_PUSH_KEY>"
+    "badge": 1,
+    "category": "GENERAL",
+    "showWhenInForeground": true,
+    "data": {
+      "foo": "bar"
+    }
+  }
 }
 ```
 
