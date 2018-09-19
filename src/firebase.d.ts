@@ -118,6 +118,16 @@ export interface InitOptions {
   onMessageReceivedCallback?: (data: Message) => void;
 
   /**
+   * For FCM. Whether you want this plugin to automatically display the notifications or just notify the callback.
+   */
+  displayNotifications: boolean;
+
+  /**
+   * For FCM. Whether you want this plugin to always handle the notifications when the app is in foreground.
+   */
+  showWhenInForeground: boolean;
+
+  /**
    * Get notified when a dynamic link was used to launch the app. Alternatively use addOnDynamicLinkReceivedCallback.
    * TODO iOS seems to return an object; not a string
    */
