@@ -269,7 +269,7 @@ firebase.init = arg => {
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
           appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
-      ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled || false);
+      ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
       if (typeof (com.google.firebase.database) !== "undefined" && typeof (com.google.firebase.database.ServerValue) !== "undefined") {
         firebase.ServerValue = {

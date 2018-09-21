@@ -377,7 +377,7 @@ export class HelloWorldModel extends Observable {
     firebase.init({
       // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
-      analyticsCollectionEnabled: true,
+      // analyticsCollectionEnabled: false, // default true
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
         if (data.loggedIn) {
@@ -451,11 +451,11 @@ export class HelloWorldModel extends Observable {
       key: "add_to_cart",
       parameters: [{ // optional
         key: "item_id",
-        value: "p7654"
+        value: "p7655"
       },
       {
         key: "item_name",
-        value: "abc"
+        value: "abcd"
       }]
     }).then(
       () => {
