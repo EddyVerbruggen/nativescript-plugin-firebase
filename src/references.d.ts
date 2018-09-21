@@ -31,3 +31,4 @@
 /// <reference path="./platforms/android/typings/firestore/android.d.ts" />
 /// <reference path="./platforms/android/typings/messaging/android.d.ts" />
 /// <reference path="./platforms/android/typings/storage/android.d.ts" />
+/// <reference path="./platforms/android/typings/functions/android.d.ts" />

@@ -2973,6 +2973,10 @@ function promptQuestions() {
     description: 'Are you using Firebase Storage? (y/n)',
     default: 'n'
   }, {
+    name: 'functions',
+    description: 'Are you using Firebase Cloud Functions? (y/n)',
+    default: 'n'
+  }, {
     name: 'facebook_auth',
     description: 'Are you using Firebase Facebook Authentication? (y/n)',
     default: 'n'
@@ -3156,8 +3160,11 @@ end`) + `
 # Firebase Cloud Messaging (FCM)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
-# Firebase Storage
+# Firebase Cloud Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
+
+# Firebase Cloud Functions
+` + (isSelected(result.functions) ? `` : `#`) + `pod 'Firebase/Functions'
 
 # AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
@@ -3411,6 +3418,9 @@ dependencies {
 
     // Cloud Storage
     ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.1"
+
+    // Cloud Functions
+    ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.0"
 
     // AdMob / Ads
     ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.1"
