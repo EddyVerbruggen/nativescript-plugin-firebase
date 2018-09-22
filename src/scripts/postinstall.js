@@ -2868,7 +2868,6 @@ function askExternalPushMessagingOnlyPrompt() {
     if (err) {
       return console.log(err);
     }
-    console.log(">> askExternalPushMessagingOnlyPrompt result: " + JSON.stringify(result));
     mergeConfig(result);
     askExternalPushMessagingOnlyPromptResult(result);
     askiOSPrompt();
@@ -3033,12 +3032,9 @@ function promptQuestions() {
         if (mlkitErr) {
           return console.log(mlkitErr);
         }
-        console.log("result: " + JSON.stringify(result));
-        console.log("mlkitResult: " + JSON.stringify(mlkitResult));
         for (var attrname in mlkitResult) {
           result[attrname] = mlkitResult[attrname];
         }
-        console.log("mergedResult result: " + JSON.stringify(result));
         mergeConfig(result);
         promptQuestionsResult(result);
         askSaveConfigPrompt();
