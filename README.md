@@ -69,9 +69,11 @@ You can reconfigure the plugin by going to the `node_modules/nativescript-plugin
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
 
 #### Using Vue?
-If you're using this template: [vue-cli-template](https://github.com/nativescript-vue/vue-cli-template), then copy `firebase.nativescript.json` to the `template` folder. You could also symlink it: `firebase.nativescript.json -> template/firebase.nativescript.json`.
+Please update your [NativeScript-Vue](https://github.com/nativescript-vue/vue-cli-template) template to 2.0 because it
+aligns perfectly with this plugin (because that template is now much more similar to a regular NativeScript project).
 
-And also, `require` the plugin before Vue.start runs (probably in `main.js`), but run `firebase.init()` afterwards (although it may work before). You could wrap it in a timeout to make sure.
+If you want a demo using Vue and Firestore, then [check out this project](https://github.com/EddyVerbruggen/footplr),
+if you want one with Realtime DB, [check out this one](https://github.com/jlooper/elocute/tree/master/mobile-v2).
 
 ### iOS (Cocoapods)
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.
