@@ -10,34 +10,25 @@ export function httpsCallable< I = {}, O = {} >( functionName: string ): HttpsCa
 
         const callable = functions.HTTPSCallableWithName(functionName);
 
+        const handleCompletion = (result: FIRHTTPSCallableResult, err: NSError) => {
+            if ( err ) {
+                if ( err.domain === FIRFunctionsErrorDomain ) {
+                    const message = err.localizedDescription;
+                    reject( message );
+                }
+
+                reject( err.localizedDescription );
+            }
+
+            if ( result ) {
+                resolve( firebaseUtils.toJsObject(result.data) as O );
+            }
+        };
+
         if ( data ) {
-            callable.callWithObjectCompletion(data, (result: FIRHTTPSCallableResult, err: NSError) => {
-                if ( err ) {
-                    if ( err.domain === FIRFunctionsErrorDomain ) {
-                        const message = err.localizedDescription;
-                        reject( message );
-                    }
-
-                    reject( err.localizedDescription );
-                }
-
-                if ( result ) {
-                    resolve( firebaseUtils.toJsObject(result.data as O) );
-                }
-            });
+            callable.callWithObjectCompletion(data, handleCompletion);
         } else {
-            callable.callWithCompletion((result: FIRHTTPSCallableResult, err: NSError) => {
-                if ( err ) {
-                    if ( err.domain === FIRFunctionsErrorDomain ) {
-                        const message = err.localizedDescription;
-                        reject( message );
-                    }
-                    reject( err.localizedDescription );
-                }
-                if ( result ) {
-                    resolve( firebaseUtils.toJsObject(result.data as O) );
-                }
-            });
+            callable.callWithCompletion(handleCompletion);
         }
     });
 }
