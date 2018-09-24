@@ -209,7 +209,7 @@ export class HelloWorldModel extends Observable {
     .catch((e) => {
       alert({
         title: "An Error Occurred",
-        message: e.message,
+        message: e,
         okButtonText: "OK, thanks"
       });
     });

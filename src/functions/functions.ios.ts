@@ -1,4 +1,5 @@
 import {HttpsCallable} from './functions';
+import { firebaseUtils } from '../utils';
 
 
 export function httpsCallable< I = {}, O = {} >( functionName: string ): HttpsCallable<I, O> {
@@ -6,14 +7,39 @@ export function httpsCallable< I = {}, O = {} >( functionName: string ): HttpsCa
     const functions = FIRFunctions.functions();
 
     return (data: I ) => new Promise((resolve, reject) => {
-        functions.HTTPSCallableWithName(functionName).callWithObjectCompletion(data, (result: FIRHTTPSCallableResult, err: NSError) => {
-            if ( err ) {
-                if ( err.domain === FIRFunctionsErrorDomain ) {
-                    const message = err.localizedDescription;
-                    reject( message );
+
+        const callable = functions.HTTPSCallableWithName(functionName);
+
+        if ( data ) {
+            callable.callWithObjectCompletion(data, (result: FIRHTTPSCallableResult, err: NSError) => {
+                if ( err ) {
+                    if ( err.domain === FIRFunctionsErrorDomain ) {
+                        const message = err.localizedDescription;
+                        reject( message );
+                    }
+
+                    reject( err.localizedDescription );
                 }
-            }
-            resolve(result.data as O);
-        });
+
+                if ( result ) {
+                    console.dir(result);
+                    resolve(result.data as O);
+                }
+            });
+        } else {
+            callable.callWithCompletion((result: FIRHTTPSCallableResult, err: NSError) => {
+                if ( err ) {
+                    if ( err.domain === FIRFunctionsErrorDomain ) {
+                        const message = err.localizedDescription;
+                        reject( message );
+                    }
+                    reject( err.localizedDescription );
+                }
+                if ( result ) {
+                    console.dir(result);
+                    resolve(result.data as O);
+                }
+            });
+        }
     });
 }

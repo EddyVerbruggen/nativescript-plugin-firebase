@@ -1,18 +1,18 @@
 {
   "nativescript": {
     "id": "org.nativescript.firebasedemo",
-    "tns-ios": {
-      "version": "4.2.0"
-    },
     "tns-android": {
-      "version": "4.2.0"
+      "version": "4.3.0-2018-09-21-01"
+    },
+    "tns-ios": {
+      "version": "4.3.0-2018-09-19-01"
     }
   },
   "dependencies": {
-    "nativescript-plugin-firebase": "7.0.1",
+    "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-7.0.1.tgz",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-unit-test-runner": "^0.3.4",
-    "tns-core-modules": "~4.2.0"
+    "tns-core-modules": "^4.3.0-2018-09-20-01"
   },
   "devDependencies": {
     "@types/jasmine": "~2.8.0",

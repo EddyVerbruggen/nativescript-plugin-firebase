@@ -1,6 +1,6 @@
 {
     "external_push_client_only": false,
-    "using_ios": false,
+    "using_ios": true,
     "using_android": true,
     "firestore": true,
     "realtimedb": true,
