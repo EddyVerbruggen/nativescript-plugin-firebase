@@ -26,6 +26,7 @@ src/platforms/android/include.gradle
 !src/scripts/*.js
 !demo/karma.conf.js
 demo/*.d.ts
+demo/firebasefunctions/functions/lib
 !demo-push/karma.conf.js
 demo-push/*.d.ts
 demo-ng/*.d.ts
