@@ -22,8 +22,7 @@ export function httpsCallable< I = {}, O = {} >( functionName: string ): HttpsCa
                 }
 
                 if ( result ) {
-                    console.dir(result);
-                    resolve(result.data as O);
+                    resolve( firebaseUtils.toJsObject(result.data as O) );
                 }
             });
         } else {
@@ -36,8 +35,7 @@ export function httpsCallable< I = {}, O = {} >( functionName: string ): HttpsCa
                     reject( err.localizedDescription );
                 }
                 if ( result ) {
-                    console.dir(result);
-                    resolve(result.data as O);
+                    resolve( firebaseUtils.toJsObject(result.data as O) );
                 }
             });
         }

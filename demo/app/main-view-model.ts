@@ -197,19 +197,19 @@ export class HelloWorldModel extends Observable {
   }
 
   public doCallableFunction(): void {
-    const fn = firebaseWebApi.functions().httpsCallable('helloWorldJson');
+    const fn = firebaseWebApi.functions().httpsCallable('helloName');
 
-    fn( 'Hello' ).then((DataCue) => {
+    fn( 'Nativescript-Plugin-Firebase!' ).then((DataCue) => {
       alert({
         title: "Callable Function Result",
-        message: JSON.stringify(DataCue),
+        message: DataCue.message,
         okButtonText: "Nice!"
       });
     })
-    .catch((e) => {
+    .catch((errorMessage) => {
       alert({
         title: "An Error Occurred",
-        message: e,
+        message: errorMessage,
         okButtonText: "OK, thanks"
       });
     });
