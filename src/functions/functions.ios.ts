@@ -1,4 +1,4 @@
-import {HttpsCallable} from '.';
+import {HttpsCallable} from './functions';
 
 
 export function httpsCallable< I = {}, O = {} >( functionName: string ): HttpsCallable<I, O> {
@@ -6,7 +6,7 @@ export function httpsCallable< I = {}, O = {} >( functionName: string ): HttpsCa
     const functions = FIRFunctions.functions();
 
     return (data: I ) => new Promise((resolve, reject) => {
-        functions.HTTPSCallableWithName(functionName).callWithObjectCompletion(data, (result, err: NSError) => {
+        functions.HTTPSCallableWithName(functionName).callWithObjectCompletion(data, (result: FIRHTTPSCallableResult, err: NSError) => {
             if ( err ) {
                 if ( err.domain === FIRFunctionsErrorDomain ) {
                     const message = err.localizedDescription;

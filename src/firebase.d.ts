@@ -847,8 +847,8 @@ export namespace firestore {
 }
 
 export namespace functions {
-  declare type HttpsCallable<I, O> = ( callableData: I ) => Promise<O>;
-  declare function httpsCallable<I, O>( callableFunctionName: string ): HttpsCallable<I, O>;
+  export type HttpsCallable<I, O> = ( callableData: I ) => Promise<O>;
+  export function httpsCallable<I, O>( callableFunctionName: string ): HttpsCallable<I, O>;
 }
 // Auth
 export function login(options: LoginOptions): Promise<User>;
