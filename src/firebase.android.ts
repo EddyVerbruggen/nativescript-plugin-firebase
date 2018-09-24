@@ -191,7 +191,7 @@ firebase.toValue = val => {
     }
   }
   return returnVal;
-}
+};
 
 firebase.toJsObject = javaObj => {
   if (javaObj === null || typeof javaObj !== "object") {

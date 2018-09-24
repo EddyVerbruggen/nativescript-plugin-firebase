@@ -15,9 +15,9 @@ export function httpsCallable<I = {}, O = {}>(functionName: string): HttpsCallab
 
                         try {
                             const result = task.getResult() as com.google.firebase.functions.HttpsCallableResult;
-                            const resultData = result.getData() as O;
+                            const resultData = result.getData();
 
-                            resolve( resultData );
+                            resolve( firebase.toJsObject(resultData) as O );
                         } catch (e) {
                             console.log('Error Caught:', e);
                             reject( e.message );
