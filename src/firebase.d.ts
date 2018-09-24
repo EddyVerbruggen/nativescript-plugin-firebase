@@ -846,6 +846,10 @@ export namespace firestore {
   function batch(): firestore.WriteBatch;
 }
 
+export namespace functions {
+  declare type HttpsCallable<I, O> = ( callableData: I ) => Promise<O>;
+  declare function httpsCallable<I, O>( callableFunctionName: string ): HttpsCallable<I, O>;
+}
 // Auth
 export function login(options: LoginOptions): Promise<User>;
 

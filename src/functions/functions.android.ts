@@ -1,4 +1,6 @@
-export function httpsCallable<I = {}, O = {}>(functionName: string) {
+import {HttpsCallable} from '.';
+
+export function httpsCallable<I = {}, O = {}>(functionName: string): HttpsCallable<I, O> {
     const instance = com.google.firebase.functions.FirebaseFunctions.getInstance();
 
     return (data: I) => new Promise<O>((resolve, reject) => {
