@@ -2024,17 +2024,17 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
       this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
     }
     return this;
-  };
+  }
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
     this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
     return this;
-  };
+  }
 
   public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
     this.nativeWriteBatch.delete(documentRef.android);
     return this;
-  };
+  }
 
   public commit(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -2050,7 +2050,7 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
       });
       this.nativeWriteBatch.commit().addOnCompleteListener(onCompleteListener);
     });
-  };
+  }
 }
 
 firebase.firestore.batch = (): firestore.WriteBatch => {
