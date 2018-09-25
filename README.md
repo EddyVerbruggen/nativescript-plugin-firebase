@@ -15,18 +15,18 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
 ## Features
-* [Realtime Database](docs/DATABASE.md)
-* [Firestore](docs/FIRESTORE.md)
-* [Authentication](docs/AUTHENTICATION.md)
-* [Remote Config](docs/REMOTECONFIG.md)
-* [Firebase Cloud Messaging](docs/MESSAGING.md)
-* [Non-Firebase Push Messaging](docs/NON_FIREBASE_MESSAGING.md) 🆕
-* [Storage](docs/STORAGE.md)
-* [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
-* [Analytics](docs/ANALYTICS.md)
-* [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [AdMob](docs/ADMOB.md)
+* [Analytics](docs/ANALYTICS.md)
+* [Authentication](docs/AUTHENTICATION.md)
+* [Cloud Firestore](docs/FIRESTORE.md)
+* [Cloud Functions](docs/FUNCTIONS.md)
+* [Cloud Messaging](docs/MESSAGING.md) / [Non-Firebase Push Messaging](docs/NON_FIREBASE_MESSAGING.md)
+* [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
+* [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [ML Kit](docs/ML_KIT.md)
+* [Realtime Database](docs/DATABASE.md)
+* [Remote Config](docs/REMOTECONFIG.md)
+* [Storage](docs/STORAGE.md)
 
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.

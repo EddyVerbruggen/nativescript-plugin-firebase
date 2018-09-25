@@ -733,10 +733,13 @@ export namespace firestore {
   }
 
   export interface DocumentSnapshot {
-    ios?: any; /* FIRDocumentSnapshot */
-    android?: any; /* com.google.firebase.firestore.DocumentSnapshot */
+    ios?: any;
+    /* FIRDocumentSnapshot */
+    android?: any;
+    /* com.google.firebase.firestore.DocumentSnapshot */
     id: string;
     exists: boolean;
+
     data(): DocumentData;
   }
 
@@ -803,17 +806,25 @@ export namespace firestore {
 
   export interface Transaction {
     get(documentRef: DocumentReference): DocumentSnapshot;
+
     set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): Transaction;
+
     update(documentRef: DocumentReference, data: UpdateData): Transaction;
+
     update(documentRef: DocumentReference, field: string | FieldPath, value: any, ...moreFieldsAndValues: any[]): Transaction;
+
     delete(documentRef: DocumentReference): Transaction;
   }
 
   export interface WriteBatch {
     set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): WriteBatch;
+
     update(documentRef: DocumentReference, data: UpdateData): WriteBatch;
+
     update(documentRef: DocumentReference, field: string | FieldPath, value: any, ...moreFieldsAndValues: any[]): WriteBatch;
+
     delete(documentRef: DocumentReference): WriteBatch;
+
     commit(): Promise<void>;
   }
 
@@ -847,9 +858,11 @@ export namespace firestore {
 }
 
 export namespace functions {
-  export type HttpsCallable<I, O> = ( callableData: I ) => Promise<O>;
-  export function httpsCallable<I, O>( callableFunctionName: string ): HttpsCallable<I, O>;
+  export type HttpsCallable<I, O> = (callableData: I) => Promise<O>;
+
+  export function httpsCallable<I, O>(callableFunctionName: string): HttpsCallable<I, O>;
 }
+
 // Auth
 export function login(options: LoginOptions): Promise<User>;
 
