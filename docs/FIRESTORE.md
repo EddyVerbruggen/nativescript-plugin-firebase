@@ -219,7 +219,10 @@ query
 ```
 
 ### Adding to (`arrayUnion`) and removing from (`arrayRemove`) Arrays
-If you don't want to set the entire contents of an Array, see [the official docs (at the bottom: "Update elements in an array")](https://firebase.google.com/docs/firestore/manage-data/add-data) and use this:
+If your document contains an array field, you can use `arrayUnion()` and `arrayRemove()` to add and remove elements.
+
+* `arrayUnion()` adds elements to an array but only elements not already present.
+* `arrayRemove()` removes all instances of each given element.
 
 ```typescript
 firebase.firestore().collection("dogs").doc("fave")
