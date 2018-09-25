@@ -221,8 +221,7 @@ query
 ### Adding to (`arrayUnion`) and removing from (`arrayRemove`) Arrays
 If your document contains an array field, you can use `arrayUnion()` and `arrayRemove()` to add and remove elements.
 
-* `arrayUnion()` adds elements to an array but only elements not already present.
-* `arrayRemove()` removes all instances of each given element.
+`arrayUnion()` adds elements to an array but only elements not already present:
 
 ```typescript
 firebase.firestore().collection("dogs").doc("fave")
@@ -230,6 +229,8 @@ firebase.firestore().collection("dogs").doc("fave")
       colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
     });
 ```
+
+`arrayRemove()` removes all instances of each given element:
 
 ```typescript
 firebase.firestore().collection("dogs").doc("fave")
