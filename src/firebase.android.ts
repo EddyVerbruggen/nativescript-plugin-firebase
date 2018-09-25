@@ -6,6 +6,7 @@ import {
   isDocumentReference
 } from "./firebase-common";
 import * as firebaseMessaging from "./messaging/messaging";
+import * as firebaseFunctions from "./functions/functions";
 import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
@@ -190,7 +191,7 @@ firebase.toValue = val => {
     }
   }
   return returnVal;
-}
+};
 
 firebase.toJsObject = javaObj => {
   if (javaObj === null || typeof javaObj !== "object") {
@@ -447,6 +448,8 @@ firebase.unregisterForPushNotifications = firebaseMessaging.unregisterForPushNot
 firebase.subscribeToTopic = firebaseMessaging.subscribeToTopic;
 firebase.unsubscribeFromTopic = firebaseMessaging.unsubscribeFromTopic;
 firebase.areNotificationsEnabled = firebaseMessaging.areNotificationsEnabled;
+
+firebase.functions = firebaseFunctions;
 
 firebase.addOnDynamicLinkReceivedCallback = callback => {
   return new Promise((resolve, reject) => {

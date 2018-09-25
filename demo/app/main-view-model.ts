@@ -8,6 +8,7 @@ import { MessagingViewModel } from './messaging-view-model';
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
+
 declare const Crashlytics: any;
 
 export class HelloWorldModel extends Observable {
@@ -193,6 +194,25 @@ export class HelloWorldModel extends Observable {
         okButtonText: "OK, thanks"
       });
     }
+  }
+
+  public doCallableFunction(): void {
+    const fn = firebaseWebApi.functions().httpsCallable('helloName');
+
+    fn( 'Nativescript-Plugin-Firebase!' ).then((DataCue) => {
+      alert({
+        title: "Callable Function Result",
+        message: DataCue.message,
+        okButtonText: "Nice!"
+      });
+    })
+    .catch((errorMessage) => {
+      alert({
+        title: "An Error Occurred",
+        message: errorMessage,
+        okButtonText: "OK, thanks"
+      });
+    });
   }
 
   public doWebAddValueEventListenerForCompanies(): void {

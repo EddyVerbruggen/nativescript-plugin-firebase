@@ -10,6 +10,7 @@ import * as application from "tns-core-modules/application/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { device } from "tns-core-modules/platform/platform";
 import { DeviceType } from "tns-core-modules/ui/enums/enums";
+import * as firebaseFunctions from './functions/functions';
 import { firestore, User } from "./firebase";
 import { firebaseUtils } from "./utils";
 
@@ -41,6 +42,8 @@ firebase.registerForInteractivePush = firebaseMessaging.registerForInteractivePu
 firebase.subscribeToTopic = firebaseMessaging.subscribeToTopic;
 firebase.unsubscribeFromTopic = firebaseMessaging.unsubscribeFromTopic;
 firebase.areNotificationsEnabled = firebaseMessaging.areNotificationsEnabled;
+
+firebase.functions = firebaseFunctions;
 
 firebase.addAppDelegateMethods = appDelegate => {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things

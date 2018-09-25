@@ -18,7 +18,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
             <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doWebInit }}" class="button button-positive"/>
@@ -71,6 +71,10 @@
             <Button row="18" col="1" text="delete remote file" tap="{{ doWebDeleteFile }}" class="button button-storage"/>
 
             <Label row="19" colSpan="2" text="{{ storageFeedback }}" class="message" textWrap="true"/>
+
+            <Label row="20" colSpan="2" text="Callable Functions" class="subtitle" />
+
+            <Button row="21" col="0" text="callable 1" tap="{{ doCallableFunction }}"  class="button button-functions" />
 
           </GridLayout>
         </ScrollView>

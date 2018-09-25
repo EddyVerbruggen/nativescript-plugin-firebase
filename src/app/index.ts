@@ -8,6 +8,7 @@ import { auth as firebaseAuthModule } from "./auth";
 import { database as firebaseDatabaseModule } from "./database";
 import { firestore as firebaseFirestoreModule } from "./firestore";
 import { storage as firebaseStorageModule } from "./storage";
+import { functions as firebaseFunctionsModule } from './functions';
 
 export function initializeApp(options?: firebase.InitOptions, name? /* ignored */: string): Promise<any> {
   return firebase.init(options);
@@ -44,6 +45,17 @@ export function firestore(app?: any): firebaseFirestoreModule.Firestore {
     firestoreCache = new firebaseFirestoreModule.Firestore();
   }
   return firestoreCache;
+}
+
+let functionsCache;
+export function functions(app?: any): firebaseFunctionsModule.Functions {
+  if (app) {
+    console.log("The 'app' param is ignored at the moment.");
+  }
+  if ( !functionsCache ) {
+    functionsCache = new firebaseFunctionsModule.Functions();
+  }
+  return functionsCache;
 }
 
 let storageCache;
