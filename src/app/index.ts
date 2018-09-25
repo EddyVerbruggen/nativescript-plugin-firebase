@@ -8,13 +8,14 @@ import { auth as firebaseAuthModule } from "./auth";
 import { database as firebaseDatabaseModule } from "./database";
 import { firestore as firebaseFirestoreModule } from "./firestore";
 import { storage as firebaseStorageModule } from "./storage";
-import { functions as firebaseFunctionsModule } from './functions';
+import { functions as firebaseFunctionsModule } from "./functions";
 
 export function initializeApp(options?: firebase.InitOptions, name? /* ignored */: string): Promise<any> {
   return firebase.init(options);
 }
 
 let authCache;
+
 export function auth(app?: any): firebaseAuthModule.Auth {
   if (app) {
     console.log("The 'app' param is ignored at the moment.");
@@ -26,6 +27,7 @@ export function auth(app?: any): firebaseAuthModule.Auth {
 }
 
 let dbCache;
+
 export function database(app?: any): firebaseDatabaseModule.Database {
   if (app) {
     console.log("The 'app' param is ignored at the moment.");
@@ -37,6 +39,7 @@ export function database(app?: any): firebaseDatabaseModule.Database {
 }
 
 let firestoreCache;
+
 export function firestore(app?: any): firebaseFirestoreModule.Firestore {
   if (app) {
     console.log("The 'app' param is ignored at the moment.");
@@ -48,17 +51,19 @@ export function firestore(app?: any): firebaseFirestoreModule.Firestore {
 }
 
 let functionsCache;
+
 export function functions(app?: any): firebaseFunctionsModule.Functions {
   if (app) {
     console.log("The 'app' param is ignored at the moment.");
   }
-  if ( !functionsCache ) {
+  if (!functionsCache) {
     functionsCache = new firebaseFunctionsModule.Functions();
   }
   return functionsCache;
 }
 
 let storageCache;
+
 export function storage(app?: any): firebaseStorageModule.Storage {
   if (app) {
     console.log("The 'app' param is ignored at the moment.");

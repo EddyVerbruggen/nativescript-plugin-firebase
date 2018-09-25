@@ -74,7 +74,7 @@
 
             <Label row="20" colSpan="2" text="Callable Functions" class="subtitle" />
 
-            <Button row="21" col="0" text="callable 1" tap="{{ doCallableFunction }}"  class="button button-functions" />
+            <Button row="21" col="0" text="callable 1" tap="{{ doWebCallableFunction }}"  class="button button-functions" />
 
           </GridLayout>
         </ScrollView>
