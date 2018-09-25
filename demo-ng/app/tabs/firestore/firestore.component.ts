@@ -16,8 +16,8 @@ export class FirestoreComponent {
 
   private listenerUnsubscribe: () => void;
 
-  public myCity$: Observable<City>;
-  public myCities$: Observable<Array<City>>;
+  myCity$: Observable<City>;
+  myCities$: Observable<Array<City>>;
 
   private city: City;
   private cities: Array<City> = [];
@@ -26,7 +26,7 @@ export class FirestoreComponent {
     // AngularFireModule.initializeApp({});
   }
 
-  public issue854(): void {
+  issue854(): void {
     const helloRef: firestore.DocumentReference =
         firebase.firestore()
             .collection("users")
@@ -37,7 +37,7 @@ export class FirestoreComponent {
     helloRef.get().then(snapshot => console.log(snapshot.data()))
   }
 
-  public loginAnonymously(): void {
+  loginAnonymously(): void {
     firebase.auth().signInAnonymously()
         .then(() => {
           const user = firebase.auth().currentUser;
@@ -46,7 +46,7 @@ export class FirestoreComponent {
         .catch(err => console.log("Login error: " + JSON.stringify(err)));
   }
 
-  public firestoreAdd(): void {
+  firestoreAdd(): void {
     firebase.firestore().collection("dogs").add({name: "Fido"})
         .then((docRef: firestore.DocumentReference) => {
           console.log("Fido added, ref: " + docRef.id);
@@ -54,7 +54,7 @@ export class FirestoreComponent {
         .catch(err => console.log("Adding Fido failed, error: " + err));
   }
 
-  public firestoreSet(): void {
+  firestoreSet(): void {
     firebase.firestore().collection("dogs").doc("fave")
         .set({
               name: "Woofie",
@@ -125,14 +125,14 @@ export class FirestoreComponent {
     });
   }
 
-  public firestoreSetByAutoID(): void {
+  firestoreSetByAutoID(): void {
     firebase.firestore().collection("dogs").doc()
         .set({name: "Woofie", last: "lastofwoofie", date: new Date()})
         .then(() => console.log("Woofie set"))
         .catch(err => console.log("Setting Woofie failed, error: " + err));
   }
 
-  public firestoreUpdate(): void {
+  firestoreUpdate(): void {
     // get a document reference so we can add a city reference to our favourite dog
     const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
 
@@ -149,7 +149,7 @@ export class FirestoreComponent {
         .catch(err => console.log("Updating Woofie failed, error: " + JSON.stringify(err)));
   }
 
-  public firestoreGet(): void {
+  firestoreGet(): void {
     const collectionRef: firestore.CollectionReference = firebase.firestore().collection("dogs");
     collectionRef.get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
@@ -174,7 +174,7 @@ export class FirestoreComponent {
     });
   }
 
-  public firestoreGetNested(): void {
+  firestoreGetNested(): void {
     const mainStreetInSFDocRef: firestore.DocumentReference =
         firebase.firestore()
             .collection("cities")
@@ -192,6 +192,28 @@ export class FirestoreComponent {
     }).catch(function (error) {
       console.log("Error getting document:", error);
     });
+  }
+
+  arrayUnion(): void {
+    firebase.firestore().collection("dogs").doc("fave")
+        .update({
+          last: "Updated From arrayUnion",
+          updateTs: firebase.firestore().FieldValue().serverTimestamp(),
+          colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
+        })
+        .then(() => console.log("Woofie updated from arrayUnion"))
+        .catch(err => console.log("Updating Woofie from arrayUnion failed, error: " + JSON.stringify(err)));
+  }
+
+  arrayRemove(): void {
+    firebase.firestore().collection("dogs").doc("fave")
+        .update({
+          last: "Updated From arrayRemove",
+          updateTs: firebase.firestore().FieldValue().serverTimestamp(),
+          colors: firebase.firestore().FieldValue().arrayRemove(["red"])
+        })
+        .then(() => console.log("Woofie updated from arrayRemove"))
+        .catch(err => console.log("Updating Woofie from arrayRemove failed, error: " + JSON.stringify(err)));
   }
 
   firestoreDocumentObservable(): void {
@@ -219,7 +241,7 @@ export class FirestoreComponent {
     });
   }
 
-  public firestoreListen(): void {
+  firestoreListen(): void {
     if (this.listenerUnsubscribe !== undefined) {
       console.log("Already listening ;)");
       return;
@@ -236,7 +258,7 @@ export class FirestoreComponent {
     });
   }
 
-  public firestoreStopListening(): void {
+  firestoreStopListening(): void {
     if (this.listenerUnsubscribe === undefined) {
       console.log("Please start listening first ;)");
       return;
@@ -246,7 +268,7 @@ export class FirestoreComponent {
     this.listenerUnsubscribe = undefined;
   }
 
-  public firestoreWhere(): void {
+  firestoreWhere(): void {
     const cityDocRef = firebase.firestore().collection("cities").doc("SF");
 
     firebase.firestore().collection("dogs")
@@ -260,7 +282,7 @@ export class FirestoreComponent {
         .catch(err => console.log("Where-get failed, error: " + err));
   }
 
-  public firestoreWhereOrderLimit(): void {
+  firestoreWhereOrderLimit(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
         .where("state", "==", "CA")
         .where("population", "<", 99999999)
@@ -277,7 +299,7 @@ export class FirestoreComponent {
         .catch(err => console.log("firestoreWhereOrderLimit failed, error: " + err));
   }
 
-  public firestoreWhereCityHasALake(): void {
+  firestoreWhereCityHasALake(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
         .where("landmarks", "array-contains", "lake");
 
@@ -291,7 +313,7 @@ export class FirestoreComponent {
         .catch(err => console.log("firestoreWhereCityHasALake failed, error: " + err));
   }
 
-  public firestoreDelete(): void {
+  firestoreDelete(): void {
     firebase.firestore().collection("dogs").doc("fave")
         .delete()
         .then(() => {
@@ -300,7 +322,7 @@ export class FirestoreComponent {
         .catch(err => console.log("Delete failed, error: " + err));
   }
 
-  public doWebGetValueForCompanies(): void {
+  doWebGetValueForCompanies(): void {
     const path = "/companies";
     firebase.database().ref(path)
         .once("value")
@@ -308,7 +330,7 @@ export class FirestoreComponent {
         .catch(error => console.log("doWebGetValueForCompanies error: " + error));
   }
 
-  public writeBatch(): void {
+  writeBatch(): void {
     // one batch can update multiple docs
     const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
     const sacDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SAC");
@@ -323,7 +345,7 @@ export class FirestoreComponent {
         .catch(error => console.log("Batch error: " + error));
   }
 
-  public transactionalUpdate(): void {
+  transactionalUpdate(): void {
     const sfDocRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
 
     firebase.firestore().runTransaction(transaction => {
@@ -345,29 +367,29 @@ export class FirestoreComponent {
         .catch(error => console.log("doTransaction error: " + error));
   }
 
-  public firestoreStartAt(): void {
+  firestoreStartAt(): void {
     firebase.firestore().collection('cities')
-      .doc('LA')
-      .get()
-      .then(doc => {
-        firebase.firestore().collection('cities')
-          .orderBy('name', 'asc')
-          .startAt(doc)
-          .get()
-          .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
-      });
+        .doc('LA')
+        .get()
+        .then(doc => {
+          firebase.firestore().collection('cities')
+              .orderBy('name', 'asc')
+              .startAt(doc)
+              .get()
+              .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+        });
   }
 
-  public firestoreStartAfter(): void {
+  firestoreStartAfter(): void {
     firebase.firestore().collection('cities')
-      .doc('LA')
-      .get()
-      .then(doc => {
-        firebase.firestore().collection('cities')
-          .orderBy('name', 'asc')
-          .startAfter(doc)
-          .get()
-          .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
-      });
+        .doc('LA')
+        .get()
+        .then(doc => {
+          firebase.firestore().collection('cities')
+              .orderBy('name', 'asc')
+              .startAfter(doc)
+              .get()
+              .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+        });
   }
 }

@@ -3,7 +3,7 @@ import {
   DocumentSnapshot as DocumentSnapshotBase,
   QuerySnapshot,
   GeoPoint,
-  isDocumentReference
+  isDocumentReference, FieldValue
 } from "./firebase-common";
 import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
@@ -1981,6 +1981,17 @@ function fixSpecialFields(item) {
 function fixSpecialField(item): any {
   if (item === "SERVER_TIMESTAMP") {
     return FIRFieldValue.fieldValueForServerTimestamp();
+  } else if (item instanceof FieldValue) {
+    const fieldValue: FieldValue = item;
+    if (fieldValue.type === "ARRAY_UNION") {
+      console.log(">> fieldValue.value1: " + fieldValue.value);
+      console.log(">> fieldValue.value2: " + JSON.stringify(fieldValue.value));
+      return FIRFieldValue.fieldValueForArrayUnion(fieldValue.value);
+    } else if (fieldValue.type === "ARRAY_REMOVE") {
+      return FIRFieldValue.fieldValueForArrayRemove(fieldValue.value);
+    } else {
+      console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!")
+    }
   } else if (item instanceof GeoPoint) {
     const geo = <GeoPoint>item;
     return new FIRGeoPoint({

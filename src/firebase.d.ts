@@ -828,8 +828,14 @@ export namespace firestore {
     commit(): Promise<void>;
   }
 
+  export type FieldValueType = "ARRAY_UNION" | "ARRAY_REMOVE";
+
   export class FieldValue {
+    constructor(type: FieldValueType, value: any);
+
     static serverTimestamp: () => "SERVER_TIMESTAMP";
+    static arrayUnion: (fields: Array<any>) => FieldValue;
+    static arrayRemove: (fields: Array<any>) => FieldValue;
   }
 
   export interface QuerySnapshot {

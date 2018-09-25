@@ -218,6 +218,23 @@ query
     });
 ```
 
+### Adding to (`arrayUnion`) and removing from (`arrayRemove`) Arrays
+If you don't want to set the entire contents of an Array, see [the official docs (at the bottom: "Update elements in an array")](https://firebase.google.com/docs/firestore/manage-data/add-data) and use this:
+
+```typescript
+firebase.firestore().collection("dogs").doc("fave")
+    .update({
+      colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
+    });
+```
+
+```typescript
+firebase.firestore().collection("dogs").doc("fave")
+    .update({
+      colors: firebase.firestore().FieldValue().arrayRemove(["red"])
+    });
+```
+
 ### Ordering and limiting results of `collection.where()`
 Return data sorted (asc or desc), or limit to a certain number of results:
 

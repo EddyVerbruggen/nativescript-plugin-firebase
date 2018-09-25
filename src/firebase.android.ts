@@ -1,6 +1,7 @@
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   firebase,
+  FieldValue,
   GeoPoint,
   QuerySnapshot,
   isDocumentReference
@@ -117,6 +118,15 @@ firebase.toHashMap = obj => {
         // note that the Android Firestore SDK only supports this for 'update' (not for 'set')
         if (obj[property] === "SERVER_TIMESTAMP") {
           node.put(property, com.google.firebase.firestore.FieldValue.serverTimestamp());
+        } else if (obj[property] instanceof FieldValue) {
+          const fieldValue: FieldValue = obj[property];
+          if (fieldValue.type === "ARRAY_UNION") {
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(fieldValue.value));
+          } else if (fieldValue.type === "ARRAY_REMOVE") {
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(fieldValue.value));
+          } else {
+            console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!")
+          }
         } else if (obj[property] instanceof Date) {
           node.put(property, new java.util.Date(obj[property].getTime()));
         } else if (obj[property] instanceof GeoPoint) {

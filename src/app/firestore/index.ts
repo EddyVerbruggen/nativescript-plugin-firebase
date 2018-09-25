@@ -7,8 +7,12 @@ export module firestore {
     }
 
     FieldValue(): firebase.firestore.FieldValue {
-      return {
-        serverTimestamp: () => "SERVER_TIMESTAMP"
+      return <any>{
+        type: undefined,
+        value: undefined,
+        serverTimestamp: () => "SERVER_TIMESTAMP",
+        arrayUnion: (fields: Array<any>) => new firebase.firestore.FieldValue("ARRAY_UNION", fields),
+        arrayRemove: (fields: Array<any>) => new firebase.firestore.FieldValue("ARRAY_REMOVE", fields)
       }
     }
 

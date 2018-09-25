@@ -24,12 +24,12 @@
     "@angular/router": "~6.1.0",
     "nativescript-angular": "^6.1.0",
     "nativescript-camera": "^4.0.2",
-    "nativescript-imagepicker": "^6.0.1",
+    "nativescript-imagepicker": "~6.0.4",
     "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-7.0.1.tgz",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.10",
     "rxjs": "~6.0.0 || >=6.1.0",
-    "tns-core-modules": "~4.2.0",
+    "tns-core-modules": "~4.2.1",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
