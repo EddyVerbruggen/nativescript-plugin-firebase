@@ -324,7 +324,9 @@ function writePodFile(result) {
   }
   try {
     fs.writeFileSync(directories.ios + '/Podfile',
-        `pod 'Firebase/Core', '~> 5.6.0' 
+        `pod 'Firebase/Core', '~> 5.6.0'
+# Temporary fix, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/926
+pod 'GoogleUtilities', '5.2.3' 
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
