@@ -740,6 +740,9 @@ firebase.logout = arg => {
     try {
       FIRAuth.auth().signOut();
 
+      // reset additional user info
+      firebase.currentAdditionalUserInfo = null;
+
       // also disconnect from Google otherwise ppl can't connect with a different account
       if (typeof (GIDSignIn) !== "undefined") {
         GIDSignIn.sharedInstance().disconnect();
@@ -760,6 +763,10 @@ firebase.logout = arg => {
 function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
   if (!user) {
     return null;
+  }
+
+  if (additionalUserInfo) {
+    firebase.currentAdditionalUserInfo = additionalUserInfo
   }
 
   const providers = [];
@@ -795,12 +802,12 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
     }
   };
 
-  if (additionalUserInfo) {
+  if (firebase.currentAdditionalUserInfo) {
     loginResult.additionalUserInfo = {
-      providerId: additionalUserInfo.providerID,
-      username: additionalUserInfo.username,
-      isNewUser: additionalUserInfo.newUser,
-      profile: firebaseUtils.toJsObject(additionalUserInfo.profile)
+      providerId: firebase.currentAdditionalUserInfo.providerID,
+      username: firebase.currentAdditionalUserInfo.username,
+      isNewUser: firebase.currentAdditionalUserInfo.newUser,
+      profile: firebaseUtils.toJsObject(firebase.currentAdditionalUserInfo.profile)
     };
   }
 

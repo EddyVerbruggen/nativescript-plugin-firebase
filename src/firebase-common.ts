@@ -24,6 +24,7 @@ export const firebase: any = {
   initialized: false,
   instance: null,
   firebaseRemoteConfig: null,
+  currentAdditionalUserInfo: null,
   authStateListeners: [],
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,

@@ -34,7 +34,6 @@ firebase._googleSignInIdToken = null;
 firebase._facebookAccessToken = null;
 
 let fbCallbackManager = null;
-let currentAdditionalUserInfo = null;
 
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
@@ -863,8 +862,10 @@ firebase.logout = arg => {
   return new Promise((resolve, reject) => {
     try {
       com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
-      //Reset additional data
-      currentAdditionalUserInfo = null;
+
+      // reset additional user info
+      firebase.currentAdditionalUserInfo = null;
+
       // also disconnect from Google otherwise ppl can't connect with a different account
       if (firebase._mGoogleApiClient && firebase._mGoogleApiClient.isConnected()) {
         com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
@@ -920,7 +921,7 @@ function toLoginResult(user, additionalUserInfo?): User {
   }
 
   if (additionalUserInfo) {
-    currentAdditionalUserInfo = additionalUserInfo
+    firebase.currentAdditionalUserInfo = additionalUserInfo
   }
 
   // for convenience return the result in multiple formats
@@ -954,12 +955,12 @@ function toLoginResult(user, additionalUserInfo?): User {
     }
   };
 
-  if (currentAdditionalUserInfo) {
+  if (firebase.currentAdditionalUserInfo) {
     loginResult.additionalUserInfo = {
-      providerId: currentAdditionalUserInfo.getProviderId(),
-      username: currentAdditionalUserInfo.getUsername(),
-      isNewUser: currentAdditionalUserInfo.isNewUser(),
-      profile: firebase.toJsObject(currentAdditionalUserInfo.getProfile())
+      providerId: firebase.currentAdditionalUserInfo.getProviderId(),
+      username: firebase.currentAdditionalUserInfo.getUsername(),
+      isNewUser: firebase.currentAdditionalUserInfo.isNewUser(),
+      profile: firebase.toJsObject(firebase.currentAdditionalUserInfo.getProfile())
     };
   }
 
