@@ -596,10 +596,10 @@ dependencies {
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.3"
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.3"
 
     // Realtime DB
-    ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.1"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.1"
 
     // Cloud Firestore
     ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.0"
