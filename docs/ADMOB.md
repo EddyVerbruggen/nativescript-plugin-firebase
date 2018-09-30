@@ -83,8 +83,8 @@ Note that an interstitial is supposed to be hidden by clicking the close button,
 
 There's two ways how you can use this function:
 
-* RECOMMENDED: without arguments, and after the Promise of 'preloadInterstitial' resolves. This will show the interstitial immediately.
-* DEPRECATED: with arguments (same as 'preloadInterstitial'). This will preload and _then_ show the interstitial, so a delay will be noticable by the user, which is against Google's policies.
+* *RECOMMENDED*: without arguments, and after the Promise of `preloadInterstitial` resolves. This will show the interstitial immediately.
+* *DEPRECATED*: with arguments (same as `preloadInterstitial`). This will preload and _then_ show the interstitial, so a delay will be noticable by the user, which is against Google's policies.
 
 ```js
   firebase.admob.preloadInterstitial({
