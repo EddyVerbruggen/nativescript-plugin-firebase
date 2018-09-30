@@ -1,6 +1,7 @@
 import { prompt } from "tns-core-modules/ui/dialogs";
 import { getString, setString } from "tns-core-modules/application-settings";
 import { firestore } from "./firebase";
+import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
 import * as storage from "./storage/storage";
 import * as mlkit from "./mlkit";
@@ -28,6 +29,7 @@ export const firebase: any = {
   authStateListeners: [],
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,
+  admob,
   analytics,
   storage,
   mlkit,
@@ -45,26 +47,6 @@ export const firebase: any = {
     MATCH_CONFIDENCE: {
       WEAK: 0,
       STRONG: 1
-    }
-  },
-  admob: {
-    AD_SIZE: {
-      SMART_BANNER: "SMART",
-      LARGE_BANNER: "LARGE",
-      BANNER: "BANNER",
-      MEDIUM_RECTANGLE: "MEDIUM",
-      FULL_BANNER: "FULL",
-      LEADERBOARD: "LEADERBOARD",
-      SKYSCRAPER: "SKYSCRAPER",
-      FLUID: "FLUID"
-    },
-    defaults: {
-      margins: {
-        top: -1,
-        bottom: -1
-      },
-      testing: false,
-      size: "SMART"
     }
   },
   LoginType: {

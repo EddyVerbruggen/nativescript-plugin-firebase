@@ -2,7 +2,7 @@ import { Observable } from "tns-core-modules/data/observable";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
 import { isIOS } from "tns-core-modules/platform";
 import * as firebase from "nativescript-plugin-firebase";
-import { AddEventListenerResult, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
+import { AddEventListenerResult, storage as firebaseStorage, admob as firebaseAdMob, User } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 import { MessagingViewModel } from './messaging-view-model';
 
@@ -546,8 +546,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowAdMobBanner(): void {
-    firebase.admob.showBanner({
-      size: firebase.admob.AD_SIZE.SMART_BANNER,
+    firebaseAdMob.showBanner({
+      size: firebaseAdMob.AD_SIZE.SMART_BANNER,
       margins: {
         bottom: isIOS ? 50 : 0
       },
@@ -592,6 +592,41 @@ export class HelloWorldModel extends Observable {
         () => {
           console.log("AdMob interstitial showing");
         },
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    );
+  }
+
+  public doPreloadAdMobInterstitial(): void {
+    firebaseAdMob.preloadInterstitial({
+      iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      testing: true,
+      // Android automatically adds the connected device as test device with testing:true, iOS does not
+      iosTestDeviceIds: [
+        "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
+        "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
+      ]
+    }).then(
+        () => console.log("AdMob interstitial preloaded"),
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    );
+  }
+
+  public doShowPreloadedAdMobInterstitial(): void {
+    firebaseAdMob.showInterstitial().then(
+        () => console.log("AdMob interstitial showing"),
         errorMessage => {
           alert({
             title: "AdMob error",

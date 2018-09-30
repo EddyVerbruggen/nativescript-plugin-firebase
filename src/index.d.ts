@@ -1,7 +1,8 @@
 // the main monolith
 export * from './firebase';
 
-// the modules I've already extracted from the monolith
+// the modules that have already been extracted from the monolith (which can be imported separately)
+export * from './admob';
 export * from './analytics';
 export * from './storage';
 export * from './messaging';

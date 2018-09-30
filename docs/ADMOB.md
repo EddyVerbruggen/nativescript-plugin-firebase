@@ -3,7 +3,7 @@
 ## Enabling AdMob
 Since plugin version 3.10.0 you can use Firebase _AdMob_ features.
 
-_AdMob_ lets you show banners or interstitials (full screen ads) in your app so you can earn a little money.
+_AdMob_ lets you show banners or interstitials (full screen ads) in your app so you can earn some money.
 
 ### iOS
 
@@ -81,8 +81,13 @@ This is a fullscreen ad, so you can earn extra credit on the eternal ladder of a
 
 Note that an interstitial is supposed to be hidden by clicking the close button, so there's no function to do it programmatically.
 
+There's two ways how you can use this function:
+
+* RECOMMENDED: without arguments, and after the Promise of 'preloadInterstitial' resolves. This will show the interstitial immediately.
+* DEPRECATED: with arguments (same as 'preloadInterstitial'). This will preload and _then_ show the interstitial, so a delay will be noticable by the user, which is against Google's policies.
+
 ```js
-  firebase.admob.showInterstitial({
+  firebase.admob.preloadInterstitial({
     iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
     androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
     testing: true, // when not running in production set this to true, Google doesn't like it any other way
@@ -92,7 +97,24 @@ Note that an interstitial is supposed to be hidden by clicking the close button,
     ]
   }).then(
       function () {
-        console.log("AdMob interstitial showing");
+        console.log("AdMob interstitial preloaded, you can now call 'showInterstitial' at any time to show it without delay.");
+      },
+      function (errorMessage) {
+        dialogs.alert({
+          title: "AdMob error",
+          message: errorMessage,
+          okButtonText: "Hmmkay"
+        });
+      }
+  );
+```
+
+After the preload Promise resolved successfully, you can show the interstitial at any time you want:
+
+```js
+  firebase.admob.showInterstitial().then(
+      function () {
+        console.log("AdMob interstitial showing.");
       },
       function (errorMessage) {
         dialogs.alert({
