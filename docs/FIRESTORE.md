@@ -242,6 +242,8 @@ firebase.firestore().collection("dogs").doc("fave")
 ### Ordering and limiting results of `collection.where()`
 Return data sorted (asc or desc), or limit to a certain number of results:
 
+> Make sure to checkt the comment on the `.catch` below.
+
 ```typescript
 const citiesCollection = firebase.firestore().collection("cities");
 
@@ -257,7 +259,7 @@ query
       querySnapshot.forEach(doc => {
         console.log(`Large Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
       });
-    });
+    }).catch(err => console.log(err)); // make sure you add this because Firestore may request you to create an index for this query!
 ```
 
 ### Paginate data with query cursors
