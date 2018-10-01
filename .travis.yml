@@ -24,6 +24,7 @@ install:
     - cd src
     - npm i --ignore-scripts
     - npm run tsc
+    - npm run package
     - cd ../demo
     - npm i
 
