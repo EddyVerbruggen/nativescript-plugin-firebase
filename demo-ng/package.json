@@ -25,7 +25,7 @@
     "nativescript-angular": "^6.1.0",
     "nativescript-camera": "^4.0.2",
     "nativescript-imagepicker": "~6.0.4",
-    "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-7.1.0.tgz",
+    "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-7.1.2.tgz",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.10",
     "rxjs": "~6.0.0 || >=6.1.0",
