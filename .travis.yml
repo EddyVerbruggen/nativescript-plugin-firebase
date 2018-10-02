@@ -24,6 +24,7 @@ install:
     - cd src
     - npm i --ignore-scripts
     - npm run tsc
+    - npm run package
     - cd ../demo
     - npm i
 
@@ -35,7 +36,7 @@ matrix:
     - stage: "Lint"
       language: node_js
       os: linux
-      node_js: "6"
+      node_js: "8"
       script: "npm run ci.tslint"
     - stage: "WebPack"
       os: osx
@@ -43,7 +44,7 @@ matrix:
         - Webpack="iOS"
       osx_image: xcode9.2
       language: node_js
-      node_js: "6"
+      node_js: "8"
       jdk: oraclejdk8
       before_install:
         - gem install cocoapods
@@ -54,7 +55,7 @@ matrix:
       env:
         - Webpack="Android"
       jdk: oraclejdk8
-      before_install: nvm install 6.10.3
+      before_install: nvm install 8.9.1
       script: travis_wait travis_retry tns build android --bundle
     - stage: "Build"
       env:
@@ -62,7 +63,7 @@ matrix:
       language: android
       os: linux
       jdk: oraclejdk8
-      before_install: nvm install 6.10.3
+      before_install: nvm install 8.9.1
       script:
         - travis_wait travis_retry tns build android
     - os: osx
@@ -71,7 +72,7 @@ matrix:
         - Xcode="9.2"
       osx_image: xcode9.2
       language: node_js
-      node_js: "6"
+      node_js: "8"
       jdk: oraclejdk8
       before_install:
         - gem install cocoapods

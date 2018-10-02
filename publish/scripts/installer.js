@@ -897,7 +897,7 @@ module.exports = function($logger, $projectData) {
                 let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
                 if (dependenciesNode > -1) {
                     dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
-                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.25.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.25.4"\\n' + buildGradleContent.substr(dependenciesNode - 1);
                 }
             }
 
