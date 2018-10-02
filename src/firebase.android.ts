@@ -12,7 +12,6 @@ import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
-import { topmost } from "tns-core-modules/ui/frame";
 import { firestore, User } from "./firebase";
 
 declare const android, com, org: any;
@@ -38,7 +37,7 @@ let fbCallbackManager = null;
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
 
-const authEnabled = lazy(() => typeof (com.google.firebase.auth) !== "undefined");
+const authEnabled = lazy(() => typeof (com.google.firebase.auth) !== "undefined" && typeof (com.google.firebase.auth.FirebaseAuth) !== "undefined");
 const messagingEnabled = lazy(() => typeof (com.google.firebase.messaging) !== "undefined");
 const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks) !== "undefined");
 
