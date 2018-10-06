@@ -1,9 +1,14 @@
 import * as firebase from "../../firebase";
+// import * as firebaseSdk from 'firebase/app';
 
-export module firestore {
-  export class Firestore {
+export namespace firestore {
+  export class Firestore /*implements firebaseSdk.firestore.Firestore*/ {
     collection(collectionPath: string): firebase.firestore.CollectionReference {
       return firebase.firestore.collection(collectionPath);
+    }
+
+    doc(path: string): firebase.firestore.DocumentReference {
+      return firebase.firestore.docRef(path);
     }
 
     FieldValue(): firebase.firestore.FieldValue {
@@ -13,7 +18,7 @@ export module firestore {
         serverTimestamp: () => "SERVER_TIMESTAMP",
         arrayUnion: (fields: Array<any>) => new firebase.firestore.FieldValue("ARRAY_UNION", fields),
         arrayRemove: (fields: Array<any>) => new firebase.firestore.FieldValue("ARRAY_REMOVE", fields)
-      }
+      };
     }
 
     GeoPoint(latitude: number, longitude: number): firebase.firestore.GeoPoint {

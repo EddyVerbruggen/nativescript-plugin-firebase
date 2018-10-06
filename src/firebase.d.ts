@@ -628,6 +628,7 @@ export namespace firestore {
     /* com.google.firebase.firestore.DocumentSnapshot */
     id: string;
     exists: boolean;
+    ref: DocumentReference;
 
     data(): DocumentData;
   }
@@ -635,6 +636,7 @@ export namespace firestore {
   export interface DocumentReference {
     discriminator: "docRef";
     id: string;
+    path: string;
     collection: (collectionPath: string) => CollectionReference;
     set: (document: any, options?: SetOptions) => Promise<void>;
     get: () => Promise<DocumentSnapshot>;
@@ -727,15 +729,82 @@ export namespace firestore {
     static arrayRemove: (fields: Array<any>) => FieldValue;
   }
 
+  export interface SnapshotListenOptions {
+    readonly includeMetadataChanges?: boolean;
+  }
+
+  export interface SnapshotOptions {
+    /**
+     * If set, controls the return value for server timestamps that have not yet
+     * been set to their final value.
+     *
+     * By specifying 'estimate', pending server timestamps return an estimate
+     * based on the local clock. This estimate will differ from the final value
+     * and cause these values to change once the server result becomes available.
+     *
+     * By specifying 'previous', pending timestamps will be ignored and return
+     * their previous value instead.
+     *
+     * If omitted or set to 'none', `null` will be returned by default until the
+     * server value becomes available.
+     */
+    readonly serverTimestamps?: 'estimate' | 'previous' | 'none';
+  }
+
+  export interface QueryDocumentSnapshot extends firestore.DocumentSnapshot {
+    /**
+     * Retrieves all fields in the document as an Object.
+     *
+     * By default, `FieldValue.serverTimestamp()` values that have not yet been
+     * set to their final value will be returned as `null`. You can override
+     * this by passing an options object.
+     *
+     * @override
+     * @param options An options object to configure how data is retrieved from
+     * the snapshot (e.g. the desired behavior for server timestamps that have
+     * not yet been set to their final value).
+     * @return An Object containing all fields in the document.
+     */
+    data(options?: SnapshotOptions): DocumentData;
+  }
+
+  export type DocumentChangeType = 'added' | 'removed' | 'modified';
+
+  export interface DocumentChange {
+    readonly type: DocumentChangeType;
+
+    /** The document affected by this change. */
+    readonly doc: QueryDocumentSnapshot;
+
+    /**
+     * The index of the changed document in the result set immediately prior to
+     * this DocumentChange (i.e. supposing that all prior DocumentChange objects
+     * have been applied). Is -1 for 'added' events.
+     */
+    readonly oldIndex: number;
+
+    /**
+     * The index of the changed document in the result set immediately after
+     * this DocumentChange (i.e. supposing that all prior DocumentChange
+     * objects and the current DocumentChange object have been applied).
+     * Is -1 for 'removed' events.
+     */
+    readonly newIndex: number;
+  }
+
   export interface QuerySnapshot {
     docSnapshots: firestore.DocumentSnapshot[];
+    docs: firestore.QueryDocumentSnapshot[];
 
+    docChanges(options?: SnapshotListenOptions): DocumentChange[];
     forEach(callback: (result: DocumentSnapshot) => void, thisArg?: any): void;
   }
 
   function collection(collectionPath: string): CollectionReference;
 
   function doc(collectionPath: string, documentPath?: string): DocumentReference;
+
+  function docRef(documentPath: string): DocumentReference;
 
   function add(collectionPath: string, documentData: any): Promise<DocumentReference>;
 
