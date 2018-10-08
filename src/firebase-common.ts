@@ -11,9 +11,9 @@ export class FieldValue {
   constructor(public type: firestore.FieldValueType, public value: any) {
   };
 
-  serverTimestamp = () => "SERVER_TIMESTAMP";
-  arrayUnion = (fields: Array<any>) => new FieldValue("ARRAY_UNION", fields);
-  arrayRemove = (fields: Array<any>) => new FieldValue("ARRAY_REMOVE", fields);
+  static serverTimestamp = () => "SERVER_TIMESTAMP";
+  static arrayUnion = (fields: Array<any>) => new FieldValue("ARRAY_UNION", fields);
+  static arrayRemove = (fields: Array<any>) => new FieldValue("ARRAY_REMOVE", fields);
 }
 
 export class GeoPoint {

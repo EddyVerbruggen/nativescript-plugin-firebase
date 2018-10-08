@@ -59,6 +59,8 @@ export class FirestoreComponent {
         .set({
               name: "Woofie",
               last: "lastofwoofie",
+              lastKnownLocation: firebase.firestore().GeoPoint(5.34, 6.67),
+              lastKnownLocation2: firestore.GeoPoint(5.34, 6.67)
               // note that this only works on iOS (there's a limitation in the Firestore Android SDK)
               // updateTsSet: firebase.firestore().FieldValue().serverTimestamp()
             },
@@ -143,7 +145,8 @@ export class FirestoreComponent {
           city: sfDocRef,
           updateTs: firestore.FieldValue.serverTimestamp(),
           updateTsAlt: firebase.firestore().FieldValue().serverTimestamp(),
-          lastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67)
+          lastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67),
+          lastKnownLocation2: firestore.GeoPoint(4.34, 5.67)
         })
         .then(() => console.log("Woofie updated"))
         .catch(err => console.log("Updating Woofie failed, error: " + JSON.stringify(err)));
