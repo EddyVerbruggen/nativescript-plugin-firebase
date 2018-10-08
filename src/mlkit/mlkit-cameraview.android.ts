@@ -115,6 +115,9 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private runCamera(): void {
     // Note that surfaceview callbacks didn't seem to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
     setTimeout(() => {
+      if (!this.surfaceView) {
+        return;
+      }
       const surfaceHolder = this.surfaceView.getHolder();
       const cameraFacingRequested = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
       const cameraInfo = new android.hardware.Camera.CameraInfo();
