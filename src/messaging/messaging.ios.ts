@@ -162,9 +162,11 @@ export function addBackgroundRemoteNotificationHandler(appDelegate) {
 
   appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
     // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
-    if (firebase._configured && FIRAuth.auth().canHandleNotification(notification)) {
-      completionHandler(UIBackgroundFetchResult.NoData);
-      return;
+    if (typeof (FIRAuth) !== "undefined") {
+      if (firebase._configured && FIRAuth.auth().canHandleNotification(notification)) {
+        completionHandler(UIBackgroundFetchResult.NoData);
+        return;
+      }
     }
 
     completionHandler(UIBackgroundFetchResult.NewData);
