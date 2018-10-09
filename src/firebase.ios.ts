@@ -1833,7 +1833,7 @@ function fixSpecialField(item): any {
     });
   } else if (isDocumentReference(item)) {
     return item.ios;
-  } else if (typeof item === "object") {
+  } else if (typeof item === 'object' && item instanceof Object && !(item instanceof Array)) {
     return fixSpecialFields(item);
   } else {
     return item;
