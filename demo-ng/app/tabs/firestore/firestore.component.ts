@@ -142,6 +142,12 @@ export class FirestoreComponent {
         .update({
           name: "Woofieupdate",
           last: "updatedwoofie!",
+          nested: {
+            nestedFoo: "bar",
+            nestedUpdateTs: firestore.FieldValue.serverTimestamp(),
+            nestedLastKnownLocation: firebase.firestore().GeoPoint(4.34, 5.67),
+            nestedLastKnownLocation2: firestore.GeoPoint(4.34, 5.67)
+          },
           city: sfDocRef,
           updateTs: firestore.FieldValue.serverTimestamp(),
           updateTsAlt: firebase.firestore().FieldValue().serverTimestamp(),
