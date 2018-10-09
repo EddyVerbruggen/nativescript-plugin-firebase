@@ -1810,6 +1810,7 @@ function fixSpecialFields(item) {
       item[k] = fixSpecialField(item[k]);
     }
   }
+  return item;
 }
 
 function fixSpecialField(item): any {
@@ -1818,8 +1819,6 @@ function fixSpecialField(item): any {
   } else if (item instanceof FieldValue) {
     const fieldValue: FieldValue = item;
     if (fieldValue.type === "ARRAY_UNION") {
-      console.log(">> fieldValue.value1: " + fieldValue.value);
-      console.log(">> fieldValue.value2: " + JSON.stringify(fieldValue.value));
       return FIRFieldValue.fieldValueForArrayUnion(fieldValue.value);
     } else if (fieldValue.type === "ARRAY_REMOVE") {
       return FIRFieldValue.fieldValueForArrayRemove(fieldValue.value);
@@ -1834,6 +1833,8 @@ function fixSpecialField(item): any {
     });
   } else if (isDocumentReference(item)) {
     return item.ios;
+  } else if (typeof item === "object") {
+    return fixSpecialFields(item);
   } else {
     return item;
   }
