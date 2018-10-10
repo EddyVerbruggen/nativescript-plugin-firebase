@@ -1,8 +1,9 @@
 import {
-  firebase,
   DocumentSnapshot as DocumentSnapshotBase,
+  FieldValue,
+  firebase,
   GeoPoint,
-  isDocumentReference, FieldValue
+  isDocumentReference
 } from "./firebase-common";
 import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
@@ -112,17 +113,17 @@ firebase.addAppDelegateMethods = appDelegate => {
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
-          application,
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+            application,
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
         result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-          url,
-          options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-          options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+            url,
+            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
+            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -475,7 +476,7 @@ firebase.getRemoteConfig = arg => {
 
       const onCompletion = (remoteConfigFetchStatus, error) => {
         if (remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Success ||
-          remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Throttled) {
+            remoteConfigFetchStatus === FIRRemoteConfigFetchStatus.Throttled) {
 
           const activated = firebaseRemoteConfig.activateFetched();
 
@@ -742,22 +743,22 @@ firebase.login = arg => {
         firActionCodeSettings.handleCodeInApp = true;
         firActionCodeSettings.setIOSBundleID(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : NSBundle.mainBundle.bundleIdentifier);
         firActionCodeSettings.setAndroidPackageNameInstallIfNotAvailableMinimumVersion(
-          arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
-          arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
-          arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
+            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
         fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
-          arg.emailLinkOptions.email,
-          firActionCodeSettings,
-          (error: NSError) => {
-            if (error) {
-              reject(error.localizedDescription);
-              return;
+            arg.emailLinkOptions.email,
+            firActionCodeSettings,
+            (error: NSError) => {
+              if (error) {
+                reject(error.localizedDescription);
+                return;
+              }
+              // The link was successfully sent.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
+              resolve();
             }
-            // The link was successfully sent.
-            // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
-            firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
-            resolve();
-          }
         );
 
       } else if (arg.type === firebase.LoginType.PHONE) {
@@ -801,14 +802,14 @@ firebase.login = arg => {
           fAuth.signInAndRetrieveDataWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
-            .then(
-              token => {
-                fAuth.signInAndRetrieveDataWithCustomTokenCompletion(token, onCompletionWithAuthResult);
-              },
-              error => {
-                reject(error);
-              }
-            );
+              .then(
+                  token => {
+                    fAuth.signInAndRetrieveDataWithCustomTokenCompletion(token, onCompletionWithAuthResult);
+                  },
+                  error => {
+                    reject(error);
+                  }
+              );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
@@ -856,9 +857,9 @@ firebase.login = arg => {
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-          scope,
-          null, // the viewcontroller param can be null since by default topmost is taken
-          onFacebookCompletion);
+            scope,
+            null, // the viewcontroller param can be null since by default topmost is taken
+            onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (typeof (GIDSignIn) === "undefined") {
@@ -1194,15 +1195,15 @@ firebase.addValueEventListener = (updateCallback, path) => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       const listener = where.observeEventTypeWithBlockWithCancelBlock(
-        FIRDataEventType.Value,
-        snapshot => {
-          updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
-        },
-        firebaseError => {
-          updateCallback({
-            error: firebaseError.localizedDescription
+          FIRDataEventType.Value,
+          snapshot => {
+            updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+          },
+          firebaseError => {
+            updateCallback({
+              error: firebaseError.localizedDescription
+            });
           });
-        });
       resolve({
         path: path,
         listeners: [listener]
@@ -1219,13 +1220,13 @@ firebase.getValue = path => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       const listener = where.observeSingleEventOfTypeWithBlockWithCancelBlock(
-        FIRDataEventType.Value,
-        snapshot => {
-          resolve(firebase.getCallbackData('ValueChanged', snapshot));
-        },
-        firebaseError => {
-          reject(firebaseError.localizedDescription);
-        });
+          FIRDataEventType.Value,
+          snapshot => {
+            resolve(firebase.getCallbackData('ValueChanged', snapshot));
+          },
+          firebaseError => {
+            reject(firebaseError.localizedDescription);
+          });
     } catch (ex) {
       console.log("Error in firebase.getValue: " + ex);
       reject(ex);
@@ -1549,18 +1550,18 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
       fixSpecialFields(data);
       nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    }
+    };
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
       fixSpecialFields(data);
       nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    }
+    };
 
     public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
       nativeWriteBatch.deleteDocument(documentRef.ios);
       return this;
-    }
+    };
 
     commit(): Promise<void> {
       return new Promise<void>((resolve, reject) => {
@@ -1612,11 +1613,11 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     FIRFirestore.firestore().runTransactionWithBlockCompletion(
-      (nativeTransaction: FIRTransaction, err: any) => {
-        const tx = new firebase.firestore.Transaction(nativeTransaction);
-        return updateFunction(tx);
-      },
-      (result, error: NSError) => error ? reject(error.localizedDescription) : resolve());
+        (nativeTransaction: FIRTransaction, err: any) => {
+          const tx = new firebase.firestore.Transaction(nativeTransaction);
+          return updateFunction(tx);
+        },
+        (result, error: NSError) => error ? reject(error.localizedDescription) : resolve());
   });
 };
 
@@ -1740,24 +1741,24 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
       fixSpecialFields(document);
       const defaultFirestore = FIRFirestore.firestore();
       const fIRDocumentReference = defaultFirestore
-        .collectionWithPath(collectionPath)
-        .addDocumentWithDataCompletion(document, (error: NSError) => {
-          if (error) {
-            reject(error.localizedDescription);
-          } else {
-            resolve({
-              discriminator: "docRef",
-              id: fIRDocumentReference.documentID,
-              path: fIRDocumentReference.path,
-              collection: cp => firebase.firestore.collection(cp),
-              set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
-              get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
-              update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
-              delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
-              onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(fIRDocumentReference, callback)
-            });
-          }
-        });
+          .collectionWithPath(collectionPath)
+          .addDocumentWithDataCompletion(document, (error: NSError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve({
+                discriminator: "docRef",
+                id: fIRDocumentReference.documentID,
+                path: fIRDocumentReference.path,
+                collection: cp => firebase.firestore.collection(cp),
+                set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
+                get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
+                update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
+                delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
+                onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(fIRDocumentReference, callback)
+              });
+            }
+          });
 
     } catch (ex) {
       console.log("Error in firebase.firestore.add: " + ex);
@@ -1777,8 +1778,8 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
-        .collectionWithPath(collectionPath)
-        .documentWithPath(documentPath);
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath);
 
       if (options && options.merge) {
         docRef.setDataMergeCompletion(document, true, (error: NSError) => {
@@ -1816,7 +1817,9 @@ function fixSpecialFields(item) {
 }
 
 function fixSpecialField(item): any {
-  if (item === "SERVER_TIMESTAMP") {
+  if (item === null) {
+    return null;
+  } else if (item === "SERVER_TIMESTAMP") {
     return FIRFieldValue.fieldValueForServerTimestamp();
   } else if (item instanceof FieldValue) {
     const fieldValue: FieldValue = item;
@@ -1853,8 +1856,8 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
-        .collectionWithPath(collectionPath)
-        .documentWithPath(documentPath);
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath);
 
       docRef.updateDataCompletion(document, (error: NSError) => {
         if (error) {
@@ -1879,8 +1882,8 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
       }
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
-        .collectionWithPath(collectionPath)
-        .documentWithPath(documentPath);
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath);
 
       docRef.deleteDocumentWithCompletion((error: NSError) => {
         if (error) {
@@ -1907,14 +1910,14 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
 
       const defaultFirestore = FIRFirestore.firestore();
       defaultFirestore
-        .collectionWithPath(collectionPath)
-        .getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
-          if (error) {
-            reject(error.localizedDescription);
-          } else {
-            resolve(new QuerySnapshot(snapshot));
-          }
-        });
+          .collectionWithPath(collectionPath)
+          .getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve(new QuerySnapshot(snapshot));
+            }
+          });
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getCollection: " + ex);
@@ -1936,15 +1939,15 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
       }
 
       FIRFirestore.firestore()
-        .collectionWithPath(collectionPath)
-        .documentWithPath(documentPath)
-        .getDocumentWithCompletion((snapshot: FIRDocumentSnapshot, error: NSError) => {
-          if (error) {
-            reject(error.localizedDescription);
-          } else {
-            resolve(new DocumentSnapshot(snapshot));
-          }
-        });
+          .collectionWithPath(collectionPath)
+          .documentWithPath(documentPath)
+          .getDocumentWithCompletion((snapshot: FIRDocumentSnapshot, error: NSError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve(new DocumentSnapshot(snapshot));
+            }
+          });
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getDocument: " + ex);
@@ -2099,10 +2102,14 @@ function convertDocRef(docRef: FIRDocumentReference): firestore.DocumentReferenc
 
 function convertDocChangeType(type: FIRDocumentChangeType) {
   switch (type) {
-    case FIRDocumentChangeType.Added: return 'added';
-    case FIRDocumentChangeType.Modified: return 'modified';
-    case FIRDocumentChangeType.Removed: return 'removed';
-    default: throw new Error('Unknown DocumentChangeType');
+    case FIRDocumentChangeType.Added:
+      return 'added';
+    case FIRDocumentChangeType.Modified:
+      return 'modified';
+    case FIRDocumentChangeType.Removed:
+      return 'removed';
+    default:
+      throw new Error('Unknown DocumentChangeType');
   }
 }
 
@@ -2113,9 +2120,8 @@ function convertDocument(qDoc: FIRQueryDocumentSnapshot): firestore.QueryDocumen
 export class QuerySnapshot implements firestore.QuerySnapshot {
   private _docSnapshots: firestore.QueryDocumentSnapshot[];
 
-  constructor(
-    private snapshot: FIRQuerySnapshot,
-  ) { }
+  constructor(private snapshot: FIRQuerySnapshot) {
+  }
 
   get docs(): firestore.QueryDocumentSnapshot[] {
     const getSnapshots = () => {
@@ -2139,7 +2145,9 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
   docSnapshots = this.docs as firestore.DocumentSnapshot[]; // It's safe to cast, as our document snapshot already has the data() method
 
   docChanges(options?: firestore.SnapshotListenOptions): firestore.DocumentChange[] {
-    if (options) { console.info('No options support yet, for docChanges()'); }
+    if (options) {
+      console.info('No options support yet, for docChanges()');
+    }
     const docChanges: firestore.DocumentChange[] = [];
     const jChanges: NSArray<FIRDocumentChange> = this.snapshot.documentChanges;
     for (let i = 0; i < jChanges.count; i++) {
