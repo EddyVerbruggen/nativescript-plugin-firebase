@@ -1,7 +1,7 @@
 import {
   DocumentSnapshot as DocumentSnapshotBase,
-  firebase,
   FieldValue,
+  firebase,
   GeoPoint,
   isDocumentReference
 } from "./firebase-common";
@@ -9,7 +9,7 @@ import * as firebaseMessaging from "./messaging/messaging";
 import * as firebaseFunctions from "./functions/functions";
 import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
-import { ad as AndroidUtils, layout } from "tns-core-modules/utils/utils";
+import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import { firestore, User } from "./firebase";
 
@@ -278,7 +278,7 @@ firebase.init = arg => {
       arg = arg || {};
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-        appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
       ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
       if (typeof (com.google.firebase.database) !== "undefined" && typeof (com.google.firebase.database.ServerValue) !== "undefined") {
@@ -301,9 +301,9 @@ firebase.init = arg => {
         if (!arg.persist) {
           try {
             com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
-              new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(false)
-                .build());
+                new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
+                    .setPersistenceEnabled(false)
+                    .build());
           } catch (ignore) {
           }
         }
@@ -536,8 +536,8 @@ firebase.getRemoteConfig = arg => {
 
       // Enable developer mode to allow for frequent refreshes of the cache
       const remoteConfigSettings = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
-        .setDeveloperModeEnabled(arg.developerMode || false)
-        .build();
+          .setDeveloperModeEnabled(arg.developerMode || false)
+          .build();
       firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
 
       const defaults = firebase.getRemoteConfigDefaults(arg.properties);
@@ -586,8 +586,8 @@ firebase.getRemoteConfig = arg => {
       const expirationDuration = arg.cacheExpirationSeconds || 43200;
 
       firebaseRemoteConfig.fetch(expirationDuration)
-        .addOnSuccessListener(onSuccessListener)
-        .addOnFailureListener(onFailureListener);
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
     };
 
     try {
@@ -692,8 +692,8 @@ firebase.getAuthToken = arg => {
         });
 
         user.getIdToken(arg.forceRefresh)
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
 
       } else {
         reject("Log in first");
@@ -822,15 +822,15 @@ firebase.login = arg => {
         }
 
         const actionCodeSettings = com.google.firebase.auth.ActionCodeSettings.newBuilder()
-          // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
-          .setUrl(arg.emailLinkOptions.url)
-          .setHandleCodeInApp(true)
-          .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : appModule.android.context.getPackageName())
-          .setAndroidPackageName(
-            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : appModule.android.context.getPackageName(),
-            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
-            arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1")
-          .build();
+        // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
+            .setUrl(arg.emailLinkOptions.url)
+            .setHandleCodeInApp(true)
+            .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : appModule.android.context.getPackageName())
+            .setAndroidPackageName(
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : appModule.android.context.getPackageName(),
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1")
+            .build();
 
         const onEmailLinkCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
           onComplete: task => {
@@ -907,11 +907,11 @@ firebase.login = arg => {
         firebase._verifyPhoneNumberInProgress = true;
 
         com.google.firebase.auth.PhoneAuthProvider.getInstance().verifyPhoneNumber(
-          arg.phoneOptions.phoneNumber,
-          60, // timeout (in seconds, because of the next argument)
-          java.util.concurrent.TimeUnit.SECONDS,
-          appModule.android.foregroundActivity,
-          new OnVerificationStateChangedCallbacks());
+            arg.phoneOptions.phoneNumber,
+            60, // timeout (in seconds, because of the next argument)
+            java.util.concurrent.TimeUnit.SECONDS,
+            appModule.android.foregroundActivity,
+            new OnVerificationStateChangedCallbacks());
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
         if (!arg.customOptions || (!arg.customOptions.token && !arg.customOptions.tokenProviderFn)) {
@@ -923,14 +923,14 @@ firebase.login = arg => {
           firebaseAuth.signInWithCustomToken(arg.customOptions.token).addOnCompleteListener(onCompleteListener);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
-            .then(
-              token => {
-                firebaseAuth.signInWithCustomToken(token).addOnCompleteListener(onCompleteListener);
-              },
-              error => {
-                reject(error);
-              }
-            );
+              .then(
+                  token => {
+                    firebaseAuth.signInWithCustomToken(token).addOnCompleteListener(onCompleteListener);
+                  },
+                  error => {
+                    reject(error);
+                  }
+              );
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
@@ -941,30 +941,30 @@ firebase.login = arg => {
 
         const fbLoginManager = com.facebook.login.LoginManager.getInstance();
         fbLoginManager.registerCallback(
-          fbCallbackManager,
-          new com.facebook.FacebookCallback({
-            onSuccess: loginResult => {
-              firebase._facebookAccessToken = loginResult.getAccessToken().getToken();
-              const authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(firebase._facebookAccessToken);
+            fbCallbackManager,
+            new com.facebook.FacebookCallback({
+              onSuccess: loginResult => {
+                firebase._facebookAccessToken = loginResult.getAccessToken().getToken();
+                const authCredential = com.google.firebase.auth.FacebookAuthProvider.getCredential(firebase._facebookAccessToken);
 
-              const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-              if (user) {
-                if (firebase._alreadyLinkedToAuthProvider(user, "facebook.com")) {
-                  firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+                if (user) {
+                  if (firebase._alreadyLinkedToAuthProvider(user, "facebook.com")) {
+                    firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  } else {
+                    user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  }
                 } else {
-                  user.linkWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+                  firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
                 }
-              } else {
-                firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
+              },
+              onCancel: () => {
+                reject("Facebook Login canceled");
+              },
+              onError: ex => {
+                reject("Error while trying to login with Fb " + ex);
               }
-            },
-            onCancel: () => {
-              reject("Facebook Login canceled");
-            },
-            onError: ex => {
-              reject("Error while trying to login with Fb " + ex);
-            }
-          })
+            })
         );
 
         let scope = ["public_profile", "email"];
@@ -987,8 +987,8 @@ firebase.login = arg => {
 
         // Configure Google Sign In
         const googleSignInOptionsBuilder = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
-          .requestIdToken(clientId)
-          .requestEmail();
+            .requestIdToken(clientId)
+            .requestEmail();
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {
           googleSignInOptionsBuilder.setHostedDomain(arg.googleOptions.hostedDomain);
@@ -1003,9 +1003,9 @@ firebase.login = arg => {
         });
 
         firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
-          .addOnConnectionFailedListener(onConnectionFailedListener)
-          .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-          .build();
+            .addOnConnectionFailedListener(onConnectionFailedListener)
+            .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+            .build();
 
         const signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(firebase._mGoogleApiClient);
 
@@ -1454,12 +1454,12 @@ firebase.push = (path, val) => {
       const pushInstance = firebase.instance.child(path).push();
 
       pushInstance.setValue(firebase.toValue(val))
-        .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
-          onSuccess: () => resolve({key: pushInstance.getKey()})
-        }))
-        .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
-          onFailure: exception => reject(exception.getMessage())
-        }));
+          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            onSuccess: () => resolve({key: pushInstance.getKey()})
+          }))
+          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            onFailure: exception => reject(exception.getMessage())
+          }));
 
     } catch (ex) {
       console.log("Error in firebase.push: " + ex);
@@ -1477,12 +1477,12 @@ firebase.setValue = (path, val) => {
       }
 
       firebase.instance.child(path).setValue(firebase.toValue(val))
-        .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
-          onSuccess: () => resolve()
-        }))
-        .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
-          onFailure: exception => reject(exception.getMessage())
-        }));
+          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            onSuccess: () => resolve()
+          }))
+          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            onFailure: exception => reject(exception.getMessage())
+          }));
 
     } catch (ex) {
       console.log("Error in firebase.setValue: " + ex);
@@ -1509,16 +1509,16 @@ firebase.update = (path, val) => {
 
       if (typeof val === "object") {
         firebase.instance.child(path).updateChildren(firebase.toHashMap(val))
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
       } else {
         const lastPartOfPath = path.lastIndexOf("/");
         const pathPrefix = path.substring(0, lastPartOfPath);
         const pathSuffix = path.substring(lastPartOfPath + 1);
         const updateObject = '{"' + pathSuffix + '" : "' + val + '"}';
         firebase.instance.child(pathPrefix).updateChildren(firebase.toHashMap(JSON.parse(updateObject)))
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
       }
     } catch (ex) {
       console.log("Error in firebase.update: " + ex);
@@ -1652,12 +1652,12 @@ firebase.remove = path => {
       }
 
       firebase.instance.child(path).setValue(null)
-        .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
-          onSuccess: () => resolve()
-        }))
-        .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
-          onFailure: exception => reject(exception.getMessage())
-        }));
+          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            onSuccess: () => resolve()
+          }))
+          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            onFailure: exception => reject(exception.getMessage())
+          }));
     } catch (ex) {
       console.log("Error in firebase.remove: " + ex);
       reject(ex);
@@ -1775,9 +1775,9 @@ firebase.invites.getInvitation = () => {
       });
 
       firebase._mGoogleInviteApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
-        .addOnConnectionFailedListener(onConnectionFailedListener)
-        .addApi(com.google.android.gms.appinvite.AppInvite.API)
-        .build();
+          .addOnConnectionFailedListener(onConnectionFailedListener)
+          .addApi(com.google.android.gms.appinvite.AppInvite.API)
+          .build();
 
       firebase._mGoogleInviteApiClient.connect();
 
@@ -1811,8 +1811,8 @@ firebase.invites.getInvitation = () => {
       });
 
       firebaseDynamicLinks.getDynamicLink(appModule.android.startActivity.getIntent())
-        .addOnSuccessListener(onSuccessListener)
-        .addOnFailureListener(onFailureListener);
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.getInvitation: " + ex);
@@ -1981,12 +1981,12 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
 
 firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
   const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
-    onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
-      if (exception === null) {
-        callback(new DocumentSnapshot(snapshot));
-      }
-    })
-  })
+        onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
+          if (exception === null) {
+            callback(new DocumentSnapshot(snapshot));
+          }
+        })
+      })
   );
 
   return () => listener.remove();
@@ -1994,15 +1994,15 @@ firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.D
 
 firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore.CollectionReference, callback: (snapshot: QuerySnapshot) => void): () => void => {
   const listener = colRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
-    onEvent: ((snapshot: com.google.firebase.firestore.QuerySnapshot, exception: com.google.firebase.firestore.FirebaseFirestoreException) => {
-      if (exception !== null) {
-        console.error('onCollectionSnapshot error code: ' + exception.getCode());
-        return;
-      }
+        onEvent: ((snapshot: com.google.firebase.firestore.QuerySnapshot, exception: com.google.firebase.firestore.FirebaseFirestoreException) => {
+          if (exception !== null) {
+            console.error('onCollectionSnapshot error code: ' + exception.getCode());
+            return;
+          }
 
-      callback(new QuerySnapshot(snapshot));
-    })
-  })
+          callback(new QuerySnapshot(snapshot));
+        })
+      })
   );
 
   return () => listener.remove();
@@ -2084,9 +2084,9 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
       });
 
       db.collection(collectionPath)
-        .add(firebase.toValue(document))
-        .addOnSuccessListener(onSuccessListener)
-        .addOnFailureListener(onFailureListener);
+          .add(firebase.toValue(document))
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.add: " + ex);
@@ -2117,14 +2117,14 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
       const docRef: com.google.firebase.firestore.DocumentReference = db.collection(collectionPath).document(documentPath);
       if (options && options.merge) {
         docRef
-          .set(firebase.toValue(document), com.google.firebase.firestore.SetOptions.merge())
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+            .set(firebase.toValue(document), com.google.firebase.firestore.SetOptions.merge())
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
       } else {
         docRef
-          .set(firebase.toValue(document))
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+            .set(firebase.toValue(document))
+            .addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener(onFailureListener);
       }
 
     } catch (ex) {
@@ -2155,9 +2155,9 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 
       const docRef: com.google.firebase.firestore.DocumentReference = db.collection(collectionPath).document(documentPath);
       docRef
-        .update(firebase.toValue(document))
-        .addOnSuccessListener(onSuccessListener)
-        .addOnFailureListener(onFailureListener);
+          .update(firebase.toValue(document))
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.update: " + ex);
@@ -2187,9 +2187,9 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 
       const docRef: com.google.firebase.firestore.DocumentReference = db.collection(collectionPath).document(documentPath);
       docRef
-        .delete()
-        .addOnSuccessListener(onSuccessListener)
-        .addOnFailureListener(onFailureListener);
+          .delete()
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.delete: " + ex);
@@ -2229,9 +2229,9 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
       });
 
       db.collection(collectionPath)
-        .get()
-        .addOnCompleteListener(onCompleteListener)
-        .addOnFailureListener(onFailureListener);
+          .get()
+          .addOnCompleteListener(onCompleteListener)
+          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getCollection: " + ex);
@@ -2274,10 +2274,10 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
       });
 
       db.collection(collectionPath)
-        .document(documentPath)
-        .get()
-        .addOnCompleteListener(onCompleteListener)
-        .addOnFailureListener(onFailureListener);
+          .document(documentPath)
+          .get()
+          .addOnCompleteListener(onCompleteListener)
+          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getDocument: " + ex);
@@ -2397,10 +2397,14 @@ function convertDocRef(docRef: JDocumentReference): firestore.DocumentReference 
 
 function convertDocChangeType(type: com.google.firebase.firestore.DocumentChange.Type) {
   switch (type) {
-    case com.google.firebase.firestore.DocumentChange.Type.ADDED: return 'added';
-    case com.google.firebase.firestore.DocumentChange.Type.MODIFIED: return 'modified';
-    case com.google.firebase.firestore.DocumentChange.Type.REMOVED: return 'removed';
-    default: throw new Error('Unknown DocumentChangeType');
+    case com.google.firebase.firestore.DocumentChange.Type.ADDED:
+      return 'added';
+    case com.google.firebase.firestore.DocumentChange.Type.MODIFIED:
+      return 'modified';
+    case com.google.firebase.firestore.DocumentChange.Type.REMOVED:
+      return 'removed';
+    default:
+      throw new Error('Unknown DocumentChangeType');
   }
 }
 
@@ -2411,9 +2415,8 @@ function convertDocument(qDoc: com.google.firebase.firestore.QueryDocumentSnapsh
 export class QuerySnapshot implements firestore.QuerySnapshot {
   private _docSnapshots: firestore.QueryDocumentSnapshot[];
 
-  constructor(
-    private snapshot: com.google.firebase.firestore.QuerySnapshot,
-  ) { }
+  constructor(private snapshot: com.google.firebase.firestore.QuerySnapshot) {
+  }
 
   get docs(): firestore.QueryDocumentSnapshot[] {
     const getSnapshots = () => {
@@ -2430,6 +2433,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
     // The operation is lazy loaded
     return this._docSnapshots || getSnapshots();
   }
+
   /**
    * @deprecated use the "docs" property instead
    */

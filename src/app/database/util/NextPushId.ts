@@ -14,7 +14,7 @@
  *    this by using the previous random bits but "incrementing" them by 1 (only
  *    in the case of a timestamp collision).
  */
-export const nextPushId = (function() {
+export const nextPushId = (function () {
   // Modeled after base64 web-safe chars, but ordered by ASCII.
   const PUSH_CHARS =
       '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
@@ -29,7 +29,7 @@ export const nextPushId = (function() {
   // we'll use those same characters except "incremented" by one.
   const lastRandChars: number[] = [];
 
-  return function(now: number) {
+  return function (now: number) {
     const duplicateTime = now === lastPushTime;
     lastPushTime = now;
 

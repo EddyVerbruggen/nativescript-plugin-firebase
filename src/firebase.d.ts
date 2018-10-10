@@ -797,6 +797,7 @@ export namespace firestore {
     docs: firestore.QueryDocumentSnapshot[];
 
     docChanges(options?: SnapshotListenOptions): DocumentChange[];
+
     forEach(callback: (result: DocumentSnapshot) => void, thisArg?: any): void;
   }
 

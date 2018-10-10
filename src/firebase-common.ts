@@ -8,10 +8,9 @@ import * as mlkit from "./mlkit";
 
 // note that this implementation is overridden for iOS
 export class FieldValue {
-  constructor(
-    public type: firestore.FieldValueType,
-    public value: any,
-  ) { }
+  constructor(public type: firestore.FieldValueType,
+              public value: any) {
+  }
 
   static serverTimestamp = () => "SERVER_TIMESTAMP";
   static arrayUnion = (fields: Array<any>) => new FieldValue("ARRAY_UNION", fields);
@@ -19,7 +18,8 @@ export class FieldValue {
 }
 
 export class GeoPoint {
-  constructor(public latitude: number, public longitude: number) {
+  constructor(public latitude: number,
+              public longitude: number) {
   }
 }
 
@@ -206,12 +206,10 @@ export const firebase: any = {
 export abstract class DocumentSnapshot implements firestore.DocumentSnapshot {
   public data: () => firestore.DocumentData;
 
-  constructor(
-    public id: string,
-    public exists: boolean,
-    documentData: firestore.DocumentData,
-    public ref: firestore.DocumentReference,
-  ) {
+  constructor(public id: string,
+              public exists: boolean,
+              documentData: firestore.DocumentData,
+              public ref: firestore.DocumentReference) {
     this.data = () => exists ? documentData : undefined;
   }
 }
