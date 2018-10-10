@@ -75,13 +75,11 @@ To be able to use Cloud features you need to do two things:
 |Feature|On-device|Cloud
 |---|---|---
 |[Text recognition](#text-recognition)|✅|✅
-|[Face detection](#face-detection)|✅*|
+|[Face detection](#face-detection)|✅|
 |[Barcode scanning](#barcode-scanning)|✅|
 |[Image labeling](#image-labeling)|✅|✅
 |[Landmark recognition](#landmark-recognition)||✅
 |[Custom model inference](#custom-model-inference)||
-
-*) _Currently detecting faces from still images doesn't work on iOS (from the camera stream works fine tho)._
 
 ### Text recognition
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_recognition.png" height="153px" alt="ML Kit - Text recognition"/>

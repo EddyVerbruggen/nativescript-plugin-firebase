@@ -26,7 +26,6 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 
         for (let i = 0, l = faces.count; i < l; i++) {
           const face: FIRVisionFace = faces.objectAtIndex(i);
-          console.log(">> face: " + face);
           result.faces.push({
             smilingProbability: face.hasSmilingProbability ? face.smilingProbability : undefined,
             leftEyeOpenProbability: face.hasLeftEyeOpenProbability ? face.leftEyeOpenProbability : undefined,
@@ -35,7 +34,6 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
           });
         }
 
-        console.log(">>> notify " + MLKitFaceDetection.scanResultEvent + " with " + JSON.stringify(result.faces));
         this.notify({
           eventName: MLKitFaceDetection.scanResultEvent,
           object: this,
@@ -69,7 +67,6 @@ function getDetector(options: MLKitDetectFacesOnDeviceOptions): FIRVisionFaceDet
   return firVision.faceDetectorWithOptions(firOptions);
 }
 
-// TODO somehow this function doesn't work.. probably because of the passed image, but I can't find the cause.. the live camera version works great tho
 export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): Promise<MLKitDetectFacesOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
@@ -103,6 +100,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
 }
 
 function getImage(options: MLKitOptions): FIRVisionImage {
-  const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
-  return FIRVisionImage.alloc().initWithImage(image);
+  const image = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
+  const newImage = UIImage.alloc().initWithCGImageScaleOrientation(image.CGImage, 1, UIImageOrientation.Up);
+  return FIRVisionImage.alloc().initWithImage(newImage);
 }
