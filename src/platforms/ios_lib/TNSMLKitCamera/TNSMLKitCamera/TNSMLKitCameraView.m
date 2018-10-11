@@ -31,7 +31,6 @@ int throttleCounter = 0;
     NSUInteger imageWidth = CGImageGetWidth(cgImage);
 
     if (imageWidth <= 0) {
-        NSLog(@">>> imageWidth <= 0");
         return nil;
     }
 
@@ -39,16 +38,13 @@ int throttleCounter = 0;
     NSUInteger oldComponentsCount = bytesPerRow / imageWidth;
 
     if (oldComponentsCount < newComponentsCount) {
-        NSLog(@">>> oldComponentsCount < newComponentsCount");
         return nil;
     }
 
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
     int newWidth = (int)floor(size.width);
-    NSLog(@">>> %d", newWidth);
     int newHeight = (int)floor(size.height);
-    NSLog(@">>> %d", newHeight);
 
     int dataSize = newWidth * newHeight * (int)oldComponentsCount *(int)batchSize;
 
@@ -66,12 +62,9 @@ int throttleCounter = 0;
     //    unsigned char *sourceData = (unsigned char*)calloc(sourceHeight * sourceWidth * 4, sizeof(unsigned char));
 
     CGContextRef context = CGBitmapContextCreate(NULL, newWidth, newHeight, bitsPerComponent, newBytesPerRow, colorSpace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast);
-    NSLog(@">>> context");
 
-    // TODO THIS line crashes because cgImage is probably not retained
     CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, newWidth, newHeight), cgImage);
 
-    NSLog(@">>> context drawn");
     CGContextRelease(context);
 
     NSMutableArray * scaledImageData = [NSMutableArray new];
@@ -80,7 +73,7 @@ int throttleCounter = 0;
         for (int xCoordinate = 0; xCoordinate < newWidth; xCoordinate++) {
             NSMutableArray * pixelArray = [NSMutableArray new];
             for (int component = 0; component < newComponentsCount; component++) {
-                int inputIndex = (yCoordinate * newWidth * oldComponentsCount) + (xCoordinate * oldComponentsCount + component);
+                long inputIndex = (yCoordinate * newWidth * oldComponentsCount) + (xCoordinate * oldComponentsCount + component);
                 unsigned char pixel = imageData[inputIndex];
                 if (isQuantized) {
                     NSLog(@"pixel %hhu", (unsigned char) pixel);

@@ -4,7 +4,6 @@
 @implementation UIImage (TNSMLKitCamera)
 
 - (NSArray * _Nullable)scaleImageDataWith:(CGSize)size componentsCount:(NSInteger)newComponentsCount batchSize:(NSInteger)batchSize isQuantized:(BOOL)isQuantized {
-    NSLog(@">>> scaleImageDataWith");
 
 //    CGImageRef cgImage = CGImageRetain([self CGImage]);
 
@@ -15,7 +14,6 @@
     NSUInteger imageWidth = CGImageGetWidth(cgImage);
 
     if (imageWidth <= 0) {
-        NSLog(@">>> imageWidth <= 0");
         return nil;
     }
 
@@ -23,19 +21,15 @@
     NSUInteger oldComponentsCount = bytesPerRow / imageWidth;
 
     if (oldComponentsCount < newComponentsCount) {
-        NSLog(@">>> oldComponentsCount < newComponentsCount");
         return nil;
     }
 
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
     int newWidth = (int)floor(size.width);
-    NSLog(@">>> %d", newWidth);
     int newHeight = (int)floor(size.height);
-    NSLog(@">>> %d", newHeight);
 
     int dataSize = newWidth * newHeight * (int)oldComponentsCount *(int)batchSize;
-    NSLog(@">>> %lu", (unsigned long) dataSize);
 
     size_t bitsPerComponent = CGImageGetBitsPerComponent(cgImage);
     size_t newBytesPerRow = oldComponentsCount * newWidth;
@@ -51,12 +45,9 @@
 //    unsigned char *sourceData = (unsigned char*)calloc(sourceHeight * sourceWidth * 4, sizeof(unsigned char));
 
     CGContextRef context = CGBitmapContextCreate(NULL, newWidth, newHeight, bitsPerComponent, newBytesPerRow, colorSpace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast);
-    NSLog(@">>> context");
 
     CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, newWidth, newHeight), cgImage);
-    NSLog(@">>> context drawn");
     CGContextRelease(context);
-    NSLog(@">>> context released");
 //    CGImageRelease(cgImage);
 //    NSLog(@">>> CGImageRelease");
 
@@ -66,10 +57,9 @@
         for (int xCoordinate = 0; xCoordinate < newWidth; xCoordinate++) {
             NSMutableArray * pixelArray = [NSMutableArray new];
             for (int component = 0; component < newComponentsCount; component++) {
-                int inputIndex = (yCoordinate * newWidth * oldComponentsCount) + (xCoordinate * oldComponentsCount + component);
+                long inputIndex = (yCoordinate * newWidth * oldComponentsCount) + (xCoordinate * oldComponentsCount + component);
                 unsigned char pixel = imageData[inputIndex];
                 if (isQuantized) {
-                    NSLog(@"pixel %hhu", (unsigned char) pixel);
                     [pixelArray addObject: [NSNumber numberWithUnsignedChar:pixel]];
                 } else {
                     // Convert pixel values from [0, 255] to [-1, 1].

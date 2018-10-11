@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "7.1.5",
+  "version": "7.1.6",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -43,6 +43,7 @@
     "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns run ios",
     "demo-ng.ios.bundled": "npm run preparedemo-ng && cd ../demo-ng && tns run ios --bundle",
     "demo-push.ios": "npm run preparedemo-push && cd ../demo-push && tns run ios",
+    "demo-push.ios.release": "npm run preparedemo-push && cd ../demo-push && tns build ios --release --for-device",
     "demo.android": "npm run preparedemo && cd ../demo && rimraf platforms/android && tns run android",
     "demo.android.linked": "npm run tsc && cd ../demo && tns run android --syncAllFiles",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",
