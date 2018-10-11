@@ -7,7 +7,31 @@ import { MessagingOptions } from "../firebase";
 declare const android, com, org: any;
 
 let _launchNotification = null;
-let _senderId = 0;
+let _senderId: string = null;
+
+function getSenderId(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    if (_senderId !== null) {
+      resolve(_senderId);
+    }
+
+    const setSenderIdAndResolve = () => {
+      const senderIdResourceId = application.android.context.getResources().getIdentifier("gcm_defaultSenderId", "string", application.android.context.getPackageName());
+      if (senderIdResourceId === 0) {
+        throw new Error("####################### Seems like you did not include 'google-services.json' in your project! Firebase Messaging will not work properly. #######################");
+      }
+      _senderId = application.android.context.getString(senderIdResourceId);
+      resolve(_senderId);
+    };
+
+    if (!application.android.context) {
+      // throw new Error("Don't call this function before your app has started.");
+      appModule.on(appModule.launchEvent, () => setSenderIdAndResolve())
+    } else {
+      setSenderIdAndResolve();
+    }
+  });
+}
 
 export function initFirebaseMessaging(options?: MessagingOptions) {
   if (!options) {
@@ -23,14 +47,6 @@ export function initFirebaseMessaging(options?: MessagingOptions) {
 
 export function onAppModuleLaunchEvent(args: any) {
   org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
-
-  const senderIdResourceId = application.android.context.getResources().getIdentifier("gcm_defaultSenderId", "string", application.android.context.getPackageName());
-  if (senderIdResourceId === 0) {
-    console.log("####################### Seems like you did not include 'google-services.json' in your project! Firebase Messaging will not work properly. #######################");
-    return;
-  }
-
-  _senderId = application.android.context.getString(senderIdResourceId);
 
   const intent = args.android;
   const isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();
@@ -72,18 +88,20 @@ export function registerForInteractivePush(model?: PushNotificationModel): void 
 export function getCurrentPushToken(): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (com.google.firebase.messaging || com.google.firebase.iid) === "undefined" || _senderId === 0) {
+      if (typeof (com.google.firebase.messaging || com.google.firebase.iid) === "undefined") {
         reject("Uncomment firebase-messaging in the plugin's include.gradle first");
         return;
       }
 
-      org.nativescript.plugins.firebase.FirebasePlugin.getCurrentPushToken(
-          _senderId,
-          new org.nativescript.plugins.firebase.FirebasePluginListener({
-            success: token => resolve(token),
-            error: err => reject(err)
-          })
-      );
+      getSenderId().then(senderId => {
+        org.nativescript.plugins.firebase.FirebasePlugin.getCurrentPushToken(
+            senderId,
+            new org.nativescript.plugins.firebase.FirebasePluginListener({
+              success: token => resolve(token),
+              error: err => reject(err)
+            })
+        );
+      });
 
     } catch (ex) {
       console.log("Error in messaging.getCurrentPushToken: " + ex);
@@ -138,13 +156,13 @@ export function addOnPushTokenReceivedCallback(callback) {
 export function registerForPushNotifications(options?: MessagingOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (com.google.firebase.messaging) === "undefined" || _senderId === 0) {
+      if (typeof (com.google.firebase.messaging) === "undefined") {
         reject("Uncomment firebase-messaging in the plugin's include.gradle first");
         return;
       }
 
       initFirebaseMessaging(options);
-      org.nativescript.plugins.firebase.FirebasePlugin.registerForPushNotifications(_senderId);
+      getSenderId().then(senderId => org.nativescript.plugins.firebase.FirebasePlugin.registerForPushNotifications(senderId));
     } catch (ex) {
       console.log("Error in messaging.registerForPushNotifications: " + ex);
       reject(ex);
@@ -160,7 +178,7 @@ export function unregisterForPushNotifications(): Promise<void> {
         return;
       }
 
-      org.nativescript.plugins.firebase.FirebasePlugin.unregisterForPushNotifications(_senderId);
+      getSenderId().then(senderId => org.nativescript.plugins.firebase.FirebasePlugin.unregisterForPushNotifications(senderId));
 
       resolve();
     } catch (ex) {
