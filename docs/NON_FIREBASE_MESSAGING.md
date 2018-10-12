@@ -17,6 +17,8 @@ Two important things to keep in mind are:
 
 ## Setup
 
+> Do not run the plugin's `.init` function!
+
 ### Android
 No additional setup required.
 
