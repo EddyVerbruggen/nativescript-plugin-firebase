@@ -42,15 +42,11 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   private initView() {
-    // if (this.preferFrontCamera) {
-    // this._reader.switchDeviceInput();
-    // }
-
     // find a suitable device
     this.captureDevice = AVCaptureDeviceDiscoverySession.discoverySessionWithDeviceTypesMediaTypePosition(
         <any>[AVCaptureDeviceTypeBuiltInWideAngleCamera],
         AVMediaTypeVideo,
-        AVCaptureDevicePosition.Back
+        this.preferFrontCamera ? AVCaptureDevicePosition.Front : AVCaptureDevicePosition.Back
     ).devices.firstObject;
 
     if (this.torchOn) {
@@ -142,7 +138,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   protected updateTorch(): void {
     const device = this.captureDevice;
-    if (device && device.lockForConfiguration()) {
+    if (device && device.hasTorch && device.lockForConfiguration()) {
       if (this.torchOn) {
         device.torchMode = AVCaptureTorchMode.On;
         device.flashMode = AVCaptureFlashMode.On;

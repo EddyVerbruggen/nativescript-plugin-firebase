@@ -10,8 +10,8 @@
         processEveryNthFrame="30"
         enableFaceTracking="true"
         minimumFaceSize="0.2"
+        preferFrontCamera="true"
         modeType="accurate"
-        [torchOn]="torchOn"
         (scanResult)="onFaceDetectionResult($event)">
     </MLKitFaceDetection>
 

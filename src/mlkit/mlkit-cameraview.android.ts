@@ -102,13 +102,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   private initView(nativeView) {
-    // if (this.preferFrontCamera) {
-    // this._reader.switchDeviceInput();
-    // }
-
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
     nativeView.addView(this.surfaceView);
-
     this.runCamera();
   }
 
@@ -119,7 +114,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         return;
       }
       const surfaceHolder = this.surfaceView.getHolder();
-      const cameraFacingRequested = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
+      const cameraFacingRequested = this.preferFrontCamera ? android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT : android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
       const cameraInfo = new android.hardware.Camera.CameraInfo();
 
       let requestedCameraId = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK; // use this as the default
@@ -160,7 +155,9 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
 
       if (this.torchOn) {
-        parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+        if (parameters.getSupportedFlashModes() && parameters.getSupportedFlashModes().contains(android.hardware.Camera.Parameters.FLASH_MODE_TORCH)) {
+          parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+        }
       }
 
       this.camera.setParameters(parameters);

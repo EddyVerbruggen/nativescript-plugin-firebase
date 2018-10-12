@@ -118,8 +118,9 @@ The exact details of using the live camera view depend on whether or not you're 
 You can use any view-related property you like as we're extending `ContentView`.
 So things like `class`, `row`, `width`, `horizontalAlignment`, `style` are all valid properties.
 
-Plugin-specific are the optional properties `processEveryNthFrame` and `torchOn`, and optional event `scanResult`.
-You can `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
+Plugin-specific are the optional properties `processEveryNthFrame`, `preferFrontCamera` (default `false`), and `torchOn`, and the optional `scanResult` event.
+
+You can set `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
 Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
 
 > Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function, and how to wire `torchOn` to a `Switch`. 
@@ -140,6 +141,7 @@ Now you're able to use the registered element in the view:
     width="260"
     height="380"
     processEveryNthFrame="10"
+    preferFrontCamera="false"
     [torchOn]="torchOn"
     (scanResult)="onTextRecognitionResult($event)">
 </MLKitTextRecognition>
@@ -158,6 +160,7 @@ Declare a namespace at the top of the embedding page, and use it anywhere on the
       width="260"
       height="380"
       processEveryNthFrame="3"
+      preferFrontCamera="false"
       scanResult="onTextRecognitionResult" />
 
 </Page>
@@ -201,6 +204,7 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
     detectionMode="accurate"
     enableFaceTracking="true"
     minimumFaceSize="0.2"
+    preferFrontCamera="true"
     [torchOn]="torchOn"
     (scanResult)="onFaceDetectionResult($event)">
 </MLKitFaceDetection>
@@ -238,6 +242,7 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
     width="260"
     height="380"
     formats="QR_CODE, EAN_8, EAN_13"
+    preferFrontCamera="false"
     [torchOn]="torchOn"
     (scanResult)="onBarcodeScanningResult($event)">
 </MLKitBarcodeScanner>
@@ -293,6 +298,7 @@ registerElement("MLKitImageLabeling", () => require("nativescript-plugin-firebas
     width="260"
     height="380"
     confidenceThreshold="0.6"
+    preferFrontCamera="false"
     [torchOn]="torchOn"
     (scanResult)="onImageLabelingResult($event)">
 </MLKitImageLabeling>
