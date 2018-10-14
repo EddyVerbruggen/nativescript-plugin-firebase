@@ -47,13 +47,10 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
       firebaseMessaging.onAppModuleLaunchEvent(args);
     }
 
-    const intent = args.android;
-    const isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();
-
-    if (isLaunchIntent && dynamicLinksEnabled()) {
+    if (dynamicLinksEnabled()) {
       // let's see if this is part of an email-link authentication flow
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-      const emailLink = "" + intent.getData();
+      const emailLink = "" + args.android.getData();
       if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
         const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
         if (rememberedEmail !== undefined) {
