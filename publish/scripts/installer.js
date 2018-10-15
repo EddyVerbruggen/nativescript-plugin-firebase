@@ -716,20 +716,20 @@ return new Promise(function(resolve, reject) {
             // copy correct version to destination
             if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
                 if(fs.existsSync(destinationGoogleJson) && fs.readFileSync(destinationGoogleJson).equals(fs.readFileSync(sourceGoogleJson))) {
-                  copyPlistOpts.$logger.out("nativescript-plugin-firebase: already using " + sourceGoogleJson + " as " + destinationGoogleJson + ".");
-                  return true;
+                  $logger.out("nativescript-plugin-firebase: already using " + sourceGoogleJson + " as " + destinationGoogleJson + ".");
+                } else {
+                  $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
+                  fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
                 }
-                $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
-                fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJsonAlt))) {
                 // NativeScript < 4 doesn't have the 'app' folder
                 if(fs.existsSync(destinationGoogleJsonAlt) && fs.readFileSync(destinationGoogleJsonAlt).equals(fs.readFileSync(sourceGoogleJson))) {
-                  copyPlistOpts.$logger.out("nativescript-plugin-firebase: already using " + sourceGoogleJson + " as " + destinationGoogleJsonAlt + ".");
-                  return true;
+                  $logger.out("nativescript-plugin-firebase: already using " + sourceGoogleJson + " as " + destinationGoogleJsonAlt + ".");
+                } else {
+                  $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJsonAlt + ".");
+                  fs.writeFileSync(destinationGoogleJsonAlt, fs.readFileSync(sourceGoogleJson));
                 }
-                $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJsonAlt + ".");
-                fs.writeFileSync(destinationGoogleJsonAlt, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else {
                 $logger.warn("Unable to copy google-services.json.");
