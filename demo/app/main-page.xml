@@ -85,7 +85,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
 
@@ -214,10 +214,17 @@
             <Android>
               <Button row="44" col="1" text="force crash :)" tap="{{ doForceCrashAndroid }}" class="button button-crash"/>
             </Android>
+            <Button row="45" col="0" text="log message crashlytics" tap="{{ doLogMessageCrashlytics }}" class="button button-crash"/>
+            <Button row="45" col="1" text="set string crashlytics" tap="{{ doSetCrashlyticString }}" class="button button-crash"/>
+            <Button row="46" col="0" text="set bool crashlytics" tap="{{ doSetCrashlyticBool }}" class="button button-crash"/>
+            <Button row="46" col="1" text="set float crashlytics" tap="{{ doSetCrashlyticFloat }}" class="button button-crash"/>
+            <Button row="47" col="0" text="set double crashlytics" tap="{{ doSetCrashlyticDouble }}" class="button button-crash"/>
+            <Button row="47" col="1" text="set int crashlytics" tap="{{ doSetCrashlyticInt }}" class="button button-crash"/>
+            <Button row="48" colSpan="2" text="SetUserId" tap="{{ doSetUserId }}" class="button button-messaging"/>
 
-            <Label row="45" colSpan="2" text="Firebase Invites" class="subtitle"/>
-            <Button row="46" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
-            <Button row="46" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
+            <Label row="49" colSpan="2" text="Firebase Invites" class="subtitle"/>
+            <Button row="50" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
+            <Button row="50" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
           </GridLayout>
 
         </ScrollView>

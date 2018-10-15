@@ -890,3 +890,18 @@ export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRem
 
 // crash logging
 export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;
+
+// send Crashlytics Log -> android Exception or iOS Exception
+export function sendCrashlyticsLog(exception: any) : Promise<any>;
+
+export function setCrashlyticsString(key: string, value : string) : void;
+
+export function setCrashlyticsBool(key : string, value : boolean) : void;
+
+export function setCrashlyticsFloat(key : string, value : number) : void;
+
+export function setCrashlyticsInt(key : string, value : number) : void;
+
+export function setCrashlyticsDouble(key : string, value : number) : void;
+
+export function setUserIdCrashlytics(userId : string) : void;

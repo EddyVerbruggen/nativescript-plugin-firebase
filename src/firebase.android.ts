@@ -1685,6 +1685,74 @@ firebase.sendCrashLog = arg => {
   });
 };
 
+firebase.sendCrashlyticsLog = arg => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof (com.crashlytics.android.Crashlytics) === "undefined") {
+        reject("Make sure Crashlytics is in the plugin's include.gradle");
+        return;
+      }
+
+      com.crashlytics.android.Crashlytics.logException(arg);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.sendCrashlyticsLog: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.setCrashlyticsString = (key, value) => {
+  if (typeof (com.crashlytics.android.Crashlytics) === "undefined") {
+    console.log("Error - Make sure Crashlytics is in the plugin's include.gradle");
+    return;
+  }
+  com.crashlytics.android.Crashlytics.setString(key , value);
+};
+
+firebase.setCrashlyticsBool = (key, value) => {
+  if (typeof (com.crashlytics.android.Crashlytics) === "undefined") {
+    console.log("Error - Make sure Crashlytics is in the plugin's include.gradle");
+    return;
+  }
+  com.crashlytics.android.Crashlytics.setBool(key , value);
+};
+
+firebase.setCrashlyticsFloat = (key, value) => {
+  if (typeof (com.crashlytics.android.Crashlytics) === "undefined") {
+    console.log("Error - Make sure Crashlytics is in the plugin's include.gradle");
+    return;
+  }
+  com.crashlytics.android.Crashlytics.setFloat(key , value);
+};
+
+firebase.setCrashlyticsInt = (key, value) => {
+  if (typeof (com.crashlytics.android.Crashlytics) === "undefined") {
+    console.log("Error - Make sure Crashlytics is in the plugin's include.gradle");
+    return;
+  }
+  com.crashlytics.android.Crashlytics.setInt(key , value);
+};
+
+firebase.setCrashlyticsDouble = (key, value) => {
+  if (typeof (com.crashlytics.android.Crashlytics) === "undefined") {
+    console.log("Error - Make sure Crashlytics is in the plugin's include.gradle");
+    return;
+  }
+  com.crashlytics.android.Crashlytics.setDouble(key , value);
+};
+
+
+firebase.setUserIdCrashlytics = arg => {
+  if (typeof (com.crashlytics.android.Crashlytics) === "undefined") {
+    console.log("Error - Make sure Crashlytics is in the plugin's include.gradle");
+    return;
+  }
+  com.crashlytics.android.Crashlytics.setUserIdentifier(arg);
+};
+
+
 firebase.invites.sendInvitation = arg => {
   return new Promise((resolve, reject) => {
     try {

@@ -1416,7 +1416,6 @@ firebase.sendCrashLog = arg => {
   return new Promise((resolve, reject) => {
     try {
       // TODO generate typings again and see if 'FIRCrashLog' is available
-
       /*
       if (typeof(FIRCrashLog) === "undefined") {
         reject("Make sure 'Firebase/Crash' is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
@@ -1441,6 +1440,73 @@ firebase.sendCrashLog = arg => {
       reject(ex);
     }
   });
+};
+
+firebase.sendCrashlyticsLog = arg => {
+  return new Promise((resolve, reject) => {
+    try {
+
+      if (typeof (Crashlytics) === "undefined") {
+        reject("Make sure Crashlytics is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
+        return;
+      }
+
+      Crashlytics.sharedInstance().recordError(arg);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.sendCrashlyticsLog: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.setCrashlyticsString = (key, value) => {
+  if (typeof (Crashlytics) === "undefined") {
+    console.log("Make sure Crashlytics is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
+    return;
+  }
+  Crashlytics.sharedInstance().setObjectValueForKey(value, key);
+};
+
+firebase.setCrashlyticsBool = (key, value) => {
+  if (typeof (Crashlytics) === "undefined") {
+    console.log("Make sure Crashlytics is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
+    return;
+  }
+  Crashlytics.sharedInstance().setBoolValueForKey(value, key);
+};
+
+firebase.setCrashlyticsFloat = (key, value) => {
+  if (typeof (Crashlytics) === "undefined") {
+    console.log("Make sure Crashlytics is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
+    return;
+  }
+  Crashlytics.sharedInstance().setFloatValueForKey(value , key);
+};
+
+firebase.setCrashlyticsInt = (key, value) => {
+  if (typeof (Crashlytics) === "undefined") {
+    console.log("Make sure Crashlytics is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
+    return;
+  }
+  Crashlytics.sharedInstance().setIntValueForKey(value, key);
+};
+
+firebase.setCrashlyticsDouble = (key, value) => {
+  if (typeof (Crashlytics) === "undefined") {
+    console.log("Make sure Crashlytics is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
+    return;
+  }
+  Crashlytics.sharedInstance().setFloatValueForKey(key , value);
+};
+
+
+firebase.setUserIdCrashlytics = arg => {
+  if (typeof (Crashlytics) === "undefined") {
+    console.log("Make sure Crashlytics is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
+    return;
+  }
+  Crashlytics.sharedInstance().setUserIdentifier(arg);
 };
 
 firebase.invites.sendInvitation = arg => {
