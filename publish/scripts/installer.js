@@ -283,8 +283,8 @@ function echoAndroidManifestChanges(result) {
       console.log('\n######################################################################################################');
       console.log('Open your app\'s resources/Android/AndroidManifest.xml file and add this (see the demo for an example):');
       console.log('<meta-data\n' +
-          '    android:name="com.google.firebase.ml.vision.DEPENDENCIES"\n' +
-          '    android:value="' + selectedFeatures.join(',') + '" />');
+        '    android:name="com.google.firebase.ml.vision.DEPENDENCIES"\n' +
+        '    android:value="' + selectedFeatures.join(',') + '" />');
       console.log('######################################################################################################\n');
     }
   }
@@ -324,7 +324,7 @@ function writePodFile(result) {
   }
   try {
     fs.writeFileSync(directories.ios + '/Podfile',
-        `pod 'Firebase/Core', '~> 5.6.0'
+      `pod 'Firebase/Core', '~> 5.6.0'
 # Temporary fix, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/926
 pod 'GoogleUtilities', '5.2.3' 
 
@@ -414,7 +414,7 @@ function writeBuildscriptHook(enable) {
   console.log("Install Crashlytics buildscript hook.");
   try {
     var scriptContent =
-        `const fs = require('fs-extra');
+      `const fs = require('fs-extra');
 const path = require('path');
 const xcode = require('xcode');
 
@@ -558,7 +558,7 @@ function writeGradleFile(result) {
   }
   try {
     fs.writeFileSync(directories.android + '/include.gradle',
-        `
+      `
 android {
     productFlavors {
         "fireb" {
@@ -663,7 +663,7 @@ function writeGoogleServiceCopyHook() {
   console.log("Install google-service.json after-prepare copy hook.");
   try {
     var afterPrepareScriptContent =
-        `
+      `
 var path = require("path");
 var fs = require("fs");
 
@@ -715,30 +715,25 @@ return new Promise(function(resolve, reject) {
 
             // copy correct version to destination
             if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
+                if(fs.existsSync(destinationGoogleJson) && fs.readFileSync(destinationGoogleJson).equals(fs.readFileSync(sourceGoogleJson))) {
+                  copyPlistOpts.$logger.out("nativescript-plugin-firebase: already using " + sourceGoogleJson + " as " + destinationGoogleJson + ".");
+                  return true;
+                }
                 $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
                 fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJsonAlt))) {
                 // NativeScript < 4 doesn't have the 'app' folder
+                if(fs.existsSync(destinationGoogleJsonAlt) && fs.readFileSync(destinationGoogleJsonAlt).equals(fs.readFileSync(sourceGoogleJson))) {
+                  copyPlistOpts.$logger.out("nativescript-plugin-firebase: already using " + sourceGoogleJson + " as " + destinationGoogleJsonAlt + ".");
+                  return true;
+                }
                 $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJsonAlt + ".");
                 fs.writeFileSync(destinationGoogleJsonAlt, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else {
                 $logger.warn("Unable to copy google-services.json.");
                 reject();
-            }
-        } else if (hookArgs.platform.toLowerCase() === 'ios') {
-            // we have copied our GoogleService-Info.plist during before-checkForChanges hook, here we delete it to avoid changes in git
-            var destinationGooglePlist = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
-            var sourceGooglePlistProd = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.prod");
-            var sourceGooglePlistDev = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.dev");
-
-            // if we have both dev/prod versions, let's remove GoogleService-Info.plist in destination dir
-            if (fs.existsSync(sourceGooglePlistProd) && fs.existsSync(sourceGooglePlistDev)) {
-                if (fs.existsSync(destinationGooglePlist)) { fs.unlinkSync(destinationGooglePlist); }
-                resolve();
-            } else { // single GoogleService-Info.plist modus
-                resolve();
             }
         } else {
             resolve();
@@ -768,7 +763,7 @@ return new Promise(function(resolve, reject) {
   console.log("Install google-service.json before-checkForChanges copy hook.");
   try {
     var beforeCheckForChangesContent =
-        `
+      `
 var path = require("path");
 var fs = require("fs");
 
@@ -838,10 +833,18 @@ var copyPlist = function(copyPlistOpts) {
         // if we have both dev/prod versions, we copy (or overwrite) GoogleService-Info.plist in destination dir
         if (fs.existsSync(sourceGooglePlistProd) && fs.existsSync(sourceGooglePlistDev)) {
             if (copyPlistOpts.buildType==='production') { // use prod version
+                if(fs.existsSync(destinationGooglePlist) && fs.readFileSync(destinationGooglePlist).equals(fs.readFileSync(sourceGooglePlistProd))) {
+                  copyPlistOpts.$logger.out("nativescript-plugin-firebase: already using " + sourceGooglePlistProd + " as " + destinationGooglePlist + ".");
+                  return true;
+                }
                 copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistProd + " to " + destinationGooglePlist + ".");
                 fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistProd));
                 return true;
             } else { // use dev version
+                if(fs.existsSync(destinationGooglePlist) && fs.readFileSync(destinationGooglePlist).equals(fs.readFileSync(sourceGooglePlistDev))) {
+                  copyPlistOpts.$logger.out("nativescript-plugin-firebase: already using " + sourceGooglePlistDev + " as " + destinationGooglePlist + ".");
+                  return true;
+                }
                 copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistDev + " to " + destinationGooglePlist + ".");
                 fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistDev));
                 return true;
@@ -875,7 +878,7 @@ function writeGoogleServiceGradleHook(result) {
   console.log("Install firebase-build-gradle hook.");
   try {
     var scriptContent =
-        `
+      `
 var path = require("path");
 var fs = require("fs");
 
