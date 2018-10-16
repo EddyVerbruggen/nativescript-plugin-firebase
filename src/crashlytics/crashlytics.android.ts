@@ -6,6 +6,10 @@ export function sendCrashLog(exception: any /* java.lang.Exception */): void {
   }
 }
 
+export function log(priority: number, tag: string, msg: string): void {
+  com.crashlytics.android.Crashlytics.log(priority, tag, msg);
+}
+
 export function setString(key: string, value: string): void {
   if (isCrashlyticsAvailable()) {
     com.crashlytics.android.Crashlytics.setString(key, value);
