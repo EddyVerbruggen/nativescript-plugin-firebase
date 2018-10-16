@@ -3,6 +3,7 @@ import { getString, setString } from "tns-core-modules/application-settings";
 import { firestore } from "./firebase";
 import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
+import * as crashlytics from "./crashlytics/crashlytics";
 import * as storage from "./storage/storage";
 import * as mlkit from "./mlkit";
 
@@ -33,6 +34,7 @@ export const firebase: any = {
   _dynamicLinkCallback: null,
   admob,
   analytics,
+  crashlytics,
   storage,
   mlkit,
   firestore: {

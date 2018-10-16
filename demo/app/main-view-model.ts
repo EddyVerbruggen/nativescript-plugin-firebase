@@ -1,8 +1,14 @@
 import { Observable } from "tns-core-modules/data/observable";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
-import { isIOS, isAndroid } from "tns-core-modules/platform";
+import { isAndroid, isIOS } from "tns-core-modules/platform";
 import * as firebase from "nativescript-plugin-firebase";
-import { AddEventListenerResult, storage as firebaseStorage, admob as firebaseAdMob, User } from "nativescript-plugin-firebase";
+import {
+  AddEventListenerResult,
+  admob as firebaseAdMob,
+  crashlytics as firebaseCrashlytics,
+  storage as firebaseStorage,
+  User
+} from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 import { MessagingViewModel } from './messaging-view-model';
 
@@ -1626,47 +1632,26 @@ export class HelloWorldModel extends Observable {
   public doLogMessageCrashlytics(): void {
     if (isAndroid) {
       // Send the desired exception
-      firebase.sendCrashlyticsLog(new java.lang.Exception("test Exception")).then(
-        () => {
-          alert({
-            title: "Message logged",
-            message: "Check the Firebase console",
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "Logging error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
+      firebaseCrashlytics.sendCrashLog(new java.lang.Exception("test Exception"));
     } else if (isIOS) {
       // Send the desired exception
-      firebase.sendCrashlyticsLog(new NSError({domain: 'ShiploopHttpResponseErrorDomain', code: 42, userInfo: null})).then(
-          () => {
-            alert({
-              title: "Message logged",
-              message: "Check the Firebase console",
-              okButtonText: "Okay"
-            });
-          },
-          error => {
-            alert({
-              title: "Logging error",
-              message: error,
-              okButtonText: "OK"
-            });
-          }
-      );
+      firebaseCrashlytics.sendCrashLog(new NSError({
+        domain: 'ShiploopHttpResponseErrorDomain',
+        code: 42,
+        userInfo: null
+      }));
     }
-    
+
+    alert({
+      title: "Message logged",
+      message: "Check the Firebase console",
+      okButtonText: "Okay"
+    });
   }
 
-
   public doSetCrashlyticString(): void {
-    firebase.setCrashlyticsString("test_key", "test_value");
+    firebaseCrashlytics.setString("test_key", "test_value");
+
     alert({
       title: "String created",
       message: "New string key created, log a new message and check firebase console",
@@ -1675,7 +1660,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetCrashlyticBool(): void {
-    firebase.setCrashlyticsBool("test_key_bool", true);
+    firebaseCrashlytics.setBool("test_key_bool", true);
+
     alert({
       title: "Bool created",
       message: "New string key created, log a new message and check firebase console",
@@ -1684,7 +1670,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetCrashlyticInt(): void {
-    firebase.setCrashlyticsInt("test_key_int", 2);
+    firebaseCrashlytics.setInt("test_key_int", 2);
+
     alert({
       title: "Int created",
       message: "New string key created, log a new message and check firebase console",
@@ -1693,7 +1680,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetCrashlyticDouble(): void {
-    firebase.setCrashlyticsDouble("test_key_double", 56615.55548465);
+    firebaseCrashlytics.setDouble("test_key_double", 56615.55548465);
+
     alert({
       title: "Double created",
       message: "New string key created, log a new message and check firebase console",
@@ -1702,7 +1690,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetCrashlyticFloat(): void {
-    firebase.setCrashlyticsFloat("test_key", 54646.45);
+    firebaseCrashlytics.setFloat("test_key", 54646.45);
+
     alert({
       title: "Float created",
       message: "New string key created, log a new message and check firebase console",
@@ -1711,7 +1700,9 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetUserId(): void {
-    firebase.setUserIdCrashlytics("user#42");
+    // just for fun: showing usage of 'firebase.crashlytics' instead of 'firebaseCrashlytics'
+    firebase.crashlytics.setUserId("user#42");
+
     alert({
       title: "User id changed",
       message: "Log a new message and check firebase console",
