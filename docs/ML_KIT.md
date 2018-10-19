@@ -118,10 +118,13 @@ The exact details of using the live camera view depend on whether or not you're 
 You can use any view-related property you like as we're extending `ContentView`.
 So things like `class`, `row`, `width`, `horizontalAlignment`, `style` are all valid properties.
 
-Plugin-specific are the optional properties `processEveryNthFrame`, `preferFrontCamera` (default `false`), and `torchOn`, and the optional `scanResult` event.
+Plugin-specific are the optional properties `processEveryNthFrame`, `preferFrontCamera` (default `false`), `torchOn`, and `pause`, as well as the optional `scanResult` event.
 
 You can set `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
 Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
+
+If you don't destroy the scanner page/modal but instead briefly want to hide it (but keep it alive),
+you can pause the scanner with the `pause` property.
 
 > Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function, and how to wire `torchOn` to a `Switch`. 
 
@@ -142,6 +145,7 @@ Now you're able to use the registered element in the view:
     height="380"
     processEveryNthFrame="10"
     preferFrontCamera="false"
+    [pause]="pause"
     [torchOn]="torchOn"
     (scanResult)="onTextRecognitionResult($event)">
 </MLKitTextRecognition>
@@ -161,6 +165,7 @@ Declare a namespace at the top of the embedding page, and use it anywhere on the
       height="380"
       processEveryNthFrame="3"
       preferFrontCamera="false"
+      pause="{{ pause }}"
       scanResult="onTextRecognitionResult" />
 
 </Page>

@@ -78,7 +78,9 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.ios.layer.addSublayer(this.previewLayer);
     }
 
-    this.captureSession.startRunning();
+    if (!this.pause) {
+      this.captureSession.startRunning();
+    }
 
     this.cameraView = TNSMLKitCameraView.alloc().initWithCaptureSession(this.captureSession);
     this.cameraView.processEveryXFrames = this.processEveryNthFrame;
@@ -147,6 +149,18 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         device.flashMode = AVCaptureFlashMode.Off;
       }
       device.unlockForConfiguration();
+    }
+  }
+
+  protected pauseScanning(): void {
+    if (this.captureSession && this.captureSession.running) {
+      this.captureSession.stopRunning();
+    }
+  };
+
+  protected resumeScanning(): void {
+    if (this.captureSession && !this.captureSession.running) {
+      this.captureSession.startRunning();
     }
   }
 

@@ -19,6 +19,12 @@ export const torchOnProperty = new Property<MLKitCameraView, boolean>({
   valueConverter: booleanConverter
 });
 
+export const pauseProperty = new Property<MLKitCameraView, boolean>({
+  name: "pause",
+  defaultValue: false,
+  valueConverter: booleanConverter
+});
+
 export abstract class MLKitCameraView extends ContentView {
   static scanResultEvent: string = "scanResult";
 
@@ -27,6 +33,7 @@ export abstract class MLKitCameraView extends ContentView {
   protected processEveryNthFrame: number;
   protected preferFrontCamera: boolean;
   protected torchOn: boolean;
+  protected pause: boolean;
 
   [processEveryNthFrameProperty.setNative](value: number) {
     this.processEveryNthFrame = value;
@@ -41,11 +48,25 @@ export abstract class MLKitCameraView extends ContentView {
     this.updateTorch();
   }
 
+  [pauseProperty.setNative](value: boolean) {
+    this.pause = value;
+    this.pause ? this.pauseScanning() : this.resumeScanning();
+  }
+
   protected updateTorch(): void {
     // implemented in concrete classes
   };
+
+  protected pauseScanning(): void {
+    // implemented in concrete classes
+  };
+
+  protected resumeScanning(): void {
+    // implemented in concrete classes
+  }
 }
 
 processEveryNthFrameProperty.register(MLKitCameraView);
 preferFrontCameraProperty.register(MLKitCameraView);
 torchOnProperty.register(MLKitCameraView);
+pauseProperty.register(MLKitCameraView);

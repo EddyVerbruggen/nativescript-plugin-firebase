@@ -13,9 +13,18 @@ export class BarcodeScanningComponent extends AbstractMLKitViewComponent {
     format: string;
   }>;
 
+  pause: boolean = false;
+
   onBarcodeScanResult(event: any): void {
     const result: MLKitScanBarcodesOnDeviceResult = event.value;
     this.barcodes = result.barcodes;
+
     console.log("this.barcodes: " + JSON.stringify(this.barcodes));
+
+    if (this.barcodes.length > 0) {
+      console.log("pausing the scanner for 3 seconds (to test the 'pause' feature)");
+      this.pause = true;
+      setTimeout(() => this.pause = false, 3000)
+    }
   }
 }

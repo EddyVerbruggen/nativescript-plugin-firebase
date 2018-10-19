@@ -219,7 +219,10 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
 
       this.camera.setPreviewDisplay(surfaceHolder);
-      this.camera.startPreview();
+
+      if (!this.pause) {
+        this.camera.startPreview();
+      }
 
     }, 500);
   }
@@ -230,6 +233,16 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       parameters.setFlashMode(this.torchOn ? android.hardware.Camera.Parameters.FLASH_MODE_TORCH : android.hardware.Camera.Parameters.FLASH_MODE_OFF);
       this.camera.setParameters(parameters);
     }
+  }
+
+  protected pauseScanning(): void {
+    if (this.camera != null) {
+      this.camera.stopPreview();
+    }
+  };
+
+  protected resumeScanning(): void {
+    this.runCamera();
   }
 
   protected abstract createDetector(): any;
