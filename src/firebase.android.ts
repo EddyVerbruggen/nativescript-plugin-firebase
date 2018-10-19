@@ -114,6 +114,8 @@ firebase.toHashMap = obj => {
         // note that the Android Firestore SDK only supports this for 'update' (not for 'set')
         if (obj[property] === "SERVER_TIMESTAMP") {
           node.put(property, com.google.firebase.firestore.FieldValue.serverTimestamp());
+        } else if (obj[property] === "DELETE") {
+          node.put(property, com.google.firebase.firestore.FieldValue.delete());
         } else if (obj[property] instanceof FieldValue) {
           const fieldValue: FieldValue = obj[property];
           if (fieldValue.type === "ARRAY_UNION") {
