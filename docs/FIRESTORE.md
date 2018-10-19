@@ -218,6 +218,20 @@ query
     });
 ```
 
+### Deleting specific fields in a document
+To delete one or more fields in a document, do this (showing two flavors, use whatever you fancy):
+
+```typescript
+import { firestore } from "nativescript-plugin-firebase");
+const firebase = require("nativescript-plugin-firebase/app");
+
+firebase.firestore().collection("dogs").doc("fave")
+    .update({
+      field1ToDelete: firestore.FieldValue.delete(),
+      field2ToDelete: firebase.firestore().FieldValue().delete(),
+    });
+```
+
 ### Adding to (`arrayUnion`) and removing from (`arrayRemove`) Arrays
 If your document contains an array field, you can use `arrayUnion()` and `arrayRemove()` to add and remove elements.
 

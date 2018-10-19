@@ -203,26 +203,53 @@ export class FirestoreComponent {
     });
   }
 
+  deleteFields(): void {
+    const faveDog = firebase.firestore().collection("dogs").doc("fave");
+
+    // let's first add the fields
+    faveDog.update(
+        {
+          field1ToDelete: "foo",
+          field2ToDelete: "bar",
+          updateTs: firebase.firestore().FieldValue().serverTimestamp()
+        })
+        .then(() => {
+          // and now remove them (added a timeout of 2s, so we can check the change in the Firebase console)
+          setTimeout(() => {
+            faveDog.update(
+                {
+                  last: "Updated From 'delete'",
+                  field1ToDelete: firestore.FieldValue.delete(),
+                  field2ToDelete: firestore.FieldValue.delete(),
+                  updateTs: firebase.firestore().FieldValue().serverTimestamp()
+                })
+                .then(() => console.log("Woofie updated from 'delete'"))
+                .catch(err => console.log("Updating Woofie from 'delete' failed, error: " + JSON.stringify(err)));
+          }, 2000);
+        });
+  }
+
   arrayUnion(): void {
     firebase.firestore().collection("dogs").doc("fave")
         .update({
-          last: "Updated From arrayUnion",
+          last: "Updated From 'arrayUnion'",
+          fieldToDelete: firestore.FieldValue.delete(),
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
           colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
         })
-        .then(() => console.log("Woofie updated from arrayUnion"))
-        .catch(err => console.log("Updating Woofie from arrayUnion failed, error: " + JSON.stringify(err)));
+        .then(() => console.log("Woofie updated from 'arrayUnion'"))
+        .catch(err => console.log("Updating Woofie from 'arrayUnion' failed, error: " + JSON.stringify(err)));
   }
 
   arrayRemove(): void {
     firebase.firestore().collection("dogs").doc("fave")
         .update({
-          last: "Updated From arrayRemove",
+          last: "Updated From 'arrayRemove'",
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
           colors: firebase.firestore().FieldValue().arrayRemove(["red"])
         })
-        .then(() => console.log("Woofie updated from arrayRemove"))
-        .catch(err => console.log("Updating Woofie from arrayRemove failed, error: " + JSON.stringify(err)));
+        .then(() => console.log("Woofie updated from 'arrayRemove'"))
+        .catch(err => console.log("Updating Woofie from 'arrayRemove' failed, error: " + JSON.stringify(err)));
   }
 
   firestoreDocumentObservable(): void {
