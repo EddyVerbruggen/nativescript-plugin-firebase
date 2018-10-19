@@ -5,8 +5,9 @@ export function sendCrashLog(exception: any /* NSError */): void {
 }
 
 export function log(priority: number, tag: string, msg: string): void {
-  Crashlytics.sharedInstance().logEvent(tag + " - " + msg);
-  Crashlytics.logEvent("test-event");
+  if (isCrashlyticsAvailable()) {
+    Crashlytics.sharedInstance().logEvent(tag + " - " + msg);
+  }
 }
 
 export function setString(key: string, value: string): void {
