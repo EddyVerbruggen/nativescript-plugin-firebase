@@ -185,17 +185,6 @@ sanFranciscoDocument.update({
 });
 ```
 
-### `collection.doc().delete()`
-Entirely remove a document from a collection:
-
-```typescript
-const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
-
-sanFranciscoDocument.delete().then(() => {
-  console.log("SF was erased from the face of the earth!");
-});
-```
-
 ### `collection.where()`
 Firestore supports advanced querying with the `where` function. Those `where` clauses can be chained to form logical 'AND' queries:
 
@@ -218,7 +207,18 @@ query
     });
 ```
 
-### Deleting specific fields in a document
+### Delete an entire document: `collection.doc().delete()`
+Entirely remove a document from a collection:
+
+```typescript
+const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+
+sanFranciscoDocument.delete().then(() => {
+  console.log("SF was erased from the face of the earth!");
+});
+```
+
+### Delete specific fields in a document
 To delete one or more fields in a document, do this (showing two flavors, use whatever you fancy):
 
 ```typescript
