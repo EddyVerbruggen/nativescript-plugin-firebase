@@ -1,4 +1,4 @@
-import { LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from "./analytics";
+import { LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions, LogComplexEventOptions } from "./analytics";
 
 export function logEvent(options: LogEventOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
@@ -25,6 +25,13 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       console.log("Error in firebase.analytics.logEvent: " + ex);
       reject(ex);
     }
+  });
+}
+
+
+export function logComplexEvent(options: LogComplexEventOptions): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    console.log("TO DO");
   });
 }
 

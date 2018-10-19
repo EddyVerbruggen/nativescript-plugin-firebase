@@ -63,6 +63,15 @@ export const firebase: any = {
     GOOGLE: "google",
     EMAIL_LINK: "emailLink"
   },
+  LogComplexEventTypeParameter: {
+    STRING: "string",
+    INT: "int",
+    FLOAT: "float",
+    DOUBLE: "double",
+    LONG: "long",
+    ARRAY: "array",
+    BOOLEAN: "boolean"
+  },
   QueryOrderByType: {
     KEY: "key",
     VALUE: "value",

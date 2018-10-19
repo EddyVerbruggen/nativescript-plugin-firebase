@@ -39,6 +39,15 @@ export enum LoginType {
   EMAIL_LINK
 }
 
+export enum LogComplexEventTypeParameter {
+  STRING,
+  INT,
+  FLOAT,
+  DOUBLE,
+  LONG,
+  ARRAY,
+  BOOLEAN
+}
 /**
  * The allowed values for QueryOptions.orderBy.type.
  */

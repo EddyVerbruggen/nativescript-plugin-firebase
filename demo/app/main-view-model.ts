@@ -500,6 +500,56 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
+
+    firebase.analytics.logComplexEvent({
+      key: "view_item_list",
+      parameters: [{
+        key: "item1",
+        type: "array",
+        value: [
+          {
+            parameters: [
+              { key: "item_id", value: "id de l’offre", type: "string"},
+              {key: "item_name", value: "uri métier", type: "string"},
+              {key: "item_category", value: "category", type: "string"},
+              {key: "item_variant", value: "variant", type: "string"},
+              {key: "item_brand", value: "nom de l’entreprise", type: "string"},
+              {key: " price", value: 1 , type: "long"},
+              {key: "item_list", value: "LO-Moteur" , type: "string" },
+              {key: "index", value: 1 , type: "0"}
+
+            ]
+          },
+          {
+            parameters: [
+              { key: "item_id", value: "id de l’offre 1", type: "string"},
+              {key: "item_name", value: "uri métier", type: "string"},
+              {key: "item_category", value: "category", type: "string"},
+              {key: "item_variant", value: "variant", type: "string"},
+              {key: "item_brand", value: "nom de l’entreprise", type: "string"},
+              {key: " price", value: 1 , type: "long"},
+              {key: "item_list", value: "LO-Moteur" , type: "string" },
+              {key: "index", value: 2 , type: "int"}
+
+            ]
+          },
+          {
+            parameters: [
+              { key: "item_id", value: "id de l’offre 2", type: "string"},
+              {key: "item_name", value: "uri métier", type: "string"},
+              {key: "item_category", value: "category", type: "string"},
+              {key: "item_variant", value: "variant", type: "string"},
+              {key: "item_brand", value: "nom de l’entreprise", type: "string"},
+              {key: " price", value: 1 , type: "long"},
+              {key: "item_list", value: "LO-Moteur" , type: "string" },
+              {key: "index", value: 3 , type: "int"}
+
+            ]
+          }
+        ]
+      }]
+    });
+
   }
 
   public doSetAnalyticsUserProperty(): void {
