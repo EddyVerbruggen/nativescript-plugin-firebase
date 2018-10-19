@@ -1630,13 +1630,10 @@ export class HelloWorldModel extends Observable {
   }
 
   public doLogMessageCrashlytics(): void {
+    firebaseCrashlytics.log(1, "TAG", "Tag message");
     if (isAndroid) {
-      // Send the desired exception
-      firebaseCrashlytics.log(1, "TAG", "Tag message");
       firebaseCrashlytics.sendCrashLog(new java.lang.Exception("test Exception"));
     } else if (isIOS) {
-      // Send the desired exception
-      firebaseCrashlytics.log(1, "TAG", "Tag message");
       firebaseCrashlytics.sendCrashLog(new NSError({
         domain: 'ShiploopHttpResponseErrorDomain',
         code: 42,
