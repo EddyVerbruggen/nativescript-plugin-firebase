@@ -725,7 +725,7 @@ export namespace firestore {
     constructor(type: FieldValueType, value: any);
 
     static serverTimestamp: () => "SERVER_TIMESTAMP";
-    static delete: () => "DELETE";
+    static delete: () => "DELETE_FIELD";
     static arrayUnion: (fields: Array<any>) => FieldValue;
     static arrayRemove: (fields: Array<any>) => FieldValue;
   }

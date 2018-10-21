@@ -1820,7 +1820,7 @@ function fixSpecialField(item): any {
     return null;
   } else if (item === "SERVER_TIMESTAMP") {
     return FIRFieldValue.fieldValueForServerTimestamp();
-  } else if (item === "DELETE") {
+  } else if (item === "DELETE_FIELD") {
     return FIRFieldValue.fieldValueForDelete();
   } else if (item instanceof FieldValue) {
     const fieldValue: FieldValue = item;
