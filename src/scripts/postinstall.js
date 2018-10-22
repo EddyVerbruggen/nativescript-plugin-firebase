@@ -3061,6 +3061,7 @@ function promptQuestionsResult(result) {
     writeGoogleServiceCopyHook();
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
+    activateAndroidPushNotificationsLib(isSelected(result.messaging || externalPushClientOnly));
   }
 
   console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
@@ -3092,11 +3093,20 @@ function echoAndroidManifestChanges(result) {
   }
 }
 
+// I don't think we still need this, but it doesn't hurt either
 function exposeAdMobSymbols(enable) {
   if (enable && fs.existsSync(directories.ios + '/build.xcconfig.admob')) {
     fs.renameSync(directories.ios + '/build.xcconfig.admob', directories.ios + '/build.xcconfig');
   } else if (!enable && fs.existsSync(directories.ios + '/build.xcconfig')) {
     fs.renameSync(directories.ios + '/build.xcconfig', directories.ios + '/build.xcconfig.admob');
+  }
+}
+
+function activateAndroidPushNotificationsLib(enable) {
+  if (enable && fs.existsSync(path.join(directories.android, 'firebase-release.aar-disabled'))) {
+    fs.renameSync(path.join(directories.android, 'firebase-release.aar-disabled'), path.join(directories.android, 'firebase-release.aar'));
+  } else if (!enable && fs.existsSync(path.join(directories.android, 'firebase-release.aar'))) {
+    fs.renameSync(path.join(directories.android, 'firebase-release.aar'), path.join(directories.android, 'firebase-release.aar-disabled'));
   }
 }
 
