@@ -1,3 +1,5 @@
+import { firebase } from "../firebase-common";
+
 declare const com: any;
 
 const FirebasePerformance = com.google.firebase.perf.FirebasePerformance;
@@ -20,9 +22,16 @@ export class FirebaseTrace {
     return this.nativeTrace.getAttribute(attribute);
   }
 
-  // TODO this is a Java map I guess
-  getAttributes(): Map<string, string> {
-    return this.nativeTrace.getAttributes();
+  // TODO this is a Java map I guess (yep, let's transform)
+  getAttributes(): { [field: string]: any } {
+    const attributes = this.nativeTrace.getAttributes();
+    const node = {};
+    const iterator = attributes.entrySet().iterator();
+    while (iterator.hasNext()) {
+      const item = iterator.next();
+      node[item.getKey()] = item.getValue();
+    }
+    return node;
   }
 
   removeAttribute(attribute: string): void {

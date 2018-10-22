@@ -4,6 +4,7 @@ import { firestore } from "./firebase";
 import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
 import * as crashlytics from "./crashlytics/crashlytics";
+import * as performance from "./performance/performance";
 import * as storage from "./storage/storage";
 import * as mlkit from "./mlkit";
 
@@ -36,6 +37,7 @@ export const firebase: any = {
   admob,
   analytics,
   crashlytics,
+  performance,
   storage,
   mlkit,
   firestore: {

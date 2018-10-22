@@ -6,11 +6,13 @@ import {
   AddEventListenerResult,
   admob as firebaseAdMob,
   crashlytics as firebaseCrashlytics,
+  performance as firebasePerformance,
   storage as firebaseStorage,
   User
 } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 import { MessagingViewModel } from './messaging-view-model';
+import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performance";
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
@@ -24,6 +26,7 @@ export class HelloWorldModel extends Observable {
   private userListenerWrapper: AddEventListenerResult;
   private companiesListenerWrapper: AddEventListenerResult;
   private onAuthStateChangedHandlerSet = false;
+  private firebaseTrace: FirebaseTrace;
 
   /***********************************************
    * Web API usage examples
@@ -1597,6 +1600,52 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
+  }
+
+  public startPerformanceMonitoringTrace(): void {
+    this.firebaseTrace = firebasePerformance.startTrace("myTrace");
+    console.log(">> trace started");
+  }
+
+  public stopPerformanceMonitoringTrace(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.stop();
+      this.firebaseTrace = undefined;
+      console.log(">> trace stopped");
+    }
+  }
+
+  public setValuePerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.setValue("foo", "bar");
+      console.log(">> value set");
+    }
+  }
+
+  public getValuePerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      console.log(">> value: " + this.firebaseTrace.getValue("foo"));
+    }
+  }
+
+  public getAttributesPerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      console.log(">> attributes: " + JSON.stringify(this.firebaseTrace.getAttributes()));
+    }
+  }
+
+  public removeAttributePerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.removeAttribute("foo");
+      console.log(">> attribute removed");
+    }
+  }
+
+  public incrementMetricPerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.incrementMetric("foo_metric", 1);
+      console.log(">> metric incremented");
+    }
   }
 
   public doLogMessage(): void {

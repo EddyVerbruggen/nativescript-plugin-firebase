@@ -6,6 +6,7 @@
     "realtimedb": true,
     "authentication": true,
     "remote_config": true,
+    "performance_monitoring": true,
     "messaging": true,
     "crashlytics": true,
     "crash_reporting": true,

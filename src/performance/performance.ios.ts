@@ -16,7 +16,7 @@ export class FirebaseTrace {
     return this.nativeTrace.valueForAttribute(attribute);
   }
 
-  getAttributes(): Map<string, string> {
+  getAttributes(): { [field: string]: any } {
     return firebaseUtils.toJsObject(this.nativeTrace.attributes);
   }
 
