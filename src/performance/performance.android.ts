@@ -1,11 +1,7 @@
-import { firebase } from "../firebase-common";
-
 declare const com: any;
 
-const FirebasePerformance = com.google.firebase.perf.FirebasePerformance;
-
 export function startTrace(name: string): FirebaseTrace {
-  const trace = FirebasePerformance.getInstance().newTrace(name);
+  const trace = com.google.firebase.perf.FirebasePerformance.getInstance().newTrace(name);
   trace.start();
   return new FirebaseTrace(trace);
 }
@@ -22,7 +18,6 @@ export class FirebaseTrace {
     return this.nativeTrace.getAttribute(attribute);
   }
 
-  // TODO this is a Java map I guess (yep, let's transform)
   getAttributes(): { [field: string]: any } {
     const attributes = this.nativeTrace.getAttributes();
     const node = {};
