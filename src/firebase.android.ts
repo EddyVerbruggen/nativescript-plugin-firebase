@@ -49,9 +49,8 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
 
     if (dynamicLinksEnabled()) {
       // let's see if this is part of an email-link authentication flow
-      const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const emailLink = "" + args.android.getData();
-      if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
+      if (authEnabled() && com.google.firebase.auth.FirebaseAuth.getInstance().isSignInWithEmailLink(emailLink)) {
         const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
         if (rememberedEmail !== undefined) {
           const emailLinkOnCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
@@ -70,7 +69,7 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
             const authCredential = com.google.firebase.auth.EmailAuthProvider.getCredentialWithLink(rememberedEmail, emailLink);
             user.linkWithCredential(authCredential).addOnCompleteListener(emailLinkOnCompleteListener);
           } else {
-            firebaseAuth.signInWithEmailLink(rememberedEmail, emailLink).addOnCompleteListener(emailLinkOnCompleteListener);
+            com.google.firebase.auth.FirebaseAuth.getInstance().signInWithEmailLink(rememberedEmail, emailLink).addOnCompleteListener(emailLinkOnCompleteListener);
           }
         }
 
