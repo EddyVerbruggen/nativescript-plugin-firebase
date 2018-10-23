@@ -152,13 +152,15 @@ export function addOnPushTokenReceivedCallback(callback) {
 }
 
 export function addBackgroundRemoteNotificationHandler(appDelegate) {
-  appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = (application: UIApplication, deviceToken: NSData) => {
-    const token = deviceToken.description.replace(/[< >]/g, "");
-    _pushToken = token;
-    if (_receivedPushTokenCallback) {
-      _receivedPushTokenCallback(token);
-    }
-  };
+  if (typeof (FIRMessaging) === "undefined") {
+    appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = (application: UIApplication, deviceToken: NSData) => {
+      const token = deviceToken.description.replace(/[< >]/g, "");
+      _pushToken = token;
+      if (_receivedPushTokenCallback) {
+        _receivedPushTokenCallback(token);
+      }
+    };
+  }
 
   appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
     // Pass notification to auth and check if they can handle it (in case phone auth is being used), see https://firebase.google.com/docs/auth/ios/phone-auth
