@@ -17,8 +17,8 @@ export namespace firestore {
         value: undefined,
         serverTimestamp: () => "SERVER_TIMESTAMP",
         delete: () => "DELETE_FIELD",
-        arrayUnion: (fields: Array<any>) => new firebase.firestore.FieldValue("ARRAY_UNION", fields),
-        arrayRemove: (fields: Array<any>) => new firebase.firestore.FieldValue("ARRAY_REMOVE", fields)
+        arrayUnion: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_UNION", elements),
+        arrayRemove: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_REMOVE", elements)
       };
     }
 

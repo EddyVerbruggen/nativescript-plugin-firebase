@@ -726,8 +726,8 @@ export namespace firestore {
 
     static serverTimestamp: () => "SERVER_TIMESTAMP";
     static delete: () => "DELETE_FIELD";
-    static arrayUnion: (fields: Array<any>) => FieldValue;
-    static arrayRemove: (fields: Array<any>) => FieldValue;
+    static arrayUnion: (...elements: any[]) => FieldValue;
+    static arrayRemove: (...elements: any[]) => FieldValue;
   }
 
   export interface SnapshotListenOptions {

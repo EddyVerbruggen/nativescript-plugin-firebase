@@ -16,8 +16,8 @@ export class FieldValue {
 
   static serverTimestamp = () => "SERVER_TIMESTAMP";
   static delete = () => "DELETE_FIELD";
-  static arrayUnion = (fields: Array<any>) => new FieldValue("ARRAY_UNION", fields);
-  static arrayRemove = (fields: Array<any>) => new FieldValue("ARRAY_REMOVE", fields);
+  static arrayUnion = (...elements: any[]) => new FieldValue("ARRAY_UNION", elements);
+  static arrayRemove = (...elements: any[]) => new FieldValue("ARRAY_REMOVE", elements);
 }
 
 export class GeoPoint {

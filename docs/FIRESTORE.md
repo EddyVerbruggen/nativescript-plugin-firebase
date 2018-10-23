@@ -238,9 +238,15 @@ If your document contains an array field, you can use `arrayUnion()` and `arrayR
 `arrayUnion()` adds elements to an array but only elements not already present:
 
 ```typescript
+import { firestore } from "nativescript-plugin-firebase";
+const firebase = require("nativescript-plugin-firebase/app");
+
 firebase.firestore().collection("dogs").doc("fave")
     .update({
-      colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
+      // you can either use this syntax:
+      colors1: firebase.firestore().FieldValue().arrayUnion("red", "blue"),
+      //.. or this one:
+      colors2: firestore.FieldValue.arrayUnion("red", "blue")
     });
 ```
 
@@ -249,7 +255,7 @@ firebase.firestore().collection("dogs").doc("fave")
 ```typescript
 firebase.firestore().collection("dogs").doc("fave")
     .update({
-      colors: firebase.firestore().FieldValue().arrayRemove(["red"])
+      colors: firebase.firestore().FieldValue().arrayRemove("red")
     });
 ```
 

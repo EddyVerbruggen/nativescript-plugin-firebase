@@ -118,9 +118,10 @@ firebase.toHashMap = obj => {
         } else if (obj[property] instanceof FieldValue) {
           const fieldValue: FieldValue = obj[property];
           if (fieldValue.type === "ARRAY_UNION") {
-            node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(fieldValue.value));
+            // nested arrays are not allowed, so harden against wrong usage: arrayUnion(["foo", "bar"]) vs arrayUnion("foo", "bar")
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
           } else if (fieldValue.type === "ARRAY_REMOVE") {
-            node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(fieldValue.value));
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
           } else {
             console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!");
           }
