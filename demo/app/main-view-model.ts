@@ -7,7 +7,8 @@ import {
   admob as firebaseAdMob,
   crashlytics as firebaseCrashlytics,
   storage as firebaseStorage,
-  User
+  User,
+  LogComplexEventTypeParameter
 } from "nativescript-plugin-firebase";
 import * as fs from "tns-core-modules/file-system";
 import { MessagingViewModel } from './messaging-view-model';
@@ -501,6 +502,10 @@ export class HelloWorldModel extends Observable {
         }
     );
 
+    /**
+     * Same thing as logEvent but can add an array or specific types not just string (LogComplexEventTypeParameter.BOOLEAN, LogComplexEventTypeParameter.STRING,
+     * LogComplexEventTypeParameter.DOUBLE, LogComplexEventTypeParameter.FLOAT, LogComplexEventTypeParameter.INT, LogComplexEventTypeParameter.ARRAY)
+     */
     firebase.analytics.logComplexEvent({
       key: "view_item_list",
       parameters: [{
@@ -509,44 +514,31 @@ export class HelloWorldModel extends Observable {
         value: [
           {
             parameters: [
-              { key: "item_id", value: "id de l’offre", type: "string"},
-              {key: "item_name", value: "uri métier", type: "string"},
-              {key: "item_category", value: "category", type: "string"},
-              {key: "item_variant", value: "variant", type: "string"},
-              {key: "item_brand", value: "nom de l’entreprise", type: "string"},
-              {key: " price", value: 1 , type: "long"},
-              {key: "item_list", value: "LO-Moteur" , type: "string" },
-              {key: "index", value: 1 , type: "0"}
+              { key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1 , type: LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list" , type: LogComplexEventTypeParameter.STRING },
+              {key: "index", value: 1 , type: LogComplexEventTypeParameter.INT}
 
             ]
           },
           {
             parameters: [
-              { key: "item_id", value: "id de l’offre 1", type: "string"},
-              {key: "item_name", value: "uri métier", type: "string"},
-              {key: "item_category", value: "category", type: "string"},
-              {key: "item_variant", value: "variant", type: "string"},
-              {key: "item_brand", value: "nom de l’entreprise", type: "string"},
-              {key: " price", value: 1 , type: "long"},
-              {key: "item_list", value: "LO-Moteur" , type: "string" },
-              {key: "index", value: 2 , type: "int"}
-
-            ]
-          },
-          {
-            parameters: [
-              { key: "item_id", value: "id de l’offre 2", type: "string"},
-              {key: "item_name", value: "uri métier", type: "string"},
-              {key: "item_category", value: "category", type: "string"},
-              {key: "item_variant", value: "variant", type: "string"},
-              {key: "item_brand", value: "nom de l’entreprise", type: "string"},
-              {key: " price", value: 1 , type: "long"},
-              {key: "item_list", value: "LO-Moteur" , type: "string" },
-              {key: "index", value: 3 , type: "int"}
+              { key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1 , type: LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list" , type: LogComplexEventTypeParameter.STRING },
+              {key: "index", value: 2 , type: LogComplexEventTypeParameter.INT}
 
             ]
           }
-        ]
+      ]
       }]
     });
 

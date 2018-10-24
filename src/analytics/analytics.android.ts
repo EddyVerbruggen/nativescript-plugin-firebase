@@ -36,7 +36,6 @@ export function logEvent(options: LogEventOptions): Promise<void> {
 
 function getArrayList(array: Array<LogComplexEventOptions>): java.util.ArrayList<android.os.Bundle> {
   let returnArray = new java.util.ArrayList<android.os.Bundle>();
-  console.log("HERE 24");
   for (const p in array) {
     const param = array[p];
     if (param.parameters !== undefined) {
@@ -54,9 +53,6 @@ function buildBundle(params: Array<LogComplexEventParameter>): android.os.Bundle
   for (const p in params) {
     const param = params[p];
     if (param.value !== undefined) {
-      console.log("HERE 23");
-      console.log(param.type);
-      console.dir(param);
       if (param.type === "string") {
           bundle.putString(param.key, param.value);
       } else if (param.type === "double") {
