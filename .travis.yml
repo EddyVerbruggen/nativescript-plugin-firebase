@@ -41,7 +41,7 @@ matrix:
       os: osx
       env:
         - Webpack="iOS"
-      osx_image: xcode10.0
+      osx_image: xcode9.2
       language: node_js
       node_js: "8"
       jdk: oraclejdk8
@@ -67,9 +67,9 @@ matrix:
         - travis_wait travis_retry tns build android
     - os: osx
       env:
-        - BuildiOS="12.0"
-        - Xcode="10.0"
-      osx_image: xcode10.0
+        - BuildiOS="11"
+        - Xcode="9.2"
+      osx_image: xcode9.2
       language: node_js
       node_js: "8"
       jdk: oraclejdk8
