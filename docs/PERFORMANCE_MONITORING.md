@@ -16,11 +16,9 @@ To add this feature to your project, either:
 In both cases, remove the `/platforms` folder afterwards so the required native library will be added upon the next build. 
 
 ## API
-You can use either the Web API syntax (easy for interoperability with a web version of your app), or our custom native syntax.
-Use whichever syntax you like most - the underlying implementation is the same.
 
 ### `startTrace`
-You need to start and stop a trace, so remember the started trace in some property:
+To interact with a started trace, we're remembering it in the property `firebaseTrace`:
 
 ```typescript
 import { performance as firebasePerformance } from "nativescript-plugin-firebase";
