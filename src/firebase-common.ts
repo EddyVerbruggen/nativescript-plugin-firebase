@@ -103,8 +103,10 @@ export const firebase: any = {
       try {
         if (listener.thisArg) {
           listener.onAuthStateChanged.call(listener.thisArg, data);
-        } else {
+        } else if (listener.onAuthStateChanged) {
           listener.onAuthStateChanged(data);
+        } else {
+          listener(data);
         }
       } catch (ex) {
         console.error("Firebase AuthStateListener failed to trigger", listener, ex);
