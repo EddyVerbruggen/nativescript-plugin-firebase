@@ -77,6 +77,10 @@ button {
   background-color: #1832d5;
 }
 
+.button-performance {
+  background-color: #d57c13;
+}
+
 .barcodescanner {
   height: 420;
   margin-top: 16;

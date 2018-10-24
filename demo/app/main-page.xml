@@ -85,7 +85,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
 
@@ -225,6 +225,15 @@
             <Label row="49" colSpan="2" text="Firebase Invites" class="subtitle"/>
             <Button row="50" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
             <Button row="50" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
+
+            <Label row="51" colSpan="2" text="Performance Monitoring" class="subtitle"/>
+            <Button row="52" col="0" text="start trace" tap="{{ startPerformanceMonitoringTrace }}" class="button button-performance"/>
+            <Button row="52" col="1" text="stop trace" tap="{{ stopPerformanceMonitoringTrace }}" class="button button-performance"/>
+            <Button row="53" col="0" text="set value trace" tap="{{ setValuePerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="53" col="1" text="get value" tap="{{ getValuePerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="54" col="0" text="get attributes" tap="{{ getAttributesPerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="54" col="1" text="removeAttribute" tap="{{ removeAttributePerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="55" colSpan="2" text="increment metric" tap="{{ incrementMetricPerformanceMonitoring }}" class="button button-performance"/>
           </GridLayout>
 
         </ScrollView>

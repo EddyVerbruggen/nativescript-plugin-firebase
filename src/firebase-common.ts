@@ -4,6 +4,7 @@ import { firestore } from "./firebase";
 import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
 import * as crashlytics from "./crashlytics/crashlytics";
+import * as performance from "./performance/performance";
 import * as storage from "./storage/storage";
 import * as mlkit from "./mlkit";
 
@@ -14,9 +15,9 @@ export class FieldValue {
   }
 
   static serverTimestamp = () => "SERVER_TIMESTAMP";
-  static delete = () => "DELETE";
-  static arrayUnion = (fields: Array<any>) => new FieldValue("ARRAY_UNION", fields);
-  static arrayRemove = (fields: Array<any>) => new FieldValue("ARRAY_REMOVE", fields);
+  static delete = () => "DELETE_FIELD";
+  static arrayUnion = (...elements: any[]) => new FieldValue("ARRAY_UNION", elements);
+  static arrayRemove = (...elements: any[]) => new FieldValue("ARRAY_REMOVE", elements);
 }
 
 export class GeoPoint {
@@ -36,6 +37,7 @@ export const firebase: any = {
   admob,
   analytics,
   crashlytics,
+  performance,
   storage,
   mlkit,
   firestore: {
@@ -110,8 +112,10 @@ export const firebase: any = {
       try {
         if (listener.thisArg) {
           listener.onAuthStateChanged.call(listener.thisArg, data);
-        } else {
+        } else if (listener.onAuthStateChanged) {
           listener.onAuthStateChanged(data);
+        } else {
+          listener(data);
         }
       } catch (ex) {
         console.error("Firebase AuthStateListener failed to trigger", listener, ex);

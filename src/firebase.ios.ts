@@ -1820,14 +1820,15 @@ function fixSpecialField(item): any {
     return null;
   } else if (item === "SERVER_TIMESTAMP") {
     return FIRFieldValue.fieldValueForServerTimestamp();
-  } else if (item === "DELETE") {
+  } else if (item === "DELETE_FIELD") {
     return FIRFieldValue.fieldValueForDelete();
   } else if (item instanceof FieldValue) {
     const fieldValue: FieldValue = item;
     if (fieldValue.type === "ARRAY_UNION") {
-      return FIRFieldValue.fieldValueForArrayUnion(fieldValue.value);
+      // nested arrays are not allowed, so harden against wrong usage: arrayUnion(["foo", "bar"]) vs arrayUnion("foo", "bar")
+      return FIRFieldValue.fieldValueForArrayUnion(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value);
     } else if (fieldValue.type === "ARRAY_REMOVE") {
-      return FIRFieldValue.fieldValueForArrayRemove(fieldValue.value);
+      return FIRFieldValue.fieldValueForArrayRemove(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value);
     } else {
       console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!");
     }

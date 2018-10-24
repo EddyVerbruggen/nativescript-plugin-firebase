@@ -90,6 +90,7 @@ export function registerForPushNotifications(options?: MessagingOptions): Promis
     }
   });
 }
+
 export function unregisterForPushNotifications(): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
@@ -153,10 +154,16 @@ export function addOnPushTokenReceivedCallback(callback) {
 
 export function addBackgroundRemoteNotificationHandler(appDelegate) {
   appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = (application: UIApplication, deviceToken: NSData) => {
-    const token = deviceToken.description.replace(/[< >]/g, "");
-    _pushToken = token;
-    if (_receivedPushTokenCallback) {
-      _receivedPushTokenCallback(token);
+    if (typeof (FIRMessaging) !== "undefined") {
+      // make sure Firebase has the latest APNs token (issue #982)
+      FIRMessaging.messaging().APNSToken = deviceToken;
+    } else {
+      // if Firebase Messaging isn't used, the developer cares about the APNs token, so pass it to the app
+      const token = deviceToken.description.replace(/[< >]/g, "");
+      _pushToken = token;
+      if (_receivedPushTokenCallback) {
+        _receivedPushTokenCallback(token);
+      }
     }
   };
 
@@ -559,9 +566,9 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
 
     if (_showNotificationsWhenInForeground || // Default value, in case we always want to show when in foreground.
-      userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
-      userInfoJSON["showWhenInForeground"] === true || // ...this is for non-FCM...
-      (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // ...and this as well (so users can choose where to put it).
+        userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
+        userInfoJSON["showWhenInForeground"] === true || // ...this is for non-FCM...
+        (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // ...and this as well (so users can choose where to put it).
     ) {
       // don't invoke the callback here, since the app shouldn't fi. navigate to a new page unless the user pressed the notification
       completionHandler(UNNotificationPresentationOptions.Alert | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Badge);

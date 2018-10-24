@@ -49,9 +49,8 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
 
     if (dynamicLinksEnabled()) {
       // let's see if this is part of an email-link authentication flow
-      const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const emailLink = "" + args.android.getData();
-      if (firebaseAuth.isSignInWithEmailLink(emailLink)) {
+      if (authEnabled() && com.google.firebase.auth.FirebaseAuth.getInstance().isSignInWithEmailLink(emailLink)) {
         const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
         if (rememberedEmail !== undefined) {
           const emailLinkOnCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
@@ -70,7 +69,7 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
             const authCredential = com.google.firebase.auth.EmailAuthProvider.getCredentialWithLink(rememberedEmail, emailLink);
             user.linkWithCredential(authCredential).addOnCompleteListener(emailLinkOnCompleteListener);
           } else {
-            firebaseAuth.signInWithEmailLink(rememberedEmail, emailLink).addOnCompleteListener(emailLinkOnCompleteListener);
+            com.google.firebase.auth.FirebaseAuth.getInstance().signInWithEmailLink(rememberedEmail, emailLink).addOnCompleteListener(emailLinkOnCompleteListener);
           }
         }
 
@@ -114,14 +113,15 @@ firebase.toHashMap = obj => {
         // note that the Android Firestore SDK only supports this for 'update' (not for 'set')
         if (obj[property] === "SERVER_TIMESTAMP") {
           node.put(property, com.google.firebase.firestore.FieldValue.serverTimestamp());
-        } else if (obj[property] === "DELETE") {
+        } else if (obj[property] === "DELETE_FIELD") {
           node.put(property, com.google.firebase.firestore.FieldValue.delete());
         } else if (obj[property] instanceof FieldValue) {
           const fieldValue: FieldValue = obj[property];
           if (fieldValue.type === "ARRAY_UNION") {
-            node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(fieldValue.value));
+            // nested arrays are not allowed, so harden against wrong usage: arrayUnion(["foo", "bar"]) vs arrayUnion("foo", "bar")
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
           } else if (fieldValue.type === "ARRAY_REMOVE") {
-            node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(fieldValue.value));
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
           } else {
             console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!");
           }
@@ -312,16 +312,7 @@ firebase.init = arg => {
         const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
         if (arg.onAuthStateChanged) {
-          firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-            onAuthStateChanged: fbAuth => {
-              const user = fbAuth.getCurrentUser();
-              arg.onAuthStateChanged({
-                loggedIn: user !== null,
-                user: toLoginResult(user)
-              });
-            }
-          });
-          firebaseAuth.addAuthStateListener(firebase.authStateListener);
+          firebase.addAuthStateListener(arg.onAuthStateChanged)
         }
 
         // Listen to auth state changes

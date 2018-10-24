@@ -230,12 +230,14 @@ export class FirestoreComponent {
   }
 
   arrayUnion(): void {
-    firebase.firestore().collection("dogs").doc("fave")
+    firestore.collection("dogs").doc("fave")
         .update({
           last: "Updated From 'arrayUnion'",
           fieldToDelete: firestore.FieldValue.delete(),
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
-          colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
+          // just fyi - both of these work:
+          colors: firestore.FieldValue.arrayUnion("red", "blue")
+          // colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
         })
         .then(() => console.log("Woofie updated from 'arrayUnion'"))
         .catch(err => console.log("Updating Woofie from 'arrayUnion' failed, error: " + JSON.stringify(err)));
@@ -246,7 +248,7 @@ export class FirestoreComponent {
         .update({
           last: "Updated From 'arrayRemove'",
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
-          colors: firebase.firestore().FieldValue().arrayRemove(["red"])
+          colors: firebase.firestore().FieldValue().arrayRemove("red")
         })
         .then(() => console.log("Woofie updated from 'arrayRemove'"))
         .catch(err => console.log("Updating Woofie from 'arrayRemove' failed, error: " + JSON.stringify(err)));

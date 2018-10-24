@@ -5,6 +5,7 @@ export * from './firebase';
 export * from './admob';
 export * from './analytics';
 export * from './crashlytics';
+export * from './performance';
 export * from './storage';
 export * from './messaging';
 import * as ml from './mlkit';

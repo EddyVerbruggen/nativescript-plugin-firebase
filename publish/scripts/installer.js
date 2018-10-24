@@ -158,6 +158,10 @@ function promptQuestions() {
     description: 'Are you using Firebase RemoteConfig? (y/n)',
     default: 'n'
   }, {
+    name: 'performance_monitoring',
+    description: 'Are you using Performance Monitoring? (y/n)',
+    default: 'n'
+  }, {
     name: 'messaging',
     description: 'Are you using Firebase Messaging? (y/n)',
     default: 'n'
@@ -259,6 +263,7 @@ function promptQuestionsResult(result) {
     writeGoogleServiceCopyHook();
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
+    activateAndroidPushNotificationsLib(isSelected(result.messaging || externalPushClientOnly));
   }
 
   console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
@@ -290,11 +295,20 @@ function echoAndroidManifestChanges(result) {
   }
 }
 
+// I don't think we still need this, but it doesn't hurt either
 function exposeAdMobSymbols(enable) {
   if (enable && fs.existsSync(directories.ios + '/build.xcconfig.admob')) {
     fs.renameSync(directories.ios + '/build.xcconfig.admob', directories.ios + '/build.xcconfig');
   } else if (!enable && fs.existsSync(directories.ios + '/build.xcconfig')) {
     fs.renameSync(directories.ios + '/build.xcconfig', directories.ios + '/build.xcconfig.admob');
+  }
+}
+
+function activateAndroidPushNotificationsLib(enable) {
+  if (enable && fs.existsSync(path.join(directories.android, 'firebase-release.aar-disabled'))) {
+    fs.renameSync(path.join(directories.android, 'firebase-release.aar-disabled'), path.join(directories.android, 'firebase-release.aar'));
+  } else if (!enable && fs.existsSync(path.join(directories.android, 'firebase-release.aar'))) {
+    fs.renameSync(path.join(directories.android, 'firebase-release.aar'), path.join(directories.android, 'firebase-release.aar-disabled'));
   }
 }
 
@@ -339,6 +353,9 @@ pod 'GoogleUtilities', '5.2.3'
 
 # Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
+
+# Performance Monitoring
+` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'Firebase/Performance'
 
 # Crash Reporting
 ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
@@ -576,7 +593,7 @@ repositories {
 }
 
 def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
-def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "15.0.1"
+def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "16.0.1"
 
 if (VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.+')) {
     throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 / 15.0.+ (currently set to $googlePlayServicesVersion)");
@@ -590,44 +607,47 @@ dependencies {
     compile "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:16.0.3"
+    compile "com.google.firebase:firebase-core:16.0.4"
 
     // for reading google-services.json and configuration
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.3"
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.4"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.1"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.3"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.0"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.1"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.0.0"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.1.0"
+
+    // Performance Monitoring
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` compile "com.google.firebase:firebase-perf:16.1.2"
 
     // Crash Reporting
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.2.0"
+    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.2.1"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.3"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.5"
 
     // Firebase Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.0"
+    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.4"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.1"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.3"
 
     // Cloud Functions
-    ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.0"
+    ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.1"
 
     // AdMob / Ads
     ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.1"
 
     // ML Kit
-    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:17.0.0"
-    ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:15.0.0"
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.1"
+    ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
 
     // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }
@@ -636,10 +656,10 @@ dependencies {
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:16.0.0"
 
     // Firebase Invites
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.3"
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.4"
 
     // Firebase Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.1"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.2"
 }
 
 apply plugin: "com.google.gms.google-services"
