@@ -873,7 +873,7 @@ export function registerForInteractivePush(model: any): void;
 
 export function getCurrentPushToken(): Promise<string>;
 
-export function registerForPushNotifications(): Promise<void>;
+export function registerForPushNotifications(options?: MessagingOptions): Promise<void>;
 
 export function unregisterForPushNotifications(): Promise<void>;
 
