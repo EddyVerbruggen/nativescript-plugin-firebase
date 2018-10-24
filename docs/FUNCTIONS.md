@@ -19,11 +19,11 @@ To add this feature to your project, either:
 In both cases, remove the `/platforms` folder afterwards so the required native library will be added upon the next build. 
 
 
-## Functions
+## API
 You can use either the Web API syntax (easy for interoperability with a web version of your app), or our custom native syntax.
 Use whichever syntax you like most - the underlying implementation is the same.
 
-### httpsCallable
+### `httpsCallable`
 This example uses the Cloud Function as [implemented here](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/ff95c77c7b09acf66654f53c52e8ae0c8d7b1c78/demo/firebasefunctions/functions/src/index.ts#L15-L19).
 
 <details>

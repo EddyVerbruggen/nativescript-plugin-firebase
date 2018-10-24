@@ -1,5 +1,6 @@
 # NativeScript Firebase plugin
 
+[![Build Status][build-status]][build-url]
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![Twitter Follow][twitter-image]][twitter-url]
@@ -24,6 +25,7 @@
 * [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
 * [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [ML Kit](docs/ML_KIT.md)
+* [Performance Monitoring](docs/PERFORMANCE_MONITORING.md)
 * [Realtime Database](docs/DATABASE.md)
 * [Remote Config](docs/REMOTECONFIG.md)
 * [Storage](docs/STORAGE.md)
