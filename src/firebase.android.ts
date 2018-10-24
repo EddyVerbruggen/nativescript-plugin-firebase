@@ -312,16 +312,7 @@ firebase.init = arg => {
         const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
         if (arg.onAuthStateChanged) {
-          firebase.authStateListener = new com.google.firebase.auth.FirebaseAuth.AuthStateListener({
-            onAuthStateChanged: fbAuth => {
-              const user = fbAuth.getCurrentUser();
-              arg.onAuthStateChanged({
-                loggedIn: user !== null,
-                user: toLoginResult(user)
-              });
-            }
-          });
-          firebaseAuth.addAuthStateListener(firebase.authStateListener);
+          firebase.addAuthStateListener(arg.onAuthStateChanged)
         }
 
         // Listen to auth state changes
