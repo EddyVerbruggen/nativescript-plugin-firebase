@@ -51,16 +51,17 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 }
 
 function getFaceDetector(options: MLKitDetectFacesOnDeviceOptions): any {
-  const faceDetectorOptions =
-      new com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.Builder()
-          .setModeType(options.detectionMode === "accurate" ? com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ACCURATE_MODE : com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.FAST_MODE)
-          .setLandmarkType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS) // TODO make configurable
-          .setClassificationType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS) // TODO make configurable
-          .setMinFaceSize(options.minimumFaceSize)
-          .setTrackingEnabled(options.enableFaceTracking === true)
-          .build();
+  const builder = new com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.Builder()
+      .setPerformanceMode(options.detectionMode === "accurate" ? com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ACCURATE : com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.FAST)
+      .setLandmarkMode(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS) // TODO make configurable
+      .setClassificationMode(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS) // TODO make configurable
+      .setMinFaceSize(options.minimumFaceSize);
 
-  return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(faceDetectorOptions);
+  if (options.enableFaceTracking === true) {
+    builder.enableTracking = true;
+  }
+
+  return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(builder.build());
 }
 
 export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): Promise<MLKitDetectFacesOnDeviceResult> {
