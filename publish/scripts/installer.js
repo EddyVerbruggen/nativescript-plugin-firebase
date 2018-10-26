@@ -866,9 +866,16 @@ var copyPlist = function(copyPlistOpts) {
                 fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistDev));
                 return true;
             }
-        } else if (!fs.existsSync(destinationGooglePlist)) { // single GoogleService-Info.plist modus but missing
+        } else if (!fs.existsSync(destinationGooglePlist)) { // single GoogleService-Info.plist modus but missing`;
+    if (externalPushClientOnly) {
+      beforeCheckForChangesContent += `
+            return true; // this is a push-only project, so this is allowed`;
+    } else {
+      beforeCheckForChangesContent += `
             copyPlistOpts.$logger.warn("nativescript-plugin-firebase: " + destinationGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
-            return false;
+            return false;`;
+    }
+    beforeCheckForChangesContent += `
         } else {
             return true; // single GoogleService-Info.plist modus
         }
