@@ -371,13 +371,16 @@ firebase.init = arg => {
       }
 
       if (typeof (FIRFirestore) !== "undefined") {
+        // fix a deprecation warning
+        const fIRFirestoreSettings = FIRFirestoreSettings.new();
+        fIRFirestoreSettings.timestampsInSnapshotsEnabled = true;
+
         // Firestore has offline persistence enabled by default
         if (arg.persist === false) {
-          const fIRFirestoreSettings = FIRFirestoreSettings.new();
           fIRFirestoreSettings.persistenceEnabled = false;
-          fIRFirestoreSettings.timestampsInSnapshotsEnabled = true;
-          FIRFirestore.firestore().settings = fIRFirestoreSettings;
         }
+
+        FIRFirestore.firestore().settings = fIRFirestoreSettings;
       }
 
       if (typeof (FIRAuth) !== "undefined") {
