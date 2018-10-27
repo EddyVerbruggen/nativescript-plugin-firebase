@@ -74,30 +74,32 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
         }
 
       } else {
-        const getDynamicLinksCallback = new com.google.android.gms.tasks.OnCompleteListener({
-          onComplete: task => {
-            if (task.isSuccessful() && task.getResult() !== null) {
-              const result = task.getResult();
+        const getDynamicLinksCallback = new com.google.android.gms.tasks.OnSuccessListener({
+          onSuccess: pendingDynamicLinkData => {
+            if (pendingDynamicLinkData != null) {
+
+              const deepLink = pendingDynamicLinkData.getLink().toString();
+              const minimumAppVersion = pendingDynamicLinkData.getMinimumAppVersion();
+
               if (firebase._dynamicLinkCallback === null) {
                 firebase._cachedDynamicLink = {
-                  url: result.getLink().toString(),
-                  // matchConfidence: 1,
-                  minimumAppVersion: result.getMinimumAppVersion()
+                  url: deepLink,
+                  minimumAppVersion: minimumAppVersion
                 };
-              } else {
-                setTimeout(() => {
-                  firebase._dynamicLinkCallback({
-                    url: result.getLink().toString(),
-                    // matchConfidence: 1,
-                    minimumAppVersion: result.getMinimumAppVersion()
-                  });
+              }
+              else {
+                setTimeout(function () {
+                    firebase._dynamicLinkCallback({
+                      url: deepLink,
+                      minimumAppVersion: minimumAppVersion
+                    });
                 });
               }
             }
           }
         });
         const firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
-        firebaseDynamicLinks.getDynamicLink(args.android).addOnCompleteListener(getDynamicLinksCallback);
+        firebaseDynamicLinks.getDynamicLink(args.android).addOnSuccessListener(getDynamicLinksCallback);
       }
     }
   });
