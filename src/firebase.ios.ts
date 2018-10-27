@@ -590,6 +590,26 @@ firebase.logout = arg => {
   });
 };
 
+firebase.unlink = providerId => {
+  return new Promise((resolve, reject) => {
+    try {
+      const user = FIRAuth.auth().currentUser;
+
+      user.unlinkFromProviderCompletion(providerId, (user, error) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(user);
+        }
+      });
+
+    } catch (ex) {
+      console.log("Error in firebase.logout: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
   if (!user) {
     return null;
