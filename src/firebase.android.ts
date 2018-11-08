@@ -1174,12 +1174,10 @@ firebase.changePassword = arg => {
       } else {
         const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
           onComplete: task => {
-            console.log("--- changed pwd: " + task);
             if (task.isSuccessful()) {
               resolve();
             } else {
-              // TODO extract error
-              reject("Updating password failed");
+              reject("Updating password failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
             }
           }
         });

@@ -380,6 +380,8 @@ This may not work on an (Android) simulator. See #463.
 ```
 
 #### Changing a password
+Note that changing a password may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
+
 ```js
   firebase.changePassword({
     email: 'useraccount@provider.com',
