@@ -96,6 +96,10 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
         }
         CFRelease(delegate);
         delegate = undefined;
+      }, () => {
+        if (!(arg.adCallback === null || arg.adCallback === undefined)) {
+          arg.adCallback();
+        }
       });
       // we're leaving the app to switch to Google's OAuth screen, so making sure this is retained
       CFRetain(delegate);
@@ -239,6 +243,7 @@ function _getBannerType(size): any {
 
 class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDelegate {
   public static ObjCProtocols = [];
+  onAdCloseCallback: () => void;
 
   static new(): GADInterstitialDelegateImpl {
     if (GADInterstitialDelegateImpl.ObjCProtocols.length === 0 && typeof (GADInterstitialDelegate) !== "undefined") {
@@ -249,13 +254,18 @@ class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDel
 
   private callback: (ad: GADInterstitial, error?: GADRequestError) => void;
 
-  public initWithCallback(callback: (ad: GADInterstitial, error?: GADRequestError) => void): GADInterstitialDelegateImpl {
+  public initWithCallback(callback: (ad: GADInterstitial, error?: GADRequestError) => void, onAdCloseCallback: () => void = null): GADInterstitialDelegateImpl {
     this.callback = callback;
+    this.onAdCloseCallback = onAdCloseCallback;
     return this;
   }
 
   public interstitialDidReceiveAd(ad: GADInterstitial): void {
     this.callback(ad);
+  }
+
+  public interstitialDidDismissScreen(ad: GADInterstitial): void {
+    this.onAdCloseCallback();
   }
 
   public interstitialDidFailToReceiveAdWithError(ad: GADInterstitial, error: GADRequestError): void {

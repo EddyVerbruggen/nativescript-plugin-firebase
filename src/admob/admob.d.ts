@@ -100,6 +100,8 @@ export interface InterstitialOptions {
    *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
    */
   iosTestDeviceIds?: string[];
+
+  adCallback?: () => void;
 }
 
 export declare function showBanner(options: BannerOptions): Promise<any>;
