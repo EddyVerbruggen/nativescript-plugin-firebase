@@ -2,7 +2,7 @@
     "external_push_client_only": false,
     "using_ios": true,
     "using_android": true,
-    "firestore": true,
+    "firestore": false,
     "realtimedb": true,
     "authentication": true,
     "remote_config": true,

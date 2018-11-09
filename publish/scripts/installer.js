@@ -732,13 +732,13 @@ dependencies {
     ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.4"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:17.1.2"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.3"
 
     // Cloud Functions
     ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.2"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:17.0.0"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.1"
 
     // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.1"
@@ -754,7 +754,7 @@ dependencies {
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.4"
 
     // Firebase Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.3"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.2" // BEWARE: 16.1.2 is fine, but 16.1.3 results in a build error
 }
 
 apply plugin: "com.google.gms.google-services"
