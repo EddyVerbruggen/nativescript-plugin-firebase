@@ -220,7 +220,7 @@
             <Button row="46" col="1" text="set float crashlytics" tap="{{ doSetCrashlyticFloat }}" class="button button-crash"/>
             <Button row="47" col="0" text="set double crashlytics" tap="{{ doSetCrashlyticDouble }}" class="button button-crash"/>
             <Button row="47" col="1" text="set int crashlytics" tap="{{ doSetCrashlyticInt }}" class="button button-crash"/>
-            <Button row="48" colSpan="2" text="SetUserId" tap="{{ doSetUserId }}" class="button button-messaging"/>
+            <Button row="48" colSpan="2" text="SetUserId" tap="{{ doSetUserId }}" class="button button-crash"/>
 
             <Label row="49" colSpan="2" text="Firebase Invites" class="subtitle"/>
             <Button row="50" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>

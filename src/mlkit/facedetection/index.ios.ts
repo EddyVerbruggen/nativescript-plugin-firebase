@@ -59,11 +59,11 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 function getDetector(options: MLKitDetectFacesOnDeviceOptions): FIRVisionFaceDetector {
   const firVision: FIRVision = FIRVision.vision();
   const firOptions = FIRVisionFaceDetectorOptions.new();
-  firOptions.modeType = options.detectionMode === "accurate" ? FIRVisionFaceDetectorMode.Accurate : FIRVisionFaceDetectorMode.Fast;
-  firOptions.landmarkType = FIRVisionFaceDetectorLandmark.All; // TODO make configurable
-  firOptions.classificationType = FIRVisionFaceDetectorClassification.All; // TODO make configurable
+  firOptions.performanceMode = options.detectionMode === "accurate" ? FIRVisionFaceDetectorPerformanceMode.Accurate : FIRVisionFaceDetectorPerformanceMode.Fast;
+  firOptions.landmarkMode = FIRVisionFaceDetectorLandmarkMode.All; // TODO make configurable
+  firOptions.classificationMode = FIRVisionFaceDetectorClassificationMode.All; // TODO make configurable
   firOptions.minFaceSize = options.minimumFaceSize;
-  firOptions.isTrackingEnabled = options.enableFaceTracking === true;
+  firOptions.trackingEnabled = options.enableFaceTracking === true;
   return firVision.faceDetectorWithOptions(firOptions);
 }
 
@@ -71,7 +71,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
   return new Promise((resolve, reject) => {
     try {
       const faceDetector = getDetector(options);
-      faceDetector.detectInImageCompletion(getImage(options), (faces: NSArray<FIRVisionFace>, error: NSError) => {
+      faceDetector.processImageCompletion(getImage(options), (faces: NSArray<FIRVisionFace>, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
 

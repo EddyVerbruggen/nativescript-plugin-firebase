@@ -50,6 +50,7 @@
       </StackLayout>
     </GridLayout>
   </GridLayout>
+
   <ListView backgroundColor="black" row="1" [items]="faces">
     <ng-template let-item="item">
       <GridLayout columns="50, *, *, *">
@@ -61,9 +62,10 @@
     </ng-template>
   </ListView>
 
-  <GridLayout rows="auto" columns="auto, auto" horizontalAlignment="right" class="m-t-4 m-r-8">
-    <Label col="0" text="Torch" class="c-white" [class.disabled]="!torchOn"></Label>
-    <Switch col="1" [checked]="torchOn" (checkedChange)="toggleTorch($event)"></Switch>
-  </GridLayout>
+  <!-- not needed; we're using the front camera ;) -->
+  <!--<GridLayout rows="auto" columns="auto, auto" horizontalAlignment="right" class="m-t-4 m-r-8">-->
+    <!--<Label col="0" text="Torch" class="c-white" [class.disabled]="!torchOn"></Label>-->
+    <!--<Switch col="1" [checked]="torchOn" (checkedChange)="toggleTorch($event)"></Switch>-->
+  <!--</GridLayout>-->
 
 </GridLayout>
