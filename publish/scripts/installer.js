@@ -738,7 +738,7 @@ dependencies {
     ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.2"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.1"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:17.0.0"
 
     // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.1"

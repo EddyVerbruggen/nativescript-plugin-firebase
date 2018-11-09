@@ -5,6 +5,20 @@ Since plugin version 3.10.0 you can use Firebase _AdMob_ features.
 
 _AdMob_ lets you show banners or interstitials (full screen ads) in your app so you can earn some money.
 
+### Android
+> ⚠️ Important! Plugin version 7.4.0+ requires you to do this - or your app will crash on start-up! ⚠️
+
+Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data` line at [the right spot](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/3fe3f6b4b9d1b83b048b10472bec923f64e08c75/demo/app_resources/Android/src/main/AndroidManifest.xml#L28-L30) (and replace the value by the actual App ID of [your app](https://apps.admob.com/)!):
+
+```xml
+<application>
+  <!-- this line needs to be added (replace the value!) -->
+  <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713" />
+
+  <activity></activity>
+</application>
+```
+
 ### iOS
 
 #### App Transport Security
