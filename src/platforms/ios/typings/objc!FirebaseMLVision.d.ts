@@ -1,4 +1,32 @@
 
+declare var FIRFaceContourTypeAll: string;
+
+declare var FIRFaceContourTypeFace: string;
+
+declare var FIRFaceContourTypeLeftEye: string;
+
+declare var FIRFaceContourTypeLeftEyebrowBottom: string;
+
+declare var FIRFaceContourTypeLeftEyebrowTop: string;
+
+declare var FIRFaceContourTypeLowerLipBottom: string;
+
+declare var FIRFaceContourTypeLowerLipTop: string;
+
+declare var FIRFaceContourTypeNoseBottom: string;
+
+declare var FIRFaceContourTypeNoseBridge: string;
+
+declare var FIRFaceContourTypeRightEye: string;
+
+declare var FIRFaceContourTypeRightEyebrowBottom: string;
+
+declare var FIRFaceContourTypeRightEyebrowTop: string;
+
+declare var FIRFaceContourTypeUpperLipBottom: string;
+
+declare var FIRFaceContourTypeUpperLipTop: string;
+
 declare var FIRFaceLandmarkTypeLeftCheek: string;
 
 declare var FIRFaceLandmarkTypeLeftEar: string;
@@ -667,10 +695,21 @@ declare class FIRVisionFace extends NSObject {
 
 	readonly trackingID: number;
 
+	contourOfType(type: string): FIRVisionFaceContour;
+
 	landmarkOfType(type: string): FIRVisionFaceLandmark;
 }
 
-declare var FIRVisionFaceDetectionMinSize: number;
+declare class FIRVisionFaceContour extends NSObject {
+
+	static alloc(): FIRVisionFaceContour; // inherited from NSObject
+
+	static new(): FIRVisionFaceContour; // inherited from NSObject
+
+	readonly points: NSArray<FIRVisionPoint>;
+
+	readonly type: string;
+}
 
 declare class FIRVisionFaceDetector extends NSObject {
 
@@ -678,28 +717,30 @@ declare class FIRVisionFaceDetector extends NSObject {
 
 	static new(): FIRVisionFaceDetector; // inherited from NSObject
 
-	detectInImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionFace>, p2: NSError) => void): void;
+	processImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionFace>, p2: NSError) => void): void;
+
+	resultsInImageError(image: FIRVisionImage): NSArray<FIRVisionFace>;
 }
 
-declare const enum FIRVisionFaceDetectorClassification {
+declare const enum FIRVisionFaceDetectorClassificationMode {
 
 	None = 1,
 
 	All = 2
 }
 
-declare const enum FIRVisionFaceDetectorLandmark {
+declare const enum FIRVisionFaceDetectorContourMode {
 
 	None = 1,
 
 	All = 2
 }
 
-declare const enum FIRVisionFaceDetectorMode {
+declare const enum FIRVisionFaceDetectorLandmarkMode {
 
-	Fast = 1,
+	None = 1,
 
-	Accurate = 2
+	All = 2
 }
 
 declare class FIRVisionFaceDetectorOptions extends NSObject {
@@ -708,15 +749,24 @@ declare class FIRVisionFaceDetectorOptions extends NSObject {
 
 	static new(): FIRVisionFaceDetectorOptions; // inherited from NSObject
 
-	classificationType: FIRVisionFaceDetectorClassification;
+	classificationMode: FIRVisionFaceDetectorClassificationMode;
 
-	isTrackingEnabled: boolean;
+	contourMode: FIRVisionFaceDetectorContourMode;
 
-	landmarkType: FIRVisionFaceDetectorLandmark;
+	landmarkMode: FIRVisionFaceDetectorLandmarkMode;
 
 	minFaceSize: number;
 
-	modeType: FIRVisionFaceDetectorMode;
+	performanceMode: FIRVisionFaceDetectorPerformanceMode;
+
+	trackingEnabled: boolean;
+}
+
+declare const enum FIRVisionFaceDetectorPerformanceMode {
+
+	Fast = 1,
+
+	Accurate = 2
 }
 
 declare class FIRVisionFaceLandmark extends NSObject {
