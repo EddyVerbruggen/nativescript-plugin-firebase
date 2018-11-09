@@ -101,7 +101,10 @@ export interface InterstitialOptions {
    */
   iosTestDeviceIds?: string[];
 
-  adCallback?: () => void;
+  /**
+   * Invoked when the user closes the interstitial.
+   */
+  onAdClosed?: () => void;
 }
 
 export declare function showBanner(options: BannerOptions): Promise<any>;

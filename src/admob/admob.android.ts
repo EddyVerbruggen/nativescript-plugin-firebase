@@ -110,9 +110,7 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
             firebase.admob.interstitialView.setAdListener(null);
             firebase.admob.interstitialView = null;
           }
-          if (!(arg.adCallback === null || arg.adCallback === undefined)) {
-            arg.adCallback();
-          }
+          arg.onAdClosed && arg.onAdClosed();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
@@ -162,6 +160,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
             firebase.admob.interstitialView.setAdListener(null);
             firebase.admob.interstitialView = null;
           }
+          arg.onAdClosed && arg.onAdClosed();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());

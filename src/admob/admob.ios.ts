@@ -88,19 +88,18 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
       firebase.admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
 
       // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
-      let delegate = GADInterstitialDelegateImpl.new().initWithCallback((ad: GADInterstitial, error: GADRequestError) => {
-        if (error) {
-          reject(error.localizedDescription);
-        } else {
-          resolve();
-        }
-        CFRelease(delegate);
-        delegate = undefined;
-      }, () => {
-        if (!(arg.adCallback === null || arg.adCallback === undefined)) {
-          arg.adCallback();
-        }
-      });
+      let delegate = GADInterstitialDelegateImpl.new().initWithCallback(
+          (ad: GADInterstitial, error: GADRequestError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve();
+            }
+            CFRelease(delegate);
+            delegate = undefined;
+          }, () => {
+            arg.onAdClosed && arg.onAdClosed();
+          });
       // we're leaving the app to switch to Google's OAuth screen, so making sure this is retained
       CFRetain(delegate);
       firebase.admob.interstitialView.delegate = delegate;
