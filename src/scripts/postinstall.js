@@ -3053,7 +3053,8 @@ function promptQuestionsResult(result) {
       writePodFile(result);
       exposeAdMobSymbols(isSelected(result.admob));
     }
-    writeBuildscriptHook(isSelected(result.crashlytics));
+    writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
+    writeBuildscriptHookForFirestore(isSelected(result.firestore));
   }
 
   if (usingAndroid) {
@@ -3136,9 +3137,10 @@ function writePodFile(result) {
   }
   try {
     fs.writeFileSync(directories.ios + '/Podfile',
-        `pod 'Firebase/Core', '~> 5.6.0'
-# Temporary fix, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/pull/926
-pod 'GoogleUtilities', '5.2.3' 
+// The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
+(isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
+
+pod 'Firebase/Core', '~> 5.12.0'
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
@@ -3216,7 +3218,7 @@ end`) + `
  *
  * @param {any} enable Is Crashlytics enabled
  */
-function writeBuildscriptHook(enable) {
+function writeBuildscriptHookForCrashlytics(enable) {
   var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
 
   if (!enable) {
@@ -3306,7 +3308,8 @@ module.exports = function($logger, $projectData, hookArgs) {
             $logger.trace('Xcode project written');
           } else {
             $logger.error(xcodeProjectPath + ' is missing.');
-            reject()
+            reject();
+            return;
           }
 
           // Logging from stdout/stderr
@@ -3329,7 +3332,8 @@ module.exports = function($logger, $projectData, hookArgs) {
             fs.writeFileSync(mainmPath, mainmContent);
           } else {
             $logger.error(mainmPath + ' is missing.');
-            reject()
+            reject();
+            return;
           }
 
           resolve();
@@ -3358,6 +3362,97 @@ module.exports = function($logger, $projectData, hookArgs) {
     fs.writeFileSync(scriptPath, scriptContent);
   } catch (e) {
     console.log("Failed to install Crashlytics buildscript hook.");
+    console.log(e);
+  }
+}
+
+/**
+ * Create the iOS build script for setting the workspace to the legacy build system (for now).
+ *
+ * @param {any} enable is Firestore enabled
+ */
+function writeBuildscriptHookForFirestore(enable) {
+  var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-firestore-buildscript.js");
+
+  if (!enable) {
+    if (fs.existsSync(scriptPath)) {
+      fs.unlinkSync(scriptPath);
+    }
+    return
+  }
+
+  console.log("Install Firestore buildscript hook.");
+  try {
+    var scriptContent =
+        `const fs = require('fs-extra');
+const path = require('path');
+
+module.exports = function($logger, $projectData, hookArgs) {
+  const platform = hookArgs.platform.toLowerCase();
+  return new Promise(function(resolve, reject) {
+    const isNativeProjectPrepared = !hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare;
+    if (isNativeProjectPrepared) {
+      try {
+        if (platform !== 'ios') {
+          resolve();
+          return;
+        }
+
+        const sanitizedAppName = path.basename($projectData.projectDir).split('').filter((c) => /[a-zA-Z0-9]/.test(c)).join('');
+
+        const xcodeWorkspacePath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcworkspace');
+        if (!fs.existsSync(xcodeWorkspacePath)) {
+          $logger.error(xcodeWorkspacePath + ' is missing.');
+          reject();
+          return;
+        }
+
+        const xcodeWorkspaceShareddataPath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcworkspace', 'xcshareddata');
+        $logger.trace('Using Xcode workspace settings path', xcodeWorkspaceShareddataPath);
+        console.log('Using Xcode workspace settings path: ' + xcodeWorkspaceShareddataPath);
+
+        if (!fs.existsSync(xcodeWorkspaceShareddataPath)) {
+          fs.mkdirSync(xcodeWorkspaceShareddataPath);
+        }
+
+        const xcodeWorkspaceSettingsFile = path.join(xcodeWorkspaceShareddataPath, 'WorkspaceSettings.xcsettings');
+        // for this temp fix we assume that if the file is there, it contains the correct config
+        if (!fs.existsSync(xcodeWorkspaceSettingsFile)) {
+          fs.writeFileSync(xcodeWorkspaceSettingsFile, \`<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BuildSystemType</key>
+	<string>Original</string>
+</dict>
+</plist>
+\`);
+          $logger.trace('Xcode workspace file written');
+        }
+        resolve();
+
+      } catch (e) {
+        $logger.error('Unknown error during prepare Firestore', e);
+        reject();
+      }
+    } else {
+      $logger.trace("Native project not prepared.");
+      resolve();
+    }
+  });
+};
+`;
+    var afterPrepareDirPath = path.dirname(scriptPath);
+    var hooksDirPath = path.dirname(afterPrepareDirPath);
+    if (!fs.existsSync(afterPrepareDirPath)) {
+      if (!fs.existsSync(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+      }
+      fs.mkdirSync(afterPrepareDirPath);
+    }
+    fs.writeFileSync(scriptPath, scriptContent);
+  } catch (e) {
+    console.log("Failed to install Firestore buildscript hook.");
     console.log(e);
   }
 }
@@ -3411,37 +3506,37 @@ dependencies {
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.4"
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.5"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.3"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.4"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.1"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.2"
 
     // Remote Config
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.1.0"
 
     // Performance Monitoring
-    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` compile "com.google.firebase:firebase-perf:16.1.2"
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` compile "com.google.firebase:firebase-perf:16.2.0"
 
     // Crash Reporting
     ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.2.1"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.5"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.6"
 
     // Firebase Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.4"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.3"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:17.1.2"
 
     // Cloud Functions
-    ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.1"
+    ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.2"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.1"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:17.0.0"
 
     // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.1"
@@ -3457,7 +3552,7 @@ dependencies {
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.4"
 
     // Firebase Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.2"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.3"
 }
 
 apply plugin: "com.google.gms.google-services"
@@ -3728,7 +3823,7 @@ module.exports = function($logger, $projectData) {
 
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
-            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.1.0"';
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.2.0"';
             if (googleServicesPattern.test(buildGradleContent)) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {

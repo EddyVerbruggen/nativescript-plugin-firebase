@@ -110,8 +110,8 @@ export declare function hideBanner(): Promise<any>;
  * To show a fullscreen banner you can use this function.
  * Note that Interstitial banners need to be loaded before they can be shown,
  * so use this function, and when the promise resolves you can call 'showInterstitial'.
- * If you don't want to use 2 steps, use createInterstitial instead, but there will be a (preloading) delay
- * which is not recommended.
+ * If you don't want to use 2 steps, use showInterstitial (with the same arguments) instead,
+ * but there will be a (preloading) delay which is not recommended.
  */
 export declare function preloadInterstitial(options: InterstitialOptions): Promise<any>;
 
