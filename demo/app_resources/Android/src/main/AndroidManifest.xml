@@ -25,7 +25,11 @@
 		android:label="@string/app_name"
 		android:theme="@style/AppTheme">
 
-    <meta-data
+		<meta-data
+				android:name="com.google.android.gms.ads.APPLICATION_ID"
+				android:value="ca-app-pub-9517346003011652~4795634921" />
+
+		<meta-data
 				android:name="com.facebook.sdk.ApplicationId"
 				android:value="@string/facebook_app_id"/>
 
