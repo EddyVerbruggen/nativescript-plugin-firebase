@@ -74,26 +74,28 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     application.off("orientationChanged"); // just making sure it was off
     application.on("orientationChanged", this.rotateOnOrientationChange.bind(this));
 
-    if (this.ios) {
-      this.ios.layer.addSublayer(this.previewLayer);
-    }
+    setTimeout(() => {
+      if (this.ios) {
+        this.ios.layer.addSublayer(this.previewLayer);
+      }
 
-    if (!this.pause) {
-      this.captureSession.startRunning();
-    }
+      if (!this.pause) {
+        this.captureSession.startRunning();
+      }
 
-    this.cameraView = TNSMLKitCameraView.alloc().initWithCaptureSession(this.captureSession);
-    this.cameraView.processEveryXFrames = this.processEveryNthFrame;
+      this.cameraView = TNSMLKitCameraView.alloc().initWithCaptureSession(this.captureSession);
+      this.cameraView.processEveryXFrames = this.processEveryNthFrame;
 
-    // this orientation is how the captured image is rotated (and shown)
-    if (this.rotateRecording()) {
-      this.cameraView.imageOrientation = UIImageOrientation.Right;
-    }
+      // this orientation is how the captured image is rotated (and shown)
+      if (this.rotateRecording()) {
+        this.cameraView.imageOrientation = UIImageOrientation.Right;
+      }
 
-    this.cameraView.delegate = TNSMLKitCameraViewDelegateImpl.createWithOwnerResultCallbackAndOptions(
-        new WeakRef(this),
-        data => {},
-        {});
+      this.cameraView.delegate = TNSMLKitCameraViewDelegateImpl.createWithOwnerResultCallbackAndOptions(
+          new WeakRef(this),
+          data => {},
+          {});
+    }, 0);
   }
 
   private rotateOnOrientationChange(args: OrientationChangedEventData): void {
@@ -109,7 +111,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   public onLayout(left: number, top: number, right: number, bottom: number): void {
     super.onLayout(left, top, right, bottom);
-    if (this.ios && this.canUseCamera()) {
+    if (this.previewLayer && this.ios && this.canUseCamera()) {
       this.previewLayer.frame = this.ios.layer.bounds;
     }
   }
