@@ -3,7 +3,7 @@
 [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
-## 7.4.0 (2018, November ??)
+## 7.4.0 (2018, November 9)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/81?closed=1)
 
 

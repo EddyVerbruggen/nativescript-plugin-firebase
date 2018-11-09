@@ -95,6 +95,8 @@ This is a fullscreen ad, so you can earn extra credit on the eternal ladder of a
 
 Note that an interstitial is supposed to be hidden by clicking the close button, so there's no function to do it programmatically.
 
+If you want to get notified when an interstitial is closed, provide an `onAdClosed` callback as shown below.
+
 There's two ways how you can use this function:
 
 * **RECOMMENDED**: without arguments, and after the Promise of `preloadInterstitial` resolves. This will show the interstitial immediately.
@@ -108,7 +110,8 @@ There's two ways how you can use this function:
     iosTestDeviceIds: [ // Android automatically adds the connected device as test device with testing:true, iOS does not
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
-    ]
+    ],
+    onAdClosed: () => console.log("Interstitial closed")
   }).then(
       function () {
         console.log("AdMob interstitial preloaded, you can now call 'showInterstitial' at any time to show it without delay.");
