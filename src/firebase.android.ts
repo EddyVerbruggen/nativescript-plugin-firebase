@@ -252,7 +252,11 @@ firebase.toJsObject = javaObj => {
           node[item.getKey()] = firebase.toJsObject(item.getValue());
         }
       } catch (e) {
-        console.log("PLEASE REPORT THIS AT https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: Tried to serialize an unsupported type: " + javaObj.getClass().getName() + ", error: " + e);
+        if (JSON.stringify(e).indexOf("Attempt to use cleared object reference") > -1) {
+          console.log("Error while transforming Java to Js: " + e);
+        } else {
+          console.log("PLEASE REPORT THIS AT https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: Tried to serialize an unsupported type: " + javaObj.getClass().getName() + ", error: " + e);
+        }
       }
   }
   return node;
