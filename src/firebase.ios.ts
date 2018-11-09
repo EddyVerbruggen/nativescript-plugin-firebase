@@ -1552,18 +1552,18 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
       fixSpecialFields(data);
       nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    };
+    }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
       fixSpecialFields(data);
       nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    };
+    }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
       nativeWriteBatch.deleteDocument(documentRef.ios);
       return this;
-    };
+    }
 
     commit(): Promise<void> {
       return new Promise<void>((resolve, reject) => {
