@@ -687,7 +687,7 @@ repositories {
     jcenter()
 }
 
-def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
+def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.1.0"
 def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "16.0.1"
 
 if (googlePlayServicesVersion != '+' && VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.+')) {
@@ -1019,7 +1019,8 @@ module.exports = function($logger, $projectData) {
                 let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
                 if (dependenciesNode > -1) {
                     dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
-                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.25.4"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                    // see https://docs.fabric.io/android/changelog.html
+                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.26.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
                 }
             }
 
@@ -1030,9 +1031,11 @@ module.exports = function($logger, $projectData) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {
                 buildGradleContent = buildGradleContent.replace(gradlePattern, function (match) {
-                    return match + '\\n        ' + latestGoogleServicesPlugin;
+                    return match + '\\n        ' + latestGoogleServicesPlugin; 
                 });
             }
+
+            buildGradleContent = buildGradleContent.replace("com.android.tools.build:gradle:3.2.0", "com.android.tools.build:gradle:3.2.1");
     
             fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
         }
