@@ -1,6 +1,9 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/crashlytics.png" height="85px" alt="Crashlytics"/>
 
+> ⚠️ The NativeScript **5** Android runtime is currently **NOT** compatible with Crashlytics. See [#1023](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/1023).
+
 > Firebase Crash reporting is deprecated - use Crashlytics if you can!
+
 
 ## Enabling Crash Reporting / Crashlytics
 Since version 5.3.0 you can choose either Crashlytics (recommended) or the older Firebase Crash Reporting (which doesn't really work on iOS).
