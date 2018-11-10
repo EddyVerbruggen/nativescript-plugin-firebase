@@ -7,7 +7,7 @@
   "performance_monitoring": true,
   "messaging": false,
   "crash_reporting": false,
-  "crashlytics": true,
+  "crashlytics": false,
   "storage": false,
   "facebook_auth": false,
   "google_auth": false,
