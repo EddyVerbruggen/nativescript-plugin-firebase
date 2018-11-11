@@ -32,6 +32,11 @@ and add this somewhere in the file (if it's not already there):
   <key>NSCameraUsageDescription</key>
   <string>Your reason here</string> <!-- better change this 😎 -->
 ```
+In order to compile, the default version on ios must be >= 9.0. 
+Edit the file build.xconfig and check that you have the following line (Without this line the default version will be 8.0 and the compilation will failed (`targeted OS version does not support use of thread local variables ...`)
+```
+IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+```
 
 ## ML Kit Features
 There are two ways of using ML Kit: 
