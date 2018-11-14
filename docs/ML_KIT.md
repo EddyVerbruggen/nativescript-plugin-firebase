@@ -93,6 +93,8 @@ To be able to use Cloud features you need to do two things:
 
 #### Still image (on-device)
 
+##### TypeScript
+
 ```typescript
 import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 const firebase = require("nativescript-plugin-firebase");
@@ -104,7 +106,21 @@ firebase.mlkit.textrecognition.recognizeTextOnDevice({
 }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
+##### JavaScript
+
+```js
+var firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.textrecognition.recognizeTextOnDevice({
+  image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
+}).then(function(result) {
+  console.log(result.text ? result.text : "");
+}).catch(function (errorMessage) { return console.log("ML Kit error: " + errorMessage); });
+```
+
 #### Still image (cloud)
+
+##### TypeScript
 
 ```typescript
 import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
@@ -115,6 +131,18 @@ firebase.mlkit.textrecognition.recognizeTextCloud({
 })
 .then((result: MLKitRecognizeTextResult) => console.log(result.text ? result.text : ""))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+##### JavaScript
+
+```js
+var firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.textrecognition.recognizeTextCloud({
+  image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
+}).then(function(result) {
+  console.log(result.text ? result.text : "");
+}).catch(function (errorMessage) { return console.log("ML Kit error: " + errorMessage); });
 ```
 
 #### Live camera feed
@@ -176,7 +204,7 @@ Declare a namespace at the top of the embedding page, and use it anywhere on the
 </Page>
 ```
 
-> Note that with NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace declaration to the TabView works just as well.
+> Note that since NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace declaration to the TabView works just as well.
 
 ### Face detection
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
