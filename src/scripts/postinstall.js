@@ -3792,11 +3792,9 @@ var copyPlist = function(copyPlistOpts) {
 }
 
 function writeGoogleServiceGradleHook(result) {
-  console.log("Install firebase-build-gradle hook.");
   try {
     var scriptContent =
-        `
-var path = require("path");
+        `var path = require("path");
 var fs = require("fs");
 
 module.exports = function($logger, $projectData) {
@@ -3829,12 +3827,12 @@ module.exports = function($logger, $projectData) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {
                 buildGradleContent = buildGradleContent.replace(gradlePattern, function (match) {
-                    return match + '\\n        ' + latestGoogleServicesPlugin; 
+                    return match + '\\n        ' + latestGoogleServicesPlugin;
                 });
             }
 
             buildGradleContent = buildGradleContent.replace("com.android.tools.build:gradle:3.2.0", "com.android.tools.build:gradle:3.2.1");
-    
+
             fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
         }
 
@@ -3848,14 +3846,26 @@ task copyMetadata {
   doLast {
     copy {
         from "$projectDir/src/main/assets/metadata"
-        def toDir = project.hasProperty("release") ? "release" : "debug";
-        if (new File("$projectDir/build/intermediates/assets").listFiles() != null) {
+        def toDir = project.hasProperty("release") ? "release" : "debug"
+        def toAssetsDir = "assets"
+
+        if (new File("$projectDir/build/intermediates/merged_assets").listFiles() != null) {
+          toAssetsDir = "merged_assets"
+          toDir = new File("$projectDir/build/intermediates/merged_assets").listFiles()[0].name
+          if (toDir == 'debug') {
+            toDir += "/mergeDebugAssets"
+          } else {
+            toDir += "/mergeReleaseAssets"
+          }
+          toDir += "/out"
+        } else if (new File("$projectDir/build/intermediates/assets").listFiles() != null) {
           toDir = new File("$projectDir/build/intermediates/assets").listFiles()[0].name
           if (toDir != 'debug' && toDir != 'release') {
             toDir += "/release"
           }
         }
-        into "$projectDir/build/intermediates/assets/" + toDir + "/metadata"
+
+        into "$projectDir/build/intermediates/" + toAssetsDir + "/" + toDir + "/metadata"
     }
   }
 }\`;
@@ -3867,7 +3877,6 @@ task copyMetadata {
     });
 };
 `;
-    console.log("Writing 'firebase-build-gradle.js' to " + appRoot + "hooks/after-prepare");
     var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-build-gradle.js");
     fs.writeFileSync(scriptPath, scriptContent);
   } catch (e) {
