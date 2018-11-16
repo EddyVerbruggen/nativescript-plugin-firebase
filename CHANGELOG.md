@@ -1,7 +1,7 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
-[Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
-[Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
+- [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
+- [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
 ## 7.4.1 (2018, November 10)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/82?closed=1)
