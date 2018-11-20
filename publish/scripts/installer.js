@@ -253,7 +253,6 @@ function promptQuestionsResult(result) {
   if (usingiOS) {
     if (!externalPushClientOnly) {
       writePodFile(result);
-      exposeAdMobSymbols(isSelected(result.admob));
     }
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
     writeBuildscriptHookForFirestore(isSelected(result.firestore));
@@ -293,15 +292,6 @@ function echoAndroidManifestChanges(result) {
           '    android:value="' + selectedFeatures.join(',') + '" />');
       console.log('######################################################################################################\n');
     }
-  }
-}
-
-// I don't think we still need this, but it doesn't hurt either
-function exposeAdMobSymbols(enable) {
-  if (enable && fs.existsSync(directories.ios + '/build.xcconfig.admob')) {
-    fs.renameSync(directories.ios + '/build.xcconfig.admob', directories.ios + '/build.xcconfig');
-  } else if (!enable && fs.existsSync(directories.ios + '/build.xcconfig')) {
-    fs.renameSync(directories.ios + '/build.xcconfig', directories.ios + '/build.xcconfig.admob');
   }
 }
 

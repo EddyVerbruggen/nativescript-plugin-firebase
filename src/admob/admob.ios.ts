@@ -44,7 +44,7 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       if (settings.testing) {
         let testDevices: any = [];
         try {
-          testDevices.push(kGADSimulatorID);
+          testDevices.push("Simulator");
         } catch (ignore) {
           // can happen on a real device
         }
@@ -109,7 +109,7 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
       if (settings.testing) {
         let testDevices: any = [];
         try {
-          testDevices.push(kGADSimulatorID);
+          testDevices.push("Simulator");
         } catch (ignore) {
           // can happen on a real device
         }
@@ -170,7 +170,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
       if (settings.testing) {
         let testDevices: any = [];
         try {
-          testDevices.push(kGADSimulatorID);
+          testDevices.push("Simulator");
         } catch (ignore) {
           // can happen on a real device
         }
