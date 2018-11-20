@@ -302,16 +302,11 @@ firebase.init = arg => {
       }
 
       if (typeof (com.google.firebase.firestore) !== "undefined") {
-        // Firestore has offline persistence enabled by default
-        if (!arg.persist) {
-          try {
-            com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
-                new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
-                    .setPersistenceEnabled(false)
-                    .build());
-          } catch (ignore) {
-          }
-        }
+        com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
+            new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(arg.persist !== false)
+                .setTimestampsInSnapshotsEnabled(true)
+                .build());
       }
 
       if (authEnabled()) {
