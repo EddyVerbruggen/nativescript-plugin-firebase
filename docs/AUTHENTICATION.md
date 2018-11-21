@@ -502,9 +502,7 @@ Upon successful authentication, Facebook creates an access token that can be obt
    			..>
    ```
    
-3. Create a file `facebooklogin.xml`. Depending on your project structure this either goes into `App_Resources/Android/values/` or `App_Resources/Android/src/main/res/values/`.
- 
-Add this to the file (replace the id):
+3. Create a file `facebooklogin.xml`. Depending on your project structure this either goes into `App_Resources/Android/values/` or `App_Resources/Android/src/main/res/values/`. Add this to the file (replace the id):
 
    ```xml
    <?xml version='1.0' encoding='utf-8'?>
