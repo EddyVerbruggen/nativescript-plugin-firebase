@@ -1,0 +1,59 @@
+platform :ios, '9.0'
+
+pod 'Firebase/Core', '~> 5.12.0'
+
+# Authentication
+#pod 'Firebase/Auth'
+
+# Realtime DB
+#pod 'Firebase/Database'
+
+# Cloud Firestore
+#pod 'Firebase/Firestore'
+
+# Remote Config
+#pod 'Firebase/RemoteConfig'
+
+# Performance Monitoring
+#pod 'Firebase/Performance'
+
+# Crash Reporting
+#pod 'Firebase/Crash'
+
+# Crashlytics
+#pod 'Fabric'
+#pod 'Crashlytics'
+
+
+# Firebase Cloud Messaging (FCM)
+#pod 'Firebase/Messaging'
+
+# Firebase Cloud Storage
+#pod 'Firebase/Storage'
+
+# Firebase Cloud Functions
+#pod 'Firebase/Functions'
+
+# AdMob
+#pod 'Firebase/AdMob'
+
+# Invites
+#pod 'Firebase/Invites'
+
+# Dynamic Links
+#pod 'Firebase/DynamicLinks'
+
+# ML Kit
+#pod 'Firebase/MLVision'
+#pod 'Firebase/MLVisionTextModel'
+#pod 'Firebase/MLVisionBarcodeModel'
+#pod 'Firebase/MLVisionFaceModel'
+#pod 'Firebase/MLVisionLabelModel'
+#pod 'Firebase/MLModelInterpreter'
+
+# Facebook Authentication
+#pod 'FBSDKCoreKit'
+#pod 'FBSDKLoginKit'
+
+# Google Authentication
+#pod 'GoogleSignIn'
