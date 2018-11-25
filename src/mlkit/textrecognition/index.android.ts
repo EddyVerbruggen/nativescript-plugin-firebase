@@ -42,7 +42,7 @@ function boundingBoxToBounds(rect: any): MLKitRecognizeTextResultBounds {
       width: rect.width(),
       height: rect.height()
     }
-  }
+  };
 }
 
 // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
@@ -59,16 +59,12 @@ function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
 
   for (let i = 0; i < firebaseVisionText.getTextBlocks().size(); i++) {
     const textBlock = firebaseVisionText.getTextBlocks().get(i);
-    // const blockText: string = textBlock.getText();
-    // const blockConfidence: number = textBlock.getConfidence();
     const lines = textBlock.getLines();
 
     const lns: MLKitRecognizeTextResultLine[] = [];
 
     for (let j = 0; j < lines.size(); j++) {
       const line = lines.get(j);
-      // const lineText = line.getText();
-      // const lineConfidence = line.getConfidence();
       const elements = line.getElements();
 
       const elms: MLKitRecognizeTextResultElement[] = [];
@@ -83,6 +79,7 @@ function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
 
       lns.push({
         text: line.getText(),
+        confidence: line.getConfidence(),
         bounds: boundingBoxToBounds(line.getBoundingBox()),
         elements: elms
       });
@@ -90,6 +87,7 @@ function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
 
     result.blocks.push({
       text: textBlock.getText(),
+      confidence: textBlock.getConfidence(),
       bounds: boundingBoxToBounds(textBlock.getBoundingBox()),
       lines: lns
     });

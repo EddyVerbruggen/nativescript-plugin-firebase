@@ -17,13 +17,15 @@ export interface MLKitRecognizeTextResultElement {
 }
 
 export interface MLKitRecognizeTextResultLine {
-	text: string;
+  text: string;
+  confidence: string;
 	bounds: MLKitRecognizeTextResultBounds;
 	elements: Array<MLKitRecognizeTextResultElement>;
 }
 
 export interface MLKitRecognizeTextResultBlock {
-	text: string;
+  text: string;
+  confidence: string;
 	bounds: MLKitRecognizeTextResultBounds;
 	lines: Array<MLKitRecognizeTextResultLine>;
 }

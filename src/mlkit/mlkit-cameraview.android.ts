@@ -239,7 +239,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     if (this.camera != null) {
       this.camera.stopPreview();
     }
-  };
+  }
 
   protected resumeScanning(): void {
     this.runCamera();
