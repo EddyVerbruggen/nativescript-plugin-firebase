@@ -427,7 +427,13 @@ function _registerForRemoteNotifications() {
           }
         }
 
-        userInfoJSON.foreground = true;
+        const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+        if (app.applicationState === UIApplicationState.Active) {
+            userInfoJSON.foreground = true;
+        } else {
+            userInfoJSON.foreground = false;
+        }
+
         _pendingNotifications.push(userInfoJSON);
         if (_receivedNotificationCallback) {
           _processPendingNotifications();
