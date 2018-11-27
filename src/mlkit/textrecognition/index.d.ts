@@ -18,14 +18,14 @@ export interface MLKitRecognizeTextResultElement {
 
 export interface MLKitRecognizeTextResultLine {
 	text: string;
-	confidence: string;
+	confidence: number;
 	bounds: MLKitRecognizeTextResultBounds;
 	elements: Array<MLKitRecognizeTextResultElement>;
 }
 
 export interface MLKitRecognizeTextResultBlock {
 	text: string;
-	confidence: string;
+	confidence: number;
 	bounds: MLKitRecognizeTextResultBounds;
 	lines: Array<MLKitRecognizeTextResultLine>;
 }

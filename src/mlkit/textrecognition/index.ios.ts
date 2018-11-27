@@ -44,6 +44,7 @@ function getResult(visionText: FIRVisionText): MLKitRecognizeTextResult {
     const feature: FIRVisionTextBlock = visionText.blocks.objectAtIndex(i);
     const resultFeature = <MLKitRecognizeTextResultBlock>{
       text: feature.text,
+      confidence: feature.confidence,
       bounds: feature.frame,
       lines: []
     };
@@ -51,6 +52,7 @@ function getResult(visionText: FIRVisionText): MLKitRecognizeTextResult {
     const addLineToResult = (line: FIRVisionTextLine): void => {
       const resultLine = <MLKitRecognizeTextResultLine>{
         text: feature.text,
+        confidence: line.confidence,
         bounds: line.frame,
         elements: []
       };
