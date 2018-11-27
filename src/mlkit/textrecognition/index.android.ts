@@ -83,6 +83,7 @@ function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
 
       lns.push({
         text: line.getText(),
+        confidence: line.getConfidence(),
         bounds: boundingBoxToBounds(line.getBoundingBox()),
         elements: elms
       });
@@ -90,6 +91,7 @@ function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
 
     result.blocks.push({
       text: textBlock.getText(),
+      confidence: textBlock.getConfidence(),
       bounds: boundingBoxToBounds(textBlock.getBoundingBox()),
       lines: lns
     });
