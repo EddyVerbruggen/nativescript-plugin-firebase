@@ -586,7 +586,7 @@ firebase.getRemoteConfig = arg => {
         runGetRemoteConfig();
       } else {
         // if this is called before application.start() wait for the event to fire
-        appModule.on(appModule.launchEvent, runGetRemoteConfig);
+        appModule.on(appModule.resumeEvent, runGetRemoteConfig);
       }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);
