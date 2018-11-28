@@ -517,6 +517,8 @@ firebase.getRemoteConfig = arg => {
     }
 
     const runGetRemoteConfig = () => {
+      appModule.off(appModule.resumeEvent, runGetRemoteConfig);
+
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
@@ -558,9 +560,7 @@ firebase.getRemoteConfig = arg => {
       };
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: () => {
-          returnMethod(false);
-        }
+        onSuccess: () => returnMethod(false)
       });
 
       const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
@@ -585,7 +585,7 @@ firebase.getRemoteConfig = arg => {
       if (appModule.android.foregroundActivity) {
         runGetRemoteConfig();
       } else {
-        // if this is called before application.start() wait for the event to fire
+        // if this is called before application.start(), wait for the event to fire
         appModule.on(appModule.resumeEvent, runGetRemoteConfig);
       }
     } catch (ex) {
