@@ -12,27 +12,27 @@ export interface MLKitRecognizeTextResultBounds {
 }
 
 export interface MLKitRecognizeTextResultElement {
-	text: string;
-	bounds: MLKitRecognizeTextResultBounds;
+  text: string;
+  bounds: MLKitRecognizeTextResultBounds;
 }
 
 export interface MLKitRecognizeTextResultLine {
-	text: string;
-	confidence: number;
-	bounds: MLKitRecognizeTextResultBounds;
-	elements: Array<MLKitRecognizeTextResultElement>;
+  text: string;
+  confidence: number;
+  bounds: MLKitRecognizeTextResultBounds;
+  elements: Array<MLKitRecognizeTextResultElement>;
 }
 
 export interface MLKitRecognizeTextResultBlock {
-	text: string;
-	confidence: number;
-	bounds: MLKitRecognizeTextResultBounds;
-	lines: Array<MLKitRecognizeTextResultLine>;
+  text: string;
+  confidence: number;
+  bounds: MLKitRecognizeTextResultBounds;
+  lines: Array<MLKitRecognizeTextResultLine>;
 }
 
 export interface MLKitRecognizeTextResult extends MLKitResult {
   text?: string;
-	blocks?: Array<MLKitRecognizeTextResultBlock>;
+  blocks?: Array<MLKitRecognizeTextResultBlock>;
   ios?: any;
   android?: any;
 }
