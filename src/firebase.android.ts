@@ -517,8 +517,6 @@ firebase.getRemoteConfig = arg => {
     }
 
     const runGetRemoteConfig = () => {
-      appModule.off(appModule.resumeEvent, runGetRemoteConfig);
-
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
         return;
@@ -586,7 +584,11 @@ firebase.getRemoteConfig = arg => {
         runGetRemoteConfig();
       } else {
         // if this is called before application.start(), wait for the event to fire
-        appModule.on(appModule.resumeEvent, runGetRemoteConfig);
+        const callback = () => {
+          runGetRemoteConfig();
+          appModule.off(appModule.resumeEvent, callback);
+        };
+        appModule.on(appModule.resumeEvent, callback);        
       }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);
