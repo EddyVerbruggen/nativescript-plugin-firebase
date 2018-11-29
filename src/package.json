@@ -114,6 +114,7 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
   "readmeFilename": "README.md",
   "dependencies": {
+    "firebase": "^5.5.9",
     "fs-extra": "~2.1.0",
     "nativescript-hook": "~0.2.4",
     "prompt-lite": "~0.1.0",

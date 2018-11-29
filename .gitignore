@@ -19,6 +19,7 @@ src/platforms/android/include.gradle
 !src/performance/performance.d.ts
 !src/storage/storage.d.ts
 !src/admob/admob.d.ts
+!src/auth/auth.d.ts
 !src/messaging/messaging.d.ts
 !src/mlkit/*/index.d.ts
 !src/mlkit/mlkit-cameraview.d.ts
