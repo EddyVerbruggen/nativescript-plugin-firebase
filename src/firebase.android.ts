@@ -558,9 +558,7 @@ firebase.getRemoteConfig = arg => {
       };
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
-        onSuccess: () => {
-          returnMethod(false);
-        }
+        onSuccess: () => returnMethod(false)
       });
 
       const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
@@ -585,8 +583,12 @@ firebase.getRemoteConfig = arg => {
       if (appModule.android.foregroundActivity) {
         runGetRemoteConfig();
       } else {
-        // if this is called before application.start() wait for the event to fire
-        appModule.on(appModule.launchEvent, runGetRemoteConfig);
+        // if this is called before application.start(), wait for the event to fire
+        const callback = () => {
+          runGetRemoteConfig();
+          appModule.off(appModule.resumeEvent, callback);
+        };
+        appModule.on(appModule.resumeEvent, callback);        
       }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);
