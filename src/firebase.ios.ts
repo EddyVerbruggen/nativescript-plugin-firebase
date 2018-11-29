@@ -159,8 +159,9 @@ firebase.addAppDelegateMethods = appDelegate => {
 
       if (userActivity.webpageURL) {
         // check for an email-link-login flow
-        const fAuth = FIRAuth.auth();
-        if (fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
+
+        const fAuth = (typeof (FIRAuth) !== "undefined") ? FIRAuth.auth() : undefined;
+        if (fAuth && fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
           const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
           if (rememberedEmail !== undefined) {
 
