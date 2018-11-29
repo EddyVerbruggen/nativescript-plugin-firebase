@@ -39,54 +39,54 @@ declare namespace firebase {
     delete(): Promise<void>;
     emailVerified: boolean;
     getIdTokenResult(
-        forceRefresh?: boolean
+      forceRefresh?: boolean
     ): Promise<firebase.auth.IdTokenResult>;
     getIdToken(forceRefresh?: boolean): Promise<string>;
     isAnonymous: boolean;
     linkAndRetrieveDataWithCredential(
-        credential: firebase.auth.AuthCredential
+      credential: firebase.auth.AuthCredential
     ): Promise<firebase.auth.UserCredential>;
     linkWithCredential(
-        credential: firebase.auth.AuthCredential
+      credential: firebase.auth.AuthCredential
     ): Promise<firebase.User>;
     linkWithPhoneNumber(
-        phoneNumber: string,
-        applicationVerifier: firebase.auth.ApplicationVerifier
+      phoneNumber: string,
+      applicationVerifier: firebase.auth.ApplicationVerifier
     ): Promise<firebase.auth.ConfirmationResult>;
     linkWithPopup(
-        provider: firebase.auth.AuthProvider
+      provider: firebase.auth.AuthProvider
     ): Promise<firebase.auth.UserCredential>;
     linkWithRedirect(provider: firebase.auth.AuthProvider): Promise<void>;
     metadata: firebase.auth.UserMetadata;
     phoneNumber: string | null;
     providerData: (firebase.UserInfo | null)[];
     reauthenticateAndRetrieveDataWithCredential(
-        credential: firebase.auth.AuthCredential
+      credential: firebase.auth.AuthCredential
     ): Promise<firebase.auth.UserCredential>;
     reauthenticateWithCredential(
-        credential: firebase.auth.AuthCredential
+      credential: firebase.auth.AuthCredential
     ): Promise<void>;
     reauthenticateWithPhoneNumber(
-        phoneNumber: string,
-        applicationVerifier: firebase.auth.ApplicationVerifier
+      phoneNumber: string,
+      applicationVerifier: firebase.auth.ApplicationVerifier
     ): Promise<firebase.auth.ConfirmationResult>;
     reauthenticateWithPopup(
-        provider: firebase.auth.AuthProvider
+      provider: firebase.auth.AuthProvider
     ): Promise<firebase.auth.UserCredential>;
     reauthenticateWithRedirect(
-        provider: firebase.auth.AuthProvider
+      provider: firebase.auth.AuthProvider
     ): Promise<void>;
     refreshToken: string;
     reload(): Promise<void>;
     sendEmailVerification(
-        actionCodeSettings?: firebase.auth.ActionCodeSettings | null
+      actionCodeSettings?: firebase.auth.ActionCodeSettings | null
     ): Promise<void>;
     toJSON(): Object;
     unlink(providerId: string): Promise<firebase.User>;
     updateEmail(newEmail: string): Promise<void>;
     updatePassword(newPassword: string): Promise<void>;
     updatePhoneNumber(
-        phoneCredential: firebase.auth.AuthCredential
+      phoneCredential: firebase.auth.AuthCredential
     ): Promise<void>;
     updateProfile(profile: {
       displayName: string | null;
@@ -145,26 +145,27 @@ declare namespace firebase.functions {
   }
   export class Functions {
     private constructor();
+    useFunctionsEmulator(url: string): void;
     httpsCallable(name: string): HttpsCallable;
   }
   export type ErrorStatus =
-      | 'ok'
-      | 'cancelled'
-      | 'unknown'
-      | 'invalid-argument'
-      | 'deadline-exceeded'
-      | 'not-found'
-      | 'already-exists'
-      | 'permission-denied'
-      | 'resource-exhausted'
-      | 'failed-precondition'
-      | 'aborted'
-      | 'out-of-range'
-      | 'unimplemented'
-      | 'internal'
-      | 'unavailable'
-      | 'data-loss'
-      | 'unauthenticated';
+    | 'ok'
+    | 'cancelled'
+    | 'unknown'
+    | 'invalid-argument'
+    | 'deadline-exceeded'
+    | 'not-found'
+    | 'already-exists'
+    | 'permission-denied'
+    | 'resource-exhausted'
+    | 'failed-precondition'
+    | 'aborted'
+    | 'out-of-range'
+    | 'unimplemented'
+    | 'internal'
+    | 'unavailable'
+    | 'data-loss'
+    | 'unauthenticated';
   export interface HttpsError extends Error {
     readonly code: ErrorStatus;
     readonly details?: any;
@@ -213,12 +214,12 @@ declare namespace firebase.auth {
     checkActionCode(code: string): Promise<firebase.auth.ActionCodeInfo>;
     confirmPasswordReset(code: string, newPassword: string): Promise<void>;
     createUserAndRetrieveDataWithEmailAndPassword(
-        email: string,
-        password: string
+      email: string,
+      password: string
     ): Promise<firebase.auth.UserCredential>;
     createUserWithEmailAndPassword(
-        email: string,
-        password: string
+      email: string,
+      password: string
     ): Promise<firebase.auth.UserCredential>;
     currentUser: firebase.User | null;
     fetchProvidersForEmail(email: string): Promise<Array<string>>;
@@ -228,58 +229,58 @@ declare namespace firebase.auth {
     languageCode: string | null;
     settings: firebase.auth.AuthSettings;
     onAuthStateChanged(
-        nextOrObserver:
-            | firebase.Observer<any>
-            | ((a: firebase.User | null) => any),
-        error?: (a: firebase.auth.Error) => any,
-        completed?: firebase.Unsubscribe
+      nextOrObserver:
+        | firebase.Observer<any>
+        | ((a: firebase.User | null) => any),
+      error?: (a: firebase.auth.Error) => any,
+      completed?: firebase.Unsubscribe
     ): firebase.Unsubscribe;
     onIdTokenChanged(
-        nextOrObserver:
-            | firebase.Observer<any>
-            | ((a: firebase.User | null) => any),
-        error?: (a: firebase.auth.Error) => any,
-        completed?: firebase.Unsubscribe
+      nextOrObserver:
+        | firebase.Observer<any>
+        | ((a: firebase.User | null) => any),
+      error?: (a: firebase.auth.Error) => any,
+      completed?: firebase.Unsubscribe
     ): firebase.Unsubscribe;
     sendSignInLinkToEmail(
-        email: string,
-        actionCodeSettings: firebase.auth.ActionCodeSettings
+      email: string,
+      actionCodeSettings: firebase.auth.ActionCodeSettings
     ): Promise<void>;
     sendPasswordResetEmail(
-        email: string,
-        actionCodeSettings?: firebase.auth.ActionCodeSettings | null
+      email: string,
+      actionCodeSettings?: firebase.auth.ActionCodeSettings | null
     ): Promise<void>;
     setPersistence(persistence: firebase.auth.Auth.Persistence): Promise<void>;
     signInAndRetrieveDataWithCredential(
-        credential: firebase.auth.AuthCredential
+      credential: firebase.auth.AuthCredential
     ): Promise<firebase.auth.UserCredential>;
     signInAnonymously(): Promise<firebase.auth.UserCredential>;
     signInAnonymouslyAndRetrieveData(): Promise<firebase.auth.UserCredential>;
     signInWithCredential(
-        credential: firebase.auth.AuthCredential
+      credential: firebase.auth.AuthCredential
     ): Promise<firebase.User>;
     signInWithCustomToken(token: string): Promise<firebase.auth.UserCredential>;
     signInAndRetrieveDataWithCustomToken(
-        token: string
+      token: string
     ): Promise<firebase.auth.UserCredential>;
     signInWithEmailAndPassword(
-        email: string,
-        password: string
+      email: string,
+      password: string
     ): Promise<firebase.auth.UserCredential>;
     signInAndRetrieveDataWithEmailAndPassword(
-        email: string,
-        password: string
+      email: string,
+      password: string
     ): Promise<firebase.auth.UserCredential>;
     signInWithPhoneNumber(
-        phoneNumber: string,
-        applicationVerifier: firebase.auth.ApplicationVerifier
+      phoneNumber: string,
+      applicationVerifier: firebase.auth.ApplicationVerifier
     ): Promise<firebase.auth.ConfirmationResult>;
     signInWithEmailLink(
-        email: string,
-        emailLink?: string
+      email: string,
+      emailLink?: string
     ): Promise<firebase.auth.UserCredential>;
     signInWithPopup(
-        provider: firebase.auth.AuthProvider
+      provider: firebase.auth.AuthProvider
     ): Promise<firebase.auth.UserCredential>;
     signInWithRedirect(provider: firebase.auth.AuthProvider): Promise<void>;
     signOut(): Promise<void>;
@@ -307,12 +308,12 @@ declare namespace firebase.auth {
     static EMAIL_PASSWORD_SIGN_IN_METHOD: string;
     static EMAIL_LINK_SIGN_IN_METHOD: string;
     static credential(
-        email: string,
-        password: string
+      email: string,
+      password: string
     ): firebase.auth.AuthCredential;
     static credentialWithLink(
-        email: string,
-        emailLink: string
+      email: string,
+      emailLink: string
     ): firebase.auth.AuthCredential;
   }
   class EmailAuthProvider_Instance implements firebase.auth.AuthProvider {
@@ -333,7 +334,7 @@ declare namespace firebase.auth {
     addScope(scope: string): firebase.auth.AuthProvider;
     providerId: string;
     setCustomParameters(
-        customOAuthParameters: Object
+      customOAuthParameters: Object
     ): firebase.auth.AuthProvider;
   }
 
@@ -346,7 +347,7 @@ declare namespace firebase.auth {
     addScope(scope: string): firebase.auth.AuthProvider;
     providerId: string;
     setCustomParameters(
-        customOAuthParameters: Object
+      customOAuthParameters: Object
     ): firebase.auth.AuthProvider;
   }
 
@@ -354,15 +355,15 @@ declare namespace firebase.auth {
     static PROVIDER_ID: string;
     static GOOGLE_SIGN_IN_METHOD: string;
     static credential(
-        idToken?: string | null,
-        accessToken?: string | null
+      idToken?: string | null,
+      accessToken?: string | null
     ): firebase.auth.AuthCredential;
   }
   class GoogleAuthProvider_Instance implements firebase.auth.AuthProvider {
     addScope(scope: string): firebase.auth.AuthProvider;
     providerId: string;
     setCustomParameters(
-        customOAuthParameters: Object
+      customOAuthParameters: Object
     ): firebase.auth.AuthProvider;
   }
 
@@ -381,26 +382,26 @@ declare namespace firebase.auth {
     static PROVIDER_ID: string;
     static PHONE_SIGN_IN_METHOD: string;
     static credential(
-        verificationId: string,
-        verificationCode: string
+      verificationId: string,
+      verificationCode: string
     ): firebase.auth.AuthCredential;
   }
   class PhoneAuthProvider_Instance implements firebase.auth.AuthProvider {
     constructor(auth?: firebase.auth.Auth | null);
     providerId: string;
     verifyPhoneNumber(
-        phoneNumber: string,
-        applicationVerifier: firebase.auth.ApplicationVerifier
+      phoneNumber: string,
+      applicationVerifier: firebase.auth.ApplicationVerifier
     ): Promise<string>;
   }
 
   class RecaptchaVerifier extends RecaptchaVerifier_Instance {}
   class RecaptchaVerifier_Instance
-      implements firebase.auth.ApplicationVerifier {
+    implements firebase.auth.ApplicationVerifier {
     constructor(
-        container: any | string,
-        parameters?: Object | null,
-        app?: firebase.app.App | null
+      container: any | string,
+      parameters?: Object | null,
+      app?: firebase.app.App | null
     );
     clear(): void;
     render(): Promise<number>;
@@ -412,14 +413,14 @@ declare namespace firebase.auth {
     static PROVIDER_ID: string;
     static TWITTER_SIGN_IN_METHOD: string;
     static credential(
-        token: string,
-        secret: string
+      token: string,
+      secret: string
     ): firebase.auth.AuthCredential;
   }
   class TwitterAuthProvider_Instance implements firebase.auth.AuthProvider {
     providerId: string;
     setCustomParameters(
-        customOAuthParameters: Object
+      customOAuthParameters: Object
     ): firebase.auth.AuthProvider;
   }
 
@@ -451,7 +452,7 @@ declare namespace firebase.database {
     exists(): boolean;
     exportVal(): any;
     forEach(
-        action: (a: firebase.database.DataSnapshot) => boolean | void
+      action: (a: firebase.database.DataSnapshot) => boolean | void
     ): boolean;
     getPriority(): string | number | null;
     hasChild(path: string): boolean;
@@ -476,48 +477,48 @@ declare namespace firebase.database {
     remove(onComplete?: (a: Error | null) => any): Promise<any>;
     set(value: any, onComplete?: (a: Error | null) => any): Promise<any>;
     setWithPriority(
-        value: any,
-        priority: number | string | null,
-        onComplete?: (a: Error | null) => any
+      value: any,
+      priority: number | string | null,
+      onComplete?: (a: Error | null) => any
     ): Promise<any>;
     update(values: Object, onComplete?: (a: Error | null) => any): Promise<any>;
   }
 
   type EventType =
-      | 'value'
-      | 'child_added'
-      | 'child_changed'
-      | 'child_moved'
-      | 'child_removed';
+    | 'value'
+    | 'child_added'
+    | 'child_changed'
+    | 'child_moved'
+    | 'child_removed';
 
   interface Query {
     endAt(
-        value: number | string | boolean | null,
-        key?: string
+      value: number | string | boolean | null,
+      key?: string
     ): firebase.database.Query;
     equalTo(
-        value: number | string | boolean | null,
-        key?: string
+      value: number | string | boolean | null,
+      key?: string
     ): firebase.database.Query;
     isEqual(other: firebase.database.Query | null): boolean;
     limitToFirst(limit: number): firebase.database.Query;
     limitToLast(limit: number): firebase.database.Query;
     off(
-        eventType?: EventType,
-        callback?: (a: firebase.database.DataSnapshot, b?: string | null) => any,
-        context?: Object | null
+      eventType?: EventType,
+      callback?: (a: firebase.database.DataSnapshot, b?: string | null) => any,
+      context?: Object | null
     ): any;
     on(
-        eventType: EventType,
-        callback: (a: firebase.database.DataSnapshot | null, b?: string) => any,
-        cancelCallbackOrContext?: Object | null,
-        context?: Object | null
+      eventType: EventType,
+      callback: (a: firebase.database.DataSnapshot | null, b?: string) => any,
+      cancelCallbackOrContext?: Object | null,
+      context?: Object | null
     ): (a: firebase.database.DataSnapshot | null, b?: string) => any;
     once(
-        eventType: EventType,
-        successCallback?: (a: firebase.database.DataSnapshot, b?: string) => any,
-        failureCallbackOrContext?: Object | null,
-        context?: Object | null
+      eventType: EventType,
+      successCallback?: (a: firebase.database.DataSnapshot, b?: string) => any,
+      failureCallbackOrContext?: Object | null,
+      context?: Object | null
     ): Promise<DataSnapshot>;
     orderByChild(path: string): firebase.database.Query;
     orderByKey(): firebase.database.Query;
@@ -525,8 +526,8 @@ declare namespace firebase.database {
     orderByValue(): firebase.database.Query;
     ref: firebase.database.Reference;
     startAt(
-        value: number | string | boolean | null,
-        key?: string
+      value: number | string | boolean | null,
+      key?: string
     ): firebase.database.Query;
     toJSON(): Object;
     toString(): string;
@@ -538,40 +539,40 @@ declare namespace firebase.database {
     onDisconnect(): firebase.database.OnDisconnect;
     parent: firebase.database.Reference | null;
     push(
-        value?: any,
-        onComplete?: (a: Error | null) => any
+      value?: any,
+      onComplete?: (a: Error | null) => any
     ): firebase.database.ThenableReference;
     remove(onComplete?: (a: Error | null) => any): Promise<any>;
     root: firebase.database.Reference;
     set(value: any, onComplete?: (a: Error | null) => any): Promise<any>;
     setPriority(
-        priority: string | number | null,
-        onComplete: (a: Error | null) => any
+      priority: string | number | null,
+      onComplete: (a: Error | null) => any
     ): Promise<any>;
     setWithPriority(
-        newVal: any,
-        newPriority: string | number | null,
-        onComplete?: (a: Error | null) => any
+      newVal: any,
+      newPriority: string | number | null,
+      onComplete?: (a: Error | null) => any
     ): Promise<any>;
     transaction(
-        transactionUpdate: (a: any) => any,
-        onComplete?: (
-            a: Error | null,
-            b: boolean,
-            c: firebase.database.DataSnapshot | null
-        ) => any,
-        applyLocally?: boolean
+      transactionUpdate: (a: any) => any,
+      onComplete?: (
+        a: Error | null,
+        b: boolean,
+        c: firebase.database.DataSnapshot | null
+      ) => any,
+      applyLocally?: boolean
     ): Promise<any>;
     update(values: Object, onComplete?: (a: Error | null) => any): Promise<any>;
   }
 
   interface ThenableReference
-      extends firebase.database.Reference,
-          PromiseLike<any> {}
+    extends firebase.database.Reference,
+      PromiseLike<any> {}
 
   function enableLogging(
-      logger?: boolean | ((a: string) => any),
-      persistent?: boolean
+    logger?: boolean | ((a: string) => any),
+    persistent?: boolean
   ): any;
 }
 
@@ -584,18 +585,18 @@ declare namespace firebase.messaging {
     deleteToken(token: string): Promise<boolean>;
     getToken(): Promise<string | null>;
     onMessage(
-        nextOrObserver: firebase.NextFn<any> | firebase.Observer<any>,
-        error?: firebase.ErrorFn,
-        completed?: firebase.CompleteFn
+      nextOrObserver: firebase.NextFn<any> | firebase.Observer<any>,
+      error?: firebase.ErrorFn,
+      completed?: firebase.CompleteFn
     ): firebase.Unsubscribe;
     onTokenRefresh(
-        nextOrObserver: firebase.NextFn<any> | firebase.Observer<any>,
-        error?: firebase.ErrorFn,
-        completed?: firebase.CompleteFn
+      nextOrObserver: firebase.NextFn<any> | firebase.Observer<any>,
+      error?: firebase.ErrorFn,
+      completed?: firebase.CompleteFn
     ): firebase.Unsubscribe;
     requestPermission(): Promise<void>;
     setBackgroundMessageHandler(
-        callback: (payload: any) => Promise<any> | void
+      callback: (payload: any) => Promise<any> | void
     ): void;
     useServiceWorker(registration: ServiceWorkerRegistration): void;
     usePublicVapidKey(b64PublicKey: string): void;
@@ -632,13 +633,13 @@ declare namespace firebase.storage {
     name: string;
     parent: firebase.storage.Reference | null;
     put(
-        data: any | any | any,
-        metadata?: firebase.storage.UploadMetadata
+      data: any | any | any,
+      metadata?: firebase.storage.UploadMetadata
     ): firebase.storage.UploadTask;
     putString(
-        data: string,
-        format?: firebase.storage.StringFormat,
-        metadata?: firebase.storage.UploadMetadata
+      data: string,
+      format?: firebase.storage.StringFormat,
+      metadata?: firebase.storage.UploadMetadata
     ): firebase.storage.UploadTask;
     root: firebase.storage.Reference;
     storage: firebase.storage.Storage;
@@ -697,17 +698,17 @@ declare namespace firebase.storage {
     cancel(): boolean;
     catch(onRejected: (a: Error) => any): Promise<any>;
     on(
-        event: firebase.storage.TaskEvent,
-        nextOrObserver?: firebase.Observer<any> | null | ((a: Object) => any),
-        error?: ((a: Error) => any) | null,
-        complete?: (firebase.Unsubscribe) | null
+      event: firebase.storage.TaskEvent,
+      nextOrObserver?: firebase.Observer<any> | null | ((a: Object) => any),
+      error?: ((a: Error) => any) | null,
+      complete?: (firebase.Unsubscribe) | null
     ): Function;
     pause(): boolean;
     resume(): boolean;
     snapshot: firebase.storage.UploadTaskSnapshot;
     then(
-        onFulfilled?: ((a: firebase.storage.UploadTaskSnapshot) => any) | null,
-        onRejected?: ((a: Error) => any) | null
+      onFulfilled?: ((a: firebase.storage.UploadTaskSnapshot) => any) | null,
+      onRejected?: ((a: Error) => any) | null
     ): Promise<any>;
   }
 
@@ -862,7 +863,7 @@ declare namespace firebase.firestore {
      * error will be returned.
      */
     runTransaction<T>(
-        updateFunction: (transaction: Transaction) => Promise<T>
+      updateFunction: (transaction: Transaction) => Promise<T>
     ): Promise<T>;
 
     /**
@@ -1069,9 +1070,9 @@ declare namespace firebase.firestore {
      * @return This `Transaction` instance. Used for chaining method calls.
      */
     set(
-        documentRef: DocumentReference,
-        data: DocumentData,
-        options?: SetOptions
+      documentRef: DocumentReference,
+      data: DocumentData,
+      options?: SetOptions
     ): Transaction;
 
     /**
@@ -1103,10 +1104,10 @@ declare namespace firebase.firestore {
      * to the backend (Note that it won't resolve while you're offline).
      */
     update(
-        documentRef: DocumentReference,
-        field: string | FieldPath,
-        value: any,
-        ...moreFieldsAndValues: any[]
+      documentRef: DocumentReference,
+      field: string | FieldPath,
+      value: any,
+      ...moreFieldsAndValues: any[]
     ): Transaction;
 
     /**
@@ -1143,9 +1144,9 @@ declare namespace firebase.firestore {
      * @return This `WriteBatch` instance. Used for chaining method calls.
      */
     set(
-        documentRef: DocumentReference,
-        data: DocumentData,
-        options?: SetOptions
+      documentRef: DocumentReference,
+      data: DocumentData,
+      options?: SetOptions
     ): WriteBatch;
 
     /**
@@ -1176,10 +1177,10 @@ declare namespace firebase.firestore {
      * to the backend (Note that it won't resolve while you're offline).
      */
     update(
-        documentRef: DocumentReference,
-        field: string | FieldPath,
-        value: any,
-        ...moreFieldsAndValues: any[]
+      documentRef: DocumentReference,
+      field: string | FieldPath,
+      value: any,
+      ...moreFieldsAndValues: any[]
     ): WriteBatch;
 
     /**
@@ -1350,9 +1351,9 @@ declare namespace firebase.firestore {
      * to the backend (Note that it won't resolve while you're offline).
      */
     update(
-        field: string | FieldPath,
-        value: any,
-        ...moreFieldsAndValues: any[]
+      field: string | FieldPath,
+      value: any,
+      ...moreFieldsAndValues: any[]
     ): Promise<void>;
 
     /**
@@ -1401,23 +1402,23 @@ declare namespace firebase.firestore {
       complete?: () => void;
     }): () => void;
     onSnapshot(
-        options: SnapshotListenOptions,
-        observer: {
-          next?: (snapshot: DocumentSnapshot) => void;
-          error?: (error: Error) => void;
-          complete?: () => void;
-        }
+      options: SnapshotListenOptions,
+      observer: {
+        next?: (snapshot: DocumentSnapshot) => void;
+        error?: (error: Error) => void;
+        complete?: () => void;
+      }
     ): () => void;
     onSnapshot(
-        onNext: (snapshot: DocumentSnapshot) => void,
-        onError?: (error: Error) => void,
-        onCompletion?: () => void
+      onNext: (snapshot: DocumentSnapshot) => void,
+      onError?: (error: Error) => void,
+      onCompletion?: () => void
     ): () => void;
     onSnapshot(
-        options: SnapshotListenOptions,
-        onNext: (snapshot: DocumentSnapshot) => void,
-        onError?: (error: Error) => void,
-        onCompletion?: () => void
+      options: SnapshotListenOptions,
+      onNext: (snapshot: DocumentSnapshot) => void,
+      onError?: (error: Error) => void,
+      onCompletion?: () => void
     ): () => void;
   }
 
@@ -1608,9 +1609,9 @@ declare namespace firebase.firestore {
      * @return The created Query.
      */
     where(
-        fieldPath: string | FieldPath,
-        opStr: WhereFilterOp,
-        value: any
+      fieldPath: string | FieldPath,
+      opStr: WhereFilterOp,
+      value: any
     ): Query;
 
     /**
@@ -1623,8 +1624,8 @@ declare namespace firebase.firestore {
      * @return The created Query.
      */
     orderBy(
-        fieldPath: string | FieldPath,
-        directionStr?: OrderByDirection
+      fieldPath: string | FieldPath,
+      directionStr?: OrderByDirection
     ): Query;
 
     /**
@@ -1768,23 +1769,23 @@ declare namespace firebase.firestore {
       complete?: () => void;
     }): () => void;
     onSnapshot(
-        options: SnapshotListenOptions,
-        observer: {
-          next?: (snapshot: QuerySnapshot) => void;
-          error?: (error: Error) => void;
-          complete?: () => void;
-        }
+      options: SnapshotListenOptions,
+      observer: {
+        next?: (snapshot: QuerySnapshot) => void;
+        error?: (error: Error) => void;
+        complete?: () => void;
+      }
     ): () => void;
     onSnapshot(
-        onNext: (snapshot: QuerySnapshot) => void,
-        onError?: (error: Error) => void,
-        onCompletion?: () => void
+      onNext: (snapshot: QuerySnapshot) => void,
+      onError?: (error: Error) => void,
+      onCompletion?: () => void
     ): () => void;
     onSnapshot(
-        options: SnapshotListenOptions,
-        onNext: (snapshot: QuerySnapshot) => void,
-        onError?: (error: Error) => void,
-        onCompletion?: () => void
+      options: SnapshotListenOptions,
+      onNext: (snapshot: QuerySnapshot) => void,
+      onError?: (error: Error) => void,
+      onCompletion?: () => void
     ): () => void;
   }
 
@@ -1836,8 +1837,8 @@ declare namespace firebase.firestore {
      * @param thisArg The `this` binding for the callback.
      */
     forEach(
-        callback: (result: QueryDocumentSnapshot) => void,
-        thisArg?: any
+      callback: (result: QueryDocumentSnapshot) => void,
+      thisArg?: any
     ): void;
 
     /**
@@ -2054,25 +2055,25 @@ declare namespace firebase.firestore {
    *   credentials for the operation.
    */
   export type FirestoreErrorCode =
-      | 'cancelled'
-      | 'unknown'
-      | 'invalid-argument'
-      | 'deadline-exceeded'
-      | 'not-found'
-      | 'already-exists'
-      | 'permission-denied'
-      | 'resource-exhausted'
-      | 'failed-precondition'
-      | 'aborted'
-      | 'out-of-range'
-      | 'unimplemented'
-      | 'internal'
-      | 'unavailable'
-      | 'data-loss'
-      | 'unauthenticated';
+    | 'cancelled'
+    | 'unknown'
+    | 'invalid-argument'
+    | 'deadline-exceeded'
+    | 'not-found'
+    | 'already-exists'
+    | 'permission-denied'
+    | 'resource-exhausted'
+    | 'failed-precondition'
+    | 'aborted'
+    | 'out-of-range'
+    | 'unimplemented'
+    | 'internal'
+    | 'unavailable'
+    | 'data-loss'
+    | 'unauthenticated';
 
   /** An error returned by a Firestore operation. */
-    // TODO(b/63008957): FirestoreError should extend firebase.FirebaseError
+  // TODO(b/63008957): FirestoreError should extend firebase.FirebaseError
   export interface FirestoreError {
     code: FirestoreErrorCode;
     message: string;
