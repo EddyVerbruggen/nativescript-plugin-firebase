@@ -57,6 +57,7 @@
     "preparedemo": "npm run tsc && npm run package && cd ../demo && tns plugin add ../publish/package/*.tgz && tns install",
     "preparedemo-ng": "npm run tsc && npm run package && cd ../demo-ng && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
     "preparedemo-push": "npm run tsc && npm run package && cd ../demo-push && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
+    "tillty.prepare": "npm run tsc && npm run package && cd ../../tilltyv5 && tns plugin remove nativescript-plugin-firebase && tns plugin add ../nativescript-plugin-firebase/publish/package/*.tgz && tns install",
     "setupandinstall": "npm i && cd ../demo && npm i && cd ../demo-ng && npm i && cd ../demo-push && npm i && cd ../src && npm run tsc && cd ../demo && tns plugin add ../src && cd ../demo-ng && tns plugin add ../src  && cd ../demo-push && tns plugin add ../src && cd ../src",
     "tslint": "tslint --config '../tslint.json' '*.ts' --exclude '**/node_modules/**'",
     "tslint.demo": "tslint --config '../tslint.json' '../demo/app/*.ts' --exclude '**/node_modules/**'",
@@ -111,6 +112,7 @@
   "homepage": "https://github.com/eddyverbruggen/nativescript-plugin-firebase",
   "readmeFilename": "README.md",
   "dependencies": {
+    "firebase": "^5.5.9",
     "fs-extra": "~2.1.0",
     "nativescript-hook": "~0.2.0",
     "prompt-lite": "~0.1.0",
@@ -118,9 +120,9 @@
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
-    "tns-core-modules": "~4.2.0",
+    "tns-core-modules": "~5.0.0",
     "tns-platform-declarations": "^4.2.1",
     "tslint": "^5.1.0",
-    "typescript": "~2.8.0"
+    "typescript": "^3.1.6"
   }
 }

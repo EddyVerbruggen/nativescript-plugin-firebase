@@ -1,7 +1,7 @@
 import * as firebase from "../../firebase";
 import { FirebaseEmailLinkActionCodeSettings, LoginType, User } from "../../firebase";
 
-export module auth {
+export namespace auth {
   export class Auth {
     private authStateChangedHandler;
     public currentUser: User;
@@ -9,7 +9,22 @@ export module auth {
     public onAuthStateChanged(handler: (user: User) => void): void {
       this.authStateChangedHandler = handler;
       console.log(">> added onAuthStateChanged handler");
-    };
+    }
+
+    public onAuthStateChangedListener(
+      nextOrObserver:
+        | import('firebase').Observer<any>
+        | ((a: import('firebase').User | null) => any),
+      error?: ((a: import('firebase').auth.Error) => any),
+      completed?: import('firebase').Unsubscribe,
+    ): import('firebase').Unsubscribe {
+      const listener = (<any>firebase).auth.addAuthStateListener(nextOrObserver, error);
+      return () => {
+        if (listener) {
+          (<any>firebase).auth.removeAuthStateListener(listener);
+        }
+      };
+    }
 
     public signOut(): Promise<any> {
       return new Promise((resolve, reject) => {
@@ -79,7 +94,7 @@ export module auth {
           this.currentUser = user;
           resolve(user);
         }).catch(err => reject(err));
-      })
+      });
     }
 
     public signInAnonymously(): Promise<any> {

@@ -7,6 +7,7 @@ import * as crashlytics from "./crashlytics/crashlytics";
 import * as performance from "./performance/performance";
 import * as storage from "./storage/storage";
 import * as mlkit from "./mlkit";
+import { auth } from './auth';
 
 // note that this implementation is overridden for iOS
 export class FieldValue {
@@ -34,6 +35,7 @@ export const firebase: any = {
   authStateListeners: [],
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,
+  auth,
   admob,
   analytics,
   crashlytics,
