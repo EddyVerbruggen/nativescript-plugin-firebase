@@ -46,8 +46,15 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 
 > Note that the filename can either be `<YourAppName>.entitlements` or `app.entitlements`, where `YourAppName` is the iOS foldername, see the path above.
 
-#### Allow processing when a background push is received
-Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
+#### Configure push notifications in `Info.plist`
+Tell the plugin to allow an external push provider by adding this to `App_Resources/iOS/Info.plist` (without this, the push token will always be `undefined`!):
+
+```xml
+<key>UseExternalPushProvider</key>
+<true/>
+```
+
+And to allow processing when a background push is received, add this as well:
 
 ```xml
 <key>UIBackgroundModes</key>
@@ -56,6 +63,9 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 </array>
 ```
 
+The end result should look like [this](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/58d2792421be0d9c3d8fbdddd4abd6c782b30723/demo-push/app_resources/iOS/Info.plist#L46-L51).
+
+#### 
 ## API
 
 ### `areNotificationsEnabled`
