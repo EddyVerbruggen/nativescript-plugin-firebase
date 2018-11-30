@@ -47,7 +47,7 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
-  <key>UseExternalPushProvider</key>
+	<key>UseExternalPushProvider</key>
 	<true/>
 </dict>
 </plist>
