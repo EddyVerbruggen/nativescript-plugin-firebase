@@ -35,13 +35,12 @@ export function initFirebaseMessaging(options) {
   _showNotifications = options.showNotifications === undefined ? _showNotifications : !!options.showNotifications;
   _showNotificationsWhenInForeground = options.showNotificationsWhenInForeground === undefined ? _showNotificationsWhenInForeground : !!options.showNotificationsWhenInForeground;
 
-  if (options.onMessageReceivedCallback !== undefined || options.onPushTokenReceivedCallback !== undefined) {
-    if (options.onMessageReceivedCallback !== undefined) {
-      addOnMessageReceivedCallback(options.onMessageReceivedCallback);
-    }
-    if (options.onPushTokenReceivedCallback !== undefined) {
-      addOnPushTokenReceivedCallback(options.onPushTokenReceivedCallback);
-    }
+  if (options.onMessageReceivedCallback !== undefined) {
+    addOnMessageReceivedCallback(options.onMessageReceivedCallback);
+  }
+
+  if (options.onPushTokenReceivedCallback !== undefined) {
+    addOnPushTokenReceivedCallback(options.onPushTokenReceivedCallback);
   }
 }
 
