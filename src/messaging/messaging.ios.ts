@@ -474,6 +474,10 @@ function _registerForRemoteNotifications() {
 
 function _messagingConnectWithCompletion() {
   return new Promise((resolve, reject) => {
+    if (typeof (FIRMessaging) === "undefined") {
+      resolve();
+      return;
+    }
 
     FIRMessaging.messaging().connectWithCompletion(error => {
       if (error) {
