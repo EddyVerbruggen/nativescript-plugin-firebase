@@ -45,15 +45,12 @@ export function initFirebaseMessaging(options?: MessagingOptions) {
   }
 }
 
-export function onAppModuleLaunchEvent(args: any) {
+export function onAppModuleResumeEvent(args: any) {
   org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
 
-  const intent = args.android;
-  const isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();
-
-  if (!isLaunchIntent) {
-    const extras = intent.getExtras();
-    // filter out any rubbish that doesn't have a 'from' key
+  const intent = args.android.getIntent();
+  const extras = intent.getExtras();
+  // filter out any rubbish that doesn't have a 'from' key
     if (extras !== null && extras.keySet().contains("from")) {
       let result = {
         foreground: false,
@@ -78,7 +75,6 @@ export function onAppModuleLaunchEvent(args: any) {
         });
       }
     }
-  }
 }
 
 export function registerForInteractivePush(model?: PushNotificationModel): void {
