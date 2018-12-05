@@ -8,40 +8,44 @@ export namespace auth {
     try {
       const auth = FIRAuth.auth();
 
-      return auth.addAuthStateDidChangeListener((auth, user) => {
-        // TODO: We probably can't satisfy all of a (Web SDK) user object, so figure out what methods are possible.
-        const fbUser = <import('firebase').User>{
-          displayName: user.displayName,
-          email: user.email,
-          emailVerified: user.emailVerified,
-          isAnonymous: user.anonymous,
-          phoneNumber: user.phoneNumber,
-          photoURL: user.photoURL && user.photoURL.absoluteString,
-          providerId: user.providerID,
-          refreshToken: user.refreshToken,
-          uid: user.uid,
-          metadata: {
-            creationTime: user.metadata.creationDate && user.metadata.creationDate.toUTCString(),
-            lastSignInTime: user.metadata.lastSignInDate && user.metadata.lastSignInDate.toUTCString(),
-          },
-          providerData: convertUserInfo(user.providerData),
-          delete: () => {
-            return new Promise((resolve, reject) => {
-              user.deleteWithCompletion((error?: NSError) => {
-                if (error) {
-                  return reject(error); // TODO: What type of error should this be to satisfy the Web SDK?
-                }
+      return auth.addAuthStateDidChangeListener((auth, user: FIRUser | null) => {
+        let fbUser: import('firebase').User | undefined;
 
-                resolve();
+        if (user) {
+          // TODO: We probably can't satisfy all of a (Web SDK) user object, so figure out what methods are possible.
+          fbUser = <import('firebase').User>{
+            displayName: user.displayName,
+            email: user.email,
+            emailVerified: user.emailVerified,
+            isAnonymous: user.anonymous,
+            phoneNumber: user.phoneNumber,
+            photoURL: user.photoURL && user.photoURL.absoluteString,
+            providerId: user.providerID,
+            refreshToken: user.refreshToken,
+            uid: user.uid,
+            metadata: {
+              creationTime: user.metadata.creationDate && user.metadata.creationDate.toUTCString(),
+              lastSignInTime: user.metadata.lastSignInDate && user.metadata.lastSignInDate.toUTCString(),
+            },
+            providerData: convertUserInfo(user.providerData),
+            delete: () => {
+              return new Promise((resolve, reject) => {
+                user.deleteWithCompletion((error?: NSError) => {
+                  if (error) {
+                    return reject(error); // TODO: What type of error should this be to satisfy the Web SDK?
+                  }
+
+                  resolve();
+                });
               });
-            });
-          }
-        };
+            }
+          };
+        }
 
         if (typeof (nextOrObserver) === 'function') {
-          nextOrObserver(fbUser);
+          nextOrObserver(fbUser || null);
         } else {
-          nextOrObserver.next(fbUser);
+          nextOrObserver.next(fbUser || null);
         }
       });
     } catch (e) {
