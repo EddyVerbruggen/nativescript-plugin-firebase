@@ -43,10 +43,6 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
 (() => {
   // note that this means we need to 'require()' the plugin before the app is loaded
   appModule.on(appModule.launchEvent, args => {
-    if (messagingEnabled()) {
-      firebaseMessaging.onAppModuleLaunchEvent(args);
-    }
-
     if (dynamicLinksEnabled()) {
       // let's see if this is part of an email-link authentication flow
       const emailLink = "" + args.android.getData();
@@ -103,7 +99,13 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
       }
     }
   });
-})();
+
+  appModule.on(appModule.resumeEvent, args => {
+      if (messagingEnabled()) {
+          firebaseMessaging.onAppModuleResumeEvent(args);
+      }
+  });
+    })();
 
 firebase.toHashMap = obj => {
   const node = new java.util.HashMap();

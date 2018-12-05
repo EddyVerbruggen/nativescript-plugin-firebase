@@ -29,7 +29,7 @@ export declare function areNotificationsEnabled(): boolean;
 export declare const onTokenRefreshNotification: (token: string) => void;
 
 // android. ...
-export declare function onAppModuleLaunchEvent(intent: any): void;
+export declare function onAppModuleResumeEvent(intent: any): void;
 
 export declare class IosInteractivePushSettings {
   actions: Array<IosInteractiveNotificationAction>;
