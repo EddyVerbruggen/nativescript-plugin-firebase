@@ -965,10 +965,14 @@ export class HelloWorldModel extends Observable {
   }
 
   public doLoginByEmailLink(): void {
-    prompt(
-        "The email address to send the link to",
-        ""
-    ).then(promptResult => {
+    prompt({
+      title: "The email address to send the link to",
+      defaultText: "",
+      inputType: "email",
+      capitalizationType: "none",
+      okButtonText: "OK",
+      cancelButtonText: "Cancel"
+    }).then(promptResult => {
       if (!promptResult.result) {
         return;
       }
@@ -978,7 +982,7 @@ export class HelloWorldModel extends Observable {
         // note that you need to enable phone login in your firebase instance
         type: firebase.LoginType.EMAIL_LINK,
         emailLinkOptions: {
-          email: promptResult.text,
+          email: promptResult.text.trim(),
           url: "https://combidesk.com?foo=bar"
         }
       }).then(

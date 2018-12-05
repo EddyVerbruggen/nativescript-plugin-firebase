@@ -82,13 +82,12 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
                   url: deepLink,
                   minimumAppVersion: minimumAppVersion
                 };
-              }
-              else {
+              } else {
                 setTimeout(function () {
-                    firebase._dynamicLinkCallback({
-                      url: deepLink,
-                      minimumAppVersion: minimumAppVersion
-                    });
+                  firebase._dynamicLinkCallback({
+                    url: deepLink,
+                    minimumAppVersion: minimumAppVersion
+                  });
                 });
               }
             }
@@ -101,11 +100,11 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
   });
 
   appModule.on(appModule.resumeEvent, args => {
-      if (messagingEnabled()) {
-          firebaseMessaging.onAppModuleResumeEvent(args);
-      }
+    if (messagingEnabled()) {
+      firebaseMessaging.onAppModuleResumeEvent(args);
+    }
   });
-    })();
+})();
 
 firebase.toHashMap = obj => {
   const node = new java.util.HashMap();
@@ -590,7 +589,7 @@ firebase.getRemoteConfig = arg => {
           runGetRemoteConfig();
           appModule.off(appModule.resumeEvent, callback);
         };
-        appModule.on(appModule.resumeEvent, callback);        
+        appModule.on(appModule.resumeEvent, callback);
       }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);

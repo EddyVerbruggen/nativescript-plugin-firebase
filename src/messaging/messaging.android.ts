@@ -50,31 +50,34 @@ export function onAppModuleResumeEvent(args: any) {
 
   const intent = args.android.getIntent();
   const extras = intent.getExtras();
-  // filter out any rubbish that doesn't have a 'from' key
-    if (extras !== null && extras.keySet().contains("from")) {
-      let result = {
-        foreground: false,
-        data: {}
-      };
 
-      const iterator = extras.keySet().iterator();
-      while (iterator.hasNext()) {
-        const key = iterator.next();
-        if (key !== "from" && key !== "collapse_key") {
-          result[key] = extras.get(key);
-          result.data[key] = extras.get(key);
-        }
-      }
+  if (extras !== null && extras.keySet().contains("from")) {
+    let result = {
+      foreground: false,
+      data: {}
+    };
 
-      if (firebase._receivedNotificationCallback === null) {
-        _launchNotification = result;
-      } else {
-        // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
-        setTimeout(() => {
-          firebase._receivedNotificationCallback(result);
-        });
+    const iterator = extras.keySet().iterator();
+    while (iterator.hasNext()) {
+      const key = iterator.next();
+      if (key !== "from" && key !== "collapse_key") {
+        result[key] = extras.get(key);
+        result.data[key] = extras.get(key);
       }
     }
+
+    // clear, otherwise the next resume we trigger this again
+    intent.removeExtra("from");
+
+    if (firebase._receivedNotificationCallback === null) {
+      _launchNotification = result;
+    } else {
+      // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
+      setTimeout(() => {
+        firebase._receivedNotificationCallback(result);
+      });
+    }
+  }
 }
 
 export function registerForInteractivePush(model?: PushNotificationModel): void {
