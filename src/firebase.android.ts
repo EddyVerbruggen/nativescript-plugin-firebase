@@ -351,19 +351,6 @@ firebase.init = arg => {
         firebase.storageBucket = com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.storageBucket);
       }
 
-      // Facebook
-      if (typeof (com.facebook) !== "undefined" && typeof (com.facebook.FacebookSdk) !== "undefined") {
-        com.facebook.FacebookSdk.sdkInitialize(com.tns.NativeScriptApplication.getInstance());
-        fbCallbackManager = com.facebook.CallbackManager.Factory.create();
-        const callback = (eventData: AndroidActivityResultEventData) => {
-          if (eventData.requestCode !== GOOGLE_SIGNIN_INTENT_ID) {
-            appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
-            fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
-          }
-        };
-        appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
-      }
-
       // Firebase AdMob
       if (typeof (com.google.android.gms.ads) !== "undefined" && typeof (com.google.android.gms.ads.MobileAds) !== "undefined") {
         // init admob
@@ -928,10 +915,22 @@ firebase.login = arg => {
         }
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
-        if (typeof (com.facebook) === "undefined") {
+        if (typeof (com.facebook) === "undefined" || typeof (com.facebook.FacebookSdk) === "undefined") {
           reject("Facebook SDK not installed - see gradle config");
           return;
         }
+
+        // Lazy loading the Facebook callback manager
+        if (!fbCallbackManager) {
+          com.facebook.FacebookSdk.sdkInitialize(com.tns.NativeScriptApplication.getInstance());
+          fbCallbackManager = com.facebook.CallbackManager.Factory.create();
+        }
+
+        const callback = (eventData: AndroidActivityResultEventData) => {
+          appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
+          fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
+        };
+        appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
 
         const fbLoginManager = com.facebook.login.LoginManager.getInstance();
         fbLoginManager.registerCallback(
@@ -952,12 +951,8 @@ firebase.login = arg => {
                   firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
                 }
               },
-              onCancel: () => {
-                reject("Facebook Login canceled");
-              },
-              onError: ex => {
-                reject("Error while trying to login with Fb " + ex);
-              }
+              onCancel: () => reject("Facebook Login canceled"),
+              onError: ex => reject("Error while trying to login with Fb " + ex)
             })
         );
 
@@ -1029,7 +1024,7 @@ firebase.login = arg => {
                 firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener(onCompleteListener);
               }
             } else {
-              console.log("Make sure you've uploaded your SHA1 fingerprint(s) to the Firebase console");
+              console.log("Make sure you've uploaded your SHA1 fingerprint(s) to the Firebase console. Status: " + googleSignInResult.getStatus());
               reject("Has the SHA1 fingerprint been uploaded? Sign-in status: " + googleSignInResult.getStatus());
             }
           }
