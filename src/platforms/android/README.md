@@ -1,7 +1,7 @@
 For more sophisticated handling of Firebase Messaging we need to implement 2 services.
 Those services must be configured in `AndroidManifest.xml` and we need to ship 2 additional classes.
  
-To make it as easy as possible for consumers of this plugin we bundle those both in an `.aar` file.
+To make it as easy as possible for consumers of this plugin we bundle those bits in an `.aar` file.
 
 Steps to update the `.aar` file:
 
