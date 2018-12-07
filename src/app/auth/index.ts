@@ -20,9 +20,20 @@ export module auth {
               resolve();
             })
             .catch(err => {
+              let code = 'auth/exception';
+              let message = err.toString();
+              if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidCredentialsException')) {
+                code = 'auth/wrong-password';
+              } else if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidUserException')) {
+                code = 'auth/user-not-found';
+              } else if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidUserException')) {
+                code = 'auth/invalid-email'
+              }
+               // Note that auth/user-disabled cannot be identified here because FirebaseAuthInvalidUserException is thrown for both
+               // auth/user-disabled and auth/user-not-found
               reject({
-                // code: "",
-                message: err
+                code: code,
+                message: message,
               });
             });
       });
