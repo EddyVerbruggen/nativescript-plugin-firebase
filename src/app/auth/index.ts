@@ -39,7 +39,12 @@ export module auth {
         }).then((user: User) => {
           this.currentUser = user;
           this.authStateChangedHandler && this.authStateChangedHandler(user);
-          resolve();
+          resolve({
+            additionalUserInfo: user.additionalUserInfo,
+            credential: null,
+            operationType: "SignIn",
+            user: user,
+          });
         }, (err => {
           reject({
             // code: "",
