@@ -333,6 +333,7 @@ function writePodFile(result) {
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
 pod 'Firebase/Core', '~> 5.12.0'
+pod 'GoogleAppMeasurement', '5.3' # temp fix for https://github.com/firebase/firebase-ios-sdk/issues/2151 (remove when bumping 'Firebase/Core')
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
