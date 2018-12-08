@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 const firebase = require("nativescript-plugin-firebase");
 
