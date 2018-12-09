@@ -222,6 +222,8 @@ firebase.toJsObject = javaObj => {
       return Number(String(javaObj));
     case 'java.util.Date':
       return new Date(javaObj.getTime());
+    case 'com.google.firebase.Timestamp':
+      return new Date(javaObj.toDate().getTime());
     case 'com.google.firebase.firestore.GeoPoint':
       return {
         "latitude": javaObj.getLatitude(),
