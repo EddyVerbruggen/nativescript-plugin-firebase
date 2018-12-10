@@ -1,38 +1,6 @@
-android:
-  components:
-    - tools
-    - platform-tools
-    - build-tools-28.0.3
-    - android-28
-    - extra-android-m2repository
-
-before_cache:
-    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
-cache:
-    directories:
-        - .nvm
-        - $HOME/.gradle/caches/
-        - $HOME/.gradle/wrapper/
-
-before_install:
-  - sudo pip install --upgrade pip
-  - sudo pip install six
-
-install:
-    - echo no | npm install -g nativescript
-    - tns usage-reporting disable
-    - tns error-reporting disable
-    - cd src
-    - npm i --ignore-scripts
-    - npm run tsc
-    - npm run package
-    - cd ../demo
-    - npm i
-
-script:
-
-
+branches:
+  only:
+    - master
 matrix:
   include:
     - stage: "Lint"
@@ -40,7 +8,7 @@ matrix:
       os: linux
       node_js: "8"
       script: "npm run ci.tslint"
-    - stage: "WebPack"
+    - stage: "Webpack"
       os: osx
       env:
         - Webpack="iOS"
@@ -81,3 +49,26 @@ matrix:
         - pod repo update
       script:
         - travis_wait travis_retry tns build ios
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-28.0.3
+    - android-28
+    - extra-android-m2repository
+
+before_install:
+  - sudo pip install --upgrade pip
+  - sudo pip install six
+
+install:
+    - echo no | npm install -g nativescript
+    - tns usage-reporting disable
+    - tns error-reporting disable
+    - cd src
+    - npm i --ignore-scripts
+    - npm run tsc
+    - npm run package
+    - cd ../demo
+    - npm i
