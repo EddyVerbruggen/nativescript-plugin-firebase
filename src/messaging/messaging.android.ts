@@ -45,9 +45,11 @@ export function initFirebaseMessaging(options?: MessagingOptions) {
   }
 }
 
-export function onAppModuleResumeEvent(args: any) {
+export function onAppModuleLaunchEvent(args: any) {
   org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
+}
 
+export function onAppModuleResumeEvent(args: any) {
   const intent = args.android.getIntent();
   const extras = intent.getExtras();
 
