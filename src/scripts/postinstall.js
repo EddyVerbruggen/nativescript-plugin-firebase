@@ -3800,7 +3800,7 @@ module.exports = function($logger, $projectData) {
                 let repositoriesNode = buildGradleContent.indexOf("repositories", 0);
                 if (repositoriesNode > -1) {
                     repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
-                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '	    maven { url "https://maven.fabric.io/public" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
+                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '\\t\\tmaven { url "https://maven.fabric.io/public" }\\n\\t\\tmaven { url "https://dl.bintray.com/android/android-tools" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
                 }
 
                 let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
@@ -3808,6 +3808,13 @@ module.exports = function($logger, $projectData) {
                     dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
                     // see https://docs.fabric.io/android/changelog.html
                     buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.26.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                }
+
+            } else if (buildGradleContent.indexOf("https://dl.bintray.com/android/android-tools") === -1) {
+                let repositoriesNode = buildGradleContent.indexOf("repositories", 0);
+                if (repositoriesNode > -1) {
+                    repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
+                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '\\t\\tmaven { url "https://dl.bintray.com/android/android-tools" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
                 }
             }
 
