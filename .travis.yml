@@ -2,10 +2,7 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-27.0.3
     - build-tools-28.0.3
-    - android-23
-    - android-26
     - android-28
     - extra-android-m2repository
 
@@ -47,7 +44,7 @@ matrix:
       os: osx
       env:
         - Webpack="iOS"
-      osx_image: xcode9.2
+      osx_image: xcode10.0
       language: node_js
       node_js: "8"
       jdk: oraclejdk8
@@ -73,9 +70,9 @@ matrix:
         - travis_wait travis_retry tns build android
     - os: osx
       env:
-        - BuildiOS="11"
-        - Xcode="9.2"
-      osx_image: xcode9.2
+        - BuildiOS="12.0"
+        - Xcode="10.0"
+      osx_image: xcode10.0
       language: node_js
       node_js: "8"
       jdk: oraclejdk8
