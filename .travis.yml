@@ -18,6 +18,10 @@ cache:
         - $HOME/.gradle/caches/
         - $HOME/.gradle/wrapper/
 
+before_install:
+  - sudo pip install --upgrade pip
+  - sudo pip install six
+
 install:
     - echo no | npm install -g nativescript
     - tns usage-reporting disable

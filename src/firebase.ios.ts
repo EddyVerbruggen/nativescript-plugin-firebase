@@ -308,12 +308,9 @@ if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
 function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
   if (application.ios.delegate === undefined) {
-    class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
-      public static ObjCProtocols = [UIApplicationDelegate];
 
-      // static new(): UIApplicationDelegateImpl {
-      //   return <UIApplicationDelegateImpl>super.new();
-      // }
+    @ObjCClass(UIApplicationDelegate)
+    class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
     }
 
     application.ios.delegate = UIApplicationDelegateImpl;
@@ -1223,7 +1220,7 @@ firebase.getValue = path => {
   return new Promise((resolve, reject) => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
-      const listener = where.observeSingleEventOfTypeWithBlockWithCancelBlock(
+      where.observeSingleEventOfTypeWithBlockWithCancelBlock(
           FIRDataEventType.Value,
           snapshot => {
             resolve(firebase.getCallbackData('ValueChanged', snapshot));

@@ -171,9 +171,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   abstract createSuccessListener(): any;
 }
 
+@ObjCClass(TNSMLKitCameraViewDelegate)
 class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraViewDelegate {
-  public static ObjCProtocols = [TNSMLKitCameraViewDelegate];
-
   private owner: WeakRef<MLKitCameraView>;
   private resultCallback: (message: any) => void;
   private options?: any;
