@@ -1,3 +1,9 @@
+export interface LogComplexEventParameter {
+  key: string;
+  value: any;
+  type: string;
+}
+
 export interface LogEventParameter {
   key: string;
   value: string;
@@ -23,6 +29,26 @@ export interface LogEventOptions {
   parameters?: Array<LogEventParameter>;
 }
 
+export interface LogComplexEventOptions {
+  /**
+   * The name of the event. You can use any name, but it's recommended to use one of
+   * the predefined constants. These values are the same for both iOS and Android, so
+   * for the complete list see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
+   */
+  key: string;
+  /**
+   * Each (predefined) event has its own set of optional parameters, see
+   * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Param
+   * Example:
+   *
+   *  parameters: [{
+   *    key: "item_name",
+   *    value: "abc"
+   *  }, ..]
+   */
+  parameters?: Array<LogComplexEventParameter>;
+}
+
 export interface SetUserIdOptions {
   userId: string;
 }
@@ -37,6 +63,8 @@ export interface SetScreenNameOptions {
 }
 
 export declare function logEvent(options: LogEventOptions): Promise<void>;
+
+export declare function logComplexEvent(options: LogComplexEventOptions): Promise<void>;
 
 export declare function setUserId(options: SetUserIdOptions): Promise<void>;
 
