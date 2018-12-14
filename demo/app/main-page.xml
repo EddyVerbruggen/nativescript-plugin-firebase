@@ -176,7 +176,7 @@
             <Button row="31" col="0" text="collection on" tap="{{ doEnableAnalytics }}" class="button button-analytics"/>
             <Button row="31" col="1" text="collection off" tap="{{ doDisableAnalytics }}" class="button button-analytics"/>
 
-            <Button row="32" col="0" text="log event" tap="{{ doLogAnalyticsEvent }}" class="button button-analytics"/>
+            <Button row="32" col="0" text="log events" tap="{{ doLogAnalyticsEvents }}" class="button button-analytics"/>
             <Button row="32" col="1" text="set user property" tap="{{ doSetAnalyticsUserProperty }}" class="button button-analytics"/>
 
             <Button row="33" col="0" text="set Screen A" tap="{{ doSetScreenNameA }}" class="button button-analytics"/>

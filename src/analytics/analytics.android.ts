@@ -1,6 +1,11 @@
 import * as appModule from "tns-core-modules/application";
-import { LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions, LogComplexEventOptions, LogComplexEventParameter } from "./analytics";
-import { LogComplexEventTypeParameter } from "../firebase";
+import {
+  LogEventOptions,
+  SetScreenNameOptions,
+  SetUserPropertyOptions,
+  LogComplexEventOptions,
+  LogComplexEventParameter
+} from "./analytics";
 
 declare const com: any;
 
@@ -54,23 +59,18 @@ function buildBundle(params: Array<LogComplexEventParameter>): android.os.Bundle
     const param = params[p];
     if (param.value !== undefined) {
       if (param.type === "string") {
-          bundle.putString(param.key, param.value);
+        bundle.putString(param.key, param.value);
       } else if (param.type === "double") {
         bundle.putDouble(param.key, param.value);
-      }
-      else if (param.type === "float") {
+      } else if (param.type === "float") {
         bundle.putFloat(param.key, param.value);
-      }
-      else if (param.type === "int") {
+      } else if (param.type === "int") {
         bundle.putInt(param.key, param.value);
-      }
-      else if (param.type === "long") {
+      } else if (param.type === "long") {
         bundle.putLong(param.key, param.value);
-      }
-      else if (param.type === "boolean") {
+      } else if (param.type === "boolean") {
         bundle.putBoolean(param.key, param.value);
-      }
-      else if (param.type === "array") {
+      } else if (param.type === "array") {
         bundle.putParcelableArrayList(param.key, getArrayList(param.value));
       }
       // bundle.putString(param.key, param.value);

@@ -1,4 +1,9 @@
-import { LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions, LogComplexEventOptions, LogComplexEventParameter } from "./analytics";
+import {
+  LogEventOptions,
+  SetScreenNameOptions,
+  SetUserPropertyOptions,
+  LogComplexEventOptions
+} from "./analytics";
 
 export function logEvent(options: LogEventOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
@@ -27,6 +32,7 @@ export function logEvent(options: LogEventOptions): Promise<void> {
     }
   });
 }
+
 /*
 function getArrayList(array: Array<LogComplexEventOptions>): Array<NSMutableDictionary<string, any>> {
   let returnArray:  Array<NSMutableDictionary<string, any>> = new Array();
@@ -112,40 +118,40 @@ export function logComplexEvent(options: LogComplexEventOptions): Promise<void> 
 
 
 export function logComplexEvent(options: LogComplexEventOptions): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      try {
-        const dic: any = NSMutableDictionary.new();
-        if (options.parameters !== undefined) {
-          for (let p in options.parameters) {
-            const param = options.parameters[p];
-            if (param.type === "array" && param.value !== undefined ) {
-              const listArray = new Array();
-              for (let val in param.value) {
-                const value = param.value[val];
-                if (value.parameters !== undefined) {
-                  const dicTemp: any = NSMutableDictionary.new();
-                  for (let i in value.parameters) {
-                    const item = value.parameters[i];
-                    if (item.type !== "array" && item.value !== undefined && item.key !== undefined ) {
-                      dicTemp.setObjectForKey(item.value, item.key);
-                    }
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const dic: any = NSMutableDictionary.new();
+      if (options.parameters !== undefined) {
+        for (let p in options.parameters) {
+          const param = options.parameters[p];
+          if (param.type === "array" && param.value !== undefined) {
+            const listArray = new Array();
+            for (let val in param.value) {
+              const value = param.value[val];
+              if (value.parameters !== undefined) {
+                const dicTemp: any = NSMutableDictionary.new();
+                for (let i in value.parameters) {
+                  const item = value.parameters[i];
+                  if (item.type !== "array" && item.value !== undefined && item.key !== undefined) {
+                    dicTemp.setObjectForKey(item.value, item.key);
                   }
-                  listArray.push(dicTemp);
                 }
+                listArray.push(dicTemp);
               }
-              dic.setObjectForKey(listArray, param.key);
-            } else if (param.type === "string" || param.type === "double" || param.type === "float" || param.type === "int" || param.type === "long" || param.type === "boolean") {
-              dic.setObjectForKey(param.value, param.key);
             }
+            dic.setObjectForKey(listArray, param.key);
+          } else if (param.type === "string" || param.type === "double" || param.type === "float" || param.type === "int" || param.type === "long" || param.type === "boolean") {
+            dic.setObjectForKey(param.value, param.key);
           }
         }
-        FIRAnalytics.logEventWithNameParameters(options.key, dic);
-        resolve();
-      } catch (ex) {
-        console.log("Error in firebase.analytics.logEvent: " + ex);
-        reject(ex);
       }
-    });
+      FIRAnalytics.logEventWithNameParameters(options.key, dic);
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.logEvent: " + ex);
+      reject(ex);
+    }
+  });
 }
 
 

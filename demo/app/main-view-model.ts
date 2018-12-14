@@ -477,7 +477,7 @@ export class HelloWorldModel extends Observable {
     });
   }
 
-  public doLogAnalyticsEvent(): void {
+  public doLogAnalyticsEvents(): void {
     firebase.analytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
@@ -517,31 +517,29 @@ export class HelloWorldModel extends Observable {
         value: [
           {
             parameters: [
-              { key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
               {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
               {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
               {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
               {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
-              {key: "price", value: 1 , type: LogComplexEventTypeParameter.DOUBLE},
-              {key: "item_list", value: "name of list" , type: LogComplexEventTypeParameter.STRING },
-              {key: "index", value: 1 , type: LogComplexEventTypeParameter.INT}
-
+              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 1, type: LogComplexEventTypeParameter.INT}
             ]
           },
           {
             parameters: [
-              { key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
               {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
               {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
               {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
               {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
-              {key: "price", value: 1 , type: LogComplexEventTypeParameter.DOUBLE},
-              {key: "item_list", value: "name of list" , type: LogComplexEventTypeParameter.STRING },
-              {key: "index", value: 2 , type: LogComplexEventTypeParameter.INT}
-
+              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 2, type: LogComplexEventTypeParameter.INT}
             ]
           }
-      ]
+        ]
       }]
     });
 
