@@ -12,7 +12,7 @@ matrix:
       os: osx
       env:
         - Webpack="iOS"
-      osx_image: xcode10.0
+      osx_image: xcode10
       language: node_js
       node_js: "8"
       jdk: oraclejdk8
@@ -25,7 +25,7 @@ matrix:
       env:
         - Webpack="Android"
       jdk: oraclejdk8
-      before_install: nvm install 8.11.4
+      before_install: nvm install stable
       script: travis_wait travis_retry tns build android --bundle
     - stage: "Build"
       env:
@@ -33,14 +33,14 @@ matrix:
       language: android
       os: linux
       jdk: oraclejdk8
-      before_install: nvm install 8.11.4
+      before_install: nvm install stable
       script:
         - travis_wait travis_retry tns build android
     - os: osx
       env:
         - BuildiOS="12"
         - Xcode="10.0"
-      osx_image: xcode10.0
+      osx_image: xcode10
       language: node_js
       node_js: "8"
       jdk: oraclejdk8
