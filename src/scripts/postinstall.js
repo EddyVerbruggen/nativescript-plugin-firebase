@@ -3192,8 +3192,8 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
 
 # Facebook Authentication
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit', '~> 4.38.0'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit', '~> 4.38.0'
 
 # Google Authentication
 ` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`);

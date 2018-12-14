@@ -6,10 +6,10 @@
   "nativescript": {
     "id": "org.nativescript.firebasedemo.firestore",
     "tns-android": {
-      "version": "5.0.0"
+      "version": "5.1.0"
     },
     "tns-ios": {
-      "version": "5.0.0"
+      "version": "5.1.0"
     }
   },
   "dependencies": {
@@ -23,13 +23,13 @@
     "@angular/platform-browser-dynamic": "~6.1.0",
     "@angular/router": "~6.1.0",
     "nativescript-angular": "^6.1.0",
-    "nativescript-camera": "^4.0.2",
-    "nativescript-imagepicker": "~6.0.4",
+    "nativescript-camera": "~4.1.1",
+    "nativescript-imagepicker": "~6.0.5",
     "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-7.4.6.tgz",
     "nativescript-theme-core": "~1.0.4",
     "reflect-metadata": "~0.1.10",
     "rxjs": "~6.0.0 || >=6.1.0",
-    "tns-core-modules": "~5.0.1",
+    "tns-core-modules": "~5.1.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -41,6 +41,6 @@
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "~0.7.0",
     "nativescript-dev-webpack": "^0.15.1",
-    "typescript": "~2.7.2"
+    "typescript": "~2.8.0"
   }
 }
