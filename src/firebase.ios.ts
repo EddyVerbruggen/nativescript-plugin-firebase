@@ -16,6 +16,7 @@ firebase._gIDAuthentication = null;
 firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 firebase._configured = false;
+firebase._beforeInitQueue = [];
 
 const useExternalPushProvider = NSBundle.mainBundle.infoDictionary.objectForKey("UseExternalPushProvider") === true;
 
@@ -332,7 +333,9 @@ firebase.init = arg => {
   return new Promise((resolve, reject) => {
     if (firebase.initialized) {
       reject("Firebase already initialized");
+      return;
     }
+
     firebase.initialized = true;
 
     try {
@@ -1621,10 +1624,16 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
   });
 };
 
+
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {
     if (typeof(FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    if (!firebase.initialized) {
+      console.log("Please run firebase.init() before firebase.firestore.collection()");
       return null;
     }
 
@@ -1710,6 +1719,11 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
   try {
     if (typeof(FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    if (!firebase.initialized) {
+      console.log("Please run firebase.init() before firebase.firestore.doc()");
       return null;
     }
 

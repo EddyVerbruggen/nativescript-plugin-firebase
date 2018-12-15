@@ -282,7 +282,9 @@ firebase.init = arg => {
   return new Promise((resolve, reject) => {
     if (firebase.initialized) {
       reject("Firebase already initialized");
+      return;
     }
+
     firebase.initialized = true;
 
     const runInit = () => {
@@ -1947,6 +1949,11 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       return null;
     }
 
+    if (!firebase.initialized) {
+      console.log("Please run firebase.init() before firebase.firestore.collection()");
+      return null;
+    }
+
     const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
     const collectionRef: com.google.firebase.firestore.CollectionReference = db.collection(collectionPath);
 
@@ -2019,6 +2026,11 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
   try {
     if (typeof (com.google.firebase.firestore) === "undefined") {
       console.log("Make sure firebase-firestore is in the plugin's include.gradle");
+      return null;
+    }
+
+    if (!firebase.initialized) {
+      console.log("Please run firebase.init() before firebase.firestore.doc()");
       return null;
     }
 
