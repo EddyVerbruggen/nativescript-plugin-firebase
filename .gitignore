@@ -10,7 +10,6 @@ src/**/*.d.ts
 src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/project.xcworkspace
 src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/xcuserdata
 src/platforms/ios/Podfile
-src/platforms/ios/build.xcconfig
 src/platforms/android/include.gradle
 !src/firebase.d.ts
 !src/index.d.ts
