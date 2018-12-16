@@ -39,11 +39,30 @@ export module auth {
         }).then((user: User) => {
           this.currentUser = user;
           this.authStateChangedHandler && this.authStateChangedHandler(user);
-          resolve();
+          resolve({
+            additionalUserInfo: user.additionalUserInfo,
+            credential: null,
+            operationType: "SignIn",
+            user: user,
+          });
         }, (err => {
+          {
+            let code = 'auth/exception';
+            let message = err.toString();
+            // Identify code for android. Note that the IOS implementation doesn't return a code.
+            if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidCredentialsException')) {
+              code = 'auth/wrong-password';
+            } else if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidUserException')) {
+              code = 'auth/user-not-found';
+            // Note that Android returns one exception for both user not found and invalid email whereas
+            // the web api returns seperate codes. Therefore the conditional below can never be satisfied
+            // for android.
+            // } else if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidUserException')) {
+            //   code = 'auth/invalid-email'
+          }
           reject({
-            // code: "",
-            message: err
+            code: code,
+            message: message,
           });
         }));
       });
