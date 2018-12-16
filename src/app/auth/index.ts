@@ -20,12 +20,10 @@ export module auth {
               resolve();
             })
             .catch(err => {
-               // Note that auth/user-disabled cannot be identified here because FirebaseAuthInvalidUserException is thrown for both
-               // auth/user-disabled and auth/user-not-found
-              reject(
+              reject({
                 // code: "",
                 message: err
-              );
+              });
             });
       });
     }
