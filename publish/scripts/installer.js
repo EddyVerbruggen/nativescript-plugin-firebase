@@ -332,8 +332,7 @@ function writePodFile(result) {
 // The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
-pod 'Firebase/Core', '~> 5.12.0'
-pod 'GoogleAppMeasurement', '5.3' # temp fix for https://github.com/firebase/firebase-ios-sdk/issues/2151 (remove when bumping 'Firebase/Core')
+pod 'Firebase/Core', '~> 5.15.0'
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
@@ -341,8 +340,8 @@ pod 'GoogleAppMeasurement', '5.3' # temp fix for https://github.com/firebase/fir
 # Realtime DB
 ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
 
-# Cloud Firestore
-` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
+# Cloud Firestore (sticking to 0.14 for now because of build error - see https://github.com/firebase/firebase-ios-sdk/issues/2177)
+` + (isSelected(result.firestore) ? `` : `#`) + `pod 'FirebaseFirestore', '~> 0.14.0'
 
 # Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
@@ -668,6 +667,11 @@ android {
             dimension "fireb"
         }
     }
+
+    // (possibly-temporary) workaround for https://stackoverflow.com/questions/52518378/more-than-one-file-was-found-with-os-independent-path-meta-inf-proguard-android
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+    }
 }
 
 repositories {
@@ -693,46 +697,48 @@ dependencies {
     compile "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:16.0.4"
+    compile "com.google.firebase:firebase-core:16.0.6"
+
+    // compile "com.google.firebase:firebase-analytics:16.0.6"
 
     // for reading google-services.json and configuration
     compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.0.5"
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.1.0"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.4"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.5"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.2"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.5"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.1.0"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.1.2"
 
     // Performance Monitoring
-    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` compile "com.google.firebase:firebase-perf:16.2.0"
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` compile "com.google.firebase:firebase-perf:16.2.3"
 
     // Crash Reporting
     ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.2.1"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.6"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.7"
 
-    // Firebase Cloud Messaging (FCM)
+    // Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.4"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.3"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.5"
 
     // Cloud Functions
-    ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.2"
+    ` + (isSelected(result.functions) ? `` : `//`) + ` compile "com.google.firebase:firebase-functions:16.1.3"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:17.0.0"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:17.1.2"
 
     // ML Kit
-    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.1"
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.2"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
 
     // Facebook Authentication
@@ -741,11 +747,11 @@ dependencies {
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:16.0.0"
 
-    // Firebase Invites
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.4"
+    // Invites
+    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.6"
 
-    // Firebase Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.2" // BEWARE: 16.1.2 is fine, but 16.1.3 results in a build error
+    // Dynamic Links
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.5" // BEWARE: 16.1.2 is fine, but 16.1.3 results in a build error
 }
 
 apply plugin: "com.google.gms.google-services"

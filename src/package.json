@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "7.5.1",
+  "version": "7.6.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -115,15 +115,15 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "fs-extra": "~2.1.0",
-    "nativescript-hook": "~0.2.0",
+    "nativescript-hook": "~0.2.4",
     "prompt-lite": "~0.1.0",
     "xcode": "~0.9.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
-    "tns-core-modules": "~5.1.0",
-    "tns-platform-declarations": "~5.1.0",
+    "tns-core-modules": "~5.1.1",
+    "tns-platform-declarations": "~5.1.1",
     "tslint": "^5.1.0",
-    "typescript": "~2.8.0"
+    "typescript": "~3.2.2"
   }
 }
