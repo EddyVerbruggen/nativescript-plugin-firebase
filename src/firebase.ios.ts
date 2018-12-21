@@ -779,6 +779,10 @@ firebase.login = arg => {
           }
 
           firebase.requestPhoneAuthVerificationCode(userResponse => {
+            if (userResponse === undefined) {
+              reject("Prompt was canceled");
+              return;
+            }
             const fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
             if (fAuth.currentUser) {
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {

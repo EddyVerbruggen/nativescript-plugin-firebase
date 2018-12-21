@@ -143,9 +143,10 @@ export const firebase: any = {
   requestPhoneAuthVerificationCode: (onUserResponse, verificationPrompt) => {
     prompt(verificationPrompt || "Verification code").then(promptResult => {
       if (!promptResult.result) {
-        return;
+        onUserResponse(undefined);
+      } else {
+        onUserResponse(promptResult.text);
       }
-      onUserResponse(promptResult.text);
     });
   },
   // for backward compatibility, because plugin version 4.0.0 moved the params to per-logintype objects
