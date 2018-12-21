@@ -595,6 +595,10 @@ firebase.unlink = providerId => {
   return new Promise((resolve, reject) => {
     try {
       const user = FIRAuth.auth().currentUser;
+      if (!user) {
+        reject("Not logged in");
+        return;
+      }
 
       user.unlinkFromProviderCompletion(providerId, (user, error) => {
         if (error) {

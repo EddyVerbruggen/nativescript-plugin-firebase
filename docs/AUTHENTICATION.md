@@ -649,7 +649,19 @@ For a given user, and a given provider ("google.com","password",...)
  <summary>Native API</summary>
 
 ```js
-  user.unlink(providerId);
+  user.unlink(providerId /* string */)
+      .then(user => console.log("Unlink OK, user: " + JSON.stringify(user)))
+      .catch(error => console.log("Unlink error: " + JSON.stringify(error)));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebaseWebApi.auth().unlink(providerId /* string */)
+      .then(user => console.log("Unlink OK, user: " + JSON.stringify(user)))
+      .catch(error => console.log("Unlink error: " + JSON.stringify(error)));
 ```
 </details>
 

@@ -666,18 +666,21 @@ firebase.unlink = providerId => {
     try {
       const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
       if (!user) {
-        resolve();
+        reject("Not logged in");
+        return;
       }
-      user.unlink(providerId).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener({
-        onComplete: task => {
-          if (task.isSuccessful()) {
-            resolve();
-          } else {
-            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-          }
-        }
-      })
-      );
+
+      user.unlink(providerId)
+          .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener({
+                onComplete: task => {
+                  if (task.isSuccessful()) {
+                    resolve();
+                  } else {
+                    reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+                  }
+                }
+              })
+          );
     } catch (ex) {
       console.log("Error in firebase.unlink: " + ex);
       reject(ex);

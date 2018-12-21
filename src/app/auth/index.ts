@@ -28,6 +28,22 @@ export module auth {
       });
     }
 
+    public unlink(providerId: string): Promise<any> {
+      return new Promise((resolve, reject) => {
+        firebase.unlink(providerId)
+            .then(user => {
+              this.currentUser = user;
+              resolve(user);
+            })
+            .catch(err => {
+              reject({
+                // code: "",
+                message: err
+              });
+            });
+      });
+    }
+
     public signInWithEmailAndPassword(email: string, password: string): Promise<any> {
       return new Promise((resolve, reject) => {
         firebase.login({
