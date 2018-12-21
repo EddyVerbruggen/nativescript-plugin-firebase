@@ -642,6 +642,17 @@ Shouldn't be more complicated than:
 ```
 </details>
 
+### unlinking provider
+For a given user, and a given provider ("google.com","password",...)
+
+<details>
+ <summary>Native API</summary>
+
+```js
+  user.unlink(providerId);
+```
+</details>
+
 ### reauthenticate
 Some security-sensitive actions (deleting an account, changing a password) require that the user has recently signed in.
 If you perform one of these actions, and the user signed in too long ago, the action fails.

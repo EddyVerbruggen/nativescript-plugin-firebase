@@ -661,6 +661,30 @@ firebase.logout = arg => {
   });
 };
 
+firebase.unlink = providerId => {
+  return new Promise((resolve, reject) => {
+    try {
+      const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+      if (!user) {
+        resolve();
+      }
+      user.unlink(providerId).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener({
+        onComplete: task => {
+          if (task.isSuccessful()) {
+            resolve();
+          } else {
+            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          }
+        }
+      })
+      );
+    } catch (ex) {
+      console.log("Error in firebase.unlink: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 firebase.getAuthToken = arg => {
   return new Promise((resolve, reject) => {
     try {
