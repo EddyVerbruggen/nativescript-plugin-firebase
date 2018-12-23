@@ -108,7 +108,7 @@ firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
   // see their respective docs.
 }).then(
-    function (instance) {
+    function () {
       console.log("firebase.init done");
     },
     function (error) {
@@ -125,7 +125,7 @@ firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
   // see their respective docs.
 }).then(
-  instance => {
+  () => {
     console.log("firebase.init done");
   },
   error => {
@@ -148,7 +148,7 @@ export class AppComponent implements OnInit {
       // Optionally pass in properties for database, authentication and cloud messaging,
       // see their respective docs.
     }).then(
-      instance => {
+      () => {
         console.log("firebase.init done");
       },
       error => {
