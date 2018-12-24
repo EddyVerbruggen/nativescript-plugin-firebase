@@ -310,11 +310,14 @@ firebase.init = arg => {
       }
 
       if (typeof (com.google.firebase.firestore) !== "undefined") {
-        com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
-            new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(arg.persist !== false)
-                .setTimestampsInSnapshotsEnabled(true)
-                .build());
+        // this may happen during livesync, and without catching this exception the app would crash
+        try {
+          com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
+              new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
+                  .setPersistenceEnabled(arg.persist !== false)
+                  .setTimestampsInSnapshotsEnabled(true)
+                  .build());
+        } catch (ignore) {}
       }
 
       if (authEnabled()) {
