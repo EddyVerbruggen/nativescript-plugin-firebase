@@ -1,19 +1,16 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/storage.png" height="85px" alt="Storage"/>
 
+_Storage_ lets you upload and download files to/from Google Cloud Storage which is connected to your Firebase instance.
+
 > NOTE: since plugin version 6.2.0 you have to use `firebase.storage.xxx` instead of `firebase.xxx`, because I've extracted storage-related functions into a separate module.
 
 ## Enabling Storage
-Since plugin version 3.4.0 you can use Firebase _Storage_ features.
+During plugin installation you'll be asked whether or not you use "Firebase Storage".
 
-_Storage_ lets you upload and download files to/from Google Cloud Storage which is connected to your Firebase instance.
+In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, edit it and add: `"storage": true`.
+Then run `rm -rf platforms && rm -rf node_modules && npm i`.
 
-If you didn't choose this feature during installation you can manually uncomment
-the relevant lines to add the SDK's to your app in
-[Podfile](../platforms/ios/Podfile) and [include.gradle](../platforms/android/include.gradle).
-
-Just uncomment the relevant lines (one for each platform) to add the SDK's to your app.
-
-### Setting the storage bucket (optional since plugin version 6.5.0)
+### Setting the storage bucket (no longer required since plugin version 6.5.0)
 If (in the odd situation) the storage bucket URL you want to use is different than the one in the downloaded config file,
 you can tell Firebase what it should use instead.
 
