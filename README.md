@@ -10,7 +10,7 @@
 [npm-image]:http://img.shields.io/npm/v/nativescript-plugin-firebase.svg
 [npm-url]:https://npmjs.org/package/nativescript-plugin-firebase
 [downloads-image]:http://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
-[total-downloads-image]:http://img.shields.io/npm/dt/nativescript-plugin-firebase.svg
+[total-downloads-image]:http://img.shields.io/npm/dt/nativescript-plugin-firebase.svg?label=total%20downloads
 [twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
 [twitter-url]:https://twitter.com/eddyverbruggen
 
