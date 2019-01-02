@@ -177,7 +177,7 @@ export class FirestoreComponent {
             const docRef: firestore.DocumentReference = doc.data().referenceToCitiesDC;
             docRef.get()
                 .then(res => console.log("docref.get: " + JSON.stringify(res.data())))
-                .catch(err => console.log("docref.get error: " + error));
+                .catch(err => console.log("docref.get error: " + err));
           } else {
             console.log("No such document!");
           }
