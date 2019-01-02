@@ -1860,17 +1860,17 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
       this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
     }
     return this;
-  }
+  };
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
     this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
     return this;
-  }
+  };
 
   public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
     this.nativeWriteBatch.delete(documentRef.android);
     return this;
-  }
+  };
 
   public commit(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -2254,22 +2254,14 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
             reject(ex && ex.getReason ? ex.getReason() : ex);
           } else {
             const result: com.google.firebase.firestore.QuerySnapshot = task.getResult();
-
             resolve(new QuerySnapshot(result));
           }
-        }
-      });
-
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-        onFailure: exception => {
-          reject(exception.getMessage());
         }
       });
 
       db.collection(collectionPath)
           .get()
           .addOnCompleteListener(onCompleteListener)
-          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getCollection: " + ex);
@@ -2305,17 +2297,10 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
-        onFailure: exception => {
-          reject(exception.getMessage());
-        }
-      });
-
       db.collection(collectionPath)
           .document(documentPath)
           .get()
           .addOnCompleteListener(onCompleteListener)
-          .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getDocument: " + ex);
@@ -2334,7 +2319,6 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
             reject(ex && ex.getReason ? ex.getReason() : ex);
           } else {
             const result: com.google.firebase.firestore.QuerySnapshot = task.getResult();
-
             resolve(new QuerySnapshot(result));
           }
         }
