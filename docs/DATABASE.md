@@ -311,7 +311,8 @@ The link is for the iOS SDK, but it's the same for Android.
       console.log("Listener error: " + result.error);
     } else {
       console.log("Key: " + result.key);
-      console.log("Calue: " + JSON.stringify(result.val()));
+      console.log("key exists? " + result.exists());
+      console.log("Value: " + JSON.stringify(result.val()));
     }
   };
 

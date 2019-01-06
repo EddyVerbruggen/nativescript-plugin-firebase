@@ -5,7 +5,7 @@ import { nextPushId } from "./util/NextPushId";
 export module database {
   export interface DataSnapshot {
     // child(path: string): DataSnapshot;
-    // exists(): boolean;
+    exists(): boolean;
     // exportVal(): any;
     // forEach(action: (a: DataSnapshot) => boolean): boolean;
     // getPriority(): string | number | null;
@@ -35,9 +35,8 @@ export module database {
         } else {
           callback({
             key: result.key,
-            val: () => {
-              return result.value;
-            }
+            val: () => result.value,
+            exists: () => !!result.value
           });
         }
       };
@@ -74,14 +73,13 @@ export module database {
       return null;
     }
 
-    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any, failureCallbackOrContext?: Object | null, context?: Object | null): Promise<any> {
+    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any, failureCallbackOrContext?: Object | null, context?: Object | null): Promise<DataSnapshot> {
       return new Promise((resolve, reject) => {
         firebase.getValue(this.path).then(result => {
           resolve({
             key: result.key,
-            val: () => {
-              return result.value;
-            }
+            val: () => result.value,
+            exists: () => !!result.value
           });
         });
       });
@@ -93,9 +91,8 @@ export module database {
         callbacks && callbacks.map(callback => {
           callback({
             key: result.key,
-            val: () => {
-              return result.value;
-            }
+            val: () => result.value,
+            exists: () => !!result.value
           });
         });
       };

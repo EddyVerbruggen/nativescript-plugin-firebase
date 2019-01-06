@@ -237,6 +237,7 @@ export class HelloWorldModel extends Observable {
           okButtonText: "Darn!"
         });
       } else {
+        console.log("key exists? " + result.exists());
         this.set("path", path);
         this.set("key", result.key);
         this.set("value", JSON.stringify(result.val()));
@@ -256,6 +257,7 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path)
         .once("value")
         .then(result => {
+          console.log("key exists? " + result.exists());
           this.set("path", path);
           this.set("key", result.key);
           this.set("value", JSON.stringify(result.val()));
@@ -268,6 +270,7 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path)
         .once("value")
         .then(result => {
+          console.log("key exists? " + result.exists());
           this.set("path", path);
           this.set("key", result.key);
           this.set("value", JSON.stringify(result.val()));
@@ -308,6 +311,7 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path).orderByChild(child)
         .once("value")
         .then(result => {
+          console.log("key exists? " + result.exists());
           this.set("path", path);
           this.set("key", result.key);
           this.set("value", JSON.stringify(result.val()));
