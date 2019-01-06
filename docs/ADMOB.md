@@ -48,7 +48,7 @@ Go [manage your AdMob app](https://apps.admob.com/#account/appmgmt:) and grab th
     size: firebase.admob.AD_SIZE.SMART_BANNER, // see firebase.admob.AD_SIZE for all options
     margins: { // optional nr of device independent pixels from the top or bottom (don't set both)
       bottom: 10,
-      top: 0
+      top: -1
     },
     androidBannerId: "ca-app-pub-9517346003011652/7749101329",
     iosBannerId: "ca-app-pub-9517346003011652/3985369721",
