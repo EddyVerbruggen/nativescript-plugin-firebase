@@ -634,7 +634,7 @@ export class HelloWorldModel extends Observable {
   public doShowAdMobInterstitial(): void {
     firebase.admob.showInterstitial({
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
-      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
       testing: true,
       // Android automatically adds the connected device as test device with testing:true, iOS does not
       iosTestDeviceIds: [
@@ -659,7 +659,7 @@ export class HelloWorldModel extends Observable {
   public doPreloadAdMobInterstitial(): void {
     firebaseAdMob.preloadInterstitial({
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
-      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
       testing: true,
       // Android automatically adds the connected device as test device with testing:true, iOS does not
       iosTestDeviceIds: [
@@ -690,6 +690,52 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
+  }
+
+  public doPreloadRewardedVideoAd(): void {
+    firebaseAdMob.preloadRewardedVideoAd({
+      iosAdPlacementId: "ca-app-pub-9517346003011652/8586553377",
+      androidAdPlacementId: "ca-app-pub-9517346003011652/2819097664",
+      testing: true,
+      // Android automatically adds the connected device as test device with testing:true, iOS does not
+      iosTestDeviceIds: [
+        "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
+        "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
+      ],
+      keywords: [
+        "foo",
+        "bar"
+      ]
+    }).then(
+        () => console.log("AdMob rewarded video ad preloaded"),
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    );
+  }
+
+  public doShowPreloadedRewardedVideoAd(): void {
+    firebaseAdMob.showRewardedVideoAd({
+      onRewarded: reward => console.log("Rewarded video ad: rewarded. Details: " + JSON.stringify(reward)),
+      onOpened: () => console.log("Rewarded video ad: opened"),
+      onStarted: () => console.log("Rewarded video ad: started"),
+      onCompleted: () => console.log("Rewarded video ad: completed"),
+      onClosed: () => console.log("Rewarded video ad: closed"),
+      onLeftApplication: () => console.log("Rewarded video ad: left application")
+    }).then(
+        () => console.log("AdMob rewarded video ad showing"),
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    )
   }
 
   /**
