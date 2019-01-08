@@ -148,8 +148,8 @@ export interface RewardedVideoAdCallbacks {
   onCompleted?: () => void;
   onClosed?: () => void;
   onLeftApplication?: () => void;
-  onLoaded: () => void,
-  onFailedToLoad: (err) => void,
+  onLoaded?: () => void,
+  onFailedToLoad?: (err) => void,
   onRewarded?: (reward: RewardedVideoAdReward) => void;
 }
 

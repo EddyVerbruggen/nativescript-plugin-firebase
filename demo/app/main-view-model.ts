@@ -1,3 +1,4 @@
+import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
 import { Observable } from "tns-core-modules/data/observable";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
 import { isAndroid, isIOS } from "tns-core-modules/platform";
@@ -719,12 +720,29 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowPreloadedRewardedVideoAd(): void {
+    let reward: RewardedVideoAdReward;
     firebaseAdMob.showRewardedVideoAd({
-      onRewarded: reward => console.log("Rewarded video ad: rewarded. Details: " + JSON.stringify(reward)),
+      onRewarded: receivedReward => {
+        reward = receivedReward;
+        console.log("Rewarded video ad: rewarded. Details: " + JSON.stringify(reward));
+      },
+      onLoaded: () => console.log("Rewarded video ad: loaded"),
+      onFailedToLoad: () => console.log("Rewarded video ad: failed to load"),
       onOpened: () => console.log("Rewarded video ad: opened"),
       onStarted: () => console.log("Rewarded video ad: started"),
       onCompleted: () => console.log("Rewarded video ad: completed"),
-      onClosed: () => console.log("Rewarded video ad: closed"),
+      onClosed: () => {
+        console.log("Rewarded video ad: closed");
+        if (reward) {
+          setTimeout(() => {
+            alert({
+              title: "You were rewarded!",
+              message: `${reward.amount} ${reward.type}`,
+              okButtonText: "Thanks!"
+            });
+          }, 500);
+        }
+      },
       onLeftApplication: () => console.log("Rewarded video ad: left application")
     }).then(
         () => console.log("AdMob rewarded video ad showing"),
