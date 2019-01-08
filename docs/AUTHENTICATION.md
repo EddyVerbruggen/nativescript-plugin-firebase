@@ -519,6 +519,8 @@ First, enable Google Sign-In in your firebase instance and add the _Web SDK conf
 
 Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
 
+<h3> Uploading your SHA1 fingerprint is required for _debug_ and _release_ builds. </h3>
+
 Then add the following lines to your code and check for setup instructions for your platform below.
 
 ```js
