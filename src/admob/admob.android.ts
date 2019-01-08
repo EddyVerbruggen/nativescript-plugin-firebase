@@ -13,7 +13,6 @@ export function showBanner(arg: BannerOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
-      console.log({settings});
 
       // always close a previously opened banner
       if (firebase.admob.adView !== null && firebase.admob.adView !== undefined) {
@@ -39,7 +38,6 @@ export function showBanner(arg: BannerOptions): Promise<any> {
           this.resolve();
         },
         onAdFailedToLoad: errorCode => {
-          // console.log('ad error: ' + errorCode);
           this.reject(errorCode);
         }
       });
@@ -180,31 +178,22 @@ export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Prom
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
       const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
       firebase.admob.rewardedAdVideoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(activity);
-      console.log("firebase.admob.rewardedAdVideoView " + firebase.admob.rewardedAdVideoView);
 
       rewardedVideoCallbacks.onLoaded = resolve;
       rewardedVideoCallbacks.onFailedToLoad = reject;
 
       // rewarded Ads must be loaded before they can be shown, so adding a listener
-
-      console.log("com.google.android.gms.ads.AdListener: " + com.google.android.gms.ads.AdListener);
-
       const RewardedVideoAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
         onRewarded(reward) {
-          console.log("reward1: " + reward);
-          console.log("reward2: " + reward.toString());
-          console.log("reward3: " + JSON.stringify(reward));
-          rewardedVideoCallbacks.onRewarded({ // TODO
-            amount: 1,
-            type: "TODO"
+          rewardedVideoCallbacks.onRewarded({
+            amount: reward.getAmount(),
+            type: reward.getType()
           });
         },
         onRewardedVideoAdLeftApplication() {
-          console.log("onRewardedVideoAdLeftApplication");
           rewardedVideoCallbacks.onLeftApplication();
         },
         onRewardedVideoAdClosed() {
-          console.log("onRewardedVideoAdClosed");
           if (firebase.admob.rewardedAdVideoView) {
             firebase.admob.rewardedAdVideoView.setRewardedVideoAdListener(null);
             firebase.admob.rewardedAdVideoView = null;
@@ -212,23 +201,18 @@ export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Prom
           rewardedVideoCallbacks.onClosed();
         },
         onRewardedVideoAdFailedToLoad(errorCode) {
-          console.log("onRewardedVideoAdFailedToLoad, errorCode: " + errorCode);
           rewardedVideoCallbacks.onFailedToLoad(errorCode);
         },
         onRewardedVideoAdLoaded() {
-          console.log("onRewardedVideoAdLoaded");
           rewardedVideoCallbacks.onLoaded();
         },
         onRewardedVideoAdOpened() {
-          console.log("onRewardedVideoAdOpened");
           rewardedVideoCallbacks.onOpened();
         },
         onRewardedVideoStarted() {
-          console.log("onRewardedVideoStarted");
           rewardedVideoCallbacks.onStarted();
         },
         onRewardedVideoCompleted() {
-          console.log("onRewardedVideoCompleted");
           rewardedVideoCallbacks.onCompleted();
         }
       });
@@ -304,7 +288,6 @@ export function hideBanner(): Promise<any> {
 }
 
 function _getBannerType(size): any {
-  console.log(">> _getBannerType: " + size);
   if (size === AD_SIZE.BANNER) {
     return com.google.android.gms.ads.AdSize.BANNER;
   } else if (size === AD_SIZE.LARGE_BANNER) {

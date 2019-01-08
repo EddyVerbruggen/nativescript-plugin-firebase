@@ -40,9 +40,10 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 [More info on this subject.](https://firebase.google.com/docs/admob/ios/app-transport-security)
 
 ## Functions
+> Note that it may take up to 24 hours after adding an Ad to your [AdMob console](https://apps.admob.com) before it's available for your app. Until then you'll see a ⚠️ warning about an unknown Ad ID.
 
 ### admob.showBanner
-Go [manage your AdMob app](https://apps.admob.com/#account/appmgmt:) and grab the banner, then show it in your app:
+Go [manage your AdMob app](https://apps.admob.com) and grab the banner, then show it in your app:
 
 ```js
   firebase.admob.showBanner({
