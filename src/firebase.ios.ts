@@ -9,7 +9,7 @@ import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebaseFunctions from './functions/functions';
-import { firestore, User } from "./firebase";
+import { firestore, User, OnDisconnect as OnDisconnectBase } from "./firebase";
 import { firebaseUtils } from "./utils";
 
 firebase._gIDAuthentication = null;
@@ -1441,6 +1441,94 @@ firebase.remove = path => {
       reject(ex);
     }
   });
+};
+
+class OnDisconnect implements OnDisconnectBase {
+  constructor(private dbRef: FIRDatabaseReference, private path: string) {
+  }
+  cancel(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.cancelDisconnectOperationsWithCompletionBlock((error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.cancel: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  remove(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.onDisconnectRemoveValueWithCompletionBlock((error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.remove: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  set(value: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.onDisconnectSetValueWithCompletionBlock(value, (error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.set: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  setWithPriority(value: any, priority: string | number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.onDisconnectSetValueAndPriorityWithCompletionBlock(value, priority, (error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.setWithPriority: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  update(values: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (typeof values === "object") {
+          this.dbRef.onDisconnectUpdateChildValuesWithCompletionBlock(values, (error: NSError, dbRef: FIRDatabaseReference) => {
+            error ? reject(error.localizedDescription) : resolve();
+          });
+        } else {
+          const lastPartOfPath = this.path.lastIndexOf("/");
+          const pathPrefix = this.path.substring(0, lastPartOfPath);
+          const pathSuffix = this.path.substring(lastPartOfPath + 1);
+          const updateObject = '{"' + pathSuffix + '" : "' + values + '"}';
+          FIRDatabase.database().reference().childByAppendingPath(pathPrefix).updateChildValuesWithCompletionBlock(JSON.parse(updateObject), (error: NSError, dbRef: FIRDatabaseReference) => {
+            error ? reject(error.localizedDescription) : resolve();
+          });
+        }
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.update: " + ex);
+        reject(ex);
+      }
+    });
+  }
+}
+
+firebase.onDisconnect = (path: string): OnDisconnect => {
+  if (!firebase.initialized) {
+    console.error("Please run firebase.init() before firebase.onDisconnect()");
+    throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+  }
+  const dbRef: FIRDatabaseReference = FIRDatabase.database().reference().child(path);
+  return new OnDisconnect(dbRef, path);
 };
 
 firebase.sendCrashLog = arg => {
