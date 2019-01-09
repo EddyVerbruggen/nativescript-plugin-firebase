@@ -1860,17 +1860,17 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
       this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
     }
     return this;
-  };
+  }
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
     this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
     return this;
-  };
+  }
 
   public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
     this.nativeWriteBatch.delete(documentRef.android);
     return this;
-  };
+  }
 
   public commit(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -2261,7 +2261,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
 
       db.collection(collectionPath)
           .get()
-          .addOnCompleteListener(onCompleteListener)
+          .addOnCompleteListener(onCompleteListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getCollection: " + ex);
@@ -2300,7 +2300,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
       db.collection(collectionPath)
           .document(documentPath)
           .get()
-          .addOnCompleteListener(onCompleteListener)
+          .addOnCompleteListener(onCompleteListener);
 
     } catch (ex) {
       console.log("Error in firebase.firestore.getDocument: " + ex);

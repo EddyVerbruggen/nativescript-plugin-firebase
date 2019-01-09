@@ -753,7 +753,7 @@ export class HelloWorldModel extends Observable {
             okButtonText: "Hmmkay"
           });
         }
-    )
+    );
   }
 
   /**
