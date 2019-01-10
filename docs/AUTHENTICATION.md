@@ -521,6 +521,10 @@ Make sure you've uploaded your [SHA1 fingerprints](https://developers.google.com
 
 > **Uploading your SHA1 fingerprint is required for _debug_ and _release_ builds.**
 
+> If you have enabled Google Play's _App Signing_ feature you will need to add the SHA1 for Google's signing certificate to your Firebase project's fingerprints. If you fail to do this, your release builds will fail because they were not signed by Google. See image below:
+>
+> <img src="./images/app-signing.png" max-height="300px" alt="Google App Signing"/>
+
 Then add the following lines to your code and check for setup instructions for your platform below.
 
 ```js
