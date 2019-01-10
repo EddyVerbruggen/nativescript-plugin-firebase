@@ -1726,11 +1726,12 @@ class OnDisconnect implements OnDisconnectBase {
               onFailure: exception => reject(exception.getMessage())
             }));
       } catch (ex) {
-        console.log("Error in firebase.onDisconnect.removee: " + ex);
+        console.log("Error in firebase.onDisconnect.remove: " + ex);
         reject(ex);
       }
     });
   }
+
   set(value: any): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
@@ -1748,10 +1749,10 @@ class OnDisconnect implements OnDisconnectBase {
     });
   }
 
-  setWithPriority(value: any, priority: number | string): Promise<any> {
+  setWithPriority(value: any, priority: any): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-       this.disconnectInstance.setValue(firebase.toValue(value), )
+       this.disconnectInstance.setValue(firebase.toValue(value), priority)
             .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
@@ -1759,7 +1760,7 @@ class OnDisconnect implements OnDisconnectBase {
               onFailure: exception => reject(exception.getMessage())
             }));
       } catch (ex) {
-        console.log("Error in firebase.onDisconnect.set: " + ex);
+        console.log("Error in firebase.onDisconnect.setWithPriority: " + ex);
         reject(ex);
       }
     });
