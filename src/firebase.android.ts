@@ -11,7 +11,7 @@ import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
-import { firestore, User } from "./firebase";
+import { firestore, User, OnDisconnect as OnDisconnectBase } from "./firebase";
 
 declare const android, com: any;
 
@@ -1691,6 +1691,105 @@ firebase.remove = path => {
       reject(ex);
     }
   });
+};
+
+class OnDisconnect implements OnDisconnectBase {
+
+  constructor(private disconnectInstance: com.google.firebase.database.OnDisconnect ) {
+  }
+
+  cancel(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.disconnectInstance.cancel()
+            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+              onSuccess: () => resolve()
+            }))
+            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+              onFailure: exception => reject(exception.getMessage())
+            }));
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.cancel: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  remove(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.disconnectInstance.removeValue()
+            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+              onSuccess: () => resolve()
+            }))
+            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+              onFailure: exception => reject(exception.getMessage())
+            }));
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.removee: " + ex);
+        reject(ex);
+      }
+    });
+  }
+  set(value: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+       this.disconnectInstance.setValue(firebase.toValue(value))
+            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+              onSuccess: () => resolve()
+            }))
+            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+              onFailure: exception => reject(exception.getMessage())
+            }));
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.set: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  setWithPriority(value: any, priority: number | string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+       this.disconnectInstance.setValue(firebase.toValue(value), )
+            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+              onSuccess: () => resolve()
+            }))
+            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+              onFailure: exception => reject(exception.getMessage())
+            }));
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.set: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  update(values: Object, onComplete?: (a: Error | null) => any): Promise<any>  {
+    return new Promise((resolve, reject) => {
+      try {
+        this.disconnectInstance.updateChildren(firebase.toHashMap(values))
+            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+              onSuccess: () => resolve()
+            }))
+            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+              onFailure: exception => reject(exception.getMessage())
+            }));
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.update: " + ex);
+        reject(ex);
+      }
+    });
+  }
+}
+
+firebase.onDisconnect = (path: string): OnDisconnectBase => {
+  if (!firebase.initialized) {
+    console.error("Please run firebase.init() before firebase.onDisconnect()");
+    throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+  }
+  const disconnectInstance: com.google.firebase.database.OnDisconnect = firebase.instance.child(path).onDisconnect();
+  return new OnDisconnect(disconnectInstance);
 };
 
 firebase.sendCrashLog = arg => {

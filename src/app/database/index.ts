@@ -241,6 +241,10 @@ export module database {
         });
       });
     }
+
+    public onDisconnect(): firebase.OnDisconnect {
+      return firebase.onDisconnect(this.path);
+    }
   }
 
   export interface ThenableReference extends Reference /*, PromiseLike<any> */
