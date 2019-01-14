@@ -263,7 +263,7 @@ function promptQuestionsResult(result) {
     writeGoogleServiceCopyHook();
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
-    activateAndroidPushNotificationsLib(isSelected(result.messaging || externalPushClientOnly));
+    activateAndroidPushNotificationsLib(isSelected(result.messaging) || externalPushClientOnly);
   }
 
   console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
@@ -740,6 +740,7 @@ dependencies {
     // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.2"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
+    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-model-interpreter:16.2.4"
 
     // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }
