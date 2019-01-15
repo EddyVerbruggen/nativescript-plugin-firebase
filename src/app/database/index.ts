@@ -31,7 +31,7 @@ export module database {
     public on(eventType /* TODO use */: string, callback: (a: DataSnapshot | null, b?: string) => any, cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => any {
       const onValueEvent = result => {
         if (result.error) {
-          callback(result.error);
+          callback(result);
         } else {
           callback({
             key: result.key,

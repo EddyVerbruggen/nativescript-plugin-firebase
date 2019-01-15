@@ -1355,9 +1355,9 @@ firebase.keepInSync = (path, switchOn) => {
 
 firebase._addObservers = (to, updateCallback) => {
   const listener = new com.google.firebase.database.ChildEventListener({
-    onCancelled: error => {
+    onCancelled: databaseError => {
       updateCallback({
-        type: 'Cancelled'
+        error: databaseError.getMessage()
       });
     },
     onChildAdded: (snapshot, previousChildKey) => {
