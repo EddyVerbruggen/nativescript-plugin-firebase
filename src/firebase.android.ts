@@ -21,7 +21,15 @@ import {
   isDocumentReference
 } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
+<<<<<<< HEAD
 import * as firebaseMessaging from "./messaging/messaging";
+=======
+import * as appModule from "tns-core-modules/application";
+import { AndroidActivityResultEventData } from "tns-core-modules/application";
+import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
+import lazy from "tns-core-modules/utils/lazy";
+import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot, Query as QueryBase } from "./firebase";
+>>>>>>> [query] - Rework firebaseWebApi queries to allow chaining of filters. Android implementation
 
 declare const com: any;
 const gmsAds = (<any>com.google.android.gms).ads;
@@ -1421,22 +1429,22 @@ firebase.keepInSync = (path, switchOn) => {
 };
 
 firebase._addObservers = (to, updateCallback) => {
-  const listener = new com.google.firebase.database.ChildEventListener({
-    onCancelled: databaseError => {
+  const listener: com.google.firebase.database.ChildEventListener = new com.google.firebase.database.ChildEventListener({
+    onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
       updateCallback({
         error: databaseError.getMessage()
       });
     },
-    onChildAdded: (snapshot, previousChildKey) => {
+    onChildAdded: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
       updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
     },
-    onChildRemoved: snapshot => {
+    onChildRemoved: (snapshot: com.google.firebase.database.DataSnapshot) => {
       updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
     },
-    onChildChanged: (snapshot, previousChildKey) => {
+    onChildChanged: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
       updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
     },
-    onChildMoved: (snapshot, previousChildKey) => {
+    onChildMoved: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
       updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
     }
   });
@@ -1622,8 +1630,218 @@ firebase.update = (path, val) => {
   });
 };
 
+<<<<<<< HEAD
 firebase.query = (updateCallback: (data: FBDataSingleEvent | FBErrorData) => void, path: string, options: QueryOptions): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
+=======
+firebase.webQuery = (path: string): QueryBase => {
+  if (!firebase.initialized) {
+    console.error("Please run firebase.init() before firebase.query()");
+    throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+  }
+  const dbRef: com.google.firebase.database.DatabaseReference = firebase.instance.child(path);
+  return new Query(dbRef, path);
+};
+
+class Query implements QueryBase {
+  private query: com.google.firebase.database.Query; // Keep track of internal query state allowing us to chain filter/range/limit
+  private static eventListenerMap: Map<string, Array<any>> = new Map(); // A map to keep track all all the listeners attached for the specified eventType
+
+  constructor(private dbRef: com.google.firebase.database.DatabaseReference, private path: string) { }
+
+  on(eventType: string, callback: (a: any, b?: string) => any): Promise<any> {
+    const onValueEvent = result => {
+      if (result.error) {
+        callback(result); // CAREFUL before we were calling result.error!
+      } else {
+        callback({
+          key: result.key,
+          val: () => result.value,
+          exists: () => !!result.value
+        });
+      }
+    };
+    return new Promise((resolve, reject) => {
+      try {
+        if (firebase.instance === null) {
+          reject("Run init() first!");
+          return;
+        }
+        const listener = this.createEventListener(eventType, onValueEvent);
+        if (!this.query) this.query = this.dbRef; // Need this when calling on() without doing a sort as this.query is undefined
+
+        if (eventType === "value") {
+          this.query.addValueEventListener(listener as com.google.firebase.database.ValueEventListener);
+        } else if (eventType === "child_added" || eventType === "child_changed" || eventType === "child_removed" || eventType === "child_moved") {
+          this.query.addChildEventListener(listener as com.google.firebase.database.ChildEventListener);
+        } else {
+          reject("Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'");
+          return;
+        }
+        // Add listener to our map which keeps track of eventType: child/value events
+        if (!Query.eventListenerMap.has(eventType)) {
+          Query.eventListenerMap.set(eventType, []);
+        }
+        Query.eventListenerMap.get(eventType).push(listener); // We need to keep track of the listeners to fully remove them when calling off
+        resolve();
+      } catch (ex) {
+        console.log("Error in firebase.addValueEventListener: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  once(eventType: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      firebase.getValue(this.path).then(result => {
+        resolve({
+          key: result.key,
+          val: () => result.value,
+          exists: () => !!result.value
+        });
+      });
+    });
+  }
+
+  off(eventType?: string): void {
+    // Remove all events if none specified
+    if (!eventType) {
+      Query.eventListenerMap.forEach((value: any[], key: string) => {
+        firebase.removeEventListeners(value, this.path);
+      });
+    } else { // Remove only the event specified by the user
+      if (Query.eventListenerMap.get(eventType)) {
+        firebase.removeEventListeners(Query.eventListenerMap.get(eventType), this.path);
+      }
+    }
+  }
+
+  orderByChild(value: string): Query {
+    if (this.query) {
+      throw new Error("You can't combine multiple orderBy calls!");
+    }
+    this.query = this.dbRef.orderByChild(value);
+    return this;
+  }
+
+  orderByKey(): Query {
+    if (this.query) {
+      throw new Error("You can't combine multiple orderBy calls!");
+    }
+    this.query = this.dbRef.orderByKey();
+    return this;
+  }
+
+  orderByPriority(): Query {
+    if (this.query) {
+      throw new Error("You can't combine multiple orderBy calls!");
+    }
+    this.query = this.dbRef.orderByPriority();
+    return this;
+  }
+
+  orderByValue(): Query {
+    if (this.query) {
+      throw new Error("You can't combine multiple orderBy calls!");
+    }
+    this.query = this.dbRef.orderByValue();
+    return this;
+  }
+
+  // Unlike the order-by methods, you can combine multiple limit or range functions.
+  // For example, you can combine the startAt() and endAt() methods to limit the results to a specified range of values.
+
+  equalTo(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.equalTo(value, key);
+    } else {
+      this.query = this.query.equalTo(value);
+    }
+    return this;
+  }
+
+  startAt(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.startAt(value, key);
+    } else {
+      this.query = this.query.startAt(value);
+    }
+    return this;
+  }
+
+  endAt(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.endAt(value, key);
+    } else {
+      this.query = this.query.endAt(value);
+    }
+    return this;
+  }
+
+  limitToFirst(value: number): Query {
+    this.query = this.query.limitToFirst(value);
+    return this;
+  }
+
+  limitToLast(value: number): Query {
+    this.query = this.query.limitToLast(value);
+    return this;
+  }
+  /**
+  * Depending on the eventType, attach listeners at the specified Database location. Follow the WebApi which listens
+  * to specific events (Android is more generic value / child - which includes all events add, change, remove etc).
+  * Similar to firebase._addObserver but I do not want to listen for every event
+  */
+  private createEventListener(eventType: string, callback): com.google.firebase.database.ValueEventListener | com.google.firebase.database.ChildEventListener {
+    let listener;
+
+    if (eventType === "value") {
+      listener = new com.google.firebase.database.ValueEventListener({
+        onDataChange: (snapshot: com.google.firebase.database.DataSnapshot) => {
+          callback(firebase.getCallbackData('ValueChanged', snapshot));
+        },
+        onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
+          callback({
+            error: databaseError.getMessage()
+          });
+        }
+      });
+    } else if (eventType === "child_added" || eventType === "child_changed" || eventType === "child_removed" || eventType === "child_moved") {
+      listener = new com.google.firebase.database.ChildEventListener({
+        onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
+          callback({
+            error: databaseError.getMessage()
+          });
+        },
+        onChildAdded: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
+          if (eventType === "child_added") {
+            callback(firebase.getCallbackData(eventType, snapshot));
+          }
+        },
+        onChildRemoved: (snapshot: com.google.firebase.database.DataSnapshot) => {
+          if (eventType === "child_removed") {
+            callback(firebase.getCallbackData(eventType, snapshot));
+          }
+        },
+        onChildChanged: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
+          if (eventType === "child_changed") {
+            callback(firebase.getCallbackData(eventType, snapshot));
+          }
+        },
+        onChildMoved: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
+          if (eventType === "child_moved") {
+            callback(firebase.getCallbackData(eventType, snapshot));
+          }
+        }
+      });
+    }
+    return listener;
+  }
+}
+
+firebase.query = (updateCallback, path, options) => {
+  return new Promise((resolve, reject) => {
+>>>>>>> [query] - Rework firebaseWebApi queries to allow chaining of filters. Android implementation
     try {
       if (firebase.instance === null) {
         reject("Run init() first!");
