@@ -163,6 +163,9 @@ Firebase supports querying data and this plugin does too, since v2.0.0.
 
 Let's say we have the structure as defined at `setValue`, then use this query to retrieve the companies in country 'Bulgaria':
 
+<details>
+ <summary>Native API</summary>
+
 ```js
     var onQueryEvent = function(result) {
         // note that the query returns 1 match at a time
@@ -216,6 +219,40 @@ Let's say we have the structure as defined at `setValue`, then use this query to
 ```
 
 For supported values of the orderBy/range/ranges/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
+</details>
+<details>
+ <summary>Web API</summary>
+
+Alternatively you can use the web api to query data. See [docs](https://firebase.google.com/docs/reference/js/firebase.database.Query) for more examples and the full api
+
+Some key notes:
+
+`off("eventType")` will remove all listeners for "eventType" at the given path. So you do not need to call `off()`
+the same number of times you call `on()`. Listeners for all eventTypes will be removed if no eventType is provided.
+
+Filters (equalTo, starAt, endAt, LimitBy, etc) are only usable after you chain it with a sort. (While Firebase exposes these without doing
+a sort, your callback is never called). Think about it, if you apply equalTo without an orderBy what are you checking key, value, priority ???
+
+DO NOT try to apply more than one orderBy to the same query as this will throw (follows the api)
+```typescript
+  const bad = firebaseWebApi.database().ref(path).orderByKey();
+  bad.orderByValue();  // <------ will throw here!
+
+  // However you could do the following:
+  firebaseWebApi.database().ref("/companies").orderByKey()
+      .equalTo("Google")
+      .on("value", onQueryEvent);
+
+  firebaseWebApi.database().ref("/companies").orderByValue()
+      .startAt(1999)
+      .on("child_added", onQueryEvent);
+
+  firebaseWebApi.database().ref("/companies").off("value");
+
+  // You can also do the following
+  firebase.webQuery("/companies").orderByKey().on("value", onQueryEvent);
+```
+ </details>
 
 ### update
 Changes the values of the keys specified in the dictionary without overwriting other keys at this location.
