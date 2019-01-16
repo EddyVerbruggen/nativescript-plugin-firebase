@@ -2,7 +2,7 @@ import * as firebase from "../../firebase";
 import { AddEventListenerResult, FBData } from "../../firebase";
 import { nextPushId } from "./util/NextPushId";
 
-export module database {
+export namespace database {
   export interface DataSnapshot {
     // child(path: string): DataSnapshot;
     exists(): boolean;
@@ -19,137 +19,85 @@ export module database {
   }
 
   export class Query {
-    private static registeredListeners: Map<string, Array<any>> = new Map();
-    private static registeredCallbacks: Map<string, Array<(a: DataSnapshot | null, b?: string) => any>> = new Map();
-
     protected path: string;
-
+    private queryObject: firebase.Query;
     constructor(path: string) {
       this.path = path;
+      this.queryObject = firebase.webQuery(this.path);
     }
 
-    public on(eventType /* TODO use */: string, callback: (a: DataSnapshot | null, b?: string) => any, cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => any {
-      const onValueEvent = result => {
-        if (result.error) {
-          callback(result);
-        } else {
-          callback({
-            key: result.key,
-            val: () => result.value,
-            exists: () => !!result.value
-          });
-        }
-      };
+   /**
+    * Listens for data changes at a particular location
+    * @param eventType One of the following strings: "value", "child_added", "child_changed", "child_removed", or "child_moved."
+    * @param callback A callback that fires when the specified event occurs. The callback will be passed a DataSnapshot.
+    * @returns The provided callback function is returned unmodified.
+    */
+    public on(eventType: string, callback: (a: DataSnapshot | null, b?: string) => any,
+      cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => Function {
 
-      firebase.addValueEventListener(onValueEvent, this.path).then(
-          (result: AddEventListenerResult) => {
-            if (!Query.registeredListeners.has(this.path)) {
-              Query.registeredListeners.set(this.path, []);
-            }
-            Query.registeredListeners.set(this.path, Query.registeredListeners.get(this.path).concat(result.listeners));
-          },
-          error => {
-            console.log("firebase.database().on error: " + error);
-          }
-      );
-
-      // remember the callbacks as we may need them for 'query' events
-      if (!Query.registeredCallbacks.has(this.path)) {
-        Query.registeredCallbacks.set(this.path, []);
-      }
-      Query.registeredCallbacks.get(this.path).push(callback);
-
-      return null;
-    }
-
-    public off(eventType? /* TODO use */: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): any {
-      if (Query.registeredListeners.has(this.path)) {
-        firebase.removeEventListeners(Query.registeredListeners.get(this.path), this.path).then(
-            result => Query.registeredListeners.delete(this.path),
-            error => console.log("firebase.database().off error: " + error)
-        );
-      }
-      Query.registeredCallbacks.delete(this.path);
-      return null;
-    }
-
-    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any, failureCallbackOrContext?: Object | null, context?: Object | null): Promise<DataSnapshot> {
-      return new Promise((resolve, reject) => {
-        firebase.getValue(this.path).then(result => {
-          resolve({
-            key: result.key,
-            val: () => result.value,
-            exists: () => !!result.value
-          });
-        });
+    /**
+     * Follow webApi which uses the eventType. Works right now but running into issue because we don't
+     * pass back a DataSnapshot with forEach / getChildren() implemented. So when an event fires the user
+     * gets the updated values, but it's not sorted. In Android and Web you would loop through the children
+     * (getChildren() and forEach()) which would be returned in the query order.
+     * See:  https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#forEach
+     */
+    this.queryObject.on(eventType, callback).catch( error => {
+        console.log("firebase.database().on error: " + error);
       });
+      return callback; // According to firebase doc we just return the callback given
     }
 
-    private getOnValueEventHandler(): (data: FBData) => void {
-      return result => {
-        const callbacks = Query.registeredCallbacks.get(this.path);
-        callbacks && callbacks.map(callback => {
-          callback({
-            key: result.key,
-            val: () => result.value,
-            exists: () => !!result.value
-          });
-        });
-      };
+    /**
+     * Remove all callbacks for given eventType. If not eventType is given this
+     * detaches all callbacks previously attached with on().
+     */
+    public off(eventType?: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): void {
+      // TODO: use callback rather than remove ALL listeners for a given eventType
+      this.queryObject.off(eventType);
     }
 
-    public orderByChild(child: string): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.CHILD,
-              value: child
-            }
-          }
-      );
-      return this;
+    /**
+     * Listens for exactly one event of the specified event type, and then stops listening.
+     * @param eventType One of the following strings: "value", "child_added", "child_changed", "child_removed", or "child_moved."
+     */
+    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any,
+      failureCallbackOrContext?: Object | null, context?: Object | null): Promise<DataSnapshot> {
+        return this.queryObject.once(eventType);
     }
 
-    public orderByKey(): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.KEY
-            }
-          }
-      );
-      return this;
+    /**
+     * Generates a new Query object ordered by the specified child key. Queries can only order
+     * by one key at a time. Calling orderByChild() multiple times on the same query is an error.
+     * @param child child key to order the results by
+     */
+    public orderByChild(child: string): firebase.Query {
+      return this.queryObject.orderByChild(child);
+    }
+    /**
+     * Generates a new Query object ordered by key.
+     * Sorts the results of a query by their (ascending) key values.
+     */
+    public orderByKey(): firebase.Query {
+      return this.queryObject.orderByKey();
     }
 
-    public orderByPriority(): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.PRIORITY
-            }
-          }
-      );
-      return this;
+    /**
+     * Generates a new Query object ordered by priority
+     */
+    public orderByPriority(): firebase.Query {
+      return this.queryObject.orderByPriority();
     }
 
-    public orderByValue(): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.VALUE
-            }
-          }
-      );
-      return this;
+    /**
+     * Generates a new Query object ordered by value.If the children of a query are all scalar values
+     * (string, number, or boolean), you can order the results by their (ascending) values.
+     */
+    public orderByValue(): firebase.Query {
+      return this.queryObject.orderByValue();
     }
+
+    // Didn't expose the filterby functions because they should be run after an orderby. (TODO: Limitby are exceptions....)
   }
 
   export class Reference extends Query {
@@ -258,8 +206,7 @@ export module database {
     }
   }
 
-  export interface ThenableReference extends Reference /*, PromiseLike<any> */
-  {
+  export interface ThenableReference extends Reference /*, PromiseLike<any> */ {
   }
 
   export class Database {
