@@ -264,6 +264,7 @@ function promptQuestionsResult(result) {
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
     activateAndroidPushNotificationsLib(isSelected(result.messaging) || externalPushClientOnly);
+    activateAndroidMLKitCustomModelLib(isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model));
   }
 
   console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
@@ -300,6 +301,14 @@ function activateAndroidPushNotificationsLib(enable) {
     fs.renameSync(path.join(directories.android, 'firebase-release.aar-disabled'), path.join(directories.android, 'firebase-release.aar'));
   } else if (!enable && fs.existsSync(path.join(directories.android, 'firebase-release.aar'))) {
     fs.renameSync(path.join(directories.android, 'firebase-release.aar'), path.join(directories.android, 'firebase-release.aar-disabled'));
+  }
+}
+
+function activateAndroidMLKitCustomModelLib(enable) {
+  if (enable && fs.existsSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'))) {
+    fs.renameSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'), path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'));
+  } else if (!enable && fs.existsSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'))) {
+    fs.renameSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'), path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'));
   }
 }
 

@@ -1,0 +1,53 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="Custom model"></Label>
+</ActionBar>
+
+<GridLayout>
+  <MLKitCustomModel
+      width="100%"
+      height="100%"
+      confidenceThreshold="0.6"
+      (scanResult)="onCustomModelResult($event)">
+  </MLKitCustomModel>
+
+  <GridLayout rows="*, 320, *" columns="*, 5/6*, *">
+    <Label class="mask" row="0" col="0" colSpan="3"></Label>
+    <Label class="mask" row="2" col="0" colSpan="3"></Label>
+    <Label class="mask" row="1" col="0"></Label>
+    <Label class="mask" row="1" col="2"></Label>
+    <GridLayout row="1" col="1" rows="1/6*, *, 1/6*" columns="1/6*, *, 1/6*">
+      <Label class="frame-top-left" row="0" col="0"></Label>
+      <Label class="frame-top-right" row="0" col="2"></Label>
+      <Label class="frame-bottom-left" row="2" col="0"></Label>
+      <Label class="frame-bottom-right" row="2" col="2"></Label>
+      <StackLayout class="swing" row="0" col="0" colSpan="3">
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.1)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.2)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.3)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.4)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.5)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.6)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.7)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.8)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 0.9)"></Label>
+        <Label height="1" marginBottom="1" borderBottomWidth="1" borderColor="rgba(81, 184, 237, 1)"></Label>
+      </StackLayout>
+    </GridLayout>
+    <Label [text]="result" row="0" rowSpan="3" col="0"></Label>
+
+    <!--ListView separatorColor="transparent" row="0" rowSpan="3" col="0" colSpan="3" [items]="result" class="m-t-20" backgroundColor="transparent">
+      <ng-template let-item="item">
+        <GridLayout columns="3*, 2*">
+          <Label col="0" class="mlkit-result" textWrap="true" [text]="item.text"></Label>
+          <Label col="1" class="mlkit-result" textWrap="true" [text]="item.confidence | number"></Label>
+        </GridLayout>
+      </ng-template>
+    </ListView-->
+  </GridLayout>
+
+  <GridLayout rows="auto" columns="auto, auto" horizontalAlignment="right" class="m-t-4 m-r-8">
+    <Label col="0" text="Torch" class="c-white" [class.disabled]="!torchOn"></Label>
+    <Switch col="1" [checked]="torchOn" (checkedChange)="toggleTorch($event)"></Switch>
+  </GridLayout>
+
+</GridLayout>

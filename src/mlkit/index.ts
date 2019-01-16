@@ -3,6 +3,7 @@ import * as barcodescanning from "./barcodescanning";
 import * as facedetection from "./facedetection";
 import * as imagelabeling from "./imagelabeling";
 import * as landmarkrecognition from "./landmarkrecognition";
+import * as custommodel from "./custommodel";
 
 import { ImageSource } from "tns-core-modules/image-source";
 import { Image } from "tns-core-modules/ui/image";
@@ -40,6 +41,7 @@ export {
   barcodescanning,
   facedetection,
   imagelabeling,
-  landmarkrecognition
+  landmarkrecognition,
+  custommodel
 };
 

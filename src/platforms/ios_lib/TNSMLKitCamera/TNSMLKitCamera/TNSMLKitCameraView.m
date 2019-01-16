@@ -4,6 +4,10 @@
 @implementation TNSMLKitCameraView
 
 int throttleCounter = 0;
+static Float32 const maxRGBValue = 255.0;
+static CGFloat const jpegCompressionQuality = 0.8;
+static int const alphaComponentBaseOffset = 4;
+static int const alphaComponentModuloRemainder = 3;
 
 - (id)initWithCaptureSession:(AVCaptureSession *)captureSession {
     AVCaptureVideoDataOutput *dataOutput = [AVCaptureVideoDataOutput new];
@@ -20,6 +24,109 @@ int throttleCounter = 0;
     return self;
 }
 
++ (NSMutableData * _Nullable)getInputData:(nonnull UIImage *)img withRows:(int) rows andColumns:(int) columns andType:(NSString *) type {
+    CGImageRef image = img.CGImage;
+    long imageWidth = CGImageGetWidth(image);
+    long imageHeight = CGImageGetHeight(image);
+    CGContextRef context = CGBitmapContextCreate(nil,
+                                                 imageWidth, imageHeight,
+                                                 8,
+                                                 imageWidth * 4,
+                                                 CGColorSpaceCreateDeviceRGB(),
+                                                 kCGImageAlphaNoneSkipFirst);
+    CGContextDrawImage(context, CGRectMake(0, 0, imageWidth, imageHeight), image);
+    UInt8 *imageData = CGBitmapContextGetData(context);
+    
+    NSMutableData *inputData = [[NSMutableData alloc] initWithCapacity:0];
+    
+    bool isFloat32 = [type isEqualToString:@"Float32"];
+
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < columns; col++) {
+            long offset = 4 * (col * imageWidth + row);
+            // ignoring offset 0 (the unused alpha channel)
+
+            if (isFloat32) {
+                Float32 red = imageData[offset + 1] / 255.0f;
+                Float32 green = imageData[offset + 2] / 255.0f;
+                Float32 blue = imageData[offset + 3] / 255.0f;
+                
+                [inputData appendBytes:&red length:sizeof(red)];
+                [inputData appendBytes:&green length:sizeof(green)];
+                [inputData appendBytes:&blue length:sizeof(blue)];
+            } else {
+                UInt8 red = imageData[offset + 1] / 255.0f;
+                UInt8 green = imageData[offset + 2] / 255.0f;
+                UInt8 blue = imageData[offset + 3] / 255.0f;
+                
+                [inputData appendBytes:&red length:sizeof(red)];
+                [inputData appendBytes:&green length:sizeof(green)];
+                [inputData appendBytes:&blue length:sizeof(blue)];
+            }
+        }
+    }
+
+    return inputData;
+}
+
++ (NSData *)scaledData:(nonnull UIImage *)img
+              withSize:(CGSize)size
+             byteCount:(int)byteCount
+           isQuantized:(BOOL)isQuantized {
+    CGImageRef cgImage = img.CGImage;
+    if (cgImage && CGImageGetWidth(cgImage) > 0 && CGImageGetHeight(cgImage) > 0) {
+        NSData *imageData = [TNSMLKitCameraView imageDataFromCGImage:cgImage size:size];
+        if (!imageData) {
+            return nil;
+        }
+        const UInt8 *bytes = imageData.bytes;
+        
+        NSMutableData *scaledBytes = [NSMutableData dataWithLength:byteCount];
+        UInt8 *mutableBytes = scaledBytes.mutableBytes;
+        
+        // Extract the RGB(A) components from the scaled image data while ignoring the alpha component.
+        int pixelIndex = 0;
+        for (int offset = 0; offset < imageData.length; offset++) {
+            if ((offset % alphaComponentBaseOffset) ==
+                alphaComponentModuloRemainder) {
+                continue;
+            }
+            mutableBytes[pixelIndex++] = bytes[offset];
+        }
+        if (!isQuantized) {
+            for (int i = 0; i < byteCount; i++) {
+                mutableBytes[i] = (Float32)mutableBytes[i]/maxRGBValue;
+            }
+        }
+        return scaledBytes;
+    } else {
+        return nil;
+    }
+}
+
++ (NSData *)imageDataFromCGImage:(CGImageRef)cgImage
+                            size:(CGSize)size {
+    uint32_t bitmapInfo = kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast;
+    int width = size.width;
+    int height = size.height;
+    size_t scaledBytesPerRow = (CGImageGetBytesPerRow(cgImage) / CGImageGetWidth(cgImage)) * width;
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(nil, width, height, CGImageGetBitsPerComponent(cgImage), scaledBytesPerRow, colorSpace, bitmapInfo);
+    CGColorSpaceRelease(colorSpace);
+    if (!context) {
+        return nil;
+    }
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), cgImage);
+    CGImageRef image = CGBitmapContextCreateImage(context);
+    CGDataProviderRef dataProvider = CGImageGetDataProvider(image);
+    CFDataRef cfData = CGDataProviderCopyData(dataProvider);
+    CGImageRelease(image);
+    CGContextRelease(context);
+    return (__bridge_transfer NSData*)cfData;
+}
+
+// TODO remove (unused)
 + (NSArray * _Nullable)resizeImage:(nonnull UIImage *)image {
     int newComponentsCount = 3;
     int batchSize = 1;

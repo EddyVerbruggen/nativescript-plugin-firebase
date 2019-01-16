@@ -15,6 +15,7 @@ import {
   MLKitImageLabelingCloudResult,
   MLKitImageLabelingOnDeviceResult
 } from "nativescript-plugin-firebase/mlkit/imagelabeling";
+import { MLKitCustomModelResult } from "nativescript-plugin-firebase/mlkit/custommodel";
 
 const firebase = require("nativescript-plugin-firebase");
 
@@ -34,6 +35,7 @@ export class MLKitComponent {
     "Face detection (on device)",
     "Image labeling (on device)",
     "Image labeling (cloud)",
+    "Custom model",
     "Landmark recognition (cloud)"
   ];
 
@@ -41,7 +43,8 @@ export class MLKitComponent {
     "Text recognition",
     "Barcode scanning",
     "Face detection",
-    "Image labeling"
+    "Image labeling",
+    "Custom model"
   ];
 
   constructor(private routerExtensions: RouterExtensions,
@@ -63,6 +66,8 @@ export class MLKitComponent {
         to = "/tabs/mlkit/facedetection";
       } else if (pickedItem === "Image labeling") {
         to = "/tabs/mlkit/imagelabeling";
+      } else if (pickedItem === "Custom model") {
+        to = "/tabs/mlkit/custommodel";
       }
 
       if (to !== undefined) {
@@ -96,8 +101,8 @@ export class MLKitComponent {
       Camera.requestPermissions();
     }
     Camera.takePicture({
-      width: 800,
-      height: 800,
+      width: 600,
+      height: 600,
       keepAspectRatio: true,
       saveToGallery: true,
       cameraFacing: "rear"
@@ -110,7 +115,7 @@ export class MLKitComponent {
     });
   }
 
-  fromCameraroll(): void {
+  fromCameraRoll(): void {
     const imagePicker = ImagePicker.create({
       mode: "single"
     });
@@ -122,8 +127,8 @@ export class MLKitComponent {
           if (selection.length === 0) return;
 
           const selected = selection[0];
-          selected.options.height = 800;
-          selected.options.width = 800;
+          selected.options.height = 600;
+          selected.options.width = 600;
           selected.options.keepAspectRatio = true;
           selected.getImageAsync((image: any, error: any) => {
             if (error) {
@@ -179,8 +184,8 @@ export class MLKitComponent {
         this.labelImageCloud(imageSource);
       } else if (pickedItem === "Landmark recognition (cloud)") {
         this.recognizeLandmarkCloud(imageSource);
-        // } else if (pickedItem === "Custom model (on device)") {
-        //   this.customModelOnDevice(imageSource);
+      } else if (pickedItem === "Custom model") {
+        this.customModel(imageSource);
       }
     });
   }
@@ -224,6 +229,38 @@ export class MLKitComponent {
           alert({
             title: `Result`,
             message: JSON.stringify(result.landmarks),
+            okButtonText: "OK"
+          });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+
+  private customModel(imageSource: ImageSource): void {
+    firebase.mlkit.custommodel.useCustomModel({
+      image: imageSource,
+
+      // note that only local quant models work currently (so not 'float' models, and not loaded from the cloud)
+
+      // cloudModelName: "~/mobilenet_quant_v2_1_0_299",
+      // cloudModelName: "~/inception_v3_quant",
+
+      localModelFile: "~/custommodel/mobilenet/mobilenet_quant_v2_1.0_299.tflite",
+      labelsFile: "~/custommodel/mobilenet/mobilenet_labels.txt",
+
+      // localModelFile: "~/custommodel/inception/inception_v3_quant.tflite",
+      // labelsFile: "~/custommodel/inception/inception_labels.txt",
+
+      maxResults: 5,
+      modelInput: [{
+        // shape: [1, 224, 224, 3], // flowers / nutella
+        shape: [1, 299, 299, 3], // others
+        type: "QUANT" // the only currently supported type of model
+      }],
+    }).then(
+        (result: MLKitCustomModelResult) => {
+          alert({
+            title: `Result`,
+            message: JSON.stringify(result.result),
             okButtonText: "OK"
           });
         })

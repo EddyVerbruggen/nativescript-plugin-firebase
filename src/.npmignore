@@ -4,6 +4,7 @@
 tsconfig.json
 references.d.ts
 platforms/android/libraryproject/
+platforms/android/mlkithelpersrc/
 platforms/ios/typings/
 platforms/ios_lib/
 platforms/android/typings/

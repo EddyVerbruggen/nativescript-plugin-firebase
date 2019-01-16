@@ -11,6 +11,7 @@ src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/project.xcworkspac
 src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/xcuserdata
 src/platforms/ios/Podfile
 src/platforms/android/include.gradle
+src/platforms/android/mlkithelpersrc/**/*.class
 !src/firebase.d.ts
 !src/index.d.ts
 !src/references.d.ts
