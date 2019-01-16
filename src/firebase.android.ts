@@ -11,6 +11,7 @@ import {
   GetAuthTokenOptions,
   GetAuthTokenResult,
   OnDisconnect as OnDisconnectBase, QueryOptions,
+  Query as QueryBase,
   User
 } from "./firebase";
 import {
@@ -21,15 +22,7 @@ import {
   isDocumentReference
 } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
-<<<<<<< HEAD
 import * as firebaseMessaging from "./messaging/messaging";
-=======
-import * as appModule from "tns-core-modules/application";
-import { AndroidActivityResultEventData } from "tns-core-modules/application";
-import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
-import lazy from "tns-core-modules/utils/lazy";
-import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot, Query as QueryBase } from "./firebase";
->>>>>>> [query] - Rework firebaseWebApi queries to allow chaining of filters. Android implementation
 
 declare const com: any;
 const gmsAds = (<any>com.google.android.gms).ads;
@@ -1629,11 +1622,10 @@ firebase.update = (path, val) => {
     }
   });
 };
+firebase.query = (updateCallback, path, options) => {
+  return new Promise((resolve, reject) => {
 
-<<<<<<< HEAD
-firebase.query = (updateCallback: (data: FBDataSingleEvent | FBErrorData) => void, path: string, options: QueryOptions): Promise<any> => {
-  return new Promise<any>((resolve, reject) => {
-=======
+
 firebase.webQuery = (path: string): QueryBase => {
   if (!firebase.initialized) {
     console.error("Please run firebase.init() before firebase.query()");
@@ -1841,7 +1833,6 @@ class Query implements QueryBase {
 
 firebase.query = (updateCallback, path, options) => {
   return new Promise((resolve, reject) => {
->>>>>>> [query] - Rework firebaseWebApi queries to allow chaining of filters. Android implementation
     try {
       if (firebase.instance === null) {
         reject("Run init() first!");
