@@ -367,7 +367,7 @@ firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/use-custom-models)
 
-⚠️ *Please take note of the following:*
+⚠️ **Please take note of the following:**
 
 - Currently only models bundled with your app can be used (not ones hosted on Firebase). That may change in the future.
 - Prefix the `localModelFile` and `labelsFile` below with `~/` so they point to your `app/` folder. This is for future compatibility, because I'd like to support loading models from the native bundle as well.
@@ -403,8 +403,6 @@ import { registerElement } from "nativescript-angular/element-registry";
 registerElement("MLKitCustomModel", () => require("nativescript-plugin-firebase/mlkit/custommodel").MLKitCustomModel);
 ```
 
-> ⚠️ Make sure to specify `modelInputShape` without the `[` and `]` characters.
-
 ```html
 <MLKitCustomModel
     width="100%"
@@ -420,3 +418,4 @@ registerElement("MLKitCustomModel", () => require("nativescript-plugin-firebase/
 </MLKitCustomModel>
 ```
 
+> ⚠️ Make sure to specify `modelInputShape` without the `[` and `]` characters. Spaces are allowed.
