@@ -1,21 +1,21 @@
 import { Component, NgZone } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular";
-import { fromFile, ImageSource } from "tns-core-modules/image-source";
-import * as fileSystemModule from "tns-core-modules/file-system";
-import { action } from "tns-core-modules/ui/dialogs";
-import { ImageAsset } from "tns-core-modules/image-asset";
-import { isIOS } from "tns-core-modules/platform";
-import * as ImagePicker from "nativescript-imagepicker";
 import * as Camera from "nativescript-camera";
+import * as ImagePicker from "nativescript-imagepicker";
 import { BarcodeFormat, MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
-import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
+import { MLKitCustomModelResult } from "nativescript-plugin-firebase/mlkit/custommodel";
 import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/facedetection";
-import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 import {
   MLKitImageLabelingCloudResult,
   MLKitImageLabelingOnDeviceResult
 } from "nativescript-plugin-firebase/mlkit/imagelabeling";
-import { MLKitCustomModelResult } from "nativescript-plugin-firebase/mlkit/custommodel";
+import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
+import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import * as fileSystemModule from "tns-core-modules/file-system";
+import { ImageAsset } from "tns-core-modules/image-asset";
+import { fromFile, ImageSource } from "tns-core-modules/image-source";
+import { isIOS } from "tns-core-modules/platform";
+import { action } from "tns-core-modules/ui/dialogs";
 
 const firebase = require("nativescript-plugin-firebase");
 
