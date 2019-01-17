@@ -8,10 +8,13 @@ import { AbstractMLKitViewComponent } from "~/tabs/mlkit/abstract.mlkitview.comp
   templateUrl: "./custommodel.component.html",
 })
 export class CustomModelComponent extends AbstractMLKitViewComponent {
-  result: any;
+  labels: Array<{
+    text: string;
+    confidence: number;
+  }>;
 
   onCustomModelResult(scanResult: any): void {
     const value: MLKitCustomModelResult = scanResult.value;
-    this.result = value.result;
+    this.labels = value.result;
   }
 }

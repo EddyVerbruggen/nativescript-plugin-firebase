@@ -11,15 +11,20 @@ export interface MLKitCustomModelResult extends MLKitResult {
 
 export type MLKitCustomModelType = "FLOAT32" | "QUANT";
 
+export interface TNSCustomModelInput {
+  shape: Array<number>,
+  type: MLKitCustomModelType
+}
+
 // see https://firebase.google.com/docs/ml-kit/ios/use-custom-models
 export interface MLKitCustomModelOptions extends MLKitOptions {
   localModelFile?: string;
   labelsFile: string;
+  /**
+   * Default 5
+   */
   maxResults?: number;
-  modelInput: Array<{
-    shape: Array<number>,
-    type: MLKitCustomModelType
-  }>,
+  modelInput: Array<TNSCustomModelInput>
   /**
    * Ignoring this for now as we deduct it from the model spec.
    */

@@ -169,6 +169,10 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   abstract createDetector(): any;
 
   abstract createSuccessListener(): any;
+
+  runDetector(image: UIImage) {
+    throw new Error("No custom detector implemented, so 'runDetector' can't do its thing");
+  }
 }
 
 class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraViewDelegate {
@@ -196,16 +200,21 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
 
   cameraDidOutputImage(image: UIImage): void {
     if (image) {
-      const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
-      const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
-      fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
-      fIRVisionImage.metadata = fIRVisionImageMetadata;
-
       if (this.detector.detectInImageCompletion) {
-        this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+        this.detector.detectInImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
+      } else if (this.detector.processImageCompletion) {
+        this.detector.processImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
       } else {
-        this.detector.processImageCompletion(fIRVisionImage, this.onSuccessListener);
+        this.owner.get().runDetector(image);
       }
     }
+  }
+
+  private uiImageToFIRVisionImage(image: UIImage): FIRVisionImage {
+    const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
+    const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
+    fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
+    fIRVisionImage.metadata = fIRVisionImageMetadata;
+    return fIRVisionImage;
   }
 }

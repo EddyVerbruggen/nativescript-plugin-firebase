@@ -1,71 +1,122 @@
+import * as fs from "tns-core-modules/file-system";
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitOptions } from "../";
 import { MLKitCustomModelOptions, MLKitCustomModelResult, MLKitCustomModelResultValue } from "./";
 import { getLabelsFromAppFolder, MLKitCustomModel as MLKitCustomModelBase } from "./custommodel-common";
-import * as fs from "tns-core-modules/file-system";
 
 declare const com: any;
 declare const org: any; // TODO remove after regenerating typings
 
 export class MLKitCustomModel extends MLKitCustomModelBase {
+  private detector;
+  private onFailureListener;
+  private inputOutputOptions;
 
   protected createDetector(): any {
-    return getInterpreter(null); // TODO
+    this.detector = getInterpreter(this.localModelFile);
+    return this.detector;
+  }
+
+  protected runDetector(imageByteBuffer, previewWidth, previewHeight): void {
+    if (this.detectorBusy) {
+      return;
+    }
+
+    this.detectorBusy = true;
+
+    if (!this.onFailureListener) {
+      this.onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        onFailure: exception => {
+          console.log(exception.getMessage());
+          this.detectorBusy = false;
+        }
+      });
+    }
+
+    const modelExpectsWidth = this.modelInputShape[1];
+    const modelExpectsHeight = this.modelInputShape[2];
+    const isQuantized = this.modelInputType !== "FLOAT32";
+
+    if (!this.inputOutputOptions) {
+      let intArrayIn = Array.create("int", 4);
+      intArrayIn[0] = this.modelInputShape[0];
+      intArrayIn[1] = modelExpectsWidth;
+      intArrayIn[2] = modelExpectsHeight;
+      intArrayIn[3] = this.modelInputShape[3];
+
+      const inputType = isQuantized ? com.google.firebase.ml.custom.FirebaseModelDataType.BYTE : com.google.firebase.ml.custom.FirebaseModelDataType.FLOAT32;
+
+      let intArrayOut = Array.create("int", 2);
+      intArrayOut[0] = 1;
+      intArrayOut[1] = this.labels.length;
+
+      this.inputOutputOptions = new com.google.firebase.ml.custom.FirebaseModelInputOutputOptions.Builder()
+          .setInputFormat(0, inputType, intArrayIn)
+          .setOutputFormat(0, inputType, intArrayOut)
+          .build();
+    }
+
+    const input = org.nativescript.plugins.firebase.mlkit.BitmapUtil.byteBufferToByteBuffer(imageByteBuffer, previewWidth, previewHeight, modelExpectsWidth, modelExpectsHeight, isQuantized);
+    const inputs = new com.google.firebase.ml.custom.FirebaseModelInputs.Builder()
+        .add(input) // add as many input arrays as your model requires
+        .build();
+
+    this.detector
+        .run(inputs, this.inputOutputOptions)
+        .addOnSuccessListener(this.onSuccessListener)
+        .addOnFailureListener(this.onFailureListener);
   }
 
   protected createSuccessListener(): any {
-    return new com.google.android.gms.tasks.OnSuccessListener({
-      onSuccess: labels => {
+    this.onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      onSuccess: output => {
+        const probabilities: Array<number> = output.getOutput(0)[0];
 
-        if (labels.size() === 0) return;
+        if (this.labels.length !== probabilities.length) {
+          console.log(`The number of labels (${this.labels.length}) is not equal to the interpretation result (${probabilities.length})!`);
+          return;
+        }
 
         const result = <MLKitCustomModelResult>{
-          result: []
+          result: getSortedResult(this.labels, probabilities, this.maxResults)
         };
-
-        // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
-        for (let i = 0; i < labels.size(); i++) {
-          const label = labels.get(i);
-          result.result.push({
-            text: label.getLabel(),
-            confidence: label.getConfidence()
-          });
-        }
 
         this.notify({
           eventName: MLKitCustomModel.scanResultEvent,
           object: this,
           value: result
         });
+
+        this.detectorBusy = false;
       }
     });
+
+    return this.onSuccessListener;
   }
 }
 
-// TODO should probably cache this
-function getInterpreter(options: MLKitCustomModelOptions): any {
+function getInterpreter(localModelFile?: string): any {
   const firModelOptionsBuilder = new com.google.firebase.ml.custom.FirebaseModelOptions.Builder();
 
   let localModelRegistrationSuccess = false;
   let cloudModelRegistrationSuccess = false;
   let localModelName;
 
-  if (options.localModelFile) {
-    localModelName = options.localModelFile.lastIndexOf("/") === -1 ? options.localModelFile : options.localModelFile.substring(options.localModelFile.lastIndexOf("/") + 1);
+  if (localModelFile) {
+    localModelName = localModelFile.lastIndexOf("/") === -1 ? localModelFile : localModelFile.substring(localModelFile.lastIndexOf("/") + 1);
 
     if (com.google.firebase.ml.custom.FirebaseModelManager.getInstance().getLocalModelSource(localModelName)) {
       localModelRegistrationSuccess = true;
       firModelOptionsBuilder.setLocalModelName(localModelName)
     } else {
-      console.log("model not yet loaded: " + options.localModelFile);
+      console.log("model not yet loaded: " + localModelFile);
 
       const firModelLocalSourceBuilder = new com.google.firebase.ml.custom.model.FirebaseLocalModelSource.Builder(localModelName);
 
-      if (options.localModelFile.indexOf("~/") === 0) {
-        firModelLocalSourceBuilder.setFilePath(fs.knownFolders.currentApp().path + options.localModelFile.substring(1));
+      if (localModelFile.indexOf("~/") === 0) {
+        firModelLocalSourceBuilder.setFilePath(fs.knownFolders.currentApp().path + localModelFile.substring(1));
       } else {
         // note that this doesn't seem to work, let's advice users to use ~/ for now
-        firModelLocalSourceBuilder.setAssetFilePath(options.localModelFile);
+        firModelLocalSourceBuilder.setAssetFilePath(localModelFile);
       }
 
       localModelRegistrationSuccess = com.google.firebase.ml.custom.FirebaseModelManager.getInstance().registerLocalModelSource(firModelLocalSourceBuilder.build());
@@ -91,7 +142,7 @@ function getInterpreter(options: MLKitCustomModelOptions): any {
 export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitCustomModelResult> {
   return new Promise((resolve, reject) => {
     try {
-      const interpreter = getInterpreter(options);
+      const interpreter = getInterpreter(options.localModelFile);
 
       let labels: Array<string>;
       if (options.labelsFile.indexOf("~/") === 0) {
@@ -130,7 +181,8 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
       intArrayIn[2] = options.modelInput[0].shape[2];
       intArrayIn[3] = options.modelInput[0].shape[3];
 
-      const inputType = options.modelInput[0].type === "FLOAT32" ? com.google.firebase.ml.custom.FirebaseModelDataType.FLOAT32 : com.google.firebase.ml.custom.FirebaseModelDataType.BYTE;
+      const isQuantized = options.modelInput[0].type !== "FLOAT32";
+      const inputType = isQuantized ? com.google.firebase.ml.custom.FirebaseModelDataType.BYTE : com.google.firebase.ml.custom.FirebaseModelDataType.FLOAT32;
 
       let intArrayOut = Array.create("int", 2);
       intArrayOut[0] = 1;
@@ -142,9 +194,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
           .build();
 
       const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
-
-      const input = org.nativescript.plugins.firebase.mlkit.BitmapUtil.bitmapToByteBuffer(image, options.modelInput[0].shape[1], options.modelInput[0].shape[2]);
-
+      const input = org.nativescript.plugins.firebase.mlkit.BitmapUtil.bitmapToByteBuffer(image, options.modelInput[0].shape[1], options.modelInput[0].shape[2], isQuantized);
       const inputs = new com.google.firebase.ml.custom.FirebaseModelInputs.Builder()
           .add(input) // add as many input arrays as your model requires
           .build();
@@ -161,16 +211,11 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
   });
 }
 
-function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
-  const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
-  return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
-}
-
-function getSortedResult(labels: Array<string>, probabilities: Array<number>, maxResults?: number): Array<MLKitCustomModelResultValue> {
+function getSortedResult(labels: Array<string>, probabilities: Array<number>, maxResults = 5): Array<MLKitCustomModelResultValue> {
   const result: Array<MLKitCustomModelResultValue> = [];
   labels.forEach((text, i) => result.push({text, confidence: probabilities[i]}));
   result.sort((a, b) => a.confidence < b.confidence ? 1 : (a.confidence === b.confidence ? 0 : -1));
-  if (maxResults && result.length > maxResults) {
+  if (result.length > maxResults) {
     result.splice(maxResults);
   }
   result.map(r => r.confidence = (r.confidence & 0xff) / 255.0);

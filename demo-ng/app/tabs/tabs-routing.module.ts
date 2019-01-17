@@ -7,13 +7,15 @@ import { TextRecognitionComponent } from "~/tabs/mlkit/textrecognition/textrecog
 import { BarcodeScanningComponent } from "~/tabs/mlkit/barcodescanning/barcodescanning.component";
 import { FaceDetectionComponent } from "~/tabs/mlkit/facedetection/facedetection.component";
 import { ImageLabelingComponent } from "~/tabs/mlkit/imagelabeling/imagelabeling.component";
+import { CustomModelComponent } from "~/tabs/mlkit/custommodel/custommodel.component";
 
 const routes: Routes = [
   { path: "", component: TabsComponent },
   { path: "mlkit/textrecognition", component: TextRecognitionComponent },
   { path: "mlkit/barcodescanning", component: BarcodeScanningComponent },
   { path: "mlkit/facedetection", component: FaceDetectionComponent },
-  { path: "mlkit/imagelabeling", component: ImageLabelingComponent }
+  { path: "mlkit/imagelabeling", component: ImageLabelingComponent },
+  { path: "mlkit/custommodel", component: CustomModelComponent }
 ];
 
 @NgModule({

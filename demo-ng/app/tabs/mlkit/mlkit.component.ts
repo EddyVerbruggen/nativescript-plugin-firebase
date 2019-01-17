@@ -244,11 +244,15 @@ export class MLKitComponent {
       // cloudModelName: "~/mobilenet_quant_v2_1_0_299",
       // cloudModelName: "~/inception_v3_quant",
 
-      localModelFile: "~/custommodel/mobilenet/mobilenet_quant_v2_1.0_299.tflite",
-      labelsFile: "~/custommodel/mobilenet/mobilenet_labels.txt",
+      // note that there's an issue with this model (making the app crash): "ValueError: Model provided has model identifier 'Mobi', should be 'TFL3'" (reported by https://github.com/EddyVerbruggen/ns-mlkit-tflite-curated/blob/master/scripts/get_model_details.py)
+      // localModelFile: "~/custommodel/nutella/retrained_quantized_model.tflite",
+      // labelsFile: "~/custommodel/nutella/nutella_labels.txt",
 
-      // localModelFile: "~/custommodel/inception/inception_v3_quant.tflite",
-      // labelsFile: "~/custommodel/inception/inception_labels.txt",
+      // localModelFile: "~/custommodel/mobilenet/mobilenet_quant_v2_1.0_299.tflite",
+      // labelsFile: "~/custommodel/mobilenet/mobilenet_labels.txt",
+
+      localModelFile: "~/custommodel/inception/inception_v3_quant.tflite",
+      labelsFile: "~/custommodel/inception/inception_labels.txt",
 
       maxResults: 5,
       modelInput: [{
