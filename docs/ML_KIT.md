@@ -363,7 +363,7 @@ firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
 ```
 
 ### Custom model inference
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_custom_model_tflit.png" height="153px" alt="ML Kit - Custom Model (TensorFlow Lite)"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_custom_model_tflite.png" height="153px" alt="ML Kit - Custom Model (TensorFlow Lite)"/>
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/use-custom-models)
 
