@@ -185,6 +185,8 @@ sanFranciscoDocument.update({
 });
 ```
 
+> NB: serverTimestamp() only works in an update on the Android SDK, not add or set.
+
 ### `collection.where()`
 Firestore supports advanced querying with the `where` function. Those `where` clauses can be chained to form logical 'AND' queries:
 
