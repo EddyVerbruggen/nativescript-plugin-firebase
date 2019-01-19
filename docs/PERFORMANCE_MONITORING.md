@@ -15,6 +15,10 @@ To add this feature to your project, either:
 
 In both cases, remove the `/platforms` folder afterwards so the required native library will be added upon the next build. 
 
+> ⚠️ It may take up to 12 hours before results pop up in your Firebase console, so be patient.
+
+> ℹ️ Per Firebase's documentation, by enabling this feature, Remote Config will be enabled as well. So you may be interested in [what Remote Config can do for your app](../REMOTECONFIG.md).
+
 ## API
 
 ### `startTrace`
