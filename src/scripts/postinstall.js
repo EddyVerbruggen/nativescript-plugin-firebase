@@ -3521,7 +3521,7 @@ dependencies {
     ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.5"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.1.2"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.1.3"
 
     // Performance Monitoring
     ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` compile "com.google.firebase:firebase-perf:16.2.3"
@@ -3530,7 +3530,7 @@ dependencies {
     ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.2.1"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.7"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.8"
 
     // Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.4"
