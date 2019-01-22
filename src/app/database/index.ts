@@ -245,6 +245,17 @@ export module database {
     public onDisconnect(): firebase.OnDisconnect {
       return firebase.onDisconnect(this.path);
     }
+
+    public transaction(
+      transactionUpdate: (a: any) => any,
+      onComplete?: (
+        a: Error | null,
+        b: boolean,
+        c: firebase.DataSnapshot | null
+      ) => any,
+      applyLocally?: boolean): Promise<any> {
+      return firebase.transaction(this.path, transactionUpdate, onComplete);
+    }
   }
 
   export interface ThenableReference extends Reference /*, PromiseLike<any> */
