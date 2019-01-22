@@ -527,6 +527,22 @@ export interface OnDisconnect {
   ): Promise<any>;
   update(values: Object): Promise<any>;
 }
+export interface DataSnapshot {
+  key: string,
+  ref: any, // TODO: Type it so that it returns a databaseReference.
+  child(path: string): DataSnapshot,
+  exists(): boolean,
+  forEach(action: (snapshot: DataSnapshot) => any) : boolean,
+  getPriority(): string | number | null,
+  hasChild(path: string): boolean,
+  hasChildren(): boolean,
+  numChildren(): number,
+  toJSON(): Object,
+  val(): any
+};
+
+export function transaction(path: string, transactionUpdate: (a: any) => any,
+  onComplete?: (error: Error | null, committed: boolean, dataSnapshot: DataSnapshot) => any): Promise<any>;
 
 export function push(path: string, value: any): Promise<PushResult>;
 
