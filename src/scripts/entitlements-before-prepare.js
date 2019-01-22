@@ -21,6 +21,7 @@ module.exports = function (logger, platformsData, projectData, hookArgs) {
           fs.appendFileSync(target, '\nCODE_SIGN_ENTITLEMENTS = ' + path.join(projectData.projectName, projectData.projectName + '.entitlements'));
         }
       } catch (error) {
+        console.log("Error in hook 'entitlements-before-prepare.js': " + error);
         reject();
       }
     } else {
