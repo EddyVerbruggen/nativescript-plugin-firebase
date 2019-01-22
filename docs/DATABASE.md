@@ -408,6 +408,64 @@ but if you only want to for instance wipe everything at `/users`, do this:
 ```
 </details>
 
+### Transaction
+Transactions are used when you want to atomically modify data at this location. This
+ensures there are no conflicts with other clients writing to the same location at the
+same time.
+
+You can look at the [docs](https://firebase.google.com/docs/reference/js/firebase.database.Reference#transaction) for more information.
+
+Note that a return value of `null` will delete the value at this location whereas returning
+undefined will abort the transaction. On success a promise is returned containing
+{committed:boolean, snapshot: DataSnapshot} and an error will be returned if the transaciton
+failed.
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+firebase.transaction(path, (currentValue => {
+      if (currentValue === null) {
+        return 0;
+      } else {
+        // console.log('User ada already exists.');
+        return ++currentValue; // Abort the transaction.
+      }
+    })) // firebase.Datasnapshot follows the web datasnapshot interface
+     .then((result: { committed: boolean, snapshot: firebase.DataSnapshot }) => {
+        console.log(result.committed + " snapshotValue: " + result.snapshot.val());
+      }).catch(err => console.log("Encountered an error " + err));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+firebaseWebApi.database().ref(path).transaction(currentValue => {
+      if (currentValue === null) {
+        return { name: { first: 'Ada', last: 'Lovelace' } };
+      } else {
+        // console.log('User ada already exists.');
+        return; // Abort the transaction.
+      }
+    })
+      .then((result: { committed: boolean, snapshot: firebase.DataSnapshot }) => {
+        console.log(result.committed + " snapshotValue: " + result.snapshot.val());
+      }).catch(err => console.log("Encountered an error " + err));
+
+
+firebaseWebApi.database().ref(path).transaction(currentValue => {
+      if (currentValue === null) {
+        return null; // Do nothing if this value doesn't exist
+       //return 0    // If you want to put a 0 in if no value exist
+      } else {
+        return ++currentValue; // increment the value
+      }
+    })
+```
+</details>
+
 ### keepInSync
 The Firebase Realtime Database synchronizes and stores a local copy of the data for active listeners (see the methods above). In addition, you can keep specific locations in sync.
 
