@@ -1807,14 +1807,22 @@ firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
     const dbRef: com.google.firebase.database.DatabaseReference = firebase.instance.child(path);
     const handler: com.google.firebase.database.Transaction.Handler = new com.google.firebase.database.Transaction.Handler({
       doTransaction: (mutableData: com.google.firebase.database.MutableData) => {
-        const desiredValue = transactionUpdate(mutableData.getValue());
+        const desiredValue = transactionUpdate(firebase.toJsObject(mutableData.getValue()));
         // Java does not have undefined, but web transactions use undefined to detect if an abort() is desired.
         if (desiredValue === undefined) {
-          return com.google.firebase.database.Transaction.abort();
-        } else {
-          mutableData.setValue(firebase.toValue(desiredValue));
+          // Same problem as iOS. The very first call to runTransaction will see that we get undefined
+          // and immediately abort the transaction which results in us failing to update the value. Subsequent
+          // calls are working fine unlike in iOS which always fail.
+
+          // TLDR: Abort would be ideal, but atm it can result in a failed update (when it shouln't)
+          // Returning success fixes this but makes our { committed: always true }...
+
+          // return com.google.firebase.database.Transaction.abort();
           return com.google.firebase.database.Transaction.success(mutableData);
         }
+        mutableData.setValue(firebase.toValue(desiredValue));
+        return com.google.firebase.database.Transaction.success(mutableData);
+
       },
       onComplete: (databaseError: com.google.firebase.database.DatabaseError, commited: boolean, snapshot: com.google.firebase.database.DataSnapshot) => {
         databaseError !== null ? reject(databaseError.getMessage()) :
