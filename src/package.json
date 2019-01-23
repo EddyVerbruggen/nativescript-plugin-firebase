@@ -61,6 +61,8 @@
     "setupandinstall": "npm i && npm run tsc && npm run package && cd ../demo && npm i && cd ../demo-ng && npm i && cd ../demo-push && npm i && cd ../src && npm run tsc && cd ../demo && tns plugin add ../src && cd ../demo-ng && tns plugin add ../src  && cd ../demo-push && tns plugin add ../src && cd ../src",
     "tslint": "tslint --config '../tslint.json' '*.ts' --exclude '**/node_modules/**'",
     "tslint.demo": "tslint --config '../tslint.json' '../demo/app/*.ts' --exclude '**/node_modules/**'",
+    "tslint.demo-ng": "tslint --config '../tslint.json' '../demo-ng/app/*.ts' --exclude '**/node_modules/**'",
+    "tslint.demo-push": "tslint --config '../tslint.json' '../demo-push/app/*.ts' --exclude '**/node_modules/**'",
     "ci.tslint": "npm run tslint && npm run tslint.demo",
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-plugin-firebase && cd ../src",
     "android.list-devices": "tns device android --available-devices",
