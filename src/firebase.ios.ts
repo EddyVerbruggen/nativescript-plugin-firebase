@@ -9,7 +9,7 @@ import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebaseFunctions from './functions/functions';
-import { firestore, User, OnDisconnect as OnDisconnectBase } from "./firebase";
+import { firestore, User, OnDisconnect as OnDisconnectBase, transaction, DataSnapshot } from "./firebase";
 import { firebaseUtils } from "./utils";
 
 firebase._gIDAuthentication = null;
@@ -1176,6 +1176,10 @@ firebase.updateProfile = arg => {
   });
 };
 
+ /***********************************************
+   * START Realtime Database Functions
+   ***********************************************/
+
 firebase._addObservers = (to, updateCallback) => {
   const listeners = [];
   listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildAdded, snapshot => {
@@ -1530,6 +1534,66 @@ firebase.onDisconnect = (path: string): OnDisconnect => {
   const dbRef: FIRDatabaseReference = FIRDatabase.database().reference().child(path);
   return new OnDisconnect(dbRef, path);
 };
+
+firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
+  onComplete: (a: Error | null, b: boolean, c: DataSnapshot) => Promise<any>) => {
+  return new Promise<any>((resolve, reject) => {
+    if (!firebase.initialized) {
+      console.error("Please run firebase.init() before firebase.transaction()");
+      throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+    }
+    const dbRef: FIRDatabaseReference = FIRDatabase.database().reference().child(path);
+
+    dbRef.runTransactionBlockAndCompletionBlock(
+      (mutableData: FIRMutableData): FIRTransactionResult => {
+        const desiredValue = transactionUpdate(mutableData.value);
+        if (desiredValue === undefined) {
+          return FIRTransactionResult.abort();
+        } else {
+          mutableData.value = desiredValue;
+          return FIRTransactionResult.successWithValue(mutableData);
+        }
+      },
+      (error: NSError, commited: boolean, snapshot: FIRDataSnapshot): void => {
+        error !== null ? reject(error.localizedDescription) :
+          resolve({ committed: commited, snapshot: nativeSnapshotToWebSnapshot(snapshot) });
+      }
+    );
+  });
+};
+
+// Converts FIRDataSnapshot into Web DataSnapshot
+function nativeSnapshotToWebSnapshot(snapshot: FIRDataSnapshot): DataSnapshot {
+  function forEach(action: (datasnapshot: DataSnapshot) => any): boolean {
+    const iterator: NSEnumerator<FIRDataSnapshot> = snapshot.children;
+    let innerSnapshot: FIRDataSnapshot;
+    let datasnapshot: DataSnapshot;
+    while (innerSnapshot = iterator.nextObject()) {
+      datasnapshot = nativeSnapshotToWebSnapshot(innerSnapshot);
+      if (action(datasnapshot)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  return {
+    key: snapshot.key,
+    ref: snapshot.ref,
+    child: (path: string) => nativeSnapshotToWebSnapshot(snapshot.childSnapshotForPath(path)),
+    exists: () => snapshot.exists(),
+    forEach: (func: (datasnapshot) => any) => forEach(func),
+    getPriority: () => firebaseUtils.toJsObject(snapshot.priority),
+    hasChild: (path: string) => snapshot.hasChild(path),
+    hasChildren: () => snapshot.hasChildren(),
+    numChildren: () => snapshot.childrenCount,
+    toJSON: () => snapshot.valueInExportFormat(),
+    val: () => firebaseUtils.toJsObject(snapshot.value)
+  };
+}
+
+ /***********************************************
+   * END Realtime Database Functions
+   ***********************************************/
 
 firebase.sendCrashLog = arg => {
   return new Promise((resolve, reject) => {

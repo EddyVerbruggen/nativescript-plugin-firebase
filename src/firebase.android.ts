@@ -11,7 +11,7 @@ import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
-import { firestore, User, OnDisconnect as OnDisconnectBase } from "./firebase";
+import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot } from "./firebase";
 
 declare const android, com: any;
 
@@ -1335,6 +1335,10 @@ firebase.updateProfile = arg => {
   });
 };
 
+ /***********************************************
+   * Start Realtime Database Functions
+   ***********************************************/
+
 firebase.keepInSync = (path, switchOn) => {
   return new Promise((resolve, reject) => {
     try {
@@ -1793,6 +1797,65 @@ firebase.onDisconnect = (path: string): OnDisconnectBase => {
   return new OnDisconnect(disconnectInstance);
 };
 
+firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
+  onComplete: (a: Error | null, b: boolean, c: DataSnapshot) => Promise<any>) => {
+  return new Promise((resolve, reject) => {
+    if (!firebase.initialized) {
+      console.error("Please run firebase.init() before firebase.transaction()");
+      throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+    }
+    const dbRef: com.google.firebase.database.DatabaseReference = firebase.instance.child(path);
+    const handler: com.google.firebase.database.Transaction.Handler = new com.google.firebase.database.Transaction.Handler({
+      doTransaction: (mutableData: com.google.firebase.database.MutableData) => {
+        const desiredValue = transactionUpdate(mutableData.getValue());
+        // Java does not have undefined, but web transactions use undefined to detect if an abort() is desired.
+        if (desiredValue === undefined) {
+          return com.google.firebase.database.Transaction.abort();
+        } else {
+          mutableData.setValue(firebase.toValue(desiredValue));
+          return com.google.firebase.database.Transaction.success(mutableData);
+        }
+      },
+      onComplete: (databaseError: com.google.firebase.database.DatabaseError, commited: boolean, snapshot: com.google.firebase.database.DataSnapshot) => {
+        databaseError !== null ? reject(databaseError.getMessage()) :
+          resolve({ committed: commited, snapshot: nativeSnapshotToWebSnapshot(snapshot) });
+      }
+    });
+    dbRef.runTransaction(handler);
+  });
+};
+
+// Converts Android DataSnapshot into Web Datasnapshot
+function nativeSnapshotToWebSnapshot(snapshot: com.google.firebase.database.DataSnapshot): DataSnapshot {
+  function forEach(action: (datasnapshot: DataSnapshot) => any): boolean {
+    let innerSnapshot: DataSnapshot;
+    for (let iterator = snapshot.getChildren().iterator(); iterator.hasNext();) {
+      innerSnapshot = nativeSnapshotToWebSnapshot(iterator.next());
+      if (action(innerSnapshot)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  return {
+    key: snapshot.getKey(),
+    ref: snapshot.getRef(),
+    child: (path: string) => nativeSnapshotToWebSnapshot(snapshot.child(path)),
+    exists: () => snapshot.exists(),
+    forEach: (func: (datasnapshot) => any) => forEach(func),
+    getPriority: () => firebase.toJsObject(snapshot.getPriority()),
+    hasChild: (path: string) => snapshot.hasChild(path),
+    hasChildren: () => snapshot.hasChildren(),
+    numChildren: () => snapshot.getChildrenCount(),
+    toJSON: () => firebase.toJsObject(snapshot.toString()),
+    val: () => firebase.toJsObject(snapshot.getValue())
+  };
+}
+
+ /***********************************************
+   * END Realtime Database Functions
+   ***********************************************/
+
 firebase.sendCrashLog = arg => {
   return new Promise((resolve, reject) => {
     try {
@@ -2005,6 +2068,7 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
     reject("Not supported on Android. If you need a x-platform implementation, use 'batch' instead.");
   });
 };
+
 
 /*
 class FirestoreTransaction implements firestore.Transaction {
