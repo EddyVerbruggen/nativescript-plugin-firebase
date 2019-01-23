@@ -9,7 +9,7 @@ import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebaseFunctions from './functions/functions';
-import { firestore, User, OnDisconnect as OnDisconnectBase, transaction, DataSnapshot } from "./firebase";
+import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot } from "./firebase";
 import { firebaseUtils } from "./utils";
 
 firebase._gIDAuthentication = null;
