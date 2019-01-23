@@ -245,7 +245,7 @@ export class MLKitComponent {
       // cloudModelName: "~/inception_v3_quant",
 
       // note that there's an issue with this model (making the app crash): "ValueError: Model provided has model identifier 'Mobi', should be 'TFL3'" (reported by https://github.com/EddyVerbruggen/ns-mlkit-tflite-curated/blob/master/scripts/get_model_details.py)
-      // localModelFile: "~/custommodel/nutella/retrained_quantized_model.tflite",
+      // localModelFile: "~/custommodel/nutella/nutella_quantize.tflite",
       // labelsFile: "~/custommodel/nutella/nutella_labels.txt",
 
       // localModelFile: "~/custommodel/mobilenet/mobilenet_quant_v2_1.0_299.tflite",
