@@ -74,12 +74,15 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(() => {
-        if (topmost() !== undefined) {
-          topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
-        } else {
+        const top = topmost();
+        if (top !== undefined && top.currentPage && top.currentPage.android && top.currentPage.android.getParent()) {
+          top.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else if (appModule.android && appModule.android.foregroundActivity) {
           appModule.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else {
+          console.log("Could not find a view to add the banner to");
         }
-      }, 0);
+      }, 100);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
       reject(ex);
