@@ -416,7 +416,9 @@ same time.
 You can look at the [docs](https://firebase.google.com/docs/reference/js/firebase.database.Reference#transaction) for more information.
 
 Note that a return value of `null` will delete the value at this location whereas returning
-undefined will abort the transaction. On success a promise is returned containing
+undefined will not modify the data at this location. Firebase web aborts the transaction when
+given an undefined, but due to technically difficulties we just return transaction success which
+results in committed = true. On transaction complete a promise is returned containing
 {committed:boolean, snapshot: DataSnapshot} and an error will be returned if the transaciton
 failed.
 
@@ -463,6 +465,25 @@ firebaseWebApi.database().ref(path).transaction(currentValue => {
         return ++currentValue; // increment the value
       }
     })
+
+// Based off Firebase simple blog post. You can also treat the
+// data as an object and return an updated version of post
+firebaseWebApi.database().ref(path).transaction(function(post) {
+      if (post) {
+        console.log("Post Object looks like: " +  JSON.stringify(post));
+        if (post.stars && post.stars[uid]) {
+          post.starCount--;
+          post.stars[uid] = null;
+        } else {
+          post.starCount++;
+          if (!post.stars) {
+            post.stars = {};
+          }
+          post.stars[uid] = true;
+        }
+      }
+      return post;
+    });
 ```
 </details>
 

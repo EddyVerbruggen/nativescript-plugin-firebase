@@ -9,7 +9,7 @@ import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebaseFunctions from './functions/functions';
-import { firestore, User, OnDisconnect as OnDisconnectBase, transaction, DataSnapshot } from "./firebase";
+import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot } from "./firebase";
 import { firebaseUtils } from "./utils";
 
 firebase._gIDAuthentication = null;
@@ -1546,9 +1546,23 @@ firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
 
     dbRef.runTransactionBlockAndCompletionBlock(
       (mutableData: FIRMutableData): FIRTransactionResult => {
-        const desiredValue = transactionUpdate(mutableData.value);
+        const desiredValue = transactionUpdate(firebaseUtils.toJsObject(mutableData.value));
         if (desiredValue === undefined) {
-          return FIRTransactionResult.abort();
+          // The problem case : user returns undefined when the the value we give them (mutableData) is null.
+          // This is a valid case as the user will want to abort if he thinks theres no data, BUT mutualData
+          // is usually null when runTransaction is called the first time(which is why its called multiple times).
+          // Result: we would abort and the transaction terminates, but the real data didn't have a chance to come in
+          // for the function to be called a second time.
+          // Even in the ios simple blog example their complete block is called twice with committed first being false
+          // followed by a second one saying committed is true... So with this implementation I favored having an "incorrect"
+          // committed boolean, but have the correct updated value
+
+          // TLDR: if user returns undefined then we may never execute his function with the correct input
+          // For now the way to resolve this is to call success with the original value (so we don't modify anything)
+          // And then the user will get his expected value, but { committed: always true }....
+
+          // return FIRTransactionResult.abort();
+          return FIRTransactionResult.successWithValue(mutableData);
         } else {
           mutableData.value = desiredValue;
           return FIRTransactionResult.successWithValue(mutableData);
