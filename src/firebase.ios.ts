@@ -1605,6 +1605,10 @@ function nativeSnapshotToWebSnapshot(snapshot: FIRDataSnapshot): DataSnapshot {
   };
 }
 
+firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
+    FIRDatabase.setLoggingEnabled(logging);
+};
+
  /***********************************************
    * END Realtime Database Functions
    ***********************************************/
