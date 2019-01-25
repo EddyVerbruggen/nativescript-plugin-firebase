@@ -487,6 +487,16 @@ firebaseWebApi.database().ref(path).transaction(function(post) {
 ```
 </details>
 
+### enableLogging
+The Firebase Realtime Database allows you turn on/off logs. This can be especially useful when trying to pinpoint any issues you may be having.
+By default the log level is set to INFO. Turning on logging will set the log level to DEBUG and off will set it to NONE.
+
+You MUST call `enableLogging()` before initializing firebase otherwise the app will crash.
+
+```js
+  firebase.enableLogging(true); // OR
+  firebaseWebApi.database.enableLogging(false);
+```
 ### keepInSync
 The Firebase Realtime Database synchronizes and stores a local copy of the data for active listeners (see the methods above). In addition, you can keep specific locations in sync.
 
