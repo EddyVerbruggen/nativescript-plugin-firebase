@@ -1860,6 +1860,14 @@ function nativeSnapshotToWebSnapshot(snapshot: com.google.firebase.database.Data
   };
 }
 
+firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
+  if (logging) {
+    com.google.firebase.database.FirebaseDatabase.getInstance().setLogLevel(com.google.firebase.database.Logger.Level.DEBUG);
+  } else {
+    com.google.firebase.database.FirebaseDatabase.getInstance().setLogLevel(com.google.firebase.database.Logger.Level.NONE);
+  }
+};
+
  /***********************************************
    * END Realtime Database Functions
    ***********************************************/
