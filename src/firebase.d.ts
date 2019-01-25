@@ -578,6 +578,7 @@ export function removeEventListeners(listeners: Array<any>, path: string): Promi
 
 export function onDisconnect(path: string): OnDisconnect;
 
+export function enableLogging(logger?: boolean | ((a: string) => any), persistent?: boolean);
 /**
  * Tells the client to keep its local cache in sync with the server automatically.
  */
