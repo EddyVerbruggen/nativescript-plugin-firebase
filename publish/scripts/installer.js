@@ -2,6 +2,18 @@ var fs = require('fs');
 var path = require('path');
 var prompt = require('prompt-lite');
 
+const { execSync } = require('child_process');
+const semver = require('semver');
+
+// iOS modern build system is supported from version NativeScript (CLI) version 5.2.0
+const tnsVersionFull = execSync('tns --version', { encoding: 'ascii'});
+const supportsIOSModernBuildSystem = tnsVersionFull.indexOf("5.2.0-") > -1 || semver.gte(tnsVersionFull, "5.2.0");
+console.log({supportsIOSModernBuildSystem});
+
+if (!supportsIOSModernBuildSystem) {
+  console.log(`You're using NativeScript ${tnsVersionFull}.. which doesn't support the latest Firestore and in-app-messaging SDKs. Upgrade NativeScript to at least 5.2.0 if you need those!\n\n`);
+}
+
 // Default settings for a few prompts
 var usingiOS = false, usingAndroid = false, externalPushClientOnly = false;
 
@@ -163,7 +175,7 @@ function promptQuestions() {
     default: 'n'
   }, {
     name: 'messaging',
-    description: 'Are you using Firebase Messaging? (y/n)',
+    description: 'Are you using Firebase Cloud Messaging? (y/n)',
     default: 'n'
   }, {
     name: 'crashlytics',
@@ -255,7 +267,7 @@ function promptQuestionsResult(result) {
       writePodFile(result);
     }
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
-    writeBuildscriptHookForFirestore(isSelected(result.firestore));
+    writeBuildscriptHookForFirestore(isSelected(result.firestore) && !supportsIOSModernBuildSystem);
   }
 
   if (usingAndroid) {
@@ -341,7 +353,8 @@ function writePodFile(result) {
 // The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
-pod 'Firebase/Core', '~> 5.15.0'
+# With NativeScript < 5.2 we can't bump Firebase/Core beyond 5.15.0, but with 5.2+ we can
+pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '5.16.0' : '5.15.0') + `'
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
@@ -350,7 +363,9 @@ pod 'Firebase/Core', '~> 5.15.0'
 ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
 
 # Cloud Firestore (sticking to 0.14 for now because of build error - see https://github.com/firebase/firebase-ios-sdk/issues/2177)
-` + (isSelected(result.firestore) ? `` : `#`) + `pod 'FirebaseFirestore', '~> 0.14.0'
+` + (isSelected(result.firestore) && !supportsIOSModernBuildSystem ? `` : `#`) + `pod 'FirebaseFirestore', '~> 0.14.0'
+# .. unless the modern build system is supported, then we can use the latest version (NativeScript 5.2+)
+` + (isSelected(result.firestore) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/Firestore'
 
 # Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
