@@ -1,8 +1,7 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions, } from "../";
-import { MLKitImageLabelingOnDeviceOptions, MLKitImageLabelingOnDeviceResult } from "./";
+import { MLKitImageLabelingOptions, MLKitImageLabelingCloudResult, MLKitImageLabelingOnDeviceResult } from "./";
 import { MLKitImageLabeling as MLKitImageLabelingBase } from "./imagelabeling-common";
-import { MLKitImageLabelingCloudOptions, MLKitImageLabelingCloudResult } from "./index";
 
 declare const com: any;
 
@@ -54,7 +53,7 @@ function getDetector(confidenceThreshold: number): any {
   return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionLabelDetector(labelDetectorOptions);
 }
 
-export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): Promise<MLKitImageLabelingOnDeviceResult> {
+export function labelImageOnDevice(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
       const firebaseVisionLabelDetector = getDetector(options.confidenceThreshold || 0.5);
@@ -96,13 +95,14 @@ export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): 
   });
 }
 
-export function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promise<MLKitImageLabelingCloudResult> {
+export function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingCloudResult> {
   return new Promise((resolve, reject) => {
     try {
       const cloudDetectorOptions =
           new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
-              .setModelType(options.modelType === "latest" ? com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.LATEST_MODEL : com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
-              .setMaxResults(options.maxResults || 10)
+              // TODO in a future version this may change to only confidenceThreshold (as it now is on iOS)
+              .setModelType(com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
+              .setMaxResults(10)
               .build();
 
       const firebaseVisionCloudLabelDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionCloudLabelDetector(cloudDetectorOptions);

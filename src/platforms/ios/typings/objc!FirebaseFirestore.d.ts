@@ -80,9 +80,9 @@ declare class FIRDocumentReference extends NSObject {
 
 	setDataMergeCompletion(documentData: NSDictionary<string, any>, merge: boolean, completion: (p1: NSError) => void): void;
 
-	setDataMergeFields(documentData: NSDictionary<string, any>, mergeFields: NSArray<any>): void;
+	setDataMergeFields(documentData: NSDictionary<string, any>, mergeFields: NSArray<any> | any[]): void;
 
-	setDataMergeFieldsCompletion(documentData: NSDictionary<string, any>, mergeFields: NSArray<any>, completion: (p1: NSError) => void): void;
+	setDataMergeFieldsCompletion(documentData: NSDictionary<string, any>, mergeFields: NSArray<any> | any[], completion: (p1: NSError) => void): void;
 
 	updateData(fields: NSDictionary<any, any>): void;
 
@@ -122,20 +122,20 @@ declare class FIRFieldPath extends NSObject implements NSCopying {
 
 	static new(): FIRFieldPath; // inherited from NSObject
 
-	constructor(o: { fields: NSArray<string>; });
+	constructor(o: { fields: NSArray<string> | string[]; });
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	initWithFields(fieldNames: NSArray<string>): this;
+	initWithFields(fieldNames: NSArray<string> | string[]): this;
 }
 
 declare class FIRFieldValue extends NSObject {
 
 	static alloc(): FIRFieldValue; // inherited from NSObject
 
-	static fieldValueForArrayRemove(elements: NSArray<any>): FIRFieldValue;
+	static fieldValueForArrayRemove(elements: NSArray<any> | any[]): FIRFieldValue;
 
-	static fieldValueForArrayUnion(elements: NSArray<any>): FIRFieldValue;
+	static fieldValueForArrayUnion(elements: NSArray<any> | any[]): FIRFieldValue;
 
 	static fieldValueForDelete(): FIRFieldValue;
 
@@ -218,6 +218,8 @@ declare class FIRFirestoreSettings extends NSObject implements NSCopying {
 
 	static new(): FIRFirestoreSettings; // inherited from NSObject
 
+	cacheSizeBytes: number;
+
 	dispatchQueue: NSObject;
 
 	host: string;
@@ -284,11 +286,11 @@ declare class FIRQuery extends NSObject {
 
 	queryEndingAtDocument(document: FIRDocumentSnapshot): FIRQuery;
 
-	queryEndingAtValues(fieldValues: NSArray<any>): FIRQuery;
+	queryEndingAtValues(fieldValues: NSArray<any> | any[]): FIRQuery;
 
 	queryEndingBeforeDocument(document: FIRDocumentSnapshot): FIRQuery;
 
-	queryEndingBeforeValues(fieldValues: NSArray<any>): FIRQuery;
+	queryEndingBeforeValues(fieldValues: NSArray<any> | any[]): FIRQuery;
 
 	queryFilteredUsingPredicate(predicate: NSPredicate): FIRQuery;
 
@@ -304,11 +306,11 @@ declare class FIRQuery extends NSObject {
 
 	queryStartingAfterDocument(document: FIRDocumentSnapshot): FIRQuery;
 
-	queryStartingAfterValues(fieldValues: NSArray<any>): FIRQuery;
+	queryStartingAfterValues(fieldValues: NSArray<any> | any[]): FIRQuery;
 
 	queryStartingAtDocument(document: FIRDocumentSnapshot): FIRQuery;
 
-	queryStartingAtValues(fieldValues: NSArray<any>): FIRQuery;
+	queryStartingAtValues(fieldValues: NSArray<any> | any[]): FIRQuery;
 
 	queryWhereFieldArrayContains(field: string, value: any): FIRQuery;
 
@@ -424,7 +426,7 @@ declare class FIRTransaction extends NSObject {
 
 	setDataForDocumentMerge(data: NSDictionary<string, any>, document: FIRDocumentReference, merge: boolean): FIRTransaction;
 
-	setDataForDocumentMergeFields(data: NSDictionary<string, any>, document: FIRDocumentReference, mergeFields: NSArray<any>): FIRTransaction;
+	setDataForDocumentMergeFields(data: NSDictionary<string, any>, document: FIRDocumentReference, mergeFields: NSArray<any> | any[]): FIRTransaction;
 
 	updateDataForDocument(fields: NSDictionary<any, any>, document: FIRDocumentReference): FIRTransaction;
 }
@@ -445,7 +447,7 @@ declare class FIRWriteBatch extends NSObject {
 
 	setDataForDocumentMerge(data: NSDictionary<string, any>, document: FIRDocumentReference, merge: boolean): FIRWriteBatch;
 
-	setDataForDocumentMergeFields(data: NSDictionary<string, any>, document: FIRDocumentReference, mergeFields: NSArray<any>): FIRWriteBatch;
+	setDataForDocumentMergeFields(data: NSDictionary<string, any>, document: FIRDocumentReference, mergeFields: NSArray<any> | any[]): FIRWriteBatch;
 
 	updateDataForDocument(fields: NSDictionary<any, any>, document: FIRDocumentReference): FIRWriteBatch;
 }
@@ -453,3 +455,5 @@ declare class FIRWriteBatch extends NSObject {
 declare var FirebaseFirestoreVersionNumber: number;
 
 declare var FirebaseFirestoreVersionString: interop.Reference<number>;
+
+declare var kFIRFirestoreCacheSizeUnlimited: number;

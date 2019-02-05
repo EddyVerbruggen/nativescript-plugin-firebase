@@ -1,3 +1,4 @@
+import { iOSApplication } from "tns-core-modules/application/application";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -7,7 +8,6 @@ import {
 } from "./firebase-common";
 import * as firebaseMessaging from "./messaging/messaging";
 import * as application from "tns-core-modules/application/application";
-import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebaseFunctions from './functions/functions';
 import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot } from "./firebase";
 import { firebaseUtils } from "./utils";
@@ -44,15 +44,19 @@ firebase.areNotificationsEnabled = firebaseMessaging.areNotificationsEnabled;
 firebase.functions = firebaseFunctions;
 
 firebase.addAppDelegateMethods = appDelegate => {
+  console.log(">>> addAppDelegateMethods");
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
+    console.log(">>> applicationDidFinishLaunchingWithOptions");
     if (!firebase._configured) {
       firebase._configured = true;
       if (typeof (FIRApp) !== "undefined") {
+        console.log(">>> applicationDidFinishLaunchingWithOptions, configure firebase");
         FIRApp.configure();
       }
     }
-    // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
+
+    // If the app was terminated and iOS is launching it in result of a push notification tapped by the user, this will hold the notification data.
     if (launchOptions) {
       const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
       if (remoteNotification) {
@@ -68,6 +72,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
   // there's no notification event to hook into for this one, so using the appDelegate
   if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRInvites) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
+    console.log(">> wiring applicationOpenURLSourceApplicationAnnotation");
     appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = (application, url, sourceApplication, annotation) => {
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
@@ -92,7 +97,9 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
+        console.log(">> wiring applicationOpenURLSourceApplicationAnnotation, FIRDynamicLink");
         const dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url);
+        console.log(">> wiring applicationOpenURLSourceApplicationAnnotation, FIRDynamicLink: " + dynamicLink);
         if (dynamicLink) {
           console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
           firebase._cachedDynamicLink = {
@@ -110,6 +117,8 @@ firebase.addAppDelegateMethods = appDelegate => {
 
   if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
     appDelegate.prototype.applicationOpenURLOptions = (application, url, options) => {
+      console.log(">> wiring applicationOpenURLOptions");
+
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
@@ -127,26 +136,26 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
+        console.log(">> wiring applicationOpenURLOptions, FIRDynamicLink, url: " + url);
         const dynamicLinks: FIRDynamicLinks = FIRDynamicLinks.dynamicLinks();
         const dynamicLink: FIRDynamicLink = dynamicLinks.dynamicLinkFromCustomSchemeURL(url);
-        if (dynamicLink) {
-          if (dynamicLink.url !== null) {
-            console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
-            if (firebase._dynamicLinkCallback) {
-              firebase._dynamicLinkCallback({
-                url: dynamicLink.url.absoluteString,
-                // matchConfidence: dynamicLink.matchConfidence,
-                minimumAppVersion: dynamicLink.minimumAppVersion
-              });
-            } else {
-              firebase._cachedDynamicLink = {
-                url: dynamicLink.url.absoluteString,
-                // matchConfidence: dynamicLink.matchConfidence,
-                minimumAppVersion: dynamicLink.minimumAppVersion
-              };
-            }
-            result = true;
+        console.log(">> wiring applicationOpenURLOptions, FIRDynamicLink: " + dynamicLink);
+        if (dynamicLink && dynamicLink.url !== null) {
+          console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
+          if (firebase._dynamicLinkCallback) {
+            firebase._dynamicLinkCallback({
+              url: dynamicLink.url.absoluteString,
+              // matchConfidence: dynamicLink.matchConfidence,
+              minimumAppVersion: dynamicLink.minimumAppVersion
+            });
+          } else {
+            firebase._cachedDynamicLink = {
+              url: dynamicLink.url.absoluteString,
+              // matchConfidence: dynamicLink.matchConfidence,
+              minimumAppVersion: dynamicLink.minimumAppVersion
+            };
           }
+          result = true;
         }
       }
       return result;
@@ -154,7 +163,9 @@ firebase.addAppDelegateMethods = appDelegate => {
   }
 
   if (typeof (FIRDynamicLink) !== "undefined") {
+    console.log(">>> addAppDelegateMethods, FIRDynamicLink");
     appDelegate.prototype.applicationContinueUserActivityRestorationHandler = (application, userActivity, restorationHandler) => {
+      console.log(">>> applicationContinueUserActivityRestorationHandler");
       let result = false;
 
       if (userActivity.webpageURL) {
@@ -305,15 +316,39 @@ if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
   firebaseMessaging.prepAppDelegate();
 }
 
+// This breaks in-app-messaging :(
 function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
+  console.log(">>> getAppDelegate, application.ios.delegate: " + application.ios.delegate);
   if (application.ios.delegate === undefined) {
+    console.log(">>> getAppDelegate, window =  " + application.ios.window);
 
-    @ObjCClass(UIApplicationDelegate)
     class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
+      public static ObjCProtocols = [UIApplicationDelegate];
+
+      // get window() {
+      //   console.log(">>> getting window: " + application.ios.window);
+      //   return application.ios.window;
+      // };
+
+      // set window(w) {
+      //   console.log(">>> setting window: " + w);
+      //   application.ios.window = w;
+      // };
+
+      // static new(): UIApplicationDelegateImpl {
+      //   console.log(">> new UIApplicationDelegateImpl");
+      //   return <UIApplicationDelegateImpl>super.new();
+      // }
     }
 
     application.ios.delegate = UIApplicationDelegateImpl;
+
+    setTimeout(() => {
+      if (!application.ios.delegate.window) {
+        application.ios.delegate.window = application.ios.window;
+      }
+    }, 2000);
   }
   return application.ios.delegate;
 }
@@ -352,14 +387,18 @@ firebase.init = arg => {
 
       // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
       if (FIROptions.defaultOptions() !== null) {
-        FIROptions.defaultOptions().deepLinkURLScheme = iOSUtils.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
+        console.log(">> init, defaultOptions deepLinkURLScheme");
+        FIROptions.defaultOptions().deepLinkURLScheme = NSBundle.mainBundle.bundleIdentifier;
+        console.log(">> init, defaultOptions deepLinkURLScheme: " + NSBundle.mainBundle.bundleIdentifier);
       }
 
       FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
+      console.log(">>> init, configure firebase");
       if (!firebase._configured) {
         firebase._configured = true;
         if (typeof (FIRApp) !== "undefined") {
+          console.log(">>> init, firebase configured");
           FIRApp.configure();
         }
       }
@@ -371,16 +410,12 @@ firebase.init = arg => {
       }
 
       if (typeof (FIRFirestore) !== "undefined") {
-        // fix a deprecation warning
-        const fIRFirestoreSettings = FIRFirestoreSettings.new();
-        fIRFirestoreSettings.timestampsInSnapshotsEnabled = true;
-
         // Firestore has offline persistence enabled by default
         if (arg.persist === false) {
+          const fIRFirestoreSettings = FIRFirestoreSettings.new();
           fIRFirestoreSettings.persistenceEnabled = false;
+          FIRFirestore.firestore().settings = fIRFirestoreSettings;
         }
-
-        FIRFirestore.firestore().settings = fIRFirestoreSettings;
       }
 
       if (typeof (FIRAuth) !== "undefined") {

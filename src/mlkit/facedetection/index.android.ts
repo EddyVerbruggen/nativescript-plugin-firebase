@@ -3,7 +3,7 @@ import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult } from 
 import { MLKitOptions } from "../index";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
 
-declare const com: any;
+const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 
@@ -16,7 +16,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
   }
 
   protected createSuccessListener(): any {
-    return new com.google.android.gms.tasks.OnSuccessListener({
+    return new gmsTasks.OnSuccessListener({
       onSuccess: faces => {
 
         if (!faces || faces.size() === 0) return;
@@ -58,7 +58,7 @@ function getFaceDetector(options: MLKitDetectFacesOnDeviceOptions): any {
       .setMinFaceSize(options.minimumFaceSize);
 
   if (options.enableFaceTracking === true) {
-    builder.enableTracking = true;
+    builder.enableTracking();
   }
 
   return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(builder.build());
@@ -69,7 +69,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
     try {
       const firebaseVisionFaceDetector = getFaceDetector(options);
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: faces => {
 
           const result = <MLKitDetectFacesOnDeviceResult>{
@@ -94,7 +94,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 

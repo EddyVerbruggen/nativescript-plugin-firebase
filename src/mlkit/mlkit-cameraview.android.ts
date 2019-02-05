@@ -4,7 +4,7 @@ import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-commo
 
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
-declare const com, android: any;
+// declare const com, android: any;
 
 class SizePair {
   pictureSize: {
@@ -256,7 +256,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   private createFailureListener(): any {
-    return new com.google.android.gms.tasks.OnFailureListener({
+    return new (<any>com.google.android.gms).tasks.OnFailureListener({
       onFailure: exception => console.log(exception.getMessage())
     });
   }

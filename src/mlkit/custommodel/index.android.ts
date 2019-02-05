@@ -3,8 +3,7 @@ import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitCustomModelOptions, MLKitCustomModelResult, MLKitCustomModelResultValue } from "./";
 import { getLabelsFromAppFolder, MLKitCustomModel as MLKitCustomModelBase } from "./custommodel-common";
 
-declare const com: any;
-declare const org: any; // TODO remove after regenerating typings
+const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitCustomModel extends MLKitCustomModelBase {
   private detector;
@@ -24,7 +23,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
     this.detectorBusy = true;
 
     if (!this.onFailureListener) {
-      this.onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      this.onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
           console.log(exception.getMessage());
           this.detectorBusy = false;
@@ -67,7 +66,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
   }
 
   protected createSuccessListener(): any {
-    this.onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+    this.onSuccessListener = new gmsTasks.OnSuccessListener({
       onSuccess: output => {
         const probabilities: Array<number> = output.getOutput(0)[0];
 
@@ -153,7 +152,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
         return;
       }
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: output => {
           const probabilities: Array<number> = output.getOutput(0)[0];
 
@@ -171,7 +170,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 

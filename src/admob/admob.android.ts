@@ -5,7 +5,7 @@ import * as appModule from "tns-core-modules/application";
 import { topmost } from "tns-core-modules/ui/frame";
 import { layout } from "tns-core-modules/utils/utils";
 
-declare const android, com: any;
+declare const com: any;
 
 export { AD_SIZE };
 

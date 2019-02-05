@@ -13,7 +13,9 @@ import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
 import lazy from "tns-core-modules/utils/lazy";
 import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot } from "./firebase";
 
-declare const android, com: any;
+declare const com: any;
+const gmsAds = (<any>com.google.android.gms).ads;
+const gmsTasks = (<any>com.google.android.gms).tasks;
 
 class DocumentSnapshot extends DocumentSnapshotBase {
   android: com.google.firebase.firestore.DocumentSnapshot;
@@ -52,7 +54,7 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
       if (authEnabled() && com.google.firebase.auth.FirebaseAuth.getInstance().isSignInWithEmailLink(emailLink)) {
         const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
         if (rememberedEmail !== undefined) {
-          const emailLinkOnCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+          const emailLinkOnCompleteListener = new gmsTasks.OnCompleteListener({
             onComplete: task => {
               if (task.isSuccessful()) {
                 const authResult = task.getResult();
@@ -73,7 +75,7 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
         }
 
       } else {
-        const getDynamicLinksCallback = new com.google.android.gms.tasks.OnSuccessListener({
+        const getDynamicLinksCallback = new gmsTasks.OnSuccessListener({
           onSuccess: pendingDynamicLinkData => {
             if (pendingDynamicLinkData != null) {
 
@@ -309,15 +311,16 @@ firebase.init = arg => {
         firebase.instance = fDatabase.getInstance().getReference();
       }
 
-      if (typeof (com.google.firebase.firestore) !== "undefined") {
-        // this may happen during livesync, and without catching this exception the app would crash
+      // Firestore has offline persistence enabled by default
+      if (arg.persist === false && typeof (com.google.firebase.firestore) !== "undefined") {
         try {
           com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(
               new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder()
-                  .setPersistenceEnabled(arg.persist !== false)
-                  .setTimestampsInSnapshotsEnabled(true)
+                  .setPersistenceEnabled(false)
                   .build());
-        } catch (ignore) {}
+        } catch (ignore) {
+          // this may happen during livesync, and without catching this exception the app would crash
+        }
       }
 
       if (authEnabled()) {
@@ -362,9 +365,9 @@ firebase.init = arg => {
       }
 
       // Firebase AdMob
-      if (typeof (com.google.android.gms.ads) !== "undefined" && typeof (com.google.android.gms.ads.MobileAds) !== "undefined") {
+      if (typeof (gmsAds) !== "undefined" && typeof (gmsAds.MobileAds) !== "undefined") {
         // init admob
-        com.google.android.gms.ads.MobileAds.initialize(appModule.android.context);
+        gmsAds.MobileAds.initialize(appModule.android.context);
       }
 
       resolve(firebase.instance);
@@ -392,7 +395,7 @@ firebase.fetchProvidersForEmail = email => {
         return;
       }
 
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task /* <ProviderQueryResult> */ => {
           if (!task.isSuccessful()) {
             reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
@@ -419,7 +422,7 @@ firebase.fetchSignInMethodsForEmail = email => {
         return;
       }
 
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task /* <SignInMethodQueryResult> */ => {
           if (!task.isSuccessful()) {
             reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
@@ -487,7 +490,7 @@ firebase.getRemoteConfigDefaults = properties => {
 firebase._isGooglePlayServicesAvailable = () => {
   const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
   const googleApiAvailability = com.google.android.gms.common.GoogleApiAvailability.getInstance();
-  const playServiceStatusSuccess = com.google.android.gms.common.ConnectionResult.SUCCESS; // 0
+  const playServiceStatusSuccess = 0; // com.google.android.gms.common.ConnectionResult.SUCCESS;
   const playServicesStatus = googleApiAvailability.isGooglePlayServicesAvailable(activity);
   const available = playServicesStatus === playServiceStatusSuccess;
   if (!available && googleApiAvailability.isUserResolvableError(playServicesStatus)) {
@@ -555,11 +558,11 @@ firebase.getRemoteConfig = arg => {
         resolve(result);
       };
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: () => returnMethod(false)
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
           if (exception.getMessage() === "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
             returnMethod(true);
@@ -618,7 +621,7 @@ firebase.sendEmailVerification = () => {
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
-        const addOnCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        const addOnCompleteListener = new gmsTasks.OnCompleteListener({
           onComplete: task => {
             if (!task.isSuccessful()) {
               reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
@@ -674,7 +677,7 @@ firebase.unlink = providerId => {
       }
 
       user.unlink(providerId)
-          .addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener({
+          .addOnCompleteListener(new gmsTasks.OnCompleteListener({
                 onComplete: task => {
                   if (task.isSuccessful()) {
                     resolve();
@@ -697,13 +700,13 @@ firebase.getAuthToken = arg => {
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
-        const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+        const onSuccessListener = new gmsTasks.OnSuccessListener({
           onSuccess: getTokenResult => {
             resolve(getTokenResult.getToken());
           }
         });
 
-        const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+        const onFailureListener = new gmsTasks.OnFailureListener({
           onFailure: exception => {
             reject(exception);
           }
@@ -790,7 +793,7 @@ firebase.login = arg => {
       firebase.moveLoginOptionsToObjects(arg);
 
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             console.log("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
@@ -850,7 +853,7 @@ firebase.login = arg => {
                 arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1")
             .build();
 
-        const onEmailLinkCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        const onEmailLinkCompleteListener = new gmsTasks.OnCompleteListener({
           onComplete: task => {
             if (!task.isSuccessful()) {
               reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
@@ -1132,7 +1135,7 @@ firebase.reauthenticate = arg => {
         return;
       }
 
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (task.isSuccessful()) {
             resolve();
@@ -1160,7 +1163,7 @@ firebase.reloadUser = () => {
         return;
       }
 
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (task.isSuccessful()) {
             resolve();
@@ -1183,7 +1186,7 @@ firebase.resetPassword = arg => {
       if (!arg.email) {
         reject("Resetting a password requires an email argument");
       } else {
-        const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        const onCompleteListener = new gmsTasks.OnCompleteListener({
           onComplete: task => {
             if (task.isSuccessful()) {
               resolve();
@@ -1210,7 +1213,7 @@ firebase.changePassword = arg => {
       if (!arg.email || !arg.oldPassword || !arg.newPassword) {
         reject("Changing a password requires an email and an oldPassword and a newPassword arguments");
       } else {
-        const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        const onCompleteListener = new gmsTasks.OnCompleteListener({
           onComplete: task => {
             if (task.isSuccessful()) {
               resolve();
@@ -1243,7 +1246,7 @@ firebase.createUser = arg => {
       } else {
         const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
 
-        const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        const onCompleteListener = new gmsTasks.OnCompleteListener({
           onComplete: task => {
             // see https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth#public-methods
             if (!task.isSuccessful()) {
@@ -1275,7 +1278,7 @@ firebase.deleteUser = arg => {
         return;
       }
 
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             reject("Deleting a user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
@@ -1307,7 +1310,7 @@ firebase.updateProfile = arg => {
           return;
         }
 
-        const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+        const onCompleteListener = new gmsTasks.OnCompleteListener({
           onComplete: task => {
             if (task.isSuccessful()) {
               resolve();
@@ -1486,10 +1489,10 @@ firebase.push = (path, val) => {
       const pushInstance = firebase.instance.child(path).push();
 
       pushInstance.setValue(firebase.toValue(val))
-          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+          .addOnSuccessListener(new gmsTasks.OnSuccessListener({
             onSuccess: () => resolve({key: pushInstance.getKey()})
           }))
-          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+          .addOnFailureListener(new gmsTasks.OnFailureListener({
             onFailure: exception => reject(exception.getMessage())
           }));
 
@@ -1509,10 +1512,10 @@ firebase.setValue = (path, val) => {
       }
 
       firebase.instance.child(path).setValue(firebase.toValue(val))
-          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+          .addOnSuccessListener(new gmsTasks.OnSuccessListener({
             onSuccess: () => resolve()
           }))
-          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+          .addOnFailureListener(new gmsTasks.OnFailureListener({
             onFailure: exception => reject(exception.getMessage())
           }));
 
@@ -1531,11 +1534,11 @@ firebase.update = (path, val) => {
         return;
       }
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: () => resolve()
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 
@@ -1684,10 +1687,10 @@ firebase.remove = path => {
       }
 
       firebase.instance.child(path).setValue(null)
-          .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+          .addOnSuccessListener(new gmsTasks.OnSuccessListener({
             onSuccess: () => resolve()
           }))
-          .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+          .addOnFailureListener(new gmsTasks.OnFailureListener({
             onFailure: exception => reject(exception.getMessage())
           }));
     } catch (ex) {
@@ -1706,10 +1709,10 @@ class OnDisconnect implements OnDisconnectBase {
     return new Promise((resolve, reject) => {
       try {
         this.disconnectInstance.cancel()
-            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            .addOnSuccessListener(new gmsTasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
-            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            .addOnFailureListener(new gmsTasks.OnFailureListener({
               onFailure: exception => reject(exception.getMessage())
             }));
       } catch (ex) {
@@ -1723,10 +1726,10 @@ class OnDisconnect implements OnDisconnectBase {
     return new Promise((resolve, reject) => {
       try {
         this.disconnectInstance.removeValue()
-            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            .addOnSuccessListener(new gmsTasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
-            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            .addOnFailureListener(new gmsTasks.OnFailureListener({
               onFailure: exception => reject(exception.getMessage())
             }));
       } catch (ex) {
@@ -1740,10 +1743,10 @@ class OnDisconnect implements OnDisconnectBase {
     return new Promise((resolve, reject) => {
       try {
        this.disconnectInstance.setValue(firebase.toValue(value))
-            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            .addOnSuccessListener(new gmsTasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
-            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            .addOnFailureListener(new gmsTasks.OnFailureListener({
               onFailure: exception => reject(exception.getMessage())
             }));
       } catch (ex) {
@@ -1757,10 +1760,10 @@ class OnDisconnect implements OnDisconnectBase {
     return new Promise((resolve, reject) => {
       try {
        this.disconnectInstance.setValue(firebase.toValue(value), priority)
-            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            .addOnSuccessListener(new gmsTasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
-            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            .addOnFailureListener(new gmsTasks.OnFailureListener({
               onFailure: exception => reject(exception.getMessage())
             }));
       } catch (ex) {
@@ -1774,10 +1777,10 @@ class OnDisconnect implements OnDisconnectBase {
     return new Promise((resolve, reject) => {
       try {
         this.disconnectInstance.updateChildren(firebase.toHashMap(values))
-            .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener({
+            .addOnSuccessListener(new gmsTasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
-            .addOnFailureListener(new com.google.android.gms.tasks.OnFailureListener({
+            .addOnFailureListener(new gmsTasks.OnFailureListener({
               onFailure: exception => reject(exception.getMessage())
             }));
       } catch (ex) {
@@ -1990,7 +1993,7 @@ firebase.invites.getInvitation = () => {
 
       const firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: pendingDynamicLinkData => {
           if (pendingDynamicLinkData === null) {
             reject("Not launched by invitation");
@@ -2011,7 +2014,7 @@ firebase.invites.getInvitation = () => {
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
           reject(exception.getMessage());
         }
@@ -2053,7 +2056,7 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
 
   public commit(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             const ex = task.getException();
@@ -2125,17 +2128,17 @@ firebase.firestore.Transaction = (nativeTransaction: com.google.firebase.firesto
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
   return new Promise((resolve, reject) => {
 
-    const onSuccessListenert = new com.google.android.gms.tasks.OnSuccessListener({
+    const onSuccessListenert = new gmsTasks.OnSuccessListener({
       onSuccess: () => {
         const i = 1;
       }
     });
 
-    const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+    const onSuccessListener = new gmsTasks.OnSuccessListener({
       onSuccess: () => resolve()
     });
 
-    const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+    const onFailureListener = new gmsTasks.OnFailureListener({
       onFailure: exception => reject(exception.getMessage())
     });
 
@@ -2281,7 +2284,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: (docRef: com.google.firebase.firestore.DocumentReference) => {
           resolve({
             discriminator: "docRef",
@@ -2297,7 +2300,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 
@@ -2324,11 +2327,11 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
 
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: () => resolve()
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 
@@ -2363,11 +2366,11 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: () => resolve()
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 
@@ -2395,11 +2398,11 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: () => resolve()
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 
@@ -2427,7 +2430,7 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
 
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             const ex = task.getException();
@@ -2465,7 +2468,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
 
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             const ex = task.getException();
@@ -2492,7 +2495,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
 firebase.firestore._getQuery = (collectionPath: string, query: com.google.firebase.firestore.Query): firestore.Query => {
   return {
     get: () => new Promise((resolve, reject) => {
-      const onCompleteListener = new com.google.android.gms.tasks.OnCompleteListener({
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             const ex = task.getException();

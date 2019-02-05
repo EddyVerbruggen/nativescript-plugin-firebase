@@ -126,7 +126,7 @@ function getInterpreter(localModelFile: string): FIRModelInterpreter {
             localModelFile.substring(0, localModelFile.lastIndexOf(".")),
             localModelFile.substring(localModelFile.lastIndexOf(".") + 1));
       }
-      const localModelSource = FIRLocalModelSource.alloc().initWithModelNamePath(localModelName, localModelFilePath);
+      const localModelSource = FIRLocalModelSource.alloc().initWithNamePath(localModelName, localModelFilePath);
       localModelRegistrationSuccess = FIRModelManager.modelManager().registerLocalModelSource(localModelSource);
     }
   }

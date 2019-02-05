@@ -1,8 +1,8 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitOptions } from "../";
-import { MLKitImageLabelingOnDeviceOptions, MLKitImageLabelingOnDeviceResult } from "./";
+import { MLKitImageLabelingOnDeviceResult, MLKitImageLabelingOptions } from "./";
 import { MLKitImageLabeling as MLKitImageLabelingBase } from "./imagelabeling-common";
-import { MLKitImageLabelingCloudOptions, MLKitImageLabelingCloudResult } from "./index";
+import { MLKitImageLabelingCloudResult } from "./index";
 
 export class MLKitImageLabeling extends MLKitImageLabelingBase {
 
@@ -11,7 +11,7 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
   }
 
   protected createSuccessListener(): any {
-    return (labels: NSArray<FIRVisionLabel>, error: NSError) => {
+    return (labels: NSArray<FIRVisionImageLabel>, error: NSError) => {
       if (error !== null) {
         console.log(error.localizedDescription);
 
@@ -21,9 +21,9 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
         };
 
         for (let i = 0, l = labels.count; i < l; i++) {
-          const label: FIRVisionLabel = labels.objectAtIndex(i);
+          const label: FIRVisionImageLabel = labels.objectAtIndex(i);
           result.labels.push({
-            text: label.label,
+            text: label.text,
             confidence: label.confidence
           });
         }
@@ -42,18 +42,19 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
   }
 }
 
-function getDetector(confidenceThreshold: number): FIRVisionLabelDetector {
+function getDetector(confidenceThreshold?: number): FIRVisionImageLabeler {
   const firVision: FIRVision = FIRVision.vision();
-  const fIRVisionLabelDetectorOptions = FIRVisionLabelDetectorOptions.alloc().initWithConfidenceThreshold(confidenceThreshold);
-  return firVision.labelDetectorWithOptions(fIRVisionLabelDetectorOptions);
+  const fIRVisionOnDeviceImageLabelerOptions = FIRVisionOnDeviceImageLabelerOptions.new();
+  fIRVisionOnDeviceImageLabelerOptions.confidenceThreshold = confidenceThreshold || 0.5;
+  return firVision.onDeviceImageLabelerWithOptions(fIRVisionOnDeviceImageLabelerOptions);
 }
 
-export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): Promise<MLKitImageLabelingOnDeviceResult> {
+export function labelImageOnDevice(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
-      const labelDetector = getDetector(options.confidenceThreshold || 0.5);
+      const labelDetector = getDetector(options.confidenceThreshold);
 
-      labelDetector.detectInImageCompletion(getImage(options), (labels: NSArray<FIRVisionLabel>, error: NSError) => {
+      labelDetector.processImageCompletion(getImage(options), (labels: NSArray<FIRVisionImageLabel>, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
 
@@ -63,9 +64,9 @@ export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): 
           };
 
           for (let i = 0, l = labels.count; i < l; i++) {
-            const label: FIRVisionLabel = labels.objectAtIndex(i);
+            const label: FIRVisionImageLabel = labels.objectAtIndex(i);
             result.labels.push({
-              text: label.label,
+              text: label.text,
               confidence: label.confidence
             });
           }
@@ -79,17 +80,16 @@ export function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): 
   });
 }
 
-export function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promise<MLKitImageLabelingCloudResult> {
+export function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingCloudResult> {
   return new Promise((resolve, reject) => {
     try {
-      const fIRVisionCloudDetectorOptions = FIRVisionCloudDetectorOptions.new();
-      fIRVisionCloudDetectorOptions.modelType = options.modelType === "latest" ? FIRVisionCloudModelType.Latest : FIRVisionCloudModelType.Stable;
-      fIRVisionCloudDetectorOptions.maxResults = options.maxResults || 10;
+      const fIRVisionCloudImageLabelerOptions = FIRVisionCloudImageLabelerOptions.new();
+      fIRVisionCloudImageLabelerOptions.confidenceThreshold = options.confidenceThreshold || 0.5;
 
       const firVision: FIRVision = FIRVision.vision();
-      const labelDetector = firVision.cloudLabelDetectorWithOptions(fIRVisionCloudDetectorOptions);
+      const labeler = firVision.cloudImageLabelerWithOptions(fIRVisionCloudImageLabelerOptions);
 
-      labelDetector.detectInImageCompletion(getImage(options), (labels: NSArray<FIRVisionCloudLabel>, error: NSError) => {
+      labeler.processImageCompletion(getImage(options), (labels: NSArray<FIRVisionImageLabel>, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
 
@@ -99,9 +99,9 @@ export function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promis
           };
 
           for (let i = 0, l = labels.count; i < l; i++) {
-            const label: FIRVisionCloudLabel = labels.objectAtIndex(i);
+            const label: FIRVisionImageLabel = labels.objectAtIndex(i);
             result.labels.push({
-              text: label.label,
+              text: label.text,
               confidence: label.confidence
             });
           }

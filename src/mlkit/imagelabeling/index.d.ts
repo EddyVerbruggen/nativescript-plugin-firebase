@@ -15,14 +15,11 @@ export interface MLKitImageLabelingCloudResult extends MLKitResult {
 export interface MLKitImageLabelingOnDeviceResult extends MLKitImageLabelingCloudResult {
 }
 
-export interface MLKitImageLabelingOnDeviceOptions extends MLKitOptions {
+export interface MLKitImageLabelingOptions extends MLKitOptions {
   /**
    * 0.5 by default
    */
   confidenceThreshold?: number;
-}
-
-export interface MLKitImageLabelingCloudOptions extends MLKitCloudOptions {
 }
 
 export declare function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): Promise<MLKitImageLabelingOnDeviceResult>;

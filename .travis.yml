@@ -26,7 +26,7 @@ matrix:
       env:
         - WebPack="Android"
       jdk: oraclejdk8
-      before_install: nvm install 8
+      before_install: nvm install stable
       script: travis_wait travis_retry tns build android --bundle
     - stage: "Build"
       env:

@@ -178,6 +178,10 @@ function promptQuestions() {
     description: 'Are you using Firebase Cloud Messaging? (y/n)',
     default: 'n'
   }, {
+    name: 'in_app_messaging',
+    description: 'Are you using In-App Messaging? (y/n)',
+    default: 'n'
+  }, {
     name: 'crashlytics',
     description: 'Are you using Firebase Crashlytics? (y/n)',
     default: 'n'
@@ -392,6 +396,9 @@ end`) + `
 
 # Firebase Cloud Messaging (FCM)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
+
+# Firebase In-App Messaging (supported on NativeScript 5.2+)
+` + (isSelected(result.in_app_messaging) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
 
 # Firebase Cloud Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
@@ -732,10 +739,10 @@ dependencies {
     ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` compile "com.google.firebase:firebase-auth:16.1.0"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.5"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.6"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.1.5"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:18.0.0"
 
     // Remote Config
     ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.1.3"
@@ -751,6 +758,9 @@ dependencies {
 
     // Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.3.4"
+
+    // In-App Messaging
+    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-inappmessaging-display:17.0.5"
 
     // Cloud Storage
     ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.5"
@@ -776,7 +786,7 @@ dependencies {
     ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.6"
 
     // Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.5" // BEWARE: 16.1.2 is fine, but 16.1.3 results in a build error
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` compile "com.google.firebase:firebase-dynamic-links:16.1.5"
 }
 
 apply plugin: "com.google.gms.google-services"

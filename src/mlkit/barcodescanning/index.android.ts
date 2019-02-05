@@ -3,9 +3,9 @@ import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } fro
 import { MLKitOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
-declare const com: any;
-
 export { BarcodeFormat };
+
+const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
@@ -20,7 +20,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
   }
 
   protected createSuccessListener(): any {
-    return new com.google.android.gms.tasks.OnSuccessListener({
+    return new gmsTasks.OnSuccessListener({
       onSuccess: barcodes => {
 
         const result = <MLKitScanBarcodesOnDeviceResult>{
@@ -66,7 +66,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
     try {
       const firebaseVisionBarcodeDetector = getBarcodeDetector(options.formats);
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: barcodes => {
           const result = <MLKitScanBarcodesOnDeviceResult>{
             barcodes: []
@@ -89,7 +89,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 
