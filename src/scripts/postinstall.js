@@ -4422,6 +4422,10 @@ function promptQuestions() {
         name: 'ml_kit_custom_model',
         description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
         default: 'n'
+      // }, {
+      //   name: 'ml_kit_natural_language_identification',
+      //   description: 'With Ml Kit, do you want to use recognize natural languages? (y/n)',
+      //   default: 'n'
       }], function (mlkitErr, mlkitResult) {
         if (mlkitErr) {
           return console.log(mlkitErr);
@@ -4594,6 +4598,8 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_face_detection) ? `` : `#`) + `pod 'Firebase/MLVisionFaceModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
+# Natural Language is commented for now, because of (likely) this issue: https://github.com/firebase/firebase-ios-sdk/issues/2324
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `#` : `#`) + `pod 'Firebase/MLNLLanguageID'
 
 # Facebook Authentication
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit', '~> 4.38.0'
@@ -4947,6 +4953,8 @@ dependencies {
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:18.0.2"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
     ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-model-interpreter:16.2.4"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `//` : `//`) + ` compile "com.google.firebase:firebase-ml-natural-language:18.1.1"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `//` : `//`) + ` compile "com.google.firebase:firebase-ml-natural-language-language-id-model:18.0.2"
 
     // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }

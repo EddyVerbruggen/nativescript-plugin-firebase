@@ -1,4 +1,4 @@
-import { MLKitCloudOptions, MLKitResult } from "../index";
+import { MLKitVisionCloudOptions, MLKitVisionResult } from "../index";
 
 export interface MLKitLandmarkRecognitionResultLandmark {
   // TODO add location (see #704)
@@ -8,11 +8,11 @@ export interface MLKitLandmarkRecognitionResultLandmark {
   android?: any;
 }
 
-export interface MLKitLandmarkRecognitionCloudResult extends MLKitResult {
+export interface MLKitLandmarkRecognitionCloudResult extends MLKitVisionResult {
   landmarks: Array<MLKitLandmarkRecognitionResultLandmark>;
 }
 
-export interface MLKitLandmarkRecognitionCloudOptions extends MLKitCloudOptions {
+export interface MLKitLandmarkRecognitionCloudOptions extends MLKitVisionCloudOptions {
 }
 
 export declare function recognizeLandmarksCloud(options: MLKitLandmarkRecognitionCloudOptions): Promise<MLKitLandmarkRecognitionCloudResult>;

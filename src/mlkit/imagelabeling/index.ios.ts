@@ -1,8 +1,7 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitOptions } from "../";
-import { MLKitImageLabelingOnDeviceResult, MLKitImageLabelingOptions } from "./";
+import { MLKitVisionOptions } from "../";
+import { MLKitImageLabelingCloudResult, MLKitImageLabelingOnDeviceResult, MLKitImageLabelingOptions } from "./";
 import { MLKitImageLabeling as MLKitImageLabelingBase } from "./imagelabeling-common";
-import { MLKitImageLabelingCloudResult } from "./index";
 
 export class MLKitImageLabeling extends MLKitImageLabelingBase {
 
@@ -116,7 +115,7 @@ export function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLK
   });
 }
 
-function getImage(options: MLKitOptions): FIRVisionImage {
+function getImage(options: MLKitVisionOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
   return FIRVisionImage.alloc().initWithImage(image);
 }

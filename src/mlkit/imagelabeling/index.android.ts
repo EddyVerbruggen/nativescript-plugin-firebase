@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitOptions, } from "../";
+import { MLKitVisionOptions, } from "../";
 import { MLKitImageLabelingOptions, MLKitImageLabelingCloudResult, MLKitImageLabelingOnDeviceResult } from "./";
 import { MLKitImageLabeling as MLKitImageLabelingBase } from "./imagelabeling-common";
 
@@ -144,7 +144,7 @@ export function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLK
   });
 }
 
-function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
+function getImage(options: MLKitVisionOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 }

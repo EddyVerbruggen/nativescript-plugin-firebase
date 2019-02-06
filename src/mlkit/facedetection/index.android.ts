@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
+import { MLKitVisionOptions } from "../";
 import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult } from "./";
-import { MLKitOptions } from "../index";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
 
 const gmsTasks = (<any>com.google.android.gms).tasks;
@@ -110,7 +110,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
   });
 }
 
-function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
+function getImage(options: MLKitVisionOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 }

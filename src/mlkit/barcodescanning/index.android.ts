@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./";
-import { MLKitOptions } from "../index";
+import { MLKitVisionOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
 export { BarcodeFormat };
@@ -105,7 +105,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
   });
 }
 
-function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
+function getImage(options: MLKitVisionOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 }

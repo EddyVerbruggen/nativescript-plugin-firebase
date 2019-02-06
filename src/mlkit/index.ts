@@ -4,17 +4,18 @@ import * as facedetection from "./facedetection";
 import * as imagelabeling from "./imagelabeling";
 import * as landmarkrecognition from "./landmarkrecognition";
 import * as custommodel from "./custommodel";
+import * as naturallanguageidentification from "./naturallanguageidentification";
 
 import { ImageSource } from "tns-core-modules/image-source";
 import { Image } from "tns-core-modules/ui/image";
 
-export interface MLKitOptions {
+export interface MLKitVisionOptions {
   image?: Image | ImageSource;
 }
 
 export type MLKitCloudModelType = "stable" | "latest";
 
-export interface MLKitCloudOptions extends MLKitOptions {
+export interface MLKitVisionCloudOptions extends MLKitVisionOptions {
   /**
    * Defaults to "stable".
    */
@@ -25,9 +26,9 @@ export interface MLKitCloudOptions extends MLKitOptions {
   maxResults?: number
 }
 
-export interface MLKitResult {
+export interface MLKitVisionResult {
   /**
-   * Only set when using a camera stream,
+   * Only set when using a camera stream (update: DISABLED),
    * because when detecting from static images... you already have the image, right? :)
    */
   // imageSource?: ImageSource;
@@ -42,6 +43,7 @@ export {
   facedetection,
   imagelabeling,
   landmarkrecognition,
-  custommodel
+  custommodel,
+  naturallanguageidentification
 };
 

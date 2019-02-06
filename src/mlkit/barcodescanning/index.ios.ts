@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./index";
-import { MLKitOptions } from "../index";
+import { MLKitVisionOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
 export { BarcodeFormat };
@@ -92,7 +92,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
   });
 }
 
-function getImage(options: MLKitOptions): FIRVisionImage {
+function getImage(options: MLKitVisionOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
   return FIRVisionImage.alloc().initWithImage(image);
 }

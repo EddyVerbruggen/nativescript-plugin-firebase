@@ -1,11 +1,11 @@
-import { MLKitCameraView, MLKitOptions, MLKitResult } from "../index";
+import { MLKitCameraView, MLKitVisionOptions, MLKitVisionResult } from "../index";
 
 export interface MLKitCustomModelResultValue {
   text: string;
   confidence: number;
 }
 
-export interface MLKitCustomModelResult extends MLKitResult {
+export interface MLKitCustomModelResult extends MLKitVisionResult {
   result: Array<MLKitCustomModelResultValue>;
 }
 
@@ -17,7 +17,7 @@ export interface TNSCustomModelInput {
 }
 
 // see https://firebase.google.com/docs/ml-kit/ios/use-custom-models
-export interface MLKitCustomModelOptions extends MLKitOptions {
+export interface MLKitCustomModelOptions extends MLKitVisionOptions {
   localModelFile?: string;
   labelsFile: string;
   /**
