@@ -4442,6 +4442,7 @@ function promptQuestions() {
 }
 
 function promptQuestionsResult(result) {
+  writeGoogleServiceCopyHook();
   if (usingiOS) {
     if (!externalPushClientOnly) {
       writePodFile(result);
@@ -4452,7 +4453,6 @@ function promptQuestionsResult(result) {
 
   if (usingAndroid) {
     writeGradleFile(result);
-    writeGoogleServiceCopyHook();
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
     activateAndroidPushNotificationsLib(isSelected(result.messaging) || externalPushClientOnly);
