@@ -379,13 +379,17 @@ This may not work on an (Android) simulator. See #463.
   );
 ```
 
-#### Changing a password
+#### Updating a password
+
+> The method name was changed in 8.0.0 from `changePassword` to `updatePassword` to better align with the Web API.
+
 Note that changing a password may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
 
+<details>
+ <summary>Native API</summary>
+
 ```js
-  firebase.changePassword({
-    email: 'useraccount@provider.com',
-    oldPassword: 'myOldPassword',
+  firebase.updatePassword({
     newPassword: 'myNewPassword'
   }).then(
       function () {
@@ -396,6 +400,17 @@ Note that changing a password may fail if your login for this `email` was too lo
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().updatePassword('new-password')
+      .then(() => console.log("Password updated"))
+      .catch(error => console.log("Error creating user: " + error));
+```
+</details>
 
 ### Phone Verification
 * Don't forget to enable Phone login in your firebase instance.
