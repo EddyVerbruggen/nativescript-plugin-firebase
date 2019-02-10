@@ -1,3 +1,8 @@
+import * as appModule from "tns-core-modules/application";
+import { AndroidActivityResultEventData } from "tns-core-modules/application";
+import lazy from "tns-core-modules/utils/lazy";
+import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
+import { ChangePasswordOptions, DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -5,13 +10,8 @@ import {
   GeoPoint,
   isDocumentReference
 } from "./firebase-common";
-import * as firebaseMessaging from "./messaging/messaging";
 import * as firebaseFunctions from "./functions/functions";
-import * as appModule from "tns-core-modules/application";
-import { AndroidActivityResultEventData } from "tns-core-modules/application";
-import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
-import lazy from "tns-core-modules/utils/lazy";
-import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot } from "./firebase";
+import * as firebaseMessaging from "./messaging/messaging";
 
 declare const com: any;
 const gmsAds = (<any>com.google.android.gms).ads;
@@ -1207,29 +1207,25 @@ firebase.resetPassword = arg => {
   });
 };
 
-firebase.changePassword = arg => {
-  return new Promise((resolve, reject) => {
+firebase.changePassword = (arg: ChangePasswordOptions): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
     try {
-      if (!arg.email || !arg.oldPassword || !arg.newPassword) {
-        reject("Changing a password requires an email and an oldPassword and a newPassword arguments");
-      } else {
-        const onCompleteListener = new gmsTasks.OnCompleteListener({
-          onComplete: task => {
-            if (task.isSuccessful()) {
-              resolve();
-            } else {
-              reject("Updating password failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-            }
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
+        onComplete: task => {
+          if (task.isSuccessful()) {
+            resolve();
+          } else {
+            reject("Updating password failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           }
-        });
-
-        const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-
-        if (user === null) {
-          reject("no current user");
-        } else {
-          user.updatePassword(arg.newPassword).addOnCompleteListener(onCompleteListener);
         }
+      });
+
+      const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+
+      if (user === null) {
+        reject("no current user");
+      } else {
+        user.updatePassword(arg.newPassword).addOnCompleteListener(onCompleteListener);
       }
     } catch (ex) {
       console.log("Error in firebase.changePassword: " + ex);

@@ -1,4 +1,5 @@
-import { iOSApplication } from "tns-core-modules/application/application";
+import * as application from "tns-core-modules/application/application";
+import { ChangePasswordOptions, DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -6,10 +7,8 @@ import {
   GeoPoint,
   isDocumentReference
 } from "./firebase-common";
-import * as firebaseMessaging from "./messaging/messaging";
-import * as application from "tns-core-modules/application/application";
 import * as firebaseFunctions from './functions/functions';
-import { firestore, User, OnDisconnect as OnDisconnectBase, DataSnapshot } from "./firebase";
+import * as firebaseMessaging from "./messaging/messaging";
 import { firebaseUtils } from "./utils";
 
 firebase._gIDAuthentication = null;
@@ -1097,8 +1096,8 @@ firebase.resetPassword = arg => {
   });
 };
 
-firebase.changePassword = arg => {
-  return new Promise((resolve, reject) => {
+firebase.changePassword = (arg: ChangePasswordOptions): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
     try {
       const onCompletion = error => {
         if (error) {
@@ -1108,15 +1107,11 @@ firebase.changePassword = arg => {
         }
       };
 
-      if (!arg.email || !arg.oldPassword || !arg.newPassword) {
-        reject("Changing a password requires an email and an oldPassword and a newPassword arguments");
+      const user = FIRAuth.auth().currentUser;
+      if (user === null) {
+        reject("no current user");
       } else {
-        const user = FIRAuth.auth().currentUser;
-        if (user === null) {
-          reject("no current user");
-        } else {
-          user.updatePasswordCompletion(arg.newPassword, onCompletion);
-        }
+        user.updatePasswordCompletion(arg.newPassword, onCompletion);
       }
     } catch (ex) {
       console.log("Error in firebase.changePassword: " + ex);

@@ -401,12 +401,7 @@ export interface FBData {
   value: any;
 }
 
-/**
- * The options object passed into the changePassword function.
- */
 export interface ChangePasswordOptions {
-  email: string;
-  oldPassword: string;
   newPassword: string;
 }
 
@@ -909,7 +904,7 @@ export function updateProfile(options: UpdateProfileOptions): Promise<any>;
 
 export function resetPassword(options: ResetPasswordOptions): Promise<any>;
 
-export function changePassword(options: ChangePasswordOptions): Promise<any>;
+export function changePassword(options: ChangePasswordOptions): Promise<void>;
 
 export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
 

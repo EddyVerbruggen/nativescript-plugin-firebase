@@ -116,6 +116,17 @@ export module auth {
       })
     }
 
+    public updatePassword(newPassword: string): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        firebase.changePassword(
+            {
+              newPassword
+            })
+            .then(() => resolve())
+            .catch(err => reject(err));
+      })
+    }
+
     public signInAnonymously(): Promise<any> {
       return new Promise((resolve, reject) => {
         firebase.login({
