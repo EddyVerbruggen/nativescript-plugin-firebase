@@ -385,13 +385,6 @@ export interface UpdateProfileOptions {
 }
 
 /**
- * The options object passed into the resetPassword function.
- */
-export interface ResetPasswordOptions {
-  email: string;
-}
-
-/**
  * The returned object in the callback handlers
  * of the addChildEventListener and addValueEventListener functions.
  */
@@ -399,10 +392,6 @@ export interface FBData {
   type: string;
   key: string;
   value: any;
-}
-
-export interface ChangePasswordOptions {
-  newPassword: string;
 }
 
 export interface AuthStateData {
@@ -902,9 +891,11 @@ export function deleteUser(): Promise<any>;
 
 export function updateProfile(options: UpdateProfileOptions): Promise<any>;
 
-export function resetPassword(options: ResetPasswordOptions): Promise<any>;
+export function sendPasswordResetEmail(email: string): Promise<void>;
 
-export function changePassword(options: ChangePasswordOptions): Promise<void>;
+export function updateEmail(newEmail: string): Promise<void>;
+
+export function updatePassword(newPassword: string): Promise<void>;
 
 export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
 

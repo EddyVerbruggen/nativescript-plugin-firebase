@@ -2,7 +2,7 @@ import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import lazy from "tns-core-modules/utils/lazy";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
-import { ChangePasswordOptions, DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
+import { DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -1180,34 +1180,57 @@ firebase.reloadUser = () => {
   });
 };
 
-firebase.resetPassword = arg => {
-  return new Promise((resolve, reject) => {
+firebase.sendPasswordResetEmail = (email: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
     try {
-      if (!arg.email) {
-        reject("Resetting a password requires an email argument");
-      } else {
-        const onCompleteListener = new gmsTasks.OnCompleteListener({
-          onComplete: task => {
-            if (task.isSuccessful()) {
-              resolve();
-            } else {
-              // TODO extract error
-              reject("Sending password reset email failed");
-            }
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
+        onComplete: task => {
+          if (task.isSuccessful()) {
+            resolve();
+          } else {
+            // TODO extract error
+            reject("Sending password reset email failed");
           }
-        });
+        }
+      });
 
-        const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
-        firebaseAuth.sendPasswordResetEmail(arg.email).addOnCompleteListener(onCompleteListener);
-      }
+      const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
+      firebaseAuth.sendPasswordResetEmail(email).addOnCompleteListener(onCompleteListener);
     } catch (ex) {
-      console.log("Error in firebase.resetPassword: " + ex);
+      console.log("Error in firebase.sendPasswordResetEmail: " + ex);
       reject(ex);
     }
   });
 };
 
-firebase.changePassword = (arg: ChangePasswordOptions): Promise<void> => {
+firebase.updateEmail = (newEmail: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const onCompleteListener = new gmsTasks.OnCompleteListener({
+        onComplete: task => {
+          if (task.isSuccessful()) {
+            resolve();
+          } else {
+            reject("Updating email failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          }
+        }
+      });
+
+      const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+
+      if (user === null) {
+        reject("no current user");
+      } else {
+        user.updateEmail(newEmail).addOnCompleteListener(onCompleteListener);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.updateEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.updatePassword = (newPassword: string): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
       const onCompleteListener = new gmsTasks.OnCompleteListener({
@@ -1225,10 +1248,10 @@ firebase.changePassword = (arg: ChangePasswordOptions): Promise<void> => {
       if (user === null) {
         reject("no current user");
       } else {
-        user.updatePassword(arg.newPassword).addOnCompleteListener(onCompleteListener);
+        user.updatePassword(newPassword).addOnCompleteListener(onCompleteListener);
       }
     } catch (ex) {
-      console.log("Error in firebase.changePassword: " + ex);
+      console.log("Error in firebase.updatePassword: " + ex);
       reject(ex);
     }
   });
@@ -1334,9 +1357,9 @@ firebase.updateProfile = arg => {
   });
 };
 
- /***********************************************
-   * Start Realtime Database Functions
-   ***********************************************/
+/***********************************************
+ * Start Realtime Database Functions
+ ***********************************************/
 
 firebase.keepInSync = (path, switchOn) => {
   return new Promise((resolve, reject) => {
@@ -1698,7 +1721,7 @@ firebase.remove = path => {
 
 class OnDisconnect implements OnDisconnectBase {
 
-  constructor(private disconnectInstance: com.google.firebase.database.OnDisconnect ) {
+  constructor(private disconnectInstance: com.google.firebase.database.OnDisconnect) {
   }
 
   cancel(): Promise<any> {
@@ -1738,7 +1761,7 @@ class OnDisconnect implements OnDisconnectBase {
   set(value: any): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-       this.disconnectInstance.setValue(firebase.toValue(value))
+        this.disconnectInstance.setValue(firebase.toValue(value))
             .addOnSuccessListener(new gmsTasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
@@ -1755,7 +1778,7 @@ class OnDisconnect implements OnDisconnectBase {
   setWithPriority(value: any, priority: any): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
-       this.disconnectInstance.setValue(firebase.toValue(value), priority)
+        this.disconnectInstance.setValue(firebase.toValue(value), priority)
             .addOnSuccessListener(new gmsTasks.OnSuccessListener({
               onSuccess: () => resolve()
             }))
@@ -1769,7 +1792,7 @@ class OnDisconnect implements OnDisconnectBase {
     });
   }
 
-  update(values: Object, onComplete?: (a: Error | null) => any): Promise<any>  {
+  update(values: Object, onComplete?: (a: Error | null) => any): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
         this.disconnectInstance.updateChildren(firebase.toHashMap(values))
@@ -1797,7 +1820,7 @@ firebase.onDisconnect = (path: string): OnDisconnectBase => {
 };
 
 firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
-  onComplete: (a: Error | null, b: boolean, c: DataSnapshot) => Promise<any>) => {
+                        onComplete: (a: Error | null, b: boolean, c: DataSnapshot) => Promise<any>) => {
   return new Promise((resolve, reject) => {
     if (!firebase.initialized) {
       console.error("Please run firebase.init() before firebase.transaction()");
@@ -1825,7 +1848,7 @@ firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
       },
       onComplete: (databaseError: com.google.firebase.database.DatabaseError, commited: boolean, snapshot: com.google.firebase.database.DataSnapshot) => {
         databaseError !== null ? reject(databaseError.getMessage()) :
-          resolve({ committed: commited, snapshot: nativeSnapshotToWebSnapshot(snapshot) });
+            resolve({committed: commited, snapshot: nativeSnapshotToWebSnapshot(snapshot)});
       }
     });
     dbRef.runTransaction(handler);
@@ -1844,6 +1867,7 @@ function nativeSnapshotToWebSnapshot(snapshot: com.google.firebase.database.Data
     }
     return false;
   }
+
   return {
     key: snapshot.getKey(),
     ref: snapshot.getRef(),
@@ -1867,9 +1891,9 @@ firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
   }
 };
 
- /***********************************************
-   * END Realtime Database Functions
-   ***********************************************/
+/***********************************************
+ * END Realtime Database Functions
+ ***********************************************/
 
 firebase.sendCrashLog = arg => {
   return new Promise((resolve, reject) => {

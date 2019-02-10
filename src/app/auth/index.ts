@@ -116,12 +116,25 @@ export module auth {
       })
     }
 
+    public updateEmail(newEmail: string): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        firebase.updateEmail(newEmail)
+            .then(() => resolve())
+            .catch(err => reject(err));
+      })
+    }
+
     public updatePassword(newPassword: string): Promise<void> {
       return new Promise<void>((resolve, reject) => {
-        firebase.changePassword(
-            {
-              newPassword
-            })
+        firebase.updatePassword(newPassword)
+            .then(() => resolve())
+            .catch(err => reject(err));
+      })
+    }
+
+    public sendPasswordResetEmail(email: string): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        firebase.sendPasswordResetEmail(email)
             .then(() => resolve())
             .catch(err => reject(err));
       })

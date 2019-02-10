@@ -365,40 +365,15 @@ This may not work on an (Android) simulator. See #463.
 
 
 #### Resetting a password
-```js
-  firebase.resetPassword({
-    email: 'useraccount@provider.com'
-  }).then(
-      function () {
-        // called when password reset was successful,
-        // you could now prompt the user to check his email
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
-```
-
-#### Updating a password
-
-> The method name was changed in 8.0.0 from `changePassword` to `updatePassword` to better align with the Web API.
-
-Note that changing a password may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
+> The method name and signature has changed in 8.0.0 from `resetPassword` to `sendPasswordResetEmail` to better align with the Web API.
 
 <details>
  <summary>Native API</summary>
 
-```js
-  firebase.updatePassword({
-    newPassword: 'myNewPassword'
-  }).then(
-      function () {
-        // called when password change was successful
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
+```typescript
+  firebase.sendPasswordResetEmail("user@example.com")
+      .then(() => console.log("Password reset email sent"))
+      .catch(error => console.log("Error sending password reset email: " + error));
 ```
 </details>
 
@@ -406,9 +381,57 @@ Note that changing a password may fail if your login for this `email` was too lo
  <summary>Web API</summary>
 
 ```typescript
-  firebaseWebApi.auth().updatePassword('new-password')
+  firebaseWebApi.auth().sendPasswordResetEmail("user@example.com")
+      .then(() => console.log("Password reset email sent"))
+      .catch(error => console.log("Error sending password reset email: " + error));
+```
+</details>
+
+#### Updating an email address
+Note that changing an email address may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.updateEmail("user@example.com")
+      .then(() => console.log("Email updated"))
+      .catch(error => console.log("Error updating email: " + error));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().updateEmail("user@example.com")
+      .then(() => console.log("Email updated"))
+      .catch(error => console.log("Error updating email: " + error));
+```
+</details>
+
+#### Updating a password
+> The method name and signature has changed in 8.0.0 from `changePassword` to `updatePassword` to better align with the Web API.
+
+Note that changing a password may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.updatePassword("myNewPassword")
       .then(() => console.log("Password updated"))
-      .catch(error => console.log("Error creating user: " + error));
+      .catch(error => console.log("Error updating password: " + error));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().updatePassword("myNewPassword")
+      .then(() => console.log("Password updated"))
+      .catch(error => console.log("Error updating password: " + error));
 ```
 </details>
 

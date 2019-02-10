@@ -1,5 +1,5 @@
 import * as application from "tns-core-modules/application/application";
-import { ChangePasswordOptions, DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
+import { DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -1073,8 +1073,8 @@ firebase.reloadUser = () => {
   });
 };
 
-firebase.resetPassword = arg => {
-  return new Promise((resolve, reject) => {
+firebase.sendPasswordResetEmail = (email: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
     try {
       const onCompletion = error => {
         if (error) {
@@ -1084,19 +1084,15 @@ firebase.resetPassword = arg => {
         }
       };
 
-      if (!arg.email) {
-        reject("Resetting a password requires an email argument");
-      } else {
-        FIRAuth.auth().sendPasswordResetWithEmailCompletion(arg.email, onCompletion);
-      }
+      FIRAuth.auth().sendPasswordResetWithEmailCompletion(email, onCompletion);
     } catch (ex) {
-      console.log("Error in firebase.resetPassword: " + ex);
+      console.log("Error in firebase.sendPasswordResetEmail: " + ex);
       reject(ex);
     }
   });
 };
 
-firebase.changePassword = (arg: ChangePasswordOptions): Promise<void> => {
+firebase.updateEmail = (newEmail: string): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
       const onCompletion = error => {
@@ -1111,10 +1107,34 @@ firebase.changePassword = (arg: ChangePasswordOptions): Promise<void> => {
       if (user === null) {
         reject("no current user");
       } else {
-        user.updatePasswordCompletion(arg.newPassword, onCompletion);
+        user.updateEmailCompletion(newEmail, onCompletion);
       }
     } catch (ex) {
-      console.log("Error in firebase.changePassword: " + ex);
+      console.log("Error in firebase.updateEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.updatePassword = (newPassword: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const onCompletion = error => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      };
+
+      const user = FIRAuth.auth().currentUser;
+      if (user === null) {
+        reject("no current user");
+      } else {
+        user.updatePasswordCompletion(newPassword, onCompletion);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.updatePassword: " + ex);
       reject(ex);
     }
   });
@@ -1206,9 +1226,9 @@ firebase.updateProfile = arg => {
   });
 };
 
- /***********************************************
-   * START Realtime Database Functions
-   ***********************************************/
+/***********************************************
+ * START Realtime Database Functions
+ ***********************************************/
 
 firebase._addObservers = (to, updateCallback) => {
   const listeners = [];
@@ -1480,6 +1500,7 @@ firebase.remove = path => {
 class OnDisconnect implements OnDisconnectBase {
   constructor(private dbRef: FIRDatabaseReference, private path: string) {
   }
+
   cancel(): Promise<any> {
     return new Promise((resolve, reject) => {
       try {
@@ -1566,7 +1587,7 @@ firebase.onDisconnect = (path: string): OnDisconnect => {
 };
 
 firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
-  onComplete: (a: Error | null, b: boolean, c: DataSnapshot) => Promise<any>) => {
+                        onComplete: (a: Error | null, b: boolean, c: DataSnapshot) => Promise<any>) => {
   return new Promise<any>((resolve, reject) => {
     if (!firebase.initialized) {
       console.error("Please run firebase.init() before firebase.transaction()");
@@ -1575,33 +1596,33 @@ firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
     const dbRef: FIRDatabaseReference = FIRDatabase.database().reference().child(path);
 
     dbRef.runTransactionBlockAndCompletionBlock(
-      (mutableData: FIRMutableData): FIRTransactionResult => {
-        const desiredValue = transactionUpdate(firebaseUtils.toJsObject(mutableData.value));
-        if (desiredValue === undefined) {
-          // The problem case : user returns undefined when the the value we give them (mutableData) is null.
-          // This is a valid case as the user will want to abort if he thinks theres no data, BUT mutualData
-          // is usually null when runTransaction is called the first time(which is why its called multiple times).
-          // Result: we would abort and the transaction terminates, but the real data didn't have a chance to come in
-          // for the function to be called a second time.
-          // Even in the ios simple blog example their complete block is called twice with committed first being false
-          // followed by a second one saying committed is true... So with this implementation I favored having an "incorrect"
-          // committed boolean, but have the correct updated value
+        (mutableData: FIRMutableData): FIRTransactionResult => {
+          const desiredValue = transactionUpdate(firebaseUtils.toJsObject(mutableData.value));
+          if (desiredValue === undefined) {
+            // The problem case : user returns undefined when the the value we give them (mutableData) is null.
+            // This is a valid case as the user will want to abort if he thinks theres no data, BUT mutualData
+            // is usually null when runTransaction is called the first time(which is why its called multiple times).
+            // Result: we would abort and the transaction terminates, but the real data didn't have a chance to come in
+            // for the function to be called a second time.
+            // Even in the ios simple blog example their complete block is called twice with committed first being false
+            // followed by a second one saying committed is true... So with this implementation I favored having an "incorrect"
+            // committed boolean, but have the correct updated value
 
-          // TLDR: if user returns undefined then we may never execute his function with the correct input
-          // For now the way to resolve this is to call success with the original value (so we don't modify anything)
-          // And then the user will get his expected value, but { committed: always true }....
+            // TLDR: if user returns undefined then we may never execute his function with the correct input
+            // For now the way to resolve this is to call success with the original value (so we don't modify anything)
+            // And then the user will get his expected value, but { committed: always true }....
 
-          // return FIRTransactionResult.abort();
-          return FIRTransactionResult.successWithValue(mutableData);
-        } else {
-          mutableData.value = desiredValue;
-          return FIRTransactionResult.successWithValue(mutableData);
+            // return FIRTransactionResult.abort();
+            return FIRTransactionResult.successWithValue(mutableData);
+          } else {
+            mutableData.value = desiredValue;
+            return FIRTransactionResult.successWithValue(mutableData);
+          }
+        },
+        (error: NSError, commited: boolean, snapshot: FIRDataSnapshot): void => {
+          error !== null ? reject(error.localizedDescription) :
+              resolve({committed: commited, snapshot: nativeSnapshotToWebSnapshot(snapshot)});
         }
-      },
-      (error: NSError, commited: boolean, snapshot: FIRDataSnapshot): void => {
-        error !== null ? reject(error.localizedDescription) :
-          resolve({ committed: commited, snapshot: nativeSnapshotToWebSnapshot(snapshot) });
-      }
     );
   });
 };
@@ -1620,6 +1641,7 @@ function nativeSnapshotToWebSnapshot(snapshot: FIRDataSnapshot): DataSnapshot {
     }
     return false;
   }
+
   return {
     key: snapshot.key,
     ref: snapshot.ref,
@@ -1636,12 +1658,12 @@ function nativeSnapshotToWebSnapshot(snapshot: FIRDataSnapshot): DataSnapshot {
 }
 
 firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
-    FIRDatabase.setLoggingEnabled(logging);
+  FIRDatabase.setLoggingEnabled(logging);
 };
 
- /***********************************************
-   * END Realtime Database Functions
-   ***********************************************/
+/***********************************************
+ * END Realtime Database Functions
+ ***********************************************/
 
 firebase.sendCrashLog = arg => {
   return new Promise((resolve, reject) => {
@@ -1854,7 +1876,7 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
 
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {
-    if (typeof(FIRFirestore) === "undefined") {
+    if (typeof (FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
       return null;
     }
@@ -1944,7 +1966,7 @@ firebase.firestore._getDocumentReference = (fIRDocumentReference: FIRDocumentRef
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   try {
-    if (typeof(FIRFirestore) === "undefined") {
+    if (typeof (FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
       return null;
     }
@@ -1975,7 +1997,7 @@ firebase.firestore.docRef = (documentPath: string): firestore.DocumentReference 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -2011,7 +2033,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -2092,7 +2114,7 @@ function fixSpecialField(item): any {
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -2120,7 +2142,7 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -2147,7 +2169,7 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -2177,7 +2199,7 @@ firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapsh
 firebase.firestore.getDocument = (collectionPath: string, documentPath: string): Promise<firestore.DocumentSnapshot> => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -2224,7 +2246,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
 
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
   try {
-    if (typeof(FIRFirestore) === "undefined") {
+    if (typeof (FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
       return null;
     }
@@ -2287,7 +2309,7 @@ class FIRInviteDelegateImpl extends NSObject implements FIRInviteDelegate {
   public static ObjCProtocols = [];
 
   static new(): FIRInviteDelegateImpl {
-    if (FIRInviteDelegateImpl.ObjCProtocols.length === 0 && typeof(FIRInviteDelegate) !== "undefined") {
+    if (FIRInviteDelegateImpl.ObjCProtocols.length === 0 && typeof (FIRInviteDelegate) !== "undefined") {
       FIRInviteDelegateImpl.ObjCProtocols.push(FIRInviteDelegate);
     }
     return <FIRInviteDelegateImpl>super.new();

@@ -1160,9 +1160,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doResetPassword(): void {
-    firebase.resetPassword({
-      email: 'eddyverbruggen@gmail.com'
-    }).then(
+    firebase.sendPasswordResetEmail("eddyverbruggen@gmail.com").then(
         () => {
           console.log("Password reset. Check your email.");
           this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
@@ -1175,6 +1173,111 @@ export class HelloWorldModel extends Observable {
           console.log("Password reset error: " + error);
           alert({
             title: "Password reset error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doWebResetPassword(): void {
+    firebaseWebApi.auth().sendPasswordResetEmail("eddyverbruggen@gmail.com").then(
+        () => {
+          console.log("Password reset. Check your email.");
+          this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
+          alert({
+            title: "Password reset. Check your email.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Password reset error: " + error);
+          alert({
+            title: "Password reset error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doUpdateEmail(): void {
+    firebase.updateEmail("eddyverbruggen+firebase@gmail.com").then(
+        () => {
+          console.log("Email updated.");
+          this.set("userEmailOrPhone", "Email updated to eddyverbruggen+firebase@gmail.com");
+          alert({
+            title: "Email updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Email update error: " + error);
+          alert({
+            title: "Email update error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doWebUpdateEmail(): void {
+    firebaseWebApi.auth().updateEmail("eddyverbruggen+firebase@gmail.com").then(
+        () => {
+          console.log("Email updated.");
+          this.set("userEmailOrPhone", "Email updated to eddyverbruggen+firebase@gmail.com");
+          alert({
+            title: "Email updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Email update error: " + error);
+          alert({
+            title: "Email update error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doUpdatePassword(): void {
+    firebase.updatePassword("pwd123LOL").then(
+        () => {
+          console.log("Password updated.");
+          this.set("userEmailOrPhone", "Password updated to pwd123LOL");
+          alert({
+            title: "Password updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Password update error: " + error);
+          alert({
+            title: "Password update error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doWebUpdatePassword(): void {
+    firebaseWebApi.auth().updatePassword("pwd123LOL").then(
+        () => {
+          console.log("Password updated.");
+          this.set("userEmailOrPhone", "Password updated to pwd123LOL");
+          alert({
+            title: "Password updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Password update error: " + error);
+          alert({
+            title: "Password update error",
             message: error,
             okButtonText: "Hmmkay :("
           });
