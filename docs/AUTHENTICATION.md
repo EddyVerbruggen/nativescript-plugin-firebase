@@ -320,9 +320,7 @@ that receives the link will need to be redirected to your app.
 </details>
 
 
-#### Managing email-password accounts
-
-##### Creating a Password account
+#### Creating a Password account
 This may not work on an (Android) simulator. See #463.
 
 <details>
@@ -365,7 +363,7 @@ This may not work on an (Android) simulator. See #463.
 
 
 #### Resetting a password
-> The method name and signature has changed in 8.0.0 from `resetPassword` to `sendPasswordResetEmail` to better align with the Web API.
+> ⚠️ The method name and signature has changed in 8.0.0 from `resetPassword` to `sendPasswordResetEmail` to better align with the Web API.
 
 <details>
  <summary>Native API</summary>
@@ -411,7 +409,7 @@ Note that changing an email address may fail if your login for this `email` was 
 </details>
 
 #### Updating a password
-> The method name and signature has changed in 8.0.0 from `changePassword` to `updatePassword` to better align with the Web API.
+> ⚠️ The method name and signature has changed in 8.0.0 from `changePassword` to `updatePassword` to better align with the Web API.
 
 Note that changing a password may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
 
