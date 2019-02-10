@@ -76,7 +76,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebLoginByPassword(): void {
     this.ensureWebOnAuthChangedHandler();
-    firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
+    firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen+firebase@gmail.com', 'pwd123LOL')
         .then(() => console.log("User logged in"))
         .catch(err => {
               alert({
@@ -999,8 +999,8 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.PASSWORD,
       passwordOptions: {
         // note that these credentials have been pre-configured in our demo firebase instance
-        email: 'eddyverbruggen@gmail.com',
-        password: 'firebase'
+        email: 'eddyverbruggen+firebase@gmail.com',
+        password: 'pwd123LOL'
       }
     }).then(
         result => {
@@ -1160,7 +1160,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doResetPassword(): void {
-    firebase.sendPasswordResetEmail("eddyverbruggen@gmail.com").then(
+    firebase.sendPasswordResetEmail("eddyverbruggen+firebase@gmail.com").then(
         () => {
           console.log("Password reset. Check your email.");
           this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
@@ -1181,7 +1181,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doWebResetPassword(): void {
-    firebaseWebApi.auth().sendPasswordResetEmail("eddyverbruggen@gmail.com").then(
+    firebaseWebApi.auth().sendPasswordResetEmail("eddyverbruggen+firebase@gmail.com").then(
         () => {
           console.log("Password reset. Check your email.");
           this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
