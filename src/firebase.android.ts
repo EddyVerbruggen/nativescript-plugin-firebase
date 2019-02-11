@@ -127,7 +127,9 @@ firebase.toHashMap = obj => {
           const fieldValue: FieldValue = obj[property];
           if (fieldValue.type === "ARRAY_UNION") {
             // nested arrays are not allowed, so harden against wrong usage: arrayUnion(["foo", "bar"]) vs arrayUnion("foo", "bar")
-            node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
+            let values: Array<any> = Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value;
+            values = values.map(v => typeof(v) === "object" ? firebase.toHashMap(v) : v);
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(values));
           } else if (fieldValue.type === "ARRAY_REMOVE") {
             node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
           } else {

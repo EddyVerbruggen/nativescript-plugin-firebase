@@ -238,8 +238,12 @@ export class FirestoreComponent {
           fieldToDelete: firestore.FieldValue.delete(),
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
           // just fyi - both of these work:
-          colors: firestore.FieldValue.arrayUnion("red", "blue")
-          // colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
+          colors: firestore.FieldValue.arrayUnion("red", "blue"),
+          messages: firebase.firestore().FieldValue().arrayUnion({
+            message: "Test 1",
+            source: "central",
+            time: Date.now()
+          })
         })
         .then(() => console.log("Woofie updated from 'arrayUnion'"))
         .catch(err => console.log("Updating Woofie from 'arrayUnion' failed, error: " + JSON.stringify(err)));
