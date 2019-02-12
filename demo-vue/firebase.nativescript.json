@@ -18,5 +18,6 @@
     "admob": false,
     "invites": false,
     "dynamic_links": true,
-    "ml_kit": false
+    "ml_kit": true,
+    "ml_kit_text_recognition": true
 }

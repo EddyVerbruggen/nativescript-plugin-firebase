@@ -161,7 +161,7 @@ you can pause the scanner with the `pause` property.
 
 > Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function, and how to wire `torchOn` to a `Switch`. 
 
-##### Angular / Vue
+##### Angular
 Register a custom element like so in the component/module:
 
 ```typescript
@@ -182,6 +182,25 @@ Now you're able to use the registered element in the view:
     [torchOn]="torchOn"
     (scanResult)="onTextRecognitionResult($event)">
 </MLKitTextRecognition>
+```
+
+##### Vue
+Register a custom element like so in `main.js`:
+
+```typescript
+Vue.registerElement("MLKitTextRecognition", () => require("nativescript-plugin-firebase/mlkit/textrecognition").MLKitTextRecognition);
+```
+
+Now you're able to use the registered element in your `.Vue` file:
+
+```vue
+  <MLKitTextRecognition
+    width="260"
+    height="340"
+    processEveryNthFrame="5"
+    :torchOn="torchOn"
+    @scanResult="onTextRecognitionResult">
+  </MLKitTextRecognition>
 ```
 
 ##### XML 

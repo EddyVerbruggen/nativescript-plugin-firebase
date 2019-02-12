@@ -7,31 +7,37 @@
       <!--<Button @tap="onTapScheduleNotification" class="btn" text="Schedule Notification"></Button>-->
       <!--<Button @tap="onTapCancelAll" class="btn" text="Cancel notifications"></Button>-->
       <Label class="message" :text="message" textWrap="true"></Label>
+      <MLKitTextRecognition width="260"
+                            height="340"
+                            processEveryNthFrame="5"
+                            @scanResult="onTextRecognitionResult">
+      </MLKitTextRecognition>
+
     </StackLayout>
   </Page>
 </template>
 
 <script>
-    const firebase = require("nativescript-plugin-firebase");
+  const firebase = require("nativescript-plugin-firebase");
 
-    firebase.init({
-      onDynamicLinkCallback: function (result) {
-        console.log("Dynamic Link received: " + result);
-        console.log("Dynamic Link received, url: " + result.url);
-        if (result.url.indexOf("/campaigns/shit") > -1) {
-          // note that you could deeplink/route the user now, but let's just show an alert
-          alert({
-            title: "Campaign button tapped!",
-            message: "You tapped the button in the 'Firebase is the 💩' campaign - well don!",
-            okButtonText: "Yep!"
-          })
-        }
+  firebase.init({
+    onDynamicLinkCallback: function (result) {
+      console.log("Dynamic Link received: " + result);
+      console.log("Dynamic Link received, url: " + result.url);
+      if (result.url.indexOf("/campaigns/shit") > -1) {
+        // note that you could deeplink/route the user now, but let's just show an alert
+        alert({
+          title: "Campaign button tapped!",
+          message: "You tapped the button in the 'Firebase is the 💩' campaign - well don!",
+          okButtonText: "Yep!"
+        })
       }
-    }).then(function () {
-      console.log("Firebase initialized");
-    }).catch(function (error) {
-      console.log("Error initializing Firebase: " + error);
-    });
+    }
+  }).then(function () {
+    console.log("Firebase initialized");
+  }).catch(function (error) {
+    console.log("Error initializing Firebase: " + error);
+  });
 
   export default {
     data() {
@@ -41,6 +47,9 @@
     },
 
     methods: {
+      onTextRecognitionResult() {
+        console.log("onTextRecognitionResult");
+      }
       /*
       onTapHasPermission() {
         LocalNotifications.hasPermission()
