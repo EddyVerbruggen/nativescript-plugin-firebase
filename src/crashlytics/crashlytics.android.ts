@@ -6,9 +6,13 @@ export function sendCrashLog(exception: any /* java.lang.Exception */): void {
   }
 }
 
-export function log(priority: number, tag: string, msg: string): void {
+export function log(msg: string, tag?: string, priority?: number): void {
   if (isCrashlyticsAvailable()) {
-    com.crashlytics.android.Crashlytics.log(priority, tag, msg);
+    if (tag && priority) {
+      com.crashlytics.android.Crashlytics.log(priority, tag, msg);
+    } else {
+      com.crashlytics.android.Crashlytics.log(msg);
+    }
   }
 }
 

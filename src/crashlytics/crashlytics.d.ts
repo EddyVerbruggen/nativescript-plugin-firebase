@@ -4,7 +4,7 @@
  */
 export declare function sendCrashLog(exception: any): void;
 
-export declare function log(priority: number, tag: string, msg: string): void;
+export declare function log(msg: string, tag?: string,  priority?: number): void;
 
 export declare function setString(key: string, value: string): void;
 

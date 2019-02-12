@@ -23,6 +23,7 @@
 /// <reference path="./platforms/ios/typings/objc!GoogleSignIn.d.ts" />
 
 /// <reference path="./platforms/ios/typings/objc!TNSMLKitCamera.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!TNSCrashlyticsLogger.d.ts" />
 
 /// <reference path="./platforms/android/typings/nativescript-android-lib/android.d.ts" />
 //
