@@ -1896,7 +1896,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doLogMessageCrashlytics(): void {
-    firebaseCrashlytics.log(1, "TAG", "Tag message");
+    firebaseCrashlytics.log("Tag message", "TAG", 1);
     if (isAndroid) {
       firebaseCrashlytics.sendCrashLog(new java.lang.Exception("test Exception"));
     } else if (isIOS) {
