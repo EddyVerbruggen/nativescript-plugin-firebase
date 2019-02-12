@@ -1,11 +1,11 @@
 import { firebase } from "../firebase-common";
-import { BannerOptions, InterstitialOptions } from "./admob";
-import { AD_SIZE, BANNER_DEFAULTS } from "./admob-common";
+import { BannerOptions, InterstitialOptions, PreloadRewardedVideoAdOptions, ShowRewardedVideoAdOptions } from "./admob";
+import { AD_SIZE, BANNER_DEFAULTS, rewardedVideoCallbacks } from "./admob-common";
 import * as appModule from "tns-core-modules/application";
 import { topmost } from "tns-core-modules/ui/frame";
 import { layout } from "tns-core-modules/utils/utils";
 
-declare const android, com: any;
+declare const com: any;
 
 export { AD_SIZE };
 
@@ -13,7 +13,6 @@ export function showBanner(arg: BannerOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
-      console.log({settings});
 
       // always close a previously opened banner
       if (firebase.admob.adView !== null && firebase.admob.adView !== undefined) {
@@ -39,7 +38,6 @@ export function showBanner(arg: BannerOptions): Promise<any> {
           this.resolve();
         },
         onAdFailedToLoad: errorCode => {
-          // console.log('ad error: ' + errorCode);
           this.reject(errorCode);
         }
       });
@@ -76,12 +74,15 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(() => {
-        if (topmost() !== undefined) {
-          topmost().currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
-        } else {
+        const top = topmost();
+        if (top !== undefined && top.currentPage && top.currentPage.android && top.currentPage.android.getParent()) {
+          top.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else if (appModule.android && appModule.android.foregroundActivity) {
           appModule.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else {
+          console.log("Could not find a view to add the banner to");
         }
-      }, 0);
+      }, 100);
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
       reject(ex);
@@ -174,6 +175,103 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
   });
 }
 
+export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Promise<any> {
+  return new Promise((resolve, reject) => {
+    try {
+      const settings = firebase.merge(arg, BANNER_DEFAULTS);
+      const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+      firebase.admob.rewardedAdVideoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(activity);
+
+      rewardedVideoCallbacks.onLoaded = resolve;
+      rewardedVideoCallbacks.onFailedToLoad = reject;
+
+      // rewarded Ads must be loaded before they can be shown, so adding a listener
+      const RewardedVideoAdListener = com.google.android.gms.ads.reward.RewardedVideoAdListener.extend({
+        onRewarded(reward) {
+          rewardedVideoCallbacks.onRewarded({
+            amount: reward.getAmount(),
+            type: reward.getType()
+          });
+        },
+        onRewardedVideoAdLeftApplication() {
+          rewardedVideoCallbacks.onLeftApplication();
+        },
+        onRewardedVideoAdClosed() {
+          if (firebase.admob.rewardedAdVideoView) {
+            firebase.admob.rewardedAdVideoView.setRewardedVideoAdListener(null);
+            firebase.admob.rewardedAdVideoView = null;
+          }
+          rewardedVideoCallbacks.onClosed();
+        },
+        onRewardedVideoAdFailedToLoad(errorCode) {
+          rewardedVideoCallbacks.onFailedToLoad(errorCode);
+        },
+        onRewardedVideoAdLoaded() {
+          rewardedVideoCallbacks.onLoaded();
+        },
+        onRewardedVideoAdOpened() {
+          rewardedVideoCallbacks.onOpened();
+        },
+        onRewardedVideoStarted() {
+          rewardedVideoCallbacks.onStarted();
+        },
+        onRewardedVideoCompleted() {
+          rewardedVideoCallbacks.onCompleted();
+        }
+      });
+
+      firebase.admob.rewardedAdVideoView.setRewardedVideoAdListener(new RewardedVideoAdListener());
+
+      const ad = _buildAdRequest(settings);
+      firebase.admob.rewardedAdVideoView.loadAd(settings.androidAdPlacementId, ad);
+    } catch (ex) {
+      console.log("Error in firebase.admob.preloadRewardedVideoAd: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function showRewardedVideoAd(arg?: ShowRewardedVideoAdOptions): Promise<any> {
+  return new Promise((resolve, reject) => {
+    try {
+      if (!firebase.admob.rewardedAdVideoView) {
+        reject("Please call 'preloadRewardedVideoAd' first");
+        return;
+      }
+
+      if (arg.onRewarded) {
+        rewardedVideoCallbacks.onRewarded = arg.onRewarded;
+      }
+
+      if (arg.onLeftApplication) {
+        rewardedVideoCallbacks.onLeftApplication = arg.onLeftApplication;
+      }
+
+      if (arg.onClosed) {
+        rewardedVideoCallbacks.onClosed = arg.onClosed;
+      }
+
+      if (arg.onOpened) {
+        rewardedVideoCallbacks.onOpened = arg.onOpened;
+      }
+
+      if (arg.onStarted) {
+        rewardedVideoCallbacks.onStarted = arg.onStarted;
+      }
+
+      if (arg.onCompleted) {
+        rewardedVideoCallbacks.onCompleted = arg.onCompleted;
+      }
+
+      firebase.admob.rewardedAdVideoView.show();
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.admob.showRewardedVideoAd: " + ex);
+      reject(ex);
+    }
+  });
+}
+
 export function hideBanner(): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
@@ -193,7 +291,6 @@ export function hideBanner(): Promise<any> {
 }
 
 function _getBannerType(size): any {
-   console.log(">> _getBannerType: " + size);
   if (size === AD_SIZE.BANNER) {
     return com.google.android.gms.ads.AdSize.BANNER;
   } else if (size === AD_SIZE.LARGE_BANNER) {

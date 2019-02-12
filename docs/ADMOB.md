@@ -1,9 +1,10 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/admob.png" height="85px" alt="AdMob"/>
 
-## Enabling AdMob
-Since plugin version 3.10.0 you can use Firebase _AdMob_ features.
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/admob-types.png" height="262px" alt="AdMob Ad Types"/>
 
-_AdMob_ lets you show banners or interstitials (full screen ads) in your app so you can earn some money.
+_AdMob currently supports these three types of Ads, as does this plugin_
+
+## Enabling AdMob
 
 ### Android
 > ⚠️ Important! Plugin version 7.4.0+ requires you to do this - or your app will crash on start-up! ⚠️
@@ -39,16 +40,17 @@ Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 [More info on this subject.](https://firebase.google.com/docs/admob/ios/app-transport-security)
 
 ## Functions
+> Note that it may take up to 24 hours after adding an Ad to your [AdMob console](https://apps.admob.com) before it's available for your app. Until then you'll see a ⚠️ warning about an unknown Ad ID.
 
 ### admob.showBanner
-Go [manage your AdMob app](https://apps.admob.com/#account/appmgmt:) and grab the banner, then show it in your app:
+Go [manage your AdMob app](https://apps.admob.com) and grab the banner, then show it in your app:
 
 ```js
   firebase.admob.showBanner({
     size: firebase.admob.AD_SIZE.SMART_BANNER, // see firebase.admob.AD_SIZE for all options
     margins: { // optional nr of device independent pixels from the top or bottom (don't set both)
       bottom: 10,
-      top: 0
+      top: -1
     },
     androidBannerId: "ca-app-pub-9517346003011652/7749101329",
     iosBannerId: "ca-app-pub-9517346003011652/3985369721",
@@ -143,8 +145,56 @@ After the preload Promise resolved successfully, you can show the interstitial a
   );
 ```
 
+### preloadRewardedVideoAd
+Use this for instance while loading your view, so it's ready for the moment you want to actually show it (by calling `showRewardedVideoAd`).
+
+```js
+firebase.admob.preloadRewardedVideoAd({
+    testing: true,
+    iosAdPlacementId: "ca-app-pub-XXXXXX/YYYYY2", // add your own
+    androidAdPlacementId: "ca-app-pub-AAAAAAAA/BBBBBB2", // add your own
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+  }).then(
+      function() {
+        console.log("RewardedVideoAd preloaded - you can now call 'showRewardedVideoAd' whenever you're ready to do so");
+      },
+      function(error) {
+        console.log("admob preloadRewardedVideoAd error: " + error);
+      }
+)
+```
+
+### showRewardedVideoAd
+At any moment after `preloadRewardedVideoAd` successfully resolves, you can call `showRewardedVideoAd`.
+
+Note that when you want to use `showRewardedVideoAd` again, you also have to use `preloadRewardedVideoAd` again because those ads can't be reused.
+
+`onRewarded` is probably the only callback you need to worry about.
+
+```js
+firebase.admob.showRewardedVideoAd({
+  onRewarded: (reward) => {
+    // the properties 'amount' and 'type' correlate to the values set at https://apps.admob.com
+    console.log("onRewarded called with amount " + reward.amount);
+    console.log("onRewarded called with type " + reward.type);
+  },
+  onLeftApplication: () => console.log("onLeftApplication"),
+  onClosed: () => console.log("onClosed"),
+  onOpened: () => console.log("onOpened"),
+  onStarted: () => console.log("onStarted"),
+  onCompleted: () => console.log("onCompleted"),
+}).then(
+      function() {
+        console.log("RewardedVideoAd showing");
+      },
+      function(error) {
+        console.log("showRewardedVideoAd error: " + error);
+      }
+)
+```
+
 ## What about the nativescript-admob plugin?
-There's currently no functional difference between the AdMob features in the Firebase plugin and
+There's no functional difference between the AdMob features in the Firebase plugin and
 [nativescript-admob](https://github.com/EddyVerbruggen/nativescript-admob).
 
 The main advantage of using the version in the Firebase plugin is to avoid a gradle build conflict

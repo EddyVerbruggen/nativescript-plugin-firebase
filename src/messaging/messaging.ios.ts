@@ -35,13 +35,12 @@ export function initFirebaseMessaging(options) {
   _showNotifications = options.showNotifications === undefined ? _showNotifications : !!options.showNotifications;
   _showNotificationsWhenInForeground = options.showNotificationsWhenInForeground === undefined ? _showNotificationsWhenInForeground : !!options.showNotificationsWhenInForeground;
 
-  if (options.onMessageReceivedCallback !== undefined || options.onPushTokenReceivedCallback !== undefined) {
-    if (options.onMessageReceivedCallback !== undefined) {
-      addOnMessageReceivedCallback(options.onMessageReceivedCallback);
-    }
-    if (options.onPushTokenReceivedCallback !== undefined) {
-      addOnPushTokenReceivedCallback(options.onPushTokenReceivedCallback);
-    }
+  if (options.onMessageReceivedCallback !== undefined) {
+    addOnMessageReceivedCallback(options.onMessageReceivedCallback);
+  }
+
+  if (options.onPushTokenReceivedCallback !== undefined) {
+    addOnPushTokenReceivedCallback(options.onPushTokenReceivedCallback);
   }
 }
 
@@ -427,7 +426,8 @@ function _registerForRemoteNotifications() {
           }
         }
 
-        userInfoJSON.foreground = true;
+        userInfoJSON.foreground = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).applicationState === UIApplicationState.Active;
+
         _pendingNotifications.push(userInfoJSON);
         if (_receivedNotificationCallback) {
           _processPendingNotifications();
@@ -474,6 +474,10 @@ function _registerForRemoteNotifications() {
 
 function _messagingConnectWithCompletion() {
   return new Promise((resolve, reject) => {
+    if (typeof (FIRMessaging) === "undefined") {
+      resolve();
+      return;
+    }
 
     FIRMessaging.messaging().connectWithCompletion(error => {
       if (error) {

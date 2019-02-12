@@ -107,6 +107,55 @@ export interface InterstitialOptions {
   onAdClosed?: () => void;
 }
 
+export interface PreloadRewardedVideoAdOptions {
+  /**
+   * When true you'll use googles testing iosAdPlacementId and androidAdPlacementId.
+   */
+  testing?: boolean;
+
+  /**
+   * Something like "ca-app-pub-AAAAAAAA/BBBBBBB".
+   */
+  androidAdPlacementId?: string;
+
+  /**
+   * Something like "ca-app-pub-XXXXXX/YYYYYY".
+   */
+  iosAdPlacementId?: string;
+
+  /**
+   * If testing is true, the simulator is allowed to receive test banners.
+   * Android automatically add the connceted device as test device, but iOS does not.
+   * If you also want to test on real devices, add it here like this:
+   *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
+   */
+  iosTestDeviceIds?: string[];
+
+  /**
+   * Specify keywords for ad targeting
+   */
+  keywords?: Array<string>;
+}
+
+export interface RewardedVideoAdReward {
+  amount: number;
+  type: string;
+}
+
+export interface RewardedVideoAdCallbacks {
+  onOpened?: () => void;
+  onStarted?: () => void;
+  onCompleted?: () => void;
+  onClosed?: () => void;
+  onLeftApplication?: () => void;
+  onLoaded?: () => void,
+  onFailedToLoad?: (err) => void,
+  onRewarded?: (reward: RewardedVideoAdReward) => void;
+}
+
+export interface ShowRewardedVideoAdOptions extends RewardedVideoAdCallbacks {
+}
+
 export declare function showBanner(options: BannerOptions): Promise<any>;
 
 export declare function hideBanner(): Promise<any>;
@@ -126,3 +175,7 @@ export declare function preloadInterstitial(options: InterstitialOptions): Promi
  * 2) DEPRECATED: with arguments (same as 'preloadInterstitial'). This will preload and _then_ show the interstitial, so a delay will be noticable by the user, which is against Google's policies.
  */
 export declare function showInterstitial(options?: InterstitialOptions): Promise<any>;
+
+export declare function preloadRewardedVideoAd(options: PreloadRewardedVideoAdOptions): Promise<any>;
+
+export declare function showRewardedVideoAd(options?: ShowRewardedVideoAdOptions): Promise<any>;

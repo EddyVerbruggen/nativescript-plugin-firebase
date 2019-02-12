@@ -15,10 +15,14 @@ To add this feature to your project, either:
 
 In both cases, remove the `/platforms` folder afterwards so the required native library will be added upon the next build. 
 
+> ⚠️ It may take up to 12 hours before results pop up in your Firebase console, so be patient.
+
+> ℹ️ Per Firebase's documentation, by enabling this feature, Remote Config will be enabled as well. So you may be interested in [what Remote Config can do for your app](../REMOTECONFIG.md).
+
 ## API
 
 ### `startTrace`
-To interact with a started trace, we're remembering it in the property `firebaseTrace`:
+To be able to interact with a started trace, you can remember it in a property (in this case `firebaseTrace`):
 
 ```typescript
 import { performance as firebasePerformance } from "nativescript-plugin-firebase";
@@ -27,7 +31,7 @@ import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performa
 const firebaseTrace: FirebaseTrace = firebasePerformance.startTrace("myTrace");
 ```
 
-Now you can call several functions on the remembered trace object, read on below. And don't forget to use `trace.stop`.
+Now you can call several functions on the remembered trace object, read on below. And don't forget to use `trace.stop` afterwards.
 
 ### `trace.setValue`
 

@@ -4,7 +4,7 @@ import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-commo
 
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
-declare const com, android: any;
+// declare const com, android: any;
 
 class SizePair {
   pictureSize: {
@@ -137,8 +137,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       const pictureSize = sizePair.pictureSize;
       const previewSize = sizePair.previewSize;
 
-      // console.log("sizePair.pictureSize @ 1400x1400: " + pictureSize.width + "x" + pictureSize.height);
-      // console.log("sizePair.previewSize @ 1400x1400: " + previewSize.width + "x" + previewSize.height);
+      console.log("sizePair.pictureSize: " + pictureSize.width + "x" + pictureSize.height);
+      console.log("sizePair.previewSize: " + previewSize.width + "x" + previewSize.height);
 
       const parameters = this.camera.getParameters();
 
@@ -197,18 +197,20 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
           let data = this.pendingFrameData;
           // pendingFrameData = null;
 
-          this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
-
           if (this.detector.processImage) {
+            this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
             this.detector
                 .processImage(this.lastVisionImage)
                 .addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
-          } else {
+          } else if (this.detector.detectInImage) {
+            this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
             this.detector
                 .detectInImage(this.lastVisionImage)
                 .addOnSuccessListener(onSuccessListener)
                 .addOnFailureListener(onFailureListener);
+          } else {
+            this.runDetector(data, previewSize.width, previewSize.height);
           }
         }
       }));
@@ -249,8 +251,12 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   protected abstract createSuccessListener(): any;
 
+  protected runDetector(imageByteBuffer, width, height): void {
+    throw new Error("No custom detector implemented for detector " + this.detector + ", so 'runDetector' can't do its thing");
+  }
+
   private createFailureListener(): any {
-    return new com.google.android.gms.tasks.OnFailureListener({
+    return new (<any>com.google.android.gms).tasks.OnFailureListener({
       onFailure: exception => console.log(exception.getMessage())
     });
   }

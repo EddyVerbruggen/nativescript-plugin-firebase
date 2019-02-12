@@ -169,18 +169,19 @@ export class FirestoreComponent {
     // examples from https://firebase.google.com/docs/firestore/query-data/get-data
     const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("BJ");
 
-    docRef.get().then((doc: firestore.DocumentSnapshot) => {
-      if (doc.exists) {
-        console.log("Document data:", JSON.stringify(doc.data()));
-        // since there's a reference stored here, we can use that to retrieve its data
-        const docRef: firestore.DocumentReference = doc.data().referenceToCitiesDC;
-        docRef.get().then(res => console.log("docref.get: " + JSON.stringify(res.data())));
-      } else {
-        console.log("No such document!");
-      }
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
+    docRef.get()
+        .then((doc: firestore.DocumentSnapshot) => {
+          if (doc.exists) {
+            console.log("Document data:", JSON.stringify(doc.data()));
+            // since there's a reference stored here, we can use that to retrieve its data
+            const docRef: firestore.DocumentReference = doc.data().referenceToCitiesDC;
+            docRef.get()
+                .then(res => console.log("docref.get: " + JSON.stringify(res.data())))
+                .catch(err => console.log("docref.get error: " + err));
+          } else {
+            console.log("No such document!");
+          }
+        }).catch(error => console.log("Error getting document:", error));
   }
 
   firestoreGetNested(): void {
@@ -192,15 +193,15 @@ export class FirestoreComponent {
             .doc("QZNrg22tkN8W71YC3qCb"); // id of 'main st.'
     // .doc("doesntexist");
 
-    mainStreetInSFDocRef.get().then((doc: firestore.DocumentSnapshot) => {
-      if (doc.exists) {
-        console.log("Document data:", JSON.stringify(doc.data()));
-      } else {
-        console.log("No such document!");
-      }
-    }).catch(function (error) {
-      console.log("Error getting document:", error);
-    });
+    mainStreetInSFDocRef.get()
+        .then((doc: firestore.DocumentSnapshot) => {
+          if (doc.exists) {
+            console.log("Document data:", JSON.stringify(doc.data()));
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch(error => console.log("Error getting document:", error));
   }
 
   deleteFields(): void {
@@ -226,7 +227,8 @@ export class FirestoreComponent {
                 .then(() => console.log("Woofie updated from 'delete'"))
                 .catch(err => console.log("Updating Woofie from 'delete' failed, error: " + JSON.stringify(err)));
           }, 2000);
-        });
+        })
+        .catch(err => console.log("deleteFields error: " + err));
   }
 
   arrayUnion(): void {
@@ -236,8 +238,12 @@ export class FirestoreComponent {
           fieldToDelete: firestore.FieldValue.delete(),
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
           // just fyi - both of these work:
-          colors: firestore.FieldValue.arrayUnion("red", "blue")
-          // colors: firebase.firestore().FieldValue().arrayUnion(["red", "blue"])
+          colors: firestore.FieldValue.arrayUnion("red", "blue"),
+          messages: firebase.firestore().FieldValue().arrayUnion({
+            message: "Test 1",
+            source: "central",
+            time: Date.now()
+          })
         })
         .then(() => console.log("Woofie updated from 'arrayUnion'"))
         .catch(err => console.log("Updating Woofie from 'arrayUnion' failed, error: " + JSON.stringify(err)));

@@ -47,36 +47,37 @@ export function initFirebaseMessaging(options?: MessagingOptions) {
 
 export function onAppModuleLaunchEvent(args: any) {
   org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
+}
 
-  const intent = args.android;
-  const isLaunchIntent = "android.intent.action.VIEW" === intent.getAction();
+export function onAppModuleResumeEvent(args: any) {
+  const intent = args.android.getIntent();
+  const extras = intent.getExtras();
 
-  if (!isLaunchIntent) {
-    const extras = intent.getExtras();
-    // filter out any rubbish that doesn't have a 'from' key
-    if (extras !== null && extras.keySet().contains("from")) {
-      let result = {
-        foreground: false,
-        data: {}
-      };
+  if (extras !== null && extras.keySet().contains("from")) {
+    let result = {
+      foreground: false,
+      data: {}
+    };
 
-      const iterator = extras.keySet().iterator();
-      while (iterator.hasNext()) {
-        const key = iterator.next();
-        if (key !== "from" && key !== "collapse_key") {
-          result[key] = extras.get(key);
-          result.data[key] = extras.get(key);
-        }
+    const iterator = extras.keySet().iterator();
+    while (iterator.hasNext()) {
+      const key = iterator.next();
+      if (key !== "from" && key !== "collapse_key") {
+        result[key] = extras.get(key);
+        result.data[key] = extras.get(key);
       }
+    }
 
-      if (firebase._receivedNotificationCallback === null) {
-        _launchNotification = result;
-      } else {
-        // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
-        setTimeout(() => {
-          firebase._receivedNotificationCallback(result);
-        });
-      }
+    // clear, otherwise the next resume we trigger this again
+    intent.removeExtra("from");
+
+    if (firebase._receivedNotificationCallback === null) {
+      _launchNotification = result;
+    } else {
+      // add a little delay just to make sure clients alerting this message will see it as the UI needs to settle
+      setTimeout(() => {
+        firebase._receivedNotificationCallback(result);
+      });
     }
   }
 }

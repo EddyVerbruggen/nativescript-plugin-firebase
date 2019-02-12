@@ -14,6 +14,6 @@ export const helloWorldJson = functions.https.onRequest((request, response) => {
 // this is a proper callable function
 export const helloName = functions.https.onCall((data, context) => {
   return {
-    message: "Hello, " + data
+    message: "Hello: " + data
   }
 });

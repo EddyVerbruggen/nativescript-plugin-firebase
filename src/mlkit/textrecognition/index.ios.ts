@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitOptions } from "../";
+import { MLKitVisionOptions } from "../";
 import { MLKitRecognizeTextCloudOptions, MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 import { MLKitRecognizeTextResultBlock, MLKitRecognizeTextResultLine } from "./index";
@@ -44,6 +44,7 @@ function getResult(visionText: FIRVisionText): MLKitRecognizeTextResult {
     const feature: FIRVisionTextBlock = visionText.blocks.objectAtIndex(i);
     const resultFeature = <MLKitRecognizeTextResultBlock>{
       text: feature.text,
+      confidence: feature.confidence,
       bounds: feature.frame,
       lines: []
     };
@@ -51,6 +52,7 @@ function getResult(visionText: FIRVisionText): MLKitRecognizeTextResult {
     const addLineToResult = (line: FIRVisionTextLine): void => {
       const resultLine = <MLKitRecognizeTextResultLine>{
         text: feature.text,
+        confidence: line.confidence,
         bounds: line.frame,
         elements: []
       };
@@ -130,7 +132,7 @@ export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Pro
   });
 }
 
-function getImage(options: MLKitOptions): FIRVisionImage {
+function getImage(options: MLKitVisionOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
   return FIRVisionImage.alloc().initWithImage(image);
 }

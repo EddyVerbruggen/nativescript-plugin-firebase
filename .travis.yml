@@ -1,36 +1,6 @@
-android:
-  components:
-    - tools
-    - platform-tools
-    - build-tools-27.0.3
-    - build-tools-28.0.3
-    - android-23
-    - android-26
-    - android-28
-    - extra-android-m2repository
-
-before_cache:
-    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
-cache:
-    directories:
-        - .nvm
-        - $HOME/.gradle/caches/
-        - $HOME/.gradle/wrapper/
-
-install:
-    - echo no | npm install -g nativescript
-    - tns usage-reporting disable
-    - tns error-reporting disable
-    - cd src
-    - npm i --ignore-scripts
-    - npm run tsc
-    - npm run package
-    - cd ../demo
-    - npm i
-
-script:
-
+branches:
+  only:
+    - master
 
 matrix:
   include:
@@ -40,38 +10,27 @@ matrix:
       node_js: "8"
       script: "npm run ci.tslint"
     - stage: "WebPack"
-      os: osx
-      env:
-        - Webpack="iOS"
-      osx_image: xcode9.2
-      language: node_js
-      node_js: "8"
-      jdk: oraclejdk8
-      before_install:
-        - gem install cocoapods
-        - pod repo update
-      script: travis_wait travis_retry tns build ios --bundle
-    - language: android
+      language: android
       os: linux
       env:
-        - Webpack="Android"
+        - WebPack="Android"
       jdk: oraclejdk8
-      before_install: nvm install 8.11.4
+      before_install: nvm install stable
       script: travis_wait travis_retry tns build android --bundle
     - stage: "Build"
       env:
-        - BuildAndroid="26"
+        - BuildAndroid="28"
       language: android
       os: linux
       jdk: oraclejdk8
-      before_install: nvm install 8.11.4
+      before_install: nvm install stable
       script:
         - travis_wait travis_retry tns build android
     - os: osx
       env:
-        - BuildiOS="11"
-        - Xcode="9.2"
-      osx_image: xcode9.2
+        - BuildiOS="12"
+        - Xcode="10.0"
+      osx_image: xcode10.0
       language: node_js
       node_js: "8"
       jdk: oraclejdk8
@@ -80,3 +39,27 @@ matrix:
         - pod repo update
       script:
         - travis_wait travis_retry tns build ios
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-28.0.3
+    - android-28
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-21
+
+before_install:
+#  - sudo pip install --upgrade pip
+#  - sudo pip install six
+
+install:
+  - echo no | npm install -g nativescript
+  - tns usage-reporting disable
+  - tns error-reporting disable
+  - cd src
+  - npm i --ignore-scripts
+  - npm run tsc
+  - npm run package
+  - cd ../demo
+  - npm i

@@ -13,9 +13,9 @@ declare class FIRExperimentController extends NSObject {
 
 	static sharedInstance(): FIRExperimentController;
 
-	latestExperimentStartTimestampBetweenTimestampAndPayloads(timestamp: number, payloads: NSArray<NSData>): number;
+	latestExperimentStartTimestampBetweenTimestampAndPayloads(timestamp: number, payloads: NSArray<NSData> | NSData[]): number;
 
-	updateExperimentsWithServiceOriginEventsPolicyLastStartTimePayloads(origin: string, events: FIRLifecycleEvents, policy: any, lastStartTime: number, payloads: NSArray<NSData>): void;
+	updateExperimentsWithServiceOriginEventsPolicyLastStartTimePayloads(origin: string, events: FIRLifecycleEvents, policy: any, lastStartTime: number, payloads: NSArray<NSData> | NSData[]): void;
 }
 
 declare var FIRExpireExperimentEventName: string;

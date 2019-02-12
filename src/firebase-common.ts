@@ -65,6 +65,15 @@ export const firebase: any = {
     GOOGLE: "google",
     EMAIL_LINK: "emailLink"
   },
+  LogComplexEventTypeParameter: {
+    STRING: "string",
+    INT: "int",
+    FLOAT: "float",
+    DOUBLE: "double",
+    LONG: "long",
+    ARRAY: "array",
+    BOOLEAN: "boolean"
+  },
   QueryOrderByType: {
     KEY: "key",
     VALUE: "value",
@@ -134,9 +143,10 @@ export const firebase: any = {
   requestPhoneAuthVerificationCode: (onUserResponse, verificationPrompt) => {
     prompt(verificationPrompt || "Verification code").then(promptResult => {
       if (!promptResult.result) {
-        return;
+        onUserResponse(undefined);
+      } else {
+        onUserResponse(promptResult.text);
       }
-      onUserResponse(promptResult.text);
     });
   },
   // for backward compatibility, because plugin version 4.0.0 moved the params to per-logintype objects

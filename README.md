@@ -1,8 +1,8 @@
 # NativeScript Firebase plugin
 
-[![Build Status][build-status]][build-url]
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
+[![TotalDownloads][total-downloads-image]][npm-url]
 [![Twitter Follow][twitter-image]][twitter-url]
 
 [build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-plugin-firebase.svg?branch=master
@@ -10,6 +10,7 @@
 [npm-image]:http://img.shields.io/npm/v/nativescript-plugin-firebase.svg
 [npm-url]:https://npmjs.org/package/nativescript-plugin-firebase
 [downloads-image]:http://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
+[total-downloads-image]:http://img.shields.io/npm/dt/nativescript-plugin-firebase.svg?label=total%20downloads
 [twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
 [twitter-url]:https://twitter.com/eddyverbruggen
 
@@ -109,7 +110,7 @@ firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
   // see their respective docs.
 }).then(
-    function (instance) {
+    function () {
       console.log("firebase.init done");
     },
     function (error) {
@@ -126,7 +127,7 @@ firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
   // see their respective docs.
 }).then(
-  instance => {
+  () => {
     console.log("firebase.init done");
   },
   error => {
@@ -149,7 +150,7 @@ export class AppComponent implements OnInit {
       // Optionally pass in properties for database, authentication and cloud messaging,
       // see their respective docs.
     }).then(
-      instance => {
+      () => {
         console.log("firebase.init done");
       },
       error => {

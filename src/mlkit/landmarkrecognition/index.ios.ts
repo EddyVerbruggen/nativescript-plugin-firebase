@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitOptions } from "../";
+import { MLKitVisionOptions } from "../";
 import { MLKitLandmarkRecognitionCloudOptions, MLKitLandmarkRecognitionCloudResult } from "./";
 import { MLKitCloudModelType } from "../index";
 
@@ -44,7 +44,7 @@ export function recognizeLandmarksCloud(options: MLKitLandmarkRecognitionCloudOp
   });
 }
 
-function getImage(options: MLKitOptions): FIRVisionImage {
+function getImage(options: MLKitVisionOptions): FIRVisionImage {
   const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
   return FIRVisionImage.alloc().initWithImage(image);
 }

@@ -1,3 +1,5 @@
+import * as application from "tns-core-modules/application/application";
+import { DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -5,11 +7,8 @@ import {
   GeoPoint,
   isDocumentReference
 } from "./firebase-common";
-import * as firebaseMessaging from "./messaging/messaging";
-import * as application from "tns-core-modules/application/application";
-import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import * as firebaseFunctions from './functions/functions';
-import { firestore, User } from "./firebase";
+import * as firebaseMessaging from "./messaging/messaging";
 import { firebaseUtils } from "./utils";
 
 firebase._gIDAuthentication = null;
@@ -44,15 +43,19 @@ firebase.areNotificationsEnabled = firebaseMessaging.areNotificationsEnabled;
 firebase.functions = firebaseFunctions;
 
 firebase.addAppDelegateMethods = appDelegate => {
+  console.log(">>> addAppDelegateMethods");
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
   appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
+    console.log(">>> applicationDidFinishLaunchingWithOptions");
     if (!firebase._configured) {
       firebase._configured = true;
       if (typeof (FIRApp) !== "undefined") {
+        console.log(">>> applicationDidFinishLaunchingWithOptions, configure firebase");
         FIRApp.configure();
       }
     }
-    // If the app was terminated and the iOS is launching it in result of push notification tapped by the user, this will hold the notification data.
+
+    // If the app was terminated and iOS is launching it in result of a push notification tapped by the user, this will hold the notification data.
     if (launchOptions) {
       const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
       if (remoteNotification) {
@@ -68,6 +71,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
   // there's no notification event to hook into for this one, so using the appDelegate
   if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRInvites) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
+    console.log(">> wiring applicationOpenURLSourceApplicationAnnotation");
     appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = (application, url, sourceApplication, annotation) => {
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
@@ -92,7 +96,9 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
+        console.log(">> wiring applicationOpenURLSourceApplicationAnnotation, FIRDynamicLink");
         const dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url);
+        console.log(">> wiring applicationOpenURLSourceApplicationAnnotation, FIRDynamicLink: " + dynamicLink);
         if (dynamicLink) {
           console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
           firebase._cachedDynamicLink = {
@@ -110,6 +116,8 @@ firebase.addAppDelegateMethods = appDelegate => {
 
   if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
     appDelegate.prototype.applicationOpenURLOptions = (application, url, options) => {
+      console.log(">> wiring applicationOpenURLOptions");
+
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
         result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
@@ -127,26 +135,26 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
+        console.log(">> wiring applicationOpenURLOptions, FIRDynamicLink, url: " + url);
         const dynamicLinks: FIRDynamicLinks = FIRDynamicLinks.dynamicLinks();
         const dynamicLink: FIRDynamicLink = dynamicLinks.dynamicLinkFromCustomSchemeURL(url);
-        if (dynamicLink) {
-          if (dynamicLink.url !== null) {
-            console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
-            if (firebase._dynamicLinkCallback) {
-              firebase._dynamicLinkCallback({
-                url: dynamicLink.url.absoluteString,
-                // matchConfidence: dynamicLink.matchConfidence,
-                minimumAppVersion: dynamicLink.minimumAppVersion
-              });
-            } else {
-              firebase._cachedDynamicLink = {
-                url: dynamicLink.url.absoluteString,
-                // matchConfidence: dynamicLink.matchConfidence,
-                minimumAppVersion: dynamicLink.minimumAppVersion
-              };
-            }
-            result = true;
+        console.log(">> wiring applicationOpenURLOptions, FIRDynamicLink: " + dynamicLink);
+        if (dynamicLink && dynamicLink.url !== null) {
+          console.log(">>> dynamicLink.url.absoluteString: " + dynamicLink.url.absoluteString);
+          if (firebase._dynamicLinkCallback) {
+            firebase._dynamicLinkCallback({
+              url: dynamicLink.url.absoluteString,
+              // matchConfidence: dynamicLink.matchConfidence,
+              minimumAppVersion: dynamicLink.minimumAppVersion
+            });
+          } else {
+            firebase._cachedDynamicLink = {
+              url: dynamicLink.url.absoluteString,
+              // matchConfidence: dynamicLink.matchConfidence,
+              minimumAppVersion: dynamicLink.minimumAppVersion
+            };
           }
+          result = true;
         }
       }
       return result;
@@ -154,13 +162,16 @@ firebase.addAppDelegateMethods = appDelegate => {
   }
 
   if (typeof (FIRDynamicLink) !== "undefined") {
+    console.log(">>> addAppDelegateMethods, FIRDynamicLink");
     appDelegate.prototype.applicationContinueUserActivityRestorationHandler = (application, userActivity, restorationHandler) => {
+      console.log(">>> applicationContinueUserActivityRestorationHandler");
       let result = false;
 
       if (userActivity.webpageURL) {
         // check for an email-link-login flow
-        const fAuth = FIRAuth.auth();
-        if (fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
+
+        const fAuth = (typeof (FIRAuth) !== "undefined") ? FIRAuth.auth() : undefined;
+        if (fAuth && fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
           const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
           if (rememberedEmail !== undefined) {
 
@@ -304,18 +315,39 @@ if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
   firebaseMessaging.prepAppDelegate();
 }
 
+// This breaks in-app-messaging :(
 function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
+  console.log(">>> getAppDelegate, application.ios.delegate: " + application.ios.delegate);
   if (application.ios.delegate === undefined) {
+    console.log(">>> getAppDelegate, window =  " + application.ios.window);
+
     class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
       public static ObjCProtocols = [UIApplicationDelegate];
 
+      // get window() {
+      //   console.log(">>> getting window: " + application.ios.window);
+      //   return application.ios.window;
+      // };
+
+      // set window(w) {
+      //   console.log(">>> setting window: " + w);
+      //   application.ios.window = w;
+      // };
+
       // static new(): UIApplicationDelegateImpl {
+      //   console.log(">> new UIApplicationDelegateImpl");
       //   return <UIApplicationDelegateImpl>super.new();
       // }
     }
 
     application.ios.delegate = UIApplicationDelegateImpl;
+
+    setTimeout(() => {
+      if (!application.ios.delegate.window) {
+        application.ios.delegate.window = application.ios.window;
+      }
+    }, 2000);
   }
   return application.ios.delegate;
 }
@@ -334,7 +366,9 @@ firebase.init = arg => {
   return new Promise((resolve, reject) => {
     if (firebase.initialized) {
       reject("Firebase already initialized");
+      return;
     }
+
     firebase.initialized = true;
 
     try {
@@ -352,14 +386,18 @@ firebase.init = arg => {
 
       // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
       if (FIROptions.defaultOptions() !== null) {
-        FIROptions.defaultOptions().deepLinkURLScheme = iOSUtils.getter(NSBundle, NSBundle.mainBundle).bundleIdentifier;
+        console.log(">> init, defaultOptions deepLinkURLScheme");
+        FIROptions.defaultOptions().deepLinkURLScheme = NSBundle.mainBundle.bundleIdentifier;
+        console.log(">> init, defaultOptions deepLinkURLScheme: " + NSBundle.mainBundle.bundleIdentifier);
       }
 
       FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
+      console.log(">>> init, configure firebase");
       if (!firebase._configured) {
         firebase._configured = true;
         if (typeof (FIRApp) !== "undefined") {
+          console.log(">>> init, firebase configured");
           FIRApp.configure();
         }
       }
@@ -371,16 +409,12 @@ firebase.init = arg => {
       }
 
       if (typeof (FIRFirestore) !== "undefined") {
-        // fix a deprecation warning
-        const fIRFirestoreSettings = FIRFirestoreSettings.new();
-        fIRFirestoreSettings.timestampsInSnapshotsEnabled = true;
-
         // Firestore has offline persistence enabled by default
         if (arg.persist === false) {
+          const fIRFirestoreSettings = FIRFirestoreSettings.new();
           fIRFirestoreSettings.persistenceEnabled = false;
+          FIRFirestore.firestore().settings = fIRFirestoreSettings;
         }
-
-        FIRFirestore.firestore().settings = fIRFirestoreSettings;
       }
 
       if (typeof (FIRAuth) !== "undefined") {
@@ -590,6 +624,30 @@ firebase.logout = arg => {
   });
 };
 
+firebase.unlink = providerId => {
+  return new Promise((resolve, reject) => {
+    try {
+      const user = FIRAuth.auth().currentUser;
+      if (!user) {
+        reject("Not logged in");
+        return;
+      }
+
+      user.unlinkFromProviderCompletion(providerId, (user, error) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(user);
+        }
+      });
+
+    } catch (ex) {
+      console.log("Error in firebase.logout: " + ex);
+      reject(ex);
+    }
+  });
+};
+
 function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
   if (!user) {
     return null;
@@ -778,6 +836,10 @@ firebase.login = arg => {
           }
 
           firebase.requestPhoneAuthVerificationCode(userResponse => {
+            if (userResponse === undefined) {
+              reject("Prompt was canceled");
+              return;
+            }
             const fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
             if (fAuth.currentUser) {
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
@@ -1011,8 +1073,8 @@ firebase.reloadUser = () => {
   });
 };
 
-firebase.resetPassword = arg => {
-  return new Promise((resolve, reject) => {
+firebase.sendPasswordResetEmail = (email: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
     try {
       const onCompletion = error => {
         if (error) {
@@ -1022,20 +1084,16 @@ firebase.resetPassword = arg => {
         }
       };
 
-      if (!arg.email) {
-        reject("Resetting a password requires an email argument");
-      } else {
-        FIRAuth.auth().sendPasswordResetWithEmailCompletion(arg.email, onCompletion);
-      }
+      FIRAuth.auth().sendPasswordResetWithEmailCompletion(email, onCompletion);
     } catch (ex) {
-      console.log("Error in firebase.resetPassword: " + ex);
+      console.log("Error in firebase.sendPasswordResetEmail: " + ex);
       reject(ex);
     }
   });
 };
 
-firebase.changePassword = arg => {
-  return new Promise((resolve, reject) => {
+firebase.updateEmail = (newEmail: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
     try {
       const onCompletion = error => {
         if (error) {
@@ -1045,18 +1103,38 @@ firebase.changePassword = arg => {
         }
       };
 
-      if (!arg.email || !arg.oldPassword || !arg.newPassword) {
-        reject("Changing a password requires an email and an oldPassword and a newPassword arguments");
+      const user = FIRAuth.auth().currentUser;
+      if (user === null) {
+        reject("no current user");
       } else {
-        const user = FIRAuth.auth().currentUser;
-        if (user === null) {
-          reject("no current user");
-        } else {
-          user.updatePasswordCompletion(arg.newPassword, onCompletion);
-        }
+        user.updateEmailCompletion(newEmail, onCompletion);
       }
     } catch (ex) {
-      console.log("Error in firebase.changePassword: " + ex);
+      console.log("Error in firebase.updateEmail: " + ex);
+      reject(ex);
+    }
+  });
+};
+
+firebase.updatePassword = (newPassword: string): Promise<void> => {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const onCompletion = error => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve();
+        }
+      };
+
+      const user = FIRAuth.auth().currentUser;
+      if (user === null) {
+        reject("no current user");
+      } else {
+        user.updatePasswordCompletion(newPassword, onCompletion);
+      }
+    } catch (ex) {
+      console.log("Error in firebase.updatePassword: " + ex);
       reject(ex);
     }
   });
@@ -1148,6 +1226,10 @@ firebase.updateProfile = arg => {
   });
 };
 
+/***********************************************
+ * START Realtime Database Functions
+ ***********************************************/
+
 firebase._addObservers = (to, updateCallback) => {
   const listeners = [];
   listeners.push(to.observeEventTypeWithBlock(FIRDataEventType.ChildAdded, snapshot => {
@@ -1222,7 +1304,7 @@ firebase.getValue = path => {
   return new Promise((resolve, reject) => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
-      const listener = where.observeSingleEventOfTypeWithBlockWithCancelBlock(
+      where.observeSingleEventOfTypeWithBlockWithCancelBlock(
           FIRDataEventType.Value,
           snapshot => {
             resolve(firebase.getCallbackData('ValueChanged', snapshot));
@@ -1414,6 +1496,174 @@ firebase.remove = path => {
     }
   });
 };
+
+class OnDisconnect implements OnDisconnectBase {
+  constructor(private dbRef: FIRDatabaseReference, private path: string) {
+  }
+
+  cancel(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.cancelDisconnectOperationsWithCompletionBlock((error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.cancel: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  remove(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.onDisconnectRemoveValueWithCompletionBlock((error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.remove: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  set(value: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.onDisconnectSetValueWithCompletionBlock(value, (error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.set: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  setWithPriority(value: any, priority: string | number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        this.dbRef.onDisconnectSetValueAndPriorityWithCompletionBlock(value, priority, (error: NSError, dbRef: FIRDatabaseReference) => {
+          error ? reject(error.localizedDescription) : resolve();
+        });
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.setWithPriority: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  update(values: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (typeof values === "object") {
+          this.dbRef.onDisconnectUpdateChildValuesWithCompletionBlock(values, (error: NSError, dbRef: FIRDatabaseReference) => {
+            error ? reject(error.localizedDescription) : resolve();
+          });
+        } else {
+          const lastPartOfPath = this.path.lastIndexOf("/");
+          const pathPrefix = this.path.substring(0, lastPartOfPath);
+          const pathSuffix = this.path.substring(lastPartOfPath + 1);
+          const updateObject = '{"' + pathSuffix + '" : "' + values + '"}';
+          FIRDatabase.database().reference().childByAppendingPath(pathPrefix).updateChildValuesWithCompletionBlock(JSON.parse(updateObject), (error: NSError, dbRef: FIRDatabaseReference) => {
+            error ? reject(error.localizedDescription) : resolve();
+          });
+        }
+      } catch (ex) {
+        console.log("Error in firebase.onDisconnect.update: " + ex);
+        reject(ex);
+      }
+    });
+  }
+}
+
+firebase.onDisconnect = (path: string): OnDisconnect => {
+  if (!firebase.initialized) {
+    console.error("Please run firebase.init() before firebase.onDisconnect()");
+    throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+  }
+  const dbRef: FIRDatabaseReference = FIRDatabase.database().reference().child(path);
+  return new OnDisconnect(dbRef, path);
+};
+
+firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
+                        onComplete: (a: Error | null, b: boolean, c: DataSnapshot) => Promise<any>) => {
+  return new Promise<any>((resolve, reject) => {
+    if (!firebase.initialized) {
+      console.error("Please run firebase.init() before firebase.transaction()");
+      throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+    }
+    const dbRef: FIRDatabaseReference = FIRDatabase.database().reference().child(path);
+
+    dbRef.runTransactionBlockAndCompletionBlock(
+        (mutableData: FIRMutableData): FIRTransactionResult => {
+          const desiredValue = transactionUpdate(firebaseUtils.toJsObject(mutableData.value));
+          if (desiredValue === undefined) {
+            // The problem case : user returns undefined when the the value we give them (mutableData) is null.
+            // This is a valid case as the user will want to abort if he thinks theres no data, BUT mutualData
+            // is usually null when runTransaction is called the first time(which is why its called multiple times).
+            // Result: we would abort and the transaction terminates, but the real data didn't have a chance to come in
+            // for the function to be called a second time.
+            // Even in the ios simple blog example their complete block is called twice with committed first being false
+            // followed by a second one saying committed is true... So with this implementation I favored having an "incorrect"
+            // committed boolean, but have the correct updated value
+
+            // TLDR: if user returns undefined then we may never execute his function with the correct input
+            // For now the way to resolve this is to call success with the original value (so we don't modify anything)
+            // And then the user will get his expected value, but { committed: always true }....
+
+            // return FIRTransactionResult.abort();
+            return FIRTransactionResult.successWithValue(mutableData);
+          } else {
+            mutableData.value = desiredValue;
+            return FIRTransactionResult.successWithValue(mutableData);
+          }
+        },
+        (error: NSError, commited: boolean, snapshot: FIRDataSnapshot): void => {
+          error !== null ? reject(error.localizedDescription) :
+              resolve({committed: commited, snapshot: nativeSnapshotToWebSnapshot(snapshot)});
+        }
+    );
+  });
+};
+
+// Converts FIRDataSnapshot into Web DataSnapshot
+function nativeSnapshotToWebSnapshot(snapshot: FIRDataSnapshot): DataSnapshot {
+  function forEach(action: (datasnapshot: DataSnapshot) => any): boolean {
+    const iterator: NSEnumerator<FIRDataSnapshot> = snapshot.children;
+    let innerSnapshot: FIRDataSnapshot;
+    let datasnapshot: DataSnapshot;
+    while (innerSnapshot = iterator.nextObject()) {
+      datasnapshot = nativeSnapshotToWebSnapshot(innerSnapshot);
+      if (action(datasnapshot)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  return {
+    key: snapshot.key,
+    ref: snapshot.ref,
+    child: (path: string) => nativeSnapshotToWebSnapshot(snapshot.childSnapshotForPath(path)),
+    exists: () => snapshot.exists(),
+    forEach: (func: (datasnapshot) => any) => forEach(func),
+    getPriority: () => firebaseUtils.toJsObject(snapshot.priority),
+    hasChild: (path: string) => snapshot.hasChild(path),
+    hasChildren: () => snapshot.hasChildren(),
+    numChildren: () => snapshot.childrenCount,
+    toJSON: () => snapshot.valueInExportFormat(),
+    val: () => firebaseUtils.toJsObject(snapshot.value)
+  };
+}
+
+firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
+  FIRDatabase.setLoggingEnabled(logging);
+};
+
+/***********************************************
+ * END Realtime Database Functions
+ ***********************************************/
 
 firebase.sendCrashLog = arg => {
   return new Promise((resolve, reject) => {
@@ -1623,10 +1873,16 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
   });
 };
 
+
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {
-    if (typeof(FIRFirestore) === "undefined") {
+    if (typeof (FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    if (!firebase.initialized) {
+      console.log("Please run firebase.init() before firebase.firestore.collection()");
       return null;
     }
 
@@ -1710,8 +1966,13 @@ firebase.firestore._getDocumentReference = (fIRDocumentReference: FIRDocumentRef
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   try {
-    if (typeof(FIRFirestore) === "undefined") {
+    if (typeof (FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
+      return null;
+    }
+
+    if (!firebase.initialized) {
+      console.log("Please run firebase.init() before firebase.firestore.doc()");
       return null;
     }
 
@@ -1736,7 +1997,7 @@ firebase.firestore.docRef = (documentPath: string): firestore.DocumentReference 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -1772,7 +2033,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -1853,7 +2114,7 @@ function fixSpecialField(item): any {
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -1881,7 +2142,7 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -1908,7 +2169,7 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -1938,7 +2199,7 @@ firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapsh
 firebase.firestore.getDocument = (collectionPath: string, documentPath: string): Promise<firestore.DocumentSnapshot> => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(FIRFirestore) === "undefined") {
+      if (typeof (FIRFirestore) === "undefined") {
         reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
         return;
       }
@@ -1985,7 +2246,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
 
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
   try {
-    if (typeof(FIRFirestore) === "undefined") {
+    if (typeof (FIRFirestore) === "undefined") {
       console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
       return null;
     }
@@ -2048,7 +2309,7 @@ class FIRInviteDelegateImpl extends NSObject implements FIRInviteDelegate {
   public static ObjCProtocols = [];
 
   static new(): FIRInviteDelegateImpl {
-    if (FIRInviteDelegateImpl.ObjCProtocols.length === 0 && typeof(FIRInviteDelegate) !== "undefined") {
+    if (FIRInviteDelegateImpl.ObjCProtocols.length === 0 && typeof (FIRInviteDelegate) !== "undefined") {
       FIRInviteDelegateImpl.ObjCProtocols.push(FIRInviteDelegate);
     }
     return <FIRInviteDelegateImpl>super.new();

@@ -169,11 +169,14 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   abstract createDetector(): any;
 
   abstract createSuccessListener(): any;
+
+  runDetector(image: UIImage) {
+    throw new Error("No custom detector implemented, so 'runDetector' can't do its thing");
+  }
 }
 
 class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraViewDelegate {
-  public static ObjCProtocols = [TNSMLKitCameraViewDelegate];
-
+  public static ObjCProtocols = [];
   private owner: WeakRef<MLKitCameraView>;
   private resultCallback: (message: any) => void;
   private options?: any;
@@ -182,6 +185,10 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
   private onSuccessListener: any;
 
   public static createWithOwnerResultCallbackAndOptions(owner: WeakRef<MLKitCameraView>, callback: (message: any) => void, options?: any): TNSMLKitCameraViewDelegateImpl {
+    // defer initialisation because the framework may not be available / used
+    if (TNSMLKitCameraViewDelegateImpl.ObjCProtocols.length === 0 && typeof (TNSMLKitCameraViewDelegate) !== "undefined") {
+      TNSMLKitCameraViewDelegateImpl.ObjCProtocols.push(TNSMLKitCameraViewDelegate);
+    }
     let delegate = <TNSMLKitCameraViewDelegateImpl>TNSMLKitCameraViewDelegateImpl.new();
     delegate.owner = owner;
     delegate.options = options;
@@ -193,16 +200,21 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
 
   cameraDidOutputImage(image: UIImage): void {
     if (image) {
-      const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
-      const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
-      fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
-      fIRVisionImage.metadata = fIRVisionImageMetadata;
-
       if (this.detector.detectInImageCompletion) {
-        this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+        this.detector.detectInImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
+      } else if (this.detector.processImageCompletion) {
+        this.detector.processImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
       } else {
-        this.detector.processImageCompletion(fIRVisionImage, this.onSuccessListener);
+        this.owner.get().runDetector(image);
       }
     }
+  }
+
+  private uiImageToFIRVisionImage(image: UIImage): FIRVisionImage {
+    const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
+    const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
+    fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
+    fIRVisionImage.metadata = fIRVisionImageMetadata;
+    return fIRVisionImage;
   }
 }

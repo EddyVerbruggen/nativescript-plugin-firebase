@@ -10,8 +10,8 @@ src/**/*.d.ts
 src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/project.xcworkspace
 src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/xcuserdata
 src/platforms/ios/Podfile
-src/platforms/ios/build.xcconfig
 src/platforms/android/include.gradle
+src/platforms/android/mlkithelpersrc/**/*.class
 !src/firebase.d.ts
 !src/index.d.ts
 !src/references.d.ts
@@ -34,6 +34,7 @@ demo/firebasefunctions/functions/lib
 !demo-push/karma.conf.js
 demo-push/*.d.ts
 demo-ng/*.d.ts
+!demo-vue/app/main.js
 !demo/references.d.ts
 !demo-push/references.d.ts
 !demo-ng/references.d.ts

@@ -38,10 +38,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
       }
       json.put("data", data_json);
 
-      Log.d(TAG, "-------------------- onMessageReceived, json: " + json.toString());
       FirebasePlugin.executeOnNotificationReceivedCallback(json.toString());
     } catch (JSONException e) {
-      Log.d(TAG, "-------------------- onMessageReceived, e");
       e.printStackTrace();
     }
   }

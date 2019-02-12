@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitOptions, } from "../";
+import { MLKitVisionOptions, } from "../";
 import { MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextResult } from "./";
 import { MLKitTextRecognition as MLKitTextRecognitionBase } from "./textrecognition-common";
 import {
@@ -83,6 +83,7 @@ function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
 
       lns.push({
         text: line.getText(),
+        confidence: line.getConfidence(),
         bounds: boundingBoxToBounds(line.getBoundingBox()),
         elements: elms
       });
@@ -90,6 +91,7 @@ function getResult(firebaseVisionText: any): MLKitRecognizeTextResult {
 
     result.blocks.push({
       text: textBlock.getText(),
+      confidence: textBlock.getConfidence(),
       bounds: boundingBoxToBounds(textBlock.getBoundingBox()),
       lines: lns
     });
@@ -161,7 +163,7 @@ export function recognizeTextCloud(options: MLKitRecognizeTextCloudOptions): Pro
   });
 }
 
-function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
+function getImage(options: MLKitVisionOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 }

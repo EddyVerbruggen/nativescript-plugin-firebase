@@ -320,9 +320,7 @@ that receives the link will need to be redirected to your app.
 </details>
 
 
-#### Managing email-password accounts
-
-##### Creating a Password account
+#### Creating a Password account
 This may not work on an (Android) simulator. See #463.
 
 <details>
@@ -365,43 +363,81 @@ This may not work on an (Android) simulator. See #463.
 
 
 #### Resetting a password
-```js
-  firebase.resetPassword({
-    email: 'useraccount@provider.com'
-  }).then(
-      function () {
-        // called when password reset was successful,
-        // you could now prompt the user to check his email
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
-```
+> ⚠️ The method name and signature has changed in 8.0.0 from `resetPassword` to `sendPasswordResetEmail` to better align with the Web API.
 
-#### Changing a password
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.sendPasswordResetEmail("user@example.com")
+      .then(() => console.log("Password reset email sent"))
+      .catch(error => console.log("Error sending password reset email: " + error));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().sendPasswordResetEmail("user@example.com")
+      .then(() => console.log("Password reset email sent"))
+      .catch(error => console.log("Error sending password reset email: " + error));
+```
+</details>
+
+#### Updating an email address
+Note that changing an email address may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.updateEmail("user@example.com")
+      .then(() => console.log("Email updated"))
+      .catch(error => console.log("Error updating email: " + error));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().updateEmail("user@example.com")
+      .then(() => console.log("Email updated"))
+      .catch(error => console.log("Error updating email: " + error));
+```
+</details>
+
+#### Updating a password
+> ⚠️ The method name and signature has changed in 8.0.0 from `changePassword` to `updatePassword` to better align with the Web API.
+
 Note that changing a password may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
 
-```js
-  firebase.changePassword({
-    email: 'useraccount@provider.com',
-    oldPassword: 'myOldPassword',
-    newPassword: 'myNewPassword'
-  }).then(
-      function () {
-        // called when password change was successful
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.updatePassword("myNewPassword")
+      .then(() => console.log("Password updated"))
+      .catch(error => console.log("Error updating password: " + error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().updatePassword("myNewPassword")
+      .then(() => console.log("Password updated"))
+      .catch(error => console.log("Error updating password: " + error));
+```
+</details>
 
 ### Phone Verification
 * Don't forget to enable Phone login in your firebase instance.
 * You can only test this on a real device (not on an emulator/simulator).
 * Use the phone number of the device you're testing on.
-* _ANDROID:_ [Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
+* _ANDROID:_ [Make sure you've uploaded your SHA1 fingerprints](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
 * _iOS:_ Make sure you have messaging enabled as well, as this uses push notifications on iOS.
 
 ```js
@@ -501,7 +537,8 @@ Upon successful authentication, Facebook creates an access token that can be obt
    			android:name="com.tns.NativeScriptActivity"
    			..>
    ```
-3. Create a file `app\App_Resources\Android\values\facebooklogin.xml` and add this (replace the id):
+   
+3. Create a file `facebooklogin.xml`. Depending on your project structure this either goes into `App_Resources/Android/values/` or `App_Resources/Android/src/main/res/values/`. Add this to the file (replace the id):
 
    ```xml
    <?xml version='1.0' encoding='utf-8'?>
@@ -516,7 +553,13 @@ Upon successful authentication, Facebook creates an access token that can be obt
 
 First, enable Google Sign-In in your firebase instance and add the _Web SDK configuration_.
 
-Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
+Make sure you've uploaded your [SHA1 fingerprints](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
+
+> **Uploading your SHA1 fingerprint is required for _debug_ and _release_ builds.**
+
+> If you have enabled Google Play's _App Signing_ feature you will need to add the SHA1 for Google's signing certificate to your Firebase project's fingerprints. If you fail to do this, your release builds will fail because they were not signed by Google. See image below:
+>
+> <img src="./images/app-signing.png" max-height="300px" alt="Google App Signing"/>
 
 Then add the following lines to your code and check for setup instructions for your platform below.
 
@@ -638,6 +681,29 @@ Shouldn't be more complicated than:
   firebaseWebApi.auth().signOut()
       .then(() => console.log("Logout OK"))
       .catch(error => console.log("Logout error: " + JSON.stringify(error)));
+```
+</details>
+
+### unlinking provider
+For a given user, and a given provider ("google.com","password",...)
+
+<details>
+ <summary>Native API</summary>
+
+```js
+  user.unlink(providerId /* string */)
+      .then(user => console.log("Unlink OK, user: " + JSON.stringify(user)))
+      .catch(error => console.log("Unlink error: " + JSON.stringify(error)));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebaseWebApi.auth().unlink(providerId /* string */)
+      .then(user => console.log("Unlink OK, user: " + JSON.stringify(user)))
+      .catch(error => console.log("Unlink error: " + JSON.stringify(error)));
 ```
 </details>
 

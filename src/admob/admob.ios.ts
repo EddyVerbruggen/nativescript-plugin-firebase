@@ -1,14 +1,17 @@
-import { firebase } from "../firebase-common";
-import { BannerOptions, InterstitialOptions } from "./admob";
 import { device } from "tns-core-modules/platform/platform";
 import { DeviceType } from "tns-core-modules/ui/enums/enums";
 import { ios as iOSUtils } from "tns-core-modules/utils/utils";
-import { AD_SIZE, BANNER_DEFAULTS } from "./admob-common";
+import { firebase } from "../firebase-common";
+import { BannerOptions, InterstitialOptions, PreloadRewardedVideoAdOptions, ShowRewardedVideoAdOptions } from "./admob";
+import { AD_SIZE, BANNER_DEFAULTS, rewardedVideoCallbacks } from "./admob-common";
 
 export { AD_SIZE };
 
 // helps global app behavior (ie: orientation handling)
-let _bannerOptions = null;
+let _bannerOptions = undefined;
+
+// these are needed in multiple functions
+let _rewardBasedVideoAdDelegate = undefined;
 
 export function showBanner(arg: BannerOptions): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -44,7 +47,7 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       if (settings.testing) {
         let testDevices: any = [];
         try {
-          testDevices.push(kGADSimulatorID);
+          testDevices.push("Simulator");
         } catch (ignore) {
           // can happen on a real device
         }
@@ -100,7 +103,7 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
           }, () => {
             arg.onAdClosed && arg.onAdClosed();
           });
-      // we're leaving the app to switch to Google's OAuth screen, so making sure this is retained
+
       CFRetain(delegate);
       firebase.admob.interstitialView.delegate = delegate;
 
@@ -109,7 +112,7 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
       if (settings.testing) {
         let testDevices: any = [];
         try {
-          testDevices.push(kGADSimulatorID);
+          testDevices.push("Simulator");
         } catch (ignore) {
           // can happen on a real device
         }
@@ -121,7 +124,7 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
 
       firebase.admob.interstitialView.loadRequest(adRequest);
     } catch (ex) {
-      console.log("Error in firebase.admob.showInterstitial: " + ex);
+      console.log("Error in firebase.admob.preloadInterstitial: " + ex);
       reject(ex);
     }
   });
@@ -170,7 +173,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
       if (settings.testing) {
         let testDevices: any = [];
         try {
-          testDevices.push(kGADSimulatorID);
+          testDevices.push("Simulator");
         } catch (ignore) {
           // can happen on a real device
         }
@@ -183,6 +186,93 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
       firebase.admob.interstitialView.loadRequest(adRequest);
     } catch (ex) {
       console.log("Error in firebase.admob.showInterstitial: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Promise<any> {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof (GADRequest) === "undefined") {
+        reject("Enable AdMob first - see the plugin documentation");
+        return;
+      }
+
+      const onLoaded = () => resolve();
+      const onError = err => reject(err);
+      _rewardBasedVideoAdDelegate = GADRewardBasedVideoAdDelegateImpl.new().initWithCallback(onLoaded, onError);
+      CFRetain(_rewardBasedVideoAdDelegate);
+
+      firebase.admob.rewardedAdVideoView = GADRewardBasedVideoAd.sharedInstance();
+      firebase.admob.rewardedAdVideoView.delegate = _rewardBasedVideoAdDelegate;
+
+      const settings = firebase.merge(arg, BANNER_DEFAULTS);
+      const adRequest = GADRequest.request();
+
+      if (settings.testing) {
+        let testDevices: any = [];
+        try {
+          testDevices.push("Simulator");
+        } catch (ignore) {
+          // can happen on a real device
+        }
+        if (settings.iosTestDeviceIds) {
+          testDevices = testDevices.concat(settings.iosTestDeviceIds);
+        }
+        adRequest.testDevices = testDevices;
+      }
+
+      firebase.admob.rewardedAdVideoView.loadRequestWithAdUnitID(adRequest, settings.iosAdPlacementId);
+    } catch (ex) {
+      console.log("Error in firebase.admob.preloadRewardedVideoAd: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function showRewardedVideoAd(arg?: ShowRewardedVideoAdOptions): Promise<any> {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof (GADRequest) === "undefined") {
+        reject("Enable AdMob first - see the plugin documentation");
+        return;
+      }
+
+      if (!firebase.admob.rewardedAdVideoView) {
+        reject("Please call 'preloadRewardedVideoAd' first");
+        return;
+      }
+
+      if (arg.onRewarded) {
+        rewardedVideoCallbacks.onRewarded = arg.onRewarded;
+      }
+
+      if (arg.onLeftApplication) {
+        rewardedVideoCallbacks.onLeftApplication = arg.onLeftApplication;
+      }
+
+      if (arg.onClosed) {
+        rewardedVideoCallbacks.onClosed = arg.onClosed;
+      }
+
+      if (arg.onOpened) {
+        rewardedVideoCallbacks.onOpened = arg.onOpened;
+      }
+
+      if (arg.onStarted) {
+        rewardedVideoCallbacks.onStarted = arg.onStarted;
+      }
+
+      if (arg.onCompleted) {
+        rewardedVideoCallbacks.onCompleted = arg.onCompleted;
+      }
+
+      firebase.admob.rewardedAdVideoView.presentFromRootViewController(iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+      resolve();
+
+    } catch (ex) {
+      console.log("Error in firebase.admob.showRewardedVideoAd: " + ex);
       reject(ex);
     }
   });
@@ -269,5 +359,64 @@ class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDel
 
   public interstitialDidFailToReceiveAdWithError(ad: GADInterstitial, error: GADRequestError): void {
     this.callback(ad, error);
+  }
+}
+
+class GADRewardBasedVideoAdDelegateImpl extends NSObject implements GADRewardBasedVideoAdDelegate {
+  public static ObjCProtocols = [];
+  _loaded: () => void;
+  _error: (err) => void;
+
+  static new(): GADRewardBasedVideoAdDelegateImpl {
+    if (GADRewardBasedVideoAdDelegateImpl.ObjCProtocols.length === 0 && typeof (GADRewardBasedVideoAdDelegate) !== "undefined") {
+      GADRewardBasedVideoAdDelegateImpl.ObjCProtocols.push(GADRewardBasedVideoAdDelegate);
+    }
+    return <GADRewardBasedVideoAdDelegateImpl>super.new();
+  }
+
+  public initWithCallback(loaded: () => void, error: (err) => void): GADRewardBasedVideoAdDelegateImpl {
+    this._loaded = loaded;
+    this._error = error;
+    return this;
+  }
+
+  rewardBasedVideoAdDidClose(rewardBasedVideoAd: GADRewardBasedVideoAd): void {
+    firebase.admob.rewardedAdVideoView = undefined;
+    rewardedVideoCallbacks.onClosed();
+    setTimeout(function () {
+      CFRelease(_rewardBasedVideoAdDelegate);
+      _rewardBasedVideoAdDelegate = undefined;
+    });
+  }
+
+  rewardBasedVideoAdDidCompletePlaying(rewardBasedVideoAd: GADRewardBasedVideoAd): void {
+    rewardedVideoCallbacks.onCompleted();
+  }
+
+  rewardBasedVideoAdDidFailToLoadWithError(rewardBasedVideoAd: GADRewardBasedVideoAd, error: NSError): void {
+    this._error(error.localizedDescription);
+  }
+
+  rewardBasedVideoAdDidOpen(rewardBasedVideoAd: GADRewardBasedVideoAd): void {
+    rewardedVideoCallbacks.onOpened();
+  }
+
+  rewardBasedVideoAdDidReceiveAd(rewardBasedVideoAd: GADRewardBasedVideoAd): void {
+    this._loaded();
+  }
+
+  rewardBasedVideoAdDidRewardUserWithReward(rewardBasedVideoAd: GADRewardBasedVideoAd, reward: GADAdReward): void {
+    rewardedVideoCallbacks.onRewarded({
+      amount: reward.amount ? reward.amount.doubleValue : undefined,
+      type: reward.type
+    });
+  }
+
+  rewardBasedVideoAdDidStartPlaying(rewardBasedVideoAd: GADRewardBasedVideoAd): void {
+    rewardedVideoCallbacks.onStarted();
+  }
+
+  rewardBasedVideoAdWillLeaveApplication(rewardBasedVideoAd: GADRewardBasedVideoAd): void {
+    rewardedVideoCallbacks.onLeftApplication();
   }
 }

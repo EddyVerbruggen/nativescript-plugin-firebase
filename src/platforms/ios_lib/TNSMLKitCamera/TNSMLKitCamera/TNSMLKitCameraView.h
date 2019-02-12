@@ -11,5 +11,11 @@
 
 - (nonnull id)initWithCaptureSession:(nonnull AVCaptureSession *)captureSession;
 + (NSArray * _Nullable)resizeImage:(nonnull UIImage *)image;
++ (NSMutableData * _Nullable)getInputData:(nonnull UIImage *)img withRows:(int) rows andColumns:(int) columns andType:(NSString *) type;
+
++ (NSData *)scaledData:(nonnull UIImage *)img
+              withSize:(CGSize)size
+             byteCount:(int)byteCount
+           isQuantized:(BOOL)isQuantized;
 
 @end

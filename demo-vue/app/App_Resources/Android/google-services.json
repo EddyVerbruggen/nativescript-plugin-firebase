@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "176080762547",
+    "firebase_url": "https://n-plugin-test-firestore.firebaseio.com",
+    "project_id": "n-plugin-test-firestore",
+    "storage_bucket": "n-plugin-test-firestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176080762547:android:fbe95ab1f255d884",
+        "android_client_info": {
+          "package_name": "org.nativescript.firebasedemo.firestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176080762547-e030nqu3u61ntnq5d3jilip6ik6au4cq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbzMMocv610ByMwPvcv2W0h45btMojqLw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

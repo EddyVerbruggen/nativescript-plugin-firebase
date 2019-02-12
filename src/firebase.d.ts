@@ -39,6 +39,16 @@ export enum LoginType {
   EMAIL_LINK
 }
 
+export enum LogComplexEventTypeParameter {
+  STRING,
+  INT,
+  FLOAT,
+  DOUBLE,
+  LONG,
+  ARRAY,
+  BOOLEAN
+}
+
 /**
  * The allowed values for QueryOptions.orderBy.type.
  */
@@ -375,13 +385,6 @@ export interface UpdateProfileOptions {
 }
 
 /**
- * The options object passed into the resetPassword function.
- */
-export interface ResetPasswordOptions {
-  email: string;
-}
-
-/**
  * The returned object in the callback handlers
  * of the addChildEventListener and addValueEventListener functions.
  */
@@ -389,15 +392,6 @@ export interface FBData {
   type: string;
   key: string;
   value: any;
-}
-
-/**
- * The options object passed into the changePassword function.
- */
-export interface ChangePasswordOptions {
-  email: string;
-  oldPassword: string;
-  newPassword: string;
 }
 
 export interface AuthStateData {
@@ -508,6 +502,46 @@ export interface SendCrashLogOptions {
 export function init(options?: InitOptions): Promise<any>;
 
 // Database
+export interface OnDisconnect {
+  cancel(): Promise<any>;
+
+  remove(): Promise<any>;
+
+  set(value: any): Promise<any>;
+
+  setWithPriority(
+      value: any,
+      priority: number | string
+  ): Promise<any>;
+
+  update(values: Object): Promise<any>;
+}
+
+export interface DataSnapshot {
+  key: string;
+  ref: any; // TODO: Type it so that it returns a databaseReference.
+  child(path: string): DataSnapshot;
+
+  exists(): boolean;
+
+  forEach(action: (snapshot: DataSnapshot) => any): boolean;
+
+  getPriority(): string | number | null;
+
+  hasChild(path: string): boolean;
+
+  hasChildren(): boolean;
+
+  numChildren(): number;
+
+  toJSON(): Object;
+
+  val(): any;
+}
+
+export function transaction(path: string, transactionUpdate: (a: any) => any,
+                            onComplete?: (error: Error | null, committed: boolean, dataSnapshot: DataSnapshot) => any): Promise<any>;
+
 export function push(path: string, value: any): Promise<PushResult>;
 
 export function getValue(path: string): Promise<any>;
@@ -526,6 +560,9 @@ export function addValueEventListener(onValueEvent: (data: FBData) => void, path
 
 export function removeEventListeners(listeners: Array<any>, path: string): Promise<any>;
 
+export function onDisconnect(path: string): OnDisconnect;
+
+export function enableLogging(logger?: boolean | ((a: string) => any), persistent?: boolean);
 /**
  * Tells the client to keep its local cache in sync with the server automatically.
  */
@@ -840,6 +877,8 @@ export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
 
 export function logout(): Promise<any>;
 
+export function unlink(providerId: string): Promise<User>;
+
 export function fetchProvidersForEmail(email: string): Promise<Array<string>>;
 
 export function fetchSignInMethodsForEmail(email: string): Promise<Array<string>>;
@@ -852,9 +891,11 @@ export function deleteUser(): Promise<any>;
 
 export function updateProfile(options: UpdateProfileOptions): Promise<any>;
 
-export function resetPassword(options: ResetPasswordOptions): Promise<any>;
+export function sendPasswordResetEmail(email: string): Promise<void>;
 
-export function changePassword(options: ChangePasswordOptions): Promise<any>;
+export function updateEmail(newEmail: string): Promise<void>;
+
+export function updatePassword(newPassword: string): Promise<void>;
 
 export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
 

@@ -8,12 +8,15 @@ const firebase = require("nativescript-plugin-firebase");
 })
 
 export class AppComponent implements OnInit {
-  ngOnInit(): void {
-    firebase.init(
-        {
-          persist: false
-        })
-        .then(() => console.log(">>>>> Firebase initialized"))
-        .catch(err => console.log(">>>>> Firebase init error: " + err));
+  // using async-await just for show
+  async ngOnInit(): Promise<void> {
+    try {
+      await firebase.init({
+        persist: false
+      });
+      console.log(">>>>> Firebase initialized");
+    } catch (err) {
+      console.log(">>>>> Firebase init error: " + err);
+    }
   }
 }
