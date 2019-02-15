@@ -4,11 +4,13 @@ var prompt = require('prompt-lite');
 
 const { execSync } = require('child_process');
 const semver = require('semver');
-
-// iOS modern build system is supported from version NativeScript (CLI) version 5.2.0
 const tnsVersionFull = execSync('tns --version', { encoding: 'ascii'});
+
+// iOS modern build system is supported from version NativeScript-CLI version 5.2.0
 const supportsIOSModernBuildSystem = tnsVersionFull.indexOf("5.2.0-") > -1 || semver.gte(tnsVersionFull, "5.2.0");
-console.log({supportsIOSModernBuildSystem});
+
+// Custom gradle buildscripts are supported from NativeScript-Android version 5.3.0 (TODO this actually checks the CLI version)
+const supportsGradleBuildscripts = tnsVersionFull.indexOf("5.3.0-") > -1 || semver.gte(tnsVersionFull, "5.3.0");
 
 if (!supportsIOSModernBuildSystem) {
   console.log(`You're using NativeScript ${tnsVersionFull}.. which doesn't support the latest Firestore and in-app-messaging SDKs. Upgrade NativeScript to at least 5.2.0 if you need those!\n\n`);
@@ -699,12 +701,6 @@ function writeGradleFile(result) {
     fs.writeFileSync(directories.android + '/include.gradle',
         `
 android {
-    productFlavors {
-        "fireb" {
-            dimension "fireb"
-        }
-    }
-
     // (possibly-temporary) workaround for https://stackoverflow.com/questions/52518378/more-than-one-file-was-found-with-os-independent-path-meta-inf-proguard-android
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
