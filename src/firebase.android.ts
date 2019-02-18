@@ -2,7 +2,14 @@ import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import lazy from "tns-core-modules/utils/lazy";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
-import { DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
+import {
+  DataSnapshot,
+  firestore,
+  GetAuthTokenOptions,
+  GetAuthTokenResult,
+  OnDisconnect as OnDisconnectBase,
+  User
+} from "./firebase";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -128,7 +135,7 @@ firebase.toHashMap = obj => {
           if (fieldValue.type === "ARRAY_UNION") {
             // nested arrays are not allowed, so harden against wrong usage: arrayUnion(["foo", "bar"]) vs arrayUnion("foo", "bar")
             let values: Array<any> = Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value;
-            values = values.map(v => typeof(v) === "object" ? firebase.toHashMap(v) : v);
+            values = values.map(v => typeof (v) === "object" ? firebase.toHashMap(v) : v);
             node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(values));
           } else if (fieldValue.type === "ARRAY_REMOVE") {
             node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
@@ -696,26 +703,19 @@ firebase.unlink = providerId => {
   });
 };
 
-firebase.getAuthToken = arg => {
+firebase.getAuthToken = (arg: GetAuthTokenOptions): Promise<GetAuthTokenResult> => {
   return new Promise((resolve, reject) => {
     try {
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
       const user = firebaseAuth.getCurrentUser();
       if (user !== null) {
         const onSuccessListener = new gmsTasks.OnSuccessListener({
-          onSuccess: getTokenResult => {
-            if (arg.withClaims) {
-               /* get token and custom claims previously set via the Firebase Admin SDK. */
-              resolve(
-                  {
-                      token: getTokenResult.getToken(),
-                      claims: getTokenResult.getClaims()
-             }
-              );
-          } else {
-             /* get just token without custom claims */
-              resolve(getTokenResult.getToken());
-          }
+          onSuccess: tokenResult => {
+            resolve({
+              token: tokenResult.getToken(),
+              claims: firebase.toJsObject(tokenResult.getClaims()),
+              signInProvider: tokenResult.getSignInProvider()
+            });
           }
         });
 

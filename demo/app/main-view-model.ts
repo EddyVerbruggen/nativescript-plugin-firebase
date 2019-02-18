@@ -1,20 +1,21 @@
-import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
-import { Observable } from "tns-core-modules/data/observable";
-import { alert, prompt } from "tns-core-modules/ui/dialogs";
-import { isAndroid, isIOS } from "tns-core-modules/platform";
 import * as firebase from "nativescript-plugin-firebase";
 import {
   AddEventListenerResult,
   admob as firebaseAdMob,
   crashlytics as firebaseCrashlytics,
+  GetAuthTokenResult,
+  LogComplexEventTypeParameter,
   performance as firebasePerformance,
   storage as firebaseStorage,
-  User,
-  LogComplexEventTypeParameter
+  User
 } from "nativescript-plugin-firebase";
-import * as fs from "tns-core-modules/file-system";
-import { MessagingViewModel } from './messaging-view-model';
+import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
 import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performance";
+import { Observable } from "tns-core-modules/data/observable";
+import * as fs from "tns-core-modules/file-system";
+import { isAndroid, isIOS } from "tns-core-modules/platform";
+import { alert, prompt } from "tns-core-modules/ui/dialogs";
+import { MessagingViewModel } from './messaging-view-model';
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
@@ -1012,16 +1013,12 @@ export class HelloWorldModel extends Observable {
           });
 
           // now retrieve an auth token we can use to access Firebase from our server
-          firebase.getAuthToken({
-            forceRefresh: false
-          }).then(
-              token => {
-                console.log("Auth token retrieved: " + token);
-              },
-              errorMessage => {
-                console.log("Auth token retrieval error: " + errorMessage);
-              }
-          );
+          firebase.getAuthToken(
+              {
+                forceRefresh: false
+              })
+              .then((result: GetAuthTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
+              .catch(errorMessage => console.log("Auth token retrieval error: " + errorMessage));
         },
         errorMessage => {
           console.log("Login error: " + errorMessage);

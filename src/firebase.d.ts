@@ -202,8 +202,12 @@ export interface GetAuthTokenOptions {
    * Default false.
    */
   forceRefresh?: boolean;
-  /* Set this to true if you want any custom claims returned that you previously set via the Firebase Admin SDK. */
-  withClaims?: boolean;
+}
+
+export interface GetAuthTokenResult {
+  token: string;
+  claims: { [key: string]: any; };
+  signInProvider: string;
 }
 
 export interface Provider {
@@ -565,6 +569,7 @@ export function removeEventListeners(listeners: Array<any>, path: string): Promi
 export function onDisconnect(path: string): OnDisconnect;
 
 export function enableLogging(logger?: boolean | ((a: string) => any), persistent?: boolean);
+
 /**
  * Tells the client to keep its local cache in sync with the server automatically.
  */
@@ -875,7 +880,7 @@ export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
 
 export function reloadUser(): Promise<void>;
 
-export function getAuthToken(option: GetAuthTokenOptions): Promise<any>;
+export function getAuthToken(option: GetAuthTokenOptions): Promise<GetAuthTokenResult>;
 
 export function logout(): Promise<any>;
 

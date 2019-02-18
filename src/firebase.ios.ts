@@ -1,5 +1,12 @@
 import * as application from "tns-core-modules/application/application";
-import { DataSnapshot, firestore, OnDisconnect as OnDisconnectBase, User } from "./firebase";
+import {
+  DataSnapshot,
+  firestore,
+  GetAuthTokenOptions,
+  GetAuthTokenResult,
+  OnDisconnect as OnDisconnectBase,
+  User
+} from "./firebase";
 import {
   DocumentSnapshot as DocumentSnapshotBase,
   FieldValue,
@@ -662,7 +669,7 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
   return loginResult;
 }
 
-firebase.getAuthToken = arg => {
+firebase.getAuthToken = (arg: GetAuthTokenOptions): Promise<GetAuthTokenResult> => {
   return new Promise((resolve, reject) => {
     try {
       const fAuth = FIRAuth.auth();
@@ -673,20 +680,17 @@ firebase.getAuthToken = arg => {
 
       const user = fAuth.currentUser;
       if (user) {
-        const onCompletion = (token, error) => {
+        user.getIDTokenResultForcingRefreshCompletion(arg.forceRefresh, (result: FIRAuthTokenResult, error: NSError) => {
           if (error) {
             reject(error.localizedDescription);
           } else {
-            resolve(token);
+            resolve({
+              token: result.token,
+              claims: firebaseUtils.toJsObject(result.claims),
+              signInProvider: result.signInProvider
+            });
           }
-        };
-        /* get token and custom claims previously set via the Firebase Admin SDK. */
-        if(arg.withClaims) {
-          user.getIDTokenResultForcingRefreshCompletion(arg.forceRefresh, onCompletion);
-      } else {
-        /* get just token without custom claims */
-          user.getIDTokenForcingRefreshCompletion(arg.forceRefresh, onCompletion);
-      }
+        });
       } else {
         reject("Log in first");
       }
