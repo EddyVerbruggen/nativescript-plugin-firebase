@@ -4,11 +4,13 @@ export function sendCrashLog(exception: any /* NSError */): void {
   }
 }
 
-export function log(priority: number, tag: string, msg: string): void {
+export function log(msg: string, tag?: string, priority?: number): void {
   if (isCrashlyticsAvailable()) {
-    // TODO this seems deprecated, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/1134
-    Crashlytics.sharedInstance().logEvent(tag + " - " + msg);
-    // Answers.logCustomEventWithNameCustomAttributes(tag + " - " + msg, null);
+    if (tag) {
+      TNSCrashlyticsLoggerWrapper.log(tag + " - " + msg);
+    } else {
+      TNSCrashlyticsLoggerWrapper.log(msg);
+    }
   }
 }
 

@@ -1,0 +1,6 @@
+framework module TNSCrashlyticsLogger {
+  umbrella header "TNSCrashlyticsLogger.h"
+
+  export *
+  module * { export * }
+}
