@@ -646,43 +646,20 @@ To solve, you will want to pass in the appropriate iOS controller of the active 
 3. Those fingerprints need to be added to your Firebase console. Go to 'project overview', 'project settings', then scroll down a bit.
 
 ### getAuthToken
-If you want to authenticate your user from your backend server you can obtain
-a Firebase auth token for the currently logged in user.
+If you want to authenticate your user from your backend server you can obtain a Firebase auth token for the currently logged in user.
 
-You can choose to get just the token itself or the token plus any custom claims you may have previously set via the Firebase Admin SDK as outlined [here](https://firebase.google.com/docs/auth/admin/custom-claims):
-
-Just token:
+You'll get the token, as well as the provider that was used to sign in, and any custom claims you may have previously set via the Firebase Admin SDK as outlined [here](https://firebase.google.com/docs/auth/admin/custom-claims):
 
 ```js
   firebase.getAuthToken({
     // default false, not recommended to set to true by Firebase but exposed for {N} devs nonetheless :)
     forceRefresh: false
   }).then(
-      function (token) {
-        console.log("Auth token retrieved: " + token);
-      },
-      function (errorMessage) {
-        console.log("Auth token retrieval error: " + errorMessage);
-      }
-  );
-```
-
-Token with custom claims:
-
-```js
-  firebase.getAuthToken({
-    // default false, not recommended to set to true by Firebase but exposed for {N} devs nonetheless :)
-    forceRefresh: false,
-    // set to true to also retrieve your custom claims
-    withClaims: true
-  }).then(
       function (result) {
         // for both platforms
         console.log("Auth token retrieved: " + result.token);
-        // Android only
-        console.log("Specific custom claim retrieved: " + result.claims.get('yourClaimKey'));
-        // iOS only
-        console.log("Specific custom claim retrieved: " + result.claims.objectForKey('yourClaimKey'));
+        console.log("Sign-In provider: " + result.signInProvider);
+        console.log("Specific custom claim retrieved: " + result.claims.yourClaimKey); // or result.claims["yourClaimKey"]
       },
       function (errorMessage) {
         console.log("Auth result retrieval error: " + errorMessage);
