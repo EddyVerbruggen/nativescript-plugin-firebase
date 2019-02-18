@@ -202,6 +202,8 @@ export interface GetAuthTokenOptions {
    * Default false.
    */
   forceRefresh?: boolean;
+  /* Set this to true if you want any custom claims returned that you previously set via the Firebase Admin SDK. */
+  withClaims?: boolean;
 }
 
 export interface Provider {
@@ -873,7 +875,7 @@ export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
 
 export function reloadUser(): Promise<void>;
 
-export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
+export function getAuthToken(option: GetAuthTokenOptions): Promise<any>;
 
 export function logout(): Promise<any>;
 

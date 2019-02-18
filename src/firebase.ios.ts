@@ -680,7 +680,13 @@ firebase.getAuthToken = arg => {
             resolve(token);
           }
         };
-        user.getIDTokenForcingRefreshCompletion(arg.forceRefresh, onCompletion);
+        /* get token and custom claims previously set via the Firebase Admin SDK. */
+        if(arg.withClaims) {
+          user.getIDTokenResultForcingRefreshCompletion(arg.forceRefresh, onCompletion);
+      } else {
+        /* get just token without custom claims */
+          user.getIDTokenForcingRefreshCompletion(arg.forceRefresh, onCompletion);
+      }
       } else {
         reject("Log in first");
       }

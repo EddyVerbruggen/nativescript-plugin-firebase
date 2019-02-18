@@ -704,7 +704,18 @@ firebase.getAuthToken = arg => {
       if (user !== null) {
         const onSuccessListener = new gmsTasks.OnSuccessListener({
           onSuccess: getTokenResult => {
-            resolve(getTokenResult.getToken());
+            if (arg.withClaims) {
+               /* get token and custom claims previously set via the Firebase Admin SDK. */
+              resolve(
+                  {
+                      token: getTokenResult.getToken(),
+                      claims: getTokenResult.getClaims()
+             }
+              );
+          } else {
+             /* get just token without custom claims */
+              resolve(getTokenResult.getToken());
+          }
           }
         });
 

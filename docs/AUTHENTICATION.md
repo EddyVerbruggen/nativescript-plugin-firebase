@@ -649,6 +649,10 @@ To solve, you will want to pass in the appropriate iOS controller of the active 
 If you want to authenticate your user from your backend server you can obtain
 a Firebase auth token for the currently logged in user.
 
+You can choose to get just the token itself or the token plus any custom claims you may have previously set via the Firebase Admin SDK as outlined [here](https://firebase.google.com/docs/auth/admin/custom-claims):
+
+Just token:
+
 ```js
   firebase.getAuthToken({
     // default false, not recommended to set to true by Firebase but exposed for {N} devs nonetheless :)
@@ -659,6 +663,29 @@ a Firebase auth token for the currently logged in user.
       },
       function (errorMessage) {
         console.log("Auth token retrieval error: " + errorMessage);
+      }
+  );
+```
+
+Token with custom claims:
+
+```js
+  firebase.getAuthToken({
+    // default false, not recommended to set to true by Firebase but exposed for {N} devs nonetheless :)
+    forceRefresh: false,
+    // set to true to also retrieve your custom claims
+    withClaims: true
+  }).then(
+      function (result) {
+        // for both platforms
+        console.log("Auth token retrieved: " + result.token);
+        // Android only
+        console.log("Specific custom claim retrieved: " + result.claims.get('yourClaimKey'));
+        // iOS only
+        console.log("Specific custom claim retrieved: " + result.claims.objectForKey('yourClaimKey'));
+      },
+      function (errorMessage) {
+        console.log("Auth result retrieval error: " + errorMessage);
       }
   );
 ```
