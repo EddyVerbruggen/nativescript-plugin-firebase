@@ -276,6 +276,7 @@ function promptQuestionsResult(result) {
     if (!externalPushClientOnly) {
       writePodFile(result);
     }
+    writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
     writeBuildscriptHookForFirestore(isSelected(result.firestore) && !supportsIOSModernBuildSystem);
   }
