@@ -1359,7 +1359,7 @@ firebase.query = (updateCallback, path, options) => {
   return new Promise((resolve, reject) => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
-      let query;
+      let query: FIRDatabaseQuery;
 
       // orderBy
       if (options.orderBy.type === firebase.QueryOrderByType.KEY) {
@@ -1437,9 +1437,19 @@ firebase.query = (updateCallback, path, options) => {
 
       if (options.singleEvent) {
         query.observeSingleEventOfTypeWithBlock(FIRDataEventType.Value, snapshot => {
-          if (updateCallback) updateCallback(firebase.getCallbackData('ValueChanged', snapshot));
+          const result = {
+            type: "ValueChanged",
+            key: snapshot.key,
+            value: {}
+          };
+          for (let i = 0; i < snapshot.children.allObjects.count; i++) {
+            const snap: FIRDataSnapshot = snapshot.children.allObjects.objectAtIndex(i);
+            result.value[snap.key] = firebaseUtils.toJsObject(snap.value);
+          }
+
+          if (updateCallback) updateCallback(result);
           // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
-          resolve(firebase.getCallbackData('ValueChanged', snapshot));
+          resolve(result);
         });
       } else {
         resolve({

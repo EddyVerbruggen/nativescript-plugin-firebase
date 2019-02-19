@@ -1556,10 +1556,11 @@ export class HelloWorldModel extends Observable {
           limit: {
             type: firebase.QueryLimitType.LAST,
             value: 2
-          }
+          },
+          singleEvent: true
         }
     ).then(
-        result => console.log("firebase.doQueryBulgarianCompanies done; added a listener"),
+        result => console.log("firebase.doQueryBulgarianCompanies done; added a listener, result: " + JSON.stringify(result)),
         errorMessage => {
           alert({
             title: "Query error",
@@ -1595,7 +1596,8 @@ export class HelloWorldModel extends Observable {
         {
           singleEvent: true,
           orderBy: {
-            type: firebase.QueryOrderByType.KEY
+            type: firebase.QueryOrderByType.CHILD,
+            value: "first"
           }
         }
     ).then(
