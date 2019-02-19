@@ -400,6 +400,14 @@ export interface FBData {
   value: any;
 }
 
+export interface FBDataSingleEvent extends FBData {
+  children?: Array<any>;
+}
+
+export interface FBErrorData {
+  error: string;
+}
+
 export interface AuthStateData {
   loggedIn?: boolean;
   user?: User;
@@ -545,6 +553,12 @@ export interface DataSnapshot {
   val(): any;
 }
 
+export interface FirebaseQueryResult {
+  type: string;
+  key: string;
+  value: any;
+}
+
 export function transaction(path: string, transactionUpdate: (a: any) => any,
                             onComplete?: (error: Error | null, committed: boolean, dataSnapshot: DataSnapshot) => any): Promise<any>;
 
@@ -558,7 +572,7 @@ export function update(path: string, value: any): Promise<any>;
 
 export function remove(path: string): Promise<any>;
 
-export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
+export function query(onValueEvent: (data: FBData | FBErrorData) => void, path: string, options: QueryOptions): Promise<any>;
 
 export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<AddEventListenerResult>;
 

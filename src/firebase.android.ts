@@ -3,11 +3,11 @@ import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import lazy from "tns-core-modules/utils/lazy";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
 import {
-  DataSnapshot,
+  DataSnapshot, FBData, FBDataSingleEvent, FBErrorData, FirebaseQueryResult,
   firestore,
   GetAuthTokenOptions,
   GetAuthTokenResult,
-  OnDisconnect as OnDisconnectBase,
+  OnDisconnect as OnDisconnectBase, QueryOptions,
   User
 } from "./firebase";
 import {
@@ -1594,8 +1594,8 @@ firebase.update = (path, val) => {
   });
 };
 
-firebase.query = (updateCallback, path, options) => {
-  return new Promise((resolve, reject) => {
+firebase.query = (updateCallback: (data: FBDataSingleEvent | FBErrorData) => void, path: string, options: QueryOptions): Promise<any> => {
+  return new Promise<any>((resolve, reject) => {
     try {
       if (firebase.instance === null) {
         reject("Run init() first!");
@@ -1681,10 +1681,24 @@ firebase.query = (updateCallback, path, options) => {
       if (options.singleEvent) {
         const listener = new com.google.firebase.database.ValueEventListener({
           onDataChange: snapshot => {
-            const data = firebase.getCallbackData("ValueChanged", snapshot);
-            if (updateCallback) updateCallback(data);
+
+            const result = {
+              type: "ValueChanged",
+              key: snapshot.getKey(),
+              value: {},
+              children: []
+            };
+
+            for (let iterator = snapshot.getChildren().iterator(); iterator.hasNext();) {
+              const snap = iterator.next();
+              const val = firebase.toJsObject(snap.getValue());
+              result.value[snap.getKey()] = val;
+              result.children.push(val);
+            }
+
+            if (updateCallback) updateCallback(result);
             // resolve promise with data in case of single event, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/126
-            resolve(data);
+            resolve(result);
           },
           onCancelled: databaseError => {
             if (updateCallback) updateCallback({

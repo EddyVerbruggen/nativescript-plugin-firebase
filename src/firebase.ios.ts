@@ -1,10 +1,10 @@
 import * as application from "tns-core-modules/application/application";
 import {
-  DataSnapshot,
+  DataSnapshot, FBData, FBDataSingleEvent, FirebaseQueryResult,
   firestore,
   GetAuthTokenOptions,
   GetAuthTokenResult,
-  OnDisconnect as OnDisconnectBase,
+  OnDisconnect as OnDisconnectBase, QueryOptions,
   User
 } from "./firebase";
 import {
@@ -1355,8 +1355,8 @@ firebase.update = (path, val) => {
   });
 };
 
-firebase.query = (updateCallback, path, options) => {
-  return new Promise((resolve, reject) => {
+firebase.query = (updateCallback: (data: FBDataSingleEvent) => void, path: string, options: QueryOptions): Promise<any> => {
+  return new Promise<any>((resolve, reject) => {
     try {
       const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
       let query: FIRDatabaseQuery;
@@ -1440,11 +1440,14 @@ firebase.query = (updateCallback, path, options) => {
           const result = {
             type: "ValueChanged",
             key: snapshot.key,
-            value: {}
+            value: {},
+            children: []
           };
           for (let i = 0; i < snapshot.children.allObjects.count; i++) {
             const snap: FIRDataSnapshot = snapshot.children.allObjects.objectAtIndex(i);
-            result.value[snap.key] = firebaseUtils.toJsObject(snap.value);
+            const val = firebaseUtils.toJsObject(snap.value);
+            result.value[snap.key] = val;
+            result.children.push(val);
           }
 
           if (updateCallback) updateCallback(result);

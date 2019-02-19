@@ -170,7 +170,8 @@ Let's say we have the structure as defined at `setValue`, then use this query to
         if (!result.error) {
             console.log("Event type: " + result.type);
             console.log("Key: " + result.key);
-            console.log("Value: " + JSON.stringify(result.value));
+            console.log("Value: " + JSON.stringify(result.value)); // a JSON object
+            console.log("Children: " + JSON.stringify(result.children)); // an array, added in plugin v 8.0.0
         }
     };
 
