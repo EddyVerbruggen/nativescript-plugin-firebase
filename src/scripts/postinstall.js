@@ -4444,17 +4444,18 @@ function promptQuestions() {
 }
 
 function promptQuestionsResult(result) {
-  writeGoogleServiceCopyHook();
   if (usingiOS) {
     if (!externalPushClientOnly) {
       writePodFile(result);
     }
+    writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
     writeBuildscriptHookForFirestore(isSelected(result.firestore) && !supportsIOSModernBuildSystem);
   }
 
   if (usingAndroid) {
     writeGradleFile(result);
+    writeGoogleServiceCopyHook();
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
     activateAndroidPushNotificationsLib(isSelected(result.messaging) || externalPushClientOnly);
