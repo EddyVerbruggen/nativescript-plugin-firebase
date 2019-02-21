@@ -64,6 +64,23 @@ unsubscribe();
 
 > Using **Observables**? [Check the example in the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/f6972433dea48bf1d342a6e4ef7f955dff341837/demo-ng/app/item/items.component.ts#L187-L198).
 
+#### Determine if results are from cache or not
+If persistence is enabled, query results will first be returned from the local cache if available, and then from network. To determine if a document has been returned from the cache or not, pass the includeMetadataChanges parameter and inspect the metadata:
+
+```typescript
+const citiesCollection = firebase.firestore().collection("cities");
+
+const unsubscribe = citiesCollection.onSnapshot(({ includeMetadataChanges: true }, snapshot: firestore.QuerySnapshot) => {
+  snapshot.forEach(city => console.log(city.data()));
+
+  const source = snapshot.metadata.fromCache ? "local cache" : "server";
+  console.log("Data came from " + source);
+});
+
+// then after a while, to detach the listener:
+unsubscribe();
+```
+
 ### `collection.doc()`
 As mentioned, a document lives inside a collection and contains the actual data:
 

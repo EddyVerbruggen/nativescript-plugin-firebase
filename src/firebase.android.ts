@@ -2229,7 +2229,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
       orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, collectionRef),
       limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef),
-      onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, callback),
+      onSnapshot: (optionsOrCallback: any, callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, optionsOrCallback, callback),
       startAfter: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshot, collectionRef),
       startAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAt(collectionPath, snapshot, collectionRef),
       endAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.endAt(collectionPath, snapshot, collectionRef),
@@ -2255,8 +2255,15 @@ firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.D
   return () => listener.remove();
 };
 
-firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore.CollectionReference, callback: (snapshot: QuerySnapshot) => void): () => void => {
-  const listener = colRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
+firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore.CollectionReference, optionsOrCallback: any, callback: (snapshot: QuerySnapshot) => void): () => void => {
+  let options = com.google.firebase.firestore.MetadataChanges.EXCLUDE;
+  if ((typeof optionsOrCallback) === 'function') {
+    callback = optionsOrCallback;
+  } else if (optionsOrCallback.includeMetadataChanges) {
+    options = com.google.firebase.firestore.MetadataChanges.INCLUDE;
+  }
+
+  const listener = colRef.addSnapshotListener(options, new com.google.firebase.firestore.EventListener({
         onEvent: ((snapshot: com.google.firebase.firestore.QuerySnapshot, exception: com.google.firebase.firestore.FirebaseFirestoreException) => {
           if (exception !== null) {
             console.error('onCollectionSnapshot error code: ' + exception.getCode());
@@ -2558,7 +2565,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
     where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
-    onSnapshot: (callback: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, callback),
+    onSnapshot: (optionsOrCallback: any, callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callback),
     startAfter: (snapshot: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, snapshot, query),
     startAt: (snapshot: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, snapshot, query),
     endAt: (snapshot: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, snapshot, query),
@@ -2669,6 +2676,10 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
 
   constructor(private snapshot: com.google.firebase.firestore.QuerySnapshot) {
   }
+
+  metadata = {
+    fromCache: this.snapshot.getMetadata().isFromCache(),
+  };
 
   get docs(): firestore.QueryDocumentSnapshot[] {
     const getSnapshots = () => {
