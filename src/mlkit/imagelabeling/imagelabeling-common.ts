@@ -1,6 +1,7 @@
 import { Property } from "tns-core-modules/ui/core/properties";
 import { MLKitCameraView } from "../mlkit-cameraview";
 
+// TODO could combine this with 'maxResults'
 export const confidenceThresholdProperty = new Property<MLKitImageLabeling, number>({
   name: "confidenceThreshold",
   defaultValue: 0.5,
@@ -11,8 +12,8 @@ export abstract class MLKitImageLabeling extends MLKitCameraView {
 
   protected confidenceThreshold: number;
 
-  [confidenceThresholdProperty.setNative](value: number) {
-    this.confidenceThreshold = value;
+  [confidenceThresholdProperty.setNative](value: any) {
+    this.confidenceThreshold = parseFloat(value);
   }
 }
 

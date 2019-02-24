@@ -64,6 +64,27 @@ unsubscribe();
 
 > Using **Observables**? [Check the example in the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/f6972433dea48bf1d342a6e4ef7f955dff341837/demo-ng/app/item/items.component.ts#L187-L198).
 
+#### Snapshot metadata (for queries and documents)
+Firestore can return metadata when passing the `includeMetadataChanges` boolean property. This can be used for:
+
+- `snapshot.metadata.fromCache`: True if the snapshot was created from cached data rather than guaranteed up-to-date server data.
+- `snapshot.metadata.hasPendingWrites`: True if the snapshot contains the result of local writes that have not yet been committed to the backend.
+
+```typescript
+import { firestore } from "nativescript-plugin-firebase";
+const citiesCollection = firebase.firestore().collection("cities");
+
+const unsubscribe = citiesCollection.onSnapshot(({ includeMetadataChanges: true }, snapshot: firestore.QuerySnapshot) => {
+  snapshot.forEach(city => console.log(city.data()));
+
+  console.log("Data came from " + (snapshot.metadata.fromCache ? "local cache" : "server"));
+  console.log("Has pending writes? " + snapshot.metadata.hasPendingWrites);
+});
+
+// then after a while, to detach the listener:
+unsubscribe();
+```
+
 ### `collection.doc()`
 As mentioned, a document lives inside a collection and contains the actual data:
 
@@ -185,19 +206,12 @@ sanFranciscoDocument.update({
 });
 ```
 
-### `collection.doc().delete()`
-Entirely remove a document from a collection:
-
-```typescript
-const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
-
-sanFranciscoDocument.delete().then(() => {
-  console.log("SF was erased from the face of the earth!");
-});
-```
+> NB: serverTimestamp() only works in an update on the Android SDK, not add or set.
 
 ### `collection.where()`
 Firestore supports advanced querying with the `where` function. Those `where` clauses can be chained to form logical 'AND' queries:
+
+You can use the operators defined in `firestore.WhereFilterOp`, which are: `'<' | '<=' | '==' | '>=' | '>' | 'array-contains'`.
 
 ```typescript
 const citiesCollection = firebase.firestore().collection("cities");
@@ -216,8 +230,62 @@ query
     });
 ```
 
+### Delete an entire document: `collection.doc().delete()`
+Entirely remove a document from a collection:
+
+```typescript
+const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
+
+sanFranciscoDocument.delete().then(() => {
+  console.log("SF was erased from the face of the earth!");
+});
+```
+
+### Delete specific fields in a document
+To delete one or more fields in a document, do this (showing two flavors, use whatever you fancy):
+
+```typescript
+import { firestore } from "nativescript-plugin-firebase");
+const firebase = require("nativescript-plugin-firebase/app");
+
+firebase.firestore().collection("dogs").doc("fave")
+    .update({
+      field1ToDelete: firestore.FieldValue.delete(),
+      field2ToDelete: firebase.firestore().FieldValue().delete(),
+    });
+```
+
+### Adding to (`arrayUnion`) and removing from (`arrayRemove`) Arrays
+If your document contains an array field, you can use `arrayUnion()` and `arrayRemove()` to add and remove elements.
+
+`arrayUnion()` adds elements to an array but only elements not already present:
+
+```typescript
+import { firestore } from "nativescript-plugin-firebase";
+const firebase = require("nativescript-plugin-firebase/app");
+
+firebase.firestore().collection("dogs").doc("fave")
+    .update({
+      // you can either use this syntax:
+      colors1: firebase.firestore().FieldValue().arrayUnion("red", "blue"),
+      //.. or this one:
+      colors2: firestore.FieldValue.arrayUnion("red", "blue")
+    });
+```
+
+`arrayRemove()` removes all instances of each given element:
+
+```typescript
+firebase.firestore().collection("dogs").doc("fave")
+    .update({
+      colors: firebase.firestore().FieldValue().arrayRemove("red")
+    });
+```
+
 ### Ordering and limiting results of `collection.where()`
 Return data sorted (asc or desc), or limit to a certain number of results:
+
+> Make sure to checkt the comment on the `.catch` below.
 
 ```typescript
 const citiesCollection = firebase.firestore().collection("cities");
@@ -234,7 +302,25 @@ query
       querySnapshot.forEach(doc => {
         console.log(`Large Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
       });
-    });
+    }).catch(err => console.log(err)); // make sure you add this because Firestore may request you to create an index for this query!
+```
+
+### Paginate data with query cursors
+You can use `startAt`, `startAfter`, `endAt`, and `endBefore` as documented for 'WEB' [here](https://firebase.google.com/docs/firestore/query-data/query-cursors).
+
+Here's an example, grabbing cities ordered by name, starting after 'LA':
+
+```typescript
+firebase.firestore().collection('cities')
+  .doc('LA')
+  .get()
+  .then(doc => {
+    firebase.firestore().collection('cities')
+      .orderBy('name', 'asc')
+      .startAfter(doc)
+      .get()
+      .then(snap => snap.forEach(doc => console.log(doc.id, doc.data())));
+  });
 ```
 
 ### Batched Writes: `batch()`

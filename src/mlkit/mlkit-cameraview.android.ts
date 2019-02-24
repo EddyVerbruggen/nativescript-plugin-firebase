@@ -4,7 +4,7 @@ import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-commo
 
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
-declare const com, android: any;
+// declare const com, android: any;
 
 class SizePair {
   pictureSize: {
@@ -17,7 +17,6 @@ class SizePair {
   };
 }
 
-// TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private surfaceView: any; // android.view.SurfaceView;
   private bytesToByteBuffer = new Map();
@@ -53,37 +52,46 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   createNativeView(): Object {
-    let v = super.createNativeView();
+    let nativeView = super.createNativeView();
 
     if (this.hasCamera()) {
-      const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
-        if (args.requestCode === CAMERA_PERMISSION_REQUEST_CODE) {
-          application.android.off(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
+      // no permission required for older Android versions
+      if (android.os.Build.VERSION.SDK_INT < 23) {
+        this.initView(nativeView);
+      } else {
+        const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
+          if (args.requestCode === CAMERA_PERMISSION_REQUEST_CODE) {
+            application.android.off(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
-          for (let i = 0; i < args.permissions.length; i++) {
-            if (args.grantResults[i] === android.content.pm.PackageManager.PERMISSION_DENIED) {
-              console.log("Camera permission denied");
-              return;
+            for (let i = 0; i < args.permissions.length; i++) {
+              if (args.grantResults[i] === android.content.pm.PackageManager.PERMISSION_DENIED) {
+                console.log("Camera permission denied");
+                return;
+              }
             }
+
+            this.initView(nativeView);
           }
+        };
 
-          this.initView();
-        }
-      };
+        // grab the permission dialog result
+        application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
-      // grab the permission dialog result
-      application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
-
-      // invoke the permission dialog
-      (android.support.v4.app.ActivityCompat as any).requestPermissions(
-          application.android.foregroundActivity || application.android.startActivity,
-          [android.Manifest.permission.CAMERA],
-          CAMERA_PERMISSION_REQUEST_CODE
-      );
+        // invoke the permission dialog
+        (android.support.v4.app.ActivityCompat as any).requestPermissions(
+            application.android.foregroundActivity || application.android.startActivity,
+            [android.Manifest.permission.CAMERA],
+            CAMERA_PERMISSION_REQUEST_CODE);
+      }
     } else {
       console.log("There's no Camera on this device :(");
     }
-    return v;
+    return nativeView;
+  }
+
+  initNativeView(): void {
+    super.initNativeView();
+    application.on("resume", arg => this.runCamera());
   }
 
   private hasCamera() {
@@ -93,18 +101,20 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         .hasSystemFeature("android.hardware.camera");
   }
 
-  private initView() {
-    // if (this.preferFrontCamera) {
-    // this._reader.switchDeviceInput();
-    // }
-
+  private initView(nativeView) {
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
-    this.nativeView.addView(this.surfaceView);
+    nativeView.addView(this.surfaceView);
+    this.runCamera();
+  }
 
-    // Note that surfacview callbacks didn't see to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
+  private runCamera(): void {
+    // Note that surfaceview callbacks didn't seem to work, so using a good old timeout (https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSourcePreview.java#L47)
     setTimeout(() => {
+      if (!this.surfaceView) {
+        return;
+      }
       const surfaceHolder = this.surfaceView.getHolder();
-      const cameraFacingRequested = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
+      const cameraFacingRequested = this.preferFrontCamera ? android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT : android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
       const cameraInfo = new android.hardware.Camera.CameraInfo();
 
       let requestedCameraId = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK; // use this as the default
@@ -117,15 +127,18 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
       this.camera = android.hardware.Camera.open(requestedCameraId);
 
-      const sizePair = this.selectSizePair(this.camera, 800, 600); // TODO based on wrapping frame
+      let sizePair = this.selectSizePair(this.camera, 1400, 1200); // TODO based on wrapping frame
 
       if (!sizePair) {
         console.log("Could not find suitable preview size.");
         return;
       }
 
-      let pictureSize = sizePair.pictureSize;
-      let previewSize = sizePair.previewSize;
+      const pictureSize = sizePair.pictureSize;
+      const previewSize = sizePair.previewSize;
+
+      console.log("sizePair.pictureSize: " + pictureSize.width + "x" + pictureSize.height);
+      console.log("sizePair.previewSize: " + previewSize.width + "x" + previewSize.height);
 
       const parameters = this.camera.getParameters();
 
@@ -141,7 +154,12 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
       }
 
-      // TODO this setter seems odd, but it's part of the example: https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/CameraSource.java#L312
+      if (this.torchOn) {
+        if (parameters.getSupportedFlashModes() && parameters.getSupportedFlashModes().contains(android.hardware.Camera.Parameters.FLASH_MODE_TORCH)) {
+          parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+        }
+      }
+
       this.camera.setParameters(parameters);
 
       this.detector = this.createDetector();
@@ -179,12 +197,21 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
           let data = this.pendingFrameData;
           // pendingFrameData = null;
 
-          this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
-
-          this.detector
-              .detectInImage(this.lastVisionImage)
-              .addOnSuccessListener(onSuccessListener)
-              .addOnFailureListener(onFailureListener);
+          if (this.detector.processImage) {
+            this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
+            this.detector
+                .processImage(this.lastVisionImage)
+                .addOnSuccessListener(onSuccessListener)
+                .addOnFailureListener(onFailureListener);
+          } else if (this.detector.detectInImage) {
+            this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
+            this.detector
+                .detectInImage(this.lastVisionImage)
+                .addOnSuccessListener(onSuccessListener)
+                .addOnFailureListener(onFailureListener);
+          } else {
+            this.runDetector(data, previewSize.width, previewSize.height);
+          }
         }
       }));
 
@@ -194,20 +221,45 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
 
       this.camera.setPreviewDisplay(surfaceHolder);
-      this.camera.startPreview();
 
-    }, 500); // TODO 500 works fine on my device, but would be wise to explore the boundaries
+      if (!this.pause) {
+        this.camera.startPreview();
+      }
+
+    }, 500);
+  }
+
+  protected updateTorch(): void {
+    if (this.camera) {
+      const parameters = this.camera.getParameters();
+      parameters.setFlashMode(this.torchOn ? android.hardware.Camera.Parameters.FLASH_MODE_TORCH : android.hardware.Camera.Parameters.FLASH_MODE_OFF);
+      this.camera.setParameters(parameters);
+    }
+  }
+
+  protected pauseScanning(): void {
+    if (this.camera != null) {
+      this.camera.stopPreview();
+    }
+  };
+
+  protected resumeScanning(): void {
+    this.runCamera();
   }
 
   protected abstract createDetector(): any;
 
   protected abstract createSuccessListener(): any;
 
+  protected runDetector(imageByteBuffer, width, height): void {
+    throw new Error("No custom detector implemented for detector " + this.detector + ", so 'runDetector' can't do its thing");
+  }
+
   private createFailureListener(): any {
-    return new com.google.android.gms.tasks.OnFailureListener({
+    return new (<any>com.google.android.gms).tasks.OnFailureListener({
       onFailure: exception => console.log(exception.getMessage())
     });
-  };
+  }
 
   private generateValidPreviewSizeList(camera): Array<SizePair> {
     let parameters = camera.getParameters();

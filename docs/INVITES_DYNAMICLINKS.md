@@ -8,7 +8,7 @@ _Invites_ lets you invite other users to your app from right within your own app
 Keep in mind that invites are based of dynamic links, and so calling for an invite may return a plain dynamic link, in which case invitationId is null.
 
 ### Android
-* [Make sure you've uploaded your SHA1 and SHA256 fingerprints](https://developers.google.com/android/guides/client-auth) to the Firebase console.
+* [Make sure you've uploaded your SHA256 fingerprints](https://developers.google.com/android/guides/client-auth) to the Firebase console.
 
 ### iOS
 * On iOS the user must be signed in with their Google Account to send invitations.

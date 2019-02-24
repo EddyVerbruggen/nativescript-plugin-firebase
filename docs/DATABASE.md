@@ -170,7 +170,8 @@ Let's say we have the structure as defined at `setValue`, then use this query to
         if (!result.error) {
             console.log("Event type: " + result.type);
             console.log("Key: " + result.key);
-            console.log("Value: " + JSON.stringify(result.value));
+            console.log("Value: " + JSON.stringify(result.value)); // a JSON object
+            console.log("Children: " + JSON.stringify(result.children)); // an array, added in plugin v 8.0.0
         }
     };
 
@@ -311,7 +312,8 @@ The link is for the iOS SDK, but it's the same for Android.
       console.log("Listener error: " + result.error);
     } else {
       console.log("Key: " + result.key);
-      console.log("Calue: " + JSON.stringify(result.val()));
+      console.log("key exists? " + result.exists());
+      console.log("Value: " + JSON.stringify(result.val()));
     }
   };
 
@@ -345,6 +347,42 @@ You can see an example of this (for both the native and web API) in the [demo ap
 ```
 </details>
 
+### OnDisconnect
+Use OnDisconnect to run operations on Firebase Realtime Database when the client disconnects.
+Disconnections can happen when the app is killed from the recent tasks, internet loss, etc. When
+you regain internet (app wasn't closed) then the database will update instantly.
+
+Note that if the device restarts / app is killed in background (ungraceful disconnect) the database will
+NOT update in realtime (there's no way), but after Firebase detects that the device is unreachable then it
+will run the function given to onDisconnect.
+
+Rather than passing in callbacks every function returns a promise.
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.onDisconnect("/companies").cancel().then(() => console.log("Success")).catch(error => console.log(error));
+  firebase.onDisconnect("/companies").remove();
+  firebase.onDisconnect("/companies").set(value);
+  firebase.onDisconnect("/companies").setWithPriority(value, priority /* string | number */);
+  firebase.onDisconnect("/companies").update(value);
+
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.database().ref("/companies").onDisconnect().cancel().then(() => console.log("Success"));
+  firebaseWebApi.database().ref("/companies").onDisconnect().remove();
+  firebaseWebApi.database().ref("/companies").onDisconnect().set(value);
+  firebaseWebApi.database().ref("/companies").onDisconnect().setWithPriority(value, priority /* string | number*/);
+  firebaseWebApi.database().ref("/companies").onDisconnect().update(values);
+```
+</details>
+
 ### remove
 You can remove the entire database content by passing `/` as param,
 but if you only want to for instance wipe everything at `/users`, do this:
@@ -371,6 +409,95 @@ but if you only want to for instance wipe everything at `/users`, do this:
 ```
 </details>
 
+### Transaction
+Transactions are used when you want to atomically modify data at this location. This
+ensures there are no conflicts with other clients writing to the same location at the
+same time.
+
+You can look at the [docs](https://firebase.google.com/docs/reference/js/firebase.database.Reference#transaction) for more information.
+
+Note that a return value of `null` will delete the value at this location whereas returning
+undefined will not modify the data at this location. Firebase web aborts the transaction when
+given an undefined, but due to technically difficulties we just return transaction success which
+results in committed = true. On transaction complete a promise is returned containing
+{committed:boolean, snapshot: DataSnapshot} and an error will be returned if the transaciton
+failed.
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+firebase.transaction(path, (currentValue => {
+      if (currentValue === null) {
+        return 0;
+      } else {
+        // console.log('User ada already exists.');
+        return ++currentValue; // Abort the transaction.
+      }
+    })) // firebase.Datasnapshot follows the web datasnapshot interface
+     .then((result: { committed: boolean, snapshot: firebase.DataSnapshot }) => {
+        console.log(result.committed + " snapshotValue: " + result.snapshot.val());
+      }).catch(err => console.log("Encountered an error " + err));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+firebaseWebApi.database().ref(path).transaction(currentValue => {
+      if (currentValue === null) {
+        return { name: { first: 'Ada', last: 'Lovelace' } };
+      } else {
+        // console.log('User ada already exists.');
+        return; // Abort the transaction.
+      }
+    })
+      .then((result: { committed: boolean, snapshot: firebase.DataSnapshot }) => {
+        console.log(result.committed + " snapshotValue: " + result.snapshot.val());
+      }).catch(err => console.log("Encountered an error " + err));
+
+
+firebaseWebApi.database().ref(path).transaction(currentValue => {
+      if (currentValue === null) {
+        return null; // Do nothing if this value doesn't exist
+       //return 0    // If you want to put a 0 in if no value exist
+      } else {
+        return ++currentValue; // increment the value
+      }
+    })
+
+// Based off Firebase simple blog post. You can also treat the
+// data as an object and return an updated version of post
+firebaseWebApi.database().ref(path).transaction(function(post) {
+      if (post) {
+        console.log("Post Object looks like: " +  JSON.stringify(post));
+        if (post.stars && post.stars[uid]) {
+          post.starCount--;
+          post.stars[uid] = null;
+        } else {
+          post.starCount++;
+          if (!post.stars) {
+            post.stars = {};
+          }
+          post.stars[uid] = true;
+        }
+      }
+      return post;
+    });
+```
+</details>
+
+### enableLogging
+The Firebase Realtime Database allows you turn on/off logs. This can be especially useful when trying to pinpoint any issues you may be having.
+By default the log level is set to INFO. Turning on logging will set the log level to DEBUG and off will set it to NONE.
+
+You MUST call `enableLogging()` before initializing firebase otherwise the app will crash.
+
+```js
+  firebase.enableLogging(true); // OR
+  firebaseWebApi.database.enableLogging(false);
+```
 ### keepInSync
 The Firebase Realtime Database synchronizes and stores a local copy of the data for active listeners (see the methods above). In addition, you can keep specific locations in sync.
 

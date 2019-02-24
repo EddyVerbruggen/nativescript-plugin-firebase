@@ -1,9 +1,9 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult, MLKitDetectFacesResultBounds } from "./";
-import { MLKitOptions } from "../index";
+import { MLKitVisionOptions } from "../";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
 
-declare const com: any;
+const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 
@@ -16,7 +16,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
   }
 
   protected createSuccessListener(): any {
-    return new com.google.android.gms.tasks.OnSuccessListener({
+    return new gmsTasks.OnSuccessListener({
       onSuccess: faces => {
 
         if (!faces || faces.size() === 0) return;
@@ -54,16 +54,17 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 }
 
 function getFaceDetector(options: MLKitDetectFacesOnDeviceOptions): any {
-  const faceDetectorOptions =
-      new com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.Builder()
-          .setModeType(options.detectionMode === "accurate" ? com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ACCURATE_MODE : com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.FAST_MODE)
-          .setLandmarkType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS) // TODO make configurable
-          .setClassificationType(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS) // TODO make configurable
-          .setMinFaceSize(options.minimumFaceSize)
-          .setTrackingEnabled(options.enableFaceTracking === true)
-          .build();
+  const builder = new com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.Builder()
+      .setPerformanceMode(options.detectionMode === "accurate" ? com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ACCURATE : com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.FAST)
+      .setLandmarkMode(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS) // TODO make configurable
+      .setClassificationMode(com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS) // TODO make configurable
+      .setMinFaceSize(options.minimumFaceSize);
 
-  return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(faceDetectorOptions);
+  if (options.enableFaceTracking === true) {
+    builder.enableTracking();
+  }
+
+  return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(builder.build());
 }
 
 function boundingBoxToBounds(rect: any): MLKitDetectFacesResultBounds {
@@ -84,7 +85,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
     try {
       const firebaseVisionFaceDetector = getFaceDetector(options);
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: faces => {
 
           const result = <MLKitDetectFacesOnDeviceResult>{
@@ -112,7 +113,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 
@@ -128,7 +129,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
   });
 }
 
-function getImage(options: MLKitOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
+function getImage(options: MLKitVisionOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 }

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -93,13 +93,13 @@ module.exports = require("readline");
  *
  */
 
-var events = __webpack_require__(/*! events */ 12),
+var events = __webpack_require__(/*! events */ 14),
     readline = __webpack_require__(/*! readline */ 0),
-    util = __webpack_require__(/*! util */ 14),
-    async = __webpack_require__(/*! async */ 4),
-    read = __webpack_require__(/*! read */ 9),
-    validate = __webpack_require__(/*! revalidator */ 10).validate,
-    colors = __webpack_require__(/*! colors */ 7);
+    util = __webpack_require__(/*! util */ 16),
+    async = __webpack_require__(/*! async */ 6),
+    read = __webpack_require__(/*! read */ 11),
+    validate = __webpack_require__(/*! revalidator */ 12).validate,
+    colors = __webpack_require__(/*! colors */ 9);
 
 //
 // Monkey-punch readline.Interface to work-around
@@ -896,6 +896,1380 @@ function mixin(target) {
 /* 2 */
 /* unknown exports provided */
 /* all exports used */
+/*!****************************!*\
+  !*** ./~/semver/semver.js ***!
+  \****************************/
+/***/ (function(module, exports) {
+
+exports = module.exports = SemVer;
+
+// The debug function is excluded entirely from the minified version.
+/* nomin */ var debug;
+/* nomin */ if (typeof process === 'object' &&
+    /* nomin */ process.env &&
+    /* nomin */ process.env.NODE_DEBUG &&
+    /* nomin */ /\bsemver\b/i.test(process.env.NODE_DEBUG))
+  /* nomin */ debug = function() {
+    /* nomin */ var args = Array.prototype.slice.call(arguments, 0);
+    /* nomin */ args.unshift('SEMVER');
+    /* nomin */ console.log.apply(console, args);
+    /* nomin */ };
+/* nomin */ else
+  /* nomin */ debug = function() {};
+
+// Note: this is the semver.org version of the spec that it implements
+// Not necessarily the package version of this code.
+exports.SEMVER_SPEC_VERSION = '2.0.0';
+
+var MAX_LENGTH = 256;
+var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
+
+// Max safe segment length for coercion.
+var MAX_SAFE_COMPONENT_LENGTH = 16;
+
+// The actual regexps go on exports.re
+var re = exports.re = [];
+var src = exports.src = [];
+var R = 0;
+
+// The following Regular Expressions can be used for tokenizing,
+// validating, and parsing SemVer version strings.
+
+// ## Numeric Identifier
+// A single `0`, or a non-zero digit followed by zero or more digits.
+
+var NUMERICIDENTIFIER = R++;
+src[NUMERICIDENTIFIER] = '0|[1-9]\\d*';
+var NUMERICIDENTIFIERLOOSE = R++;
+src[NUMERICIDENTIFIERLOOSE] = '[0-9]+';
+
+
+// ## Non-numeric Identifier
+// Zero or more digits, followed by a letter or hyphen, and then zero or
+// more letters, digits, or hyphens.
+
+var NONNUMERICIDENTIFIER = R++;
+src[NONNUMERICIDENTIFIER] = '\\d*[a-zA-Z-][a-zA-Z0-9-]*';
+
+
+// ## Main Version
+// Three dot-separated numeric identifiers.
+
+var MAINVERSION = R++;
+src[MAINVERSION] = '(' + src[NUMERICIDENTIFIER] + ')\\.' +
+                   '(' + src[NUMERICIDENTIFIER] + ')\\.' +
+                   '(' + src[NUMERICIDENTIFIER] + ')';
+
+var MAINVERSIONLOOSE = R++;
+src[MAINVERSIONLOOSE] = '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
+                        '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
+                        '(' + src[NUMERICIDENTIFIERLOOSE] + ')';
+
+// ## Pre-release Version Identifier
+// A numeric identifier, or a non-numeric identifier.
+
+var PRERELEASEIDENTIFIER = R++;
+src[PRERELEASEIDENTIFIER] = '(?:' + src[NUMERICIDENTIFIER] +
+                            '|' + src[NONNUMERICIDENTIFIER] + ')';
+
+var PRERELEASEIDENTIFIERLOOSE = R++;
+src[PRERELEASEIDENTIFIERLOOSE] = '(?:' + src[NUMERICIDENTIFIERLOOSE] +
+                                 '|' + src[NONNUMERICIDENTIFIER] + ')';
+
+
+// ## Pre-release Version
+// Hyphen, followed by one or more dot-separated pre-release version
+// identifiers.
+
+var PRERELEASE = R++;
+src[PRERELEASE] = '(?:-(' + src[PRERELEASEIDENTIFIER] +
+                  '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))';
+
+var PRERELEASELOOSE = R++;
+src[PRERELEASELOOSE] = '(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] +
+                       '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))';
+
+// ## Build Metadata Identifier
+// Any combination of digits, letters, or hyphens.
+
+var BUILDIDENTIFIER = R++;
+src[BUILDIDENTIFIER] = '[0-9A-Za-z-]+';
+
+// ## Build Metadata
+// Plus sign, followed by one or more period-separated build metadata
+// identifiers.
+
+var BUILD = R++;
+src[BUILD] = '(?:\\+(' + src[BUILDIDENTIFIER] +
+             '(?:\\.' + src[BUILDIDENTIFIER] + ')*))';
+
+
+// ## Full Version String
+// A main version, followed optionally by a pre-release version and
+// build metadata.
+
+// Note that the only major, minor, patch, and pre-release sections of
+// the version string are capturing groups.  The build metadata is not a
+// capturing group, because it should not ever be used in version
+// comparison.
+
+var FULL = R++;
+var FULLPLAIN = 'v?' + src[MAINVERSION] +
+                src[PRERELEASE] + '?' +
+                src[BUILD] + '?';
+
+src[FULL] = '^' + FULLPLAIN + '$';
+
+// like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
+// also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
+// common in the npm registry.
+var LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] +
+                 src[PRERELEASELOOSE] + '?' +
+                 src[BUILD] + '?';
+
+var LOOSE = R++;
+src[LOOSE] = '^' + LOOSEPLAIN + '$';
+
+var GTLT = R++;
+src[GTLT] = '((?:<|>)?=?)';
+
+// Something like "2.*" or "1.2.x".
+// Note that "x.x" is a valid xRange identifer, meaning "any version"
+// Only the first item is strictly required.
+var XRANGEIDENTIFIERLOOSE = R++;
+src[XRANGEIDENTIFIERLOOSE] = src[NUMERICIDENTIFIERLOOSE] + '|x|X|\\*';
+var XRANGEIDENTIFIER = R++;
+src[XRANGEIDENTIFIER] = src[NUMERICIDENTIFIER] + '|x|X|\\*';
+
+var XRANGEPLAIN = R++;
+src[XRANGEPLAIN] = '[v=\\s]*(' + src[XRANGEIDENTIFIER] + ')' +
+                   '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+                   '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+                   '(?:' + src[PRERELEASE] + ')?' +
+                   src[BUILD] + '?' +
+                   ')?)?';
+
+var XRANGEPLAINLOOSE = R++;
+src[XRANGEPLAINLOOSE] = '[v=\\s]*(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+                        '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+                        '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+                        '(?:' + src[PRERELEASELOOSE] + ')?' +
+                        src[BUILD] + '?' +
+                        ')?)?';
+
+var XRANGE = R++;
+src[XRANGE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAIN] + '$';
+var XRANGELOOSE = R++;
+src[XRANGELOOSE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAINLOOSE] + '$';
+
+// Coercion.
+// Extract anything that could conceivably be a part of a valid semver
+var COERCE = R++;
+src[COERCE] = '(?:^|[^\\d])' +
+              '(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '})' +
+              '(?:\\.(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '}))?' +
+              '(?:\\.(\\d{1,' + MAX_SAFE_COMPONENT_LENGTH + '}))?' +
+              '(?:$|[^\\d])';
+
+// Tilde ranges.
+// Meaning is "reasonably at or greater than"
+var LONETILDE = R++;
+src[LONETILDE] = '(?:~>?)';
+
+var TILDETRIM = R++;
+src[TILDETRIM] = '(\\s*)' + src[LONETILDE] + '\\s+';
+re[TILDETRIM] = new RegExp(src[TILDETRIM], 'g');
+var tildeTrimReplace = '$1~';
+
+var TILDE = R++;
+src[TILDE] = '^' + src[LONETILDE] + src[XRANGEPLAIN] + '$';
+var TILDELOOSE = R++;
+src[TILDELOOSE] = '^' + src[LONETILDE] + src[XRANGEPLAINLOOSE] + '$';
+
+// Caret ranges.
+// Meaning is "at least and backwards compatible with"
+var LONECARET = R++;
+src[LONECARET] = '(?:\\^)';
+
+var CARETTRIM = R++;
+src[CARETTRIM] = '(\\s*)' + src[LONECARET] + '\\s+';
+re[CARETTRIM] = new RegExp(src[CARETTRIM], 'g');
+var caretTrimReplace = '$1^';
+
+var CARET = R++;
+src[CARET] = '^' + src[LONECARET] + src[XRANGEPLAIN] + '$';
+var CARETLOOSE = R++;
+src[CARETLOOSE] = '^' + src[LONECARET] + src[XRANGEPLAINLOOSE] + '$';
+
+// A simple gt/lt/eq thing, or just "" to indicate "any version"
+var COMPARATORLOOSE = R++;
+src[COMPARATORLOOSE] = '^' + src[GTLT] + '\\s*(' + LOOSEPLAIN + ')$|^$';
+var COMPARATOR = R++;
+src[COMPARATOR] = '^' + src[GTLT] + '\\s*(' + FULLPLAIN + ')$|^$';
+
+
+// An expression to strip any whitespace between the gtlt and the thing
+// it modifies, so that `> 1.2.3` ==> `>1.2.3`
+var COMPARATORTRIM = R++;
+src[COMPARATORTRIM] = '(\\s*)' + src[GTLT] +
+                      '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')';
+
+// this one has to use the /g flag
+re[COMPARATORTRIM] = new RegExp(src[COMPARATORTRIM], 'g');
+var comparatorTrimReplace = '$1$2$3';
+
+
+// Something like `1.2.3 - 1.2.4`
+// Note that these all use the loose form, because they'll be
+// checked against either the strict or loose comparator form
+// later.
+var HYPHENRANGE = R++;
+src[HYPHENRANGE] = '^\\s*(' + src[XRANGEPLAIN] + ')' +
+                   '\\s+-\\s+' +
+                   '(' + src[XRANGEPLAIN] + ')' +
+                   '\\s*$';
+
+var HYPHENRANGELOOSE = R++;
+src[HYPHENRANGELOOSE] = '^\\s*(' + src[XRANGEPLAINLOOSE] + ')' +
+                        '\\s+-\\s+' +
+                        '(' + src[XRANGEPLAINLOOSE] + ')' +
+                        '\\s*$';
+
+// Star ranges basically just allow anything at all.
+var STAR = R++;
+src[STAR] = '(<|>)?=?\\s*\\*';
+
+// Compile to actual regexp objects.
+// All are flag-free, unless they were created above with a flag.
+for (var i = 0; i < R; i++) {
+  debug(i, src[i]);
+  if (!re[i])
+    re[i] = new RegExp(src[i]);
+}
+
+exports.parse = parse;
+function parse(version, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
+  if (version instanceof SemVer)
+    return version;
+
+  if (typeof version !== 'string')
+    return null;
+
+  if (version.length > MAX_LENGTH)
+    return null;
+
+  var r = options.loose ? re[LOOSE] : re[FULL];
+  if (!r.test(version))
+    return null;
+
+  try {
+    return new SemVer(version, options);
+  } catch (er) {
+    return null;
+  }
+}
+
+exports.valid = valid;
+function valid(version, options) {
+  var v = parse(version, options);
+  return v ? v.version : null;
+}
+
+
+exports.clean = clean;
+function clean(version, options) {
+  var s = parse(version.trim().replace(/^[=v]+/, ''), options);
+  return s ? s.version : null;
+}
+
+exports.SemVer = SemVer;
+
+function SemVer(version, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+  if (version instanceof SemVer) {
+    if (version.loose === options.loose)
+      return version;
+    else
+      version = version.version;
+  } else if (typeof version !== 'string') {
+    throw new TypeError('Invalid Version: ' + version);
+  }
+
+  if (version.length > MAX_LENGTH)
+    throw new TypeError('version is longer than ' + MAX_LENGTH + ' characters')
+
+  if (!(this instanceof SemVer))
+    return new SemVer(version, options);
+
+  debug('SemVer', version, options);
+  this.options = options;
+  this.loose = !!options.loose;
+
+  var m = version.trim().match(options.loose ? re[LOOSE] : re[FULL]);
+
+  if (!m)
+    throw new TypeError('Invalid Version: ' + version);
+
+  this.raw = version;
+
+  // these are actually numbers
+  this.major = +m[1];
+  this.minor = +m[2];
+  this.patch = +m[3];
+
+  if (this.major > MAX_SAFE_INTEGER || this.major < 0)
+    throw new TypeError('Invalid major version')
+
+  if (this.minor > MAX_SAFE_INTEGER || this.minor < 0)
+    throw new TypeError('Invalid minor version')
+
+  if (this.patch > MAX_SAFE_INTEGER || this.patch < 0)
+    throw new TypeError('Invalid patch version')
+
+  // numberify any prerelease numeric ids
+  if (!m[4])
+    this.prerelease = [];
+  else
+    this.prerelease = m[4].split('.').map(function(id) {
+      if (/^[0-9]+$/.test(id)) {
+        var num = +id;
+        if (num >= 0 && num < MAX_SAFE_INTEGER)
+          return num;
+      }
+      return id;
+    });
+
+  this.build = m[5] ? m[5].split('.') : [];
+  this.format();
+}
+
+SemVer.prototype.format = function() {
+  this.version = this.major + '.' + this.minor + '.' + this.patch;
+  if (this.prerelease.length)
+    this.version += '-' + this.prerelease.join('.');
+  return this.version;
+};
+
+SemVer.prototype.toString = function() {
+  return this.version;
+};
+
+SemVer.prototype.compare = function(other) {
+  debug('SemVer.compare', this.version, this.options, other);
+  if (!(other instanceof SemVer))
+    other = new SemVer(other, this.options);
+
+  return this.compareMain(other) || this.comparePre(other);
+};
+
+SemVer.prototype.compareMain = function(other) {
+  if (!(other instanceof SemVer))
+    other = new SemVer(other, this.options);
+
+  return compareIdentifiers(this.major, other.major) ||
+         compareIdentifiers(this.minor, other.minor) ||
+         compareIdentifiers(this.patch, other.patch);
+};
+
+SemVer.prototype.comparePre = function(other) {
+  if (!(other instanceof SemVer))
+    other = new SemVer(other, this.options);
+
+  // NOT having a prerelease is > having one
+  if (this.prerelease.length && !other.prerelease.length)
+    return -1;
+  else if (!this.prerelease.length && other.prerelease.length)
+    return 1;
+  else if (!this.prerelease.length && !other.prerelease.length)
+    return 0;
+
+  var i = 0;
+  do {
+    var a = this.prerelease[i];
+    var b = other.prerelease[i];
+    debug('prerelease compare', i, a, b);
+    if (a === undefined && b === undefined)
+      return 0;
+    else if (b === undefined)
+      return 1;
+    else if (a === undefined)
+      return -1;
+    else if (a === b)
+      continue;
+    else
+      return compareIdentifiers(a, b);
+  } while (++i);
+};
+
+// preminor will bump the version up to the next minor release, and immediately
+// down to pre-release. premajor and prepatch work the same way.
+SemVer.prototype.inc = function(release, identifier) {
+  switch (release) {
+    case 'premajor':
+      this.prerelease.length = 0;
+      this.patch = 0;
+      this.minor = 0;
+      this.major++;
+      this.inc('pre', identifier);
+      break;
+    case 'preminor':
+      this.prerelease.length = 0;
+      this.patch = 0;
+      this.minor++;
+      this.inc('pre', identifier);
+      break;
+    case 'prepatch':
+      // If this is already a prerelease, it will bump to the next version
+      // drop any prereleases that might already exist, since they are not
+      // relevant at this point.
+      this.prerelease.length = 0;
+      this.inc('patch', identifier);
+      this.inc('pre', identifier);
+      break;
+    // If the input is a non-prerelease version, this acts the same as
+    // prepatch.
+    case 'prerelease':
+      if (this.prerelease.length === 0)
+        this.inc('patch', identifier);
+      this.inc('pre', identifier);
+      break;
+
+    case 'major':
+      // If this is a pre-major version, bump up to the same major version.
+      // Otherwise increment major.
+      // 1.0.0-5 bumps to 1.0.0
+      // 1.1.0 bumps to 2.0.0
+      if (this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0)
+        this.major++;
+      this.minor = 0;
+      this.patch = 0;
+      this.prerelease = [];
+      break;
+    case 'minor':
+      // If this is a pre-minor version, bump up to the same minor version.
+      // Otherwise increment minor.
+      // 1.2.0-5 bumps to 1.2.0
+      // 1.2.1 bumps to 1.3.0
+      if (this.patch !== 0 || this.prerelease.length === 0)
+        this.minor++;
+      this.patch = 0;
+      this.prerelease = [];
+      break;
+    case 'patch':
+      // If this is not a pre-release version, it will increment the patch.
+      // If it is a pre-release it will bump up to the same patch version.
+      // 1.2.0-5 patches to 1.2.0
+      // 1.2.0 patches to 1.2.1
+      if (this.prerelease.length === 0)
+        this.patch++;
+      this.prerelease = [];
+      break;
+    // This probably shouldn't be used publicly.
+    // 1.0.0 "pre" would become 1.0.0-0 which is the wrong direction.
+    case 'pre':
+      if (this.prerelease.length === 0)
+        this.prerelease = [0];
+      else {
+        var i = this.prerelease.length;
+        while (--i >= 0) {
+          if (typeof this.prerelease[i] === 'number') {
+            this.prerelease[i]++;
+            i = -2;
+          }
+        }
+        if (i === -1) // didn't increment anything
+          this.prerelease.push(0);
+      }
+      if (identifier) {
+        // 1.2.0-beta.1 bumps to 1.2.0-beta.2,
+        // 1.2.0-beta.fooblz or 1.2.0-beta bumps to 1.2.0-beta.0
+        if (this.prerelease[0] === identifier) {
+          if (isNaN(this.prerelease[1]))
+            this.prerelease = [identifier, 0];
+        } else
+          this.prerelease = [identifier, 0];
+      }
+      break;
+
+    default:
+      throw new Error('invalid increment argument: ' + release);
+  }
+  this.format();
+  this.raw = this.version;
+  return this;
+};
+
+exports.inc = inc;
+function inc(version, release, loose, identifier) {
+  if (typeof(loose) === 'string') {
+    identifier = loose;
+    loose = undefined;
+  }
+
+  try {
+    return new SemVer(version, loose).inc(release, identifier).version;
+  } catch (er) {
+    return null;
+  }
+}
+
+exports.diff = diff;
+function diff(version1, version2) {
+  if (eq(version1, version2)) {
+    return null;
+  } else {
+    var v1 = parse(version1);
+    var v2 = parse(version2);
+    if (v1.prerelease.length || v2.prerelease.length) {
+      for (var key in v1) {
+        if (key === 'major' || key === 'minor' || key === 'patch') {
+          if (v1[key] !== v2[key]) {
+            return 'pre'+key;
+          }
+        }
+      }
+      return 'prerelease';
+    }
+    for (var key in v1) {
+      if (key === 'major' || key === 'minor' || key === 'patch') {
+        if (v1[key] !== v2[key]) {
+          return key;
+        }
+      }
+    }
+  }
+}
+
+exports.compareIdentifiers = compareIdentifiers;
+
+var numeric = /^[0-9]+$/;
+function compareIdentifiers(a, b) {
+  var anum = numeric.test(a);
+  var bnum = numeric.test(b);
+
+  if (anum && bnum) {
+    a = +a;
+    b = +b;
+  }
+
+  return (anum && !bnum) ? -1 :
+         (bnum && !anum) ? 1 :
+         a < b ? -1 :
+         a > b ? 1 :
+         0;
+}
+
+exports.rcompareIdentifiers = rcompareIdentifiers;
+function rcompareIdentifiers(a, b) {
+  return compareIdentifiers(b, a);
+}
+
+exports.major = major;
+function major(a, loose) {
+  return new SemVer(a, loose).major;
+}
+
+exports.minor = minor;
+function minor(a, loose) {
+  return new SemVer(a, loose).minor;
+}
+
+exports.patch = patch;
+function patch(a, loose) {
+  return new SemVer(a, loose).patch;
+}
+
+exports.compare = compare;
+function compare(a, b, loose) {
+  return new SemVer(a, loose).compare(new SemVer(b, loose));
+}
+
+exports.compareLoose = compareLoose;
+function compareLoose(a, b) {
+  return compare(a, b, true);
+}
+
+exports.rcompare = rcompare;
+function rcompare(a, b, loose) {
+  return compare(b, a, loose);
+}
+
+exports.sort = sort;
+function sort(list, loose) {
+  return list.sort(function(a, b) {
+    return exports.compare(a, b, loose);
+  });
+}
+
+exports.rsort = rsort;
+function rsort(list, loose) {
+  return list.sort(function(a, b) {
+    return exports.rcompare(a, b, loose);
+  });
+}
+
+exports.gt = gt;
+function gt(a, b, loose) {
+  return compare(a, b, loose) > 0;
+}
+
+exports.lt = lt;
+function lt(a, b, loose) {
+  return compare(a, b, loose) < 0;
+}
+
+exports.eq = eq;
+function eq(a, b, loose) {
+  return compare(a, b, loose) === 0;
+}
+
+exports.neq = neq;
+function neq(a, b, loose) {
+  return compare(a, b, loose) !== 0;
+}
+
+exports.gte = gte;
+function gte(a, b, loose) {
+  return compare(a, b, loose) >= 0;
+}
+
+exports.lte = lte;
+function lte(a, b, loose) {
+  return compare(a, b, loose) <= 0;
+}
+
+exports.cmp = cmp;
+function cmp(a, op, b, loose) {
+  var ret;
+  switch (op) {
+    case '===':
+      if (typeof a === 'object') a = a.version;
+      if (typeof b === 'object') b = b.version;
+      ret = a === b;
+      break;
+    case '!==':
+      if (typeof a === 'object') a = a.version;
+      if (typeof b === 'object') b = b.version;
+      ret = a !== b;
+      break;
+    case '': case '=': case '==': ret = eq(a, b, loose); break;
+    case '!=': ret = neq(a, b, loose); break;
+    case '>': ret = gt(a, b, loose); break;
+    case '>=': ret = gte(a, b, loose); break;
+    case '<': ret = lt(a, b, loose); break;
+    case '<=': ret = lte(a, b, loose); break;
+    default: throw new TypeError('Invalid operator: ' + op);
+  }
+  return ret;
+}
+
+exports.Comparator = Comparator;
+function Comparator(comp, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
+  if (comp instanceof Comparator) {
+    if (comp.loose === !!options.loose)
+      return comp;
+    else
+      comp = comp.value;
+  }
+
+  if (!(this instanceof Comparator))
+    return new Comparator(comp, options);
+
+  debug('comparator', comp, options);
+  this.options = options;
+  this.loose = !!options.loose;
+  this.parse(comp);
+
+  if (this.semver === ANY)
+    this.value = '';
+  else
+    this.value = this.operator + this.semver.version;
+
+  debug('comp', this);
+}
+
+var ANY = {};
+Comparator.prototype.parse = function(comp) {
+  var r = this.options.loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
+  var m = comp.match(r);
+
+  if (!m)
+    throw new TypeError('Invalid comparator: ' + comp);
+
+  this.operator = m[1];
+  if (this.operator === '=')
+    this.operator = '';
+
+  // if it literally is just '>' or '' then allow anything.
+  if (!m[2])
+    this.semver = ANY;
+  else
+    this.semver = new SemVer(m[2], this.options.loose);
+};
+
+Comparator.prototype.toString = function() {
+  return this.value;
+};
+
+Comparator.prototype.test = function(version) {
+  debug('Comparator.test', version, this.options.loose);
+
+  if (this.semver === ANY)
+    return true;
+
+  if (typeof version === 'string')
+    version = new SemVer(version, this.options);
+
+  return cmp(version, this.operator, this.semver, this.options);
+};
+
+Comparator.prototype.intersects = function(comp, options) {
+  if (!(comp instanceof Comparator)) {
+    throw new TypeError('a Comparator is required');
+  }
+
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
+  var rangeTmp;
+
+  if (this.operator === '') {
+    rangeTmp = new Range(comp.value, options);
+    return satisfies(this.value, rangeTmp, options);
+  } else if (comp.operator === '') {
+    rangeTmp = new Range(this.value, options);
+    return satisfies(comp.semver, rangeTmp, options);
+  }
+
+  var sameDirectionIncreasing =
+    (this.operator === '>=' || this.operator === '>') &&
+    (comp.operator === '>=' || comp.operator === '>');
+  var sameDirectionDecreasing =
+    (this.operator === '<=' || this.operator === '<') &&
+    (comp.operator === '<=' || comp.operator === '<');
+  var sameSemVer = this.semver.version === comp.semver.version;
+  var differentDirectionsInclusive =
+    (this.operator === '>=' || this.operator === '<=') &&
+    (comp.operator === '>=' || comp.operator === '<=');
+  var oppositeDirectionsLessThan =
+    cmp(this.semver, '<', comp.semver, options) &&
+    ((this.operator === '>=' || this.operator === '>') &&
+    (comp.operator === '<=' || comp.operator === '<'));
+  var oppositeDirectionsGreaterThan =
+    cmp(this.semver, '>', comp.semver, options) &&
+    ((this.operator === '<=' || this.operator === '<') &&
+    (comp.operator === '>=' || comp.operator === '>'));
+
+  return sameDirectionIncreasing || sameDirectionDecreasing ||
+    (sameSemVer && differentDirectionsInclusive) ||
+    oppositeDirectionsLessThan || oppositeDirectionsGreaterThan;
+};
+
+
+exports.Range = Range;
+function Range(range, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+
+  if (range instanceof Range) {
+    if (range.loose === !!options.loose &&
+        range.includePrerelease === !!options.includePrerelease) {
+      return range;
+    } else {
+      return new Range(range.raw, options);
+    }
+  }
+
+  if (range instanceof Comparator) {
+    return new Range(range.value, options);
+  }
+
+  if (!(this instanceof Range))
+    return new Range(range, options);
+
+  this.options = options;
+  this.loose = !!options.loose;
+  this.includePrerelease = !!options.includePrerelease
+
+  // First, split based on boolean or ||
+  this.raw = range;
+  this.set = range.split(/\s*\|\|\s*/).map(function(range) {
+    return this.parseRange(range.trim());
+  }, this).filter(function(c) {
+    // throw out any that are not relevant for whatever reason
+    return c.length;
+  });
+
+  if (!this.set.length) {
+    throw new TypeError('Invalid SemVer Range: ' + range);
+  }
+
+  this.format();
+}
+
+Range.prototype.format = function() {
+  this.range = this.set.map(function(comps) {
+    return comps.join(' ').trim();
+  }).join('||').trim();
+  return this.range;
+};
+
+Range.prototype.toString = function() {
+  return this.range;
+};
+
+Range.prototype.parseRange = function(range) {
+  var loose = this.options.loose;
+  range = range.trim();
+  // `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4`
+  var hr = loose ? re[HYPHENRANGELOOSE] : re[HYPHENRANGE];
+  range = range.replace(hr, hyphenReplace);
+  debug('hyphen replace', range);
+  // `> 1.2.3 < 1.2.5` => `>1.2.3 <1.2.5`
+  range = range.replace(re[COMPARATORTRIM], comparatorTrimReplace);
+  debug('comparator trim', range, re[COMPARATORTRIM]);
+
+  // `~ 1.2.3` => `~1.2.3`
+  range = range.replace(re[TILDETRIM], tildeTrimReplace);
+
+  // `^ 1.2.3` => `^1.2.3`
+  range = range.replace(re[CARETTRIM], caretTrimReplace);
+
+  // normalize spaces
+  range = range.split(/\s+/).join(' ');
+
+  // At this point, the range is completely trimmed and
+  // ready to be split into comparators.
+
+  var compRe = loose ? re[COMPARATORLOOSE] : re[COMPARATOR];
+  var set = range.split(' ').map(function(comp) {
+    return parseComparator(comp, this.options);
+  }, this).join(' ').split(/\s+/);
+  if (this.options.loose) {
+    // in loose mode, throw out any that are not valid comparators
+    set = set.filter(function(comp) {
+      return !!comp.match(compRe);
+    });
+  }
+  set = set.map(function(comp) {
+    return new Comparator(comp, this.options);
+  }, this);
+
+  return set;
+};
+
+Range.prototype.intersects = function(range, options) {
+  if (!(range instanceof Range)) {
+    throw new TypeError('a Range is required');
+  }
+
+  return this.set.some(function(thisComparators) {
+    return thisComparators.every(function(thisComparator) {
+      return range.set.some(function(rangeComparators) {
+        return rangeComparators.every(function(rangeComparator) {
+          return thisComparator.intersects(rangeComparator, options);
+        });
+      });
+    });
+  });
+};
+
+// Mostly just for testing and legacy API reasons
+exports.toComparators = toComparators;
+function toComparators(range, options) {
+  return new Range(range, options).set.map(function(comp) {
+    return comp.map(function(c) {
+      return c.value;
+    }).join(' ').trim().split(' ');
+  });
+}
+
+// comprised of xranges, tildes, stars, and gtlt's at this point.
+// already replaced the hyphen ranges
+// turn into a set of JUST comparators.
+function parseComparator(comp, options) {
+  debug('comp', comp, options);
+  comp = replaceCarets(comp, options);
+  debug('caret', comp);
+  comp = replaceTildes(comp, options);
+  debug('tildes', comp);
+  comp = replaceXRanges(comp, options);
+  debug('xrange', comp);
+  comp = replaceStars(comp, options);
+  debug('stars', comp);
+  return comp;
+}
+
+function isX(id) {
+  return !id || id.toLowerCase() === 'x' || id === '*';
+}
+
+// ~, ~> --> * (any, kinda silly)
+// ~2, ~2.x, ~2.x.x, ~>2, ~>2.x ~>2.x.x --> >=2.0.0 <3.0.0
+// ~2.0, ~2.0.x, ~>2.0, ~>2.0.x --> >=2.0.0 <2.1.0
+// ~1.2, ~1.2.x, ~>1.2, ~>1.2.x --> >=1.2.0 <1.3.0
+// ~1.2.3, ~>1.2.3 --> >=1.2.3 <1.3.0
+// ~1.2.0, ~>1.2.0 --> >=1.2.0 <1.3.0
+function replaceTildes(comp, options) {
+  return comp.trim().split(/\s+/).map(function(comp) {
+    return replaceTilde(comp, options);
+  }).join(' ');
+}
+
+function replaceTilde(comp, options) {
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+  var r = options.loose ? re[TILDELOOSE] : re[TILDE];
+  return comp.replace(r, function(_, M, m, p, pr) {
+    debug('tilde', comp, _, M, m, p, pr);
+    var ret;
+
+    if (isX(M))
+      ret = '';
+    else if (isX(m))
+      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
+    else if (isX(p))
+      // ~1.2 == >=1.2.0 <1.3.0
+      ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
+    else if (pr) {
+      debug('replaceTilde pr', pr);
+      if (pr.charAt(0) !== '-')
+        pr = '-' + pr;
+      ret = '>=' + M + '.' + m + '.' + p + pr +
+            ' <' + M + '.' + (+m + 1) + '.0';
+    } else
+      // ~1.2.3 == >=1.2.3 <1.3.0
+      ret = '>=' + M + '.' + m + '.' + p +
+            ' <' + M + '.' + (+m + 1) + '.0';
+
+    debug('tilde return', ret);
+    return ret;
+  });
+}
+
+// ^ --> * (any, kinda silly)
+// ^2, ^2.x, ^2.x.x --> >=2.0.0 <3.0.0
+// ^2.0, ^2.0.x --> >=2.0.0 <3.0.0
+// ^1.2, ^1.2.x --> >=1.2.0 <2.0.0
+// ^1.2.3 --> >=1.2.3 <2.0.0
+// ^1.2.0 --> >=1.2.0 <2.0.0
+function replaceCarets(comp, options) {
+  return comp.trim().split(/\s+/).map(function(comp) {
+    return replaceCaret(comp, options);
+  }).join(' ');
+}
+
+function replaceCaret(comp, options) {
+  debug('caret', comp, options);
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+  var r = options.loose ? re[CARETLOOSE] : re[CARET];
+  return comp.replace(r, function(_, M, m, p, pr) {
+    debug('caret', comp, _, M, m, p, pr);
+    var ret;
+
+    if (isX(M))
+      ret = '';
+    else if (isX(m))
+      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
+    else if (isX(p)) {
+      if (M === '0')
+        ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
+      else
+        ret = '>=' + M + '.' + m + '.0 <' + (+M + 1) + '.0.0';
+    } else if (pr) {
+      debug('replaceCaret pr', pr);
+      if (pr.charAt(0) !== '-')
+        pr = '-' + pr;
+      if (M === '0') {
+        if (m === '0')
+          ret = '>=' + M + '.' + m + '.' + p + pr +
+                ' <' + M + '.' + m + '.' + (+p + 1);
+        else
+          ret = '>=' + M + '.' + m + '.' + p + pr +
+                ' <' + M + '.' + (+m + 1) + '.0';
+      } else
+        ret = '>=' + M + '.' + m + '.' + p + pr +
+              ' <' + (+M + 1) + '.0.0';
+    } else {
+      debug('no pr');
+      if (M === '0') {
+        if (m === '0')
+          ret = '>=' + M + '.' + m + '.' + p +
+                ' <' + M + '.' + m + '.' + (+p + 1);
+        else
+          ret = '>=' + M + '.' + m + '.' + p +
+                ' <' + M + '.' + (+m + 1) + '.0';
+      } else
+        ret = '>=' + M + '.' + m + '.' + p +
+              ' <' + (+M + 1) + '.0.0';
+    }
+
+    debug('caret return', ret);
+    return ret;
+  });
+}
+
+function replaceXRanges(comp, options) {
+  debug('replaceXRanges', comp, options);
+  return comp.split(/\s+/).map(function(comp) {
+    return replaceXRange(comp, options);
+  }).join(' ');
+}
+
+function replaceXRange(comp, options) {
+  comp = comp.trim();
+  if (!options || typeof options !== 'object')
+    options = { loose: !!options, includePrerelease: false }
+  var r = options.loose ? re[XRANGELOOSE] : re[XRANGE];
+  return comp.replace(r, function(ret, gtlt, M, m, p, pr) {
+    debug('xRange', comp, ret, gtlt, M, m, p, pr);
+    var xM = isX(M);
+    var xm = xM || isX(m);
+    var xp = xm || isX(p);
+    var anyX = xp;
+
+    if (gtlt === '=' && anyX)
+      gtlt = '';
+
+    if (xM) {
+      if (gtlt === '>' || gtlt === '<') {
+        // nothing is allowed
+        ret = '<0.0.0';
+      } else {
+        // nothing is forbidden
+        ret = '*';
+      }
+    } else if (gtlt && anyX) {
+      // replace X with 0
+      if (xm)
+        m = 0;
+      if (xp)
+        p = 0;
+
+      if (gtlt === '>') {
+        // >1 => >=2.0.0
+        // >1.2 => >=1.3.0
+        // >1.2.3 => >= 1.2.4
+        gtlt = '>=';
+        if (xm) {
+          M = +M + 1;
+          m = 0;
+          p = 0;
+        } else if (xp) {
+          m = +m + 1;
+          p = 0;
+        }
+      } else if (gtlt === '<=') {
+        // <=0.7.x is actually <0.8.0, since any 0.7.x should
+        // pass.  Similarly, <=7.x is actually <8.0.0, etc.
+        gtlt = '<';
+        if (xm)
+          M = +M + 1;
+        else
+          m = +m + 1;
+      }
+
+      ret = gtlt + M + '.' + m + '.' + p;
+    } else if (xm) {
+      ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
+    } else if (xp) {
+      ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
+    }
+
+    debug('xRange return', ret);
+
+    return ret;
+  });
+}
+
+// Because * is AND-ed with everything else in the comparator,
+// and '' means "any version", just remove the *s entirely.
+function replaceStars(comp, options) {
+  debug('replaceStars', comp, options);
+  // Looseness is ignored here.  star is always as loose as it gets!
+  return comp.trim().replace(re[STAR], '');
+}
+
+// This function is passed to string.replace(re[HYPHENRANGE])
+// M, m, patch, prerelease, build
+// 1.2 - 3.4.5 => >=1.2.0 <=3.4.5
+// 1.2.3 - 3.4 => >=1.2.0 <3.5.0 Any 3.4.x will do
+// 1.2 - 3.4 => >=1.2.0 <3.5.0
+function hyphenReplace($0,
+                       from, fM, fm, fp, fpr, fb,
+                       to, tM, tm, tp, tpr, tb) {
+
+  if (isX(fM))
+    from = '';
+  else if (isX(fm))
+    from = '>=' + fM + '.0.0';
+  else if (isX(fp))
+    from = '>=' + fM + '.' + fm + '.0';
+  else
+    from = '>=' + from;
+
+  if (isX(tM))
+    to = '';
+  else if (isX(tm))
+    to = '<' + (+tM + 1) + '.0.0';
+  else if (isX(tp))
+    to = '<' + tM + '.' + (+tm + 1) + '.0';
+  else if (tpr)
+    to = '<=' + tM + '.' + tm + '.' + tp + '-' + tpr;
+  else
+    to = '<=' + to;
+
+  return (from + ' ' + to).trim();
+}
+
+
+// if ANY of the sets match ALL of its comparators, then pass
+Range.prototype.test = function(version) {
+  if (!version)
+    return false;
+
+  if (typeof version === 'string')
+    version = new SemVer(version, this.options);
+
+  for (var i = 0; i < this.set.length; i++) {
+    if (testSet(this.set[i], version, this.options))
+      return true;
+  }
+  return false;
+};
+
+function testSet(set, version, options) {
+  for (var i = 0; i < set.length; i++) {
+    if (!set[i].test(version))
+      return false;
+  }
+
+  if (!options)
+    options = {}
+
+  if (version.prerelease.length && !options.includePrerelease) {
+    // Find the set of versions that are allowed to have prereleases
+    // For example, ^1.2.3-pr.1 desugars to >=1.2.3-pr.1 <2.0.0
+    // That should allow `1.2.3-pr.2` to pass.
+    // However, `1.2.4-alpha.notready` should NOT be allowed,
+    // even though it's within the range set by the comparators.
+    for (var i = 0; i < set.length; i++) {
+      debug(set[i].semver);
+      if (set[i].semver === ANY)
+        continue;
+
+      if (set[i].semver.prerelease.length > 0) {
+        var allowed = set[i].semver;
+        if (allowed.major === version.major &&
+            allowed.minor === version.minor &&
+            allowed.patch === version.patch)
+          return true;
+      }
+    }
+
+    // Version has a -pre, but it's not one of the ones we like.
+    return false;
+  }
+
+  return true;
+}
+
+exports.satisfies = satisfies;
+function satisfies(version, range, options) {
+  try {
+    range = new Range(range, options);
+  } catch (er) {
+    return false;
+  }
+  return range.test(version);
+}
+
+exports.maxSatisfying = maxSatisfying;
+function maxSatisfying(versions, range, options) {
+  var max = null;
+  var maxSV = null;
+  try {
+    var rangeObj = new Range(range, options);
+  } catch (er) {
+    return null;
+  }
+  versions.forEach(function (v) {
+    if (rangeObj.test(v)) { // satisfies(v, range, options)
+      if (!max || maxSV.compare(v) === -1) { // compare(max, v, true)
+        max = v;
+        maxSV = new SemVer(max, options);
+      }
+    }
+  })
+  return max;
+}
+
+exports.minSatisfying = minSatisfying;
+function minSatisfying(versions, range, options) {
+  var min = null;
+  var minSV = null;
+  try {
+    var rangeObj = new Range(range, options);
+  } catch (er) {
+    return null;
+  }
+  versions.forEach(function (v) {
+    if (rangeObj.test(v)) { // satisfies(v, range, options)
+      if (!min || minSV.compare(v) === 1) { // compare(min, v, true)
+        min = v;
+        minSV = new SemVer(min, options);
+      }
+    }
+  })
+  return min;
+}
+
+exports.validRange = validRange;
+function validRange(range, options) {
+  try {
+    // Return '*' instead of '' so that truthiness works.
+    // This will throw if it's invalid anyway
+    return new Range(range, options).range || '*';
+  } catch (er) {
+    return null;
+  }
+}
+
+// Determine if version is less than all the versions possible in the range
+exports.ltr = ltr;
+function ltr(version, range, options) {
+  return outside(version, range, '<', options);
+}
+
+// Determine if version is greater than all the versions possible in the range.
+exports.gtr = gtr;
+function gtr(version, range, options) {
+  return outside(version, range, '>', options);
+}
+
+exports.outside = outside;
+function outside(version, range, hilo, options) {
+  version = new SemVer(version, options);
+  range = new Range(range, options);
+
+  var gtfn, ltefn, ltfn, comp, ecomp;
+  switch (hilo) {
+    case '>':
+      gtfn = gt;
+      ltefn = lte;
+      ltfn = lt;
+      comp = '>';
+      ecomp = '>=';
+      break;
+    case '<':
+      gtfn = lt;
+      ltefn = gte;
+      ltfn = gt;
+      comp = '<';
+      ecomp = '<=';
+      break;
+    default:
+      throw new TypeError('Must provide a hilo val of "<" or ">"');
+  }
+
+  // If it satisifes the range it is not outside
+  if (satisfies(version, range, options)) {
+    return false;
+  }
+
+  // From now on, variable terms are as if we're in "gtr" mode.
+  // but note that everything is flipped for the "ltr" function.
+
+  for (var i = 0; i < range.set.length; ++i) {
+    var comparators = range.set[i];
+
+    var high = null;
+    var low = null;
+
+    comparators.forEach(function(comparator) {
+      if (comparator.semver === ANY) {
+        comparator = new Comparator('>=0.0.0')
+      }
+      high = high || comparator;
+      low = low || comparator;
+      if (gtfn(comparator.semver, high.semver, options)) {
+        high = comparator;
+      } else if (ltfn(comparator.semver, low.semver, options)) {
+        low = comparator;
+      }
+    });
+
+    // If the edge version comparator has a operator then our version
+    // isn't outside it
+    if (high.operator === comp || high.operator === ecomp) {
+      return false;
+    }
+
+    // If the lowest version comparator has an operator and our version
+    // is less than it then it isn't higher than the range
+    if ((!low.operator || low.operator === comp) &&
+        ltefn(version, low.semver)) {
+      return false;
+    } else if (low.operator === ecomp && ltfn(version, low.semver)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+exports.prerelease = prerelease;
+function prerelease(version, options) {
+  var parsed = parse(version, options);
+  return (parsed && parsed.prerelease.length) ? parsed.prerelease : null;
+}
+
+exports.intersects = intersects;
+function intersects(r1, r2, options) {
+  r1 = new Range(r1, options)
+  r2 = new Range(r2, options)
+  return r1.intersects(r2)
+}
+
+exports.coerce = coerce;
+function coerce(version) {
+  if (version instanceof SemVer)
+    return version;
+
+  if (typeof version !== 'string')
+    return null;
+
+  var match = version.match(re[COERCE]);
+
+  if (match == null)
+    return null;
+
+  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0')); 
+}
+
+
+/***/ }),
+/* 3 */
+/* unknown exports provided */
+/* all exports used */
+/*!********************************!*\
+  !*** external "child_process" ***!
+  \********************************/
+/***/ (function(module, exports) {
+
+module.exports = require("child_process");
+
+/***/ }),
+/* 4 */
+/* unknown exports provided */
+/* all exports used */
 /*!*********************!*\
   !*** external "fs" ***!
   \*********************/
@@ -904,7 +2278,7 @@ function mixin(target) {
 module.exports = require("fs");
 
 /***/ }),
-/* 3 */
+/* 5 */
 /* unknown exports provided */
 /* all exports used */
 /*!***********************!*\
@@ -915,7 +2289,7 @@ module.exports = require("fs");
 module.exports = require("path");
 
 /***/ }),
-/* 4 */
+/* 6 */
 /* unknown exports provided */
 /* all exports used */
 /*!**************************!*\
@@ -925,11 +2299,11 @@ module.exports = require("path");
 
 // This file is just added for convenience so this repository can be
 // directly checked out into a project's deps folder
-module.exports = __webpack_require__(/*! ./lib/async */ 5);
+module.exports = __webpack_require__(/*! ./lib/async */ 7);
 
 
 /***/ }),
-/* 5 */
+/* 7 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************************!*\
@@ -1632,7 +3006,7 @@ module.exports = __webpack_require__(/*! ./lib/async */ 5);
 
 
 /***/ }),
-/* 6 */
+/* 8 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************!*\
@@ -1646,11 +3020,11 @@ function webpackEmptyContext(req) {
 webpackEmptyContext.keys = function() { return []; };
 webpackEmptyContext.resolve = webpackEmptyContext;
 module.exports = webpackEmptyContext;
-webpackEmptyContext.id = 6;
+webpackEmptyContext.id = 8;
 
 
 /***/ }),
-/* 7 */
+/* 9 */
 /* unknown exports provided */
 /* all exports used */
 /*!****************************!*\
@@ -2003,7 +3377,7 @@ addProperty('zalgo', function () {
 
 
 /***/ }),
-/* 8 */
+/* 10 */
 /* unknown exports provided */
 /* all exports used */
 /*!*******************************!*\
@@ -2011,7 +3385,7 @@ addProperty('zalgo', function () {
   \*******************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-var Stream = __webpack_require__(/*! stream */ 13)
+var Stream = __webpack_require__(/*! stream */ 15)
 
 module.exports = MuteStream
 
@@ -2159,7 +3533,7 @@ MuteStream.prototype.close = proxy('close')
 
 
 /***/ }),
-/* 9 */
+/* 11 */
 /* unknown exports provided */
 /* all exports used */
 /*!****************************!*\
@@ -2171,7 +3545,7 @@ MuteStream.prototype.close = proxy('close')
 module.exports = read
 
 var readline = __webpack_require__(/*! readline */ 0)
-var Mute = __webpack_require__(/*! mute-stream */ 8)
+var Mute = __webpack_require__(/*! mute-stream */ 10)
 
 function read (opts, cb) {
   if (opts.num) {
@@ -2283,7 +3657,7 @@ function read (opts, cb) {
 
 
 /***/ }),
-/* 10 */
+/* 12 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************************************!*\
@@ -2719,10 +4093,10 @@ function read (opts, cb) {
 
 })(typeof module === 'object' && module && module.exports ? module.exports : window);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../webpack/buildin/module.js */ 11)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./../../webpack/buildin/module.js */ 13)(module)))
 
 /***/ }),
-/* 11 */
+/* 13 */
 /* unknown exports provided */
 /* all exports used */
 /*!***********************************!*\
@@ -2755,7 +4129,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 12 */
+/* 14 */
 /* unknown exports provided */
 /* all exports used */
 /*!*************************!*\
@@ -2766,7 +4140,7 @@ module.exports = function(module) {
 module.exports = require("events");
 
 /***/ }),
-/* 13 */
+/* 15 */
 /* unknown exports provided */
 /* all exports used */
 /*!*************************!*\
@@ -2777,7 +4151,7 @@ module.exports = require("events");
 module.exports = require("stream");
 
 /***/ }),
-/* 14 */
+/* 16 */
 /* unknown exports provided */
 /* all exports used */
 /*!***********************!*\
@@ -2788,7 +4162,7 @@ module.exports = require("stream");
 module.exports = require("util");
 
 /***/ }),
-/* 15 */
+/* 17 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************************!*\
@@ -2796,17 +4170,31 @@ module.exports = require("util");
   \******************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-var fs = __webpack_require__(/*! fs */ 2);
-var path = __webpack_require__(/*! path */ 3);
+var fs = __webpack_require__(/*! fs */ 4);
+var path = __webpack_require__(/*! path */ 5);
 var prompt = __webpack_require__(/*! prompt-lite */ 1);
 
-// Default settings for using ios and android with Firebase
-var usingiOS = false, usingAndroid = false;
+const { execSync } = __webpack_require__(/*! child_process */ 3);
+const semver = __webpack_require__(/*! semver */ 2);
+const tnsVersionFull = execSync('tns --version', { encoding: 'ascii'});
+
+// iOS modern build system is supported from version NativeScript-CLI version 5.2.0
+const supportsIOSModernBuildSystem = tnsVersionFull.indexOf("5.2.0-") > -1 || semver.gte(tnsVersionFull, "5.2.0");
+
+// Custom gradle buildscripts are supported from NativeScript-Android version 5.3.0 (TODO this actually checks the CLI version)
+const supportsGradleBuildscripts = tnsVersionFull.indexOf("5.3.0-") > -1 || semver.gte(tnsVersionFull, "5.3.0");
+
+if (!supportsIOSModernBuildSystem) {
+  console.log(`You're using NativeScript ${tnsVersionFull}.. which doesn't support the latest Firestore and in-app-messaging SDKs. Upgrade NativeScript to at least 5.2.0 if you need those!\n\n`);
+}
+
+// Default settings for a few prompts
+var usingiOS = false, usingAndroid = false, externalPushClientOnly = false;
 
 // The directories where the Podfile and include.gradle are stored
 var directories = {
-    ios: './platforms/ios',
-    android: './platforms/android'
+  ios: './platforms/ios',
+  android: './platforms/android'
 };
 
 console.log('NativeScript Firebase Plugin Installation');
@@ -2815,271 +4203,323 @@ var appRoot = "../../";
 var pluginConfigFile = "firebase.nativescript.json";
 var pluginConfigPath = path.join(appRoot, pluginConfigFile);
 var config = {};
+
 function mergeConfig(result) {
-    for (var key in result) {
-        config[key] = isSelected(result[key]);
-    }
+  for (var key in result) {
+    config[key] = isSelected(result[key]);
+  }
 }
+
 function saveConfig() {
-    fs.writeFileSync(pluginConfigPath, JSON.stringify(config, null, 4));
+  fs.writeFileSync(pluginConfigPath, JSON.stringify(config, null, 4));
 }
+
 function readConfig() {
-    try {
-        config = JSON.parse(fs.readFileSync(pluginConfigPath));
-    } catch(e) {
-        console.log("Failed reading " + pluginConfigFile);
-        console.log(e);
-        config = {};
-    }
+  try {
+    config = JSON.parse(fs.readFileSync(pluginConfigPath));
+  } catch (e) {
+    console.log("Failed reading " + pluginConfigFile);
+    console.log(e);
+    config = {};
+  }
 }
+
 function isInteractive() {
-    return process.stdin && process.stdin.isTTY && process.stdout && process.stdout.isTTY;
+  return process.stdin && process.stdin.isTTY && process.stdout && process.stdout.isTTY;
 }
-
-// workaround for https://github.com/NativeScript/nativescript-cli/issues/2521 (2.5.0 only)
-var nativeScriptVersion = "";
-try {
-  nativeScriptVersion = __webpack_require__(/*! child_process */ 2).execSync('nativescript --version');
-} catch (err) {
-  // On some environments nativescript is not in the PATH
-  // Ignore the error
-}
-
-var isNativeScriptCLI250 = nativeScriptVersion.indexOf("2.5.0") !== -1;
 
 // note that for CI builds you want a pluginConfigFile, otherwise the build will fail
 if (process.argv.indexOf("config") === -1 && fs.existsSync(pluginConfigPath)) {
-    readConfig();
-    console.log("Config file exists (" + pluginConfigFile + ")");
-    askiOSPromptResult(config);
-    askAndroidPromptResult(config);
-    promptQuestionsResult(config);
-} else if (isNativeScriptCLI250 && process.argv.indexOf("setup") === -1) {
-    console.log("*******************************************************************");
-    console.log("*******************************************************************");
-    console.log("************************** IMPORTANT: *****************************");
-    console.log("*******************  with nativescript 2.5.0  *********************");
-    console.log("************** now execute 'npm run setup' manually ***************");
-    console.log("***** in the node_modules/nativescript-plugin-firebase folder *****");
-    console.log("*******************************************************************");
-    console.log("*******************************************************************");
+  readConfig();
+  console.log("Config file exists (" + pluginConfigFile + ")");
+  askiOSPromptResult(config);
+  askAndroidPromptResult(config);
+  askExternalPushMessagingOnlyPromptResult(config);
+  promptQuestionsResult(config);
 } else if (!isInteractive()) {
-    console.log("No existing " + pluginConfigFile + " config file found and terminal is not interactive! Default configuration will be used.");
+  console.log("No existing " + pluginConfigFile + " config file found and terminal is not interactive! Default configuration will be used.");
 } else {
-    console.log("No existing " + pluginConfigFile + " config file found, so let's configure the Firebase plugin!");
-    prompt.start();
+  console.log("No existing " + pluginConfigFile + " config file found, so let's configure the Firebase plugin!");
+  prompt.start();
+  askExternalPushMessagingOnlyPrompt();
+}
+
+/**
+ * Prompt the user if they are integrating Firebase with iOS
+ */
+function askExternalPushMessagingOnlyPrompt() {
+  prompt.get({
+    name: 'external_push_client_only',
+    description: 'Are you using this plugin ONLY as a Push Notification client for an external (non-Firebase) Push service? (y/n)',
+    default: 'n'
+  }, function (err, result) {
+    if (err) {
+      return console.log(err);
+    }
+    mergeConfig(result);
+    askExternalPushMessagingOnlyPromptResult(result);
     askiOSPrompt();
+  });
 }
 
 /**
  * Prompt the user if they are integrating Firebase with iOS
  */
 function askiOSPrompt() {
-    prompt.get({
-        name: 'using_ios',
-        description: 'Are you using iOS (y/n)',
-        default: 'y'
-    }, function (err, result) {
-        if (err) {
-            return console.log(err);
-        }
-        mergeConfig(result);
-        askiOSPromptResult(result);
-        askAndroidPrompt();
-    });
-}
-function askiOSPromptResult(result) {
-    if (isSelected(result.using_ios)) {
-        usingiOS = true;
+  prompt.get({
+    name: 'using_ios',
+    description: 'Are you using iOS (y/n)',
+    default: 'y'
+  }, function (err, result) {
+    if (err) {
+      return console.log(err);
     }
+    mergeConfig(result);
+    askiOSPromptResult(result);
+    askAndroidPrompt();
+  });
+}
+
+function askExternalPushMessagingOnlyPromptResult(result) {
+  if (isSelected(result.external_push_client_only)) {
+    externalPushClientOnly = true;
+  }
+}
+
+function askiOSPromptResult(result) {
+  if (isSelected(result.using_ios)) {
+    usingiOS = true;
+  }
 }
 
 /**
  * Prompt the user if they are integrating Firebase with Android
  */
 function askAndroidPrompt() {
-    prompt.get({
-        name: 'using_android',
-        description: 'Are you using Android (y/n)',
-        default: 'y'
-    }, function (err, result) {
-        if (err) {
-            return console.log(err);
-        }
-        mergeConfig(result);
-        askAndroidPromptResult(result);
-        if (usingiOS || usingAndroid) {
-            promptQuestions();
-        } else {
-            askSaveConfigPrompt();
-        }
-    });
-}
-function askAndroidPromptResult(result) {
-    if (isSelected(result.using_android)) {
-        usingAndroid = true;
+  prompt.get({
+    name: 'using_android',
+    description: 'Are you using Android (y/n)',
+    default: 'y'
+  }, function (err, result) {
+    if (err) {
+      return console.log(err);
     }
+    mergeConfig(result);
+    askAndroidPromptResult(result);
+    if ((usingiOS || usingAndroid) && !externalPushClientOnly) {
+      promptQuestions();
+    } else if (externalPushClientOnly) {
+      promptQuestionsResult(result);
+      askSaveConfigPrompt();
+    } else {
+      askSaveConfigPrompt();
+    }
+  });
+}
+
+function askAndroidPromptResult(result) {
+  if (isSelected(result.using_android)) {
+    usingAndroid = true;
+  }
 }
 
 /**
  * Prompt the user through the configurable Firebase add-on services
  */
 function promptQuestions() {
-    prompt.get([{
-        name: 'firestore',
-        description: 'Are you using Cloud Firestore? (y/n)',
+  prompt.get([{
+    name: 'firestore',
+    description: 'Are you using Firestore? (y/n)',
+    default: 'n'
+  }, {
+    name: 'realtimedb',
+    description: 'Are you using Realtime DB? (y/n)',
+    default: 'n'
+  }, {
+    name: 'authentication',
+    description: 'Are you using Firebase Authentication (pretty likely if you use Firestore or Realtime DB)? (y/n)',
+    default: 'y'
+  }, {
+    name: 'remote_config',
+    description: 'Are you using Firebase RemoteConfig? (y/n)',
+    default: 'n'
+  }, {
+    name: 'performance_monitoring',
+    description: 'Are you using Performance Monitoring? (y/n)',
+    default: 'n'
+  }, {
+    name: 'messaging',
+    description: 'Are you using Firebase Cloud Messaging? (y/n)',
+    default: 'n'
+  }, {
+    name: 'in_app_messaging',
+    description: 'Are you using In-App Messaging? (y/n)',
+    default: 'n'
+  }, {
+    name: 'crashlytics',
+    description: 'Are you using Firebase Crashlytics? (y/n)',
+    default: 'n'
+  }, {
+    name: 'crash_reporting',
+    description: 'Are you using Firebase Crash Reporting? (answer "n" if you want to use Crashlytics instead) (y/n)',
+    default: 'n'
+  }, {
+    name: 'storage',
+    description: 'Are you using Firebase Storage? (y/n)',
+    default: 'n'
+  }, {
+    name: 'functions',
+    description: 'Are you using Firebase Cloud Functions? (y/n)',
+    default: 'n'
+  }, {
+    name: 'facebook_auth',
+    description: 'Are you using Firebase Facebook Authentication? (y/n)',
+    default: 'n'
+  }, {
+    name: 'google_auth',
+    description: 'Are you using Firebase Google Authentication? (y/n)',
+    default: 'n'
+  }, {
+    name: 'admob',
+    description: 'Are you using AdMob? (y/n)',
+    default: 'n'
+  }, {
+    name: 'invites',
+    description: 'Are you using Firebase Invites? (y/n)',
+    default: 'n'
+  }, {
+    name: 'dynamic_links',
+    description: 'Are you using Firebase Dynamic Links? (y/n)',
+    default: 'n'
+  }, {
+    name: 'ml_kit',
+    description: 'Are you using ML Kit? (y/n)',
+    default: 'n'
+  }], function (err, result) {
+    if (err) {
+      return console.log(err);
+    }
+    if (!isSelected(result.ml_kit)) {
+      mergeConfig(result);
+      promptQuestionsResult(result);
+      askSaveConfigPrompt();
+    } else {
+      prompt.get([{
+        name: 'ml_kit_text_recognition',
+        description: 'With Ml Kit, do you want to recognize text? (y/n)',
         default: 'n'
-    }, {
-        name: 'realtimedb',
-        description: 'Are you using Realtime DB? (y/n)',
+      }, {
+        name: 'ml_kit_barcode_scanning',
+        description: 'With Ml Kit, do you want to scan barcodes? (y/n)',
         default: 'n'
-    }, {
-        name: 'remote_config',
-        description: 'Are you using Firebase RemoteConfig? (y/n)',
+      }, {
+        name: 'ml_kit_face_detection',
+        description: 'With Ml Kit, do you want to detect faces? (y/n)',
         default: 'n'
-    }, {
-        name: 'messaging',
-        description: 'Are you using Firebase Messaging? (y/n)',
+      }, {
+        name: 'ml_kit_image_labeling',
+        description: 'With Ml Kit, do you want to label images? (y/n)',
         default: 'n'
-    }, {
-        name: 'crashlytics',
-        description: 'Are you using Firebase Crashlytics? (y/n)',
+      }, {
+        name: 'ml_kit_custom_model',
+        description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
         default: 'n'
-    }, {
-        name: 'crash_reporting',
-        description: 'Are you using Firebase Crash Reporting? (answer "n" if you want to use Crashlytics instead) (y/n)',
-        default: 'n'
-    }, {
-        name: 'storage',
-        description: 'Are you using Firebase Storage? (y/n)',
-        default: 'n'
-    }, {
-        name: 'facebook_auth',
-        description: 'Are you using Firebase Facebook Authentication? (y/n)',
-        default: 'n'
-    }, {
-        name: 'google_auth',
-        description: 'Are you using Firebase Google Authentication? (y/n)',
-        default: 'n'
-    }, {
-        name: 'admob',
-        description: 'Are you using AdMob? (y/n)',
-        default: 'n'
-    }, {
-        name: 'invites',
-        description: 'Are you using Firebase Invites and/or Dynamic Links? (y/n)',
-        default: 'n'
-    }, {
-      name: 'ml_kit',
-      description: 'Are you using ML Kit? (y/n)',
-      default: 'n'
-    }], function (err, result) {
-        if (err) {
-            return console.log(err);
+      // }, {
+      //   name: 'ml_kit_natural_language_identification',
+      //   description: 'With Ml Kit, do you want to use recognize natural languages? (y/n)',
+      //   default: 'n'
+      }], function (mlkitErr, mlkitResult) {
+        if (mlkitErr) {
+          return console.log(mlkitErr);
         }
-        if (!isSelected(result.ml_kit)) {
-            mergeConfig(result);
-            promptQuestionsResult(result);
-            askSaveConfigPrompt();
-        } else {
-            prompt.get([{
-                name: 'ml_kit_text_recognition',
-                description: 'With Ml Kit, do you want to recognize text? (y/n)',
-                default: 'n'
-            }, {
-                name: 'ml_kit_barcode_scanning',
-                description: 'With Ml Kit, do you want to scan barcodes? (y/n)',
-                default: 'n'
-            }, {
-                name: 'ml_kit_face_detection',
-                description: 'With Ml Kit, do you want to detect faces? (y/n)',
-                default: 'n'
-            }, {
-                name: 'ml_kit_image_labeling',
-                description: 'With Ml Kit, do you want to label images? (y/n)',
-                default: 'n'
-            }, {
-                name: 'ml_kit_custom_model',
-                description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
-                default: 'n'
-            }], function (mlkitErr, mlkitResult) {
-                if (mlkitErr) {
-                    return console.log(mlkitErr);
-                }
-                console.log("result: " + JSON.stringify(result));
-                console.log("mlkitResult: " + JSON.stringify(mlkitResult));
-                for (var attrname in mlkitResult) { result[attrname] = mlkitResult[attrname]; }
-                console.log("mergedResult result: " + JSON.stringify(result));
-                mergeConfig(result);
-                promptQuestionsResult(result);
-                askSaveConfigPrompt();
-          });
+        for (var attrname in mlkitResult) {
+          result[attrname] = mlkitResult[attrname];
         }
-    });
+        mergeConfig(result);
+        promptQuestionsResult(result);
+        askSaveConfigPrompt();
+      });
+    }
+  });
 }
 
 function promptQuestionsResult(result) {
-    if (usingiOS) {
-        writePodFile(result);
-        exposeAdMobSymbols(isSelected(result.admob));
-        writeBuildscriptHook(isSelected(result.crashlytics));
+  if (usingiOS) {
+    if (!externalPushClientOnly) {
+      writePodFile(result);
     }
-    if (usingAndroid) {
-        writeGradleFile(result);
-        writeGoogleServiceCopyHook();
-        writeGoogleServiceGradleHook(result);
-        echoAndroidManifestChanges(result);
-    }
-    console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
+    writeGoogleServiceCopyHook();
+    writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
+    writeBuildscriptHookForFirestore(isSelected(result.firestore) && !supportsIOSModernBuildSystem);
+  }
+
+  if (usingAndroid) {
+    writeGradleFile(result);
+    writeGoogleServiceCopyHook();
+    writeGoogleServiceGradleHook(result);
+    echoAndroidManifestChanges(result);
+    activateAndroidPushNotificationsLib(isSelected(result.messaging) || externalPushClientOnly);
+    activateAndroidMLKitCustomModelLib(isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model));
+  }
+
+  console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
 }
 
 function echoAndroidManifestChanges(result) {
-    if (isSelected(result.ml_kit)) {
-      var selectedFeatures = [];
-      if (isSelected(result.ml_kit_text_recognition)) {
-        selectedFeatures.push("text");
-      }
-      if (isSelected(result.ml_kit_barcode_scanning)) {
-        selectedFeatures.push("barcode");
-      }
-      if (isSelected(result.ml_kit_face_detection)) {
-        selectedFeatures.push("face");
-      }
-      if (isSelected(result.ml_kit_image_labeling)) {
-        selectedFeatures.push("label");
-      }
-      if (selectedFeatures.length > 0) {
-        console.log('\n######################################################################################################');
-        console.log('Open your app\'s resources/Android/AndroidManifest.xml file and add this (see the demo for an example):');
-        console.log('<meta-data\n' +
-            '    android:name="com.google.firebase.ml.vision.DEPENDENCIES"\n' +
-            '    android:value="' + selectedFeatures.join(',') + '" />');
-        console.log('######################################################################################################\n');
-      }
+  if (isSelected(result.ml_kit)) {
+    var selectedFeatures = [];
+    if (isSelected(result.ml_kit_text_recognition)) {
+      selectedFeatures.push("ocr");
     }
+    if (isSelected(result.ml_kit_barcode_scanning)) {
+      selectedFeatures.push("barcode");
+    }
+    if (isSelected(result.ml_kit_face_detection)) {
+      selectedFeatures.push("face");
+    }
+    if (isSelected(result.ml_kit_image_labeling)) {
+      selectedFeatures.push("label");
+    }
+    if (selectedFeatures.length > 0) {
+      console.log('\n######################################################################################################');
+      console.log('Open your app\'s resources/Android/AndroidManifest.xml file and add this (see the demo for an example):');
+      console.log('<meta-data\n' +
+          '    android:name="com.google.firebase.ml.vision.DEPENDENCIES"\n' +
+          '    android:value="' + selectedFeatures.join(',') + '" />');
+      console.log('######################################################################################################\n');
+    }
+  }
 }
 
-function exposeAdMobSymbols(enable) {
-    if (enable && fs.existsSync(directories.ios + '/build.xcconfig.admob')) {
-        fs.renameSync(directories.ios + '/build.xcconfig.admob', directories.ios + '/build.xcconfig');
-    } else if (!enable && fs.existsSync(directories.ios + '/build.xcconfig')) {
-        fs.renameSync(directories.ios + '/build.xcconfig', directories.ios + '/build.xcconfig.admob');
-    }
+function activateAndroidPushNotificationsLib(enable) {
+  if (enable && fs.existsSync(path.join(directories.android, 'firebase-release.aar-disabled'))) {
+    fs.renameSync(path.join(directories.android, 'firebase-release.aar-disabled'), path.join(directories.android, 'firebase-release.aar'));
+  } else if (!enable && fs.existsSync(path.join(directories.android, 'firebase-release.aar'))) {
+    fs.renameSync(path.join(directories.android, 'firebase-release.aar'), path.join(directories.android, 'firebase-release.aar-disabled'));
+  }
+}
+
+function activateAndroidMLKitCustomModelLib(enable) {
+  if (enable && fs.existsSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'))) {
+    fs.renameSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'), path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'));
+  } else if (!enable && fs.existsSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'))) {
+    fs.renameSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'), path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'));
+  }
 }
 
 function askSaveConfigPrompt() {
-    prompt.get({
-        name: 'save_config',
-        description: 'Do you want to save the selected configuration. Reinstalling the dependency will reuse the setup from: ' + pluginConfigFile + '. CI will be easier. (y/n)',
-        default: 'y'
-    }, function (err, result) {
-        if (err) {
-            return console.log(err);
-        }
-        if (isSelected(result.save_config)) {
-            saveConfig();
-        }
-    });
+  prompt.get({
+    name: 'save_config',
+    description: 'Do you want to save the selected configuration. Reinstalling the dependency will reuse the setup from: ' + pluginConfigFile + '. CI will be easier. (y/n)',
+    default: 'y'
+  }, function (err, result) {
+    if (err) {
+      return console.log(err);
+    }
+    if (isSelected(result.save_config)) {
+      saveConfig();
+    }
+  });
 }
 
 /**
@@ -3088,22 +4528,33 @@ function askSaveConfigPrompt() {
  * @param {any} result The answers to the micro-service prompts
  */
 function writePodFile(result) {
-    if(!fs.existsSync(directories.ios)) {
-        fs.mkdirSync(directories.ios);
-    }
-    try {
-        fs.writeFileSync(directories.ios + '/Podfile',
-`pod 'Firebase/Core', '~> 5.5.0' 
-pod 'Firebase/Auth'
+  if (!fs.existsSync(directories.ios)) {
+    fs.mkdirSync(directories.ios);
+  }
+  try {
+    fs.writeFileSync(directories.ios + '/Podfile',
+// The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
+(isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
+
+# With NativeScript < 5.2 we can't bump Firebase/Core beyond 5.15.0, but with 5.2+ we can
+pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '5.16.0' : '5.15.0') + `'
+
+# Authentication
+` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
 
 # Realtime DB
 ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
 
-# Cloud Firestore
-` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
+# Cloud Firestore (sticking to 0.14 for now because of build error - see https://github.com/firebase/firebase-ios-sdk/issues/2177)
+` + (isSelected(result.firestore) && !supportsIOSModernBuildSystem ? `` : `#`) + `pod 'FirebaseFirestore', '~> 0.14.0'
+# .. unless the modern build system is supported, then we can use the latest version (NativeScript 5.2+)
+` + (isSelected(result.firestore) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/Firestore'
 
 # Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
+
+# Performance Monitoring
+` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'Firebase/Performance'
 
 # Crash Reporting
 ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
@@ -3125,14 +4576,23 @@ end`) + `
 # Firebase Cloud Messaging (FCM)
 ` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
-# Firebase Storage
+# Firebase In-App Messaging (supported on NativeScript 5.2+)
+` + (isSelected(result.in_app_messaging) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
+
+# Firebase Cloud Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
+
+# Firebase Cloud Functions
+` + (isSelected(result.functions) ? `` : `#`) + `pod 'Firebase/Functions'
 
 # AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Invites / Dynamic Links
+# Invites
 ` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
+
+# Dynamic Links
+` + (isSelected(result.dynamic_links) ? `` : `#`) + `pod 'Firebase/DynamicLinks'
 
 # ML Kit
 ` + (isSelected(result.ml_kit) ? `` : `#`) + `pod 'Firebase/MLVision'
@@ -3141,18 +4601,20 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_face_detection) ? `` : `#`) + `pod 'Firebase/MLVisionFaceModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
+# Natural Language is commented for now, because of (likely) this issue: https://github.com/firebase/firebase-ios-sdk/issues/2324
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `#` : `#`) + `pod 'Firebase/MLNLLanguageID'
 
 # Facebook Authentication
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit', '~> 4.38.0'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit', '~> 4.38.0'
 
 # Google Authentication
 ` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`);
-        console.log('Successfully created iOS (Pod) file.');
-    } catch(e) {
-        console.log('Failed to create iOS (Pod) file.');
-        console.log(e);
-    }
+    console.log('Successfully created iOS (Pod) file.');
+  } catch (e) {
+    console.log('Failed to create iOS (Pod) file.');
+    console.log(e);
+  }
 }
 
 /**
@@ -3160,20 +4622,20 @@ end`) + `
  *
  * @param {any} enable Is Crashlytics enabled
  */
-function writeBuildscriptHook(enable) {
-    var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
+function writeBuildscriptHookForCrashlytics(enable) {
+  var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-crashlytics-buildscript.js");
 
-    if (!enable) {
-        if (fs.existsSync(scriptPath)) {
-            fs.unlinkSync(scriptPath);
-        }
-        return
+  if (!enable) {
+    if (fs.existsSync(scriptPath)) {
+      fs.unlinkSync(scriptPath);
     }
+    return
+  }
 
-    console.log("Install Crashlytics buildscript hook.");
-    try {
-        var scriptContent =
-`const fs = require('fs-extra');
+  console.log("Install Crashlytics buildscript hook.");
+  try {
+    var scriptContent =
+        `const fs = require('fs-extra');
 const path = require('path');
 const xcode = require('xcode');
 
@@ -3242,7 +4704,7 @@ module.exports = function($logger, $projectData, hookArgs) {
           if (fs.existsSync(xcodeProjectPath)) {
             var xcodeProject = xcode.project(xcodeProjectPath);
             xcodeProject.parseSync();
-            var options = { shellPath: '/bin/sh', shellScript: '\${PODS_ROOT}/Fabric/run' };
+            var options = { shellPath: '/bin/sh', shellScript: '\"\${PODS_ROOT}/Fabric/run\"' };
             xcodeProject.addBuildPhase(
               [], 'PBXShellScriptBuildPhase', 'Configure Crashlytics', undefined, options
             ).buildPhase;
@@ -3250,7 +4712,8 @@ module.exports = function($logger, $projectData, hookArgs) {
             $logger.trace('Xcode project written');
           } else {
             $logger.error(xcodeProjectPath + ' is missing.');
-            reject()
+            reject();
+            return;
           }
 
           // Logging from stdout/stderr
@@ -3273,7 +4736,8 @@ module.exports = function($logger, $projectData, hookArgs) {
             fs.writeFileSync(mainmPath, mainmContent);
           } else {
             $logger.error(mainmPath + ' is missing.');
-            reject()
+            reject();
+            return;
           }
 
           resolve();
@@ -3291,19 +4755,110 @@ module.exports = function($logger, $projectData, hookArgs) {
   });
 };
 `;
-        var afterPrepareDirPath = path.dirname(scriptPath);
-        var hooksDirPath = path.dirname(afterPrepareDirPath);
-        if (!fs.existsSync(afterPrepareDirPath)) {
-            if (!fs.existsSync(hooksDirPath)) {
-                fs.mkdirSync(hooksDirPath);
-            }
-            fs.mkdirSync(afterPrepareDirPath);
-        }
-        fs.writeFileSync(scriptPath, scriptContent);
-    } catch(e) {
-        console.log("Failed to install Crashlytics buildscript hook.");
-        console.log(e);
+    var afterPrepareDirPath = path.dirname(scriptPath);
+    var hooksDirPath = path.dirname(afterPrepareDirPath);
+    if (!fs.existsSync(afterPrepareDirPath)) {
+      if (!fs.existsSync(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+      }
+      fs.mkdirSync(afterPrepareDirPath);
     }
+    fs.writeFileSync(scriptPath, scriptContent);
+  } catch (e) {
+    console.log("Failed to install Crashlytics buildscript hook.");
+    console.log(e);
+  }
+}
+
+/**
+ * Create the iOS build script for setting the workspace to the legacy build system (for now).
+ *
+ * @param {any} enable is Firestore enabled
+ */
+function writeBuildscriptHookForFirestore(enable) {
+  var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-firestore-buildscript.js");
+
+  if (!enable) {
+    if (fs.existsSync(scriptPath)) {
+      fs.unlinkSync(scriptPath);
+    }
+    return
+  }
+
+  console.log("Install Firestore buildscript hook.");
+  try {
+    var scriptContent =
+        `const fs = require('fs-extra');
+const path = require('path');
+
+module.exports = function($logger, $projectData, hookArgs) {
+  const platform = hookArgs.platform.toLowerCase();
+  return new Promise(function(resolve, reject) {
+    const isNativeProjectPrepared = !hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare;
+    if (isNativeProjectPrepared) {
+      try {
+        if (platform !== 'ios') {
+          resolve();
+          return;
+        }
+
+        const sanitizedAppName = path.basename($projectData.projectDir).split('').filter((c) => /[a-zA-Z0-9]/.test(c)).join('');
+
+        const xcodeWorkspacePath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcworkspace');
+        if (!fs.existsSync(xcodeWorkspacePath)) {
+          $logger.error(xcodeWorkspacePath + ' is missing.');
+          reject();
+          return;
+        }
+
+        const xcodeWorkspaceShareddataPath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcworkspace', 'xcshareddata');
+        $logger.trace('Using Xcode workspace settings path', xcodeWorkspaceShareddataPath);
+        console.log('Using Xcode workspace settings path: ' + xcodeWorkspaceShareddataPath);
+
+        if (!fs.existsSync(xcodeWorkspaceShareddataPath)) {
+          fs.mkdirSync(xcodeWorkspaceShareddataPath);
+        }
+
+        const xcodeWorkspaceSettingsFile = path.join(xcodeWorkspaceShareddataPath, 'WorkspaceSettings.xcsettings');
+        // for this temp fix we assume that if the file is there, it contains the correct config
+        if (!fs.existsSync(xcodeWorkspaceSettingsFile)) {
+          fs.writeFileSync(xcodeWorkspaceSettingsFile, \`<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>BuildSystemType</key>
+	<string>Original</string>
+</dict>
+</plist>
+\`);
+          $logger.trace('Xcode workspace file written');
+        }
+        resolve();
+
+      } catch (e) {
+        $logger.error('Unknown error during prepare Firestore', e);
+        reject();
+      }
+    } else {
+      $logger.trace("Native project not prepared.");
+      resolve();
+    }
+  });
+};
+`;
+    var afterPrepareDirPath = path.dirname(scriptPath);
+    var hooksDirPath = path.dirname(afterPrepareDirPath);
+    if (!fs.existsSync(afterPrepareDirPath)) {
+      if (!fs.existsSync(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+      }
+      fs.mkdirSync(afterPrepareDirPath);
+    }
+    fs.writeFileSync(scriptPath, scriptContent);
+  } catch (e) {
+    console.log("Failed to install Firestore buildscript hook.");
+    console.log(e);
+  }
 }
 
 /**
@@ -3312,17 +4867,16 @@ module.exports = function($logger, $projectData, hookArgs) {
  * @param {any} result The answers to the micro-service prompts
  */
 function writeGradleFile(result) {
-     if(!fs.existsSync(directories.android)) {
-        fs.mkdirSync(directories.android);
-    }
-    try {
-        fs.writeFileSync(directories.android + '/include.gradle',
-`
+  if (!fs.existsSync(directories.android)) {
+    fs.mkdirSync(directories.android);
+  }
+  try {
+    fs.writeFileSync(directories.android + '/include.gradle',
+        `
 android {
-    productFlavors {
-        "fireb" {
-            dimension "fireb"
-        }
+    // (possibly-temporary) workaround for https://stackoverflow.com/questions/52518378/more-than-one-file-was-found-with-os-independent-path-meta-inf-proguard-android
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
     }
 }
 
@@ -3334,63 +4888,82 @@ repositories {
     jcenter()
 }
 
-def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.0.0"
-def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "15.0.0"
+def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.1.0"
+def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "16.0.1"
 
-if ( VersionNumber.parse( googlePlayServicesVersion ) < VersionNumber.parse( '15.0.0' ) ) {
-    throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 ( currently set to $googlePlayServicesVersion )");
+if (googlePlayServicesVersion != '+' && VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.+')) {
+    throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 / 15.0.+ (currently set to $googlePlayServicesVersion)");
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$supportVersion"
-    compile "com.android.support:cardview-v7:$supportVersion"
-    compile "com.android.support:customtabs:$supportVersion"
-    compile "com.android.support:design:$supportVersion"
-    compile "com.android.support:support-compat:$supportVersion"
+    implementation "com.android.support:appcompat-v7:$supportVersion"
+    implementation "com.android.support:cardview-v7:$supportVersion"
+    implementation "com.android.support:customtabs:$supportVersion"
+    implementation "com.android.support:design:$supportVersion"
+    implementation "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    compile "com.google.firebase:firebase-core:16.0.1"
-    compile "com.google.firebase:firebase-auth:16.0.2"
+    implementation "com.google.firebase:firebase-core:16.0.6"
+
+    // implementation "com.google.firebase:firebase-analytics:16.0.6"
 
     // for reading google-services.json and configuration
-    compile "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+    implementation "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
+
+    // Authentication
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:16.1.0"
 
     // Realtime DB
-    ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `//`) + ` compile "com.google.firebase:firebase-database:16.0.1"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:16.0.6"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` compile "com.google.firebase:firebase-firestore:17.0.4"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:18.0.0"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` compile "com.google.firebase:firebase-config:16.0.0"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:16.1.3"
+
+    // Performance Monitoring
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:16.2.3"
 
     // Crash Reporting
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.google.firebase:firebase-crash:16.0.1"
+    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-crash:16.2.1"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` compile "com.crashlytics.sdk.android:crashlytics:2.9.3"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.9.8"
 
-    // Firebase Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) ? `` : `//`) + ` compile "com.google.firebase:firebase-messaging:17.1.0"
+    // Cloud Messaging (FCM)
+    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:17.3.4"
+
+    // In-App Messaging
+    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.0.5"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` compile "com.google.firebase:firebase-storage:16.0.1"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:16.0.5"
+
+    // Cloud Functions
+    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:16.1.3"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` compile "com.google.firebase:firebase-ads:15.0.1"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:17.1.2"
 
     // ML Kit
-    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision:16.0.0"
-    ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` compile "com.google.firebase:firebase-ml-vision-image-label-model:15.0.0"
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:18.0.2"
+    ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
+    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:16.2.4"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `//` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:18.1.1"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `//` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:18.0.2"
 
     // Facebook Authentication
-    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` compile ("com.facebook.android:facebook-android-sdk:4.+"){ exclude group: 'com.google.zxing' }
+    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }
 
     // Google Sign-In Authentication
-    ` + (isSelected(result.google_auth) ? `` : `//`) + ` compile "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
+    ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:16.0.0"
 
-    // Firebase Invites / Dynamic Links
-    ` + (isSelected(result.invites) ? `` : `//`) + ` compile "com.google.firebase:firebase-invites:16.0.1"
+    // Invites
+    ` + (isSelected(result.invites) ? `` : `//`) + ` implementation "com.google.firebase:firebase-invites:16.0.6"
+
+    // Dynamic Links
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:16.1.5"
 }
 
 apply plugin: "com.google.gms.google-services"
@@ -3398,31 +4971,73 @@ apply plugin: "com.google.gms.google-services"
 // Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `//`) + `apply plugin: "io.fabric"
 `);
-        console.log('Successfully created Android (include.gradle) file.');
-    } catch(e) {
-        console.log('Failed to create Android (include.gradle) file.');
-        console.log(e);
-    }
+    console.log('Successfully created Android (include.gradle) file.');
+  } catch (e) {
+    console.log('Failed to create Android (include.gradle) file.');
+    console.log(e);
+  }
 }
 
 /**
  * Installs an after-prepare build hook to copy the app/App_Resources/Android/google-services.json to platform/android on build.
+ * Installs before-checkForChange build hook to detect changes in environment and copy GoogleServices.plist on build.
  */
 function writeGoogleServiceCopyHook() {
-    console.log("Install google-service.json copy hook.");
-    try {
-        var scriptContent =
-`
+  // Install after-prepare hook
+  console.log("Install google-service.json after-prepare copy hook.");
+  try {
+    var afterPrepareScriptContent =
+        `
 var path = require("path");
 var fs = require("fs");
 
 module.exports = function($logger, $projectData, hookArgs) {
 
-    return new Promise(function(resolve, reject) {
+return new Promise(function(resolve, reject) {
+
+        /* Decide whether to prepare for dev or prod environment */
+
+        var isReleaseBuild = (hookArgs.appFilesUpdaterOptions && hookArgs.appFilesUpdaterOptions.release) ? true : false;
+        var validProdEnvs = ['prod','production'];
+        var isProdEnv = false; // building with --env.prod or --env.production flag
+
+        if (hookArgs.platformSpecificData.env) {
+            Object.keys(hookArgs.platformSpecificData.env).forEach((key) => {
+                if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
+            });
+        }
+
+        var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+
+        /* Create info file in platforms dir so we can detect changes in environment and force prepare if needed */
+
+        var npfInfoPath = path.join($projectData.platformsDir, hookArgs.platform.toLowerCase(), ".pluginfirebaseinfo");
+        var npfInfo = {
+            buildType: buildType,
+        };
+
+        try { fs.writeFileSync(npfInfoPath, JSON.stringify(npfInfo)); }
+        catch (err) {
+            $logger.info('nativescript-plugin-firebase: unable to create '+npfInfoPath+', prepare will be forced next time!');
+        }
+
+
+        /* Handle preparing of Google Services files */
+
         if (hookArgs.platform.toLowerCase() === 'android') {
-            var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json");
             var destinationGoogleJson = path.join($projectData.platformsDir, "android", "app", "google-services.json");
             var destinationGoogleJsonAlt = path.join($projectData.platformsDir, "android", "google-services.json");
+            var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json");
+            var sourceGoogleJsonProd = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json.prod");
+            var sourceGoogleJsonDev = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json.dev");
+
+            // ensure we have both dev/prod versions so we never overwrite singlular google-services.json
+            if (fs.existsSync(sourceGoogleJsonProd) && fs.existsSync(sourceGoogleJsonDev)) {
+                if (buildType==='production') { sourceGoogleJson = sourceGoogleJsonProd; } // use prod version
+                else { sourceGoogleJson = sourceGoogleJsonDev; } // use dev version
+            }
+
+            // copy correct version to destination
             if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
                 $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
                 fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
@@ -3437,11 +5052,16 @@ module.exports = function($logger, $projectData, hookArgs) {
                 reject();
             }
         } else if (hookArgs.platform.toLowerCase() === 'ios') {
-            var sourceGooglePlist = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
-            if (!fs.existsSync(sourceGooglePlist)) {
-                $logger.warn(sourceGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
-                return reject();
-            } else {
+            // we have copied our GoogleService-Info.plist during before-checkForChanges hook, here we delete it to avoid changes in git
+            var destinationGooglePlist = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
+            var sourceGooglePlistProd = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.prod");
+            var sourceGooglePlistDev = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.dev");
+
+            // if we have both dev/prod versions, let's remove GoogleService-Info.plist in destination dir
+            if (fs.existsSync(sourceGooglePlistProd) && fs.existsSync(sourceGooglePlistDev)) {
+                if (fs.existsSync(destinationGooglePlist)) { fs.unlinkSync(destinationGooglePlist); }
+                resolve();
+            } else { // single GoogleService-Info.plist modus
                 resolve();
             }
         } else {
@@ -3450,28 +5070,142 @@ module.exports = function($logger, $projectData, hookArgs) {
     });
 };
 `;
-        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
-        var afterPrepareDirPath = path.dirname(scriptPath);
-        var hooksDirPath = path.dirname(afterPrepareDirPath);
-        if (!fs.existsSync(afterPrepareDirPath)) {
-            if (!fs.existsSync(hooksDirPath)) {
-                fs.mkdirSync(hooksDirPath);
-            }
-            fs.mkdirSync(afterPrepareDirPath);
-        }
-        fs.writeFileSync(scriptPath, scriptContent);
-    } catch(e) {
-        console.log("Failed to install google-service.json copy hook.");
-        console.log(e);
+    var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
+    var afterPrepareDirPath = path.dirname(scriptPath);
+    var hooksDirPath = path.dirname(afterPrepareDirPath);
+    if (!fs.existsSync(afterPrepareDirPath)) {
+      if (!fs.existsSync(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+      }
+      fs.mkdirSync(afterPrepareDirPath);
     }
+    fs.writeFileSync(scriptPath, afterPrepareScriptContent);
+  } catch (e) {
+    console.log("Failed to install google-service.json after-prepare copy hook.");
+    console.log(e);
+  }
+
+  /*
+     Install before-checkForChanges hook
+  */
+
+  console.log("Install google-service.json before-checkForChanges copy hook.");
+  try {
+    var beforeCheckForChangesContent =
+        `
+var path = require("path");
+var fs = require("fs");
+
+module.exports = function($logger, $projectData, hookArgs) {
+    return new Promise(function(resolve, reject) {
+
+        /* Decide whether to prepare for dev or prod environment */
+
+        var isReleaseBuild = hookArgs['checkForChangesOpts']['projectData']['$options']['argv']['release'] || false;
+        var validProdEnvs = ['prod','production'];
+        var isProdEnv = false; // building with --env.prod or --env.production flag
+
+        var env = hookArgs['checkForChangesOpts']['projectData']['$options']['argv']['env'];
+        if (env) {
+            Object.keys(env).forEach((key) => {
+                if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
+            });
+        }
+
+        var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+
+        /*
+            Detect if we have nativescript-plugin-firebase temp file created during after-prepare hook, so we know
+            for which environment {development|prod} the project was prepared. If needed, we delete the NS .nsprepareinfo
+            file so we force a new prepare
+        */
+        var platform = hookArgs['checkForChangesOpts']['platform'].toLowerCase(); // ios | android
+        var platformsDir = hookArgs['checkForChangesOpts']['projectData']['platformsDir'];
+        var appResourcesDirectoryPath = hookArgs['checkForChangesOpts']['projectData']['appResourcesDirectoryPath'];
+        var forcePrepare = true; // whether to force NS to run prepare, defaults to true
+        var npfInfoPath = path.join(platformsDir, platform, ".pluginfirebaseinfo");
+        var nsPrepareInfoPath = path.join(platformsDir, platform, ".nsprepareinfo");
+        var copyPlistOpts = { platform, appResourcesDirectoryPath, buildType, $logger }
+
+        if (fs.existsSync(npfInfoPath)) {
+            var npfInfo = undefined;
+            try { npfInfo = JSON.parse(fs.readFileSync(npfInfoPath, 'utf8')); }
+            catch (e) { $logger.info('nativescript-plugin-firebase: error reading '+npfInfoPath); }
+
+            if (npfInfo && npfInfo.hasOwnProperty('buildType') && npfInfo.buildType===buildType) {
+                $logger.info('nativescript-plugin-firebase: building for same environment, not forcing prepare.');
+                forcePrepare=false;
+            }
+        } else { $logger.info('nativescript-plugin-firebase: '+npfInfoPath+' not found, forcing prepare!'); }
+
+        if (forcePrepare && fs.existsSync(nsPrepareInfoPath)) {
+            $logger.info('nativescript-plugin-firebase: running release build or change in environment detected, forcing prepare!');
+
+            if (fs.existsSync(npfInfoPath)) { fs.unlinkSync(npfInfoPath); }
+            if (fs.existsSync(nsPrepareInfoPath)) { fs.unlinkSync(nsPrepareInfoPath); }
+
+            if (copyPlist(copyPlistOpts)) { resolve(); } else { reject(); }
+        } else { resolve(); }
+    });
+};
+
+/*
+    Handle preparing of Google Services files for iOS
+*/
+var copyPlist = function(copyPlistOpts) {
+    if (copyPlistOpts.platform === 'android') { return true; }
+    else if (copyPlistOpts.platform === 'ios') {
+        var sourceGooglePlistProd = path.join(copyPlistOpts.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.prod");
+        var sourceGooglePlistDev = path.join(copyPlistOpts.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.dev");
+        var destinationGooglePlist = path.join(copyPlistOpts.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
+
+        // if we have both dev/prod versions, we copy (or overwrite) GoogleService-Info.plist in destination dir
+        if (fs.existsSync(sourceGooglePlistProd) && fs.existsSync(sourceGooglePlistDev)) {
+            if (copyPlistOpts.buildType==='production') { // use prod version
+                copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistProd + " to " + destinationGooglePlist + ".");
+                fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistProd));
+                return true;
+            } else { // use dev version
+                copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistDev + " to " + destinationGooglePlist + ".");
+                fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistDev));
+                return true;
+            }
+        } else if (!fs.existsSync(destinationGooglePlist)) { // single GoogleService-Info.plist modus but missing`;
+    if (externalPushClientOnly) {
+      beforeCheckForChangesContent += `
+            return true; // this is a push-only project, so this is allowed`;
+    } else {
+      beforeCheckForChangesContent += `
+            copyPlistOpts.$logger.warn("nativescript-plugin-firebase: " + destinationGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
+            return false;`;
+    }
+    beforeCheckForChangesContent += `
+        } else {
+            return true; // single GoogleService-Info.plist modus
+        }
+    } else { return true; }
+}
+`;
+    var scriptPath = path.join(appRoot, "hooks", "before-checkForChanges", "firebase-copy-google-services.js");
+    var afterPrepareDirPath = path.dirname(scriptPath);
+    var hooksDirPath = path.dirname(afterPrepareDirPath);
+    if (!fs.existsSync(afterPrepareDirPath)) {
+      if (!fs.existsSync(hooksDirPath)) {
+        fs.mkdirSync(hooksDirPath);
+      }
+      fs.mkdirSync(afterPrepareDirPath);
+    }
+    fs.writeFileSync(scriptPath, beforeCheckForChangesContent);
+  } catch (e) {
+    console.log("Failed to install google-service.json before-checkForChanges copy hook.");
+    console.log(e);
+  }
 }
 
 function writeGoogleServiceGradleHook(result) {
-    console.log("Install firebase-build-gradle hook.");
-    try {
-        var scriptContent =
-`
-var path = require("path");
+  try {
+    var scriptContent =
+        `var path = require("path");
 var fs = require("fs");
 
 module.exports = function($logger, $projectData) {
@@ -3486,19 +5220,27 @@ module.exports = function($logger, $projectData) {
                 let repositoriesNode = buildGradleContent.indexOf("repositories", 0);
                 if (repositoriesNode > -1) {
                     repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
-                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '	    maven { url "https://maven.fabric.io/public" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
+                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '\\t\\tmaven { url "https://maven.fabric.io/public" }\\n\\t\\tmaven { url "https://dl.bintray.com/android/android-tools" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
                 }
 
                 let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
                 if (dependenciesNode > -1) {
                     dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
-                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.25.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                    // see https://docs.fabric.io/android/changelog.html
+                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.26.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                }
+
+            } else if (buildGradleContent.indexOf("https://dl.bintray.com/android/android-tools") === -1) {
+                let repositoriesNode = buildGradleContent.indexOf("repositories", 0);
+                if (repositoriesNode > -1) {
+                    repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
+                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '\\t\\tmaven { url "https://dl.bintray.com/android/android-tools" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
                 }
             }
 
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
-            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.0.1"';
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.2.0"';
             if (googleServicesPattern.test(buildGradleContent)) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {
@@ -3506,7 +5248,7 @@ module.exports = function($logger, $projectData) {
                     return match + '\\n        ' + latestGoogleServicesPlugin;
                 });
             }
-    
+
             fs.writeFileSync(projectBuildGradlePath, buildGradleContent);
         }
 
@@ -3520,14 +5262,26 @@ task copyMetadata {
   doLast {
     copy {
         from "$projectDir/src/main/assets/metadata"
-        def toDir = project.hasProperty("release") ? "release" : "debug";
-        if (new File("$projectDir/build/intermediates/assets").listFiles() != null) {
+        def toDir = project.hasProperty("release") ? "release" : "debug"
+        def toAssetsDir = "assets"
+
+        if (new File("$projectDir/build/intermediates/merged_assets").listFiles() != null) {
+          toAssetsDir = "merged_assets"
+          toDir = new File("$projectDir/build/intermediates/merged_assets").listFiles()[0].name
+          if (toDir == 'debug') {
+            toDir += "/mergeDebugAssets"
+          } else {
+            toDir += "/mergeReleaseAssets"
+          }
+          toDir += "/out"
+        } else if (new File("$projectDir/build/intermediates/assets").listFiles() != null) {
           toDir = new File("$projectDir/build/intermediates/assets").listFiles()[0].name
           if (toDir != 'debug' && toDir != 'release') {
             toDir += "/release"
           }
         }
-        into "$projectDir/build/intermediates/assets/" + toDir + "/metadata"
+
+        into "$projectDir/build/intermediates/" + toAssetsDir + "/" + toDir + "/metadata"
     }
   }
 }\`;
@@ -3539,13 +5293,12 @@ task copyMetadata {
     });
 };
 `;
-        console.log("Writing 'firebase-build-gradle.js' to " + appRoot + "hooks/after-prepare");
-        var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-build-gradle.js");
-        fs.writeFileSync(scriptPath, scriptContent);
-    } catch(e) {
-        console.log("Failed to install firebase-build-gradle hook.");
-        console.log(e);
-    }
+    var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-build-gradle.js");
+    fs.writeFileSync(scriptPath, scriptContent);
+  } catch (e) {
+    console.log("Failed to install firebase-build-gradle hook.");
+    console.log(e);
+  }
 }
 
 /**
@@ -3555,7 +5308,7 @@ task copyMetadata {
  * @returns {boolean} The answer is yes, {false} The answer is no
  */
 function isSelected(value) {
-    return value === true || (typeof value === "string" && value.toLowerCase() === 'y');
+  return value === true || (typeof value === "string" && value.toLowerCase() === 'y');
 }
 
 function isPresent(value) {

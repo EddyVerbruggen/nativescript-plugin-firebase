@@ -1,15 +1,25 @@
 import * as firebase from "../../firebase";
+// import * as firebaseSdk from 'firebase/app';
 
-export module firestore {
-  export class Firestore {
+export namespace firestore {
+  export class Firestore /*implements firebaseSdk.firestore.Firestore*/ {
     collection(collectionPath: string): firebase.firestore.CollectionReference {
       return firebase.firestore.collection(collectionPath);
     }
 
+    doc(path: string): firebase.firestore.DocumentReference {
+      return firebase.firestore.docRef(path);
+    }
+
     FieldValue(): firebase.firestore.FieldValue {
-      return {
-        serverTimestamp: () => "SERVER_TIMESTAMP"
-      }
+      return <any>{
+        type: undefined,
+        value: undefined,
+        serverTimestamp: () => "SERVER_TIMESTAMP",
+        delete: () => "DELETE_FIELD",
+        arrayUnion: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_UNION", elements),
+        arrayRemove: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_REMOVE", elements)
+      };
     }
 
     GeoPoint(latitude: number, longitude: number): firebase.firestore.GeoPoint {

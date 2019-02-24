@@ -1,5 +1,5 @@
-import { MLKitOptions } from "../";
-import { MLKitCameraView, MLKitCloudOptions, MLKitResult } from "../index";
+import { MLKitVisionOptions } from "../";
+import { MLKitCameraView, MLKitVisionResult } from "../index";
 
 export interface MLKitImageLabelingResultLabel {
   text: string;
@@ -8,25 +8,22 @@ export interface MLKitImageLabelingResultLabel {
   android?: any;
 }
 
-export interface MLKitImageLabelingCloudResult extends MLKitResult {
+export interface MLKitImageLabelingCloudResult extends MLKitVisionResult {
   labels: Array<MLKitImageLabelingResultLabel>;
 }
 
 export interface MLKitImageLabelingOnDeviceResult extends MLKitImageLabelingCloudResult {
 }
 
-export interface MLKitImageLabelingOnDeviceOptions extends MLKitOptions {
+export interface MLKitImageLabelingOptions extends MLKitVisionOptions {
   /**
    * 0.5 by default
    */
   confidenceThreshold?: number;
 }
 
-export interface MLKitImageLabelingCloudOptions extends MLKitCloudOptions {
-}
+export declare function labelImageOnDevice(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingOnDeviceResult>;
 
-export declare function labelImageOnDevice(options: MLKitImageLabelingOnDeviceOptions): Promise<MLKitImageLabelingOnDeviceResult>;
-
-export declare function labelImageCloud(options: MLKitImageLabelingCloudOptions): Promise<MLKitImageLabelingCloudResult>;
+export declare function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingCloudResult>;
 
 export declare class MLKitImageLabeling extends MLKitCameraView {}

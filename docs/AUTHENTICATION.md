@@ -5,7 +5,7 @@ You can sign in a user either
 
 * [anonymously](#anonymous-login),
 * by [email and password](#email-password-login),
-* by [email link](#email-link),
+* by [email link](#email-link-login),
 * by [phone verification](#phone-verification),
 * using a [custom token](#custom-login),
 * using [Facebook](#facebook-login),
@@ -263,7 +263,7 @@ Enable email-password login in your firebase instance, and flip the "E-mail link
 This login type allows your users to login without providing a password. They can simply click a link
 and get redirected to the app. The app may even run on a different device.
 
-Enable dynamic links, as described in the [Dynamic Links readme]("./INVITES_DYNAMICLINKS.md"), because the user
+Enable dynamic links, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md), because the user
 that receives the link will need to be redirected to your app.
 
 #### iOS configuration
@@ -271,7 +271,7 @@ that receives the link will need to be redirected to your app.
 
 #### Android configuration
 - Specify the package name of your app in the Firebase console.
-- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme]("./INVITES_DYNAMICLINKS.md").
+- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md).
 - Also add an `android:host` for the `emailLinkOptions.url` to your `app/App_Resources/Android/AndroidManifest.xml` file as described in that readme.
 
 <details>
@@ -320,9 +320,7 @@ that receives the link will need to be redirected to your app.
 </details>
 
 
-#### Managing email-password accounts
-
-##### Creating a Password account
+#### Creating a Password account
 This may not work on an (Android) simulator. See #463.
 
 <details>
@@ -365,41 +363,81 @@ This may not work on an (Android) simulator. See #463.
 
 
 #### Resetting a password
-```js
-  firebase.resetPassword({
-    email: 'useraccount@provider.com'
-  }).then(
-      function () {
-        // called when password reset was successful,
-        // you could now prompt the user to check his email
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
-```
+> ⚠️ The method name and signature has changed in 8.0.0 from `resetPassword` to `sendPasswordResetEmail` to better align with the Web API.
 
-#### Changing a password
-```js
-  firebase.changePassword({
-    email: 'useraccount@provider.com',
-    oldPassword: 'myOldPassword',
-    newPassword: 'myNewPassword'
-  }).then(
-      function () {
-        // called when password change was successful
-      },
-      function (errorMessage) {
-        console.log(errorMessage);
-      }
-  );
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.sendPasswordResetEmail("user@example.com")
+      .then(() => console.log("Password reset email sent"))
+      .catch(error => console.log("Error sending password reset email: " + error));
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().sendPasswordResetEmail("user@example.com")
+      .then(() => console.log("Password reset email sent"))
+      .catch(error => console.log("Error sending password reset email: " + error));
+```
+</details>
+
+#### Updating an email address
+Note that changing an email address may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.updateEmail("user@example.com")
+      .then(() => console.log("Email updated"))
+      .catch(error => console.log("Error updating email: " + error));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().updateEmail("user@example.com")
+      .then(() => console.log("Email updated"))
+      .catch(error => console.log("Error updating email: " + error));
+```
+</details>
+
+#### Updating a password
+> ⚠️ The method name and signature has changed in 8.0.0 from `changePassword` to `updatePassword` to better align with the Web API.
+
+Note that changing a password may fail if your login for this `email` was too long ago (per Firebase's standards, whatever they are).
+
+<details>
+ <summary>Native API</summary>
+
+```typescript
+  firebase.updatePassword("myNewPassword")
+      .then(() => console.log("Password updated"))
+      .catch(error => console.log("Error updating password: " + error));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().updatePassword("myNewPassword")
+      .then(() => console.log("Password updated"))
+      .catch(error => console.log("Error updating password: " + error));
+```
+</details>
 
 ### Phone Verification
 * Don't forget to enable Phone login in your firebase instance.
 * You can only test this on a real device (not on an emulator/simulator).
 * Use the phone number of the device you're testing on.
-* _ANDROID:_ [Make sure you've uploaded your SHA1 fingerprint(s)](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
+* _ANDROID:_ [Make sure you've uploaded your SHA1 fingerprints](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
 * _iOS:_ Make sure you have messaging enabled as well, as this uses push notifications on iOS.
 
 ```js
@@ -499,7 +537,8 @@ Upon successful authentication, Facebook creates an access token that can be obt
    			android:name="com.tns.NativeScriptActivity"
    			..>
    ```
-3. Create a file `app\App_Resources\Android\values\facebooklogin.xml` and add this (replace the id):
+   
+3. Create a file `facebooklogin.xml`. Depending on your project structure this either goes into `App_Resources/Android/values/` or `App_Resources/Android/src/main/res/values/`. Add this to the file (replace the id):
 
    ```xml
    <?xml version='1.0' encoding='utf-8'?>
@@ -513,6 +552,14 @@ Upon successful authentication, Facebook creates an access token that can be obt
 ### Google Sign-In
 
 First, enable Google Sign-In in your firebase instance and add the _Web SDK configuration_.
+
+Make sure you've uploaded your [SHA1 fingerprints](https://developers.google.com/android/guides/client-auth) to the Firebase console, then download the latest `google-services.json` file and add it to `app/App_Resources/Android`.
+
+> **Uploading your SHA1 fingerprint is required for _debug_ and _release_ builds.**
+
+> If you have enabled Google Play's _App Signing_ feature you will need to add the SHA1 for Google's signing certificate to your Firebase project's fingerprints. If you fail to do this, your release builds will fail because they were not signed by Google. See image below:
+>
+> <img src="./images/app-signing.png" max-height="300px" alt="Google App Signing"/>
 
 Then add the following lines to your code and check for setup instructions for your platform below.
 
@@ -531,6 +578,18 @@ Then add the following lines to your code and check for setup instructions for y
         console.log(errorMessage);
       }
   );
+```
+
+#### Google Access Token
+Upon successful authentication, Google creates an access token that can be obtained from the login method's result object. This access token can then be used for Google API:
+
+```js
+"providers": [
+         {
+             "id": "google.com",
+             "token": "<Google Access Token>"
+         }
+     ]
 ```
 
 #### iOS
@@ -587,19 +646,23 @@ To solve, you will want to pass in the appropriate iOS controller of the active 
 3. Those fingerprints need to be added to your Firebase console. Go to 'project overview', 'project settings', then scroll down a bit.
 
 ### getAuthToken
-If you want to authenticate your user from your backend server you can obtain
-a Firebase auth token for the currently logged in user.
+If you want to authenticate your user from your backend server you can obtain a Firebase auth token for the currently logged in user.
+
+You'll get the token, as well as the provider that was used to sign in, and any custom claims you may have previously set via the Firebase Admin SDK as outlined [here](https://firebase.google.com/docs/auth/admin/custom-claims):
 
 ```js
   firebase.getAuthToken({
     // default false, not recommended to set to true by Firebase but exposed for {N} devs nonetheless :)
     forceRefresh: false
   }).then(
-      function (token) {
-        console.log("Auth token retrieved: " + token);
+      function (result) {
+        // for both platforms
+        console.log("Auth token retrieved: " + result.token);
+        console.log("Sign-In provider: " + result.signInProvider);
+        console.log("Specific custom claim retrieved: " + result.claims.yourClaimKey); // or result.claims["yourClaimKey"]
       },
       function (errorMessage) {
-        console.log("Auth token retrieval error: " + errorMessage);
+        console.log("Auth result retrieval error: " + errorMessage);
       }
   );
 ```
@@ -622,6 +685,29 @@ Shouldn't be more complicated than:
   firebaseWebApi.auth().signOut()
       .then(() => console.log("Logout OK"))
       .catch(error => console.log("Logout error: " + JSON.stringify(error)));
+```
+</details>
+
+### unlinking provider
+For a given user, and a given provider ("google.com","password",...)
+
+<details>
+ <summary>Native API</summary>
+
+```js
+  user.unlink(providerId /* string */)
+      .then(user => console.log("Unlink OK, user: " + JSON.stringify(user)))
+      .catch(error => console.log("Unlink error: " + JSON.stringify(error)));
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```js
+  firebaseWebApi.auth().unlink(providerId /* string */)
+      .then(user => console.log("Unlink OK, user: " + JSON.stringify(user)))
+      .catch(error => console.log("Unlink error: " + JSON.stringify(error)));
 ```
 </details>
 

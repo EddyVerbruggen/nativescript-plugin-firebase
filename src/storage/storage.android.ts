@@ -213,7 +213,7 @@ export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
 }
 
 export function deleteFile(arg: DeleteFileOptions): Promise<void> {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     try {
 
       const storageRef = getStorageRef(reject, arg);

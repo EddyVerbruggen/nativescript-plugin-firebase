@@ -28,6 +28,22 @@ export module auth {
       });
     }
 
+    public unlink(providerId: string): Promise<any> {
+      return new Promise((resolve, reject) => {
+        firebase.unlink(providerId)
+            .then(user => {
+              this.currentUser = user;
+              resolve(user);
+            })
+            .catch(err => {
+              reject({
+                // code: "",
+                message: err
+              });
+            });
+      });
+    }
+
     public signInWithEmailAndPassword(email: string, password: string): Promise<any> {
       return new Promise((resolve, reject) => {
         firebase.login({
@@ -39,13 +55,31 @@ export module auth {
         }).then((user: User) => {
           this.currentUser = user;
           this.authStateChangedHandler && this.authStateChangedHandler(user);
-          resolve();
-        }, (err => {
-          reject({
-            // code: "",
-            message: err
+          resolve({
+            additionalUserInfo: user.additionalUserInfo,
+            credential: null,
+            operationType: "SignIn",
+            user: user,
           });
-        }));
+        }).catch(err => {
+          let code = 'auth/exception';
+          let message = err.toString();
+          // Identify code for android. Note that the IOS implementation doesn't return a code.
+          if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidCredentialsException')) {
+            code = 'auth/wrong-password';
+          } else if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidUserException')) {
+            code = 'auth/user-not-found';
+            // Note that Android returns one exception for both user not found and invalid email whereas
+            // the web api returns seperate codes. Therefore the conditional below can never be satisfied
+            // for android.
+            // } else if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidUserException')) {
+            //   code = 'auth/invalid-email'
+          }
+          reject({
+            code: code,
+            message: message
+          })
+        });
       });
     }
 
@@ -79,6 +113,30 @@ export module auth {
           this.currentUser = user;
           resolve(user);
         }).catch(err => reject(err));
+      })
+    }
+
+    public updateEmail(newEmail: string): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        firebase.updateEmail(newEmail)
+            .then(() => resolve())
+            .catch(err => reject(err));
+      })
+    }
+
+    public updatePassword(newPassword: string): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        firebase.updatePassword(newPassword)
+            .then(() => resolve())
+            .catch(err => reject(err));
+      })
+    }
+
+    public sendPasswordResetEmail(email: string): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        firebase.sendPasswordResetEmail(email)
+            .then(() => resolve())
+            .catch(err => reject(err));
       })
     }
 

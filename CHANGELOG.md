@@ -1,9 +1,121 @@
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/>
 
-[Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
-[Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
+- [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
+- [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
-## 6.5.0 (2018, August ?)
+## 8.0.0 (2019, February X)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/94?closed=1)
+
+
+## 7.7.0 (2019, January 20)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/92?closed=1)
+
+
+## 7.6.1 (2019, January 8)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/91?closed=1)
+
+
+## 7.6.0 (2018, December 21)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/90?closed=1)
+
+
+## 7.5.1 (2018, December 15)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/89?closed=1)
+
+
+## 7.5.0 (2018, December 15)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/88?closed=1)
+
+
+## 7.4.6 (2018, December 10)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/87?closed=1)
+
+
+## 7.4.5 (2018, December 10)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/86?closed=1)
+
+
+## 7.4.4 (2018, December 8)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/85?closed=1)
+
+
+## 7.4.3 (2018, December 3)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/84?closed=1)
+
+
+## 7.4.2 (2018, November 16)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/83?closed=1)
+
+
+## 7.4.1 (2018, November 10)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/82?closed=1)
+
+
+## 7.4.0 (2018, November 9)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/81?closed=1)
+
+
+## 7.3.0 (2018, October 24)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/80?closed=1)
+
+
+## 7.2.0 (2018, October 19)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/79?closed=1)
+
+
+## 7.1.6 (2018, October 12)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/78?closed=1)
+
+
+## 7.1.5 (2018, October 10)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/77?closed=1)
+
+
+## 7.1.4 (2018, October 9)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/76?closed=1)
+
+
+## 7.1.3 (2018, October 8)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/75?closed=1)
+
+
+## 7.1.2 (2018, October 2)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/74?closed=1)
+
+
+## 7.1.1 (2018, September 30)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/73?closed=1)
+
+
+## 7.1.0 (2018, September 26)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/72?closed=1)
+
+
+## 7.0.1 (2018, September 21)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/71?closed=1)
+
+
+## 7.0.0 (2018, September 19)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/70?closed=1)
+
+
+## 6.8.1 (2018, September 14)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/69?closed=1)
+
+
+## 6.8.0 (2018, September 12)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/68?closed=1)
+
+
+## 6.7.0 (2018, September 3)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/67?closed=1)
+
+
+## 6.6.0 (2018, August 28)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/66?closed=1)
+
+
+## 6.5.0 (2018, August 16)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/65?closed=1)
 
 

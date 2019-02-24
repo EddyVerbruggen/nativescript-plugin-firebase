@@ -32,6 +32,11 @@ and add this somewhere in the file (if it's not already there):
   <key>NSCameraUsageDescription</key>
   <string>Your reason here</string> <!-- better change this 😎 -->
 ```
+In order to compile, the default version on ios must be >= 9.0. 
+Edit the file build.xconfig and check that you have the following line (Without this line the default version will be 8.0 and the compilation will failed (`targeted OS version does not support use of thread local variables ...`)
+```
+IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+```
 
 ## ML Kit Features
 There are two ways of using ML Kit: 
@@ -46,11 +51,11 @@ after your app is installed from the Play Store. Add this to your `<resources>/A
 ```xml
 <meta-data
     android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-    android:value="text,face,.." />
+    android:value="ocr,face,.." />
 ```
 
-Replace `text,label,..` by whichever features you need. So if you only need Text recognitions, use `"text"`, but if you want
-to perform Text recognition, Face detection, Barcode scanning, and Image labeling on-device, use `"text,face,barcode,label"`.
+Replace `ocr,label,..` by whichever features you need. So if you only need Text recognitions, use `"ocr"`, but if you want
+to perform Text recognition, Face detection, Barcode scanning, and Image labeling on-device, use `"ocr,face,barcode,label"`.
 
 Note that (because of how iOS works) we bundle the models you've picked during plugin configuration with your app.
 So if you have a change of heart, re-run the configuration as explained at the top of this document. 
@@ -75,13 +80,11 @@ To be able to use Cloud features you need to do two things:
 |Feature|On-device|Cloud
 |---|---|---
 |[Text recognition](#text-recognition)|✅|✅
-|[Face detection](#face-detection)|✅*|
+|[Face detection](#face-detection)|✅|
 |[Barcode scanning](#barcode-scanning)|✅|
 |[Image labeling](#image-labeling)|✅|✅
 |[Landmark recognition](#landmark-recognition)||✅
-|[Custom model inference](#custom-model-inference)||
-
-*) _Currently detecting faces from still images doesn't work on iOS (from the camera stream works fine tho)._
+|[Custom model inference](#custom-model-inference)|✅|✅
 
 ### Text recognition
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_recognition.png" height="153px" alt="ML Kit - Text recognition"/>
@@ -90,28 +93,56 @@ To be able to use Cloud features you need to do two things:
 
 #### Still image (on-device)
 
+##### TypeScript
+
 ```typescript
-import { MLKitRecognizeTextOnDeviceResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.textrecognition.recognizeTextOnDevice({
   image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
-}).then((result: MLKitRecognizeTextOnDeviceResult) => { // just look at this type to see what else is returned
-  console.log(result.blocks.map(block => block.text).join(""));
+}).then((result: MLKitRecognizeTextResult) => { // just look at this type to see what else is returned
+  console.log(result.text ? result.text : "");
 }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+##### JavaScript
+
+```js
+var firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.textrecognition.recognizeTextOnDevice({
+  image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
+}).then(function(result) {
+  console.log(result.text ? result.text : "");
+}).catch(function (errorMessage) { return console.log("ML Kit error: " + errorMessage); });
 ```
 
 #### Still image (cloud)
 
+##### TypeScript
+
 ```typescript
-import { MLKitRecognizeTextCloudResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
+import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.textrecognition.recognizeTextCloud({
   image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
 })
-.then((result: MLKitRecognizeTextCloudResult) => console.log(result.text))
+.then((result: MLKitRecognizeTextResult) => console.log(result.text ? result.text : ""))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+##### JavaScript
+
+```js
+var firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.textrecognition.recognizeTextCloud({
+  image: imageSource // a NativeScript Image or ImageSource, see the demo for examples
+}).then(function(result) {
+  console.log(result.text ? result.text : "");
+}).catch(function (errorMessage) { return console.log("ML Kit error: " + errorMessage); });
 ```
 
 #### Live camera feed
@@ -120,13 +151,17 @@ The exact details of using the live camera view depend on whether or not you're 
 You can use any view-related property you like as we're extending `ContentView`.
 So things like `class`, `row`, `width`, `horizontalAlignment`, `style` are all valid properties.
 
-Plugin-specific are the optional property `processEveryNthFrame` and optional event `scanResult`.
-You can `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
+Plugin-specific are the optional properties `processEveryNthFrame`, `preferFrontCamera` (default `false`), `torchOn`, and `pause`, as well as the optional `scanResult` event.
+
+You can set `processEveryNthFrame` set to a lower value than the default (5) to put less strain on the device.
 Especially 'Face detection' seems a bit more CPU intensive, but for 'Text recognition' the default is fine.
 
-> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function. 
+If you don't destroy the scanner page/modal but instead briefly want to hide it (but keep it alive),
+you can pause the scanner with the `pause` property.
 
-##### Angular / Vue
+> Look at [the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) to see how to wire up that `onTextRecognitionResult` function, and how to wire `torchOn` to a `Switch`. 
+
+##### Angular
 Register a custom element like so in the component/module:
 
 ```typescript
@@ -142,8 +177,30 @@ Now you're able to use the registered element in the view:
     width="260"
     height="380"
     processEveryNthFrame="10"
+    preferFrontCamera="false"
+    [pause]="pause"
+    [torchOn]="torchOn"
     (scanResult)="onTextRecognitionResult($event)">
 </MLKitTextRecognition>
+```
+
+##### Vue
+Register a custom element like so in `main.js`:
+
+```typescript
+Vue.registerElement("MLKitTextRecognition", () => require("nativescript-plugin-firebase/mlkit/textrecognition").MLKitTextRecognition);
+```
+
+Now you're able to use the registered element in your `.Vue` file:
+
+```vue
+  <MLKitTextRecognition
+    width="260"
+    height="340"
+    processEveryNthFrame="5"
+    :torchOn="torchOn"
+    @scanResult="onTextRecognitionResult">
+  </MLKitTextRecognition>
 ```
 
 ##### XML 
@@ -159,12 +216,14 @@ Declare a namespace at the top of the embedding page, and use it anywhere on the
       width="260"
       height="380"
       processEveryNthFrame="3"
+      preferFrontCamera="false"
+      pause="{{ pause }}"
       scanResult="onTextRecognitionResult" />
 
 </Page>
 ```
 
-> Note that with NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace declaration to the TabView works just as well.
+> Note that since NativeScript 4 the `Page` tag may actually be a `TabView`, but adding the namespace declaration to the TabView works just as well.
 
 ### Face detection
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_face_detection.png" height="153px" alt="ML Kit - Face detection"/>
@@ -202,6 +261,8 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
     detectionMode="accurate"
     enableFaceTracking="true"
     minimumFaceSize="0.2"
+    preferFrontCamera="true"
+    [torchOn]="torchOn"
     (scanResult)="onFaceDetectionResult($event)">
 </MLKitFaceDetection>
 ```
@@ -238,9 +299,14 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
     width="260"
     height="380"
     formats="QR_CODE, EAN_8, EAN_13"
+    preferFrontCamera="false"
+    [torchOn]="torchOn"
     (scanResult)="onBarcodeScanningResult($event)">
 </MLKitBarcodeScanner>
 ```
+
+Note that `formats` is optional but recommended for better recognition performance. Supported types:
+`CODE_128`, `CODE_39`, `CODE_93`, `CODABAR`, `DATA_MATRIX`, `EAN_13`, `EAN_8`, `ITF`, `QR_CODE`, `UPC_A`, `UPC_E`, `PDF417`, `AZTEC`.
 
 ### Image labeling
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
@@ -289,6 +355,8 @@ registerElement("MLKitImageLabeling", () => require("nativescript-plugin-firebas
     width="260"
     height="380"
     confidenceThreshold="0.6"
+    preferFrontCamera="false"
+    [torchOn]="torchOn"
     (scanResult)="onImageLabelingResult($event)">
 </MLKitImageLabeling>
 ```
@@ -314,6 +382,59 @@ firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
 ```
 
 ### Custom model inference
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_custom_model_tflite.png" height="153px" alt="ML Kit - Custom Model (TensorFlow Lite)"/>
+
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/use-custom-models)
 
-Coming soon. See issue #702.
+⚠️ **Please take note of the following:**
+
+- Currently only models bundled with your app can be used (not ones hosted on Firebase). That may change in the future.
+- Prefix the `localModelFile` and `labelsFile` below with `~/` so they point to your `app/` folder. This is for future compatibility, because I'd like to support loading models from the native bundle as well.
+- On Android, make sure the model is not compressed by adding [your model's file extension to app.gradle](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/57969d0a62d761bffb98b19db85af88bfae858dd/demo-ng/app/App_Resources/Android/app.gradle#L22).
+- Only "Quantized" models can be used. Not "Float" models, so `modelInput.type` below must be set to `QUANT`.
+- The `modelInput.shape` parameter below must specify your model's dimensions. If you're not sure, use the script in the paragraph "Specify the model's input and output" at [the Firebase docs](https://firebase.google.com/docs/ml-kit/ios/use-custom-models).
+
+#### Still image (on-device)
+
+```typescript
+import { MLKitCustomModelResult } from "nativescript-plugin-firebase/mlkit/custommodel";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.custommodel.useCustomModel({
+  image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
+  maxResults: 10, // default 5 (limit numbers to this amount of results)
+  localModelFile: "~/custommodel/inception/inception_v3_quant.tflite", // see the demo, where the model lives in app/custommodel/etc..
+  labelsFile: "~/custommodel/inception/inception_labels.txt",
+  modelInput: [{ // Array<TNSCustomModelInput>
+    shape: [1, 299, 299, 3], // see the tips above
+    type: "QUANT" // for now, must be "QUANT" (and you should use a 'quantized' model (not 'float'))
+  }]
+})
+.then((result: MLKitCustomModelResult) => console.log(JSON.stringify(result.result)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Live camera feed
+The basics are explained above for 'Text recognition'.
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitCustomModel", () => require("nativescript-plugin-firebase/mlkit/custommodel").MLKitCustomModel);
+```
+
+```html
+<MLKitCustomModel
+    width="100%"
+    height="100%"
+    localModelFile="~/custommodel/inception/inception_v3_quant.tflite"
+    labelsFile="~/custommodel/inception/inception_labels.txt"
+    modelInputShape="1, 299, 299, 3"
+    modelInputType="QUANT"
+    processEveryNthFrame="30"
+    maxResults="5"
+    [torchOn]="torchOn"
+    (scanResult)="onCustomModelResult($event)">
+</MLKitCustomModel>
+```
+
+> ⚠️ Make sure to specify `modelInputShape` without the `[` and `]` characters. Spaces are allowed.

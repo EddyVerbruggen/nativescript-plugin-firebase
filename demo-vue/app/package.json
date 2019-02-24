@@ -1,0 +1,9 @@
+{
+  "android": {
+    "v8Flags": "--expose_gc"
+  },
+  "discardUncaughtJsExceptions": true,
+  "main": "main",
+  "name": "demo-vue",
+  "version": "1.0.0"
+}

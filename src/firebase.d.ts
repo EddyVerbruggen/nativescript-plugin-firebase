@@ -39,6 +39,16 @@ export enum LoginType {
   EMAIL_LINK
 }
 
+export enum LogComplexEventTypeParameter {
+  STRING,
+  INT,
+  FLOAT,
+  DOUBLE,
+  LONG,
+  ARRAY,
+  BOOLEAN
+}
+
 /**
  * The allowed values for QueryOptions.orderBy.type.
  */
@@ -75,10 +85,40 @@ export enum ServerValue {
   TIMESTAMP
 }
 
+export interface MessagingOptions {
+  /**
+   * For Messaging, either pass in this callback function here, or use addOnMessageReceivedCallback.
+   */
+  onPushTokenReceivedCallback?: (token: string) => void;
+
+  /**
+   * For Messaging, either pass in this callback function here, or use addOnPushTokenReceivedCallback.
+   */
+  onMessageReceivedCallback?: (message: Message) => void;
+
+  /**
+   * For Messaging (Push Notifications). Whether you want this plugin to automatically display the notifications or just notify the callback.
+   * Currently used on iOS only. Default true.
+   */
+  showNotifications?: boolean;
+
+  /**
+   * For Messaging (Push Notifications). Whether you want this plugin to always handle the notifications when the app is in foreground.
+   * Currently used on iOS only. Default false.
+   */
+  showNotificationsWhenInForeground?: boolean;
+}
+
 /**
  * The options object passed into the init function.
  */
-export interface InitOptions {
+export interface InitOptions extends MessagingOptions {
+  /**
+   * Allow the app to send analytics data to Firebase.
+   * Can also be set later with analytics.setAnalyticsCollectionEnabled.
+   * Default true.
+   */
+  analyticsCollectionEnabled?: boolean;
   /**
    * Allow disk persistence. Default true for Firestore, false for regular Firebase DB.
    */
@@ -100,16 +140,6 @@ export interface InitOptions {
    * Can be found in the firebase console.
    */
   storageBucket?: string;
-
-  /**
-   * For FCM either pass in this callback function here, or use addOnMessageReceivedCallback.
-   */
-  onPushTokenReceivedCallback?: (data: string) => void;
-
-  /**
-   * For FCM either pass in this callback function here, or use addOnPushTokenReceivedCallback.
-   */
-  onMessageReceivedCallback?: (data: Message) => void;
 
   /**
    * Get notified when a dynamic link was used to launch the app. Alternatively use addOnDynamicLinkReceivedCallback.
@@ -172,6 +202,12 @@ export interface GetAuthTokenOptions {
    * Default false.
    */
   forceRefresh?: boolean;
+}
+
+export interface GetAuthTokenResult {
+  token: string;
+  claims: { [key: string]: any; };
+  signInProvider: string;
 }
 
 export interface Provider {
@@ -355,13 +391,6 @@ export interface UpdateProfileOptions {
 }
 
 /**
- * The options object passed into the resetPassword function.
- */
-export interface ResetPasswordOptions {
-  email: string;
-}
-
-/**
  * The returned object in the callback handlers
  * of the addChildEventListener and addValueEventListener functions.
  */
@@ -371,13 +400,12 @@ export interface FBData {
   value: any;
 }
 
-/**
- * The options object passed into the changePassword function.
- */
-export interface ChangePasswordOptions {
-  email: string;
-  oldPassword: string;
-  newPassword: string;
+export interface FBDataSingleEvent extends FBData {
+  children?: Array<any>;
+}
+
+export interface FBErrorData {
+  error: string;
 }
 
 export interface AuthStateData {
@@ -488,6 +516,52 @@ export interface SendCrashLogOptions {
 export function init(options?: InitOptions): Promise<any>;
 
 // Database
+export interface OnDisconnect {
+  cancel(): Promise<any>;
+
+  remove(): Promise<any>;
+
+  set(value: any): Promise<any>;
+
+  setWithPriority(
+      value: any,
+      priority: number | string
+  ): Promise<any>;
+
+  update(values: Object): Promise<any>;
+}
+
+export interface DataSnapshot {
+  key: string;
+  ref: any; // TODO: Type it so that it returns a databaseReference.
+  child(path: string): DataSnapshot;
+
+  exists(): boolean;
+
+  forEach(action: (snapshot: DataSnapshot) => any): boolean;
+
+  getPriority(): string | number | null;
+
+  hasChild(path: string): boolean;
+
+  hasChildren(): boolean;
+
+  numChildren(): number;
+
+  toJSON(): Object;
+
+  val(): any;
+}
+
+export interface FirebaseQueryResult {
+  type: string;
+  key: string;
+  value: any;
+}
+
+export function transaction(path: string, transactionUpdate: (a: any) => any,
+                            onComplete?: (error: Error | null, committed: boolean, dataSnapshot: DataSnapshot) => any): Promise<any>;
+
 export function push(path: string, value: any): Promise<PushResult>;
 
 export function getValue(path: string): Promise<any>;
@@ -498,7 +572,7 @@ export function update(path: string, value: any): Promise<any>;
 
 export function remove(path: string): Promise<any>;
 
-export function query(onValueEvent: (data: FBData) => void, path: string, options: QueryOptions): Promise<any>;
+export function query(onValueEvent: (data: FBData | FBErrorData) => void, path: string, options: QueryOptions): Promise<any>;
 
 export function addChildEventListener(onChildEvent: (data: FBData) => void, path: string): Promise<AddEventListenerResult>;
 
@@ -506,121 +580,14 @@ export function addValueEventListener(onValueEvent: (data: FBData) => void, path
 
 export function removeEventListeners(listeners: Array<any>, path: string): Promise<any>;
 
+export function onDisconnect(path: string): OnDisconnect;
+
+export function enableLogging(logger?: boolean | ((a: string) => any), persistent?: boolean);
+
 /**
  * Tells the client to keep its local cache in sync with the server automatically.
  */
 export function keepInSync(path: string, switchOn: boolean): Promise<any>;
-
-// AdMob module
-export namespace admob {
-
-  /**
-   * The allowed values for AD_SIZE.
-   */
-  export enum AD_SIZE {
-    SMART_BANNER,
-    LARGE_BANNER,
-    BANNER,
-    MEDIUM_RECTANGLE,
-    FULL_BANNER,
-    LEADERBOARD
-  }
-
-  /**
-   * The possible error codes (see https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest#ERROR_CODE_INTERNAL_ERROR).
-   */
-  export enum ERROR_CODES {
-    ERROR_CODE_INTERNAL_ERROR,
-    ERROR_CODE_INVALID_REQUEST,
-    ERROR_CODE_NETWORK_ERROR,
-    ERROR_CODE_NO_FILL
-  }
-
-  export interface ShowBannerOptions {
-    /**
-     * The layout of the banner.
-     * Default AD_SIZE.SMART_BANNER
-     */
-    size?: AD_SIZE;
-
-    /**
-     * When false (default) you'll get real banners.
-     */
-    testing?: boolean;
-
-    /**
-     * Something like "ca-app-pub-AAAAAAAA/BBBBBBB".
-     */
-    androidBannerId?: string;
-
-    /**
-     * Something like "ca-app-pub-XXXXXX/YYYYYY".
-     */
-    iosBannerId?: string;
-
-    /**
-     * If testing is true, the simulator is allowed to receive test banners.
-     * Android automatically add the connceted device as test device, but iOS does not.
-     * If you also want to test on real devices, add it here like this:
-     *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
-     */
-    iosTestDeviceIds?: string[];
-
-    /**
-     * The number of pixels from the top/bottom of the view.
-     * The plugin corrects for display density, so don't worry about that.
-     *
-     * If both are set, top wins.
-     */
-    margins?: {
-      /**
-       * Default: -1 (ignored).
-       */
-      top?: number;
-
-      /**
-       * Default: -1 (ignored).
-       */
-      bottom?: number;
-    };
-
-    /**
-     * Specify keywords for ad targeting
-     */
-    keywords?: string[];
-  }
-
-  export interface ShowInterstitialOptions {
-    /**
-     * When false (default) you'll get real banners.
-     */
-    testing?: boolean;
-
-    /**
-     * Something like "ca-app-pub-AAAAAAAA/BBBBBBB".
-     */
-    androidInterstitialId?: string;
-
-    /**
-     * Something like "ca-app-pub-XXXXXX/YYYYYY".
-     */
-    iosInterstitialId?: string;
-
-    /**
-     * If testing is true, the simulator is allowed to receive test banners.
-     * Android automatically add the connceted device as test device, but iOS does not.
-     * If you also want to test on real devices, add it here like this:
-     *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
-     */
-    iosTestDeviceIds?: string[];
-  }
-
-  function showBanner(options: ShowBannerOptions): Promise<any>;
-
-  function showInterstitial(options: ShowInterstitialOptions): Promise<any>;
-
-  function hideBanner(): Promise<any>;
-}
 
 // Invites module
 export namespace invites {
@@ -712,22 +679,63 @@ export namespace firestore {
     merge?: boolean;
   }
 
+  export interface SnapshotMetadata {
+    /**
+     * True if the snapshot contains the result of local writes (e.g. set() or
+     * update() calls) that have not yet been committed to the backend.
+     * If your listener has opted into metadata updates (via
+     * `DocumentListenOptions` or `QueryListenOptions`) you will receive another
+     * snapshot with `hasPendingWrites` equal to false once the writes have been
+     * committed to the backend.
+     */
+    readonly hasPendingWrites: boolean;
+
+    /**
+     * True if the snapshot was created from cached data rather than
+     * guaranteed up-to-date server data. If your listener has opted into
+     * metadata updates (via `DocumentListenOptions` or `QueryListenOptions`)
+     * you will receive another snapshot with `fromCache` equal to false once
+     * the client has received up-to-date data from the backend.
+     */
+    readonly fromCache: boolean;
+  }
+
   export interface DocumentSnapshot {
+    ios?: any;
+    /* FIRDocumentSnapshot */
+    android?: any;
+    /* com.google.firebase.firestore.DocumentSnapshot */
     id: string;
     exists: boolean;
+    ref: DocumentReference;
+
+    /**
+     * Included when includeMetadataChanges is true.
+     */
+    readonly metadata?: SnapshotMetadata;
 
     data(): DocumentData;
   }
 
+  export interface SnapshotListenOptions {
+    /**
+     * Include a change even if only the metadata of the query or of a document changed.
+     * Default false.
+     */
+    readonly includeMetadataChanges?: boolean;
+  }
+
   export interface DocumentReference {
+    discriminator: "docRef";
     id: string;
+    path: string;
     collection: (collectionPath: string) => CollectionReference;
     set: (document: any, options?: SetOptions) => Promise<void>;
     get: () => Promise<DocumentSnapshot>;
     update: (document: any) => Promise<void>;
     delete: () => Promise<void>;
 
-    onSnapshot(callback: (doc: DocumentSnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback?: (snapshot: DocumentSnapshot) => void): () => void;
 
     android?: any;
     ios?: any;
@@ -742,7 +750,15 @@ export namespace firestore {
 
     limit(limit: number): Query;
 
-    onSnapshot(callback: (snapshot: QuerySnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void): () => void;
+
+    startAt(snapshot: DocumentSnapshot): Query;
+
+    startAfter(snapshot: DocumentSnapshot): Query;
+
+    endAt(snapshot: DocumentSnapshot): Query;
+
+    endBefore(snapshot: DocumentSnapshot): Query;
   }
 
   export interface CollectionReference extends Query {
@@ -773,26 +789,112 @@ export namespace firestore {
 
   export interface Transaction {
     get(documentRef: DocumentReference): DocumentSnapshot;
+
     set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): Transaction;
+
     update(documentRef: DocumentReference, data: UpdateData): Transaction;
+
     update(documentRef: DocumentReference, field: string | FieldPath, value: any, ...moreFieldsAndValues: any[]): Transaction;
+
     delete(documentRef: DocumentReference): Transaction;
   }
 
   export interface WriteBatch {
     set(documentRef: DocumentReference, data: DocumentData, options?: SetOptions): WriteBatch;
+
     update(documentRef: DocumentReference, data: UpdateData): WriteBatch;
+
     update(documentRef: DocumentReference, field: string | FieldPath, value: any, ...moreFieldsAndValues: any[]): WriteBatch;
+
     delete(documentRef: DocumentReference): WriteBatch;
+
     commit(): Promise<void>;
   }
 
+  export type FieldValueType = "ARRAY_UNION" | "ARRAY_REMOVE";
+
   export class FieldValue {
+    constructor(type: FieldValueType, value: any);
+
     static serverTimestamp: () => "SERVER_TIMESTAMP";
+    static delete: () => "DELETE_FIELD";
+    static arrayUnion: (...elements: any[]) => FieldValue;
+    static arrayRemove: (...elements: any[]) => FieldValue;
+  }
+
+  export interface SnapshotListenOptions {
+    readonly includeMetadataChanges?: boolean;
+  }
+
+  export interface SnapshotOptions {
+    /**
+     * If set, controls the return value for server timestamps that have not yet
+     * been set to their final value.
+     *
+     * By specifying 'estimate', pending server timestamps return an estimate
+     * based on the local clock. This estimate will differ from the final value
+     * and cause these values to change once the server result becomes available.
+     *
+     * By specifying 'previous', pending timestamps will be ignored and return
+     * their previous value instead.
+     *
+     * If omitted or set to 'none', `null` will be returned by default until the
+     * server value becomes available.
+     */
+    readonly serverTimestamps?: 'estimate' | 'previous' | 'none';
+  }
+
+  export interface QueryDocumentSnapshot extends firestore.DocumentSnapshot {
+    /**
+     * Retrieves all fields in the document as an Object.
+     *
+     * By default, `FieldValue.serverTimestamp()` values that have not yet been
+     * set to their final value will be returned as `null`. You can override
+     * this by passing an options object.
+     *
+     * @override
+     * @param options An options object to configure how data is retrieved from
+     * the snapshot (e.g. the desired behavior for server timestamps that have
+     * not yet been set to their final value).
+     * @return An Object containing all fields in the document.
+     */
+    data(options?: SnapshotOptions): DocumentData;
+  }
+
+  export type DocumentChangeType = 'added' | 'removed' | 'modified';
+
+  export interface DocumentChange {
+    readonly type: DocumentChangeType;
+
+    /** The document affected by this change. */
+    readonly doc: QueryDocumentSnapshot;
+
+    /**
+     * The index of the changed document in the result set immediately prior to
+     * this DocumentChange (i.e. supposing that all prior DocumentChange objects
+     * have been applied). Is -1 for 'added' events.
+     */
+    readonly oldIndex: number;
+
+    /**
+     * The index of the changed document in the result set immediately after
+     * this DocumentChange (i.e. supposing that all prior DocumentChange
+     * objects and the current DocumentChange object have been applied).
+     * Is -1 for 'removed' events.
+     */
+    readonly newIndex: number;
   }
 
   export interface QuerySnapshot {
     docSnapshots: firestore.DocumentSnapshot[];
+    docs: firestore.QueryDocumentSnapshot[];
+
+    /**
+     * Included when includeMetadataChanges is true.
+     */
+    readonly metadata: SnapshotMetadata;
+
+    docChanges(options?: SnapshotListenOptions): DocumentChange[];
 
     forEach(callback: (result: DocumentSnapshot) => void, thisArg?: any): void;
   }
@@ -800,6 +902,8 @@ export namespace firestore {
   function collection(collectionPath: string): CollectionReference;
 
   function doc(collectionPath: string, documentPath?: string): DocumentReference;
+
+  function docRef(documentPath: string): DocumentReference;
 
   function add(collectionPath: string, documentData: any): Promise<DocumentReference>;
 
@@ -816,6 +920,12 @@ export namespace firestore {
   function batch(): firestore.WriteBatch;
 }
 
+export namespace functions {
+  export type HttpsCallable<I, O> = (callableData: I) => Promise<O>;
+
+  export function httpsCallable<I, O>(callableFunctionName: string): HttpsCallable<I, O>;
+}
+
 // Auth
 export function login(options: LoginOptions): Promise<User>;
 
@@ -823,9 +933,11 @@ export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
 
 export function reloadUser(): Promise<void>;
 
-export function getAuthToken(option: GetAuthTokenOptions): Promise<string>;
+export function getAuthToken(option: GetAuthTokenOptions): Promise<GetAuthTokenResult>;
 
 export function logout(): Promise<any>;
+
+export function unlink(providerId: string): Promise<User>;
 
 export function fetchProvidersForEmail(email: string): Promise<Array<string>>;
 
@@ -839,9 +951,11 @@ export function deleteUser(): Promise<any>;
 
 export function updateProfile(options: UpdateProfileOptions): Promise<any>;
 
-export function resetPassword(options: ResetPasswordOptions): Promise<any>;
+export function sendPasswordResetEmail(email: string): Promise<void>;
 
-export function changePassword(options: ChangePasswordOptions): Promise<any>;
+export function updateEmail(newEmail: string): Promise<void>;
+
+export function updatePassword(newPassword: string): Promise<void>;
 
 export function addAuthStateListener(listener: AuthStateChangeListener): boolean;
 
@@ -856,13 +970,19 @@ export function addOnMessageReceivedCallback(onMessageReceived: (data: Message) 
 
 export function addOnPushTokenReceivedCallback(onPushTokenReceived: (data: string) => void): Promise<any>;
 
+export function registerForInteractivePush(model: any): void;
+
 export function getCurrentPushToken(): Promise<string>;
+
+export function registerForPushNotifications(options?: MessagingOptions): Promise<void>;
 
 export function unregisterForPushNotifications(): Promise<void>;
 
 export function subscribeToTopic(topicName): Promise<any>;
 
 export function unsubscribeFromTopic(topicName): Promise<any>;
+
+export function areNotificationsEnabled(): boolean;
 
 // dynamic links
 export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBackData: dynamicLinks.DynamicLinkCallbackData) => void): Promise<any>;

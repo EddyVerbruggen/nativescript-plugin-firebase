@@ -6,9 +6,13 @@ declare class TNSMLKitCameraView extends UIViewController implements AVCaptureVi
 
   static alloc(): TNSMLKitCameraView; // inherited from NSObject
 
+  static getInputDataWithRowsAndColumnsAndType(img: UIImage, rows: number, columns: number, type: string): NSMutableData;
+
   static new(): TNSMLKitCameraView; // inherited from NSObject
 
   static resizeImage(image: UIImage): NSArray<any>;
+
+  static scaledDataWithSizeByteCountIsQuantized(img: UIImage, size: CGSize, byteCount: number, isQuantized: boolean): NSData;
 
   delegate: TNSMLKitCameraViewDelegate;
 

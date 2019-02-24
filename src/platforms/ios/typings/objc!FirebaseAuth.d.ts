@@ -37,6 +37,8 @@ declare class FIRActionCodeSettings extends NSObject {
 
 	readonly androidPackageName: string;
 
+	dynamicLinkDomain: string;
+
 	handleCodeInApp: boolean;
 
 	readonly iOSBundleID: string;
@@ -288,7 +290,11 @@ declare const enum FIRAuthErrorCode {
 
 	WebInternalError = 17062,
 
+	LocalPlayerNotAuthenticated = 17066,
+
 	NullUser = 17067,
+
+	InvalidDynamicLinkDomain = 17074,
 
 	KeychainError = 17995,
 
@@ -380,6 +386,19 @@ declare class FIRFacebookAuthProvider extends NSObject {
 declare var FIRFacebookAuthProviderID: string;
 
 declare var FIRFacebookAuthSignInMethod: string;
+
+declare class FIRGameCenterAuthProvider extends NSObject {
+
+	static alloc(): FIRGameCenterAuthProvider; // inherited from NSObject
+
+	static getCredentialWithCompletion(completion: (p1: FIRAuthCredential, p2: NSError) => void): void;
+
+	static new(): FIRGameCenterAuthProvider; // inherited from NSObject
+}
+
+declare var FIRGameCenterAuthProviderID: string;
+
+declare var FIRGameCenterAuthSignInMethod: string;
 
 declare class FIRGitHubAuthProvider extends NSObject {
 

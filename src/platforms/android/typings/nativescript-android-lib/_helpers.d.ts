@@ -1,6 +1,7 @@
 declare module native {
 	export class Array<T> {
-		public constructor();
+		constructor();
+		length: number;
+		[index: number]: T;
 	}
 }
-

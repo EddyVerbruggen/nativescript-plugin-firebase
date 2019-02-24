@@ -5,7 +5,7 @@ import { nextPushId } from "./util/NextPushId";
 export module database {
   export interface DataSnapshot {
     // child(path: string): DataSnapshot;
-    // exists(): boolean;
+    exists(): boolean;
     // exportVal(): any;
     // forEach(action: (a: DataSnapshot) => boolean): boolean;
     // getPriority(): string | number | null;
@@ -31,13 +31,12 @@ export module database {
     public on(eventType /* TODO use */: string, callback: (a: DataSnapshot | null, b?: string) => any, cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => any {
       const onValueEvent = result => {
         if (result.error) {
-          callback(result.error);
+          callback(result);
         } else {
           callback({
             key: result.key,
-            val: () => {
-              return result.value;
-            }
+            val: () => result.value,
+            exists: () => !!result.value
           });
         }
       };
@@ -74,14 +73,13 @@ export module database {
       return null;
     }
 
-    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any, failureCallbackOrContext?: Object | null, context?: Object | null): Promise<any> {
+    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any, failureCallbackOrContext?: Object | null, context?: Object | null): Promise<DataSnapshot> {
       return new Promise((resolve, reject) => {
         firebase.getValue(this.path).then(result => {
           resolve({
             key: result.key,
-            val: () => {
-              return result.value;
-            }
+            val: () => result.value,
+            exists: () => !!result.value
           });
         });
       });
@@ -93,9 +91,8 @@ export module database {
         callbacks && callbacks.map(callback => {
           callback({
             key: result.key,
-            val: () => {
-              return result.value;
-            }
+            val: () => result.value,
+            exists: () => !!result.value
           });
         });
       };
@@ -243,6 +240,21 @@ export module database {
           reject(err);
         });
       });
+    }
+
+    public onDisconnect(): firebase.OnDisconnect {
+      return firebase.onDisconnect(this.path);
+    }
+
+    public transaction(
+      transactionUpdate: (a: any) => any,
+      onComplete?: (
+        a: Error | null,
+        b: boolean,
+        c: firebase.DataSnapshot | null
+      ) => any,
+      applyLocally?: boolean): Promise<any> {
+      return firebase.transaction(this.path, transactionUpdate, onComplete);
     }
   }
 

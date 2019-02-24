@@ -1,6 +1,5 @@
-import { MLKitOptions } from "../";
+import { MLKitCameraView, MLKitVisionOptions, MLKitVisionResult } from "../";
 import { BarcodeFormat } from "./barcodescanning-common";
-import { MLKitResult, MLKitCameraView } from "../index";
 
 export { BarcodeFormat };
 
@@ -24,11 +23,11 @@ export interface MLKitScanBarcodesResultBarcode {
   // TODO details
 }
 
-export interface MLKitScanBarcodesOnDeviceResult extends MLKitResult {
+export interface MLKitScanBarcodesOnDeviceResult extends MLKitVisionResult {
   barcodes: Array<MLKitScanBarcodesResultBarcode>;
 }
 
-export interface MLKitScanBarcodesOnDeviceOptions extends MLKitOptions {
+export interface MLKitScanBarcodesOnDeviceOptions extends MLKitVisionOptions {
   /**
    * Limit to only what you need to speed up processing.
    * If not set, we'll detect all supported formats.
@@ -38,4 +37,5 @@ export interface MLKitScanBarcodesOnDeviceOptions extends MLKitOptions {
 
 export declare function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions): Promise<MLKitScanBarcodesOnDeviceResult>;
 
-export declare class MLKitBarcodeScanner extends MLKitCameraView {}
+export declare class MLKitBarcodeScanner extends MLKitCameraView {
+}

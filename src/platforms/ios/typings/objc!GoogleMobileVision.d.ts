@@ -346,7 +346,9 @@ declare const enum GMVDetectorFaceLandmark {
 
 	None = 1,
 
-	All = 2
+	All = 2,
+
+	Contour = 4
 }
 
 declare var GMVDetectorFaceLandmarkType: string;
@@ -359,7 +361,9 @@ declare const enum GMVDetectorFaceModeOption {
 
 	FastMode = 200,
 
-	AccurateMode = 201
+	AccurateMode = 201,
+
+	SelfieMode = 202
 }
 
 declare var GMVDetectorFaceTrackingEnabled: string;
@@ -367,8 +371,6 @@ declare var GMVDetectorFaceTrackingEnabled: string;
 declare var GMVDetectorImageOrientation: string;
 
 declare var GMVDetectorLabelScoreThreshold: string;
-
-declare var GMVDetectorResultCoordinateSpace: string;
 
 declare var GMVDetectorTypeBarcode: string;
 
@@ -378,6 +380,41 @@ declare var GMVDetectorTypeLabel: string;
 
 declare var GMVDetectorTypeText: string;
 
+declare class GMVFaceContour extends NSObject {
+
+	static alloc(): GMVFaceContour; // inherited from NSObject
+
+	static new(): GMVFaceContour; // inherited from NSObject
+
+	readonly allPoints: NSArray<NSValue>;
+
+	readonly bottomLeftEyebrowContour: NSArray<NSValue>;
+
+	readonly bottomLowerLipContour: NSArray<NSValue>;
+
+	readonly bottomNoseContour: NSArray<NSValue>;
+
+	readonly bottomRightEyebrowContour: NSArray<NSValue>;
+
+	readonly bottomUpperLipContour: NSArray<NSValue>;
+
+	readonly faceContour: NSArray<NSValue>;
+
+	readonly leftEyeContour: NSArray<NSValue>;
+
+	readonly noseBridgeContour: NSArray<NSValue>;
+
+	readonly rightEyeContour: NSArray<NSValue>;
+
+	readonly topLeftEyebrowContour: NSArray<NSValue>;
+
+	readonly topLowerLipContour: NSArray<NSValue>;
+
+	readonly topRightEyebrowContour: NSArray<NSValue>;
+
+	readonly topUpperLipContour: NSArray<NSValue>;
+}
+
 declare class GMVFaceFeature extends GMVFeature {
 
 	static alloc(): GMVFaceFeature; // inherited from NSObject
@@ -386,7 +423,11 @@ declare class GMVFaceFeature extends GMVFeature {
 
 	readonly bottomMouthPosition: CGPoint;
 
+	readonly contour: GMVFaceContour;
+
 	readonly hasBottomMouthPosition: boolean;
+
+	readonly hasHeadEulerAngleX: boolean;
 
 	readonly hasHeadEulerAngleY: boolean;
 
@@ -417,6 +458,8 @@ declare class GMVFaceFeature extends GMVFeature {
 	readonly hasRightMouthPosition: boolean;
 
 	readonly hasSmilingProbability: boolean;
+
+	readonly headEulerAngleX: number;
 
 	readonly headEulerAngleY: number;
 
@@ -506,13 +549,6 @@ declare class GMVLabelFeature extends GMVFeature {
 	readonly labelDescription: string;
 
 	readonly score: number;
-}
-
-declare const enum GMVResultCoordinateSpace {
-
-	CaptureDeviceEXIFCoordinateSpace = 1,
-
-	CaptureDeviceCoordinateSpace = 2
 }
 
 declare class GMVTextBlockFeature extends GMVFeature {

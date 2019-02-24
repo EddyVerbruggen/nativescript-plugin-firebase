@@ -3,7 +3,6 @@ import * as application from "tns-core-modules/application";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 import { OrientationChangedEventData } from "tns-core-modules/application";
 
-// TODO pause/resume handling
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private captureSession: AVCaptureSession;
   private captureDevice: AVCaptureDevice;
@@ -43,20 +42,20 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   private initView() {
-    // if (this.preferFrontCamera) {
-    // this._reader.switchDeviceInput();
-    // }
-
     // find a suitable device
     this.captureDevice = AVCaptureDeviceDiscoverySession.discoverySessionWithDeviceTypesMediaTypePosition(
         <any>[AVCaptureDeviceTypeBuiltInWideAngleCamera],
         AVMediaTypeVideo,
-        AVCaptureDevicePosition.Back
+        this.preferFrontCamera ? AVCaptureDevicePosition.Front : AVCaptureDevicePosition.Back
     ).devices.firstObject;
+
+    if (this.torchOn) {
+      this.updateTorch();
+    }
 
     // begin the session
     this.captureSession = AVCaptureSession.new();
-    this.captureSession.sessionPreset = AVCaptureSessionPreset640x480;
+    this.captureSession.sessionPreset = AVCaptureSessionPreset1280x720;
 
     const captureDeviceInput = AVCaptureDeviceInput.deviceInputWithDeviceError(this.captureDevice);
     this.captureSession.addInput(captureDeviceInput);
@@ -75,24 +74,28 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     application.off("orientationChanged"); // just making sure it was off
     application.on("orientationChanged", this.rotateOnOrientationChange.bind(this));
 
-    if (this.ios) {
-      this.ios.layer.addSublayer(this.previewLayer);
-    }
+    setTimeout(() => {
+      if (this.ios) {
+        this.ios.layer.addSublayer(this.previewLayer);
+      }
 
-    this.captureSession.startRunning();
+      if (!this.pause) {
+        this.captureSession.startRunning();
+      }
 
-    this.cameraView = TNSMLKitCameraView.alloc().initWithCaptureSession(this.captureSession);
-    this.cameraView.processEveryXFrames = this.processEveryNthFrame;
+      this.cameraView = TNSMLKitCameraView.alloc().initWithCaptureSession(this.captureSession);
+      this.cameraView.processEveryXFrames = this.processEveryNthFrame;
 
-    // this orientation is how the captured image is rotated (and shown)
-    if (this.rotateRecording()) {
-      this.cameraView.imageOrientation = UIImageOrientation.Right;
-    }
+      // this orientation is how the captured image is rotated (and shown)
+      if (this.rotateRecording()) {
+        this.cameraView.imageOrientation = UIImageOrientation.Right;
+      }
 
-    this.cameraView.delegate = TNSMLKitCameraViewDelegateImpl.createWithOwnerResultCallbackAndOptions(
-        new WeakRef(this),
-        data => {},
-        {});
+      this.cameraView.delegate = TNSMLKitCameraViewDelegateImpl.createWithOwnerResultCallbackAndOptions(
+          new WeakRef(this),
+          data => {},
+          {});
+    }, 0);
   }
 
   private rotateOnOrientationChange(args: OrientationChangedEventData): void {
@@ -108,7 +111,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   public onLayout(left: number, top: number, right: number, bottom: number): void {
     super.onLayout(left, top, right, bottom);
-    if (this.ios && this.canUseCamera()) {
+    if (this.previewLayer && this.ios && this.canUseCamera()) {
       this.previewLayer.frame = this.ios.layer.bounds;
     }
   }
@@ -137,14 +140,43 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     }
   }
 
+  protected updateTorch(): void {
+    const device = this.captureDevice;
+    if (device && device.hasTorch && device.lockForConfiguration()) {
+      if (this.torchOn) {
+        device.torchMode = AVCaptureTorchMode.On;
+        device.flashMode = AVCaptureFlashMode.On;
+      } else {
+        device.torchMode = AVCaptureTorchMode.Off;
+        device.flashMode = AVCaptureFlashMode.Off;
+      }
+      device.unlockForConfiguration();
+    }
+  }
+
+  protected pauseScanning(): void {
+    if (this.captureSession && this.captureSession.running) {
+      this.captureSession.stopRunning();
+    }
+  };
+
+  protected resumeScanning(): void {
+    if (this.captureSession && !this.captureSession.running) {
+      this.captureSession.startRunning();
+    }
+  }
+
   abstract createDetector(): any;
 
   abstract createSuccessListener(): any;
+
+  runDetector(image: UIImage) {
+    throw new Error("No custom detector implemented, so 'runDetector' can't do its thing");
+  }
 }
 
 class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraViewDelegate {
-  public static ObjCProtocols = [TNSMLKitCameraViewDelegate];
-
+  public static ObjCProtocols = [];
   private owner: WeakRef<MLKitCameraView>;
   private resultCallback: (message: any) => void;
   private options?: any;
@@ -153,6 +185,10 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
   private onSuccessListener: any;
 
   public static createWithOwnerResultCallbackAndOptions(owner: WeakRef<MLKitCameraView>, callback: (message: any) => void, options?: any): TNSMLKitCameraViewDelegateImpl {
+    // defer initialisation because the framework may not be available / used
+    if (TNSMLKitCameraViewDelegateImpl.ObjCProtocols.length === 0 && typeof (TNSMLKitCameraViewDelegate) !== "undefined") {
+      TNSMLKitCameraViewDelegateImpl.ObjCProtocols.push(TNSMLKitCameraViewDelegate);
+    }
     let delegate = <TNSMLKitCameraViewDelegateImpl>TNSMLKitCameraViewDelegateImpl.new();
     delegate.owner = owner;
     delegate.options = options;
@@ -164,11 +200,21 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
 
   cameraDidOutputImage(image: UIImage): void {
     if (image) {
-      const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
-      const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
-      fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
-      fIRVisionImage.metadata = fIRVisionImageMetadata;
-      this.detector.detectInImageCompletion(fIRVisionImage, this.onSuccessListener);
+      if (this.detector.detectInImageCompletion) {
+        this.detector.detectInImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
+      } else if (this.detector.processImageCompletion) {
+        this.detector.processImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
+      } else {
+        this.owner.get().runDetector(image);
+      }
     }
+  }
+
+  private uiImageToFIRVisionImage(image: UIImage): FIRVisionImage {
+    const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
+    const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
+    fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);
+    fIRVisionImage.metadata = fIRVisionImageMetadata;
+    return fIRVisionImage;
   }
 }

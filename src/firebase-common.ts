@@ -1,17 +1,28 @@
 import { prompt } from "tns-core-modules/ui/dialogs";
 import { getString, setString } from "tns-core-modules/application-settings";
 import { firestore } from "./firebase";
+import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
+import * as crashlytics from "./crashlytics/crashlytics";
+import * as performance from "./performance/performance";
 import * as storage from "./storage/storage";
 import * as mlkit from "./mlkit";
 
 // note that this implementation is overridden for iOS
 export class FieldValue {
-  serverTimestamp = () => "SERVER_TIMESTAMP";
+  constructor(public type: firestore.FieldValueType,
+              public value: any) {
+  }
+
+  static serverTimestamp = () => "SERVER_TIMESTAMP";
+  static delete = () => "DELETE_FIELD";
+  static arrayUnion = (...elements: any[]) => new FieldValue("ARRAY_UNION", elements);
+  static arrayRemove = (...elements: any[]) => new FieldValue("ARRAY_REMOVE", elements);
 }
 
 export class GeoPoint {
-  constructor(public latitude: number, public longitude: number) {
+  constructor(public latitude: number,
+              public longitude: number) {
   }
 }
 
@@ -19,16 +30,18 @@ export const firebase: any = {
   initialized: false,
   instance: null,
   firebaseRemoteConfig: null,
+  currentAdditionalUserInfo: null,
   authStateListeners: [],
   _receivedNotificationCallback: null,
   _dynamicLinkCallback: null,
+  admob,
   analytics,
+  crashlytics,
+  performance,
   storage,
   mlkit,
   firestore: {
-    FieldValue: {
-      serverTimestamp: () => "SERVER_TIMESTAMP"
-    },
+    FieldValue,
     GeoPoint: (latitude: number, longitude: number) => new GeoPoint(latitude, longitude)
   },
   invites: {
@@ -43,26 +56,6 @@ export const firebase: any = {
       STRONG: 1
     }
   },
-  admob: {
-    AD_SIZE: {
-      SMART_BANNER: "SMART",
-      LARGE_BANNER: "LARGE",
-      BANNER: "BANNER",
-      MEDIUM_RECTANGLE: "MEDIUM",
-      FULL_BANNER: "FULL",
-      LEADERBOARD: "LEADERBOARD",
-      SKYSCRAPER: "SKYSCRAPER",
-      FLUID: "FLUID"
-    },
-    defaults: {
-      margins: {
-        top: -1,
-        bottom: -1
-      },
-      testing: false,
-      size: "SMART"
-    }
-  },
   LoginType: {
     ANONYMOUS: "anonymous",
     PASSWORD: "password",
@@ -71,6 +64,15 @@ export const firebase: any = {
     FACEBOOK: "facebook",
     GOOGLE: "google",
     EMAIL_LINK: "emailLink"
+  },
+  LogComplexEventTypeParameter: {
+    STRING: "string",
+    INT: "int",
+    FLOAT: "float",
+    DOUBLE: "double",
+    LONG: "long",
+    ARRAY: "array",
+    BOOLEAN: "boolean"
   },
   QueryOrderByType: {
     KEY: "key",
@@ -110,8 +112,10 @@ export const firebase: any = {
       try {
         if (listener.thisArg) {
           listener.onAuthStateChanged.call(listener.thisArg, data);
-        } else {
+        } else if (listener.onAuthStateChanged) {
           listener.onAuthStateChanged(data);
+        } else {
+          listener(data);
         }
       } catch (ex) {
         console.error("Firebase AuthStateListener failed to trigger", listener, ex);
@@ -139,9 +143,10 @@ export const firebase: any = {
   requestPhoneAuthVerificationCode: (onUserResponse, verificationPrompt) => {
     prompt(verificationPrompt || "Verification code").then(promptResult => {
       if (!promptResult.result) {
-        return;
+        onUserResponse(undefined);
+      } else {
+        onUserResponse(promptResult.text);
       }
-      onUserResponse(promptResult.text);
     });
   },
   // for backward compatibility, because plugin version 4.0.0 moved the params to per-logintype objects
@@ -215,17 +220,17 @@ export const firebase: any = {
   }
 };
 
-export class DocumentSnapshot implements firestore.DocumentSnapshot {
+export abstract class DocumentSnapshot implements firestore.DocumentSnapshot {
   public data: () => firestore.DocumentData;
-  constructor(public id: string, public exists: boolean, documentData: firestore.DocumentData) {
+
+  constructor(public id: string,
+              public exists: boolean,
+              documentData: firestore.DocumentData,
+              public ref: firestore.DocumentReference) {
     this.data = () => exists ? documentData : undefined;
   }
 }
 
-export class QuerySnapshot implements firestore.QuerySnapshot {
-  public docSnapshots: firestore.DocumentSnapshot[];
-
-  forEach(callback: (result: firestore.DocumentSnapshot) => void, thisArg?: any): void {
-    this.docSnapshots.map(snapshot => callback(snapshot));
-  }
+export function isDocumentReference(object: any): object is firestore.DocumentReference {
+  return object && object.discriminator === "docRef";
 }

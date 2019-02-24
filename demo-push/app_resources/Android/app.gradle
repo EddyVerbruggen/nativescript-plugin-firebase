@@ -1,0 +1,27 @@
+// Add your native dependencies here:
+
+// Uncomment to add recyclerview-v7 dependency
+//dependencies {
+//	compile 'com.android.support:recyclerview-v7:+'
+//}
+
+//project.ext {
+//  googlePlayServicesVersion = "15.0.1"
+//}
+
+android {
+  defaultConfig {
+    generatedDensities = []
+    multiDexEnabled true
+    applicationId "org.nativescript.firebasedemo"
+  }
+
+  // after adding a few additional Firebase libs we'll need this (otherwise: OutOfMemoryException)
+  dexOptions {
+    javaMaxHeapSize "4g"
+  }
+
+  aaptOptions {
+    additionalParameters "--no-version-vectors"
+  }
+}

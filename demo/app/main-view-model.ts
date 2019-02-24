@@ -1,35 +1,35 @@
-import { Observable } from "tns-core-modules/data/observable";
-import { alert, prompt } from "tns-core-modules/ui/dialogs";
-import { ios as iosUtils } from "tns-core-modules/utils/utils";
-import { isIOS } from "tns-core-modules/platform";
 import * as firebase from "nativescript-plugin-firebase";
-import { AddEventListenerResult, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
+import {
+  AddEventListenerResult,
+  admob as firebaseAdMob,
+  crashlytics as firebaseCrashlytics,
+  GetAuthTokenResult,
+  LogComplexEventTypeParameter,
+  performance as firebasePerformance,
+  storage as firebaseStorage,
+  User
+} from "nativescript-plugin-firebase";
+import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
+import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performance";
+import { Observable } from "tns-core-modules/data/observable";
 import * as fs from "tns-core-modules/file-system";
+import { isAndroid, isIOS } from "tns-core-modules/platform";
+import { alert, prompt } from "tns-core-modules/ui/dialogs";
+import { MessagingViewModel } from './messaging-view-model';
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
-declare const Crashlytics: any;
 
-const getCircularReplacer = () => {
-  const seen = new WeakSet;
-  return (key, value) => {
-    if (typeof value === "object" && value !== null) {
-      if (seen.has(value)) {
-        return;
-      }
-      seen.add(value);
-    }
-    return value;
-  };
-};
+declare const Crashlytics: any;
 
 export class HelloWorldModel extends Observable {
 
+  public messaging = new MessagingViewModel();
   public userEmailOrPhone: string;
   private userListenerWrapper: AddEventListenerResult;
   private companiesListenerWrapper: AddEventListenerResult;
   private onAuthStateChangedHandlerSet = false;
-
+  private firebaseTrace: FirebaseTrace;
 
   /***********************************************
    * Web API usage examples
@@ -77,7 +77,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebLoginByPassword(): void {
     this.ensureWebOnAuthChangedHandler();
-    firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen@gmail.com', 'firebase')
+    firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen+firebase@gmail.com', 'pwd123LOL')
         .then(() => console.log("User logged in"))
         .catch(err => {
               alert({
@@ -208,6 +208,27 @@ export class HelloWorldModel extends Observable {
     }
   }
 
+  public doWebCallableFunction(): void {
+    // see the implementation of this function @ https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/ff95c77c7b09acf66654f53c52e8ae0c8d7b1c78/demo/firebasefunctions/functions/src/index.ts#L15-L19
+    const fn = firebase.functions.httpsCallable("helloName");
+
+    fn("Nativescript-Plugin-Firebase!")
+        .then((dataCue: any) => {
+          alert({
+            title: "Callable Function Result",
+            message: dataCue.message,
+            okButtonText: "Nice!"
+          });
+        })
+        .catch((errorMessage: string) => {
+          alert({
+            title: "An Error Occurred",
+            message: errorMessage,
+            okButtonText: "OK, thanks"
+          });
+        });
+  }
+
   public doWebAddValueEventListenerForCompanies(): void {
     const path = "/companies";
     const onValueEvent = result => {
@@ -218,6 +239,7 @@ export class HelloWorldModel extends Observable {
           okButtonText: "Darn!"
         });
       } else {
+        console.log("key exists? " + result.exists());
         this.set("path", path);
         this.set("key", result.key);
         this.set("value", JSON.stringify(result.val()));
@@ -237,6 +259,7 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path)
         .once("value")
         .then(result => {
+          console.log("key exists? " + result.exists());
           this.set("path", path);
           this.set("key", result.key);
           this.set("value", JSON.stringify(result.val()));
@@ -249,6 +272,7 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path)
         .once("value")
         .then(result => {
+          console.log("key exists? " + result.exists());
           this.set("path", path);
           this.set("key", result.key);
           this.set("value", JSON.stringify(result.val()));
@@ -289,6 +313,7 @@ export class HelloWorldModel extends Observable {
     firebaseWebApi.database().ref(path).orderByChild(child)
         .once("value")
         .then(result => {
+          console.log("key exists? " + result.exists());
           this.set("path", path);
           this.set("key", result.key);
           this.set("value", JSON.stringify(result.val()));
@@ -390,13 +415,15 @@ export class HelloWorldModel extends Observable {
     firebase.init({
       // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
+      // analyticsCollectionEnabled: false, // default true
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
         if (data.loggedIn) {
           this.set("userEmailOrPhone", data.user.email ? data.user.email : (data.user.phoneNumber ? data.user.phoneNumber : "N/A"));
         }
       },
-      // testing push wiring in init for iOS:
+      // uncomment in order to testi push wiring during 'init' for iOS (instead of adding these callbacks later):
+      /*
       onPushTokenReceivedCallback: token => {
         // you can use this token to send to your own backend server,
         // so you can send notifications to this specific device
@@ -417,6 +444,7 @@ export class HelloWorldModel extends Observable {
           });
         }, 500);
       },
+      */
       onDynamicLinkCallback: result => {
         console.log("dynamic link callback invoked with: " + result);
         setTimeout(() => {
@@ -437,17 +465,35 @@ export class HelloWorldModel extends Observable {
     );
   }
 
-  public doLogAnalyticsEvent(): void {
+  public doEnableAnalytics(): void {
+    firebase.analytics.setAnalyticsCollectionEnabled(true);
+    alert({
+      title: "Analytics collection",
+      message: "ENABLED",
+      okButtonText: "OK"
+    });
+  }
+
+  public doDisableAnalytics(): void {
+    firebase.analytics.setAnalyticsCollectionEnabled(false);
+    alert({
+      title: "Analytics collection",
+      message: "DISABLED",
+      okButtonText: "OK"
+    });
+  }
+
+  public doLogAnalyticsEvents(): void {
     firebase.analytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
       parameters: [{ // optional
         key: "item_id",
-        value: "p7654"
+        value: "p7655"
       },
         {
           key: "item_name",
-          value: "abc"
+          value: "abcd"
         }]
     }).then(
         () => {
@@ -464,6 +510,45 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
+
+    /**
+     * Same thing as logEvent but can add an array or specific types not just string (LogComplexEventTypeParameter.BOOLEAN, LogComplexEventTypeParameter.STRING,
+     * LogComplexEventTypeParameter.DOUBLE, LogComplexEventTypeParameter.FLOAT, LogComplexEventTypeParameter.INT, LogComplexEventTypeParameter.ARRAY)
+     */
+    firebase.analytics.logComplexEvent({
+      key: "view_item_list",
+      parameters: [{
+        key: "item1",
+        type: "array",
+        value: [
+          {
+            parameters: [
+              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 1, type: LogComplexEventTypeParameter.INT}
+            ]
+          },
+          {
+            parameters: [
+              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 2, type: LogComplexEventTypeParameter.INT}
+            ]
+          }
+        ]
+      }]
+    });
+
   }
 
   public doSetAnalyticsUserProperty(): void {
@@ -516,8 +601,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowAdMobBanner(): void {
-    firebase.admob.showBanner({
-      size: firebase.admob.AD_SIZE.SMART_BANNER,
+    firebaseAdMob.showBanner({
+      size: firebaseAdMob.AD_SIZE.SMART_BANNER,
       margins: {
         bottom: isIOS ? 50 : 0
       },
@@ -526,8 +611,8 @@ export class HelloWorldModel extends Observable {
       testing: true,
       // Android automatically adds the connected device as test device with testing:true, iOS does not
       iosTestDeviceIds: [
-        "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
-        "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
+        "fee4cf319a242eab4701543e4c16db89c722731f",  // Eddy's iPad Pro
+        "a4cbb499e279054b55c206528f8510ff7fbf20c8",  // Eddy's iPhone X
       ],
       keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
     }).then(
@@ -551,17 +636,117 @@ export class HelloWorldModel extends Observable {
   public doShowAdMobInterstitial(): void {
     firebase.admob.showInterstitial({
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
-      androidInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
       testing: true,
       // Android automatically adds the connected device as test device with testing:true, iOS does not
       iosTestDeviceIds: [
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
-      ]
+      ],
+      onAdClosed: () => console.log("Interstitial closed")
     }).then(
         () => {
           console.log("AdMob interstitial showing");
         },
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    );
+  }
+
+  public doPreloadAdMobInterstitial(): void {
+    firebaseAdMob.preloadInterstitial({
+      iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
+      androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
+      testing: true,
+      // Android automatically adds the connected device as test device with testing:true, iOS does not
+      iosTestDeviceIds: [
+        "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
+        "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
+      ],
+      onAdClosed: () => console.log("Interstitial closed")
+    }).then(
+        () => console.log("AdMob interstitial preloaded"),
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    );
+  }
+
+  public doShowPreloadedAdMobInterstitial(): void {
+    firebaseAdMob.showInterstitial().then(
+        () => console.log("AdMob interstitial showing"),
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    );
+  }
+
+  public doPreloadRewardedVideoAd(): void {
+    firebaseAdMob.preloadRewardedVideoAd({
+      iosAdPlacementId: "ca-app-pub-9517346003011652/8586553377",
+      androidAdPlacementId: "ca-app-pub-9517346003011652/2819097664",
+      testing: true,
+      // Android automatically adds the connected device as test device with testing:true, iOS does not
+      iosTestDeviceIds: [
+        "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
+        "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
+      ],
+      keywords: [
+        "foo",
+        "bar"
+      ]
+    }).then(
+        () => console.log("AdMob rewarded video ad preloaded"),
+        errorMessage => {
+          alert({
+            title: "AdMob error",
+            message: errorMessage,
+            okButtonText: "Hmmkay"
+          });
+        }
+    );
+  }
+
+  public doShowPreloadedRewardedVideoAd(): void {
+    let reward: RewardedVideoAdReward;
+    firebaseAdMob.showRewardedVideoAd({
+      onRewarded: receivedReward => {
+        reward = receivedReward;
+        console.log("Rewarded video ad: rewarded. Details: " + JSON.stringify(reward));
+      },
+      onLoaded: () => console.log("Rewarded video ad: loaded"),
+      onFailedToLoad: () => console.log("Rewarded video ad: failed to load"),
+      onOpened: () => console.log("Rewarded video ad: opened"),
+      onStarted: () => console.log("Rewarded video ad: started"),
+      onCompleted: () => console.log("Rewarded video ad: completed"),
+      onClosed: () => {
+        console.log("Rewarded video ad: closed");
+        if (reward) {
+          setTimeout(() => {
+            alert({
+              title: "You were rewarded!",
+              message: `${reward.amount} ${reward.type}`,
+              okButtonText: "Thanks!"
+            });
+          }, 500);
+        }
+      },
+      onLeftApplication: () => console.log("Rewarded video ad: left application")
+    }).then(
+        () => console.log("AdMob rewarded video ad showing"),
         errorMessage => {
           alert({
             title: "AdMob error",
@@ -589,57 +774,6 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
-  }
-
-  public doGetCurrentPushToken(): void {
-    firebase.getCurrentPushToken().then(token => {
-      // may be null if not known yet
-      console.log("Current push token: " + token);
-      alert({
-        title: "Current Push Token",
-        message: (token === null ? "Not received yet" : token),
-        okButtonText: "OK, thx"
-      });
-    });
-  }
-
-  // You would normally add these handlers in 'init', but if you want you can do it seperately as well:
-  public doRegisterPushHandlers(): void {
-    firebase.addOnPushTokenReceivedCallback(
-        token => {
-          // you can use this token to send to your own backend server,
-          // so you can send notifications to this specific device
-          console.log("Firebase plugin received a push token: " + token);
-          // var pasteboard = utils.ios.getter(UIPasteboard, UIPasteboard.generalPasteboard);
-          // pasteboard.setValueForPasteboardType(token, kUTTypePlainText);
-        }
-    );
-    firebase.addOnMessageReceivedCallback(
-        message => {
-          console.log("------------------- push message received: " + JSON.stringify(message, getCircularReplacer()));
-
-          // alert({
-          //   title: "Push message!",
-          //   message: (message.title !== undefined ? message.title : ""),
-          //   okButtonText: "Sw33t"
-          // });
-        }
-    ).then(() => {
-      console.log("Added addOnMessageReceivedCallback");
-    }, err => {
-      console.log("Failed to add addOnMessageReceivedCallback: " + err);
-    });
-  }
-
-  public doUnregisterForPushNotifications(): void {
-    firebase.unregisterForPushNotifications().then(
-        () => {
-          alert({
-            title: "Unregistered",
-            message: "If you were registered, that is.",
-            okButtonText: "Got it, thanks!"
-          });
-        });
   }
 
   public doGetRemoteConfig(): void {
@@ -866,8 +1000,8 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.PASSWORD,
       passwordOptions: {
         // note that these credentials have been pre-configured in our demo firebase instance
-        email: 'eddyverbruggen@gmail.com',
-        password: 'firebase'
+        email: 'eddyverbruggen+firebase@gmail.com',
+        password: 'pwd123LOL'
       }
     }).then(
         result => {
@@ -879,16 +1013,12 @@ export class HelloWorldModel extends Observable {
           });
 
           // now retrieve an auth token we can use to access Firebase from our server
-          firebase.getAuthToken({
-            forceRefresh: false
-          }).then(
-              token => {
-                console.log("Auth token retrieved: " + token);
-              },
-              errorMessage => {
-                console.log("Auth token retrieval error: " + errorMessage);
-              }
-          );
+          firebase.getAuthToken(
+              {
+                forceRefresh: false
+              })
+              .then((result: GetAuthTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
+              .catch(errorMessage => console.log("Auth token retrieval error: " + errorMessage));
         },
         errorMessage => {
           console.log("Login error: " + errorMessage);
@@ -940,10 +1070,14 @@ export class HelloWorldModel extends Observable {
   }
 
   public doLoginByEmailLink(): void {
-    prompt(
-        "The email address to send the link to",
-        ""
-    ).then(promptResult => {
+    prompt({
+      title: "The email address to send the link to",
+      defaultText: "",
+      inputType: "email",
+      capitalizationType: "none",
+      okButtonText: "OK",
+      cancelButtonText: "Cancel"
+    }).then(promptResult => {
       if (!promptResult.result) {
         return;
       }
@@ -953,7 +1087,7 @@ export class HelloWorldModel extends Observable {
         // note that you need to enable phone login in your firebase instance
         type: firebase.LoginType.EMAIL_LINK,
         emailLinkOptions: {
-          email: promptResult.text,
+          email: promptResult.text.trim(),
           url: "https://combidesk.com?foo=bar"
         }
       }).then(
@@ -1023,9 +1157,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doResetPassword(): void {
-    firebase.resetPassword({
-      email: 'eddyverbruggen@gmail.com'
-    }).then(
+    firebase.sendPasswordResetEmail("eddyverbruggen+firebase@gmail.com").then(
         () => {
           console.log("Password reset. Check your email.");
           this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
@@ -1038,6 +1170,111 @@ export class HelloWorldModel extends Observable {
           console.log("Password reset error: " + error);
           alert({
             title: "Password reset error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doWebResetPassword(): void {
+    firebaseWebApi.auth().sendPasswordResetEmail("eddyverbruggen+firebase@gmail.com").then(
+        () => {
+          console.log("Password reset. Check your email.");
+          this.set("userEmailOrPhone", "Password reset mail sent to eddyverbruggen@gmail.com.");
+          alert({
+            title: "Password reset. Check your email.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Password reset error: " + error);
+          alert({
+            title: "Password reset error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doUpdateEmail(): void {
+    firebase.updateEmail("eddyverbruggen+firebase@gmail.com").then(
+        () => {
+          console.log("Email updated.");
+          this.set("userEmailOrPhone", "Email updated to eddyverbruggen+firebase@gmail.com");
+          alert({
+            title: "Email updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Email update error: " + error);
+          alert({
+            title: "Email update error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doWebUpdateEmail(): void {
+    firebaseWebApi.auth().updateEmail("eddyverbruggen+firebase@gmail.com").then(
+        () => {
+          console.log("Email updated.");
+          this.set("userEmailOrPhone", "Email updated to eddyverbruggen+firebase@gmail.com");
+          alert({
+            title: "Email updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Email update error: " + error);
+          alert({
+            title: "Email update error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doUpdatePassword(): void {
+    firebase.updatePassword("pwd123LOL").then(
+        () => {
+          console.log("Password updated.");
+          this.set("userEmailOrPhone", "Password updated to pwd123LOL");
+          alert({
+            title: "Password updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Password update error: " + error);
+          alert({
+            title: "Password update error",
+            message: error,
+            okButtonText: "Hmmkay :("
+          });
+        }
+    );
+  }
+
+  public doWebUpdatePassword(): void {
+    firebaseWebApi.auth().updatePassword("pwd123LOL").then(
+        () => {
+          console.log("Password updated.");
+          this.set("userEmailOrPhone", "Password updated to pwd123LOL");
+          alert({
+            title: "Password updated.",
+            okButtonText: "OK, nice!"
+          });
+        },
+        error => {
+          console.log("Password update error: " + error);
+          alert({
+            title: "Password update error",
             message: error,
             okButtonText: "Hmmkay :("
           });
@@ -1319,10 +1556,11 @@ export class HelloWorldModel extends Observable {
           limit: {
             type: firebase.QueryLimitType.LAST,
             value: 2
-          }
+          },
+          singleEvent: true
         }
     ).then(
-        result => console.log("firebase.doQueryBulgarianCompanies done; added a listener"),
+        result => console.log("firebase.doQueryBulgarianCompanies done; added a listener, result: " + JSON.stringify(result)),
         errorMessage => {
           alert({
             title: "Query error",
@@ -1358,7 +1596,8 @@ export class HelloWorldModel extends Observable {
         {
           singleEvent: true,
           orderBy: {
-            type: firebase.QueryOrderByType.KEY
+            type: firebase.QueryOrderByType.CHILD,
+            value: "first"
           }
         }
     ).then(
@@ -1538,44 +1777,6 @@ export class HelloWorldModel extends Observable {
     );
   }
 
-  public doSubscribeToTopic(): void {
-    firebase.subscribeToTopic("demo").then(
-        () => {
-          alert({
-            title: "Subscribed",
-            message: ".. to the 'demo' topic",
-            okButtonText: "Okay, interesting"
-          });
-        },
-        error => {
-          alert({
-            title: "Subscribe error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
-  }
-
-  public doUnsubscribeFromTopic(): void {
-    firebase.unsubscribeFromTopic("demo").then(
-        () => {
-          alert({
-            title: "Unsubscribed",
-            message: ".. from the 'demo' topic",
-            okButtonText: "Okay, very interesting"
-          });
-        },
-        error => {
-          alert({
-            title: "Unsubscribe error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
-  }
-
   public sendInvitation(): void {
     firebase.invites.sendInvitation({
       title: "Invite title here",
@@ -1617,6 +1818,52 @@ export class HelloWorldModel extends Observable {
     );
   }
 
+  public startPerformanceMonitoringTrace(): void {
+    this.firebaseTrace = firebasePerformance.startTrace("myTrace");
+    console.log(">> trace started");
+  }
+
+  public stopPerformanceMonitoringTrace(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.stop();
+      this.firebaseTrace = undefined;
+      console.log(">> trace stopped");
+    }
+  }
+
+  public setValuePerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.setValue("foo", "bar");
+      console.log(">> value set");
+    }
+  }
+
+  public getValuePerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      console.log(">> value: " + this.firebaseTrace.getValue("foo"));
+    }
+  }
+
+  public getAttributesPerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      console.log(">> attributes: " + JSON.stringify(this.firebaseTrace.getAttributes()));
+    }
+  }
+
+  public removeAttributePerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.removeAttribute("foo");
+      console.log(">> attribute removed");
+    }
+  }
+
+  public incrementMetricPerformanceMonitoring(): void {
+    if (this.firebaseTrace) {
+      this.firebaseTrace.incrementMetric("foo_metric", 1);
+      console.log(">> metric incremented");
+    }
+  }
+
   public doLogMessage(): void {
     firebase.sendCrashLog({
       message: "Hey, I was logged!",
@@ -1645,5 +1892,85 @@ export class HelloWorldModel extends Observable {
 
   public doForceCrashAndroid(): void {
     throw new java.lang.Exception("Forced an exception.");
+  }
+
+  public doLogMessageCrashlytics(): void {
+    firebaseCrashlytics.log("Tag message", "TAG", 1);
+    if (isAndroid) {
+      firebaseCrashlytics.sendCrashLog(new java.lang.Exception("test Exception"));
+    } else if (isIOS) {
+      firebaseCrashlytics.sendCrashLog(new NSError({
+        domain: 'ShiploopHttpResponseErrorDomain',
+        code: 42,
+        userInfo: null
+      }));
+    }
+
+    alert({
+      title: "Message logged",
+      message: "Check the Firebase console",
+      okButtonText: "Okay"
+    });
+  }
+
+  public doSetCrashlyticString(): void {
+    firebaseCrashlytics.setString("test_key", "test_value");
+
+    alert({
+      title: "String created",
+      message: "New string key created, log a new message and check firebase console",
+      okButtonText: "Okay"
+    });
+  }
+
+  public doSetCrashlyticBool(): void {
+    firebaseCrashlytics.setBool("test_key_bool", true);
+
+    alert({
+      title: "Bool created",
+      message: "New string key created, log a new message and check firebase console",
+      okButtonText: "Okay"
+    });
+  }
+
+  public doSetCrashlyticInt(): void {
+    firebaseCrashlytics.setInt("test_key_int", 2);
+
+    alert({
+      title: "Int created",
+      message: "New string key created, log a new message and check firebase console",
+      okButtonText: "Okay"
+    });
+  }
+
+  public doSetCrashlyticDouble(): void {
+    firebaseCrashlytics.setDouble("test_key_double", 56615.55548465);
+
+    alert({
+      title: "Double created",
+      message: "New string key created, log a new message and check firebase console",
+      okButtonText: "Okay"
+    });
+  }
+
+  public doSetCrashlyticFloat(): void {
+    firebaseCrashlytics.setFloat("test_key", 54646.45);
+
+    alert({
+      title: "Float created",
+      message: "New string key created, log a new message and check firebase console",
+      okButtonText: "Okay"
+    });
+  }
+
+  public doSetUserId(): void {
+    // just for fun: showing usage of 'firebase.crashlytics' instead of 'firebaseCrashlytics'
+    firebase.crashlytics.setUserId("user#42");
+
+    alert({
+      title: "User id changed",
+      message: "Log a new message and check firebase console",
+      okButtonText: "Okay"
+    });
   }
 }

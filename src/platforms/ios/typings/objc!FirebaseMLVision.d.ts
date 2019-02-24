@@ -1,4 +1,32 @@
 
+declare var FIRFaceContourTypeAll: string;
+
+declare var FIRFaceContourTypeFace: string;
+
+declare var FIRFaceContourTypeLeftEye: string;
+
+declare var FIRFaceContourTypeLeftEyebrowBottom: string;
+
+declare var FIRFaceContourTypeLeftEyebrowTop: string;
+
+declare var FIRFaceContourTypeLowerLipBottom: string;
+
+declare var FIRFaceContourTypeLowerLipTop: string;
+
+declare var FIRFaceContourTypeNoseBottom: string;
+
+declare var FIRFaceContourTypeNoseBridge: string;
+
+declare var FIRFaceContourTypeRightEye: string;
+
+declare var FIRFaceContourTypeRightEyebrowBottom: string;
+
+declare var FIRFaceContourTypeRightEyebrowTop: string;
+
+declare var FIRFaceContourTypeUpperLipBottom: string;
+
+declare var FIRFaceContourTypeUpperLipTop: string;
+
 declare var FIRFaceLandmarkTypeLeftCheek: string;
 
 declare var FIRFaceLandmarkTypeLeftEar: string;
@@ -39,9 +67,9 @@ declare class FIRVision extends NSObject {
 
 	cloudDocumentTextRecognizerWithOptions(options: FIRVisionCloudDocumentTextRecognizerOptions): FIRVisionDocumentTextRecognizer;
 
-	cloudLabelDetector(): FIRVisionCloudLabelDetector;
+	cloudImageLabeler(): FIRVisionImageLabeler;
 
-	cloudLabelDetectorWithOptions(options: FIRVisionCloudDetectorOptions): FIRVisionCloudLabelDetector;
+	cloudImageLabelerWithOptions(options: FIRVisionCloudImageLabelerOptions): FIRVisionImageLabeler;
 
 	cloudLandmarkDetector(): FIRVisionCloudLandmarkDetector;
 
@@ -55,9 +83,9 @@ declare class FIRVision extends NSObject {
 
 	faceDetectorWithOptions(options: FIRVisionFaceDetectorOptions): FIRVisionFaceDetector;
 
-	labelDetector(): FIRVisionLabelDetector;
+	onDeviceImageLabeler(): FIRVisionImageLabeler;
 
-	labelDetectorWithOptions(options: FIRVisionLabelDetectorOptions): FIRVisionLabelDetector;
+	onDeviceImageLabelerWithOptions(options: FIRVisionOnDeviceImageLabelerOptions): FIRVisionImageLabeler;
 
 	onDeviceTextRecognizer(): FIRVisionTextRecognizer;
 }
@@ -430,26 +458,15 @@ declare class FIRVisionCloudDocumentTextRecognizerOptions extends NSObject {
 	languageHints: NSArray<string>;
 }
 
-declare class FIRVisionCloudLabel extends NSObject {
+declare class FIRVisionCloudImageLabelerOptions extends NSObject {
 
-	static alloc(): FIRVisionCloudLabel; // inherited from NSObject
+	static alloc(): FIRVisionCloudImageLabelerOptions; // inherited from NSObject
 
-	static new(): FIRVisionCloudLabel; // inherited from NSObject
+	static new(): FIRVisionCloudImageLabelerOptions; // inherited from NSObject
 
-	readonly confidence: number;
+	APIKeyOverride: string;
 
-	readonly entityId: string;
-
-	readonly label: string;
-}
-
-declare class FIRVisionCloudLabelDetector extends NSObject {
-
-	static alloc(): FIRVisionCloudLabelDetector; // inherited from NSObject
-
-	static new(): FIRVisionCloudLabelDetector; // inherited from NSObject
-
-	detectInImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionCloudLabel>, p2: NSError) => void): void;
+	confidenceThreshold: number;
 }
 
 declare class FIRVisionCloudLandmark extends NSObject {
@@ -667,10 +684,21 @@ declare class FIRVisionFace extends NSObject {
 
 	readonly trackingID: number;
 
+	contourOfType(type: string): FIRVisionFaceContour;
+
 	landmarkOfType(type: string): FIRVisionFaceLandmark;
 }
 
-declare var FIRVisionFaceDetectionMinSize: number;
+declare class FIRVisionFaceContour extends NSObject {
+
+	static alloc(): FIRVisionFaceContour; // inherited from NSObject
+
+	static new(): FIRVisionFaceContour; // inherited from NSObject
+
+	readonly points: NSArray<FIRVisionPoint>;
+
+	readonly type: string;
+}
 
 declare class FIRVisionFaceDetector extends NSObject {
 
@@ -678,28 +706,30 @@ declare class FIRVisionFaceDetector extends NSObject {
 
 	static new(): FIRVisionFaceDetector; // inherited from NSObject
 
-	detectInImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionFace>, p2: NSError) => void): void;
+	processImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionFace>, p2: NSError) => void): void;
+
+	resultsInImageError(image: FIRVisionImage): NSArray<FIRVisionFace>;
 }
 
-declare const enum FIRVisionFaceDetectorClassification {
+declare const enum FIRVisionFaceDetectorClassificationMode {
 
 	None = 1,
 
 	All = 2
 }
 
-declare const enum FIRVisionFaceDetectorLandmark {
+declare const enum FIRVisionFaceDetectorContourMode {
 
 	None = 1,
 
 	All = 2
 }
 
-declare const enum FIRVisionFaceDetectorMode {
+declare const enum FIRVisionFaceDetectorLandmarkMode {
 
-	Fast = 1,
+	None = 1,
 
-	Accurate = 2
+	All = 2
 }
 
 declare class FIRVisionFaceDetectorOptions extends NSObject {
@@ -708,15 +738,24 @@ declare class FIRVisionFaceDetectorOptions extends NSObject {
 
 	static new(): FIRVisionFaceDetectorOptions; // inherited from NSObject
 
-	classificationType: FIRVisionFaceDetectorClassification;
+	classificationMode: FIRVisionFaceDetectorClassificationMode;
 
-	isTrackingEnabled: boolean;
+	contourMode: FIRVisionFaceDetectorContourMode;
 
-	landmarkType: FIRVisionFaceDetectorLandmark;
+	landmarkMode: FIRVisionFaceDetectorLandmarkMode;
 
 	minFaceSize: number;
 
-	modeType: FIRVisionFaceDetectorMode;
+	performanceMode: FIRVisionFaceDetectorPerformanceMode;
+
+	trackingEnabled: boolean;
+}
+
+declare const enum FIRVisionFaceDetectorPerformanceMode {
+
+	Fast = 1,
+
+	Accurate = 2
 }
 
 declare class FIRVisionFaceLandmark extends NSObject {
@@ -747,6 +786,37 @@ declare class FIRVisionImage extends NSObject {
 	initWithImage(image: UIImage): this;
 }
 
+declare class FIRVisionImageLabel extends NSObject {
+
+	static alloc(): FIRVisionImageLabel; // inherited from NSObject
+
+	static new(): FIRVisionImageLabel; // inherited from NSObject
+
+	readonly confidence: number;
+
+	readonly entityID: string;
+
+	readonly text: string;
+}
+
+declare class FIRVisionImageLabeler extends NSObject {
+
+	static alloc(): FIRVisionImageLabeler; // inherited from NSObject
+
+	static new(): FIRVisionImageLabeler; // inherited from NSObject
+
+	readonly type: FIRVisionImageLabelerType;
+
+	processImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionImageLabel>, p2: NSError) => void): void;
+}
+
+declare const enum FIRVisionImageLabelerType {
+
+	OnDevice = 0,
+
+	Cloud = 1
+}
+
 declare class FIRVisionImageMetadata extends NSObject {
 
 	static alloc(): FIRVisionImageMetadata; // inherited from NSObject
@@ -754,43 +824,6 @@ declare class FIRVisionImageMetadata extends NSObject {
 	static new(): FIRVisionImageMetadata; // inherited from NSObject
 
 	orientation: FIRVisionDetectorImageOrientation;
-}
-
-declare class FIRVisionLabel extends NSObject {
-
-	static alloc(): FIRVisionLabel; // inherited from NSObject
-
-	static new(): FIRVisionLabel; // inherited from NSObject
-
-	readonly confidence: number;
-
-	readonly entityID: string;
-
-	readonly frame: CGRect;
-
-	readonly label: string;
-}
-
-declare class FIRVisionLabelDetector extends NSObject {
-
-	static alloc(): FIRVisionLabelDetector; // inherited from NSObject
-
-	static new(): FIRVisionLabelDetector; // inherited from NSObject
-
-	detectInImageCompletion(image: FIRVisionImage, completion: (p1: NSArray<FIRVisionLabel>, p2: NSError) => void): void;
-}
-
-declare class FIRVisionLabelDetectorOptions extends NSObject {
-
-	static alloc(): FIRVisionLabelDetectorOptions; // inherited from NSObject
-
-	static new(): FIRVisionLabelDetectorOptions; // inherited from NSObject
-
-	readonly confidenceThreshold: number;
-
-	constructor(o: { confidenceThreshold: number; });
-
-	initWithConfidenceThreshold(confidenceThreshold: number): this;
 }
 
 declare class FIRVisionLatitudeLongitude extends NSObject {
@@ -806,6 +839,15 @@ declare class FIRVisionLatitudeLongitude extends NSObject {
 	constructor(o: { latitude: number; longitude: number; });
 
 	initWithLatitudeLongitude(latitude: number, longitude: number): this;
+}
+
+declare class FIRVisionOnDeviceImageLabelerOptions extends NSObject {
+
+	static alloc(): FIRVisionOnDeviceImageLabelerOptions; // inherited from NSObject
+
+	static new(): FIRVisionOnDeviceImageLabelerOptions; // inherited from NSObject
+
+	confidenceThreshold: number;
 }
 
 declare class FIRVisionPoint extends NSObject {

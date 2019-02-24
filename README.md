@@ -2,6 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
+[![TotalDownloads][total-downloads-image]][npm-url]
 [![Twitter Follow][twitter-image]][twitter-url]
 
 [build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-plugin-firebase.svg?branch=master
@@ -9,23 +10,26 @@
 [npm-image]:http://img.shields.io/npm/v/nativescript-plugin-firebase.svg
 [npm-url]:https://npmjs.org/package/nativescript-plugin-firebase
 [downloads-image]:http://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
+[total-downloads-image]:http://img.shields.io/npm/dt/nativescript-plugin-firebase.svg?label=total%20downloads
 [twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
 [twitter-url]:https://twitter.com/eddyverbruggen
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
 ## Features
-* [Realtime Database](docs/DATABASE.md)
-* [Firestore](docs/FIRESTORE.md)
-* [Authentication](docs/AUTHENTICATION.md)
-* [Remote Config](docs/REMOTECONFIG.md)
-* [Cloud Messaging](docs/MESSAGING.md)
-* [Storage](docs/STORAGE.md)
-* [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
-* [Analytics](docs/ANALYTICS.md)
-* [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [AdMob](docs/ADMOB.md)
+* [Analytics](docs/ANALYTICS.md)
+* [Authentication](docs/AUTHENTICATION.md)
+* [Cloud Firestore](docs/FIRESTORE.md)
+* [Cloud Functions](docs/FUNCTIONS.md)
+* [Cloud Messaging](docs/MESSAGING.md) / [Non-Firebase Push Messaging](docs/NON_FIREBASE_MESSAGING.md)
+* [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
+* [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [ML Kit](docs/ML_KIT.md)
+* [Performance Monitoring](docs/PERFORMANCE_MONITORING.md)
+* [Realtime Database](docs/DATABASE.md)
+* [Remote Config](docs/REMOTECONFIG.md)
+* [Storage](docs/STORAGE.md)
 
 ## Prerequisites
 Head on over to [https://console.firebase.google.com/](https://console.firebase.google.com/) and sign up for a free account.
@@ -36,6 +40,8 @@ Open your Firebase project at the Google console and click 'Add app' to add an i
 * iOS: `GoogleService-Info.plist` which you'll add to your NativeScript project at `app/App_Resources/iOS/GoogleService-Info.plist`
 
 * Android: `google-services.json` which you'll add to your NativeScript project at `app/App_Resources/Android/google-services.json`
+
+Note: for using separate versions of these files for development and production environments see [this section](#separation-of-environments)
 
 ## Installation
 If you rather watch a (slightly outdated) video explaining the steps then check out this step-by-step guide - you'll also learn how to
@@ -51,6 +57,8 @@ tns plugin add nativescript-plugin-firebase
 This will launch an install script which will guide you through installing additional components.
 Check the doc links above to see what's what. You can always change your choices later.
 
+> Want to use this plugin with an *external push notification provider* and **not** use any Firebase feature? Just answer 'y' to the first question to skip most of them, and️ [hop on over to the Push Notification](docs/NON_FIREBASE_MESSAGING.md). Do not run the plugin's `.init` function in this case!
+
 > Using [NativeScript SideKick](https://www.nativescript.org/nativescript-sidekick)? Then the aforementioned install script
 will not (be able to) run. In that case, running the app for Android will result in [this issue](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/829#issuecomment-409870671).
 To fix that, see [this comment](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/829#issuecomment-409855611).
@@ -64,9 +72,11 @@ You can reconfigure the plugin by going to the `node_modules/nativescript-plugin
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
 
 #### Using Vue?
-If you're using this template: [vue-cli-template](https://github.com/nativescript-vue/vue-cli-template), then copy `firebase.nativescript.json` to the `template` folder. You could also symlink it: `firebase.nativescript.json -> template/firebase.nativescript.json`.
+Please update your [NativeScript-Vue](https://github.com/nativescript-vue/vue-cli-template) template to 2.0 because it
+aligns perfectly with this plugin (because that template is now much more similar to a regular NativeScript project).
 
-And also, `require` the plugin before Vue.start runs (probably in `main.js`), but run `firebase.init()` afterwards (although it may work before). You could wrap it in a timeout to make sure.
+If you want a demo using Vue and Firestore, then [check out this project](https://github.com/EddyVerbruggen/footplr),
+if you want one with Realtime DB, [check out this one](https://github.com/jlooper/elocute/tree/master/mobile-v2).
 
 ### iOS (Cocoapods)
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.
@@ -84,7 +94,10 @@ project.ext {
 ## Usage
 
 ### Demo app
-If you want a quickstart, clone the repo, `cd src`, and `npm run demo.ios` or `npm run demo.android`.
+If you want a quickstart, clone the repo, then:
+- `cd src`.
+- `npm i` (just answer 'n' to any prompts as they are ignored anyway).
+- `npm run demo.ios` or `npm run demo.android` (answer 'n' again if prompted).
 
 ### Start-up wiring
 We need to do some wiring when your app starts, so open `app.js` and add this before `application.start();`:
@@ -97,7 +110,7 @@ firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
   // see their respective docs.
 }).then(
-    function (instance) {
+    function () {
       console.log("firebase.init done");
     },
     function (error) {
@@ -114,7 +127,7 @@ firebase.init({
   // Optionally pass in properties for database, authentication and cloud messaging,
   // see their respective docs.
 }).then(
-  instance => {
+  () => {
     console.log("firebase.init done");
   },
   error => {
@@ -137,7 +150,7 @@ export class AppComponent implements OnInit {
       // Optionally pass in properties for database, authentication and cloud messaging,
       // see their respective docs.
     }).then(
-      instance => {
+      () => {
         console.log("firebase.init done");
       },
       error => {
@@ -250,21 +263,46 @@ Update your local Android SDKs:
 Just run `$ANDROID_HOME/tools/bin/sdkmanager --update` from a command prompt
 or launch the SDK manager from Android Studio, expand `Extras` and install any pending updates.
 
-#### Found play-services:10.A.B, but version 11.X.Y is needed..
+#### Found play-services:A.C.D, but version B.X.Y is needed..
 Update your Android bits like the issue above and reinstall the android platform in your project.
 
 #### `include.gradle`: Failed to apply plugin .. For input string: "+"
 You probably have another plugin depending on Google Play Services (Google Maps, perhaps).
 We need to pin to a specific play services version to play nice with others, so open `app/App_Resources/Android/app.gradle` and add:
 
-```
+```js
 android {  
   // other stuff here
 
   project.ext {
-    googlePlayServicesVersion = "11.8.0"
+    googlePlayServicesVersion = "15.0.0"
   }
 }
 ```
 
-Where `"11.8.0"` is best set to the same value as the `firebaseVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/src/platforms/android/include.gradle).
+Where `"15.0.0"` is best set to the same value as the `googlePlayServicesVersion` value in [this file](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/48a99ccd2a0f590c37080b1a252173ea9b996e9f/publish/scripts/installer.js#L540).
+
+## Separation of Environments
+
+It is possible to use different development and production environments by using multiple `GoogleService-Info.plist` and `google-services.json` files.
+
+### Setup
+1. Create two separate Firebase projects (e.g. `myproject` and `myproject-dev`) and configure them with the same package name
+2. Download the `plist` and `json` files for both projects and put them in the relevant directories with either `.dev` or `.prod` appended to the file names, so you have the following files in place:
+
+    * iOS
+       * `app/App_Resources/iOS/GoogleService-Info.plist.dev`
+       * `app/App_Resources/iOS/GoogleService-Info.plist.prod`
+    * Android
+       * `app/App_Resources/Android/google-services.json.dev`
+       * `app/App_Resources/Android/google-services.json.prod`
+
+Note: if you currently have the `storageBucket` property in the `firebase.init()` then remove it (not mandatory anymore as of version `6.5.0` of this plugin), so it will be taken automatically from the relevant google services `plist` and `json` files.
+
+### Build
+The build hooks of this plugin will now choose either the `dev` or the `prod` version of your google services `plist` and `json` files depending on how you run your build:
+
+* `prod` will be selected if you run with either the `--release`, `--env.prod` or `--env.production` flags
+* `dev` will be selected if you do not run with any of the above flags
+
+Note: if you do not have both `dev` and `prod` files in place, the regular `GoogleService-Info.plist` and `google-services.json` files will be used.
