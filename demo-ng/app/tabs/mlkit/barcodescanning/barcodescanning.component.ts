@@ -1,5 +1,8 @@
 import { Component } from "@angular/core";
-import { MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
+import {
+  MLKitScanBarcodesOnDeviceResult,
+  MLKitScanBarcodesResultBarcode
+} from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { AbstractMLKitViewComponent } from "~/tabs/mlkit/abstract.mlkitview.component";
 
 @Component({
@@ -8,10 +11,8 @@ import { AbstractMLKitViewComponent } from "~/tabs/mlkit/abstract.mlkitview.comp
   templateUrl: "./barcodescanning.component.html",
 })
 export class BarcodeScanningComponent extends AbstractMLKitViewComponent {
-  barcodes: Array<{
-    value: string;
-    format: string;
-  }>;
+
+  barcodes: Array<MLKitScanBarcodesResultBarcode>;
 
   pause: boolean = false;
 
@@ -19,12 +20,11 @@ export class BarcodeScanningComponent extends AbstractMLKitViewComponent {
     const result: MLKitScanBarcodesOnDeviceResult = event.value;
     this.barcodes = result.barcodes;
 
-    console.log("this.barcodes: " + JSON.stringify(this.barcodes));
-
     if (this.barcodes.length > 0) {
-      console.log("pausing the scanner for 3 seconds (to test the 'pause' feature)");
+      console.log("this.barcodes: " + JSON.stringify(this.barcodes));
+      console.log("pausing the scanner for 1 second (to show the 'pause' feature)");
       this.pause = true;
-      setTimeout(() => this.pause = false, 3000)
+      setTimeout(() => this.pause = false, 1000)
     }
   }
 }

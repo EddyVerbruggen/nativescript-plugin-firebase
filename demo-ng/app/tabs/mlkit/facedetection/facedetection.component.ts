@@ -16,6 +16,7 @@ export class FaceDetectionComponent extends AbstractMLKitViewComponent {
     const value: MLKitDetectFacesOnDeviceResult = scanResult.value;
     if (value.faces.length > 0) {
       this.faces = value.faces;
+      console.log("this.faces: " + JSON.stringify(this.faces));
 
       let allSmilingAndEyesOpen = true;
       value.faces.forEach(face => {
