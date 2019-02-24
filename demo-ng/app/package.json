@@ -1,8 +1,8 @@
 {
   "android": {
-    "v8Flags": "--expose_gc",
-    "discardUncaughtJsExceptions": true
+    "v8Flags": "--expose_gc"
   },
+  "discardUncaughtJsExceptions": true,
   "main": "main.js",
   "name": "tns-template-hello-world-ng",
   "version": "3.3.0"

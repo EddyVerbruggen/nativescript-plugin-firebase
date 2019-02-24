@@ -26,9 +26,9 @@
   },
   "homepage": "https://github.com/NativeScript/template-hello-world-ts",
   "android": {
-    "v8Flags": "--expose_gc",
-    "discardUncaughtJsExceptions": true
+    "v8Flags": "--expose_gc"
   },
+  "discardUncaughtJsExceptions": true,
   "devDependencies": {
     "nativescript-dev-typescript": "^0.3.0"
   },
