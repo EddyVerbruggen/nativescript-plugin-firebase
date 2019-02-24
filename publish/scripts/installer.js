@@ -966,7 +966,7 @@ module.exports = function($logger, $projectData, hookArgs) {
             }
         } else { $logger.info('nativescript-plugin-firebase: '+npfInfoPath+' not found, forcing prepare!'); }
 
-        if (forcePrepare && fs.existsSync(nsPrepareInfoPath)) {
+        if (forcePrepare) {
             $logger.info('nativescript-plugin-firebase: running release build or change in environment detected, forcing prepare!');
 
             if (fs.existsSync(npfInfoPath)) { fs.unlinkSync(npfInfoPath); }
