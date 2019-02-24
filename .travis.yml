@@ -29,8 +29,8 @@ matrix:
     - os: osx
       env:
         - BuildiOS="12"
-        - Xcode="10.0"
-      osx_image: xcode10.0
+        - Xcode="10.2"
+      osx_image: "xcode10.2"
       language: node_js
       node_js: "8"
       jdk: oraclejdk8

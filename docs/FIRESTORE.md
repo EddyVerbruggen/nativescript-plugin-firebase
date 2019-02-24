@@ -64,17 +64,21 @@ unsubscribe();
 
 > Using **Observables**? [Check the example in the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/f6972433dea48bf1d342a6e4ef7f955dff341837/demo-ng/app/item/items.component.ts#L187-L198).
 
-#### Determine if results are from cache or not
-If persistence is enabled, query results will first be returned from the local cache if available, and then from network. To determine if a document has been returned from the cache or not, pass the includeMetadataChanges parameter and inspect the metadata:
+#### Snapshot metadata (for queries and documents)
+Firestore can return metadata when passing the `includeMetadataChanges` boolean property. This can be used for:
+
+- `snapshot.metadata.fromCache`: True if the snapshot was created from cached data rather than guaranteed up-to-date server data.
+- `snapshot.metadata.hasPendingWrites`: True if the snapshot contains the result of local writes that have not yet been committed to the backend.
 
 ```typescript
+import { firestore } from "nativescript-plugin-firebase";
 const citiesCollection = firebase.firestore().collection("cities");
 
 const unsubscribe = citiesCollection.onSnapshot(({ includeMetadataChanges: true }, snapshot: firestore.QuerySnapshot) => {
   snapshot.forEach(city => console.log(city.data()));
 
-  const source = snapshot.metadata.fromCache ? "local cache" : "server";
-  console.log("Data came from " + source);
+  console.log("Data came from " + (snapshot.metadata.fromCache ? "local cache" : "server"));
+  console.log("Has pending writes? " + snapshot.metadata.hasPendingWrites);
 });
 
 // then after a while, to detach the listener:

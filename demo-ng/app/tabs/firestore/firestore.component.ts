@@ -263,25 +263,38 @@ export class FirestoreComponent {
   firestoreDocumentObservable(): void {
     this.myCity$ = Observable.create(subscriber => {
       const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
-      docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
-        this.zone.run(() => {
-          this.city = <City>doc.data();
-          subscriber.next(this.city);
-        });
-      });
+      docRef.onSnapshot(
+          {includeMetadataChanges: true},
+          (doc: firestore.DocumentSnapshot) => {
+
+            const source = doc.metadata.fromCache ? "local cache" : "server";
+            console.log("Data came from " + source);
+            console.log("Has pending writes? " + doc.metadata.hasPendingWrites);
+
+            this.zone.run(() => {
+              this.city = <City>doc.data();
+              subscriber.next(this.city);
+            });
+          });
     });
   }
 
   firestoreCollectionObservable(): void {
     this.myCities$ = Observable.create(subscriber => {
       const colRef: firestore.CollectionReference = firebase.firestore().collection("cities");
-      colRef.onSnapshot((snapshot: firestore.QuerySnapshot) => {
-        this.zone.run(() => {
-          this.cities = [];
-          snapshot.forEach(docSnap => this.cities.push(<City>docSnap.data()));
-          subscriber.next(this.cities);
-        });
-      });
+      colRef.onSnapshot(
+          {includeMetadataChanges: true},
+          (snapshot: firestore.QuerySnapshot) => {
+            const source = snapshot.metadata.fromCache ? "local cache" : "server";
+            console.log("Data came from " + source);
+            console.log("Has pending writes? " + snapshot.metadata.hasPendingWrites);
+
+            this.zone.run(() => {
+              this.cities = [];
+              snapshot.forEach(docSnap => this.cities.push(<City>docSnap.data()));
+              subscriber.next(this.cities);
+            });
+          });
     });
   }
 

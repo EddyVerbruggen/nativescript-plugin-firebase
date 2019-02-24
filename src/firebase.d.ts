@@ -679,6 +679,27 @@ export namespace firestore {
     merge?: boolean;
   }
 
+  export interface SnapshotMetadata {
+    /**
+     * True if the snapshot contains the result of local writes (e.g. set() or
+     * update() calls) that have not yet been committed to the backend.
+     * If your listener has opted into metadata updates (via
+     * `DocumentListenOptions` or `QueryListenOptions`) you will receive another
+     * snapshot with `hasPendingWrites` equal to false once the writes have been
+     * committed to the backend.
+     */
+    readonly hasPendingWrites: boolean;
+
+    /**
+     * True if the snapshot was created from cached data rather than
+     * guaranteed up-to-date server data. If your listener has opted into
+     * metadata updates (via `DocumentListenOptions` or `QueryListenOptions`)
+     * you will receive another snapshot with `fromCache` equal to false once
+     * the client has received up-to-date data from the backend.
+     */
+    readonly fromCache: boolean;
+  }
+
   export interface DocumentSnapshot {
     ios?: any;
     /* FIRDocumentSnapshot */
@@ -688,7 +709,20 @@ export namespace firestore {
     exists: boolean;
     ref: DocumentReference;
 
+    /**
+     * Included when includeMetadataChanges is true.
+     */
+    readonly metadata?: SnapshotMetadata;
+
     data(): DocumentData;
+  }
+
+  export interface SnapshotListenOptions {
+    /**
+     * Include a change even if only the metadata of the query or of a document changed.
+     * Default false.
+     */
+    readonly includeMetadataChanges?: boolean;
   }
 
   export interface DocumentReference {
@@ -701,7 +735,7 @@ export namespace firestore {
     update: (document: any) => Promise<void>;
     delete: () => Promise<void>;
 
-    onSnapshot(callback: (doc: DocumentSnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback?: (snapshot: DocumentSnapshot) => void): () => void;
 
     android?: any;
     ios?: any;
@@ -716,7 +750,7 @@ export namespace firestore {
 
     limit(limit: number): Query;
 
-    onSnapshot(callback: (snapshot: QuerySnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void): () => void;
 
     startAt(snapshot: DocumentSnapshot): Query;
 
@@ -854,6 +888,11 @@ export namespace firestore {
   export interface QuerySnapshot {
     docSnapshots: firestore.DocumentSnapshot[];
     docs: firestore.QueryDocumentSnapshot[];
+
+    /**
+     * Included when includeMetadataChanges is true.
+     */
+    readonly metadata: SnapshotMetadata;
 
     docChanges(options?: SnapshotListenOptions): DocumentChange[];
 

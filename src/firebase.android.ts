@@ -3,7 +3,9 @@ import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import lazy from "tns-core-modules/utils/lazy";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
 import {
-  DataSnapshot, FBData, FBDataSingleEvent, FBErrorData, FirebaseQueryResult,
+  DataSnapshot,
+  FBDataSingleEvent,
+  FBErrorData,
   firestore,
   GetAuthTokenOptions,
   GetAuthTokenResult,
@@ -26,6 +28,11 @@ const gmsTasks = (<any>com.google.android.gms).tasks;
 
 class DocumentSnapshot extends DocumentSnapshotBase {
   android: com.google.firebase.firestore.DocumentSnapshot;
+
+  metadata = {
+    fromCache: this.snapshot.getMetadata().isFromCache(),
+    hasPendingWrites: this.snapshot.getMetadata().hasPendingWrites()
+  };
 
   constructor(public snapshot: com.google.firebase.firestore.DocumentSnapshot) {
     super(snapshot ? snapshot.getId() : null, snapshot.exists(), firebase.toJsObject(snapshot.getData()), convertDocRef(snapshot.getReference()));
@@ -2229,7 +2236,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
       orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, collectionRef),
       limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, collectionRef),
-      onSnapshot: (optionsOrCallback: any, callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, optionsOrCallback, callback),
+      onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(collectionRef, optionsOrCallback, callback),
       startAfter: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshot, collectionRef),
       startAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAt(collectionPath, snapshot, collectionRef),
       endAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.endAt(collectionPath, snapshot, collectionRef),
@@ -2242,9 +2249,16 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, callback: (doc: DocumentSnapshot) => void): () => void => {
-  const listener = docRef.addSnapshotListener(new com.google.firebase.firestore.EventListener({
-        onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception) => {
+firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback: (doc: DocumentSnapshot) => void): () => void => {
+  let options = com.google.firebase.firestore.MetadataChanges.EXCLUDE;
+  if ((typeof optionsOrCallback) === "function") {
+    callback = <(snapshot: DocumentSnapshot) => void>optionsOrCallback;
+  } else if ((<firestore.SnapshotListenOptions>optionsOrCallback).includeMetadataChanges) {
+    options = com.google.firebase.firestore.MetadataChanges.INCLUDE;
+  }
+
+  const listener = docRef.addSnapshotListener(options, new com.google.firebase.firestore.EventListener({
+        onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception: com.google.firebase.firestore.FirebaseFirestoreException) => {
           if (exception === null) {
             callback(new DocumentSnapshot(snapshot));
           }
@@ -2255,11 +2269,11 @@ firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.D
   return () => listener.remove();
 };
 
-firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore.CollectionReference, optionsOrCallback: any, callback: (snapshot: QuerySnapshot) => void): () => void => {
+firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore.CollectionReference, optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback: (snapshot: QuerySnapshot) => void): () => void => {
   let options = com.google.firebase.firestore.MetadataChanges.EXCLUDE;
-  if ((typeof optionsOrCallback) === 'function') {
-    callback = optionsOrCallback;
-  } else if (optionsOrCallback.includeMetadataChanges) {
+  if ((typeof optionsOrCallback) === "function") {
+    callback = <(snapshot: QuerySnapshot) => void>optionsOrCallback;
+  } else if ((<firestore.SnapshotListenOptions>optionsOrCallback).includeMetadataChanges) {
     options = com.google.firebase.firestore.MetadataChanges.INCLUDE;
   }
 
@@ -2288,7 +2302,7 @@ firebase.firestore._getDocumentReference = (javaObj: JDocumentReference, collect
     get: () => firebase.firestore.getDocument(collectionPath, javaObj.getId()),
     update: (data: any) => firebase.firestore.update(collectionPath, javaObj.getId(), data),
     delete: () => firebase.firestore.delete(collectionPath, javaObj.getId()),
-    onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(javaObj, callback),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(javaObj, optionsOrCallback, callback),
     android: javaObj
   };
 };
@@ -2349,7 +2363,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
             update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
             delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-            onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, callback)
+            onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callback)
           });
         }
       });
@@ -2565,7 +2579,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
     where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
-    onSnapshot: (optionsOrCallback: any, callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callback),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callback),
     startAfter: (snapshot: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, snapshot, query),
     startAt: (snapshot: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, snapshot, query),
     endAt: (snapshot: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, snapshot, query),
@@ -2649,7 +2663,7 @@ function convertDocRef(docRef: JDocumentReference): firestore.DocumentReference 
     get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-    onSnapshot: (callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, callback),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((doc: DocumentSnapshot) => void), callback: (doc: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callback),
     android: docRef
   };
 }
@@ -2679,6 +2693,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
 
   metadata = {
     fromCache: this.snapshot.getMetadata().isFromCache(),
+    hasPendingWrites: this.snapshot.getMetadata().hasPendingWrites()
   };
 
   get docs(): firestore.QueryDocumentSnapshot[] {
