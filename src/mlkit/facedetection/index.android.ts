@@ -1,6 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
+import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult, MLKitDetectFacesResultBounds } from "./";
 import { MLKitVisionOptions } from "../";
-import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult } from "./";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
 
 const gmsTasks = (<any>com.google.android.gms).tasks;
@@ -33,10 +33,13 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
         for (let i = 0; i < faces.size(); i++) {
           const face = faces.get(i);
           result.faces.push({
+            bounds: boundingBoxToBounds(face.getBoundingBox()),
             smilingProbability: face.getSmilingProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getSmilingProbability() : undefined,
             leftEyeOpenProbability: face.getLeftEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getLeftEyeOpenProbability() : undefined,
             rightEyeOpenProbability: face.getRightEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getRightEyeOpenProbability() : undefined,
-            trackingId: face.getTrackingId() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.INVALID_ID ? face.getTrackingId() : undefined
+            trackingId: face.getTrackingId() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.INVALID_ID ? face.getTrackingId() : undefined,
+            headEulerAngleY: face.getHeadEulerAngleY(),
+            headEulerAngleZ: face.getHeadEulerAngleZ()
           });
         }
 
@@ -64,6 +67,19 @@ function getFaceDetector(options: MLKitDetectFacesOnDeviceOptions): any {
   return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionFaceDetector(builder.build());
 }
 
+function boundingBoxToBounds(rect: any): MLKitDetectFacesResultBounds {
+  return {
+    origin: {
+      x: rect.left,
+      y: rect.top
+    },
+    size: {
+      width: rect.width(),
+      height: rect.height()
+    }
+  }
+}
+
 export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): Promise<MLKitDetectFacesOnDeviceResult> {
   return new Promise((resolve, reject) => {
     try {
@@ -81,10 +97,13 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
             for (let i = 0; i < faces.size(); i++) {
               const face = faces.get(i);
               result.faces.push({
+                bounds: boundingBoxToBounds(face.getBoundingBox()),
                 smilingProbability: face.getSmilingProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getSmilingProbability() : undefined,
                 leftEyeOpenProbability: face.getLeftEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getLeftEyeOpenProbability() : undefined,
                 rightEyeOpenProbability: face.getRightEyeOpenProbability() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.UNCOMPUTED_PROBABILITY ? face.getRightEyeOpenProbability() : undefined,
-                trackingId: face.getTrackingId() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.INVALID_ID ? face.getTrackingId() : undefined
+                trackingId: face.getTrackingId() !== com.google.firebase.ml.vision.face.FirebaseVisionFace.INVALID_ID ? face.getTrackingId() : undefined,
+                headEulerAngleY: face.getHeadEulerAngleY(),
+                headEulerAngleZ: face.getHeadEulerAngleZ()
               });
             }
           }

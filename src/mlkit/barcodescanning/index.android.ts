@@ -1,5 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
-import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./";
+import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult, MLKitScanBarcodesResultBounds } from "./";
 import { MLKitVisionOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
@@ -34,7 +34,8 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
             result.barcodes.push({
               value: barcode.getRawValue(),
               format: BarcodeFormat[barcode.getFormat()],
-              android: barcode
+              android: barcode,
+              bounds: boundingBoxToBounds(barcode.getBoundingBox())
             });
           }
         }
@@ -46,6 +47,19 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
         });
       }
     });
+  }
+}
+
+function boundingBoxToBounds(rect: any): MLKitScanBarcodesResultBounds {
+  return {
+    origin: {
+      x: rect.left,
+      y: rect.top
+    },
+    size: {
+      width: rect.width(),
+      height: rect.height()
+    }
   }
 }
 
@@ -79,7 +93,8 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
               result.barcodes.push({
                 value: barcode.getRawValue(),
                 format: BarcodeFormat[barcode.getFormat()],
-                android: barcode
+                android: barcode,
+                bounds: boundingBoxToBounds(barcode.getBoundingBox())
               });
             }
           }

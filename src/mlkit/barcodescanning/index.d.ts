@@ -3,11 +3,23 @@ import { BarcodeFormat } from "./barcodescanning-common";
 
 export { BarcodeFormat };
 
+export interface MLKitScanBarcodesResultBounds {
+  origin: {
+    x: number;
+    y: number;
+  },
+  size: {
+    width: number;
+    height: number;
+  }
+}
+
 export interface MLKitScanBarcodesResultBarcode {
   value: string;
   format: string;
   ios?: any;
   android?: any;
+  bounds?: MLKitScanBarcodesResultBounds;
   // TODO details
 }
 
