@@ -9,6 +9,11 @@ You will be prompted during installation of the plugin to enable either Crashlyt
 Note that if you want to use Crashlytics, make sure your `firebase.nativescript.json` file has `"crashlytics": true` and `"crash_reporting": false`,
 then remove the `platforms` folder so these changes are picked up.
 
+## Configuration in the Firebase Console
+When setting up Crashlytics, select "This app is new to Crashlytics" and press "Next".
+Then the screen changes to something like "waiting for your first crash report".
+Then produce a crash, and it can easily take a day before that screen changes (later data comes in much quicker).
+
 ## Crashlytics API
 
 ### `sendCrashLog`
