@@ -3,6 +3,7 @@ import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import lazy from "tns-core-modules/utils/lazy";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
 import {
+  ActionCodeSettings,
   DataSnapshot,
   FBDataSingleEvent,
   FBErrorData,
@@ -631,7 +632,7 @@ firebase.getCurrentUser = arg => {
   });
 };
 
-firebase.sendEmailVerification = () => {
+firebase.sendEmailVerification = (actionCodeSettings?: ActionCodeSettings) => {
   return new Promise((resolve, reject) => {
     try {
       const firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
@@ -647,7 +648,24 @@ firebase.sendEmailVerification = () => {
           }
         });
 
-        user.sendEmailVerification().addOnCompleteListener(addOnCompleteListener);
+        if (actionCodeSettings) {
+          const settingsBuilder = new com.google.firebase.auth.ActionCodeSettings.newBuilder();
+          if (actionCodeSettings.handleCodeInApp !== undefined) {
+            settingsBuilder.setHandleCodeInApp(actionCodeSettings.handleCodeInApp);
+          }
+          if (actionCodeSettings.url) {
+            settingsBuilder.setUrl(actionCodeSettings.url);
+          }
+          if (actionCodeSettings.iOS && actionCodeSettings.iOS.bundleId) {
+            settingsBuilder.setIOSBundleId(actionCodeSettings.iOS.bundleId);
+          }
+          if (actionCodeSettings.android && actionCodeSettings.android.packageName) {
+            settingsBuilder.setAndroidPackageName(actionCodeSettings.android.packageName, actionCodeSettings.android.installApp, actionCodeSettings.android.minimumVersion || null);
+          }
+          user.sendEmailVerification(settingsBuilder.build()).addOnCompleteListener(addOnCompleteListener);
+        } else {
+          user.sendEmailVerification().addOnCompleteListener(addOnCompleteListener);
+        }
       } else {
         reject("Log in first");
       }
@@ -783,7 +801,8 @@ function toLoginResult(user, additionalUserInfo?): User {
     metadata: {
       creationTimestamp: user.getMetadata() ? new Date(user.getMetadata().getCreationTimestamp() as number) : null,
       lastSignInTimestamp: user.getMetadata() ? new Date(user.getMetadata().getLastSignInTimestamp() as number) : null
-    }
+    },
+    sendEmailVerification: (actionCodeSettings?: ActionCodeSettings) => firebase.sendEmailVerification(actionCodeSettings)
   };
 
   if (firebase.currentAdditionalUserInfo) {

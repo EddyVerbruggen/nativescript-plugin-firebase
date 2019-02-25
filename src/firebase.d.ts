@@ -322,6 +322,20 @@ export interface ReauthenticateOptions {
   password?: string;
 }
 
+type ActionCodeSettings = {
+  url: string;
+  handleCodeInApp?: boolean;
+  android?: {
+    installApp?: boolean;
+    minimumVersion?: string;
+    packageName: string;
+  };
+  iOS?: {
+    bundleId: string;
+    dynamicLinkDomain?: string;
+  };
+};
+
 /**
  * The returned object from the login function.
  */
@@ -339,6 +353,8 @@ export interface User {
   additionalUserInfo?: AdditionalUserInfo;
   /** iOS only */
   refreshToken?: string;
+
+  sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<void>;
 }
 
 /**
@@ -943,7 +959,7 @@ export function fetchProvidersForEmail(email: string): Promise<Array<string>>;
 
 export function fetchSignInMethodsForEmail(email: string): Promise<Array<string>>;
 
-export function sendEmailVerification(): Promise<any>;
+export function sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<any>;
 
 export function createUser(options: CreateUserOptions): Promise<User>;
 

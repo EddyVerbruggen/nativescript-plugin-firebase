@@ -5,6 +5,7 @@ export module auth {
   export class Auth {
     private authStateChangedHandler;
     public currentUser: User;
+    public languageCode: string | null;
 
     public onAuthStateChanged(handler: (user: User) => void): void {
       this.authStateChangedHandler = handler;

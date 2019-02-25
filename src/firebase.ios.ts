@@ -1,5 +1,6 @@
 import * as application from "tns-core-modules/application/application";
 import {
+  ActionCodeSettings,
   DataSnapshot,
   FBDataSingleEvent,
   firestore,
@@ -543,7 +544,7 @@ firebase.getCurrentUser = arg => {
   });
 };
 
-firebase.sendEmailVerification = () => {
+firebase.sendEmailVerification = (actionCodeSettings?: ActionCodeSettings) => {
   return new Promise((resolve, reject) => {
     try {
       const fAuth = FIRAuth.auth();
@@ -561,7 +562,29 @@ firebase.sendEmailVerification = () => {
             resolve(true);
           }
         };
-        user.sendEmailVerificationWithCompletion(onCompletion);
+        if (actionCodeSettings) {
+          const firActionCodeSettings = FIRActionCodeSettings.new();
+          if (actionCodeSettings.handleCodeInApp !== undefined) {
+            firActionCodeSettings.handleCodeInApp = actionCodeSettings.handleCodeInApp;
+          }
+          if (actionCodeSettings.url) {
+            firActionCodeSettings.URL = NSURL.URLWithString(actionCodeSettings.url);
+          }
+          if (actionCodeSettings.iOS) {
+            if (actionCodeSettings.iOS.bundleId) {
+              firActionCodeSettings.setIOSBundleID(actionCodeSettings.iOS.bundleId);
+            }
+            if (actionCodeSettings.iOS.dynamicLinkDomain) {
+              firActionCodeSettings.dynamicLinkDomain = actionCodeSettings.iOS.dynamicLinkDomain;
+            }
+          }
+          if (actionCodeSettings.android && actionCodeSettings.android.packageName) {
+            firActionCodeSettings.setAndroidPackageNameInstallIfNotAvailableMinimumVersion(actionCodeSettings.android.packageName, actionCodeSettings.android.installApp, actionCodeSettings.android.minimumVersion || null);
+          }
+          user.sendEmailVerificationWithActionCodeSettingsCompletion(firActionCodeSettings, onCompletion);
+        } else {
+          user.sendEmailVerificationWithCompletion(onCompletion);
+        }
       } else {
         reject("Log in first");
       }
@@ -660,7 +683,8 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
     metadata: {
       creationTimestamp: user.metadata.creationDate as Date,
       lastSignInTimestamp: user.metadata.lastSignInDate as Date
-    }
+    },
+    sendEmailVerification: (actionCodeSettings?: ActionCodeSettings) => firebase.sendEmailVerification(actionCodeSettings)
   };
 
   if (firebase.currentAdditionalUserInfo) {

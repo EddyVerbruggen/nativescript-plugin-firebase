@@ -746,14 +746,46 @@ When this happens (or to prevent it from happening), re-authenticate the user.
 Sending an "email confirmation" email can be done after the user logged in:
 
 ```js
-  firebase.sendEmailVerification().then(
-      function () {
-        console.log("Email verification sent");
-      },
-      function (error) {
-        console.log("Error sending email verification: " + error);
-      }
-  );
+firebase.sendEmailVerification().then(
+  function () {
+    console.log("Email verification sent");
+  },
+  function (error) {
+    console.log("Error sending email verification: " + error);
+  }
+);
 ```
 
+You can also pass state to this function - for details on the properties, see [the Firebase docs](https://firebase.google.com/docs/auth/web/passing-state-in-email-actions).
 
+```js
+firebase.sendEmailVerification({
+   url: "https://www.google.com",
+   handleCodeInApp: true,
+   iOS: {
+     bundleId: "com.bla.hoopla",
+     dynamicLinkDomain: "xyz"
+   },
+   android: {
+     minimumVersion: "13",
+     installApp: true,
+     packageName: "x.y.z"
+   }
+ }).then(
+  function () {
+    console.log("Email verification sent");
+  },
+  function (error) {
+    console.log("Error sending email verification: " + error);
+  }
+);
+```
+
+Note that you can also use this with the Web API:
+
+```js
+const firebaseWebApi = require("nativescript-plugin-firebase/app");
+const user = firebaseWebApi.auth().currentUser;
+
+user.sendEmailVerification() // see the implementation above 
+```
