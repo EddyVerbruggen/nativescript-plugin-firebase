@@ -57,8 +57,14 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.captureSession = AVCaptureSession.new();
     this.captureSession.sessionPreset = AVCaptureSessionPreset1280x720;
 
-    const captureDeviceInput = AVCaptureDeviceInput.deviceInputWithDeviceError(this.captureDevice);
-    this.captureSession.addInput(captureDeviceInput);
+    try {
+      const captureDeviceInput = AVCaptureDeviceInput.deviceInputWithDeviceError(this.captureDevice);
+      this.captureSession.addInput(captureDeviceInput);
+    } catch (e) {
+      // likely here, because the camera permission was previously denied (catching, otherwise the app crashes)
+      console.log("Error while trying to use the camera: " + e);
+      return;
+    }
 
     this.previewLayer = AVCaptureVideoPreviewLayer.layerWithSession(this.captureSession);
     this.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
