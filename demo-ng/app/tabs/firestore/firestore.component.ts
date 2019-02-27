@@ -254,7 +254,12 @@ export class FirestoreComponent {
         .update({
           last: "Updated From 'arrayRemove'",
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
-          colors: firebase.firestore().FieldValue().arrayRemove("red")
+          colors: firestore.FieldValue.arrayUnion("red"),
+          messages: firebase.firestore().FieldValue().arrayRemove({
+            message: "Test 1",
+            source: "central",
+            time: Date.now()
+          })
         })
         .then(() => console.log("Woofie updated from 'arrayRemove'"))
         .catch(err => console.log("Updating Woofie from 'arrayRemove' failed, error: " + JSON.stringify(err)));
