@@ -146,7 +146,9 @@ firebase.toHashMap = obj => {
             values = values.map(v => typeof (v) === "object" ? firebase.toHashMap(v) : v);
             node.put(property, com.google.firebase.firestore.FieldValue.arrayUnion(values));
           } else if (fieldValue.type === "ARRAY_REMOVE") {
-            node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value));
+            let values: Array<any> = Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value;
+            values = values.map(v => typeof (v) === "object" ? firebase.toHashMap(v) : v);
+            node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(values));
           } else {
             console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!");
           }
