@@ -11,12 +11,6 @@ export function httpsCallable<I = {}, O = {}>(functionName: string): HttpsCallab
 
     const handleCompletion = (result: FIRHTTPSCallableResult, err: NSError) => {
       if (err) {
-        if (err.domain === FIRFunctionsErrorDomain) {
-          const message = err.localizedDescription;
-          reject(message);
-          return;
-        }
-
         reject(err.localizedDescription);
         return;
       }
