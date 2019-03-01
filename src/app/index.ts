@@ -52,14 +52,6 @@ export function firestore(app?: any): firebaseFirestoreModule.Firestore {
 
 let functionsCache;
 
-export namespace database {
-  // This is just to follow the webs interface. On android and ios enable logging only accepts a boolean
-  // By default logging is set to Info. We will set to debug if true and none if false.
-  export function enableLogging(logger?: boolean | ((a: string) => any), persistent?: boolean): any {
-    firebase.enableLogging(logger, persistent);
-  }
-}
-
 export function functions(app?: any): firebaseFunctionsModule.Functions {
   if (app) {
     console.log("The 'app' param is ignored at the moment.");
@@ -80,4 +72,14 @@ export function storage(app?: any): firebaseStorageModule.Storage {
     storageCache = new firebaseStorageModule.Storage();
   }
   return storageCache;
+}
+export namespace database {
+  // This is just to follow the webs interface. On android and ios enable logging only accepts a boolean
+  // By default logging is set to Info. We will set to debug if true and none if false.
+  export function enableLogging(logger?: boolean | ((a: string) => any), persistent?: boolean): any {
+    firebase.enableLogging(logger, persistent);
+  }
+}
+export namespace database.ServerValue {
+  export let TIMESTAMP: Object = { ".sv": "timestamp" };
 }
