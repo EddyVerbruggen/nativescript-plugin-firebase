@@ -6,6 +6,8 @@
 ## 8.0.0 (2019, February 26)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/94?closed=1)
 
+### BREAKING CHANGES
+- `getAuthToken` no longer returns a token (`string`), but an `GetAuthTokenResult` object which contains more data.
 
 ## 7.7.0 (2019, January 20)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/92?closed=1)
