@@ -26,23 +26,16 @@ export namespace database {
       this.queryObject = firebase.webQuery(this.path);
     }
 
-   /**
-    * Listens for data changes at a particular location
-    * @param eventType One of the following strings: "value", "child_added", "child_changed", "child_removed", or "child_moved."
-    * @param callback A callback that fires when the specified event occurs. The callback will be passed a DataSnapshot.
-    * @returns The provided callback function is returned unmodified.
-    */
+    /**
+     * Listens for data changes at a particular location
+     * @param eventType One of the following strings: "value", "child_added", "child_changed", "child_removed", or "child_moved."
+     * @param callback A callback that fires when the specified event occurs. The callback will be passed a DataSnapshot.
+     * @returns The provided callback function is returned unmodified.
+     */
     public on(eventType: string, callback: (a: DataSnapshot | null, b?: string) => any,
       cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => Function {
 
-    /**
-     * Follow webApi which uses the eventType. Works right now but running into issue because we don't
-     * pass back a DataSnapshot with forEach / getChildren() implemented. So when an event fires the user
-     * gets the updated values, but it's not sorted. In Android and Web you would loop through the children
-     * (getChildren() and forEach()) which would be returned in the query order.
-     * See:  https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#forEach
-     */
-    this.queryObject.on(eventType, callback).catch( error => {
+      this.queryObject.on(eventType, callback).catch(error => {
         console.log("firebase.database().on error: " + error);
       });
       return callback; // According to firebase doc we just return the callback given
@@ -63,7 +56,7 @@ export namespace database {
      */
     public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any,
       failureCallbackOrContext?: Object | null, context?: Object | null): Promise<DataSnapshot> {
-        return this.queryObject.once(eventType);
+      return this.queryObject.once(eventType);
     }
 
     /**
@@ -97,7 +90,42 @@ export namespace database {
       return this.queryObject.orderByValue();
     }
 
-    // Didn't expose the filterby functions because they should be run after an orderby. (TODO: Limitby are exceptions....)
+    /**
+     * Creates a Query with the specified starting point. The value to start at should match the type
+     * passed to orderBy(). If using orderByKey(), the value must be a string
+     */
+    public startAt(value: number | string | boolean | null): firebase.Query {
+      return this.queryObject.startAt(value);
+    }
+
+    /**
+     * Creates a Query with the specified ending point. The value to start at should match the type
+     * passed to orderBy(). If using orderByKey(), the value must be a string.
+     */
+    public endAt(value: any, key?: string): firebase.Query {
+      return this.queryObject.endAt(value, key);
+    }
+
+    /**
+     * Generate a new Query limited to the first specific number of children.
+     */
+    public limitToFirst(value: number): firebase.Query {
+      return this.queryObject.limitToFirst(value);
+    }
+
+    /**
+     * Generate a new Query limited to the last specific number of children.
+     */
+    public limitToLast(value: number): firebase.Query {
+      return this.queryObject.limitToLast(value);
+    }
+
+    /**
+     * Creates a Query that includes children that match the specified value.
+     */
+    public equalTo(value: any, key?: string): firebase.Query {
+      return this.queryObject.equalTo(value, key);
+    }
   }
 
   export class Reference extends Query {
