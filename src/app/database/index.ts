@@ -1,5 +1,4 @@
 import * as firebase from "../../firebase";
-import { AddEventListenerResult, FBData } from "../../firebase";
 import { nextPushId } from "./util/NextPushId";
 
 export namespace database {
@@ -94,7 +93,7 @@ export namespace database {
      * Creates a Query with the specified starting point. The value to start at should match the type
      * passed to orderBy(). If using orderByKey(), the value must be a string
      */
-    public startAt(value: number | string | boolean | null): firebase.Query {
+    public startAt(value: number | string | boolean): firebase.Query {
       return this.queryObject.startAt(value);
     }
 

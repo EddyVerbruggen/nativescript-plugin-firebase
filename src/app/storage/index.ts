@@ -11,7 +11,7 @@ export module storage {
 
   export class Reference {
 
-    private path: string;
+    private path: string | undefined;
 
     parent: Reference | null; // TODO set this every time we navigate..
     root: Reference;
