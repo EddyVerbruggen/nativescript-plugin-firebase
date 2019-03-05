@@ -1503,10 +1503,10 @@ firebase.getValue = path => {
       }
 
       const listener = new com.google.firebase.database.ValueEventListener({
-        onDataChange: snapshot => {
+        onDataChange: (snapshot: com.google.firebase.database.DataSnapshot) => {
           resolve(firebase.getCallbackData('ValueChanged', snapshot));
         },
-        onCancelled: databaseError => {
+        onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
           reject(databaseError.getMessage());
         }
       });
@@ -1622,9 +1622,6 @@ firebase.update = (path, val) => {
     }
   });
 };
-firebase.query = (updateCallback, path, options) => {
-  return new Promise((resolve, reject) => {
-
 
 firebase.webQuery = (path: string): QueryBase => {
   if (!firebase.initialized) {
@@ -1639,20 +1636,15 @@ class Query implements QueryBase {
   private query: com.google.firebase.database.Query; // Keep track of internal query state allowing us to chain filter/range/limit
   private static eventListenerMap: Map<string, Array<any>> = new Map(); // A map to keep track all all the listeners attached for the specified eventType
 
-  constructor(private dbRef: com.google.firebase.database.DatabaseReference, private path: string) { }
+  constructor(private dbRef: com.google.firebase.database.DatabaseReference, private path: string) {
+    this.query = this.dbRef;
+  }
 
   on(eventType: string, callback: (a: any, b?: string) => any): Promise<any> {
     const onValueEvent = result => {
-      if (result.error) {
-        callback(result); // CAREFUL before we were calling result.error!
-      } else {
-        callback({
-          key: result.key,
-          val: () => result.value,
-          exists: () => !!result.value
-        });
-      }
+        callback(result);
     };
+
     return new Promise((resolve, reject) => {
       try {
         if (firebase.instance === null) {
@@ -1660,13 +1652,15 @@ class Query implements QueryBase {
           return;
         }
         const listener = this.createEventListener(eventType, onValueEvent);
-        if (!this.query) this.query = this.dbRef; // Need this when calling on() without doing a sort as this.query is undefined
 
         if (eventType === "value") {
           this.query.addValueEventListener(listener as com.google.firebase.database.ValueEventListener);
         } else if (eventType === "child_added" || eventType === "child_changed" || eventType === "child_removed" || eventType === "child_moved") {
           this.query.addChildEventListener(listener as com.google.firebase.database.ChildEventListener);
         } else {
+          callback({
+            error: "Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'"
+          });
           reject("Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'");
           return;
         }
@@ -1677,21 +1671,36 @@ class Query implements QueryBase {
         Query.eventListenerMap.get(eventType).push(listener); // We need to keep track of the listeners to fully remove them when calling off
         resolve();
       } catch (ex) {
-        console.log("Error in firebase.addValueEventListener: " + ex);
+        console.log("Error in firebase.on: " + ex);
         reject(ex);
       }
     });
   }
 
-  once(eventType: string): Promise<any> {
+  once(eventType: string): Promise<DataSnapshot> {
     return new Promise((resolve, reject) => {
-      firebase.getValue(this.path).then(result => {
-        resolve({
-          key: result.key,
-          val: () => result.value,
-          exists: () => !!result.value
+      try {
+        if (firebase.instance === null) {
+          reject("Run init() first!");
+          return;
+        }
+        const listener = new com.google.firebase.database.ValueEventListener({
+          onDataChange: (snapshot: com.google.firebase.database.DataSnapshot) => {
+            resolve(nativeSnapshotToWebSnapshot(snapshot));
+          },
+          onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
+            reject({
+              error: databaseError.getMessage()
+            });
+          }
         });
-      });
+        // Kind of akward since Android only has single listener for the value event type...
+        firebase.instance.child(this.path).addListenerForSingleValueEvent(listener);
+      }
+      catch (ex) {
+        console.log("Error in firebase.once: " + ex);
+        reject(ex);
+      }
     });
   }
 
@@ -1709,34 +1718,22 @@ class Query implements QueryBase {
   }
 
   orderByChild(value: string): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.orderByChild(value);
+    this.query = this.query.orderByChild(value);
     return this;
   }
 
   orderByKey(): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.orderByKey();
+    this.query = this.query.orderByKey();
     return this;
   }
 
   orderByPriority(): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.orderByPriority();
+    this.query = this.query.orderByPriority();
     return this;
   }
 
   orderByValue(): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.orderByValue();
+    this.query = this.query.orderByValue();
     return this;
   }
 
@@ -1790,7 +1787,7 @@ class Query implements QueryBase {
     if (eventType === "value") {
       listener = new com.google.firebase.database.ValueEventListener({
         onDataChange: (snapshot: com.google.firebase.database.DataSnapshot) => {
-          callback(firebase.getCallbackData('ValueChanged', snapshot));
+          callback(nativeSnapshotToWebSnapshot(snapshot));
         },
         onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
           callback({
@@ -1807,22 +1804,22 @@ class Query implements QueryBase {
         },
         onChildAdded: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
           if (eventType === "child_added") {
-            callback(firebase.getCallbackData(eventType, snapshot));
+            callback(nativeSnapshotToWebSnapshot(snapshot));
           }
         },
         onChildRemoved: (snapshot: com.google.firebase.database.DataSnapshot) => {
           if (eventType === "child_removed") {
-            callback(firebase.getCallbackData(eventType, snapshot));
+            callback(nativeSnapshotToWebSnapshot(snapshot));
           }
         },
         onChildChanged: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
           if (eventType === "child_changed") {
-            callback(firebase.getCallbackData(eventType, snapshot));
+            callback(nativeSnapshotToWebSnapshot(snapshot));
           }
         },
         onChildMoved: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
           if (eventType === "child_moved") {
-            callback(firebase.getCallbackData(eventType, snapshot));
+            callback(nativeSnapshotToWebSnapshot(snapshot));
           }
         }
       });
