@@ -227,13 +227,24 @@ Alternatively you can use the web api to query data. See [docs](https://firebase
 
 Some key notes:
 
+The DataSnapshot returned is vastly different from the native api's snapshot! Please follow the web api docs to see what
+you can do with the datasnapshot returned. Note that Datasnapshot.ref() is yet implemented.
+
+`Query.on()` does not accept a cancelCallbackOrContext. Similar to the native api, check if result.error is true before continuing.
+
+`once("eventType")` behaves differently on Android and iOS. On Android once only works with an eventType of `value` whereas
+iOS will work with all the eventTypes like `child_added, child_removed` etc.
+
 `off("eventType")` will remove all listeners for "eventType" at the given path. So you do not need to call `off()`
 the same number of times you call `on()`. Listeners for all eventTypes will be removed if no eventType is provided.
 
-Filters (equalTo, starAt, endAt, LimitBy, etc) are only usable after you chain it with a sort. (While Firebase exposes these without doing
-a sort, your callback is never called). Think about it, if you apply equalTo without an orderBy what are you checking key, value, priority ???
+Filters (`equalTo, startAt, endAt, LimitBy`, etc) should be used with a sort. If not, you may not get the result expected.
+If you apply equalTo without an orderBy what are you checking for (key, value, priority)?
 
-DO NOT try to apply more than one orderBy to the same query as this will throw (follows the api)
+When using `equalTo, startAt or endAt` chained with `orderByKey()`, you MUST make sure they are all strings. Otherwise expect
+an exception to be thrown.
+
+DO NOT try to apply more than one orderBy to the same query as this will crash the application (follows the api)
 ```typescript
   const bad = firebaseWebApi.database().ref(path).orderByKey();
   bad.orderByValue();  // <------ will throw here!
@@ -251,7 +262,23 @@ DO NOT try to apply more than one orderBy to the same query as this will throw (
 
   // You can also do the following
   firebase.webQuery("/companies").orderByKey().on("value", onQueryEvent);
+
+  const onQueryEvent = (result: any) {
+        if (!result.error) {
+            console.log("Exists: " + result.exists());
+            console.log("Key: " + result.key);
+            console.log("Value: " + JSON.stringify(result.val()));
+            result.forEach(
+              snapshot => {
+                // Do something forEach children. Note that this goes one level deep
+                console.log(snapshot.toJSON());
+              }
+          );
+        }
+    };
+
 ```
+Since the webapi queries follow the Google Documentation you can look at their examples for more reference.
  </details>
 
 ### update
