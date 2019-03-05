@@ -546,23 +546,33 @@ export interface OnDisconnect {
 
   update(values: Object): Promise<any>;
 }
+
 // WebAPI Query
 export interface Query {
   on(eventType: string, callback: (a: any, b?: string) => any): Promise<any>;
+
   once(eventType: string): Promise<DataSnapshot>;
+
   off(eventType?: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): void;
+
   orderByChild(value: string): Query;
+
   orderByKey(): Query;
+
   orderByPriority(): Query;
+
   orderByValue(): Query;
+
   equalTo(value: string | number | boolean, key?: string): Query;
+
   startAt(value: string | number | boolean, key?: string): Query;
+
   endAt(value: string | number | boolean, key?: string): Query;
+
   limitToFirst(value: number): Query;
+
   limitToLast(value: number): Query;
 }
-
-export function webQuery(path: string): Query;
 
 export interface DataSnapshot {
   key: string;
@@ -614,6 +624,8 @@ export function addValueEventListener(onValueEvent: (data: FBData) => void, path
 export function removeEventListeners(listeners: Array<any>, path: string): Promise<any>;
 
 export function onDisconnect(path: string): OnDisconnect;
+
+export function webQuery(path: string): Query;
 
 export function enableLogging(logger?: boolean | ((a: string) => any), persistent?: boolean);
 
