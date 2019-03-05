@@ -549,7 +549,7 @@ export interface OnDisconnect {
 // WebAPI Query
 export interface Query {
   on(eventType: string, callback: (a: any, b?: string) => any): Promise<any>;
-  once(eventType: string): Promise<any>;
+  once(eventType: string): Promise<DataSnapshot>;
   off(eventType?: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): void;
   orderByChild(value: string): Query;
   orderByKey(): Query;
