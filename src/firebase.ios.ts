@@ -1395,55 +1395,60 @@ firebase.webQuery = (path: string): QueryBase => {
 };
 
 class Query implements QueryBase {
-  private query: FIRDatabaseQuery; // Keep track of internal query state allowing us to chain filter/range/limit
+  private query: FIRDatabaseQuery | FIRDatabaseReference; // Keep track of internal query state allowing us to chain filter/range/limit
   private static eventListenerMap: Map<string, Array<any>> = new Map(); // A map to keep track all all the listeners attached for the specified eventType
 
-  constructor(private dbRef: FIRDatabaseReference, private path: string) { }
+  constructor(private dbRef: FIRDatabaseReference, private path: string) {
+    this.query = this.dbRef;
+  }
 
   on(eventType: string, callback: (a: any, b?: string) => any): Promise<any> {
     const onValueEvent = result => {
-      if (result.error) {
-        callback(result); // CAREFUL before we were calling result.error!
-      } else {
-        callback({
-          key: result.key,
-          val: () => result.value,
-          exists: () => !!result.value
-        });
-      }
+      callback(result);
     };
     return new Promise((resolve, reject) => {
       try {
         if (eventType === "value" || eventType === "child_added" || eventType === "child_changed"
           || eventType === "child_removed" || eventType === "child_moved") {
-            // This.query may not exist if we call on without any sorts
-          const firDatabaseHandle = this.query ? this.attachEventObserver(this.query, eventType, onValueEvent) :
-            this.attachEventObserver(this.dbRef, eventType, onValueEvent);
+          const firDataEventType = this.eventToFIRDataEventType(eventType);
+          const firDatabaseHandle = this.attachEventObserver(this.query, firDataEventType, onValueEvent);
           if (!Query.eventListenerMap.has(eventType)) {
             Query.eventListenerMap.set(eventType, []);
           }
           Query.eventListenerMap.get(eventType).push(firDatabaseHandle); // We need to keep track of the listeners to fully remove them when calling off
         } else {
+          callback({
+            error: "Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'"
+          });
           reject("Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'");
           return;
         }
         resolve();
       } catch (ex) {
-        console.log("Error in firebase.addValueEventListener: " + ex);
+        console.log("Error in firebase.on: " + ex);
         reject(ex);
       }
     });
   }
 
-  once(eventType: string): Promise<any> {
+  once(eventType: string): Promise<DataSnapshot> {
     return new Promise((resolve, reject) => {
-      firebase.getValue(this.path).then(result => {
-        resolve({
-          key: result.key,
-          val: () => result.value,
-          exists: () => !!result.value
-        });
-      });
+      try {
+        const firDataEventType = this.eventToFIRDataEventType(eventType);
+        this.query.observeEventTypeWithBlockWithCancelBlock(
+          firDataEventType,
+          snapshot => {
+            resolve(nativeSnapshotToWebSnapshot(snapshot));
+          },
+          firebaseError => {
+            reject({
+              error: firebaseError.localizedDescription
+            });
+          });
+      } catch (ex) {
+        console.log("Error in firebase.once: " + ex);
+        reject(ex);
+      }
     });
   }
 
@@ -1461,34 +1466,22 @@ class Query implements QueryBase {
   }
 
   orderByChild(value: string): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.queryOrderedByChild(value);
+    this.query = this.query.queryOrderedByChild(value);
     return this;
   }
 
   orderByKey(): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.queryOrderedByKey();
+    this.query = this.query.queryOrderedByKey();
     return this;
   }
 
   orderByPriority(): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.queryOrderedByPriority();
+    this.query = this.query.queryOrderedByPriority();
     return this;
   }
 
   orderByValue(): Query {
-    if (this.query) {
-      throw new Error("You can't combine multiple orderBy calls!");
-    }
-    this.query = this.dbRef.queryOrderedByValue();
+    this.query = this.query.queryOrderedByValue();
     return this;
   }
 
@@ -1532,12 +1525,7 @@ class Query implements QueryBase {
     return this;
   }
 
-  /**
-  * Depending on the eventType, attach listeners at the specified Database location. Follow the WebApi which listens
-  * to specific events (Android is more generic value / child - which includes all events add, change, remove etc).
-  * Similar to firebase._addObserver but I do not want to listen for every event
-  */
-  private attachEventObserver(dbRef: FIRDatabaseQuery | FIRDatabaseReference, eventType: string, callback): number {
+  private eventToFIRDataEventType(eventType: string): FIRDataEventType {
     let firEventType: FIRDataEventType;
     switch (eventType) {
       case "value":
@@ -1556,11 +1544,18 @@ class Query implements QueryBase {
         firEventType = FIRDataEventType.ChildMoved;
         break;
     }
-
+    return firEventType;
+  }
+  /**
+  * Depending on the eventType, attach listeners at the specified Database location. Follow the WebApi which listens
+  * to specific events (Android is more generic value / child - which includes all events add, change, remove etc).
+  * Similar to firebase._addObserver but I do not want to listen for every event
+  */
+  private attachEventObserver(dbRef: FIRDatabaseQuery | FIRDatabaseReference, firEventType: FIRDataEventType, callback): number {
     const listener = dbRef.observeEventTypeWithBlockWithCancelBlock(
       firEventType,
       snapshot => {
-        callback(firebase.getCallbackData(eventType, snapshot));
+        callback(nativeSnapshotToWebSnapshot(snapshot));
       },
       firebaseError => {
         callback({
