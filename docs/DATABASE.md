@@ -431,10 +431,9 @@ firebase.transaction(path, (currentValue => {
       if (currentValue === null) {
         return 0;
       } else {
-        // console.log('User ada already exists.');
-        return ++currentValue; // Abort the transaction.
+        return ++currentValue; // Increment the current value. Do not try to increment currentValue if its NaN!
       }
-    })) // firebase.Datasnapshot follows the web datasnapshot interface
+    }))
      .then((result: { committed: boolean, snapshot: firebase.DataSnapshot }) => {
         console.log(result.committed + " snapshotValue: " + result.snapshot.val());
       }).catch(err => console.log("Encountered an error " + err));
@@ -460,7 +459,7 @@ firebaseWebApi.database().ref(path).transaction(currentValue => {
 
 firebaseWebApi.database().ref(path).transaction(currentValue => {
       if (currentValue === null) {
-        return null; // Do nothing if this value doesn't exist
+        return null; // Do nothing if this value doesn't exist or return undefined (null works here because theres nothing at this path)
        //return 0    // If you want to put a 0 in if no value exist
       } else {
         return ++currentValue; // increment the value
