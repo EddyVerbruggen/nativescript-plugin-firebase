@@ -1402,11 +1402,10 @@ class Query implements QueryBase {
     this.query = this.dbRef;
   }
 
-  on(eventType: string, callback: (a: any, b?: string) => any): Promise<any> {
+  on(eventType: string, callback: (a: any, b?: string) => any): Function {
     const onValueEvent = result => {
       callback(result);
     };
-    return new Promise((resolve, reject) => {
       try {
         if (eventType === "value" || eventType === "child_added" || eventType === "child_changed"
           || eventType === "child_removed" || eventType === "child_moved") {
@@ -1420,15 +1419,13 @@ class Query implements QueryBase {
           callback({
             error: "Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'"
           });
-          reject("Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'");
-          return;
         }
-        resolve();
       } catch (ex) {
         console.log("Error in firebase.on: " + ex);
-        reject(ex);
       }
-    });
+      finally {
+        return callback;
+      }
   }
 
   once(eventType: string): Promise<DataSnapshot> {
@@ -1838,7 +1835,7 @@ function nativeSnapshotToWebSnapshot(snapshot: FIRDataSnapshot): DataSnapshot {
 
   return {
     key: snapshot.key,
-    ref: snapshot.ref,
+    // ref: snapshot.ref,
     child: (path: string) => nativeSnapshotToWebSnapshot(snapshot.childSnapshotForPath(path)),
     exists: () => snapshot.exists(),
     forEach: (func: (datasnapshot) => any) => forEach(func),

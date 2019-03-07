@@ -17,7 +17,7 @@ export namespace database {
     val(): any;
   }
 
-  export class Query {
+  export class Query implements firebase.Query {
     protected path: string;
     private queryObject: firebase.Query;
     constructor(path: string) {
@@ -34,9 +34,8 @@ export namespace database {
     public on(eventType: string, callback: (a: DataSnapshot | null, b?: string) => any,
       cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => Function {
 
-      this.queryObject.on(eventType, callback).catch(error => {
-        console.log("firebase.database().on error: " + error);
-      });
+      this.queryObject.on(eventType, callback);
+
       return callback; // According to firebase doc we just return the callback given
     }
 
