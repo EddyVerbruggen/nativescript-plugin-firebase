@@ -371,17 +371,25 @@ The link is for the iOS SDK, but it's the same for Android.
  <summary>Web API</summary>
 
 ```js
-  const onValueEvent = result => {
-    if (result.error) {
-      console.log("Listener error: " + result.error);
-    } else {
-      console.log("Key: " + result.key);
-      console.log("key exists? " + result.exists());
-      console.log("Value: " + JSON.stringify(result.val()));
-    }
-  };
+  public doWebAddValueEventListenerForCompanies(): void {
+    const path = "/companies";
+    const onValueEvent = (result: firebase.DataSnapshot ) => {
+      // NOTE: we no longer check for result.error as it doesn't exist. Pass in an onError callback to handle errors!
+        console.log("value : " + result.forEach(datasnapshot => {
+          console.log(datasnapshot.key + "  " + JSON.stringify(datasnapshot.val()));
+        }));
+        console.log("key exists? " + result.exists());
+        this.set("path", path);
+        this.set("key", result.key);
+        this.set("value", JSON.stringify(result.val()));
+      };
 
-  firebaseWebApi.database().ref("/companies").on("value", onValueEvent);
+    const onErrorEvent = (err: Error ) => {
+      console.log("Encountered an error: " + err);
+    };
+  firebaseWebApi.database().ref("/companies").on("value", onValueEvent, onErrorEvent /* Totally Optional */);
+  }
+
 ```
 </details>
 
