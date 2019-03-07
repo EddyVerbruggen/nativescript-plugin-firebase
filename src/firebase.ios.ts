@@ -1402,30 +1402,29 @@ class Query implements QueryBase {
     this.query = this.dbRef;
   }
 
-  on(eventType: string, callback: (a: any, b?: string) => any): Function {
-    const onValueEvent = result => {
-      callback(result);
-    };
-      try {
-        if (eventType === "value" || eventType === "child_added" || eventType === "child_changed"
-          || eventType === "child_removed" || eventType === "child_moved") {
-          const firDataEventType = this.eventToFIRDataEventType(eventType);
-          const firDatabaseHandle = this.attachEventObserver(this.query, firDataEventType, onValueEvent);
-          if (!Query.eventListenerMap.has(eventType)) {
-            Query.eventListenerMap.set(eventType, []);
-          }
-          Query.eventListenerMap.get(eventType).push(firDatabaseHandle); // We need to keep track of the listeners to fully remove them when calling off
-        } else {
-          callback({
-            error: "Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'"
-          });
+  on(eventType: string, callback: (a: any, b?: string) => any, cancelCallbackOrContext?: (a: Error | null) => any): Function {
+    try {
+      if (eventType === "value" || eventType === "child_added" || eventType === "child_changed"
+        || eventType === "child_removed" || eventType === "child_moved") {
+        const firDataEventType = this.eventToFIRDataEventType(eventType);
+        const firDatabaseHandle = this.attachEventObserver(this.query, firDataEventType, callback, cancelCallbackOrContext);
+        if (!Query.eventListenerMap.has(eventType)) {
+          Query.eventListenerMap.set(eventType, []);
         }
-      } catch (ex) {
-        console.log("Error in firebase.on: " + ex);
+        Query.eventListenerMap.get(eventType).push(firDatabaseHandle); // We need to keep track of the listeners to fully remove them when calling off
+      } else {
+        throw new Error(`${eventType} is not a valid eventType. Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'`);
       }
-      finally {
-        return callback;
+    } catch (ex) {
+      // TODO: Make custom errors
+      console.error("Error in firebase.on: " + ex);
+      if (cancelCallbackOrContext !== undefined) {
+        cancelCallbackOrContext(ex);
       }
+    }
+    finally {
+      return callback;
+    }
   }
 
   once(eventType: string): Promise<DataSnapshot> {
@@ -1443,7 +1442,7 @@ class Query implements QueryBase {
             });
           });
       } catch (ex) {
-        console.log("Error in firebase.once: " + ex);
+        console.error("Error in firebase.once: " + ex);
         reject(ex);
       }
     });
@@ -1548,16 +1547,16 @@ class Query implements QueryBase {
   * to specific events (Android is more generic value / child - which includes all events add, change, remove etc).
   * Similar to firebase._addObserver but I do not want to listen for every event
   */
-  private attachEventObserver(dbRef: FIRDatabaseQuery | FIRDatabaseReference, firEventType: FIRDataEventType, callback): number {
+  private attachEventObserver(dbRef: FIRDatabaseQuery | FIRDatabaseReference, firEventType: FIRDataEventType, callback, cancelCallback): number {
     const listener = dbRef.observeEventTypeWithBlockWithCancelBlock(
       firEventType,
       snapshot => {
         callback(nativeSnapshotToWebSnapshot(snapshot));
       },
       firebaseError => {
-        callback({
-          error: firebaseError.localizedDescription
-        });
+        if (cancelCallback !== undefined) {
+          cancelCallback(new Error(firebaseError.localizedDescription));
+        }
       });
     return listener;
   }

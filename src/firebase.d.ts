@@ -549,7 +549,7 @@ export interface OnDisconnect {
 
 // WebAPI Query
 export interface Query {
-  on(eventType: string, callback: (a: any, b?: string) => any): Function;
+  on(eventType: string, callback: (a: any, b?: string) => any, cancelCallbackOrContext?: (a: Error | null) => any): Function;
 
   once(eventType: string): Promise<DataSnapshot>;
 

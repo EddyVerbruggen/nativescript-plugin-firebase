@@ -1640,25 +1640,19 @@ class Query implements QueryBase {
     this.query = this.dbRef;
   }
 
-  on(eventType: string, callback: (a: any, b?: string) => any): Function {
-    const onValueEvent = result => {
-      callback(result);
-    };
-
+  on(eventType: string, callback: (a: DataSnapshot, b?: string) => any, cancelCallbackOrContext?: (a: Error | null) => any): Function {
     try {
       if (firebase.instance === null) {
         throw new Error("Run init() first!");
       }
-      const listener = this.createEventListener(eventType, onValueEvent);
+      const listener = this.createEventListener(eventType, callback, cancelCallbackOrContext);
 
       if (eventType === "value") {
         this.query.addValueEventListener(listener as com.google.firebase.database.ValueEventListener);
       } else if (eventType === "child_added" || eventType === "child_changed" || eventType === "child_removed" || eventType === "child_moved") {
         this.query.addChildEventListener(listener as com.google.firebase.database.ChildEventListener);
       } else {
-        callback({
-          error: "Invalid eventType.  Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'"
-        });
+        throw new Error(`${eventType} is not a valid eventType. Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'`);
       }
       // Add listener to our map which keeps track of eventType: child/value events
       if (!Query.eventListenerMap.has(eventType)) {
@@ -1667,6 +1661,9 @@ class Query implements QueryBase {
       Query.eventListenerMap.get(eventType).push(listener); // We need to keep track of the listeners to fully remove them when calling off
     } catch (ex) {
       console.error("Error in firebase.on: " + ex);
+      if (cancelCallbackOrContext !== undefined) {
+        cancelCallbackOrContext(ex);
+      }
     } finally {
       return callback;
     }
@@ -1693,7 +1690,7 @@ class Query implements QueryBase {
         firebase.instance.child(this.path).addListenerForSingleValueEvent(listener);
       }
       catch (ex) {
-        console.log("Error in firebase.once: " + ex);
+        console.error("Error in firebase.once: " + ex);
         reject(ex);
       }
     });
@@ -1776,7 +1773,7 @@ class Query implements QueryBase {
   * to specific events (Android is more generic value / child - which includes all events add, change, remove etc).
   * Similar to firebase._addObserver but I do not want to listen for every event
   */
-  private createEventListener(eventType: string, callback): com.google.firebase.database.ValueEventListener | com.google.firebase.database.ChildEventListener {
+  private createEventListener(eventType: string, callback, cancelCallback?): com.google.firebase.database.ValueEventListener | com.google.firebase.database.ChildEventListener {
     let listener;
 
     if (eventType === "value") {
@@ -1785,17 +1782,17 @@ class Query implements QueryBase {
           callback(nativeSnapshotToWebSnapshot(snapshot));
         },
         onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
-          callback({
-            error: databaseError.getMessage()
-          });
+          if (cancelCallback !== undefined) {
+            cancelCallback(new Error(databaseError.getMessage()));
+          }
         }
       });
     } else if (eventType === "child_added" || eventType === "child_changed" || eventType === "child_removed" || eventType === "child_moved") {
       listener = new com.google.firebase.database.ChildEventListener({
         onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
-          callback({
-            error: databaseError.getMessage()
-          });
+           if (cancelCallback !== undefined) {
+            cancelCallback(new Error(databaseError.getMessage()));
+          }
         },
         onChildAdded: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
           if (eventType === "child_added") {

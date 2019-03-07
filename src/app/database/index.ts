@@ -2,20 +2,7 @@ import * as firebase from "../../firebase";
 import { nextPushId } from "./util/NextPushId";
 
 export namespace database {
-  export interface DataSnapshot {
-    // child(path: string): DataSnapshot;
-    exists(): boolean;
-    // exportVal(): any;
-    // forEach(action: (a: DataSnapshot) => boolean): boolean;
-    // getPriority(): string | number | null;
-    // hasChild(path: string): boolean;
-    // hasChildren(): boolean;
-    key: string | null;
-    // numChildren(): number;
-    // ref: Reference;
-    // toJSON(): Object | null;
-    val(): any;
-  }
+  export type DataSnapshot = firebase.DataSnapshot;
 
   export class Query implements firebase.Query {
     protected path: string;
@@ -29,12 +16,13 @@ export namespace database {
      * Listens for data changes at a particular location
      * @param eventType One of the following strings: "value", "child_added", "child_changed", "child_removed", or "child_moved."
      * @param callback A callback that fires when the specified event occurs. The callback will be passed a DataSnapshot.
+     * @param cancelCallbackOrContext A callback that fires when an error occurs. The callback will be passed an error object.
      * @returns The provided callback function is returned unmodified.
      */
     public on(eventType: string, callback: (a: DataSnapshot | null, b?: string) => any,
-      cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => Function {
+      cancelCallbackOrContext?: (a: Error | null) => any, context?: Object | null): (a: DataSnapshot | null, b?: string) => Function {
 
-      this.queryObject.on(eventType, callback);
+      this.queryObject.on(eventType, callback, cancelCallbackOrContext);
 
       return callback; // According to firebase doc we just return the callback given
     }
