@@ -33,5 +33,9 @@ export namespace firestore {
     batch(): firebase.firestore.WriteBatch {
       return firebase.firestore.batch();
     }
+
+    settings(settings: firebase.firestore.Settings): void {
+      firebase.firestore.settings(settings);
+    }
   }
 }
