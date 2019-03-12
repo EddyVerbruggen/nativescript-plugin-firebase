@@ -378,3 +378,17 @@ firebase.firestore().runTransaction(transaction => {
    .then(() => console.log("Transaction successfully committed"))
    .catch(error => console.log(`Transaction error: ${error}`));
 ```
+
+### Firestore configurations: `settings()`
+> You must set these before invoking any other methods!
+
+Setting cacheSizeBytes is Android only
+
+You can modify `host`, `ssl` and `cacheSizeBytes`.  (`timestampsInSnapshots` shouldn't be used as it will be deprecated)
+See [docs](https://firebase.google.com/docs/reference/js/firebase.firestore.Settings) for more information.
+
+```typescript
+   firebase.firestore.settings({});
+
+   firebaseWebApi.firestore().settings({"host" : "Example", "ssl" : false});
+```
