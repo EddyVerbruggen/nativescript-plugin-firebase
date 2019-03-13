@@ -789,17 +789,25 @@ export namespace firestore {
 
   export interface DocumentReference {
     discriminator: "docRef";
+
     id: string;
+
     path: string;
+
     collection: (collectionPath: string) => CollectionReference;
+
     set: (document: any, options?: SetOptions) => Promise<void>;
+
     get: () => Promise<DocumentSnapshot>;
+
     update: (document: any) => Promise<void>;
+
     delete: () => Promise<void>;
 
-    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback?: (snapshot: DocumentSnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (snapshot: DocumentSnapshot | Error) => void, onError?: (error: Error) => void): () => void;
 
     android?: any;
+
     ios?: any;
   }
 
@@ -812,7 +820,7 @@ export namespace firestore {
 
     limit(limit: number): Query;
 
-    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void): () => void;
 
     startAt(snapshot: DocumentSnapshot): Query;
 
