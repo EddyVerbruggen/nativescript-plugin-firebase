@@ -27,6 +27,7 @@ firebase._configured = false;
 
 const useExternalPushProvider = NSBundle.mainBundle.infoDictionary.objectForKey("UseExternalPushProvider") === true;
 
+let initializeArguments: any;
 class DocumentSnapshot extends DocumentSnapshotBase {
   ios: FIRDocumentSnapshot;
 
@@ -361,6 +362,7 @@ firebase.init = arg => {
       }
 
       arg = arg || {};
+      initializeArguments = arg;
 
       // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
       if (FIROptions.defaultOptions() !== null) {
@@ -1886,6 +1888,21 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
   });
 };
 
+firebase.firestore.settings = (settings: firestore.Settings) => {
+  if (typeof (FIRFirestore) !== "undefined") {
+    try {
+      const fIRFirestoreSettings = FIRFirestoreSettings.new();
+      if (initializeArguments.persist !== undefined) fIRFirestoreSettings.persistenceEnabled = initializeArguments.persist;
+      if (settings.ssl !== undefined) fIRFirestoreSettings.sslEnabled = settings.ssl;
+      if (settings.host !== undefined) fIRFirestoreSettings.host = settings.host;
+      // Cannot do this because of nativescript cannot convert Number to int64_t
+      // fIRFirestoreSettings.cacheSizeBytes = settings.cacheSizeBytes;
+      FIRFirestore.firestore().settings = fIRFirestoreSettings;
+    } catch (err) {
+      console.log("Error: " + err);
+    }
+  }
+};
 
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {

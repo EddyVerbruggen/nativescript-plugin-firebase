@@ -49,6 +49,7 @@ firebase._googleSignInIdToken = null;
 firebase._facebookAccessToken = null;
 
 let fbCallbackManager = null;
+let initializeArguments: any;
 
 const GOOGLE_SIGNIN_INTENT_ID = 123;
 const REQUEST_INVITE_INTENT_ID = 48;
@@ -310,6 +311,7 @@ firebase.init = arg => {
 
     const runInit = () => {
       arg = arg || {};
+      initializeArguments = arg;
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
           appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
@@ -2232,6 +2234,22 @@ firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Tra
   });
 };
 */
+
+firebase.firestore.settings = (settings: firestore.Settings) => {
+  if (typeof (com.google.firebase.firestore) !== "undefined") {
+    try {
+      const builder = new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder();
+      (settings.cacheSizeBytes !== undefined) && builder.setCacheSizeBytes(long(settings.cacheSizeBytes));
+      (settings.ssl !== undefined) && builder.setSslEnabled(settings.ssl);
+      (settings.host !== undefined) && builder.setHost(settings.host);
+      (initializeArguments.persist !== undefined) && builder.setPersistenceEnabled(initializeArguments.persist);
+
+      com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(builder.build());
+    } catch (err) {
+      console.log("Error: " + err );
+    }
+  }
+};
 
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   try {
