@@ -28,6 +28,7 @@ firebase._configured = false;
 const useExternalPushProvider = NSBundle.mainBundle.infoDictionary.objectForKey("UseExternalPushProvider") === true;
 
 let initializeArguments: any;
+
 class DocumentSnapshot extends DocumentSnapshotBase {
   ios: FIRDocumentSnapshot;
 
@@ -1899,7 +1900,7 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
       // fIRFirestoreSettings.cacheSizeBytes = settings.cacheSizeBytes;
       FIRFirestore.firestore().settings = fIRFirestoreSettings;
     } catch (err) {
-      console.log("Error: " + err);
+      console.log("Error in firebase.firestore.settings: " + err);
     }
   }
 };

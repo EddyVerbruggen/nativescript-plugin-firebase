@@ -2246,7 +2246,7 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
 
       com.google.firebase.firestore.FirebaseFirestore.getInstance().setFirestoreSettings(builder.build());
     } catch (err) {
-      console.log("Error: " + err );
+      console.log("Error in firebase.firestore.settings: " + err);
     }
   }
 };
