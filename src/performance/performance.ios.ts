@@ -1,7 +1,7 @@
 import { firebaseUtils } from "../utils";
 
 export function startTrace(name: string): FirebaseTrace {
-  return new FirebaseTrace(FIRPerformance.sharedInstance().traceWithName(name));
+  return new FirebaseTrace(FIRPerformance.startTraceWithName(name));
 }
 
 export class FirebaseTrace {
