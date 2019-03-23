@@ -788,9 +788,13 @@ export namespace firestore {
   }
 
   export interface DocumentReference {
-    discriminator: "docRef";
-    id: string;
-    path: string;
+    readonly discriminator: "docRef";
+    readonly id: string;
+    /**
+     * A reference to the Collection to which this DocumentReference belongs.
+     */
+    readonly parent: CollectionReference;
+    readonly path: string;
     collection: (collectionPath: string) => CollectionReference;
     set: (document: any, options?: SetOptions) => Promise<void>;
     get: () => Promise<DocumentSnapshot>;
@@ -824,7 +828,12 @@ export namespace firestore {
   }
 
   export interface CollectionReference extends Query {
-    id: string;
+    readonly id: string;
+
+    /**
+     * A reference to the containing Document if this is a subcollection, else null.
+     */
+    readonly parent: DocumentReference | null;
 
     doc(documentPath?: string): DocumentReference;
 
