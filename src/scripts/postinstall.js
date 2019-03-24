@@ -4888,14 +4888,14 @@ repositories {
     jcenter()
 }
 
-def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.1.0"
-def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "16.0.1"
-
-if (googlePlayServicesVersion != '+' && VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.+')) {
-    throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 / 15.0.+ (currently set to $googlePlayServicesVersion)");
-}
-
 dependencies {
+    def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.1.0"
+    def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "16.0.1"
+    
+    if (googlePlayServicesVersion != '+' && VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.+')) {
+        throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 / 15.0.+ (currently set to $googlePlayServicesVersion)");
+    }
+
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation "com.android.support:cardview-v7:$supportVersion"
     implementation "com.android.support:customtabs:$supportVersion"

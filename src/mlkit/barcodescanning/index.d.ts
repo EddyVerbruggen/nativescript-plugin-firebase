@@ -33,6 +33,18 @@ export interface MLKitScanBarcodesOnDeviceOptions extends MLKitVisionOptions {
    * If not set, we'll detect all supported formats.
    */
   formats?: Array<BarcodeFormat>;
+
+  /**
+   * Play a sound when a code was scanned.
+   * Default: true
+   */
+  beepOnScan?: boolean;
+
+  /**
+   * Wheter or not to report duplicate scan results during continuous scanning.
+   * Default false.
+   */
+  reportDuplicates?: boolean;
 }
 
 export declare function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions): Promise<MLKitScanBarcodesOnDeviceResult>;

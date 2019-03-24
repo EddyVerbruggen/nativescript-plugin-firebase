@@ -12,6 +12,7 @@
 		A32431C320A5E2A200C79104 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A32431C220A5E2A200C79104 /* CoreMedia.framework */; };
 		A349852320B321E200EBB136 /* UIImage+TNSMLKitCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = A349852220B321E200EBB136 /* UIImage+TNSMLKitCamera.h */; };
 		A349852520B3220000EBB136 /* UIImage+TNSMLKitCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = A349852420B3220000EBB136 /* UIImage+TNSMLKitCamera.m */; };
+		A3538E0F2247B3C4006D11DE /* beep.caf in Resources */ = {isa = PBXBuildFile; fileRef = A3538E0E2247B3C4006D11DE /* beep.caf */; };
 		A3905B0A1EBCD37D008D0250 /* TNSMLKitCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = A3905B081EBCD37D008D0250 /* TNSMLKitCamera.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3905B111EBCD434008D0250 /* TNSMLKitCameraView.h in Headers */ = {isa = PBXBuildFile; fileRef = A3905B101EBCD434008D0250 /* TNSMLKitCameraView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A3905B131EBCD44B008D0250 /* TNSMLKitCameraView.m in Sources */ = {isa = PBXBuildFile; fileRef = A3905B121EBCD44B008D0250 /* TNSMLKitCameraView.m */; };
@@ -23,6 +24,7 @@
 		A32431C220A5E2A200C79104 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		A349852220B321E200EBB136 /* UIImage+TNSMLKitCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+TNSMLKitCamera.h"; sourceTree = "<group>"; };
 		A349852420B3220000EBB136 /* UIImage+TNSMLKitCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TNSMLKitCamera.m"; sourceTree = "<group>"; };
+		A3538E0E2247B3C4006D11DE /* beep.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = beep.caf; sourceTree = "<group>"; };
 		A3905B051EBCD37D008D0250 /* TNSMLKitCamera.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TNSMLKitCamera.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3905B081EBCD37D008D0250 /* TNSMLKitCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TNSMLKitCamera.h; sourceTree = "<group>"; };
 		A3905B091EBCD37D008D0250 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 		A3905B071EBCD37D008D0250 /* TNSMLKitCamera */ = {
 			isa = PBXGroup;
 			children = (
+				A3538E0E2247B3C4006D11DE /* beep.caf */,
 				A3905B081EBCD37D008D0250 /* TNSMLKitCamera.h */,
 				A3905B091EBCD37D008D0250 /* Info.plist */,
 				A3905B101EBCD434008D0250 /* TNSMLKitCameraView.h */,
@@ -157,6 +160,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3538E0F2247B3C4006D11DE /* beep.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

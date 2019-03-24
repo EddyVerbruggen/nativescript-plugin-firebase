@@ -7,6 +7,8 @@ export { BarcodeFormat };
 
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
+  private player: AVAudioPlayer;
+
   protected createDetector(): any {
     let formats: Array<BarcodeFormat>;
     if (this.formats) {
@@ -14,6 +16,19 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
       const requestedFormats = this.formats.split(",");
       requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]))
     }
+
+    if (this.beepOnScan) {
+      // play nice with others when playing sound
+      AVAudioSession.sharedInstance().setCategoryModeOptionsError(AVAudioSessionCategoryPlayback, AVAudioSessionModeDefault, AVAudioSessionCategoryOptions.MixWithOthers)
+
+      // prepare an audio player, with a sound file bundled in our custom fwk
+      const barcodeBundlePath = NSBundle.bundleWithIdentifier("org.nativescript.plugin.firebase.MLKit").bundlePath;
+      this.player = new AVAudioPlayer({contentsOfURL: NSURL.fileURLWithPath(barcodeBundlePath + "/beep.caf")});
+      this.player.numberOfLoops = 1;
+      this.player.volume = 0.7; // this is not the actual volume, as that really depends on the device volume
+      this.player.prepareToPlay();
+    }
+
     return getBarcodeDetector(formats);
   }
 
@@ -42,6 +57,10 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
           object: this,
           value: result
         });
+
+        if (barcodes.count > 0 && this.player) {
+          this.player.play();
+        }
       }
     }
   }
