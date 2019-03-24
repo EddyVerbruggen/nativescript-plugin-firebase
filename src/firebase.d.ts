@@ -730,13 +730,15 @@ export namespace firestore {
      */
     cacheSizeBytes?: number;
   }
-    /**
-     * Specifies custom settings to be used to configure the `Firestore`
-     * instance. Must be set before invoking any other methods.
-     *
-     * @param settings The settings to use.
-     */
+
+  /**
+   * Specifies custom settings to be used to configure the `Firestore`
+   * instance. Must be set before invoking any other methods.
+   *
+   * @param settings The settings to use.
+   */
   export function settings(settings: Settings): void;
+
   export interface SetOptions {
     merge?: boolean;
   }
@@ -789,21 +791,30 @@ export namespace firestore {
 
   export interface DocumentReference {
     readonly discriminator: "docRef";
+
     readonly id: string;
+
     /**
      * A reference to the Collection to which this DocumentReference belongs.
      */
     readonly parent: CollectionReference;
+
     readonly path: string;
+
     collection: (collectionPath: string) => CollectionReference;
+
     set: (document: any, options?: SetOptions) => Promise<void>;
+
     get: () => Promise<DocumentSnapshot>;
+
     update: (document: any) => Promise<void>;
+
     delete: () => Promise<void>;
 
-    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback?: (snapshot: DocumentSnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (snapshot: DocumentSnapshot | Error) => void, onError?: (error: Error) => void): () => void;
 
     android?: any;
+
     ios?: any;
   }
 
@@ -816,7 +827,7 @@ export namespace firestore {
 
     limit(limit: number): Query;
 
-    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void): () => void;
+    onSnapshot(optionsOrCallback: SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void): () => void;
 
     startAt(snapshot: DocumentSnapshot): Query;
 

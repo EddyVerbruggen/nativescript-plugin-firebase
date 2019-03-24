@@ -60,6 +60,29 @@ const unsubscribe = citiesCollection.onSnapshot((snapshot: firestore.QuerySnapsh
 
 // then after a while, to detach the listener:
 unsubscribe();
+
+/**
+ * If you pass in SnapshotOptions for the first parameter then your next should be onNext and
+ * onError if you want for the third parameter. If you pass onNext as the first parameter the
+ * second will be interpreted as onError callback. Note that you could pass onComplete, but
+ * it will never be called as stated by Firestore docs.
+ *
+ * onError callbacks are optional!
+ * onSnapshot(p1: SnapshotListenOptions|onNextCallback, p2?: onNextCallback | onErrorCallback, p3?: onErrorCallback?)
+ */
+const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
+docRef.onSnapshot(
+    {includeMetadataChanges: true},   // Comment out if you just want onNext && onError callbacks
+    (doc: firestore.DocumentSnapshot) => {
+
+      const source = doc.metadata.fromCache ? "local cache" : "server";
+      console.log("Data came from " + source);
+      console.log("Has pending writes? " + doc.metadata.hasPendingWrites);
+    },
+    (error: Error) => {
+      console.error(error);
+    }
+  );
 ```
 
 > Using **Observables**? [Check the example in the demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/f6972433dea48bf1d342a6e4ef7f955dff341837/demo-ng/app/item/items.component.ts#L187-L198).

@@ -318,13 +318,17 @@ export class FirestoreComponent {
 
     const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
 
-    this.listenerUnsubscribe = docRef.onSnapshot((doc: firestore.DocumentSnapshot) => {
-      if (doc.exists) {
-        console.log("Document data:", JSON.stringify(doc.data()));
-      } else {
-        console.log("No such document!");
-      }
-    });
+    this.listenerUnsubscribe = docRef.onSnapshot(
+        (doc: firestore.DocumentSnapshot) => {
+          if (doc.exists) {
+            console.log("Document data:", JSON.stringify(doc.data()));
+          } else {
+            console.log("No such document!");
+          }
+        },
+        callback => console.log("callback: " + callback),
+        onError => console.log("onError: " + onError)
+    );
   }
 
   firestoreStopListening(): void {
