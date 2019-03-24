@@ -1924,25 +1924,36 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback?: (doc: DocumentSnapshot) => void): () => void => {
+firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError: (docOrError: DocumentSnapshot | Error) => void, onError: (error: Error) => void): () => void => {
   let includeMetadataChanges = false;
+  let onNextCallback: (snapshot: DocumentSnapshot) => void;
+  let onErrorCallback: (error: Error) => void;
+
   if ((typeof optionsOrCallback) === "function") {
-    callback = <(snapshot: DocumentSnapshot) => void>optionsOrCallback;
-  } else if ((<firestore.SnapshotListenOptions>optionsOrCallback).includeMetadataChanges === true) {
+    onNextCallback = <(snapshot: DocumentSnapshot) => void>optionsOrCallback;
+    onErrorCallback = callbackOrOnError;
+  } else {
+    onNextCallback = callbackOrOnError;
+    onErrorCallback = onError;
+  }
+
+  if ((<firestore.SnapshotListenOptions>optionsOrCallback).includeMetadataChanges === true) {
     includeMetadataChanges = true;
   }
 
   const listener = docRef.addSnapshotListenerWithIncludeMetadataChangesListener(includeMetadataChanges, (snapshot: FIRDocumentSnapshot, error: NSError) => {
-    if (!error && snapshot) {
-      callback(new DocumentSnapshot(snapshot));
+    if (error || !snapshot) {
+      error && onErrorCallback && onErrorCallback(new Error(error.localizedDescription));
+      return;
     }
+    onNextCallback && onNextCallback(new DocumentSnapshot(snapshot));
   });
 
   // There's a bug resulting this function to be undefined..
   if (listener.remove === undefined) {
     return () => {
       // .. so we're just ignoring anything received from the server (until the callback is set again when 'onSnapshot' is invoked).
-      callback = () => {
+      onNextCallback = () => {
       };
     };
   } else {
@@ -1950,27 +1961,38 @@ firebase.firestore.onDocumentSnapshot = (docRef: FIRDocumentReference, optionsOr
   }
 };
 
-firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, optionsOrCallback: any, callback: (snapshot: QuerySnapshot) => void): () => void => {
+firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void): () => void => {
   let includeMetadataChanges = false;
+  let onNextCallback: (snapshot: QuerySnapshot) => void;
+  let onErrorCallback: (error: Error) => void;
+
+  // If we passed in an onNext for the first parameter, the next parameter would be onError if provided
+  // If options was the first parameter then the next parameter would be onNext if provided
   if ((typeof optionsOrCallback) === "function") {
-    callback = <(snapshot: QuerySnapshot) => void>optionsOrCallback;
-  } else if ((<firestore.SnapshotListenOptions>optionsOrCallback).includeMetadataChanges === true) {
+    onNextCallback = <(snapshot: QuerySnapshot) => void>optionsOrCallback;
+    onErrorCallback = callbackOrOnError;
+  } else {
+    onNextCallback = callbackOrOnError; // Can be undefined if callback was not provided
+    onErrorCallback = onError; // Can be undefined if onError was not provided
+  }
+
+  if ((<firestore.SnapshotListenOptions>optionsOrCallback).includeMetadataChanges === true) {
     includeMetadataChanges = true;
   }
 
   const listener = colRef.addSnapshotListenerWithIncludeMetadataChangesListener(includeMetadataChanges, (snapshot: FIRQuerySnapshot, error: NSError) => {
     if (error || !snapshot) {
+      error && onErrorCallback && onErrorCallback(new Error(error.localizedDescription));
       return;
     }
-
-    callback(new QuerySnapshot(snapshot));
+    onNextCallback && onNextCallback(new QuerySnapshot(snapshot));
   });
 
   // There's a bug resulting in this function to be undefined..
   if (listener.remove === undefined) {
     return () => {
       // .. so we're just ignoring anything received from the server (until the callback is set again when 'onSnapshot' is invoked).
-      callback = () => {
+      onNextCallback = () => {
       };
     };
   } else {
@@ -1987,14 +2009,15 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
 
   return {
     id: colRef.collectionID,
-    parent: firebase.firestore._getDocumentReference(colRef.parent),
+    parent: firebase.firestore.
+    mentReference(colRef.parent),
     doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
     add: document => firebase.firestore.add(collectionPath, document),
     get: () => firebase.firestore.get(collectionPath),
     where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
     orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callback),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callbackOrOnError, onError),
     startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, colRef),
     startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, colRef),
     endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, colRef),
@@ -2019,7 +2042,7 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
     get: () => firebase.firestore.getDocument(collectionPath, docRef.documentID),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.documentID, data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.documentID),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callback?: (snapshot: DocumentSnapshot) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callback),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     ios: docRef
   };
 };
@@ -2286,7 +2309,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
     where: (fp: string, os: firestore.WhereFilterOp, v: any): firestore.Query => firebase.firestore.where(collectionPath, fp, os, v, query),
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callback),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callbackOrOnError, onError),
     startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, query),
     startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, query),
     endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, query),
