@@ -160,14 +160,20 @@ export class FirestoreComponent {
 
   firestoreGet(): void {
     const collectionRef: firestore.CollectionReference = firebase.firestore().collection("dogs");
+    console.log(">> collectionRef.parent: " + collectionRef.parent); // should be null (has no parent)
     collectionRef.get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => console.log(`${doc.id} => ${JSON.stringify(doc.data())}`));
         })
         .catch(err => console.log("Get failed, error: " + err));
 
+    // testing 'parent'
+    const bjDistrictsRef: firestore.CollectionReference = firebase.firestore().collection("cities").doc("BJ").collection("districts");
+    console.log(">> bjDistrictsRef.parent.id: " + bjDistrictsRef.parent.id);
+
     // examples from https://firebase.google.com/docs/firestore/query-data/get-data
     const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("BJ");
+    console.log(">> docRef.parent.id: " + docRef.parent.id);
 
     docRef.get()
         .then((doc: firestore.DocumentSnapshot) => {
@@ -175,6 +181,7 @@ export class FirestoreComponent {
             console.log("Document data:", JSON.stringify(doc.data()));
             // since there's a reference stored here, we can use that to retrieve its data
             const docRef: firestore.DocumentReference = doc.data().referenceToCitiesDC;
+            console.log(">> docRef2.parent.id: " + docRef.parent.id);
             docRef.get()
                 .then(res => console.log("docref.get: " + JSON.stringify(res.data())))
                 .catch(err => console.log("docref.get error: " + err));

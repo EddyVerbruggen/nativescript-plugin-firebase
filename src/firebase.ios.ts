@@ -38,7 +38,7 @@ class DocumentSnapshot extends DocumentSnapshotBase {
   };
 
   constructor(public snapshot: FIRDocumentSnapshot) {
-    super(snapshot.documentID, snapshot.exists, firebaseUtils.toJsObject(snapshot.data()), convertDocRef(snapshot.reference));
+    super(snapshot.documentID, snapshot.exists, firebaseUtils.toJsObject(snapshot.data()), firebase.firestore._getDocumentReference(snapshot.reference));
     this.ios = snapshot;
   }
 }
@@ -1917,23 +1917,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
       return null;
     }
 
-    const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
-
-    return {
-      id: fIRCollectionReference.collectionID,
-      doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
-      add: document => firebase.firestore.add(collectionPath, document),
-      get: () => firebase.firestore.get(collectionPath),
-      where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
-      orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, fIRCollectionReference),
-      limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, fIRCollectionReference),
-      onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(fIRCollectionReference, optionsOrCallback, callbackOrOnError, onError),
-      startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, fIRCollectionReference),
-      startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, fIRCollectionReference),
-      endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, fIRCollectionReference),
-      endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, fIRCollectionReference),
-    };
-
+    return firebase.firestore._getCollectionReference(FIRFirestore.firestore().collectionWithPath(collectionPath));
   } catch (ex) {
     console.log("Error in firebase.firestore.collection: " + ex);
     return null;
@@ -2016,19 +2000,50 @@ firebase.firestore.onCollectionSnapshot = (colRef: FIRCollectionReference, optio
   }
 };
 
-firebase.firestore._getDocumentReference = (fIRDocumentReference: FIRDocumentReference, collectionPath: string, documentPath: string): firestore.DocumentReference => {
+firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): firestore.CollectionReference => {
+  if (!colRef) {
+    return null;
+  }
+
+  const collectionPath = colRef.path;
+
+  return {
+    id: colRef.collectionID,
+    parent: firebase.firestore.
+    mentReference(colRef.parent),
+    doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
+    add: document => firebase.firestore.add(collectionPath, document),
+    get: () => firebase.firestore.get(collectionPath),
+    where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
+    orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
+    limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callbackOrOnError, onError),
+    startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, colRef),
+    startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, colRef),
+    endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, colRef),
+    endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, colRef),
+  };
+};
+
+firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): firestore.DocumentReference => {
+  if (!docRef) {
+    return null;
+  }
+
+  const collectionPath = docRef.parent.path;
+
   return {
     discriminator: "docRef",
-    id: fIRDocumentReference.documentID,
-    path: fIRDocumentReference.path,
-    collection: cp => firebase.firestore.collection(`${collectionPath}/${documentPath}/${cp}`),
-    set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
-    get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
-    update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
-    delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void,
-      onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(fIRDocumentReference, optionsOrCallback, callbackOrOnError, onError),
-    ios: fIRDocumentReference
+    id: docRef.documentID,
+    parent: firebase.firestore._getCollectionReference(docRef.parent),
+    path: docRef.path,
+    collection: cp => firebase.firestore.collection(`${collectionPath}/${docRef.documentID}/${cp}`),
+    set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.documentID, data, options),
+    get: () => firebase.firestore.getDocument(collectionPath, docRef.documentID),
+    update: (data: any) => firebase.firestore.update(collectionPath, docRef.documentID, data),
+    delete: () => firebase.firestore.delete(collectionPath, docRef.documentID),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
+    ios: docRef
   };
 };
 
@@ -2046,7 +2061,7 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 
     const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
     const fIRDocumentReference = documentPath ? fIRCollectionReference.documentWithPath(documentPath) : fIRCollectionReference.documentWithAutoID();
-    return firebase.firestore._getDocumentReference(fIRDocumentReference, collectionPath, documentPath);
+    return firebase.firestore._getDocumentReference(fIRDocumentReference);
   } catch (ex) {
     console.log("Error in firebase.firestore.doc: " + ex);
     return null;
@@ -2059,7 +2074,7 @@ firebase.firestore.docRef = (documentPath: string): firestore.DocumentReference 
     return null;
   }
 
-  return convertDocRef(FIRFirestore.firestore().documentWithPath(documentPath));
+  return firebase.firestore._getDocumentReference(FIRFirestore.firestore().documentWithPath(documentPath));
 };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
@@ -2077,18 +2092,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve({
-                discriminator: "docRef",
-                id: fIRDocumentReference.documentID,
-                path: fIRDocumentReference.path,
-                collection: cp => firebase.firestore.collection(cp),
-                set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, fIRDocumentReference.documentID, data, options),
-                get: () => firebase.firestore.getDocument(collectionPath, fIRDocumentReference.documentID),
-                update: (data: any) => firebase.firestore.update(collectionPath, fIRDocumentReference.documentID, data),
-                delete: () => firebase.firestore.delete(collectionPath, fIRDocumentReference.documentID),
-                onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void,
-                  onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(fIRDocumentReference, optionsOrCallback, callbackOrOnError, onError)
-              });
+              resolve(firebase.firestore._getDocumentReference(fIRDocumentReference))
             }
           });
 
@@ -2416,24 +2420,6 @@ class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {
   public signInDidSignInForUserWithError(signIn: GIDSignIn, user: GIDGoogleUser, error: NSError): void {
     this.callback(user, error);
   }
-}
-
-function convertDocRef(docRef: FIRDocumentReference): firestore.DocumentReference {
-  const collectionPath = docRef.parent.path;
-
-  return {
-    discriminator: "docRef",
-    id: docRef.documentID,
-    path: docRef.path,
-    collection: cp => firebase.firestore.collection(`${collectionPath}/${docRef.documentID}/${cp}`),
-    set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.documentID, data, options),
-    get: () => firebase.firestore.getDocument(collectionPath, docRef.documentID),
-    update: (data: any) => firebase.firestore.update(collectionPath, docRef.documentID, data),
-    delete: () => firebase.firestore.delete(collectionPath, docRef.documentID),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void,
-    onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
-    ios: docRef
-  };
 }
 
 function convertDocChangeType(type: FIRDocumentChangeType) {
