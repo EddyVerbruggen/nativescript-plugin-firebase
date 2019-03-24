@@ -2352,7 +2352,7 @@ firebase.firestore._getDocumentReference = (docRef?: JDocumentReference): firest
     get: () => firebase.firestore.getDocument(collectionPath, docRef.getId()),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(javaObj, optionsOrCallback, callbackOrOnError, onError),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     android: docRef
   };
 };
@@ -2373,7 +2373,7 @@ firebase.firestore._getCollectionReference = (colRef?: JCollectionReference): fi
     where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
     orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callback?: (snapshot: QuerySnapshot) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callback),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callbackOrOnError, onError),
     startAfter: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshot, colRef),
     startAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.startAt(collectionPath, snapshot, colRef),
     endAt: (snapshot: DocumentSnapshot): firestore.Query => firebase.firestore.endAt(collectionPath, snapshot, colRef),
@@ -2426,7 +2426,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 
       const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: (docRef: com.google.firebase.firestore.DocumentReference) => {
-          resolve(firebase.firestore._getDocumentReference(docRef))
+          resolve(firebase.firestore._getDocumentReference(docRef));
         }
       });
 

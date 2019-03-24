@@ -2092,7 +2092,7 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve(firebase.firestore._getDocumentReference(fIRDocumentReference))
+              resolve(firebase.firestore._getDocumentReference(fIRDocumentReference));
             }
           });
 
