@@ -298,6 +298,7 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
 <MLKitBarcodeScanner
     width="260"
     height="380"
+    beepOnScan="true"
     formats="QR_CODE, EAN_8, EAN_13"
     preferFrontCamera="false"
     [torchOn]="torchOn"
@@ -307,6 +308,8 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
 
 Note that `formats` is optional but recommended for better recognition performance. Supported types:
 `CODE_128`, `CODE_39`, `CODE_93`, `CODABAR`, `DATA_MATRIX`, `EAN_13`, `EAN_8`, `ITF`, `QR_CODE`, `UPC_A`, `UPC_E`, `PDF417`, `AZTEC`.
+
+Also note that `beepOnScan` is optional and (since version 8.1.0) default `true`.
 
 ### Image labeling
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_image_labeling.png" height="153px" alt="ML Kit - Image labeling"/>
