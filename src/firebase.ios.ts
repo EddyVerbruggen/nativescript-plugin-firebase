@@ -2009,8 +2009,7 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
 
   return {
     id: colRef.collectionID,
-    parent: firebase.firestore.
-    mentReference(colRef.parent),
+    parent: firebase.firestore._getDocumentReference(colRef.parent),
     doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
     add: document => firebase.firestore.add(collectionPath, document),
     get: () => firebase.firestore.get(collectionPath),
