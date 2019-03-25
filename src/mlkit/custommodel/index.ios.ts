@@ -18,13 +18,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
     return this.modelInterpreter;
   }
 
-  runDetector(image: UIImage): void {
-    if (this.detectorBusy) {
-      return;
-    }
-
-    this.detectorBusy = true;
-
+  runDetector(image: UIImage, onComplete: () => void): void {
     const modelExpectsWidth = this.modelInputShape[1];
     const modelExpectsHeight = this.modelInputShape[2];
     const isQuantized = this.modelInputType !== "FLOAT32";
@@ -63,20 +57,20 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
 
         if (this.labels.length !== probabilities.count) {
           console.log(`The number of labels (${this.labels.length}) is not equal to the interpretation result (${probabilities.count})!`);
-          return;
+          onComplete();
+        } else {
+          const result = <MLKitCustomModelResult>{
+            result: getSortedResult(this.labels, probabilities, this.maxResults)
+          };
+
+          this.notify({
+            eventName: MLKitCustomModel.scanResultEvent,
+            object: this,
+            value: result
+          });
         }
-
-        const result = <MLKitCustomModelResult>{
-          result: getSortedResult(this.labels, probabilities, this.maxResults)
-        };
-
-        this.notify({
-          eventName: MLKitCustomModel.scanResultEvent,
-          object: this,
-          value: result
-        });
       }
-      this.detectorBusy = false;
+      onComplete();
     })
   }
 

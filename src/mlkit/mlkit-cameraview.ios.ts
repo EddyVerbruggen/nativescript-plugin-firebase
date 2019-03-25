@@ -176,7 +176,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   abstract createSuccessListener(): any;
 
-  runDetector(image: UIImage) {
+  runDetector(image: UIImage, onComplete: () => void) {
     throw new Error("No custom detector implemented, so 'runDetector' can't do its thing");
   }
 }
@@ -189,6 +189,8 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
 
   private detector: any;
   private onSuccessListener: any;
+
+  private detectorBusy = false;
 
   public static createWithOwnerResultCallbackAndOptions(owner: WeakRef<MLKitCameraView>, callback: (message: any) => void, options?: any): TNSMLKitCameraViewDelegateImpl {
     // defer initialisation because the framework may not be available / used
@@ -205,14 +207,30 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
   }
 
   cameraDidOutputImage(image: UIImage): void {
-    if (image) {
-      if (this.detector.detectInImageCompletion) {
-        this.detector.detectInImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
-      } else if (this.detector.processImageCompletion) {
-        this.detector.processImageCompletion(this.uiImageToFIRVisionImage(image), this.onSuccessListener);
-      } else {
-        this.owner.get().runDetector(image);
-      }
+    if (!image || this.detectorBusy) {
+      return;
+    }
+
+    this.detectorBusy = true;
+
+    const onComplete = () => {
+      this.detectorBusy = false;
+    };
+
+    if (this.detector.detectInImageCompletion) {
+      this.detector.detectInImageCompletion(this.uiImageToFIRVisionImage(image), (result, error) => {
+        this.onSuccessListener(result, error);
+        onComplete();
+      });
+
+    } else if (this.detector.processImageCompletion) {
+      this.detector.processImageCompletion(this.uiImageToFIRVisionImage(image), (result, error) => {
+        this.onSuccessListener(result, error);
+        onComplete();
+      });
+
+    } else {
+      this.owner.get().runDetector(image, onComplete);
     }
   }
 
