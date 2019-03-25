@@ -645,10 +645,14 @@ To solve, you will want to pass in the appropriate iOS controller of the active 
 2. Google Sign-In requires an SHA1 fingerprint: see [Authenticating Your Client for details](https://developers.google.com/android/guides/client-auth). If you don't do this you will see the account selection popup, but you won't be able to actually sign in.
 3. Those fingerprints need to be added to your Firebase console. Go to 'project overview', 'project settings', then scroll down a bit.
 
-### getAuthToken
+### getAuthToken / getIdToken
 If you want to authenticate your user from your backend server you can obtain a Firebase auth token for the currently logged in user.
 
 You'll get the token, as well as the provider that was used to sign in, and any custom claims you may have previously set via the Firebase Admin SDK as outlined [here](https://firebase.google.com/docs/auth/admin/custom-claims):
+
+
+<details>
+ <summary>Native API</summary>
 
 ```js
   firebase.getAuthToken({
@@ -666,6 +670,17 @@ You'll get the token, as well as the provider that was used to sign in, and any 
       }
   );
 ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+```typescript
+  firebaseWebApi.auth().currentUser.getIdToken(false)
+      .then((token: string) => console.log("Auth token retrieved: " + token))
+      .catch(errorMessage => console.log("Auth token retrieval error: " + errorMessage));
+```
+</details>
 
 ### logout
 Shouldn't be more complicated than:
