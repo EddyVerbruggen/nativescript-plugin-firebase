@@ -78,7 +78,14 @@ export class HelloWorldModel extends Observable {
   public doWebLoginByPassword(): void {
     this.ensureWebOnAuthChangedHandler();
     firebaseWebApi.auth().signInWithEmailAndPassword('eddyverbruggen+firebase@gmail.com', 'pwd123LOL')
-        .then(() => console.log("User logged in"))
+        .then(() => {
+          console.log("User logged in");
+
+          // now retrieve an auth token we can use to access Firebase from our server
+          firebaseWebApi.auth().currentUser.getIdToken(false)
+              .then((token: string) => console.log("Auth token retrieved: " + token))
+              .catch(errorMessage => console.log("Auth token retrieval error: " + errorMessage));
+        })
         .catch(err => {
               alert({
                 title: "Login error",

@@ -806,6 +806,11 @@ function toLoginResult(user, additionalUserInfo?): User {
       creationTimestamp: user.getMetadata() ? new Date(user.getMetadata().getCreationTimestamp() as number) : null,
       lastSignInTimestamp: user.getMetadata() ? new Date(user.getMetadata().getLastSignInTimestamp() as number) : null
     },
+    getIdToken: (forceRefresh?: boolean) => new Promise((resolve, reject) => {
+      firebase.getAuthToken({forceRefresh})
+          .then((result: GetAuthTokenResult) => resolve(result.token))
+          .catch(reject)
+    }),
     sendEmailVerification: (actionCodeSettings?: ActionCodeSettings) => firebase.sendEmailVerification(actionCodeSettings)
   };
 

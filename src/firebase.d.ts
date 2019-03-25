@@ -351,8 +351,11 @@ export interface User {
   profileImageURL?: string;
   metadata: UserMetadata;
   additionalUserInfo?: AdditionalUserInfo;
+
   /** iOS only */
   refreshToken?: string;
+
+  getIdToken(forceRefresh?: boolean): Promise<string>;
 
   sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<void>;
 }
@@ -730,13 +733,15 @@ export namespace firestore {
      */
     cacheSizeBytes?: number;
   }
-    /**
-     * Specifies custom settings to be used to configure the `Firestore`
-     * instance. Must be set before invoking any other methods.
-     *
-     * @param settings The settings to use.
-     */
+
+  /**
+   * Specifies custom settings to be used to configure the `Firestore`
+   * instance. Must be set before invoking any other methods.
+   *
+   * @param settings The settings to use.
+   */
   export function settings(settings: Settings): void;
+
   export interface SetOptions {
     merge?: boolean;
   }

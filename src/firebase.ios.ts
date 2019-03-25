@@ -687,6 +687,11 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       creationTimestamp: user.metadata.creationDate as Date,
       lastSignInTimestamp: user.metadata.lastSignInDate as Date
     },
+    getIdToken: (forceRefresh?: boolean) => new Promise((resolve, reject) => {
+      firebase.getAuthToken({forceRefresh})
+          .then((result: GetAuthTokenResult) => resolve(result.token))
+          .catch(reject)
+    }),
     sendEmailVerification: (actionCodeSettings?: ActionCodeSettings) => firebase.sendEmailVerification(actionCodeSettings)
   };
 
