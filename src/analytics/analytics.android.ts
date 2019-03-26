@@ -171,3 +171,15 @@ export function setAnalyticsCollectionEnabled(enabled: boolean): void {
       appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
   ).setAnalyticsCollectionEnabled(enabled);
 }
+
+export function setMinimumSessionDuration(milliseconds: number): void {
+  com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+      appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+  ).setMinimumSessionDuration(milliseconds);
+}
+
+export function setSessionTimeoutDuration(milliseconds: number): void {
+  com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+      appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+  ).setSessionTimeoutDuration(milliseconds);
+}
