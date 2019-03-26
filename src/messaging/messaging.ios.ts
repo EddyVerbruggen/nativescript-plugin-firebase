@@ -378,9 +378,7 @@ const updateUserInfo = userInfoJSON => {
 function _registerForRemoteNotifications() {
   let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
-    application.on("launch", () => {
-      _registerForRemoteNotifications();
-    });
+    application.on("launch", () => _registerForRemoteNotifications());
     return;
   }
 
