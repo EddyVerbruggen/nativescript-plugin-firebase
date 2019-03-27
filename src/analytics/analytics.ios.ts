@@ -217,10 +217,6 @@ export function setAnalyticsCollectionEnabled(enabled: boolean): void {
   FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(enabled);
 }
 
-export function setMinimumSessionDuration(milliseconds: number): void {
-  FIRAnalyticsConfiguration.sharedInstance().setMinimumSessionInterval(milliseconds);
-}
-
 export function setSessionTimeoutDuration(milliseconds: number): void {
   FIRAnalyticsConfiguration.sharedInstance().setSessionTimeoutInterval(milliseconds);
 }

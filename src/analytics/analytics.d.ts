@@ -74,6 +74,4 @@ export declare function setScreenName(options: SetScreenNameOptions): Promise<vo
 
 export declare function setAnalyticsCollectionEnabled(enabled: boolean): void;
 
-export declare function setMinimumSessionDuration(milliseconds: number): void;
-
 export declare function setSessionTimeoutDuration(milliseconds: number): void;
