@@ -4574,7 +4574,7 @@ post_install do |installer|
 end`) + `
 
 # Firebase Cloud Messaging (FCM)
-` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
+` + (isSelected(result.messaging) && !isSelected(result.external_messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
 # Firebase In-App Messaging (supported on NativeScript 5.2+)
 ` + (isSelected(result.in_app_messaging) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
