@@ -73,3 +73,5 @@ export declare function setUserProperty(options: SetUserPropertyOptions): Promis
 export declare function setScreenName(options: SetScreenNameOptions): Promise<void>;
 
 export declare function setAnalyticsCollectionEnabled(enabled: boolean): void;
+
+export declare function setSessionTimeoutDuration(milliseconds: number): void;
