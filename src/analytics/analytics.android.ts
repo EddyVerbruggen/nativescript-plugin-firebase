@@ -172,8 +172,8 @@ export function setAnalyticsCollectionEnabled(enabled: boolean): void {
   ).setAnalyticsCollectionEnabled(enabled);
 }
 
-export function setSessionTimeoutDuration(milliseconds: number): void {
+export function setSessionTimeoutDuration(seconds: number): void {
   com.google.firebase.analytics.FirebaseAnalytics.getInstance(
       appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
-  ).setSessionTimeoutDuration(milliseconds);
+  ).setSessionTimeoutDuration(seconds * 1000); // Android expects ms
 }

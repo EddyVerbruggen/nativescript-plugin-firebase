@@ -99,3 +99,10 @@ You can also pass this property during `init()`:
 ```
 
 > If you want to disable collection without calling this function programmatically, then you can add a flag to your `App_Resources/iOS/Info.plist` and `App_Resources/Android/AndroidManifest.xml`, see [Firebase's documentation](https://firebase.google.com/support/guides/disable-analytics) for details.
+
+### analytics.setSessionTimeoutDuration
+Sets the duration of inactivity that terminates the current session. The default value is 1800 seconds (30 minutes).
+
+```js
+  firebase.analytics.setSessionTimeoutDuration(600); // 10 minutes
+```
