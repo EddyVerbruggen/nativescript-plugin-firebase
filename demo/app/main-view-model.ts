@@ -4,6 +4,7 @@ import {
   admob as firebaseAdMob,
   crashlytics as firebaseCrashlytics,
   GetAuthTokenResult,
+  GetRemoteConfigResult,
   LogComplexEventTypeParameter,
   performance as firebasePerformance,
   storage as firebaseStorage,
@@ -790,10 +791,11 @@ export class HelloWorldModel extends Observable {
     firebase.getRemoteConfig({
       developerMode: true,
       cacheExpirationSeconds: 600, // 10 minutes, default is 12 hours
-      properties: [{
-        "key": "holiday_promo_enabled",
-        "default": false
-      },
+      properties: [
+        {
+          "key": "holiday_promo_enabled",
+          "default": false
+        },
         {
           "key": "default_only_prop",
           "default": 77
@@ -815,7 +817,7 @@ export class HelloWorldModel extends Observable {
           "default": 11
         }]
     }).then(
-        result => {
+        (result: GetRemoteConfigResult) => {
           console.log("remote config fetched: " + JSON.stringify(result.properties));
           alert({
             title: `Fetched at ${result.lastFetch} ${result.throttled ? '(throttled)' : ''}`,
