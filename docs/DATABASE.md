@@ -163,6 +163,9 @@ Firebase supports querying data and this plugin does too, since v2.0.0.
 
 Let's say we have the structure as defined at `setValue`, then use this query to retrieve the companies in country 'Bulgaria':
 
+<details>
+ <summary>Native API</summary>
+
 ```js
     var onQueryEvent = function(result) {
         // note that the query returns 1 match at a time
@@ -216,6 +219,67 @@ Let's say we have the structure as defined at `setValue`, then use this query to
 ```
 
 For supported values of the orderBy/range/ranges/limit's `type` properties, take a look at the [`firebase-common.d.ts`](firebase-common.d.ts) TypeScript definitions in this repo.
+</details>
+<details>
+ <summary>Web API</summary>
+
+Alternatively you can use the web api to query data. See [docs](https://firebase.google.com/docs/reference/js/firebase.database.Query) for more examples and the full api
+
+Some key notes:
+
+The DataSnapshot returned is vastly different from the native api's snapshot! Please follow the web api docs to see what
+you can do with the datasnapshot returned. Note that Datasnapshot.ref() is yet implemented.
+
+`Query.on()` does not accept a cancelCallbackOrContext. Similar to the native api, check if result.error is true before continuing.
+
+`once("eventType")` behaves differently on Android and iOS. On Android once only works with an eventType of `value` whereas
+iOS will work with all the eventTypes like `child_added, child_removed` etc.
+
+`off("eventType")` will remove all listeners for "eventType" at the given path. So you do not need to call `off()`
+the same number of times you call `on()`. Listeners for all eventTypes will be removed if no eventType is provided.
+
+Filters (`equalTo, startAt, endAt, LimitBy`, etc) should be used with a sort. If not, you may not get the result expected.
+If you apply equalTo without an orderBy what are you checking for (key, value, priority)?
+
+When using `equalTo, startAt or endAt` chained with `orderByKey()`, you MUST make sure they are all strings. Otherwise expect
+an exception to be thrown.
+
+DO NOT try to apply more than one orderBy to the same query as this will crash the application (follows the api)
+```typescript
+  const bad = firebaseWebApi.database().ref(path).orderByKey();
+  bad.orderByValue();  // <------ will throw here!
+
+  // However you could do the following:
+  firebaseWebApi.database().ref("/companies").orderByKey()
+      .equalTo("Google")
+      .on("value", onQueryEvent);
+
+  firebaseWebApi.database().ref("/companies").orderByValue()
+      .startAt(1999)
+      .on("child_added", onQueryEvent);
+
+  firebaseWebApi.database().ref("/companies").off("value");
+
+  // You can also do the following
+  firebase.webQuery("/companies").orderByKey().on("value", onQueryEvent);
+
+  const onQueryEvent = (result: any) {
+        if (!result.error) {
+            console.log("Exists: " + result.exists());
+            console.log("Key: " + result.key);
+            console.log("Value: " + JSON.stringify(result.val()));
+            result.forEach(
+              snapshot => {
+                // Do something forEach children. Note that this goes one level deep
+                console.log(snapshot.toJSON());
+              }
+          );
+        }
+    };
+
+```
+Since the webapi queries follow the Google Documentation you can look at their examples for more reference.
+ </details>
 
 ### update
 Changes the values of the keys specified in the dictionary without overwriting other keys at this location.
@@ -307,17 +371,25 @@ The link is for the iOS SDK, but it's the same for Android.
  <summary>Web API</summary>
 
 ```js
-  const onValueEvent = result => {
-    if (result.error) {
-      console.log("Listener error: " + result.error);
-    } else {
-      console.log("Key: " + result.key);
-      console.log("key exists? " + result.exists());
-      console.log("Value: " + JSON.stringify(result.val()));
-    }
-  };
+  public doWebAddValueEventListenerForCompanies(): void {
+    const path = "/companies";
+    const onValueEvent = (result: firebase.DataSnapshot ) => {
+      // NOTE: we no longer check for result.error as it doesn't exist. Pass in an onError callback to handle errors!
+        console.log("value : " + result.forEach(datasnapshot => {
+          console.log(datasnapshot.key + "  " + JSON.stringify(datasnapshot.val()));
+        }));
+        console.log("key exists? " + result.exists());
+        this.set("path", path);
+        this.set("key", result.key);
+        this.set("value", JSON.stringify(result.val()));
+      };
 
-  firebaseWebApi.database().ref("/companies").on("value", onValueEvent);
+    const onErrorEvent = (err: Error ) => {
+      console.log("Encountered an error: " + err);
+    };
+  firebaseWebApi.database().ref("/companies").on("value", onValueEvent, onErrorEvent /* Totally Optional */);
+  }
+
 ```
 </details>
 

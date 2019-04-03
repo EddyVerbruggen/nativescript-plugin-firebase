@@ -11,6 +11,7 @@ import {
   GetAuthTokenOptions,
   GetAuthTokenResult,
   OnDisconnect as OnDisconnectBase, QueryOptions,
+  Query as QueryBase,
   User
 } from "./firebase";
 import {
@@ -1428,22 +1429,22 @@ firebase.keepInSync = (path, switchOn) => {
 };
 
 firebase._addObservers = (to, updateCallback) => {
-  const listener = new com.google.firebase.database.ChildEventListener({
-    onCancelled: databaseError => {
+  const listener: com.google.firebase.database.ChildEventListener = new com.google.firebase.database.ChildEventListener({
+    onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
       updateCallback({
         error: databaseError.getMessage()
       });
     },
-    onChildAdded: (snapshot, previousChildKey) => {
+    onChildAdded: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
       updateCallback(firebase.getCallbackData('ChildAdded', snapshot));
     },
-    onChildRemoved: snapshot => {
+    onChildRemoved: (snapshot: com.google.firebase.database.DataSnapshot) => {
       updateCallback(firebase.getCallbackData('ChildRemoved', snapshot));
     },
-    onChildChanged: (snapshot, previousChildKey) => {
+    onChildChanged: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
       updateCallback(firebase.getCallbackData('ChildChanged', snapshot));
     },
-    onChildMoved: (snapshot, previousChildKey) => {
+    onChildMoved: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
       updateCallback(firebase.getCallbackData('ChildMoved', snapshot));
     }
   });
@@ -1509,10 +1510,10 @@ firebase.getValue = path => {
       }
 
       const listener = new com.google.firebase.database.ValueEventListener({
-        onDataChange: snapshot => {
+        onDataChange: (snapshot: com.google.firebase.database.DataSnapshot) => {
           resolve(firebase.getCallbackData('ValueChanged', snapshot));
         },
-        onCancelled: databaseError => {
+        onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
           reject(databaseError.getMessage());
         }
       });
@@ -1629,8 +1630,205 @@ firebase.update = (path, val) => {
   });
 };
 
-firebase.query = (updateCallback: (data: FBDataSingleEvent | FBErrorData) => void, path: string, options: QueryOptions): Promise<any> => {
-  return new Promise<any>((resolve, reject) => {
+firebase.webQuery = (path: string): QueryBase => {
+  if (!firebase.initialized) {
+    console.error("Please run firebase.init() before firebase.query()");
+    throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+  }
+  const dbRef: com.google.firebase.database.DatabaseReference = firebase.instance.child(path);
+  return new Query(dbRef, path);
+};
+
+class Query implements QueryBase {
+  private query: com.google.firebase.database.Query; // Keep track of internal query state allowing us to chain filter/range/limit
+  private static eventListenerMap: Map<string, Array<any>> = new Map(); // A map to keep track all all the listeners attached for the specified eventType
+
+  constructor(private dbRef: com.google.firebase.database.DatabaseReference, private path: string) {
+    this.query = this.dbRef;
+  }
+
+  on(eventType: string, callback: (a: DataSnapshot, b?: string) => any, cancelCallbackOrContext?: (a: Error | null) => any): Function {
+    try {
+      if (firebase.instance === null) {
+        throw new Error("Run init() first!");
+      }
+      const listener = this.createEventListener(eventType, callback, cancelCallbackOrContext);
+
+      if (eventType === "value") {
+        this.query.addValueEventListener(listener as com.google.firebase.database.ValueEventListener);
+      } else if (eventType === "child_added" || eventType === "child_changed" || eventType === "child_removed" || eventType === "child_moved") {
+        this.query.addChildEventListener(listener as com.google.firebase.database.ChildEventListener);
+      } else {
+        throw new Error(`${eventType} is not a valid eventType. Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'`);
+      }
+      // Add listener to our map which keeps track of eventType: child/value events
+      if (!Query.eventListenerMap.has(eventType)) {
+        Query.eventListenerMap.set(eventType, []);
+      }
+      Query.eventListenerMap.get(eventType).push(listener); // We need to keep track of the listeners to fully remove them when calling off
+    } catch (ex) {
+      console.error("Error in firebase.on: " + ex);
+      if (cancelCallbackOrContext !== undefined) {
+        cancelCallbackOrContext(ex);
+      }
+    } finally {
+      return callback;
+    }
+  }
+
+  once(eventType: string): Promise<DataSnapshot> {
+    return new Promise((resolve, reject) => {
+      try {
+        if (firebase.instance === null) {
+          reject("Run init() first!");
+          return;
+        }
+        const listener = new com.google.firebase.database.ValueEventListener({
+          onDataChange: (snapshot: com.google.firebase.database.DataSnapshot) => {
+            resolve(nativeSnapshotToWebSnapshot(snapshot));
+          },
+          onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
+            reject({
+              error: databaseError.getMessage()
+            });
+          }
+        });
+        // Kind of akward since Android only has single listener for the value event type...
+        firebase.instance.child(this.path).addListenerForSingleValueEvent(listener);
+      }
+      catch (ex) {
+        console.error("Error in firebase.once: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  off(eventType?: string): void {
+    // Remove all events if none specified
+    if (!eventType) {
+      Query.eventListenerMap.forEach((value: any[], key: string) => {
+        firebase.removeEventListeners(value, this.path);
+      });
+    } else { // Remove only the event specified by the user
+      if (Query.eventListenerMap.get(eventType)) {
+        firebase.removeEventListeners(Query.eventListenerMap.get(eventType), this.path);
+      }
+    }
+  }
+
+  orderByChild(value: string): Query {
+    this.query = this.query.orderByChild(value);
+    return this;
+  }
+
+  orderByKey(): Query {
+    this.query = this.query.orderByKey();
+    return this;
+  }
+
+  orderByPriority(): Query {
+    this.query = this.query.orderByPriority();
+    return this;
+  }
+
+  orderByValue(): Query {
+    this.query = this.query.orderByValue();
+    return this;
+  }
+
+  // Unlike the order-by methods, you can combine multiple limit or range functions.
+  // For example, you can combine the startAt() and endAt() methods to limit the results to a specified range of values.
+
+  equalTo(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.equalTo(value, key);
+    } else {
+      this.query = this.query.equalTo(value);
+    }
+    return this;
+  }
+
+  startAt(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.startAt(value, key);
+    } else {
+      this.query = this.query.startAt(value);
+    }
+    return this;
+  }
+
+  endAt(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.endAt(value, key);
+    } else {
+      this.query = this.query.endAt(value);
+    }
+    return this;
+  }
+
+  limitToFirst(value: number): Query {
+    this.query = this.query.limitToFirst(value);
+    return this;
+  }
+
+  limitToLast(value: number): Query {
+    this.query = this.query.limitToLast(value);
+    return this;
+  }
+  /**
+  * Depending on the eventType, attach listeners at the specified Database location. Follow the WebApi which listens
+  * to specific events (Android is more generic value / child - which includes all events add, change, remove etc).
+  * Similar to firebase._addObserver but I do not want to listen for every event
+  */
+  private createEventListener(eventType: string, callback, cancelCallback?): com.google.firebase.database.ValueEventListener | com.google.firebase.database.ChildEventListener {
+    let listener;
+
+    if (eventType === "value") {
+      listener = new com.google.firebase.database.ValueEventListener({
+        onDataChange: (snapshot: com.google.firebase.database.DataSnapshot) => {
+          callback(nativeSnapshotToWebSnapshot(snapshot));
+        },
+        onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
+          if (cancelCallback !== undefined) {
+            cancelCallback(new Error(databaseError.getMessage()));
+          }
+        }
+      });
+    } else if (eventType === "child_added" || eventType === "child_changed" || eventType === "child_removed" || eventType === "child_moved") {
+      listener = new com.google.firebase.database.ChildEventListener({
+        onCancelled: (databaseError: com.google.firebase.database.DatabaseError) => {
+           if (cancelCallback !== undefined) {
+            cancelCallback(new Error(databaseError.getMessage()));
+          }
+        },
+        onChildAdded: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
+          if (eventType === "child_added") {
+            callback(nativeSnapshotToWebSnapshot(snapshot));
+          }
+        },
+        onChildRemoved: (snapshot: com.google.firebase.database.DataSnapshot) => {
+          if (eventType === "child_removed") {
+            callback(nativeSnapshotToWebSnapshot(snapshot));
+          }
+        },
+        onChildChanged: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
+          if (eventType === "child_changed") {
+            callback(nativeSnapshotToWebSnapshot(snapshot));
+          }
+        },
+        onChildMoved: (snapshot: com.google.firebase.database.DataSnapshot, previousChildKey: string) => {
+          if (eventType === "child_moved") {
+            callback(nativeSnapshotToWebSnapshot(snapshot));
+          }
+        }
+      });
+    }
+    return listener;
+  }
+}
+
+firebase.query = (updateCallback, path, options) => {
+  return new Promise((resolve, reject) => {
     try {
       if (firebase.instance === null) {
         reject("Run init() first!");
@@ -1917,6 +2115,9 @@ firebase.transaction = (path: string, transactionUpdate: (currentState) => any,
   });
 };
 
+function nativeRefToWebRef(ref: com.google.firebase.database.DatabaseReference) {
+
+}
 // Converts Android DataSnapshot into Web Datasnapshot
 function nativeSnapshotToWebSnapshot(snapshot: com.google.firebase.database.DataSnapshot): DataSnapshot {
   function forEach(action: (datasnapshot: DataSnapshot) => any): boolean {
@@ -1932,7 +2133,7 @@ function nativeSnapshotToWebSnapshot(snapshot: com.google.firebase.database.Data
 
   return {
     key: snapshot.getKey(),
-    ref: snapshot.getRef(),
+    // ref: snapshot.getRef(), TODO: Convert native ref to webRef
     child: (path: string) => nativeSnapshotToWebSnapshot(snapshot.child(path)),
     exists: () => snapshot.exists(),
     forEach: (func: (datasnapshot) => any) => forEach(func),

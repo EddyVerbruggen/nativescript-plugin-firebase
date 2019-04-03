@@ -1,154 +1,116 @@
 import * as firebase from "../../firebase";
-import { AddEventListenerResult, FBData } from "../../firebase";
 import { nextPushId } from "./util/NextPushId";
 
-export module database {
-  export interface DataSnapshot {
-    // child(path: string): DataSnapshot;
-    exists(): boolean;
-    // exportVal(): any;
-    // forEach(action: (a: DataSnapshot) => boolean): boolean;
-    // getPriority(): string | number | null;
-    // hasChild(path: string): boolean;
-    // hasChildren(): boolean;
-    key: string | null;
-    // numChildren(): number;
-    // ref: Reference;
-    // toJSON(): Object | null;
-    val(): any;
-  }
+export namespace database {
+  export type DataSnapshot = firebase.DataSnapshot;
 
-  export class Query {
-    private static registeredListeners: Map<string, Array<any>> = new Map();
-    private static registeredCallbacks: Map<string, Array<(a: DataSnapshot | null, b?: string) => any>> = new Map();
-
+  export class Query implements firebase.Query {
     protected path: string;
-
+    private queryObject: firebase.Query;
     constructor(path: string) {
       this.path = path;
+      this.queryObject = firebase.webQuery(this.path);
     }
 
-    public on(eventType /* TODO use */: string, callback: (a: DataSnapshot | null, b?: string) => any, cancelCallbackOrContext?: Object | null, context?: Object | null): (a: DataSnapshot | null, b?: string) => any {
-      const onValueEvent = result => {
-        if (result.error) {
-          callback(result);
-        } else {
-          callback({
-            key: result.key,
-            val: () => result.value,
-            exists: () => !!result.value
-          });
-        }
-      };
+    /**
+     * Listens for data changes at a particular location
+     * @param eventType One of the following strings: "value", "child_added", "child_changed", "child_removed", or "child_moved."
+     * @param callback A callback that fires when the specified event occurs. The callback will be passed a DataSnapshot.
+     * @param cancelCallbackOrContext A callback that fires when an error occurs. The callback will be passed an error object.
+     * @returns The provided callback function is returned unmodified.
+     */
+    public on(eventType: string, callback: (a: DataSnapshot | null, b?: string) => any,
+      cancelCallbackOrContext?: (a: Error | null) => any, context?: Object | null): (a: DataSnapshot | null, b?: string) => Function {
 
-      firebase.addValueEventListener(onValueEvent, this.path).then(
-          (result: AddEventListenerResult) => {
-            if (!Query.registeredListeners.has(this.path)) {
-              Query.registeredListeners.set(this.path, []);
-            }
-            Query.registeredListeners.set(this.path, Query.registeredListeners.get(this.path).concat(result.listeners));
-          },
-          error => {
-            console.log("firebase.database().on error: " + error);
-          }
-      );
+      this.queryObject.on(eventType, callback, cancelCallbackOrContext);
 
-      // remember the callbacks as we may need them for 'query' events
-      if (!Query.registeredCallbacks.has(this.path)) {
-        Query.registeredCallbacks.set(this.path, []);
-      }
-      Query.registeredCallbacks.get(this.path).push(callback);
-
-      return null;
+      return callback; // According to firebase doc we just return the callback given
     }
 
-    public off(eventType? /* TODO use */: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): any {
-      if (Query.registeredListeners.has(this.path)) {
-        firebase.removeEventListeners(Query.registeredListeners.get(this.path), this.path).then(
-            result => Query.registeredListeners.delete(this.path),
-            error => console.log("firebase.database().off error: " + error)
-        );
-      }
-      Query.registeredCallbacks.delete(this.path);
-      return null;
+    /**
+     * Remove all callbacks for given eventType. If not eventType is given this
+     * detaches all callbacks previously attached with on().
+     */
+    public off(eventType?: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): void {
+      // TODO: use callback rather than remove ALL listeners for a given eventType
+      this.queryObject.off(eventType);
     }
 
-    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any, failureCallbackOrContext?: Object | null, context?: Object | null): Promise<DataSnapshot> {
-      return new Promise((resolve, reject) => {
-        firebase.getValue(this.path).then(result => {
-          resolve({
-            key: result.key,
-            val: () => result.value,
-            exists: () => !!result.value
-          });
-        });
-      });
+    /**
+     * Listens for exactly one event of the specified event type, and then stops listening.
+     * @param eventType One of the following strings: "value", "child_added", "child_changed", "child_removed", or "child_moved."
+     */
+    public once(eventType: string, successCallback?: (a: DataSnapshot, b?: string) => any,
+      failureCallbackOrContext?: Object | null, context?: Object | null): Promise<DataSnapshot> {
+      return this.queryObject.once(eventType);
     }
 
-    private getOnValueEventHandler(): (data: FBData) => void {
-      return result => {
-        const callbacks = Query.registeredCallbacks.get(this.path);
-        callbacks && callbacks.map(callback => {
-          callback({
-            key: result.key,
-            val: () => result.value,
-            exists: () => !!result.value
-          });
-        });
-      };
+    /**
+     * Generates a new Query object ordered by the specified child key. Queries can only order
+     * by one key at a time. Calling orderByChild() multiple times on the same query is an error.
+     * @param child child key to order the results by
+     */
+    public orderByChild(child: string): firebase.Query {
+      return this.queryObject.orderByChild(child);
+    }
+    /**
+     * Generates a new Query object ordered by key.
+     * Sorts the results of a query by their (ascending) key values.
+     */
+    public orderByKey(): firebase.Query {
+      return this.queryObject.orderByKey();
     }
 
-    public orderByChild(child: string): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.CHILD,
-              value: child
-            }
-          }
-      );
-      return this;
+    /**
+     * Generates a new Query object ordered by priority
+     */
+    public orderByPriority(): firebase.Query {
+      return this.queryObject.orderByPriority();
     }
 
-    public orderByKey(): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.KEY
-            }
-          }
-      );
-      return this;
+    /**
+     * Generates a new Query object ordered by value.If the children of a query are all scalar values
+     * (string, number, or boolean), you can order the results by their (ascending) values.
+     */
+    public orderByValue(): firebase.Query {
+      return this.queryObject.orderByValue();
     }
 
-    public orderByPriority(): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.PRIORITY
-            }
-          }
-      );
-      return this;
+    /**
+     * Creates a Query with the specified starting point. The value to start at should match the type
+     * passed to orderBy(). If using orderByKey(), the value must be a string
+     */
+    public startAt(value: number | string | boolean): firebase.Query {
+      return this.queryObject.startAt(value);
     }
 
-    public orderByValue(): Query {
-      firebase.query(
-          this.getOnValueEventHandler(),
-          this.path,
-          {
-            orderBy: {
-              type: firebase.QueryOrderByType.VALUE
-            }
-          }
-      );
-      return this;
+    /**
+     * Creates a Query with the specified ending point. The value to start at should match the type
+     * passed to orderBy(). If using orderByKey(), the value must be a string.
+     */
+    public endAt(value: any, key?: string): firebase.Query {
+      return this.queryObject.endAt(value, key);
+    }
+
+    /**
+     * Generate a new Query limited to the first specific number of children.
+     */
+    public limitToFirst(value: number): firebase.Query {
+      return this.queryObject.limitToFirst(value);
+    }
+
+    /**
+     * Generate a new Query limited to the last specific number of children.
+     */
+    public limitToLast(value: number): firebase.Query {
+      return this.queryObject.limitToLast(value);
+    }
+
+    /**
+     * Creates a Query that includes children that match the specified value.
+     */
+    public equalTo(value: any, key?: string): firebase.Query {
+      return this.queryObject.equalTo(value, key);
     }
   }
 
@@ -258,8 +220,7 @@ export module database {
     }
   }
 
-  export interface ThenableReference extends Reference /*, PromiseLike<any> */
-  {
+  export interface ThenableReference extends Reference /*, PromiseLike<any> */ {
   }
 
   export class Database {

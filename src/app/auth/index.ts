@@ -4,7 +4,7 @@ import { FirebaseEmailLinkActionCodeSettings, LoginType, User } from "../../fire
 export module auth {
   export class Auth {
     private authStateChangedHandler;
-    public currentUser: User;
+    public currentUser: User | undefined;
     public languageCode: string | null;
 
     public onAuthStateChanged(handler: (user: User) => void): void {

@@ -7,6 +7,7 @@ import {
   GetAuthTokenOptions,
   GetAuthTokenResult,
   OnDisconnect as OnDisconnectBase, QueryOptions,
+  Query as QueryBase,
   User
 } from "./firebase";
 import {
@@ -1392,6 +1393,182 @@ firebase.update = (path, val) => {
     }
   });
 };
+firebase.webQuery = (path: string): QueryBase => {
+  if (!firebase.initialized) {
+    console.error("Please run firebase.init() before firebase.query()");
+    throw new Error("FirebaseApp is not initialized. Make sure you run firebase.init() first");
+  }
+  const dbRef: FIRDatabaseReference =  FIRDatabase.database().reference().child(path);
+  return new Query(dbRef, path);
+};
+
+class Query implements QueryBase {
+  private query: FIRDatabaseQuery | FIRDatabaseReference; // Keep track of internal query state allowing us to chain filter/range/limit
+  private static eventListenerMap: Map<string, Array<any>> = new Map(); // A map to keep track all all the listeners attached for the specified eventType
+
+  constructor(private dbRef: FIRDatabaseReference, private path: string) {
+    this.query = this.dbRef;
+  }
+
+  on(eventType: string, callback: (a: any, b?: string) => any, cancelCallbackOrContext?: (a: Error | null) => any): Function {
+    try {
+      if (eventType === "value" || eventType === "child_added" || eventType === "child_changed"
+        || eventType === "child_removed" || eventType === "child_moved") {
+        const firDataEventType = this.eventToFIRDataEventType(eventType);
+        const firDatabaseHandle = this.attachEventObserver(this.query, firDataEventType, callback, cancelCallbackOrContext);
+        if (!Query.eventListenerMap.has(eventType)) {
+          Query.eventListenerMap.set(eventType, []);
+        }
+        Query.eventListenerMap.get(eventType).push(firDatabaseHandle); // We need to keep track of the listeners to fully remove them when calling off
+      } else {
+        throw new Error(`${eventType} is not a valid eventType. Use one of the following: 'value', 'child_added', 'child_changed', 'child_removed', or 'child_moved'`);
+      }
+    } catch (ex) {
+      // TODO: Make custom errors
+      console.error("Error in firebase.on: " + ex);
+      if (cancelCallbackOrContext !== undefined) {
+        cancelCallbackOrContext(ex);
+      }
+    }
+    finally {
+      return callback;
+    }
+  }
+
+  once(eventType: string): Promise<DataSnapshot> {
+    return new Promise((resolve, reject) => {
+      try {
+        const firDataEventType = this.eventToFIRDataEventType(eventType);
+        this.query.observeEventTypeWithBlockWithCancelBlock(
+          firDataEventType,
+          snapshot => {
+            resolve(nativeSnapshotToWebSnapshot(snapshot));
+          },
+          firebaseError => {
+            reject({
+              error: firebaseError.localizedDescription
+            });
+          });
+      } catch (ex) {
+        console.error("Error in firebase.once: " + ex);
+        reject(ex);
+      }
+    });
+  }
+
+  off(eventType?: string): void {
+    // Remove all events if none specified
+    if (!eventType) {
+      Query.eventListenerMap.forEach((value: any[], key: string) => {
+        firebase.removeEventListeners(value, this.path);
+      });
+    } else { // Remove only the event specified by the user
+      if (Query.eventListenerMap.get(eventType)) {
+        firebase.removeEventListeners(Query.eventListenerMap.get(eventType), this.path);
+      }
+    }
+  }
+
+  orderByChild(value: string): Query {
+    this.query = this.query.queryOrderedByChild(value);
+    return this;
+  }
+
+  orderByKey(): Query {
+    this.query = this.query.queryOrderedByKey();
+    return this;
+  }
+
+  orderByPriority(): Query {
+    this.query = this.query.queryOrderedByPriority();
+    return this;
+  }
+
+  orderByValue(): Query {
+    this.query = this.query.queryOrderedByValue();
+    return this;
+  }
+
+  // Unlike the order-by methods, you can combine multiple limit or range functions.
+  // For example, you can combine the startAt() and endAt() methods to limit the results to a specified range of values.
+
+  equalTo(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.queryEqualToValueChildKey(value, key);
+    } else {
+      this.query = this.query.queryEqualToValue(value);
+    }
+    return this;
+  }
+
+  startAt(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.queryStartingAtValueChildKey(value, key);
+    } else {
+      this.query = this.query.queryStartingAtValue(value);
+    }
+    return this;
+  }
+
+  endAt(value: any, key?: string): Query {
+    if (key) {
+      this.query = this.query.queryEndingAtValueChildKey(value, key);
+    } else {
+      this.query = this.query.queryEndingAtValue(value);
+    }
+    return this;
+  }
+
+  limitToFirst(value: number): Query {
+    this.query = this.query.queryLimitedToFirst(value);
+    return this;
+  }
+
+  limitToLast(value: number): Query {
+    this.query = this.query.queryLimitedToLast(value);
+    return this;
+  }
+
+  private eventToFIRDataEventType(eventType: string): FIRDataEventType {
+    let firEventType: FIRDataEventType;
+    switch (eventType) {
+      case "value":
+        firEventType = FIRDataEventType.Value;
+        break;
+      case "child_added":
+        firEventType = FIRDataEventType.ChildAdded;
+        break;
+      case "child_changed":
+        firEventType = FIRDataEventType.ChildChanged;
+        break;
+      case "child_removed":
+        firEventType = FIRDataEventType.ChildRemoved;
+        break;
+      case "child_moved":
+        firEventType = FIRDataEventType.ChildMoved;
+        break;
+    }
+    return firEventType;
+  }
+  /**
+  * Depending on the eventType, attach listeners at the specified Database location. Follow the WebApi which listens
+  * to specific events (Android is more generic value / child - which includes all events add, change, remove etc).
+  * Similar to firebase._addObserver but I do not want to listen for every event
+  */
+  private attachEventObserver(dbRef: FIRDatabaseQuery | FIRDatabaseReference, firEventType: FIRDataEventType, callback, cancelCallback): number {
+    const listener = dbRef.observeEventTypeWithBlockWithCancelBlock(
+      firEventType,
+      snapshot => {
+        callback(nativeSnapshotToWebSnapshot(snapshot));
+      },
+      firebaseError => {
+        if (cancelCallback !== undefined) {
+          cancelCallback(new Error(firebaseError.localizedDescription));
+        }
+      });
+    return listener;
+  }
+}
 
 firebase.query = (updateCallback: (data: FBDataSingleEvent) => void, path: string, options: QueryOptions): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
@@ -1665,7 +1842,7 @@ function nativeSnapshotToWebSnapshot(snapshot: FIRDataSnapshot): DataSnapshot {
 
   return {
     key: snapshot.key,
-    ref: snapshot.ref,
+    // ref: snapshot.ref,
     child: (path: string) => nativeSnapshotToWebSnapshot(snapshot.childSnapshotForPath(path)),
     exists: () => snapshot.exists(),
     forEach: (func: (datasnapshot) => any) => forEach(func),
