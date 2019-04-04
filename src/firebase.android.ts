@@ -809,7 +809,7 @@ function toLoginResult(user, additionalUserInfo?): User {
     getIdToken: (forceRefresh?: boolean) => new Promise((resolve, reject) => {
       firebase.getAuthToken({forceRefresh})
           .then((result: GetAuthTokenResult) => resolve(result.token))
-          .catch(reject)
+          .catch(reject);
     }),
     sendEmailVerification: (actionCodeSettings?: ActionCodeSettings) => firebase.sendEmailVerification(actionCodeSettings)
   };
