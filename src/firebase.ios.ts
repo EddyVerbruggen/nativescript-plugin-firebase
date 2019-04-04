@@ -690,7 +690,12 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
     getIdToken: (forceRefresh?: boolean) => new Promise((resolve, reject) => {
       firebase.getAuthToken({forceRefresh})
           .then((result: GetAuthTokenResult) => resolve(result.token))
-          .catch(reject)
+          .catch(reject);
+    }),
+    getIdTokenResult: (forceRefresh?: boolean) => new Promise((resolve, reject) => {
+      firebase.getAuthToken({forceRefresh})
+          .then((result: GetAuthTokenResult) => resolve(result))
+          .catch(reject);
     }),
     sendEmailVerification: (actionCodeSettings?: ActionCodeSettings) => firebase.sendEmailVerification(actionCodeSettings)
   };
@@ -725,7 +730,10 @@ firebase.getAuthToken = (arg: GetAuthTokenOptions): Promise<GetAuthTokenResult> 
             resolve({
               token: result.token,
               claims: firebaseUtils.toJsObject(result.claims),
-              signInProvider: result.signInProvider
+              signInProvider: result.signInProvider,
+              expirationTime: firebaseUtils.toJsObject(result.expirationDate),
+              issuedAtTime: firebaseUtils.toJsObject(result.issuedAtDate),
+              authTime: firebaseUtils.toJsObject(result.authDate)
             });
           }
         });
