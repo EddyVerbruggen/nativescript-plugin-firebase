@@ -3,7 +3,7 @@ import {
   AddEventListenerResult,
   admob as firebaseAdMob,
   crashlytics as firebaseCrashlytics,
-  GetAuthTokenResult,
+  IdTokenResult,
   GetRemoteConfigResult,
   LogComplexEventTypeParameter,
   performance as firebasePerformance,
@@ -1026,7 +1026,7 @@ export class HelloWorldModel extends Observable {
               {
                 forceRefresh: false
               })
-              .then((result: GetAuthTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
+              .then((result: IdTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
               .catch(errorMessage => console.log("Auth token retrieval error: " + errorMessage));
         },
         errorMessage => {

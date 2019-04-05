@@ -204,7 +204,7 @@ export interface GetAuthTokenOptions {
   forceRefresh?: boolean;
 }
 
-export interface GetAuthTokenResult { // Need to rename to IdTokenResult for webAPI
+export interface IdTokenResult {
   token: string;
   claims: { [key: string]: any; };
   signInProvider: string;
@@ -360,7 +360,7 @@ export interface User {
 
   getIdToken(forceRefresh?: boolean): Promise<string>;
 
-  getIdTokenResult(forceRefresh?: boolean): Promise<any>; // Returns GetAuthTokenResult, but we should rename to IdTokenResult to be web compatible
+  getIdTokenResult(forceRefresh?: boolean): Promise<IdTokenResult>;
 
   sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<void>;
 }
