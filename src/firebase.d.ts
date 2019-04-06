@@ -204,10 +204,13 @@ export interface GetAuthTokenOptions {
   forceRefresh?: boolean;
 }
 
-export interface GetAuthTokenResult {
+export interface IdTokenResult {
   token: string;
   claims: { [key: string]: any; };
   signInProvider: string;
+  expirationTime: number;
+  issuedAtTime: number;
+  authTime: number;
 }
 
 export interface Provider {
@@ -356,6 +359,8 @@ export interface User {
   refreshToken?: string;
 
   getIdToken(forceRefresh?: boolean): Promise<string>;
+
+  getIdTokenResult(forceRefresh?: boolean): Promise<IdTokenResult>;
 
   sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<void>;
 }

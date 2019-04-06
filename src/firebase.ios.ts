@@ -5,7 +5,7 @@ import {
   FBDataSingleEvent,
   firestore,
   GetAuthTokenOptions,
-  GetAuthTokenResult,
+  IdTokenResult,
   OnDisconnect as OnDisconnectBase, QueryOptions,
   User
 } from "./firebase";
@@ -689,8 +689,13 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
     },
     getIdToken: (forceRefresh?: boolean) => new Promise((resolve, reject) => {
       firebase.getAuthToken({forceRefresh})
-          .then((result: GetAuthTokenResult) => resolve(result.token))
-          .catch(reject)
+          .then((result: IdTokenResult) => resolve(result.token))
+          .catch(reject);
+    }),
+    getIdTokenResult: (forceRefresh?: boolean) => new Promise((resolve, reject) => {
+      firebase.getAuthToken({forceRefresh})
+          .then((result: IdTokenResult) => resolve(result))
+          .catch(reject);
     }),
     sendEmailVerification: (actionCodeSettings?: ActionCodeSettings) => firebase.sendEmailVerification(actionCodeSettings)
   };
@@ -707,7 +712,7 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
   return loginResult;
 }
 
-firebase.getAuthToken = (arg: GetAuthTokenOptions): Promise<GetAuthTokenResult> => {
+firebase.getAuthToken = (arg: GetAuthTokenOptions): Promise<IdTokenResult> => {
   return new Promise((resolve, reject) => {
     try {
       const fAuth = FIRAuth.auth();
@@ -725,7 +730,10 @@ firebase.getAuthToken = (arg: GetAuthTokenOptions): Promise<GetAuthTokenResult> 
             resolve({
               token: result.token,
               claims: firebaseUtils.toJsObject(result.claims),
-              signInProvider: result.signInProvider
+              signInProvider: result.signInProvider,
+              expirationTime: firebaseUtils.toJsObject(result.expirationDate),
+              issuedAtTime: firebaseUtils.toJsObject(result.issuedAtDate),
+              authTime: firebaseUtils.toJsObject(result.authDate)
             });
           }
         });
