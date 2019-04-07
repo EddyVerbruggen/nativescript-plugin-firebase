@@ -213,12 +213,10 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
   });
 }
 
-// TODO see https://github.com/firebase/firebase-ios-sdk/pull/2516 (iOS SDK 5.19.0)
 export function setAnalyticsCollectionEnabled(enabled: boolean): void {
-  FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(enabled);
+  FIRAnalytics.setAnalyticsCollectionEnabled(enabled);
 }
 
-// TODO see https://github.com/firebase/firebase-ios-sdk/pull/2516 (iOS SDK 5.19.0)
 export function setSessionTimeoutDuration(seconds: number): void {
-  FIRAnalyticsConfiguration.sharedInstance().setSessionTimeoutInterval(seconds);
+  FIRAnalytics.setSessionTimeoutInterval(seconds);
 }

@@ -4537,7 +4537,7 @@ function writePodFile(result) {
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
 # With NativeScript < 5.2 we can't bump Firebase/Core beyond 5.15.0, but with 5.2+ we can
-pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '5.16.0' : '5.15.0') + `'
+pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '5.20.1' : '5.15.0') + `'
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'

@@ -50,6 +50,10 @@ declare class FIRInstanceIDResult extends NSObject implements NSCopying {
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 }
 
+declare var FirebaseInstanceIDVersionNumber: number;
+
+declare var FirebaseInstanceIDVersionString: interop.Reference<number>;
+
 declare var kFIRInstanceIDScopeFirebaseMessaging: string;
 
 declare var kFIRInstanceIDTokenRefreshNotification: string;

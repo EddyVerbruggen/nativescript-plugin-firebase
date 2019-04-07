@@ -1,28 +1,9 @@
 
-declare class FIRCloudModelSource extends NSObject {
+declare class FIRLocalModel extends NSObject {
 
-	static alloc(): FIRCloudModelSource; // inherited from NSObject
+	static alloc(): FIRLocalModel; // inherited from NSObject
 
-	static new(): FIRCloudModelSource; // inherited from NSObject
-
-	readonly enableModelUpdates: boolean;
-
-	readonly initialConditions: FIRModelDownloadConditions;
-
-	readonly name: string;
-
-	readonly updateConditions: FIRModelDownloadConditions;
-
-	constructor(o: { name: string; enableModelUpdates: boolean; initialConditions: FIRModelDownloadConditions; updateConditions: FIRModelDownloadConditions; });
-
-	initWithNameEnableModelUpdatesInitialConditionsUpdateConditions(name: string, enableModelUpdates: boolean, initialConditions: FIRModelDownloadConditions, updateConditions: FIRModelDownloadConditions): this;
-}
-
-declare class FIRLocalModelSource extends NSObject {
-
-	static alloc(): FIRLocalModelSource; // inherited from NSObject
-
-	static new(): FIRLocalModelSource; // inherited from NSObject
+	static new(): FIRLocalModel; // inherited from NSObject
 
 	readonly name: string;
 
@@ -39,15 +20,15 @@ declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
 
 	static new(): FIRModelDownloadConditions; // inherited from NSObject
 
-	readonly canDownloadInBackground: boolean;
+	readonly allowsBackgroundDownloading: boolean;
 
-	readonly isWiFiRequired: boolean;
+	readonly allowsCellularAccess: boolean;
 
-	constructor(o: { isWiFiRequired: boolean; canDownloadInBackground: boolean; });
+	constructor(o: { allowsCellularAccess: boolean; allowsBackgroundDownloading: boolean; });
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	initWithIsWiFiRequiredCanDownloadInBackground(isWiFiRequired: boolean, canDownloadInBackground: boolean): this;
+	initWithAllowsCellularAccessAllowsBackgroundDownloading(allowsCellularAccess: boolean, allowsBackgroundDownloading: boolean): this;
 }
 
 declare class FIRModelManager extends NSObject {
@@ -58,11 +39,30 @@ declare class FIRModelManager extends NSObject {
 
 	static new(): FIRModelManager; // inherited from NSObject
 
-	cloudModelSourceForModelName(name: string): FIRCloudModelSource;
+	localModelWithName(name: string): FIRLocalModel;
 
-	localModelSourceForModelName(name: string): FIRLocalModelSource;
+	registerLocalModel(localModel: FIRLocalModel): boolean;
 
-	registerCloudModelSource(cloudModelSource: FIRCloudModelSource): boolean;
+	registerRemoteModel(remoteModel: FIRRemoteModel): boolean;
 
-	registerLocalModelSource(localModelSource: FIRLocalModelSource): boolean;
+	remoteModelWithName(name: string): FIRRemoteModel;
+}
+
+declare class FIRRemoteModel extends NSObject {
+
+	static alloc(): FIRRemoteModel; // inherited from NSObject
+
+	static new(): FIRRemoteModel; // inherited from NSObject
+
+	readonly allowsModelUpdates: boolean;
+
+	readonly initialConditions: FIRModelDownloadConditions;
+
+	readonly name: string;
+
+	readonly updateConditions: FIRModelDownloadConditions;
+
+	constructor(o: { name: string; allowsModelUpdates: boolean; initialConditions: FIRModelDownloadConditions; updateConditions: FIRModelDownloadConditions; });
+
+	initWithNameAllowsModelUpdatesInitialConditionsUpdateConditions(name: string, allowsModelUpdates: boolean, initialConditions: FIRModelDownloadConditions, updateConditions: FIRModelDownloadConditions): this;
 }

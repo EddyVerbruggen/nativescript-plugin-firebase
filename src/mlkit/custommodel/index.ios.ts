@@ -109,7 +109,7 @@ function getInterpreter(localModelFile: string): FIRModelInterpreter {
     localModelName = localModelFile.lastIndexOf("/") === -1 ? localModelFile : localModelFile.substring(localModelFile.lastIndexOf("/") + 1);
 
     // make sure we load the model (with the same name) only once
-    if (FIRModelManager.modelManager().localModelSourceForModelName(localModelName)) {
+    if (FIRModelManager.modelManager().localModelWithName(localModelName)) {
       localModelRegistrationSuccess = true;
     } else {
       let localModelFilePath: string;
@@ -120,22 +120,22 @@ function getInterpreter(localModelFile: string): FIRModelInterpreter {
             localModelFile.substring(0, localModelFile.lastIndexOf(".")),
             localModelFile.substring(localModelFile.lastIndexOf(".") + 1));
       }
-      const localModelSource = FIRLocalModelSource.alloc().initWithNamePath(localModelName, localModelFilePath);
-      localModelRegistrationSuccess = FIRModelManager.modelManager().registerLocalModelSource(localModelSource);
+      const localModelSource = FIRLocalModel.alloc().initWithNamePath(localModelName, localModelFilePath);
+      localModelRegistrationSuccess = FIRModelManager.modelManager().registerLocalModel(localModelSource);
     }
   }
 
   /*
   if (options.cloudModelName) {
-    const fIRModelDownloadConditions = FIRModelDownloadConditions.alloc().initWithIsWiFiRequiredCanDownloadInBackground(options.requireWifiForCloudModelDownload, true);
+    const fIRModelDownloadConditions = FIRModelDownloadConditions.alloc().initWithAllowsCellularAccessAllowsBackgroundDownloading(options.requireWifiForCloudModelDownload, true);
 
-    const fIRCloudModelSource = FIRCloudModelSource.alloc().initWithModelNameEnableModelUpdatesInitialConditionsUpdateConditions(
+    const fIRCloudModelSource = FIRRemoteModel.alloc().initWithNameAllowsModelUpdatesInitialConditionsUpdateConditions(
         options.cloudModelName,
         true,
         fIRModelDownloadConditions,
         fIRModelDownloadConditions);
 
-    cloudModelRegistrationSuccess = FIRModelManager.modelManager().registerCloudModelSource(fIRCloudModelSource);
+    cloudModelRegistrationSuccess = FIRModelManager.modelManager().registerRemoteModel(fIRCloudModelSource);
     console.log("cloudModelRegistrationSuccess: " + cloudModelRegistrationSuccess);
   }
   */
@@ -146,7 +146,7 @@ function getInterpreter(localModelFile: string): FIRModelInterpreter {
     return null;
   }
 
-  const fIRModelOptions = FIRModelOptions.alloc().initWithCloudModelNameLocalModelName(
+  const fIRModelOptions = FIRModelOptions.alloc().initWithRemoteModelNameLocalModelName(
       null, // cloudModelRegistrationSuccess ? cloudModelName : null,
       localModelRegistrationSuccess ? localModelName : null);
 

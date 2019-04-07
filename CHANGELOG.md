@@ -3,6 +3,11 @@
 - [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 - [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 8.2.0 (2019, April ?)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/98?closed=1)
+
+> Note: The Firebase iOS SDK now requires Xcode 10.1 or later.
+
 ## 8.1.1 (2019, March 24)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/97?closed=1)
 

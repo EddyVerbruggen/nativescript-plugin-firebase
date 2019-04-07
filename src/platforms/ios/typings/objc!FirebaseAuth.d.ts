@@ -144,6 +144,8 @@ declare class FIRAuth extends NSObject {
 
 	signInWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
+	signInWithProviderUIDelegateCompletion(provider: FIRFederatedAuthProvider, UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
 	signOut(): boolean;
 
 	updateCurrentUserCompletion(user: FIRUser, completion: (p1: NSError) => void): void;
@@ -290,11 +292,17 @@ declare const enum FIRAuthErrorCode {
 
 	WebInternalError = 17062,
 
+	WebSignInUserInteractionFailure = 17063,
+
 	LocalPlayerNotAuthenticated = 17066,
 
 	NullUser = 17067,
 
+	InvalidProviderID = 17071,
+
 	InvalidDynamicLinkDomain = 17074,
+
+	GameKitNotLinked = 17076,
 
 	KeychainError = 17995,
 
@@ -308,6 +316,10 @@ declare var FIRAuthErrorDomain: string;
 declare var FIRAuthErrorNameKey: string;
 
 declare var FIRAuthErrorUserInfoEmailKey: string;
+
+declare var FIRAuthErrorUserInfoNameKey: string;
+
+declare var FIRAuthErrorUserInfoUpdatedCredentialKey: string;
 
 declare class FIRAuthErrors {
 }
@@ -387,6 +399,15 @@ declare var FIRFacebookAuthProviderID: string;
 
 declare var FIRFacebookAuthSignInMethod: string;
 
+interface FIRFederatedAuthProvider extends NSObjectProtocol {
+
+	getCredentialWithUIDelegateCompletion(UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthCredential, p2: NSError) => void): void;
+}
+declare var FIRFederatedAuthProvider: {
+
+	prototype: FIRFederatedAuthProvider;
+};
+
 declare class FIRGameCenterAuthProvider extends NSObject {
 
 	static alloc(): FIRGameCenterAuthProvider; // inherited from NSObject
@@ -426,22 +447,101 @@ declare var FIRGoogleAuthProviderID: string;
 
 declare var FIRGoogleAuthSignInMethod: string;
 
-declare class FIROAuthProvider extends NSObject {
+declare var FIRMicrosoftAuthProviderID: string;
+
+declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCoding {
+
+	static alloc(): FIROAuthCredential; // inherited from NSObject
+
+	static new(): FIROAuthCredential; // inherited from NSObject
+
+	readonly IDToken: string;
+
+	readonly accessToken: string;
+
+	readonly pendingToken: string;
+
+	static readonly supportsSecureCoding: boolean; // inherited from NSSecureCoding
+
+	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
+
+	encodeWithCoder(aCoder: NSCoder): void;
+
+	initWithCoder(aDecoder: NSCoder): this;
+}
+
+declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvider {
 
 	static alloc(): FIROAuthProvider; // inherited from NSObject
 
-	static credentialWithProviderIDAccessToken(providerID: string, accessToken: string): FIRAuthCredential;
+	static credentialWithProviderIDAccessToken(providerID: string, accessToken: string): FIROAuthCredential;
 
-	static credentialWithProviderIDIDTokenAccessToken(providerID: string, IDToken: string, accessToken: string): FIRAuthCredential;
+	static credentialWithProviderIDIDTokenAccessToken(providerID: string, IDToken: string, accessToken: string): FIROAuthCredential;
+
+	static credentialWithProviderIDIDTokenAccessTokenPendingToken(providerID: string, IDToken: string, accessToken: string, pendingToken: string): FIROAuthCredential;
 
 	static new(): FIROAuthProvider; // inherited from NSObject
+
+	static providerWithProviderID(providerID: string): FIROAuthProvider;
+
+	static providerWithProviderIDAuth(providerID: string, auth: FIRAuth): FIROAuthProvider;
+
+	customParameters: NSDictionary<string, string>;
+
+	readonly providerID: string;
+
+	scopes: NSArray<string>;
+
+	readonly debugDescription: string; // inherited from NSObjectProtocol
+
+	readonly description: string; // inherited from NSObjectProtocol
+
+	readonly hash: number; // inherited from NSObjectProtocol
+
+	readonly isProxy: boolean; // inherited from NSObjectProtocol
+
+	readonly superclass: typeof NSObject; // inherited from NSObjectProtocol
+
+	readonly  // inherited from NSObjectProtocol
+
+	class(): typeof NSObject;
+
+	conformsToProtocol(aProtocol: any /* Protocol */): boolean;
+
+	getCredentialWithUIDelegateCompletion(UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthCredential, p2: NSError) => void): void;
+
+	isEqual(object: any): boolean;
+
+	isKindOfClass(aClass: typeof NSObject): boolean;
+
+	isMemberOfClass(aClass: typeof NSObject): boolean;
+
+	performSelector(aSelector: string): any;
+
+	performSelectorWithObject(aSelector: string, object: any): any;
+
+	performSelectorWithObjectWithObject(aSelector: string, object1: any, object2: any): any;
+
+	respondsToSelector(aSelector: string): boolean;
+
+	retainCount(): number;
+
+	self(): this;
 }
 
-declare class FIRPhoneAuthCredential extends FIRAuthCredential {
+declare class FIRPhoneAuthCredential extends FIRAuthCredential implements NSSecureCoding {
 
 	static alloc(): FIRPhoneAuthCredential; // inherited from NSObject
 
 	static new(): FIRPhoneAuthCredential; // inherited from NSObject
+
+	static readonly supportsSecureCoding: boolean; // inherited from NSSecureCoding
+
+	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
+
+	encodeWithCoder(aCoder: NSCoder): void;
+
+	initWithCoder(aDecoder: NSCoder): this;
 }
 
 declare class FIRPhoneAuthProvider extends NSObject {
@@ -615,6 +715,8 @@ declare class FIRUserProfileChangeRequest extends NSObject {
 
 	commitChangesWithCompletion(completion: (p1: NSError) => void): void;
 }
+
+declare var FIRYahooAuthProviderID: string;
 
 declare var FirebaseAuthVersionNum: number;
 

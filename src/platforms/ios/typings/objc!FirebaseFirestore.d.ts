@@ -139,6 +139,10 @@ declare class FIRFieldValue extends NSObject {
 
 	static fieldValueForDelete(): FIRFieldValue;
 
+	static fieldValueForDoubleIncrement(d: number): FIRFieldValue;
+
+	static fieldValueForIntegerIncrement(l: number): FIRFieldValue;
+
 	static fieldValueForServerTimestamp(): FIRFieldValue;
 
 	static new(): FIRFieldValue; // inherited from NSObject

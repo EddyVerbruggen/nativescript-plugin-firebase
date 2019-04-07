@@ -55,13 +55,13 @@ declare class FIRModelOptions extends NSObject {
 
 	static new(): FIRModelOptions; // inherited from NSObject
 
-	readonly cloudModelName: string;
-
 	readonly localModelName: string;
 
-	constructor(o: { cloudModelName: string; localModelName: string; });
+	readonly remoteModelName: string;
 
-	initWithCloudModelNameLocalModelName(cloudModelName: string, localModelName: string): this;
+	constructor(o: { remoteModelName: string; localModelName: string; });
+
+	initWithRemoteModelNameLocalModelName(remoteModelName: string, localModelName: string): this;
 }
 
 declare class FIRModelOutputs extends NSObject {

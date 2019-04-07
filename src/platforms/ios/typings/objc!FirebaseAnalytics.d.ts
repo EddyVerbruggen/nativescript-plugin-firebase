@@ -17,7 +17,11 @@ declare class FIRAnalytics extends NSObject {
 
 	static resetAnalyticsData(): void;
 
+	static setAnalyticsCollectionEnabled(analyticsCollectionEnabled: boolean): void;
+
 	static setScreenNameScreenClass(screenName: string, screenClassOverride: string): void;
+
+	static setSessionTimeoutInterval(sessionTimeoutInterval: number): void;
 
 	static setUserID(userID: string): void;
 
