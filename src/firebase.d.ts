@@ -1023,7 +1023,7 @@ export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
 
 export function reloadUser(): Promise<void>;
 
-export function getAuthToken(option: GetAuthTokenOptions): Promise<GetAuthTokenResult>;
+export function getAuthToken(option: GetAuthTokenOptions): Promise<IdTokenResult>;
 
 export function logout(): Promise<any>;
 
