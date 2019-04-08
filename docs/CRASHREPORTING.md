@@ -64,4 +64,4 @@ import { crashlytics } from "nativescript-plugin-firebase";
 crashlytics.crash();
 ```
 
-This should crash your app. 😱
+> This should crash your app unless you have `discardUncaughtJsExceptions` set to `true` in `app/package.json`.
