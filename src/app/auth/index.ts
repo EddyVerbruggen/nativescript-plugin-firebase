@@ -1,5 +1,5 @@
 import * as firebase from "../../firebase";
-import { FirebaseEmailLinkActionCodeSettings, LoginType, User } from "../../firebase";
+import { FirebaseEmailLinkActionCodeSettings, LoginType, User, Unsubscribe } from "../../firebase";
 
 export namespace auth {
   export class Auth {
@@ -44,10 +44,15 @@ export namespace auth {
     }
 
     // Completed will never be called, but it is here to closely follow the web api interface.
-    public onAuthStateChanged(handler: (user: User) => void,  error?: (err) => any, completed?: () => any): void {
+    public onAuthStateChanged(handler: (user: User) => void,  error?: (err) => any, completed?: Unsubscribe): Unsubscribe {
       this.authStateChangedHandler = handler;
       if (error) this.authStateOnErrorHandler = error;
       console.log(">> added onAuthStateChanged handler");
+
+      return () => {
+        this.authStateChangedHandler = undefined;
+        this.authStateOnErrorHandler = undefined;
+      };
     }
 
     public signOut(): Promise<any> {

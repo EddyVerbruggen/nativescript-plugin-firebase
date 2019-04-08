@@ -583,6 +583,8 @@ export interface FirebaseQueryResult {
   value: any;
 }
 
+export type Unsubscribe = () => void;
+
 export function transaction(path: string, transactionUpdate: (a: any) => any,
                             onComplete?: (error: Error | null, committed: boolean, dataSnapshot: DataSnapshot) => any): Promise<any>;
 
