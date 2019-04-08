@@ -6,8 +6,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzaa {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzaa>;
+						export class zzeh {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeh>;
+							public static VERSION: string;
 						}
 					}
 				}
@@ -22,14 +23,32 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzab {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzab>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzab.zza*/);
+						export class zzei {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzei>;
+							public constructor();
 						}
-						export module zzab {
-							export class zza {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzab.zza>;
-								public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbe*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzdj*/, param4: any /* com.google.android.gms.internal.firebase_ml.zzaz*/);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzej extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzej>;
+							public constructor();
+						}
+						export module zzej {
+							export class zza extends com.google.android.gms.internal.firebase_ml.zzgd {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzej.zza>;
+								public getReason(): string;
+								public constructor();
 							}
 						}
 					}
@@ -45,9 +64,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzac<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzdb*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzac<any>>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzab*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzaq*/, param4: java.lang.Class<any>);
+						export class zzek {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzek>;
 						}
 					}
 				}
@@ -62,8 +80,15 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzad {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzad>;
+						export class zzel {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzel>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzel.zza*/);
+						}
+						export module zzel {
+							export class zza {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzel.zza>;
+								public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzfo*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzhu*/, param4: any /* com.google.android.gms.internal.firebase_ml.zzfj*/);
+							}
 						}
 					}
 				}
@@ -78,8 +103,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzae {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzae>;
+						export class zzem<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzhm*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzem<any>>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzel*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzfa*/, param4: java.lang.Class<any>);
 						}
 					}
 				}
@@ -94,8 +120,40 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzaf extends com.google.android.gms.internal.firebase_ml.zzag {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzaf>;
+						export class zzen {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzen>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzeo {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeo>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzep extends com.google.android.gms.internal.firebase_ml.zzeq {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzep>;
 							public constructor();
 							public constructor(param0: string);
 						}
@@ -112,13 +170,13 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzag {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzag>;
+						export class zzeq {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeq>;
 							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzag interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzeq interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zza(param0: any /* com.google.android.gms.internal.firebase_ml.zzac<any>*/): void;
+								zza(param0: any /* com.google.android.gms.internal.firebase_ml.zzem<any>*/): void;
 							});
 							public constructor();
 						}
@@ -135,10 +193,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzah extends com.google.android.gms.internal.firebase_ml.zzab {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzah>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzai*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzab.zza*/);
+						export class zzer extends com.google.android.gms.internal.firebase_ml.zzel {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzer>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzel.zza*/);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzes*/);
 						}
 					}
 				}
@@ -153,10 +211,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzai extends com.google.android.gms.internal.firebase_ml.zzab.zza {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzai>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbe*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzdj*/, param4: any /* com.google.android.gms.internal.firebase_ml.zzaz*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbe*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzbu*/, param2: string, param3: string, param4: any /* com.google.android.gms.internal.firebase_ml.zzaz*/, param5: boolean);
+						export class zzes extends com.google.android.gms.internal.firebase_ml.zzel.zza {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzes>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzfo*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzge*/, param2: string, param3: string, param4: any /* com.google.android.gms.internal.firebase_ml.zzfj*/, param5: boolean);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzfo*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzhu*/, param4: any /* com.google.android.gms.internal.firebase_ml.zzfj*/);
 						}
 					}
 				}
@@ -171,10 +229,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzaj<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzac<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzaj<any>>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzah*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzab*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzaq*/, param4: java.lang.Class<any>);
+						export class zzet<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzem<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzet<any>>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzel*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzfa*/, param4: java.lang.Class<any>);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzer*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
 						}
 					}
 				}
@@ -189,8 +247,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzak extends com.google.android.gms.internal.firebase_ml.zzaf {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzak>;
+						export class zzeu extends com.google.android.gms.internal.firebase_ml.zzep {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeu>;
 							public constructor();
 							public constructor(param0: string);
 						}
@@ -207,10 +265,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbl>;
+						export class zzfv {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfv>;
 							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzbl interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzfv interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
 								zza(param0: java.net.URL): java.net.HttpURLConnection;
@@ -230,8 +288,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbm extends com.google.android.gms.internal.firebase_ml.zzbl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbm>;
+						export class zzfw extends com.google.android.gms.internal.firebase_ml.zzfv {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfw>;
 							public constructor();
 							public constructor(param0: java.net.Proxy);
 						}
@@ -248,8 +306,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbn {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbn>;
+						export class zzfx {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfx>;
 							public addHeader(param0: string, param1: string): void;
 						}
 					}
@@ -265,8 +323,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbo {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbo>;
+						export class zzfy {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfy>;
 							public getStatusCode(): number;
 							public getContent(): java.io.InputStream;
 							public disconnect(): void;
@@ -288,11 +346,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbp>;
+						export class zzfz {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfz>;
 							public skip(param0: number): number;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzfy*/, param1: java.io.InputStream);
 							public read(): number;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbo*/, param1: java.io.InputStream);
 							public read(param0: native.Array<number>, param1: number, param2: number): number;
 						}
 					}
@@ -308,8 +366,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbq>;
+						export class zzga {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzga>;
 							public constructor();
 						}
 					}
@@ -325,10 +383,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbr {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbr>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbu*/, param1: any);
+						export class zzgb {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgb>;
 							public writeTo(param0: java.io.OutputStream): void;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzge*/, param1: any);
 						}
 					}
 				}
@@ -343,8 +401,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbs {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbs>;
+						export class zzgc {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgc>;
 						}
 					}
 				}
@@ -359,8 +417,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbt>;
+						export class zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgd>;
 							public constructor();
 							public toString(): string;
 						}
@@ -377,8 +435,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export abstract class zzbu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbu>;
+						export abstract class zzge {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzge>;
 							public constructor();
 							public toString(param0: any): string;
 						}
@@ -395,8 +453,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export abstract class zzbv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbv>;
+						export abstract class zzgf {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgf>;
 							public constructor();
 							public writeBoolean(param0: boolean): void;
 							public flush(): void;
@@ -415,9 +473,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbw>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbx*/);
+						export class zzgg {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgg>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzgh*/);
 						}
 					}
 				}
@@ -432,9 +490,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbx>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbu*/);
+						export class zzgh {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgh>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzge*/);
 						}
 					}
 				}
@@ -449,8 +507,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export abstract class zzby {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzby>;
+						export abstract class zzgi {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgi>;
 							public constructor();
 							public close(): void;
 							public getText(): string;
@@ -469,8 +527,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzbz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzbz>;
+						export class zzgj {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgj>;
 						}
 					}
 				}
@@ -485,25 +543,25 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzca {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzca>;
+						export class zzgk {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgk>;
 							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzca interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzgk interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zzcf(): any /* native.Array<com.google.android.gms.internal.firebase_ml.zzca.zza>*/;
+								zzgu(): any /* native.Array<com.google.android.gms.internal.firebase_ml.zzgk.zza>*/;
 							});
 							public constructor();
 						}
-						export module zzca {
+						export module zzgk {
 							export class zza {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzca.zza>;
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgk.zza>;
 								/**
-								 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzca$zza interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzgk$zza interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 								 */
 								public constructor(implementation: {
-									zzcg(): string;
-									zzch(): java.lang.Class<any>;
+									zzgv(): string;
+									zzgw(): java.lang.Class<any>;
 								});
 								public constructor();
 							}
@@ -521,10 +579,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzcb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzcb>;
+						export class zzgl {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgl>;
 							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzcb interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzgl interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
 							});
@@ -543,9 +601,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzcc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzcc>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_ml.zzcc>*/;
+						export class zzgm {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgm>;
+							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_ml.zzgm>*/;
 						}
 					}
 				}
@@ -560,8 +618,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzcd extends com.google.android.gms.internal.firebase_ml.zzbu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzcd>;
+						export class zzgn extends com.google.android.gms.internal.firebase_ml.zzge {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgn>;
 							public constructor();
 						}
 					}
@@ -577,8 +635,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzce {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzce>;
+						export class zzgo {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgo>;
 						}
 					}
 				}
@@ -593,8 +651,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzcf extends com.google.android.gms.internal.firebase_ml.zzbv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzcf>;
+						export class zzgp extends com.google.android.gms.internal.firebase_ml.zzgf {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgp>;
 							public writeBoolean(param0: boolean): void;
 							public flush(): void;
 							public writeString(param0: string): void;
@@ -612,8 +670,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzcg extends com.google.android.gms.internal.firebase_ml.zzby {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzcg>;
+						export class zzgq extends com.google.android.gms.internal.firebase_ml.zzgi {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgq>;
 							public close(): void;
 							public getText(): string;
 							public getIntValue(): number;
@@ -631,8 +689,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzch {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzch>;
+						export class zzgr {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzgr>;
 						}
 					}
 				}
@@ -647,8 +705,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzdz extends com.google.android.gms.internal.firebase_ml.zzah {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzdz>;
+						export class zzik extends com.google.android.gms.internal.firebase_ml.zzer {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzik>;
 						}
 					}
 				}
@@ -663,11 +721,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzea extends com.google.android.gms.internal.firebase_ml.zzai {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzea>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbe*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzdj*/, param4: any /* com.google.android.gms.internal.firebase_ml.zzaz*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbe*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzbu*/, param2: string, param3: string, param4: any /* com.google.android.gms.internal.firebase_ml.zzaz*/, param5: boolean);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzbe*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzbu*/, param2: any /* com.google.android.gms.internal.firebase_ml.zzaz*/);
+						export class zzil extends com.google.android.gms.internal.firebase_ml.zzes {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzil>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzfo*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzge*/, param2: string, param3: string, param4: any /* com.google.android.gms.internal.firebase_ml.zzfj*/, param5: boolean);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzfo*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzhu*/, param4: any /* com.google.android.gms.internal.firebase_ml.zzfj*/);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzfo*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzge*/, param2: any /* com.google.android.gms.internal.firebase_ml.zzfj*/);
 						}
 					}
 				}
@@ -682,9 +740,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzeb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeb>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzdz*/);
+						export class zzim {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzim>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzik*/);
 						}
 					}
 				}
@@ -699,12 +757,12 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzec extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzed<com.google.android.gms.internal.firebase_ml.zzei>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzec>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzdz*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzah*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzab*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzaq*/, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzeb*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzeh*/);
+						export class zzin extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzio<com.google.android.gms.internal.firebase_ml.zzit>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzin>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzel*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzfa*/, param4: java.lang.Class<any>);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzer*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzim*/, param1: any /* com.google.android.gms.internal.firebase_ml.zzis*/);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzik*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
 						}
 					}
 				}
@@ -719,11 +777,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzed<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzaj<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzed<any>>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzdz*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzah*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzab*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzaq*/, param4: java.lang.Class<any>);
+						export class zzio<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzet<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzio<any>>;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzel*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_ml.zzfa*/, param4: java.lang.Class<any>);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzer*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_ml.zzik*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
 						}
 					}
 				}
@@ -738,8 +796,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzee extends com.google.android.gms.internal.firebase_ml.zzak {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzee>;
+						export class zzip extends com.google.android.gms.internal.firebase_ml.zzeu {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzip>;
 							public constructor();
 							public constructor(param0: string);
 						}
@@ -756,8 +814,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzef extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzef>;
+						export class zziq extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziq>;
 							public constructor();
 						}
 					}
@@ -773,8 +831,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzeg extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeg>;
+						export class zzir extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzir>;
 							public constructor();
 						}
 					}
@@ -790,8 +848,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzeh extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeh>;
+						export class zzis extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzis>;
 							public constructor();
 						}
 					}
@@ -807,8 +865,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzei extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzei>;
+						export class zzit extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzit>;
 							public constructor();
 						}
 					}
@@ -824,11 +882,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzej extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzej>;
+						export class zziu extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziu>;
 							public constructor();
+							public getParagraphs(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzjm>*/;
 							public getConfidence(): java.lang.Float;
-							public getParagraphs(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzfb>*/;
 						}
 					}
 				}
@@ -843,8 +901,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzek extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzek>;
+						export class zziv extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziv>;
 							public constructor();
 						}
 					}
@@ -860,8 +918,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzel extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzel>;
+						export class zziw extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziw>;
 							public constructor();
 						}
 					}
@@ -877,8 +935,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzem extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzem>;
+						export class zzix extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzix>;
 							public constructor();
 						}
 					}
@@ -894,8 +952,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzen extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzen>;
+						export class zziy extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziy>;
 							public constructor();
 							public getType(): string;
 						}
@@ -912,8 +970,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzeo extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeo>;
+						export class zziz extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziz>;
 							public constructor();
 							public getLanguageCode(): string;
 						}
@@ -930,8 +988,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzep extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzep>;
+						export class zzja extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzja>;
 							public constructor();
 						}
 					}
@@ -947,11 +1005,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzeq extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeq>;
+						export class zzjb extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjb>;
 							public constructor();
+							public getLocations(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzjk>*/;
 							public getMid(): string;
-							public getLocations(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzez>*/;
 							public getDescription(): string;
 						}
 					}
@@ -967,8 +1025,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzer extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzer>;
+						export class zzjc extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjc>;
 							public constructor();
 						}
 					}
@@ -984,8 +1042,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzes extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzes>;
+						export class zzjd extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjd>;
 							public constructor();
 						}
 					}
@@ -1001,8 +1059,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzet extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzet>;
+						export class zzje extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzje>;
 							public constructor();
 						}
 					}
@@ -1018,8 +1076,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzeu extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzeu>;
+						export class zzjf extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjf>;
 							public constructor();
 						}
 					}
@@ -1035,8 +1093,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzev extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzev>;
+						export class zzjg extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjg>;
 							public constructor();
 						}
 					}
@@ -1052,8 +1110,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzew extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzew>;
+						export class zzjh extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjh>;
 							public constructor();
 						}
 					}
@@ -1069,8 +1127,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzex extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzex>;
+						export class zzji extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzji>;
 							public constructor();
 						}
 					}
@@ -1086,8 +1144,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzey extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzey>;
+						export class zzjj extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjj>;
 							public constructor();
 						}
 					}
@@ -1103,8 +1161,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzez extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzez>;
+						export class zzjk extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjk>;
 							public constructor();
 						}
 					}
@@ -1120,240 +1178,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzfa extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfa>;
-							public constructor();
-							public getBlocks(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzej>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfb extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfb>;
-							public constructor();
-							public getConfidence(): java.lang.Float;
-							public getWords(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzfm>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfc extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfc>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfd extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfd>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfe extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfe>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzff extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzff>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfg extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfg>;
-							public constructor();
-							public getConfidence(): java.lang.Float;
-							public getText(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfh extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfh>;
-							public constructor();
-							public getText(): string;
-							public getPages(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzfa>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfi extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfi>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfj extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfj>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfk extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfk>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfl extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfl>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzfm extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzfm>;
-							public constructor();
-							public getConfidence(): java.lang.Float;
-							public getSymbols(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzfg>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzjl extends java.lang.Object {
+						export class zzjl extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjl>;
-							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions);
-							public release(): void;
+							public constructor();
+							public getBlocks(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zziu>*/;
 						}
 					}
 				}
@@ -1368,8 +1196,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjm {
+						export class zzjm extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjm>;
+							public constructor();
+							public getConfidence(): java.lang.Float;
+							public getWords(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzjx>*/;
 						}
 					}
 				}
@@ -1384,8 +1215,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjn {
+						export class zzjn extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjn>;
+							public constructor();
 						}
 					}
 				}
@@ -1400,11 +1232,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjo {
+						export class zzjo extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjo>;
-							public features: any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzer>*/;
-							public imageContext: any /* com.google.android.gms.internal.firebase_ml.zzeu*/;
-							public constructor(param0: native.Array<number>, param1: number, param2: any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzer>*/, param3: any /* com.google.android.gms.internal.firebase_ml.zzeu*/);
+							public constructor();
 						}
 					}
 				}
@@ -1419,11 +1249,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export abstract class zzjp<ResultType>  extends java.io.Closeable {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjp<any>>;
-							public close(): void;
-							public constructor(param0: com.google.firebase.FirebaseApp, param1: string, param2: com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions);
-							public constructor(param0: com.google.firebase.FirebaseApp, param1: string, param2: any /* com.google.android.gms.internal.firebase_ml.zzeu*/, param3: boolean);
+						export class zzjp extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjp>;
+							public constructor();
 						}
 					}
 				}
@@ -1438,9 +1266,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjq extends java.lang.Object {
+						export class zzjq extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjq>;
-							public release(): void;
+							public constructor();
 						}
 					}
 				}
@@ -1455,8 +1283,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjr extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zzid<com.google.android.gms.internal.firebase_ml.zzeg,com.google.android.gms.internal.firebase_ml.zzjo>*/ {
+						export class zzjr extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjr>;
+							public constructor();
+							public getConfidence(): java.lang.Float;
+							public getText(): string;
 						}
 					}
 				}
@@ -1471,8 +1302,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjs extends com.google.android.gms.internal.firebase_ml.zzee {
+						export class zzjs extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjs>;
+							public constructor();
+							public getText(): string;
+							public getPages(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzjl>*/;
 						}
 					}
 				}
@@ -1487,8 +1321,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjt extends com.google.android.gms.internal.firebase_ml.zzee {
+						export class zzjt extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjt>;
+							public constructor();
 						}
 					}
 				}
@@ -1503,8 +1338,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzju {
+						export class zzju extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzju>;
+							public constructor();
 						}
 					}
 				}
@@ -1519,7 +1355,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjv {
+						export class zzjv extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjv>;
 							public constructor();
 						}
@@ -1536,8 +1372,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjw {
+						export class zzjw extends com.google.android.gms.internal.firebase_ml.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjw>;
+							public constructor();
 						}
 					}
 				}
@@ -1552,10 +1389,99 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjx<TDetectionResult>  extends java.io.Closeable {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjx<any>>;
+						export class zzjx extends com.google.android.gms.internal.firebase_ml.zzgd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjx>;
+							public constructor();
+							public getConfidence(): java.lang.Float;
+							public getSymbols(): any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzjr>*/;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpk extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpk>;
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions);
+							public release(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpl {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpl>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpm {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpm>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpn {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpn>;
+							public features: any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzjc>*/;
+							public imageContext: any /* com.google.android.gms.internal.firebase_ml.zzjf*/;
+							public constructor(param0: native.Array<number>, param1: number, param2: any /* java.util.List<com.google.android.gms.internal.firebase_ml.zzjc>*/, param3: any /* com.google.android.gms.internal.firebase_ml.zzjf*/);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export abstract class zzpo<ResultType>  extends java.io.Closeable {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpo<any>>;
 							public close(): void;
-							public constructor(param0: com.google.firebase.FirebaseApp, param1: any /* com.google.android.gms.internal.firebase_ml.zzid<any,com.google.android.gms.internal.firebase_ml.zzka>*/);
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: string, param2: any /* com.google.android.gms.internal.firebase_ml.zzjf*/, param3: boolean);
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: string, param2: com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions);
 						}
 					}
 				}
@@ -1570,8 +1496,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjy {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjy>;
+						export class zzpp extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpp>;
+							public release(): void;
 						}
 					}
 				}
@@ -1586,8 +1513,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjz>;
+						export class zzpq extends java.lang.Object /* com.google.android.gms.internal.firebase_ml.zznm<com.google.android.gms.internal.firebase_ml.zzir,com.google.android.gms.internal.firebase_ml.zzpn>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpq>;
 						}
 					}
 				}
@@ -1602,8 +1529,139 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzka {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzka>;
+						export class zzpr extends com.google.android.gms.internal.firebase_ml.zzip {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpr>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzps extends com.google.android.gms.internal.firebase_ml.zzip {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzps>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpt {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpt>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpu {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpu>;
+							public constructor();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpv {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpv>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpw<TDetectionResult>  extends java.io.Closeable {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpw<any>>;
+							public close(): void;
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: any /* com.google.android.gms.internal.firebase_ml.zznm<any,com.google.android.gms.internal.firebase_ml.zzpz>*/);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpx {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpx>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpy {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpy>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpz {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpz>;
 							public constructor(param0: com.google.android.gms.vision.Frame);
 						}
 					}
@@ -1619,8 +1677,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkb extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkb>;
+						export class zzqa extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqa>;
 							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions);
 							public release(): void;
 						}
@@ -1637,8 +1695,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkc>;
+						export class zzqb {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqb>;
 						}
 					}
 				}
@@ -1653,9 +1711,48 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkd extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkd>;
-							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions);
+						export class zzqc extends com.google.android.gms.internal.firebase_ml.zzpo<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>> {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqc>;
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: string, param2: any /* com.google.android.gms.internal.firebase_ml.zzjf*/, param3: boolean);
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions);
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: string, param2: com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions);
+							public detectInImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzqd extends com.google.android.gms.internal.firebase_ml.zzpw<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>> implements java.io.Closeable  {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqd>;
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions);
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: any /* com.google.android.gms.internal.firebase_ml.zznm<any,com.google.android.gms.internal.firebase_ml.zzpz>*/);
+							public detectInImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzqe extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqe>;
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions);
 							public release(): void;
 						}
 					}
@@ -1671,8 +1768,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzke {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzke>;
+						export class zzqf {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqf>;
 						}
 					}
 				}
@@ -1687,8 +1784,25 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkf extends com.google.android.gms.internal.firebase_ml.zzjp<com.google.firebase.ml.vision.text.FirebaseVisionText> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkf>;
+						export class zzqg extends com.google.android.gms.internal.firebase_ml.zzpw<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>> implements java.io.Closeable  {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqg>;
+							public close(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzqh extends com.google.android.gms.internal.firebase_ml.zzpo<com.google.firebase.ml.vision.text.FirebaseVisionText> {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqh>;
 							public processImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<com.google.firebase.ml.vision.text.FirebaseVisionText>;
 						}
 					}
@@ -1704,8 +1818,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkg extends com.google.android.gms.internal.firebase_ml.zzjx<com.google.firebase.ml.vision.text.FirebaseVisionText> implements java.io.Closeable  {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkg>;
+						export class zzqi extends com.google.android.gms.internal.firebase_ml.zzpw<com.google.firebase.ml.vision.text.FirebaseVisionText> implements java.io.Closeable  {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqi>;
 							public processImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<com.google.firebase.ml.vision.text.FirebaseVisionText>;
 						}
 					}
@@ -1721,8 +1835,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkh extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkh>;
+						export class zzqj extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqj>;
 							public constructor(param0: com.google.firebase.FirebaseApp);
 							public release(): void;
 						}
@@ -1739,8 +1853,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzki {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzki>;
+						export class zzqk {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqk>;
 						}
 					}
 				}
@@ -1755,8 +1869,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkj>;
+						export class zzql {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzql>;
 						}
 					}
 				}
@@ -1771,8 +1885,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkk>;
+						export class zzqm {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqm>;
 							public constructor();
 						}
 					}
@@ -1788,8 +1902,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkl>;
+						export class zzqn {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqn>;
 							public nextBoolean(): boolean;
 							public close(): void;
 							public endArray(): void;
@@ -1817,8 +1931,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkm extends com.google.android.gms.internal.firebase_ml.zzkk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkm>;
+						export class zzqo extends com.google.android.gms.internal.firebase_ml.zzqm {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqo>;
 						}
 					}
 				}
@@ -1833,9 +1947,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkn {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkn>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_ml.zzkn>*/;
+						export class zzqp {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqp>;
+							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_ml.zzqp>*/;
 						}
 					}
 				}
@@ -1850,8 +1964,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzko {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzko>;
+						export class zzqq {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqq>;
 							public close(): void;
 							public setIndent(param0: string): void;
 							public constructor(param0: java.io.Writer);
@@ -1871,67 +1985,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzkp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzkp>;
+						export class zzqr {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzqr>;
 							public constructor(param0: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzx>;
-							public static VERSION: string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzy {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzy>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzz extends com.google.android.gms.internal.firebase_ml.zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzz>;
-							public constructor();
-						}
-						export module zzz {
-							export class zza extends com.google.android.gms.internal.firebase_ml.zzbt {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzz.zza>;
-								public getReason(): string;
-								public constructor();
-							}
 						}
 					}
 				}
@@ -1952,20 +2008,264 @@ declare module com {
 						public getVisionFaceDetector(): com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 						public isStatsCollectionEnabled(): boolean;
 						public getCloudTextRecognizer(param0: com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions): com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
-						public getVisionCloudLabelDetector(): com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabelDetector;
+						public getOnDeviceImageLabeler(): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
+						public getOnDeviceImageLabeler(param0: com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 						public getVisionCloudLandmarkDetector(): com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmarkDetector;
-						public getVisionLabelDetector(): com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
 						public getCloudDocumentTextRecognizer(param0: com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions): com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer;
 						public setStatsCollectionEnabled(param0: boolean): void;
 						public static getInstance(): com.google.firebase.ml.vision.FirebaseVision;
-						public getVisionCloudLabelDetector(param0: com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions): com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabelDetector;
 						public getVisionCloudLandmarkDetector(param0: com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions): com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmarkDetector;
 						public static getInstance(param0: com.google.firebase.FirebaseApp): com.google.firebase.ml.vision.FirebaseVision;
 						public getOnDeviceTextRecognizer(): com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 						public getCloudTextRecognizer(): com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
-						public getVisionLabelDetector(param0: com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions): com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
 						public getVisionFaceDetector(param0: com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions): com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
+						public getCloudImageLabeler(param0: com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
+						public getCloudImageLabeler(): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 						public getCloudDocumentTextRecognizer(): com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class IOnDeviceAutoMLImageLabeler {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									zza(param0: com.google.android.gms.dynamic.IObjectWrapper, param1: any /* com.google.firebase.ml.vision.automl.internal.zzg*/): any /* native.Array<com.google.firebase.ml.vision.automl.internal.zze>*/;
+									zzlp(): void;
+									close(): void;
+								});
+								public constructor();
+								public close(): void;
+							}
+							export module IOnDeviceAutoMLImageLabeler {
+								export abstract class zza implements com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler {
+									public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler.zza>;
+									public constructor();
+									public close(): void;
+									public dispatchTransaction(param0: number, param1: globalAndroid.os.Parcel, param2: globalAndroid.os.Parcel, param3: number): boolean;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class OnDeviceAutoMLImageLabelerOptionsParcel {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.OnDeviceAutoMLImageLabelerOptionsParcel>;
+								public static CREATOR: globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.automl.internal.OnDeviceAutoMLImageLabelerOptionsParcel>;
+								public constructor(param0: number, param1: string, param2: string);
+								public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zza implements com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zza>;
+								public close(): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zzb {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zzb>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.ml.vision.automl.internal.zzb interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									newOnDeviceAutoMLImageLabeler(param0: com.google.android.gms.dynamic.IObjectWrapper, param1: com.google.firebase.ml.vision.automl.internal.OnDeviceAutoMLImageLabelerOptionsParcel): com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler;
+								});
+								public constructor();
+								public newOnDeviceAutoMLImageLabeler(param0: com.google.android.gms.dynamic.IObjectWrapper, param1: com.google.firebase.ml.vision.automl.internal.OnDeviceAutoMLImageLabelerOptionsParcel): com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export abstract class zzc implements com.google.firebase.ml.vision.automl.internal.zzb {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zzc>;
+								public dispatchTransaction(param0: number, param1: globalAndroid.os.Parcel, param2: globalAndroid.os.Parcel, param3: number): boolean;
+								public constructor();
+								public newOnDeviceAutoMLImageLabeler(param0: com.google.android.gms.dynamic.IObjectWrapper, param1: com.google.firebase.ml.vision.automl.internal.OnDeviceAutoMLImageLabelerOptionsParcel): com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler;
+								public static asInterface(param0: globalAndroid.os.IBinder): any /* com.google.firebase.ml.vision.automl.internal.zzb*/;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zzd implements com.google.firebase.ml.vision.automl.internal.zzb {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zzd>;
+								public newOnDeviceAutoMLImageLabeler(param0: com.google.android.gms.dynamic.IObjectWrapper, param1: com.google.firebase.ml.vision.automl.internal.OnDeviceAutoMLImageLabelerOptionsParcel): com.google.firebase.ml.vision.automl.internal.IOnDeviceAutoMLImageLabeler;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zze {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zze>;
+								public static CREATOR: any /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.automl.internal.zze>*/;
+								public constructor(param0: string, param1: string, param2: number);
+								public equals(param0: any): boolean;
+								public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+								public hashCode(): number;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zzf extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.automl.internal.zze>*/ {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zzf>;
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zzg {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zzg>;
+								public static CREATOR: any /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.automl.internal.zzg>*/;
+								public constructor(param0: number, param1: number, param2: number, param3: number, param4: number);
+								public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zzh extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.automl.internal.zzg>*/ {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zzh>;
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module automl {
+						export module internal {
+							export class zzi extends globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.automl.internal.OnDeviceAutoMLImageLabelerOptionsParcel> {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.automl.internal.zzi>;
+								public constructor();
+							}
+						}
 					}
 				}
 			}
@@ -2213,7 +2513,7 @@ declare module com {
 			export module ml {
 				export module vision {
 					export module barcode {
-						export class FirebaseVisionBarcodeDetector extends com.google.android.gms.internal.firebase_ml.zzjx<java.util.List<com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode>> implements java.io.Closeable  {
+						export class FirebaseVisionBarcodeDetector extends com.google.android.gms.internal.firebase_ml.zzpw<java.util.List<com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode>> implements java.io.Closeable  {
 							public static class: java.lang.Class<com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector>;
 							public close(): void;
 							public detectInImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode>>;
@@ -2280,6 +2580,7 @@ declare module com {
 							public static DEFAULT: com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
 							public getMaxResults(): number;
 							public hashCode(): number;
+							public isEnforceCertFingerprintMatch(): boolean;
 							public builder(): com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder;
 							public equals(param0: any): boolean;
 							public getModelType(): number;
@@ -2301,46 +2602,6 @@ declare module com {
 								public constructor(implementation: {
 								});
 								public constructor();
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module vision {
-					export module cloud {
-						export module label {
-							export class FirebaseVisionCloudLabel {
-								public static class: java.lang.Class<com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel>;
-								public getConfidence(): number;
-								public getLabel(): string;
-								public getEntityId(): string;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module vision {
-					export module cloud {
-						export module label {
-							export class FirebaseVisionCloudLabelDetector extends com.google.android.gms.internal.firebase_ml.zzjp<java.util.List<com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel>> {
-								public static class: java.lang.Class<com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabelDetector>;
-								public detectInImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel>>;
 							}
 						}
 					}
@@ -2380,7 +2641,7 @@ declare module com {
 				export module vision {
 					export module cloud {
 						export module landmark {
-							export class FirebaseVisionCloudLandmarkDetector extends com.google.android.gms.internal.firebase_ml.zzjp<java.util.List<com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmark>> {
+							export class FirebaseVisionCloudLandmarkDetector extends com.google.android.gms.internal.firebase_ml.zzpo<java.util.List<com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmark>> {
 								public static class: java.lang.Class<com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmarkDetector>;
 								public detectInImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.cloud.landmark.FirebaseVisionCloudLandmark>>;
 							}
@@ -2553,6 +2814,7 @@ declare module com {
 						export class FirebaseVisionCloudDocumentRecognizerOptions {
 							public static class: java.lang.Class<com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions>;
 							public hashCode(): number;
+							public isEnforceCertFingerprintMatch(): boolean;
 							public getHintedLanguages(): java.util.List<string>;
 							public equals(param0: any): boolean;
 						}
@@ -2643,7 +2905,7 @@ declare module com {
 			export module ml {
 				export module vision {
 					export module document {
-						export class FirebaseVisionDocumentTextRecognizer extends com.google.android.gms.internal.firebase_ml.zzjp<com.google.firebase.ml.vision.document.FirebaseVisionDocumentText> {
+						export class FirebaseVisionDocumentTextRecognizer extends com.google.android.gms.internal.firebase_ml.zzpo<com.google.firebase.ml.vision.document.FirebaseVisionDocumentText> {
 							public static class: java.lang.Class<com.google.firebase.ml.vision.document.FirebaseVisionDocumentTextRecognizer>;
 							public processImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<com.google.firebase.ml.vision.document.FirebaseVisionDocumentText>;
 						}
@@ -2766,7 +3028,7 @@ declare module com {
 			export module ml {
 				export module vision {
 					export module face {
-						export class FirebaseVisionFaceDetector extends com.google.android.gms.internal.firebase_ml.zzjx<java.util.List<com.google.firebase.ml.vision.face.FirebaseVisionFace>> implements java.io.Closeable  {
+						export class FirebaseVisionFaceDetector extends com.google.android.gms.internal.firebase_ml.zzpw<java.util.List<com.google.firebase.ml.vision.face.FirebaseVisionFace>> implements java.io.Closeable  {
 							public static class: java.lang.Class<com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector>;
 							public close(): void;
 							public detectInImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.face.FirebaseVisionFace>>;
@@ -2922,12 +3184,43 @@ declare module com {
 			export module ml {
 				export module vision {
 					export module label {
-						export class FirebaseVisionLabel {
-							public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionLabel>;
+						export class FirebaseVisionCloudImageLabelerOptions {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions>;
+							public hashCode(): number;
+							public isEnforceCertFingerprintMatch(): boolean;
+							public getConfidenceThreshold(): number;
+							public equals(param0: any): boolean;
+						}
+						export module FirebaseVisionCloudImageLabelerOptions {
+							export class Builder {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions.Builder>;
+								public setConfidenceThreshold(param0: number): com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions.Builder;
+								public enforceCertFingerprintMatch(): com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions.Builder;
+								public build(): com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions;
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module label {
+						export class FirebaseVisionImageLabel {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>;
 							public getConfidence(): number;
-							public getLabel(): string;
+							public getText(): string;
+							public hashCode(): number;
 							public constructor(param0: com.google.android.gms.vision.label.ImageLabel);
 							public getEntityId(): string;
+							public equals(param0: any): boolean;
 						}
 					}
 				}
@@ -2942,10 +3235,24 @@ declare module com {
 			export module ml {
 				export module vision {
 					export module label {
-						export class FirebaseVisionLabelDetector extends com.google.android.gms.internal.firebase_ml.zzjx<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionLabel>> implements java.io.Closeable  {
-							public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector>;
+						export class FirebaseVisionImageLabeler {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler>;
+							public static ON_DEVICE: number;
+							public static CLOUD: number;
+							public getImageLabelerType(): number;
 							public close(): void;
-							public detectInImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionLabel>>;
+							public processImage(param0: com.google.firebase.ml.vision.common.FirebaseVisionImage): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>>;
+						}
+						export module FirebaseVisionImageLabeler {
+							export class ImageLabelerType {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler.ImageLabelerType>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler$ImageLabelerType interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+								});
+								public constructor();
+							}
 						}
 					}
 				}
@@ -2960,18 +3267,18 @@ declare module com {
 			export module ml {
 				export module vision {
 					export module label {
-						export class FirebaseVisionLabelDetectorOptions {
-							public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions>;
+						export class FirebaseVisionOnDeviceImageLabelerOptions {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions>;
 							public hashCode(): number;
 							public getConfidenceThreshold(): number;
 							public equals(param0: any): boolean;
 						}
-						export module FirebaseVisionLabelDetectorOptions {
+						export module FirebaseVisionOnDeviceImageLabelerOptions {
 							export class Builder {
-								public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions.Builder>;
-								public setConfidenceThreshold(param0: number): com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions.Builder;
+								public static class: java.lang.Class<com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions.Builder>;
+								public build(): com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions;
 								public constructor();
-								public build(): com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions;
+								public setConfidenceThreshold(param0: number): com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions.Builder;
 							}
 						}
 					}
@@ -3002,12 +3309,344 @@ declare module com {
 		export module firebase {
 			export module ml {
 				export module vision {
+					export module label {
+						export class zzb extends com.google.android.gms.tasks.Continuation<java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>,java.util.List<com.google.firebase.ml.vision.label.FirebaseVisionImageLabel>> {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.label.zzb>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module label {
+						export class zzc {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.label.zzc>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class IObjectDetector {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.IObjectDetector>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.ml.vision.object.internal.IObjectDetector interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									zza(param0: com.google.android.gms.dynamic.IObjectWrapper, param1: any /* com.google.firebase.ml.vision.object.internal.zze*/): any /* native.Array<com.google.firebase.ml.vision.object.internal.zzh>*/;
+									start(): void;
+									stop(): void;
+								});
+								public constructor();
+								public stop(): void;
+								public start(): void;
+							}
+							export module IObjectDetector {
+								export abstract class zza implements com.google.firebase.ml.vision.object.internal.IObjectDetector {
+									public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.IObjectDetector.zza>;
+									public constructor();
+									public dispatchTransaction(param0: number, param1: globalAndroid.os.Parcel, param2: globalAndroid.os.Parcel, param3: number): boolean;
+									public start(): void;
+									public stop(): void;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class ObjectDetectorOptionsParcel {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.ObjectDetectorOptionsParcel>;
+								public static CREATOR: globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.object.internal.ObjectDetectorOptionsParcel>;
+								public constructor(param0: number, param1: boolean, param2: boolean);
+								public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zza implements com.google.firebase.ml.vision.object.internal.IObjectDetector {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zza>;
+								public stop(): void;
+								public start(): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zzb {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zzb>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.ml.vision.object.internal.zzb interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									newObjectDetector(param0: com.google.firebase.ml.vision.object.internal.ObjectDetectorOptionsParcel): com.google.firebase.ml.vision.object.internal.IObjectDetector;
+								});
+								public constructor();
+								public newObjectDetector(param0: com.google.firebase.ml.vision.object.internal.ObjectDetectorOptionsParcel): com.google.firebase.ml.vision.object.internal.IObjectDetector;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export abstract class zzc implements com.google.firebase.ml.vision.object.internal.zzb {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zzc>;
+								public dispatchTransaction(param0: number, param1: globalAndroid.os.Parcel, param2: globalAndroid.os.Parcel, param3: number): boolean;
+								public static asInterface(param0: globalAndroid.os.IBinder): any /* com.google.firebase.ml.vision.object.internal.zzb*/;
+								public constructor();
+								public newObjectDetector(param0: com.google.firebase.ml.vision.object.internal.ObjectDetectorOptionsParcel): com.google.firebase.ml.vision.object.internal.IObjectDetector;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zzd implements com.google.firebase.ml.vision.object.internal.zzb {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zzd>;
+								public newObjectDetector(param0: com.google.firebase.ml.vision.object.internal.ObjectDetectorOptionsParcel): com.google.firebase.ml.vision.object.internal.IObjectDetector;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zze {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zze>;
+								public static CREATOR: any /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.object.internal.zze>*/;
+								public width: number;
+								public height: number;
+								public rotation: number;
+								public constructor(param0: number, param1: number, param2: number, param3: number, param4: number);
+								public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zzf extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.object.internal.zze>*/ {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zzf>;
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zzg extends globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.object.internal.ObjectDetectorOptionsParcel> {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zzg>;
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zzh {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zzh>;
+								public static CREATOR: any /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.object.internal.zzh>*/;
+								public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+								public constructor(param0: native.Array<number>, param1: java.lang.Integer, param2: java.lang.Float, param3: string, param4: number);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export module internal {
+							export class zzi extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.ml.vision.object.internal.zzh>*/ {
+								public static class: java.lang.Class<com.google.firebase.ml.vision.object.internal.zzi>;
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export class zza {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.object.zza>;
+							public hashCode(): number;
+							public equals(param0: any): boolean;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export class zzb {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.object.zzb>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
+					export module object {
+						export class zzc {
+							public static class: java.lang.Class<com.google.firebase.ml.vision.object.zzc>;
+							public constructor();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module ml {
+				export module vision {
 					export module text {
 						export class FirebaseVisionCloudTextRecognizerOptions {
 							public static class: java.lang.Class<com.google.firebase.ml.vision.text.FirebaseVisionCloudTextRecognizerOptions>;
 							public static SPARSE_MODEL: number;
 							public static DENSE_MODEL: number;
 							public hashCode(): number;
+							public isEnforceCertFingerprintMatch(): boolean;
 							public getHintedLanguages(): java.util.List<string>;
 							public equals(param0: any): boolean;
 							public getModelType(): number;
@@ -3166,9 +3805,9 @@ declare module com {
 }
 
 //Generics information:
-//com.google.android.gms.internal.firebase_ml.zzac:1
-//com.google.android.gms.internal.firebase_ml.zzaj:1
-//com.google.android.gms.internal.firebase_ml.zzed:1
-//com.google.android.gms.internal.firebase_ml.zzjp:1
-//com.google.android.gms.internal.firebase_ml.zzjx:1
+//com.google.android.gms.internal.firebase_ml.zzem:1
+//com.google.android.gms.internal.firebase_ml.zzet:1
+//com.google.android.gms.internal.firebase_ml.zzio:1
+//com.google.android.gms.internal.firebase_ml.zzpo:1
+//com.google.android.gms.internal.firebase_ml.zzpw:1
 

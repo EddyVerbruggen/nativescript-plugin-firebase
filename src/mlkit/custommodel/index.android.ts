@@ -93,43 +93,42 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
   }
 }
 
+const registeredModels = [];
+
 function getInterpreter(localModelFile?: string): any {
   const firModelOptionsBuilder = new com.google.firebase.ml.custom.FirebaseModelOptions.Builder();
 
+  const localModelName = localModelFile.lastIndexOf("/") === -1 ? localModelFile : localModelFile.substring(localModelFile.lastIndexOf("/") + 1);
   let localModelRegistrationSuccess = false;
-  let cloudModelRegistrationSuccess = false;
-  let localModelName;
 
   if (localModelFile) {
-    localModelName = localModelFile.lastIndexOf("/") === -1 ? localModelFile : localModelFile.substring(localModelFile.lastIndexOf("/") + 1);
-
-    if (com.google.firebase.ml.custom.FirebaseModelManager.getInstance().getLocalModelSource(localModelName)) {
+    if (registeredModels.indexOf(localModelName) > -1) {
       localModelRegistrationSuccess = true;
       firModelOptionsBuilder.setLocalModelName(localModelName)
     } else {
-      console.log("model not yet loaded: " + localModelFile);
-
-      const firModelLocalSourceBuilder = new com.google.firebase.ml.custom.model.FirebaseLocalModelSource.Builder(localModelName);
+      const firModelLocalBuilder = new com.google.firebase.ml.common.modeldownload.FirebaseLocalModel.Builder(localModelName);
 
       if (localModelFile.indexOf("~/") === 0) {
-        firModelLocalSourceBuilder.setFilePath(fs.knownFolders.currentApp().path + localModelFile.substring(1));
+        firModelLocalBuilder.setFilePath(fs.knownFolders.currentApp().path + localModelFile.substring(1));
       } else {
         // note that this doesn't seem to work, let's advice users to use ~/ for now
-        firModelLocalSourceBuilder.setAssetFilePath(localModelFile);
+        firModelLocalBuilder.setAssetFilePath(localModelFile);
       }
 
-      localModelRegistrationSuccess = com.google.firebase.ml.custom.FirebaseModelManager.getInstance().registerLocalModelSource(firModelLocalSourceBuilder.build());
+      localModelRegistrationSuccess = com.google.firebase.ml.common.modeldownload.FirebaseModelManager.getInstance().registerLocalModel(firModelLocalBuilder.build());
+
       if (localModelRegistrationSuccess) {
+        registeredModels.push(localModelName);
         firModelOptionsBuilder.setLocalModelName(localModelName)
       }
     }
   }
 
   // if (options.cloudModelName) {
-  //   firModelOptionsBuilder.setCloudModelName(options.cloudModelName)
+  //   firModelOptionsBuilder.setRemoteModelName(options.cloudModelName)
   // }
 
-  if (!localModelRegistrationSuccess && !cloudModelRegistrationSuccess) {
+  if (!localModelRegistrationSuccess) {
     // TODO handle this case upstream
     console.log("No (cloud or local) model was successfully loaded.");
     return null;

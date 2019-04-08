@@ -27,9 +27,9 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
 
         // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
         for (let i = 0; i < labels.size(); i++) {
-          const label = labels.get(i);
+          const label: com.google.firebase.ml.vision.label.FirebaseVisionImageLabel = labels.get(i);
           result.labels.push({
-            text: label.getLabel(),
+            text: label.getText(),
             confidence: label.getConfidence()
           });
         }
@@ -44,13 +44,13 @@ export class MLKitImageLabeling extends MLKitImageLabelingBase {
   }
 }
 
-function getDetector(confidenceThreshold: number): any {
+function getDetector(confidenceThreshold: number): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler {
   const labelDetectorOptions =
-      new com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions.Builder()
+      new com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceImageLabelerOptions.Builder()
           .setConfidenceThreshold(confidenceThreshold)
           .build();
 
-  return com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionLabelDetector(labelDetectorOptions);
+  return com.google.firebase.ml.vision.FirebaseVision.getInstance().getOnDeviceImageLabeler(labelDetectorOptions);
 }
 
 export function labelImageOnDevice(options: MLKitImageLabelingOptions): Promise<MLKitImageLabelingOnDeviceResult> {
@@ -66,9 +66,9 @@ export function labelImageOnDevice(options: MLKitImageLabelingOptions): Promise<
 
           if (labels) {
             for (let i = 0; i < labels.size(); i++) {
-              const label = labels.get(i);
+              const label: com.google.firebase.ml.vision.label.FirebaseVisionImageLabel = labels.get(i);
               result.labels.push({
-                text: label.getLabel(),
+                text: label.getText(),
                 confidence: label.getConfidence()
               });
             }
@@ -84,7 +84,7 @@ export function labelImageOnDevice(options: MLKitImageLabelingOptions): Promise<
       });
 
       firebaseVisionLabelDetector
-          .detectInImage(getImage(options))
+          .processImage(getImage(options))
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 
@@ -99,13 +99,11 @@ export function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLK
   return new Promise((resolve, reject) => {
     try {
       const cloudDetectorOptions =
-          new com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.Builder()
-              // TODO in a future version this may change to only confidenceThreshold (as it now is on iOS)
-              .setModelType(com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions.STABLE_MODEL)
-              .setMaxResults(10)
+          new com.google.firebase.ml.vision.label.FirebaseVisionCloudImageLabelerOptions.Builder()
+              .setConfidenceThreshold(options.confidenceThreshold || 0.5)
               .build();
 
-      const firebaseVisionCloudLabelDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getVisionCloudLabelDetector(cloudDetectorOptions);
+      const firebaseVisionCloudLabelDetector = com.google.firebase.ml.vision.FirebaseVision.getInstance().getCloudImageLabeler(cloudDetectorOptions);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: labels => {
@@ -115,9 +113,9 @@ export function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLK
 
           if (labels) {
             for (let i = 0; i < labels.size(); i++) {
-              const label = labels.get(i);
+              const label: com.google.firebase.ml.vision.label.FirebaseVisionImageLabel = labels.get(i);
               result.labels.push({
-                text: label.getLabel(),
+                text: label.getText(),
                 confidence: label.getConfidence()
               });
             }
@@ -133,7 +131,7 @@ export function labelImageCloud(options: MLKitImageLabelingOptions): Promise<MLK
       });
 
       firebaseVisionCloudLabelDetector
-          .detectInImage(getImage(options))
+          .processImage(getImage(options))
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 

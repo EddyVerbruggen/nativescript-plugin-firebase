@@ -553,11 +553,13 @@ firebase.getRemoteConfig = arg => {
           .build();
       firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
 
+      // TODO async, do we need to wait?
       const defaults = firebase.getRemoteConfigDefaults(arg.properties);
-      firebaseRemoteConfig.setDefaults(firebase.toHashMap(defaults));
+      firebaseRemoteConfig.setDefaultsAsync(firebase.toHashMap(defaults));
 
       const returnMethod = throttled => {
-        firebaseRemoteConfig.activateFetched();
+        // TODO async, so do we need to wait?
+        firebaseRemoteConfig.activate();
 
         const lastFetchTime = firebaseRemoteConfig.getInfo().getFetchTimeMillis();
         const lastFetch = new Date(lastFetchTime);

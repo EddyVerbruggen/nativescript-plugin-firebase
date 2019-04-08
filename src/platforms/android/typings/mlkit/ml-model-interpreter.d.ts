@@ -6,8 +6,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzis {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzis>;
+						export class zzoz {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzoz>;
+							public constructor();
 						}
 					}
 				}
@@ -22,121 +23,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzit {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzit>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zziu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziu>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zziv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziv>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zziw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziw>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzix {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzix>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zziy {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziy>;
-							public run(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zziz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zziz>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzja {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzja>;
+						export class zzpa {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpa>;
 							public constructor(param0: com.google.firebase.ml.custom.FirebaseModelInputs, param1: com.google.firebase.ml.custom.FirebaseModelInputOutputOptions);
 						}
 					}
@@ -152,8 +40,25 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjb>;
+						export class zzpb {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpb>;
+							public constructor(param0: globalAndroid.content.Context);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_ml {
+						export class zzpc {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpc>;
 							public constructor(param0: number, param1: native.Array<number>);
 							public getType(): number;
 						}
@@ -170,8 +75,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjc>;
+						export class zzpd {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpd>;
 						}
 					}
 				}
@@ -186,29 +91,12 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjd>;
-							public load(): java.nio.MappedByteBuffer;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzje extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzje>;
+						export class zzpe extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpe>;
 							public getOutputIndex(param0: string): number;
 							public getInputIndex(param0: string): number;
-							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.custom.model.FirebaseLocalModelSource, param2: com.google.firebase.ml.custom.model.FirebaseCloudModelSource, param3: boolean);
 							public release(): void;
+							public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.ml.common.modeldownload.FirebaseLocalModel, param2: com.google.firebase.ml.common.modeldownload.FirebaseRemoteModel, param3: boolean);
 						}
 					}
 				}
@@ -223,8 +111,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjf extends com.google.android.gms.internal.firebase_ml.zzji {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjf>;
+						export class zzpf extends com.google.android.gms.internal.firebase_ml.zzpi {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpf>;
 						}
 					}
 				}
@@ -239,8 +127,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjg {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjg>;
+						export class zzpg {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpg>;
 						}
 					}
 				}
@@ -255,8 +143,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjh>;
+						export class zzph {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzph>;
 						}
 					}
 				}
@@ -271,13 +159,13 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzji {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzji>;
+						export class zzpi {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpi>;
 							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzji interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_ml.zzpi interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zzc(param0: java.nio.MappedByteBuffer): any /* com.google.android.gms.internal.firebase_ml.zzjj*/;
+								zzd(param0: java.nio.MappedByteBuffer): any /* com.google.android.gms.internal.firebase_ml.zzpj*/;
 							});
 							public constructor();
 						}
@@ -294,25 +182,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_ml {
-						export class zzjj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjj>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_ml {
-						export class zzjk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzjk>;
-							public openConnection(): java.net.URLConnection;
+						export class zzpj {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_ml.zzpj>;
 						}
 					}
 				}
@@ -423,39 +294,18 @@ declare module com {
 		export module firebase {
 			export module ml {
 				export module custom {
-					export class FirebaseModelManager {
-						public static class: java.lang.Class<com.google.firebase.ml.custom.FirebaseModelManager>;
-						public static getInstance(): com.google.firebase.ml.custom.FirebaseModelManager;
-						public registerCloudModelSource(param0: com.google.firebase.ml.custom.model.FirebaseCloudModelSource): boolean;
-						public registerLocalModelSource(param0: com.google.firebase.ml.custom.model.FirebaseLocalModelSource): boolean;
-						public getCloudModelSource(param0: string): com.google.firebase.ml.custom.model.FirebaseCloudModelSource;
-						public getLocalModelSource(param0: string): com.google.firebase.ml.custom.model.FirebaseLocalModelSource;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module custom {
 					export class FirebaseModelOptions {
 						public static class: java.lang.Class<com.google.firebase.ml.custom.FirebaseModelOptions>;
 						public equals(param0: any): boolean;
 						public hashCode(): number;
-						public getLocalModelName(): string;
-						public getCloudModelName(): string;
 					}
 					export module FirebaseModelOptions {
 						export class Builder {
 							public static class: java.lang.Class<com.google.firebase.ml.custom.FirebaseModelOptions.Builder>;
 							public constructor();
-							public setCloudModelName(param0: string): com.google.firebase.ml.custom.FirebaseModelOptions.Builder;
 							public setLocalModelName(param0: string): com.google.firebase.ml.custom.FirebaseModelOptions.Builder;
 							public build(): com.google.firebase.ml.custom.FirebaseModelOptions;
+							public setRemoteModelName(param0: string): com.google.firebase.ml.custom.FirebaseModelOptions.Builder;
 						}
 					}
 				}
@@ -473,147 +323,6 @@ declare module com {
 						public static class: java.lang.Class<com.google.firebase.ml.custom.FirebaseModelOutputs>;
 						public getOutput(param0: number): any;
 						public constructor(param0: java.util.Map<java.lang.Integer,any>);
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module custom {
-					export module model {
-						export class FirebaseCloudModelSource {
-							public static class: java.lang.Class<com.google.firebase.ml.custom.model.FirebaseCloudModelSource>;
-							public hashCode(): number;
-							public isModelUpdatesEnabled(): boolean;
-							public getModelName(): string;
-							public getInitialDownloadConditions(): com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions;
-							public equals(param0: any): boolean;
-							public getUpdatesDownloadConditions(): com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions;
-						}
-						export module FirebaseCloudModelSource {
-							export class Builder {
-								public static class: java.lang.Class<com.google.firebase.ml.custom.model.FirebaseCloudModelSource.Builder>;
-								public setInitialDownloadConditions(param0: com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions): com.google.firebase.ml.custom.model.FirebaseCloudModelSource.Builder;
-								public enableModelUpdates(param0: boolean): com.google.firebase.ml.custom.model.FirebaseCloudModelSource.Builder;
-								public setUpdatesDownloadConditions(param0: com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions): com.google.firebase.ml.custom.model.FirebaseCloudModelSource.Builder;
-								public constructor(param0: string);
-								public build(): com.google.firebase.ml.custom.model.FirebaseCloudModelSource;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module custom {
-					export module model {
-						export class FirebaseLocalModelSource {
-							public static class: java.lang.Class<com.google.firebase.ml.custom.model.FirebaseLocalModelSource>;
-							public hashCode(): number;
-							public getFilePath(): string;
-							public getAssetFilePath(): string;
-							public getModelName(): string;
-							public equals(param0: any): boolean;
-						}
-						export module FirebaseLocalModelSource {
-							export class Builder {
-								public static class: java.lang.Class<com.google.firebase.ml.custom.model.FirebaseLocalModelSource.Builder>;
-								public build(): com.google.firebase.ml.custom.model.FirebaseLocalModelSource;
-								public setFilePath(param0: string): com.google.firebase.ml.custom.model.FirebaseLocalModelSource.Builder;
-								public constructor(param0: string);
-								public setAssetFilePath(param0: string): com.google.firebase.ml.custom.model.FirebaseLocalModelSource.Builder;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module custom {
-					export module model {
-						export class FirebaseModelDownloadConditions {
-							public static class: java.lang.Class<com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions>;
-							public hashCode(): number;
-							public isDeviceIdleRequired(): boolean;
-							public isWifiRequired(): boolean;
-							public equals(param0: any): boolean;
-							public isChargingRequired(): boolean;
-						}
-						export module FirebaseModelDownloadConditions {
-							export class Builder {
-								public static class: java.lang.Class<com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions.Builder>;
-								public requireCharging(): com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions.Builder;
-								public requireWifi(): com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions.Builder;
-								public build(): com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions;
-								public constructor();
-								public requireDeviceIdle(): com.google.firebase.ml.custom.model.FirebaseModelDownloadConditions.Builder;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module custom {
-					export module model {
-						export class zza {
-							public static class: java.lang.Class<com.google.firebase.ml.custom.model.zza>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module custom {
-					export module model {
-						export class zzb {
-							public static class: java.lang.Class<com.google.firebase.ml.custom.model.zzb>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module ml {
-				export module custom {
-					export module model {
-						export class zzc {
-							public static class: java.lang.Class<com.google.firebase.ml.custom.model.zzc>;
-						}
 					}
 				}
 			}

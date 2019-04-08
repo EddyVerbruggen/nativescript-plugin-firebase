@@ -4424,10 +4424,14 @@ function promptQuestions() {
         name: 'ml_kit_custom_model',
         description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
         default: 'n'
-      // }, {
-      //   name: 'ml_kit_natural_language_identification',
-      //   description: 'With Ml Kit, do you want to use recognize natural languages? (y/n)',
-      //   default: 'n'
+      }, {
+        name: 'ml_kit_natural_language_identification',
+        description: 'With Ml Kit, do you want to recognize natural languages? (y/n)',
+        default: 'n'
+      }, {
+        name: 'ml_kit_natural_language_smartreply',
+        description: 'With Ml Kit, do you want to use smart reply? (y/n)',
+        default: 'n'
       }], function (mlkitErr, mlkitResult) {
         if (mlkitErr) {
           return console.log(mlkitErr);
@@ -4601,8 +4605,10 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_face_detection) ? `` : `#`) + `pod 'Firebase/MLVisionFaceModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
-# Natural Language is commented for now, because of (likely) this issue: https://github.com/firebase/firebase-ios-sdk/issues/2324
-` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `#` : `#`) + `pod 'Firebase/MLNLLanguageID'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNaturalLanguage'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNLLanguageID'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_smartreply) ? `` : `#`) + `pod 'Firebase/MLCommon'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_smartreply) ? `` : `#`) + `pod 'Firebase/MLNLSmartReply'
 
 # Facebook Authentication
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit', '~> 4.38.0'
@@ -4903,67 +4909,66 @@ dependencies {
     implementation "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    implementation "com.google.firebase:firebase-core:16.0.6"
-
-    // implementation "com.google.firebase:firebase-analytics:16.0.6"
+    implementation "com.google.firebase:firebase-core:16.0.8"
 
     // for reading google-services.json and configuration
     implementation "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:16.1.0"
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:16.2.1"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:16.0.6"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:16.1.0"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:18.0.0"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:18.2.0"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:16.1.3"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:16.5.0"
 
     // Performance Monitoring
-    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:16.2.3"
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:16.2.5"
 
     // Crash Reporting
     ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-crash:16.2.1"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.9.8"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.9.9"
 
     // Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:17.3.4"
+    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:17.6.0"
 
     // In-App Messaging
-    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.0.5"
+    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.1.1"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:16.0.5"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:16.1.0"
 
     // Cloud Functions
-    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:16.1.3"
+    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:16.3.0"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:17.1.2"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:17.2.0"
 
     // ML Kit
-    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:18.0.2"
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:19.0.3"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
-    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:16.2.4"
-    ` + (isSelected(result.ml_kit_natural_language_identification) ? `//` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:18.1.1"
-    ` + (isSelected(result.ml_kit_natural_language_identification) ? `//` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:18.0.2"
+    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:18.0.0"
+    ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:18.2.0"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:18.0.3"
+    ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:18.0.0"
 
     // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }
 
     // Google Sign-In Authentication
-    ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:16.0.0"
+    ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
     // Invites
-    ` + (isSelected(result.invites) ? `` : `//`) + ` implementation "com.google.firebase:firebase-invites:16.0.6"
+    ` + (isSelected(result.invites) ? `` : `//`) + ` implementation "com.google.firebase:firebase-invites:16.1.1"
 
     // Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:16.1.5"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:16.1.8"
 }
 
 apply plugin: "com.google.gms.google-services"
