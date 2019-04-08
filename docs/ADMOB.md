@@ -22,6 +22,16 @@ Open your App_Resources/Android/AndroidManifest.xml file and add this `meta-data
 
 ### iOS
 
+> ⚠️ Important! Plugin version 8.2.0+ requires you to do this - or your app will crash on start-up! ⚠️
+
+As can be read [here](https://developers.google.com/admob/ios/quick-start#update_your_infoplist) you should open your
+App_Resources/iOS/Info.plist file and add this `GADApplicationIdentifier` key and replace the value by the actual App ID of [your app](https://apps.admob.com/)!:
+
+```xml
+  <key>GADApplicationIdentifier</key>
+  <string>ca-app-pub-9517346003011652~2508636525</string>
+```
+
 #### App Transport Security
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 
