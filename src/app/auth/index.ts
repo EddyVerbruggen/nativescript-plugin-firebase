@@ -4,6 +4,7 @@ import { FirebaseEmailLinkActionCodeSettings, LoginType, User } from "../../fire
 export namespace auth {
   export class Auth {
     private authStateChangedHandler;
+    private authStateOnErrorHandler;
     public currentUser: User;
     public languageCode: string | null;
 
@@ -33,6 +34,7 @@ export namespace auth {
             // } else if (message.includes('com.google.firebase.auth.FirebaseAuthInvalidUserException')) {
             //   code = 'auth/invalid-email'
           }
+          this.authStateOnErrorHandler && this.authStateOnErrorHandler(err.toString());
           reject({
             code: code,
             message: message
@@ -41,8 +43,10 @@ export namespace auth {
       });
     }
 
-    public onAuthStateChanged(handler: (user: User) => void): void {
+    // Completed will never be called, but it is here to closely follow the web api interface.
+    public onAuthStateChanged(handler: (user: User) => void,  error?: (err) => any, completed?: () => any): void {
       this.authStateChangedHandler = handler;
+      if (error) this.authStateOnErrorHandler = error;
       console.log(">> added onAuthStateChanged handler");
     }
 
@@ -55,6 +59,7 @@ export namespace auth {
               resolve();
             })
             .catch(err => {
+              this.authStateOnErrorHandler && this.authStateOnErrorHandler(err);
               reject({
                 // code: "",
                 message: err
