@@ -1895,12 +1895,9 @@ export class HelloWorldModel extends Observable {
     );
   }
 
-  public doForceCrashIOS(): void {
-    Crashlytics.sharedInstance().crash();
-  }
-
-  public doForceCrashAndroid(): void {
-    throw new java.lang.Exception("Forced an exception.");
+  public doCrash(): void {
+    console.log("Gonna crash on demand");
+    firebaseCrashlytics.crash();
   }
 
   public doLogMessageCrashlytics(): void {

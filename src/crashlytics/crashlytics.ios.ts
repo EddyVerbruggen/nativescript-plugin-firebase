@@ -50,6 +50,12 @@ export function setUserId(id: string): void {
   }
 }
 
+export function crash(): void {
+  if (isCrashlyticsAvailable()) {
+    Crashlytics.sharedInstance().crash();
+  }
+}
+
 function isCrashlyticsAvailable(): boolean {
   if (typeof (Crashlytics) === "undefined") {
     console.log("Add 'crashlytics: true' to firebase.nativescript.json and remove the platforms folder");

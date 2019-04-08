@@ -28,7 +28,7 @@
   "android": {
     "v8Flags": "--expose_gc"
   },
-  "discardUncaughtJsExceptions": true,
+  "discardUncaughtJsExceptions": false,
   "devDependencies": {
     "nativescript-dev-typescript": "^0.3.0"
   },

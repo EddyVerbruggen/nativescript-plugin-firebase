@@ -44,7 +44,7 @@ if (isAndroid) {
 Set a value that will be logged with an error and showing in the Firebase console on the 'Keys' tab of the error details.
 
 ```typescript
-import { crashlytics } from "nativescript-plugin-firebase"; // and do: crashlytics.sendCrashLog
+import { crashlytics } from "nativescript-plugin-firebase";
 
 crashlytics.setString("test_key", "test_value");
 crashlytics.setBool("test_key_bool", true);
@@ -54,3 +54,14 @@ crashlytics.setFloat("test_key", 54646.45);
 
 crashlytics.setUserId("user#42");
 ```
+
+### `crash`
+For easier testing, version 8.2.0 exposed this `crash()` function of the native Firebase Crashlytics SDKs:
+
+```typescript
+import { crashlytics } from "nativescript-plugin-firebase";
+
+crashlytics.crash();
+```
+
+This should crash your app. 😱

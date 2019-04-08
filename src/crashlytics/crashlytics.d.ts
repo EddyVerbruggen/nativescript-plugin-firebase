@@ -17,3 +17,5 @@ export declare function setInt(key: string, value: number): void;
 export declare function setDouble(key: string, value: number): void;
 
 export declare function setUserId(userId: string): void;
+
+export declare function crash(): void;

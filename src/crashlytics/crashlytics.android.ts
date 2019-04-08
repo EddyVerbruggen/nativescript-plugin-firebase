@@ -52,6 +52,12 @@ export function setUserId(id: string): void {
   }
 }
 
+export function crash(): void {
+  if (isCrashlyticsAvailable()) {
+    com.crashlytics.android.Crashlytics.crash();
+  }
+}
+
 function isCrashlyticsAvailable(): boolean {
   if (typeof (com.crashlytics) === "undefined" || typeof (com.crashlytics.android.Crashlytics) === "undefined") {
     console.log("Add 'crashlytics: true' to firebase.nativescript.json and remove the platforms folder");
