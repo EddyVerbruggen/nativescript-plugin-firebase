@@ -551,56 +551,70 @@ firebase.getRemoteConfig = arg => {
       const remoteConfigSettings = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
           .setDeveloperModeEnabled(arg.developerMode || false)
           .build();
+
       firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
 
-      // TODO async, do we need to wait?
-      const defaults = firebase.getRemoteConfigDefaults(arg.properties);
-      firebaseRemoteConfig.setDefaultsAsync(firebase.toHashMap(defaults));
-
-      const returnMethod = throttled => {
-        // TODO async, so do we need to wait?
-        firebaseRemoteConfig.activate();
-
-        const lastFetchTime = firebaseRemoteConfig.getInfo().getFetchTimeMillis();
-        const lastFetch = new Date(lastFetchTime);
-
-        const result = {
-          lastFetch: lastFetch,
-          throttled: throttled,
-          properties: {}
-        };
-
-        for (const p in arg.properties) {
-          const prop = arg.properties[p];
-          const key = prop.key;
-          const value = firebaseRemoteConfig.getString(key);
-          // we could have the user pass in the type but this seems easier to use
-          result.properties[key] = firebase.strongTypeify(value);
-        }
-
-        resolve(result);
-      };
-
-      const onSuccessListener = new gmsTasks.OnSuccessListener({
-        onSuccess: () => returnMethod(false)
-      });
-
-      const onFailureListener = new gmsTasks.OnFailureListener({
-        onFailure: exception => {
-          if (exception.getMessage() === "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
-            returnMethod(true);
+      const addOnCompleteListener = new gmsTasks.OnCompleteListener({
+        onComplete: task => {
+          if (!task.isSuccessful()) {
+            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           } else {
-            reject("Retrieving remote config data failed. " + exception);
+            const returnMethod = throttled => {
+              const addOnCompleteActivateListener = new gmsTasks.OnCompleteListener({
+                onComplete: task => {
+                  if (!task.isSuccessful()) {
+                    reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+                  } else {
+                    const lastFetchTime = firebaseRemoteConfig.getInfo().getFetchTimeMillis();
+                    const lastFetch = new Date(lastFetchTime);
+
+                    const result = {
+                      lastFetch: lastFetch,
+                      throttled: throttled,
+                      properties: {}
+                    };
+
+                    for (const p in arg.properties) {
+                      const prop = arg.properties[p];
+                      const key = prop.key;
+                      const value = firebaseRemoteConfig.getString(key);
+                      // we could have the user pass in the type but this seems easier to use
+                      result.properties[key] = firebase.strongTypeify(value);
+                    }
+                    resolve(result);
+                  }
+                }
+              });
+              firebaseRemoteConfig.activate().addOnCompleteListener(addOnCompleteActivateListener);
+            };
+
+            const onSuccessListener = new gmsTasks.OnSuccessListener({
+              onSuccess: () => returnMethod(false)
+            });
+
+            const onFailureListener = new gmsTasks.OnFailureListener({
+              onFailure: exception => {
+                if (exception.getMessage() === "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
+                  returnMethod(true);
+                } else {
+                  reject("Retrieving remote config data failed. " + exception);
+                }
+              }
+            });
+
+            // default 12 hours, just like the SDK does
+            const expirationDuration = arg.cacheExpirationSeconds || 43200;
+
+            firebaseRemoteConfig.fetch(expirationDuration)
+                .addOnSuccessListener(onSuccessListener)
+                .addOnFailureListener(onFailureListener);
           }
         }
       });
 
-      // default 12 hours, just like the SDK does
-      const expirationDuration = arg.cacheExpirationSeconds || 43200;
-
-      firebaseRemoteConfig.fetch(expirationDuration)
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+      const defaults = firebase.getRemoteConfigDefaults(arg.properties);
+      firebaseRemoteConfig.setDefaultsAsync(firebase.toHashMap(defaults))
+          .addOnCompleteListener(addOnCompleteListener);
     };
 
     try {
@@ -2304,15 +2318,15 @@ firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.D
   }
 
   const listener = docRef.addSnapshotListener(options, new com.google.firebase.firestore.EventListener({
-    onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception: com.google.firebase.firestore.FirebaseFirestoreException) => {
-      if (exception !== null) {
-        const error = "onDocumentSnapshot error code: " + exception.getCode();
-        onErrorCallback && onErrorCallback(new Error(error));
-        return;
-      }
-      onNextCallback && onNextCallback(new DocumentSnapshot(snapshot));
-    })
-  })
+        onEvent: ((snapshot: com.google.firebase.firestore.DocumentSnapshot, exception: com.google.firebase.firestore.FirebaseFirestoreException) => {
+          if (exception !== null) {
+            const error = "onDocumentSnapshot error code: " + exception.getCode();
+            onErrorCallback && onErrorCallback(new Error(error));
+            return;
+          }
+          onNextCallback && onNextCallback(new DocumentSnapshot(snapshot));
+        })
+      })
   );
 
   return () => listener.remove();
@@ -2345,8 +2359,7 @@ firebase.firestore.onCollectionSnapshot = (colRef: com.google.firebase.firestore
       }
       onNextCallback && onNextCallback(new QuerySnapshot(snapshot));
     })
-  })
-  );
+  }));
   return () => listener.remove();
 };
 
