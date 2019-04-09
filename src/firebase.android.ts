@@ -812,7 +812,7 @@ function toLoginResult(user, additionalUserInfo?): User {
 
   const loginResult: User = {
     uid: user.getUid(),
-    name: user.getDisplayName(),
+    displayName: user.getDisplayName(),
     email: user.getEmail(),
     emailVerified: user.isEmailVerified(),
     // provider: user.getProviderId(), // always 'firebase'
@@ -820,7 +820,7 @@ function toLoginResult(user, additionalUserInfo?): User {
     anonymous: user.isAnonymous(),
     isAnonymous: user.isAnonymous(),
     phoneNumber: user.getPhoneNumber(),
-    profileImageURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null,
+    photoURL: user.getPhotoUrl() ? user.getPhotoUrl().toString() : null,
     metadata: {
       creationTimestamp: user.getMetadata() ? new Date(user.getMetadata().getCreationTimestamp() as number) : null,
       lastSignInTimestamp: user.getMetadata() ? new Date(user.getMetadata().getLastSignInTimestamp() as number) : null

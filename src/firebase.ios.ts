@@ -677,10 +677,10 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
     isAnonymous: user.anonymous,
     // provider: user.providerID, // always 'Firebase'
     providers: providers,
-    profileImageURL: user.photoURL ? user.photoURL.absoluteString : null,
+    photoURL: user.photoURL ? user.photoURL.absoluteString : null,
     email: user.email,
     emailVerified: user.emailVerified,
-    name: user.displayName,
+    displayName: user.displayName,
     phoneNumber: user.phoneNumber,
     refreshToken: user.refreshToken,
     metadata: {
