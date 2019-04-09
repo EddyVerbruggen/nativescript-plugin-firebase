@@ -5,6 +5,7 @@ import * as imagelabeling from "./imagelabeling";
 import * as landmarkrecognition from "./landmarkrecognition";
 import * as custommodel from "./custommodel";
 import * as naturallanguageidentification from "./naturallanguageidentification";
+import * as smartreply from "./smartreply";
 
 import { ImageSource } from "tns-core-modules/image-source";
 import { Image } from "tns-core-modules/ui/image";
@@ -44,6 +45,7 @@ export {
   imagelabeling,
   landmarkrecognition,
   custommodel,
-  naturallanguageidentification
+  naturallanguageidentification,
+  smartreply
 };
 

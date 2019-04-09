@@ -84,6 +84,8 @@ To be able to use Cloud features you need to do two things:
 |[Barcode scanning](#barcode-scanning)|✅|
 |[Image labeling](#image-labeling)|✅|✅
 |[Landmark recognition](#landmark-recognition)||✅
+|[Natural language identification](#natural-language-identification)|✅|
+|[Smart reply](#smart-reply)|✅|
 |[Custom model inference](#custom-model-inference)|✅|✅
 
 ### Text recognition
@@ -381,6 +383,59 @@ firebase.mlkit.landmarkrecognition.recognizeLandmarksCloud({
   maxResults: 8 // default 10
 })
 .then((result: MLKitLandmarkRecognitionCloudResult) => console.log(JSON.stringify(result.landmarks)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+### Natural language identification
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_language_detection.png" height="153px" alt="ML Kit - Landmark detection"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/identify-languages)
+
+#### Still image
+Note that you could hook this up to text recognition running from a live camera stream, to get realtime results.
+Check [demo-ng](demo-ng) if you're interested in such a solution.
+
+```typescript
+import { MLKitNaturalLanguageIdentificationResult } from "nativescript-plugin-firebase/mlkit/naturallanguageidentification";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.naturallanguageidentification.identifyNaturalLanguage({
+  text: "Some text to detect the language for"
+})
+.then((languageIdResult: MLKitNaturalLanguageIdentificationResult) => console.log(`Language code: ${languageIdResult.languageCode}`))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+### Smart reply
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_smart_reply.png" height="153px" alt="ML Kit - Smart reply"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/generate-smart-replies)
+
+#### Still image
+
+```typescript
+import { MLKitSmartReplyConversationMessage } from "nativescript-plugin-firebase/mlkit/smartreply";
+const firebase = require("nativescript-plugin-firebase");
+
+// build a converstation history MLKit can create suggestions for, in chronological order
+const conversation: Array<MLKitSmartReplyConversationMessage> = [];
+conversation.push({
+  text: "some text",
+  userId: "abc",
+  localUser: false,
+  timestamp: new Date().getTime()
+});
+
+conversation.push({
+  text: "some other text",
+  userId: "def",
+  localUser: true,
+  timestamp: new Date().getTime()
+});
+
+firebase.mlkit.smartreply.suggestReplies({
+  conversation
+}).then((suggestions: Array<string>) => console.log(JSON.stringify(suggestions)))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 

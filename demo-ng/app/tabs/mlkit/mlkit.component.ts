@@ -11,6 +11,7 @@ import {
 } from "nativescript-plugin-firebase/mlkit/imagelabeling";
 import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
 import { MLKitNaturalLanguageIdentificationResult } from "nativescript-plugin-firebase/mlkit/naturallanguageidentification";
+import { MLKitSmartReplyConversationMessage } from "nativescript-plugin-firebase/mlkit/smartreply";
 import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 import * as fileSystemModule from "tns-core-modules/file-system";
 import { ImageAsset } from "tns-core-modules/image-asset";
@@ -38,7 +39,8 @@ export class MLKitComponent {
     "Image labeling (cloud)",
     "Custom model",
     "Landmark recognition (cloud)",
-    "Language identification (on device)"
+    "Language identification",
+    "Smart Reply"
   ];
 
   private mlkitOnDeviceFeatures: Array<string> = [
@@ -191,8 +193,10 @@ export class MLKitComponent {
         this.recognizeLandmarkCloud(imageSource);
       } else if (pickedItem === "Custom model") {
         this.customModel(imageSource);
-      } else if (pickedItem === "Language identification (on device)") {
+      } else if (pickedItem === "Language identification") {
         this.languageIdentification(imageSource);
+      } else if (pickedItem === "Smart reply") {
+        this.smartReply(imageSource);
       }
     });
   }
@@ -246,21 +250,41 @@ export class MLKitComponent {
     // First recognize text, then get its language
     firebase.mlkit.textrecognition.recognizeTextOnDevice({
       image: imageSource
-    }).then(
-        (result: MLKitRecognizeTextResult) => {
-          firebase.mlkit.naturallanguageidentification.identifyNaturalLanguage({
-            text: result.text
-          }).then(
-              (languageIdResult: MLKitNaturalLanguageIdentificationResult) => {
-                alert({
-                  title: `Result`,
-                  message: `Language code: ${languageIdResult.languageCode}`,
-                  okButtonText: "OK"
-                });
-              })
-              .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
-        })
-        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+    }).then((result: MLKitRecognizeTextResult) => {
+      firebase.mlkit.naturallanguageidentification.identifyNaturalLanguage({
+        text: result.text
+      }).then((languageIdResult: MLKitNaturalLanguageIdentificationResult) => {
+        alert({
+          title: `Result`,
+          message: `Language code: ${languageIdResult.languageCode}`,
+          okButtonText: "OK"
+        });
+      }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+    }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+
+  // it would be easier to hardcode the conversation, but this fits better with the other image-based examples
+  private smartReply(imageSource: ImageSource): void {
+    firebase.mlkit.textrecognition.recognizeTextOnDevice({
+      image: imageSource
+    }).then((result: MLKitRecognizeTextResult) => {
+      const messages: Array<MLKitSmartReplyConversationMessage> = [];
+      result.blocks.forEach(block => messages.push({
+        text: block.text,
+        userId: "abc",
+        localUser: false,
+        timestamp: new Date().getTime()
+      }));
+      firebase.mlkit.smartreply.suggestReplies({
+        messages
+      }).then((result: Array<string>) => {
+        alert({
+          title: `Suggestions`,
+          message: JSON.stringify(result),
+          okButtonText: "OK"
+        });
+      }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+    }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 
   private customModel(imageSource: ImageSource): void {
