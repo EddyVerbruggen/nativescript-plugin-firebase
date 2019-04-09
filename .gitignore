@@ -18,6 +18,7 @@ src/platforms/android/mlkithelpersrc/**/*.class
 !src/analytics/analytics.d.ts
 !src/crashlytics/crashlytics.d.ts
 !src/performance/performance.d.ts
+!src/inappmessaging/inappmessaging.d.ts
 !src/storage/storage.d.ts
 !src/admob/admob.d.ts
 !src/messaging/messaging.d.ts

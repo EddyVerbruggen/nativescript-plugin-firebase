@@ -10,7 +10,7 @@ Engage active app users with contextual messages.
 ## Want to see a demo?
 Check out the (code of the) [Vue demo](demo-vue)!
 
-## Enabling Cloud Functions
+## Enabling In-App Messaging
 To add this feature to your project, either:
 
 * Remove `firebase.nativescript.json` from the root of the project and run `npm i`, or

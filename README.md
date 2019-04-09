@@ -24,7 +24,7 @@
 * [Cloud Functions](docs/FUNCTIONS.md)
 * [Cloud Messaging](docs/MESSAGING.md) / [Non-Firebase Push Messaging](docs/NON_FIREBASE_MESSAGING.md)
 * [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
-* [In-App Messaging](docs/IN_APP_MESSAGING.md.md)
+* [In-App Messaging](docs/IN_APP_MESSAGING.md)
 * [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
 * [ML Kit](docs/ML_KIT.md)
 * [Performance Monitoring](docs/PERFORMANCE_MONITORING.md)
