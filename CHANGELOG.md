@@ -8,6 +8,8 @@
 
 > Note: The Firebase iOS SDK now requires Xcode 10.1 or later.
 
+> Also note that there's a little breaking change that's easy to fix: the `name` and `profileImageURL` properties of the login result object have new names: `displayName` and `photoURL` respectively.
+
 ## 8.1.1 (2019, March 24)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/97?closed=1)
 

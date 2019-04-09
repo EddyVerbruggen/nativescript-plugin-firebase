@@ -23,8 +23,8 @@ All login functions below, as well as `getCurrentUser` return a 'User' object wi
 |`emailVerified`|no|You can send an email with a verification link which this refers to
 |`providers`|no|An array of {id: value} objects, where value can be 'facebook.com', etc
 |`email`|yes|Not all providers require an email address
-|`name`|yes|The name stored at the provider
-|`profileImageURL`|yes|A string containing a link to a user image on the web
+|`displayName`|yes|The name stored at the provider. Note that before plugin version 8.2.0 this was called `name`.
+|`photoURL`|yes|A string containing a link to a user image on the web. Note that before plugin version 8.2.0 this was called `profileImageURL`.
 |`phoneNumber`|yes|The user's phone number
 |`refreshToken`|yes|iOS only
 |`additionalUserInfo`|no|See `AdditionalUserInfo` below
