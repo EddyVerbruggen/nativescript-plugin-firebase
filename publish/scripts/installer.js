@@ -12,6 +12,9 @@ const supportsIOSModernBuildSystem = tnsVersionFull.indexOf("5.2.0-") > -1 || se
 // Custom gradle buildscripts are supported from NativeScript-Android version 5.3.0 (TODO this actually checks the CLI version)
 const supportsGradleBuildscripts = tnsVersionFull.indexOf("5.3.0-") > -1 || semver.gte(tnsVersionFull, "5.3.0");
 
+// TODO use this when writing stuff like 'com.android.support' below, because {N} 6 will have to use AndroidX
+const supportsAndroidX = semver.gte(tnsVersionFull, "6.0.0");
+
 if (!supportsIOSModernBuildSystem) {
   console.log(`You're using NativeScript ${tnsVersionFull}.. which doesn't support the latest Firestore and in-app-messaging SDKs. Upgrade NativeScript to at least 5.2.0 if you need those!\n\n`);
 }
