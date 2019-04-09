@@ -346,12 +346,12 @@ export interface User {
   uid: string;
   email?: string;
   emailVerified: boolean;
-  name?: string;
+  displayName?: string;
   phoneNumber?: string;
   anonymous: boolean;
   isAnonymous: boolean; // This is used by the web API
   providers: Array<Provider>;
-  profileImageURL?: string;
+  photoURL?: string;
   metadata: UserMetadata;
   additionalUserInfo?: AdditionalUserInfo;
 
