@@ -98,10 +98,10 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
             } else {
               resolve();
             }
-            CFRelease(delegate);
-            delegate = undefined;
           }, () => {
             arg.onAdClosed && arg.onAdClosed();
+            CFRelease(delegate);
+            delegate = undefined;
           });
 
       CFRetain(delegate);
