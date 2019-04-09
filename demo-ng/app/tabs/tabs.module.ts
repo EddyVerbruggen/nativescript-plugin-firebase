@@ -11,6 +11,7 @@ import { BarcodeScanningComponent } from "~/tabs/mlkit/barcodescanning/barcodesc
 import { FaceDetectionComponent } from "~/tabs/mlkit/facedetection/facedetection.component";
 import { ImageLabelingComponent } from "~/tabs/mlkit/imagelabeling/imagelabeling.component";
 import { CustomModelComponent } from "~/tabs/mlkit/custommodel/custommodel.component";
+import { LanguageIdentificationComponent } from "~/tabs/mlkit/languageidentification/languageidentification.component";
 
 import { registerElement } from "nativescript-angular/element-registry";
 registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-firebase/mlkit/barcodescanning").MLKitBarcodeScanner);
@@ -32,7 +33,8 @@ registerElement("MLKitCustomModel", () => require("nativescript-plugin-firebase/
     MLKitComponent,
     TabsComponent,
     TextRecognitionComponent,
-    CustomModelComponent
+    CustomModelComponent,
+    LanguageIdentificationComponent
   ],
   schemas: [
     NO_ERRORS_SCHEMA

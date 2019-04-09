@@ -10,6 +10,7 @@ import {
   MLKitImageLabelingOnDeviceResult
 } from "nativescript-plugin-firebase/mlkit/imagelabeling";
 import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
+import { MLKitNaturalLanguageIdentificationResult } from "nativescript-plugin-firebase/mlkit/naturallanguageidentification";
 import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
 import * as fileSystemModule from "tns-core-modules/file-system";
 import { ImageAsset } from "tns-core-modules/image-asset";
@@ -36,7 +37,8 @@ export class MLKitComponent {
     "Image labeling (on device)",
     "Image labeling (cloud)",
     "Custom model",
-    "Landmark recognition (cloud)"
+    "Landmark recognition (cloud)",
+    "Language identification (on device)"
   ];
 
   private mlkitOnDeviceFeatures: Array<string> = [
@@ -44,7 +46,8 @@ export class MLKitComponent {
     "Barcode scanning",
     "Face detection",
     "Image labeling",
-    "Custom model"
+    "Custom model",
+    "Language identification"
   ];
 
   constructor(private routerExtensions: RouterExtensions,
@@ -68,6 +71,8 @@ export class MLKitComponent {
         to = "/tabs/mlkit/imagelabeling";
       } else if (pickedItem === "Custom model") {
         to = "/tabs/mlkit/custommodel";
+      } else if (pickedItem === "Language identification") {
+        to = "/tabs/mlkit/languageidentification";
       }
 
       if (to !== undefined) {
@@ -186,6 +191,8 @@ export class MLKitComponent {
         this.recognizeLandmarkCloud(imageSource);
       } else if (pickedItem === "Custom model") {
         this.customModel(imageSource);
+      } else if (pickedItem === "Language identification (on device)") {
+        this.languageIdentification(imageSource);
       }
     });
   }
@@ -231,6 +238,27 @@ export class MLKitComponent {
             message: JSON.stringify(result.landmarks),
             okButtonText: "OK"
           });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+
+  private languageIdentification(imageSource: ImageSource): void {
+    // First recognize text, then get its language
+    firebase.mlkit.textrecognition.recognizeTextOnDevice({
+      image: imageSource
+    }).then(
+        (result: MLKitRecognizeTextResult) => {
+          firebase.mlkit.naturallanguageidentification.identifyNaturalLanguage({
+            text: result.text
+          }).then(
+              (languageIdResult: MLKitNaturalLanguageIdentificationResult) => {
+                alert({
+                  title: `Result`,
+                  message: `Language code: ${languageIdResult.languageCode}`,
+                  okButtonText: "OK"
+                });
+              })
+              .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
         })
         .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
