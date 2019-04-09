@@ -6,12 +6,12 @@
       <!--<Button @tap="onTapHasPermission" class="btn" text="Has Permission?"></Button>-->
       <!--<Button @tap="onTapScheduleNotification" class="btn" text="Schedule Notification"></Button>-->
       <!--<Button @tap="onTapCancelAll" class="btn" text="Cancel notifications"></Button>-->
-      <Label class="message" :text="message" textWrap="true"></Label>
-      <MLKitTextRecognition width="260"
+      <Label class="message" :text="message" textWrap="true" horizontalAlignment="center"></Label>
+      <!--MLKitTextRecognition width="260"
                             height="340"
                             processEveryNthFrame="5"
                             @scanResult="onTextRecognitionResult">
-      </MLKitTextRecognition>
+      </MLKitTextRecognition-->
 
     </StackLayout>
   </Page>
@@ -19,31 +19,27 @@
 
 <script>
   const firebase = require("nativescript-plugin-firebase");
-
-  firebase.init({
-    onDynamicLinkCallback: function (result) {
-      console.log("Dynamic Link received: " + result);
-      console.log("Dynamic Link received, url: " + result.url);
-      if (result.url.indexOf("/campaigns/shit") > -1) {
-        // note that you could deeplink/route the user now, but let's just show an alert
-        alert({
-          title: "Campaign button tapped!",
-          message: "You tapped the button in the 'Firebase is the 💩' campaign - well don!",
-          okButtonText: "Yep!"
-        })
-      }
-    }
-  }).then(function () {
-    console.log("Firebase initialized");
-  }).catch(function (error) {
-    console.log("Error initializing Firebase: " + error);
-  });
+  import { inappmessaging } from "nativescript-plugin-firebase/inappmessaging";
 
   export default {
     data() {
       return {
-        message: "Tap a button above.."
+        message: "Fear not, young Skywalker"
       }
+    },
+
+    created() {
+      // wire up an 'onMessageClicked' callback
+      inappmessaging.onMessageClicked(message => {
+        console.log(">> inappmessaging onMessageClicked, campaign: " + message.campaignName);
+        this.message = `Campaign ${message.campaignName} clicked`;
+      });
+
+      // 👉 .. and for fun, wire an 'onMessageImpression' callback so when know when the message is shown
+      inappmessaging.onMessageImpression(message => {
+        console.log(">> inappmessaging onMessageImpression, campaign: " + message.campaignName);
+        this.message = `Campaign ${message.campaignName} seen`;
+      });
     },
 
     methods: {
@@ -124,8 +120,8 @@
   }
 
   .message {
-    font-size: 14;
-    margin: 16;
+    font-size: 17;
+    margin: 17;
     color: #53ba82;
   }
 

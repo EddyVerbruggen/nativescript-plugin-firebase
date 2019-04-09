@@ -24,6 +24,9 @@
 /// <reference path="./platforms/ios/typings/objc!FirebaseStorage.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!GoogleMobileAds.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!GoogleSignIn.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseMLNaturalLanguage.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseMLNLLanguageID.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseMLNLSmartReply.d.ts" />
 
 /// <reference path="./platforms/ios/typings/objc!TNSMLKitCamera.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!TNSCrashlyticsLogger.d.ts" />

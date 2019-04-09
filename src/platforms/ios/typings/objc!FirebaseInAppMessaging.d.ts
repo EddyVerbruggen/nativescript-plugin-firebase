@@ -16,6 +16,8 @@ declare class FIRInAppMessaging extends NSObject {
 
 	automaticDataCollectionEnabled: boolean;
 
+	delegate: FIRInAppMessagingDisplayDelegate;
+
 	messageDisplayComponent: FIRInAppMessagingDisplay;
 
 	messageDisplaySuppressed: boolean;
@@ -38,11 +40,13 @@ declare class FIRInAppMessagingActionButton extends NSObject {
 	initWithButtonTextButtonTextColorBackgroundColor(btnText: string, textColor: UIColor, bkgColor: UIColor): this;
 }
 
-declare class FIRInAppMessagingBannerDisplay extends FIRInAppMessagingDisplayMessageBase {
+declare class FIRInAppMessagingBannerDisplay extends FIRInAppMessagingDisplayMessage {
 
 	static alloc(): FIRInAppMessagingBannerDisplay; // inherited from NSObject
 
 	static new(): FIRInAppMessagingBannerDisplay; // inherited from NSObject
+
+	readonly actionURL: NSURL;
 
 	readonly bodyText: string;
 
@@ -54,9 +58,26 @@ declare class FIRInAppMessagingBannerDisplay extends FIRInAppMessagingDisplayMes
 
 	readonly title: string;
 
-	constructor(o: { messageID: string; renderAsTestMessage: boolean; titleText: string; bodyText: string; textColor: UIColor; backgroundColor: UIColor; imageData: FIRInAppMessagingImageData; });
+	constructor(o: { messageID: string; campaignName: string; renderAsTestMessage: boolean; triggerType: FIRInAppMessagingDisplayTriggerType; titleText: string; bodyText: string; textColor: UIColor; backgroundColor: UIColor; imageData: FIRInAppMessagingImageData; actionURL: NSURL; });
 
-	initWithMessageIDRenderAsTestMessageTitleTextBodyTextTextColorBackgroundColorImageData(messageID: string, renderAsTestMessage: boolean, title: string, bodyText: string, textColor: UIColor, backgroundColor: UIColor, imageData: FIRInAppMessagingImageData): this;
+	initWithMessageIDCampaignNameRenderAsTestMessageTriggerTypeTitleTextBodyTextTextColorBackgroundColorImageDataActionURL(messageID: string, campaignName: string, renderAsTestMessage: boolean, triggerType: FIRInAppMessagingDisplayTriggerType, title: string, bodyText: string, textColor: UIColor, backgroundColor: UIColor, imageData: FIRInAppMessagingImageData, actionURL: NSURL): this;
+}
+
+declare class FIRInAppMessagingCampaignInfo extends NSObject {
+
+	static alloc(): FIRInAppMessagingCampaignInfo; // inherited from NSObject
+
+	static new(): FIRInAppMessagingCampaignInfo; // inherited from NSObject
+
+	readonly campaignName: string;
+
+	readonly messageID: string;
+
+	readonly renderAsTestMessage: boolean;
+
+	constructor(o: { messageID: string; campaignName: string; renderAsTestMessage: boolean; });
+
+	initWithMessageIDCampaignNameRenderAsTestMessage(messageID: string, campaignName: string, renderAsTestMessage: boolean): this;
 }
 
 declare const enum FIRInAppMessagingDismissType {
@@ -72,7 +93,7 @@ declare const enum FIRInAppMessagingDismissType {
 
 interface FIRInAppMessagingDisplay {
 
-	displayMessageDisplayDelegate(messageForDisplay: FIRInAppMessagingDisplayMessageBase, displayDelegate: FIRInAppMessagingDisplayDelegate): void;
+	displayMessageDisplayDelegate(messageForDisplay: FIRInAppMessagingDisplayMessage, displayDelegate: FIRInAppMessagingDisplayDelegate): void;
 }
 declare var FIRInAppMessagingDisplay: {
 
@@ -81,32 +102,50 @@ declare var FIRInAppMessagingDisplay: {
 
 interface FIRInAppMessagingDisplayDelegate extends NSObjectProtocol {
 
-	displayErrorEncountered(error: NSError): void;
+	displayErrorForMessageError(inAppMessage: FIRInAppMessagingDisplayMessage, error: NSError): void;
 
-	impressionDetected(): void;
+	impressionDetectedForMessage(inAppMessage: FIRInAppMessagingDisplayMessage): void;
 
-	messageClicked(): void;
+	messageClicked(inAppMessage: FIRInAppMessagingDisplayMessage): void;
 
-	messageDismissedWithType(dismissType: FIRInAppMessagingDismissType): void;
+	messageDismissedDismissType(inAppMessage: FIRInAppMessagingDisplayMessage, dismissType: FIRInAppMessagingDismissType): void;
 }
 declare var FIRInAppMessagingDisplayDelegate: {
 
 	prototype: FIRInAppMessagingDisplayDelegate;
 };
 
-declare class FIRInAppMessagingDisplayMessageBase extends NSObject {
+declare class FIRInAppMessagingDisplayMessage extends NSObject {
 
-	static alloc(): FIRInAppMessagingDisplayMessageBase; // inherited from NSObject
+	static alloc(): FIRInAppMessagingDisplayMessage; // inherited from NSObject
 
-	static new(): FIRInAppMessagingDisplayMessageBase; // inherited from NSObject
+	static new(): FIRInAppMessagingDisplayMessage; // inherited from NSObject
 
-	readonly messageID: string;
+	readonly campaignInfo: FIRInAppMessagingCampaignInfo;
 
-	readonly renderAsTestMessage: boolean;
+	readonly triggerType: FIRInAppMessagingDisplayTriggerType;
 
-	constructor(o: { messageID: string; renderAsTestMessage: boolean; });
+	readonly type: FIRInAppMessagingDisplayMessageType;
 
-	initWithMessageIDRenderAsTestMessage(messageID: string, renderAsTestMessage: boolean): this;
+	constructor(o: { messageID: string; campaignName: string; renderAsTestMessage: boolean; messageType: FIRInAppMessagingDisplayMessageType; triggerType: FIRInAppMessagingDisplayTriggerType; });
+
+	initWithMessageIDCampaignNameRenderAsTestMessageMessageTypeTriggerType(messageID: string, campaignName: string, renderAsTestMessage: boolean, messageType: FIRInAppMessagingDisplayMessageType, triggerType: FIRInAppMessagingDisplayTriggerType): this;
+}
+
+declare const enum FIRInAppMessagingDisplayMessageType {
+
+	Modal = 0,
+
+	Banner = 1,
+
+	ImageOnly = 2
+}
+
+declare const enum FIRInAppMessagingDisplayTriggerType {
+
+	OnAppForeground = 0,
+
+	OnAnalyticsEvent = 1
 }
 
 declare class FIRInAppMessagingImageData extends NSObject {
@@ -124,26 +163,30 @@ declare class FIRInAppMessagingImageData extends NSObject {
 	initWithImageURLImageData(imageURL: string, imageData: NSData): this;
 }
 
-declare class FIRInAppMessagingImageOnlyDisplay extends FIRInAppMessagingDisplayMessageBase {
+declare class FIRInAppMessagingImageOnlyDisplay extends FIRInAppMessagingDisplayMessage {
 
 	static alloc(): FIRInAppMessagingImageOnlyDisplay; // inherited from NSObject
 
 	static new(): FIRInAppMessagingImageOnlyDisplay; // inherited from NSObject
 
+	readonly actionURL: NSURL;
+
 	readonly imageData: FIRInAppMessagingImageData;
 
-	constructor(o: { messageID: string; renderAsTestMessage: boolean; imageData: FIRInAppMessagingImageData; });
+	constructor(o: { messageID: string; campaignName: string; renderAsTestMessage: boolean; triggerType: FIRInAppMessagingDisplayTriggerType; imageData: FIRInAppMessagingImageData; actionURL: NSURL; });
 
-	initWithMessageIDRenderAsTestMessageImageData(messageID: string, renderAsTestMessage: boolean, imageData: FIRInAppMessagingImageData): this;
+	initWithMessageIDCampaignNameRenderAsTestMessageTriggerTypeImageDataActionURL(messageID: string, campaignName: string, renderAsTestMessage: boolean, triggerType: FIRInAppMessagingDisplayTriggerType, imageData: FIRInAppMessagingImageData, actionURL: NSURL): this;
 }
 
-declare class FIRInAppMessagingModalDisplay extends FIRInAppMessagingDisplayMessageBase {
+declare class FIRInAppMessagingModalDisplay extends FIRInAppMessagingDisplayMessage {
 
 	static alloc(): FIRInAppMessagingModalDisplay; // inherited from NSObject
 
 	static new(): FIRInAppMessagingModalDisplay; // inherited from NSObject
 
 	readonly actionButton: FIRInAppMessagingActionButton;
+
+	readonly actionURL: NSURL;
 
 	readonly bodyText: string;
 
@@ -155,7 +198,11 @@ declare class FIRInAppMessagingModalDisplay extends FIRInAppMessagingDisplayMess
 
 	readonly title: string;
 
-	constructor(o: { messageID: string; renderAsTestMessage: boolean; titleText: string; bodyText: string; textColor: UIColor; backgroundColor: UIColor; imageData: FIRInAppMessagingImageData; actionButton: FIRInAppMessagingActionButton; });
+	constructor(o: { messageID: string; campaignName: string; renderAsTestMessage: boolean; triggerType: FIRInAppMessagingDisplayTriggerType; titleText: string; bodyText: string; textColor: UIColor; backgroundColor: UIColor; imageData: FIRInAppMessagingImageData; actionButton: FIRInAppMessagingActionButton; actionURL: NSURL; });
 
-	initWithMessageIDRenderAsTestMessageTitleTextBodyTextTextColorBackgroundColorImageDataActionButton(messageID: string, renderAsTestMessage: boolean, title: string, bodyText: string, textColor: UIColor, backgroundColor: UIColor, imageData: FIRInAppMessagingImageData, actionButton: FIRInAppMessagingActionButton): this;
+	initWithMessageIDCampaignNameRenderAsTestMessageTriggerTypeTitleTextBodyTextTextColorBackgroundColorImageDataActionButtonActionURL(messageID: string, campaignName: string, renderAsTestMessage: boolean, triggerType: FIRInAppMessagingDisplayTriggerType, title: string, bodyText: string, textColor: UIColor, backgroundColor: UIColor, imageData: FIRInAppMessagingImageData, actionButton: FIRInAppMessagingActionButton, actionURL: NSURL): this;
 }
+
+declare var FirebaseInAppMessagingVersionNumber: number;
+
+declare var FirebaseInAppMessagingVersionString: interop.Reference<number>;

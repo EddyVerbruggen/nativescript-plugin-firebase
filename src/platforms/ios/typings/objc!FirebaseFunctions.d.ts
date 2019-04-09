@@ -65,6 +65,8 @@ declare class FIRHTTPSCallable extends NSObject {
 
 	static new(): FIRHTTPSCallable; // inherited from NSObject
 
+	timeoutInterval: number;
+
 	callWithCompletion(completion: (p1: FIRHTTPSCallableResult, p2: NSError) => void): void;
 
 	callWithObjectCompletion(data: any, completion: (p1: FIRHTTPSCallableResult, p2: NSError) => void): void;

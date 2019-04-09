@@ -8,5 +8,6 @@ export * from './crashlytics';
 export * from './performance';
 export * from './storage';
 export * from './messaging';
+export * from './inappmessaging';
 import * as ml from './mlkit';
 export declare const mlkit: typeof ml;

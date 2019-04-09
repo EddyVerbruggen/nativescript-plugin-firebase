@@ -5,7 +5,7 @@ declare class FIRIAMDefaultDisplayImpl extends NSObject implements FIRInAppMessa
 
 	static new(): FIRIAMDefaultDisplayImpl; // inherited from NSObject
 
-	displayMessageDisplayDelegate(messageForDisplay: FIRInAppMessagingDisplayMessageBase, displayDelegate: FIRInAppMessagingDisplayDelegate): void;
+	displayMessageDisplayDelegate(messageForDisplay: FIRInAppMessagingDisplayMessage, displayDelegate: FIRInAppMessagingDisplayDelegate): void;
 }
 
 declare var FirebaseInAppMessagingDisplayVersionNumber: number;
