@@ -98,13 +98,17 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
       firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(activity);
       firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
 
+      // need these to support preloadInterstitial more than once
+      this.resolve = resolve;
+      this.reject = reject;
+
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       const InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
         onAdLoaded: () => {
-          resolve();
+          this.resolve();
         },
         onAdFailedToLoad: errorCode => {
-          reject(errorCode);
+          this.reject(errorCode);
         },
         onAdClosed: () => {
           if (firebase.admob.interstitialView) {
