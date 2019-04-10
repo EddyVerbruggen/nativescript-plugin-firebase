@@ -1113,8 +1113,7 @@ firebase.login = arg => {
             .build();
 
         const signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(firebase._mGoogleApiClient);
-
-        appModule.android.context.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
+        (appModule.android.foregroundActivity || appModule.android.startActivity).startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
 
         const callback = (eventData: AndroidActivityResultEventData) => {
           if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
@@ -2038,7 +2037,7 @@ firebase.invites.sendInvitation = arg => {
 
       const firebaseInviteIntent = builder.build();
 
-      appModule.android.foregroundActivity.startActivityForResult(firebaseInviteIntent, REQUEST_INVITE_INTENT_ID);
+      (appModule.android.foregroundActivity || appModule.android.startActivity).startActivityForResult(firebaseInviteIntent, REQUEST_INVITE_INTENT_ID);
 
       const callback = (eventData: AndroidActivityResultEventData) => {
         if (eventData.requestCode === REQUEST_INVITE_INTENT_ID) {
