@@ -28,7 +28,7 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
       ).logEvent(options.key, bundle);
 
       resolve();
