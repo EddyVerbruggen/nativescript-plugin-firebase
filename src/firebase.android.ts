@@ -314,7 +314,7 @@ firebase.init = arg => {
       initializeArguments = arg;
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
       ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
       if (typeof (com.google.firebase.database) !== "undefined" && typeof (com.google.firebase.database.ServerValue) !== "undefined") {
@@ -1114,7 +1114,7 @@ firebase.login = arg => {
 
         const signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(firebase._mGoogleApiClient);
 
-        appModule.android.currentContext.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
+        appModule.android.context.startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
 
         const callback = (eventData: AndroidActivityResultEventData) => {
           if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
