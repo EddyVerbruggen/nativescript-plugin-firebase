@@ -5,13 +5,11 @@ export function suggestReplies(options: MLKitSmartReplySuggestRepliesOptions): P
     try {
       const naturalLanguage = FIRNaturalLanguage.naturalLanguage();
       const smartReply = naturalLanguage.smartReply();
-      const conversation: Array<FIRTextMessage> = [];
-      options.conversation.forEach(m => conversation.push(new FIRTextMessage({
-        text: m.text,
-        isLocalUser: m.localUser,
-        timestamp: m.timestamp,
-        userID: m.userId
-      })));
+      const conversation: NSMutableArray<FIRTextMessage> = NSMutableArray.new();
+
+      options.conversation.forEach(m => conversation.addObject(
+          FIRTextMessage.alloc().initWithTextTimestampUserIDIsLocalUser(m.text, m.timestamp, m.userId, m.localUser)
+      ));
 
       smartReply.suggestRepliesForMessagesCompletion(conversation, (result: FIRSmartReplySuggestionResult, error: NSError) => {
         if (error) {
