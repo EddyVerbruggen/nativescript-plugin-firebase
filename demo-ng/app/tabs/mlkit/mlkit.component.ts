@@ -40,7 +40,7 @@ export class MLKitComponent {
     "Custom model",
     "Landmark recognition (cloud)",
     "Language identification",
-    "Smart Reply"
+    "Smart reply"
   ];
 
   private mlkitOnDeviceFeatures: Array<string> = [
@@ -268,22 +268,36 @@ export class MLKitComponent {
     firebase.mlkit.textrecognition.recognizeTextOnDevice({
       image: imageSource
     }).then((result: MLKitRecognizeTextResult) => {
-      const messages: Array<MLKitSmartReplyConversationMessage> = [];
-      result.blocks.forEach(block => messages.push({
+      const conversation: Array<MLKitSmartReplyConversationMessage> = [];
+      let personId = 0;
+
+      // just faking a conversation based on the text blocks we got from the image :)
+      result.blocks.forEach(block => conversation.push({
         text: block.text,
-        userId: "abc",
-        localUser: false,
-        timestamp: new Date().getTime()
+        userId: "person" + (++personId % 2 === 0 ? 1 : 2),
+        localUser: (personId % 2 === 0),
+        timestamp: new Date().getTime() - 500000 + (personId * 5000)
       }));
+
+      console.log(JSON.stringify(conversation));
+
       firebase.mlkit.smartreply.suggestReplies({
-        messages
+        conversation
       }).then((result: Array<string>) => {
+        console.log("result1: " + JSON.stringify(result));
         alert({
           title: `Suggestions`,
           message: JSON.stringify(result),
           okButtonText: "OK"
         });
-      }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+      }).catch(errorMessage => {
+        console.log("ML Kit error: " + errorMessage);
+        alert({
+          title: `Error getting suggestions`,
+          message: errorMessage,
+          okButtonText: "Pity.."
+        });
+      });
     }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 

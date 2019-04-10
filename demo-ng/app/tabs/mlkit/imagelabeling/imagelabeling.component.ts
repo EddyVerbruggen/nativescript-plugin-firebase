@@ -13,12 +13,6 @@ export class ImageLabelingComponent extends AbstractMLKitViewComponent {
     confidence: number;
   }>;
 
-  constructor() {
-    super();
-    // let's start with the torch on, just for show
-    this.torchOn = true;
-  }
-
   onImageLabelingResult(scanResult: any): void {
     const value: MLKitImageLabelingOnDeviceResult = scanResult.value;
     this.labels = value.labels;

@@ -11,6 +11,7 @@ export class FaceDetectionComponent extends AbstractMLKitViewComponent {
   faces: Array<MLKitDetectFacesResultFace>;
 
   mlKitAllOK: string;
+  allSmilingAndEyesOpen: boolean = false;
 
   onFaceDetectionResult(scanResult: any): any {
     const value: MLKitDetectFacesOnDeviceResult = scanResult.value;
@@ -18,12 +19,12 @@ export class FaceDetectionComponent extends AbstractMLKitViewComponent {
       this.faces = value.faces;
       console.log("this.faces: " + JSON.stringify(this.faces));
 
-      let allSmilingAndEyesOpen = true;
+      this.allSmilingAndEyesOpen = true;
       value.faces.forEach(face => {
-        allSmilingAndEyesOpen = allSmilingAndEyesOpen && face.smilingProbability && face.leftEyeOpenProbability && face.rightEyeOpenProbability &&
+        this.allSmilingAndEyesOpen = this.allSmilingAndEyesOpen && face.smilingProbability && face.leftEyeOpenProbability && face.rightEyeOpenProbability &&
             face.smilingProbability > 0.7 && face.leftEyeOpenProbability > 0.7 && face.rightEyeOpenProbability > 0.7;
       });
-      this.mlKitAllOK = `All smiling and eyes open? ${allSmilingAndEyesOpen ? 'Yes!' : 'Nope'}`;
+      this.mlKitAllOK = `All smiling and eyes open? ${this.allSmilingAndEyesOpen ? 'Yes!' : 'Nope'}`;
     }
   }
 }
