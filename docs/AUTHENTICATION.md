@@ -62,7 +62,8 @@ const firebaseWebApi = require("nativescript-plugin-firebase/app");
 As stated [here](https://firebase.google.com/docs/auth/ios/manage-users#get_the_currently_signed-in_user):
 
 > The recommended way to get the current user is by setting a listener on the Auth object
-
+<details>
+ <summary>Native API</summary>
 To listen to auth state changes you can register a listener during `init`:
 
 ```js
@@ -98,7 +99,35 @@ If - for some reason - you want more control over the listener you can use these
   
   // check if already listening to auth state changes
   firebase.hasAuthStateListener(listener);
+ ```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+The callback handler in will be called with the currentUser (undefined if not signed in) upon attaching the listener
+and when the auth state changes.
+
+```js
+  firebaseWebApi.auth().onAuthStateChanged((user?: User) => {
+    console.log(">> auth state changed: " + user);
+    if (user) {
+      this.set("userEmailOrPhone", user.email ? user.email : (user.phoneNumber ? user.phoneNumber : "N/A"));
+      alert({
+        title: "User signed in",
+        message: JSON.stringify(user),
+        okButtonText: "Nice!"
+      });
+    } else {
+      alert({
+        title: "User signed out",
+        okButtonText: "Bye!"
+      });
+    }
+  },
+error => console.log("OnAuthChanged Error: " + error));
 ```
+</details>
 
 ### Get Current User
 Once the user is logged in you can retrieve the currently logged in user:
