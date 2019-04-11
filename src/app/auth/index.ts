@@ -44,11 +44,12 @@ export namespace auth {
     }
 
     // Completed will never be called, but it is here to closely follow the web api interface.
+    // When called, the callback handler will be passed in the currentUser or undefined if not signed in
     public onAuthStateChanged(handler: (user: User) => void,  error?: (err) => any, completed?: Unsubscribe): Unsubscribe {
       this.authStateChangedHandler = handler;
       if (error) this.authStateOnErrorHandler = error;
       console.log(">> added onAuthStateChanged handler");
-
+      handler(this.currentUser);
       return () => {
         this.authStateChangedHandler = undefined;
         this.authStateOnErrorHandler = undefined;
