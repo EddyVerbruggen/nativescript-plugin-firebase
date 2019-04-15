@@ -771,6 +771,8 @@ dependencies {
 
     // In-App Messaging
     ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.1.1"
+    // not entirely sure this is needed, but doesn't hurt.. make sure to check the compatible version when bumping firebase-inappmessaging-display
+    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.squareup.picasso:picasso:2.5.2"
 
     // Cloud Storage
     ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:16.1.0"
