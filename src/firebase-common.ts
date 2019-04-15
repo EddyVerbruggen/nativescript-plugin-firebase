@@ -18,6 +18,7 @@ export class FieldValue {
   static delete = () => "DELETE_FIELD";
   static arrayUnion = (...elements: any[]) => new FieldValue("ARRAY_UNION", elements);
   static arrayRemove = (...elements: any[]) => new FieldValue("ARRAY_REMOVE", elements);
+  static increment = (n: number) => new firebase.firestore.FieldValue("INCREMENT", n);
 }
 
 export class GeoPoint {

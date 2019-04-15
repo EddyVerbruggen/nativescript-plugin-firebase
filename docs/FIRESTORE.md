@@ -6,7 +6,7 @@ During plugin installation you'll be asked whether or not you use Firestore.
 In case you're upgrading and you have the `firebase.nativescript.json` file in your project root, edit it and add: `"firestore": true`.
 Then run `rm -rf platforms && rm -rf node_modules && npm i`.
 
-## Functions
+## API
 All of these are 100% compatible with the Firestore Web API to make it easy to share code between web and native, and you can
 refer to the [Firestore web api docs](https://firebase.google.com/docs/firestore/data-model) (make sure to look at the 'WEB' tab of those code samples).
 
@@ -268,13 +268,27 @@ sanFranciscoDocument.delete().then(() => {
 To delete one or more fields in a document, do this (showing two flavors, use whatever you fancy):
 
 ```typescript
-import { firestore } from "nativescript-plugin-firebase");
+import { firestore } from "nativescript-plugin-firebase";
 const firebase = require("nativescript-plugin-firebase/app");
 
 firebase.firestore().collection("dogs").doc("fave")
     .update({
       field1ToDelete: firestore.FieldValue.delete(),
       field2ToDelete: firebase.firestore().FieldValue().delete(),
+    });
+```
+
+### Increment numbers
+To easily increment numbers (`int` or `float`), you can use the `increment` feature since plugin version 8.3.0.
+
+```typescript
+import { firestore } from "nativescript-plugin-firebase";
+const firebase = require("nativescript-plugin-firebase/app");
+
+firebase.firestore().collection("dogs").doc("fave")
+    .update({
+      age: firestore.FieldValue.increment(1),
+      lifePercentage: firebase.firestore().FieldValue().increment(0.0027),
     });
 ```
 

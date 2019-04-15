@@ -246,6 +246,7 @@ export class FirestoreComponent {
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
           // just fyi - both of these work:
           colors: firestore.FieldValue.arrayUnion("red", "blue"),
+          ageInt: firebase.firestore().FieldValue().increment(2),
           messages: firebase.firestore().FieldValue().arrayUnion({
             message: "Test 1",
             source: "central",
@@ -262,6 +263,7 @@ export class FirestoreComponent {
           last: "Updated From 'arrayRemove'",
           updateTs: firebase.firestore().FieldValue().serverTimestamp(),
           colors: firestore.FieldValue.arrayUnion("red"),
+          ageDouble: firebase.firestore().FieldValue().increment(1.1),
           messages: firebase.firestore().FieldValue().arrayRemove({
             message: "Test 1",
             source: "central",

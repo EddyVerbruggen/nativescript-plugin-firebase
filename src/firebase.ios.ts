@@ -2178,6 +2178,13 @@ function fixSpecialField(item): any {
       return FIRFieldValue.fieldValueForArrayUnion(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value);
     } else if (fieldValue.type === "ARRAY_REMOVE") {
       return FIRFieldValue.fieldValueForArrayRemove(Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value);
+    } else if (fieldValue.type === "INCREMENT") {
+      const isInt = fieldValue.value % 1 === 0;
+      if (isInt) {
+        return FIRFieldValue.fieldValueForIntegerIncrement(fieldValue.value);
+      } else {
+        return FIRFieldValue.fieldValueForDoubleIncrement(fieldValue.value);
+      }
     } else {
       console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!");
     }

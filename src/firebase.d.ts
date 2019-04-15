@@ -903,7 +903,7 @@ export namespace firestore {
     commit(): Promise<void>;
   }
 
-  export type FieldValueType = "ARRAY_UNION" | "ARRAY_REMOVE";
+  export type FieldValueType = "ARRAY_UNION" | "ARRAY_REMOVE" | "INCREMENT";
 
   export class FieldValue {
     constructor(type: FieldValueType, value: any);
@@ -912,6 +912,7 @@ export namespace firestore {
     static delete: () => "DELETE_FIELD";
     static arrayUnion: (...elements: any[]) => FieldValue;
     static arrayRemove: (...elements: any[]) => FieldValue;
+    static increment: (n: number) => FieldValue;
   }
 
   export interface SnapshotListenOptions {

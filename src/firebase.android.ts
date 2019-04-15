@@ -150,6 +150,8 @@ firebase.toHashMap = obj => {
             let values: Array<any> = Array.isArray(fieldValue.value[0]) ? fieldValue.value[0] : fieldValue.value;
             values = values.map(v => typeof (v) === "object" ? firebase.toHashMap(v) : v);
             node.put(property, com.google.firebase.firestore.FieldValue.arrayRemove(values));
+          } else if (fieldValue.type === "INCREMENT") {
+            node.put(property, com.google.firebase.firestore.FieldValue.increment(fieldValue.value));
           } else {
             console.log("You found a bug! Please report an issue at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues, mention fieldValue.type = '" + fieldValue.type + "'. Thanks!");
           }

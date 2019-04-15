@@ -18,7 +18,8 @@ export namespace firestore {
         serverTimestamp: () => "SERVER_TIMESTAMP",
         delete: () => "DELETE_FIELD",
         arrayUnion: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_UNION", elements),
-        arrayRemove: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_REMOVE", elements)
+        arrayRemove: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_REMOVE", elements),
+        increment: (n: number) => new firebase.firestore.FieldValue("INCREMENT", n)
       };
     }
 
