@@ -11,6 +11,7 @@ public class FirebasePlugin {
 
   private static String cachedToken;
   private static String cachedNotification;
+  private static boolean preventInitialRegisterTokenCallback = false;
 
   private static FirebasePluginListener onPushTokenReceivedCallback;
   private static FirebasePluginListener onNotificationReceivedCallback;
@@ -19,7 +20,13 @@ public class FirebasePlugin {
     new Thread() {
       public void run() {
         try {
-          FirebaseInstanceId.getInstance().getToken(senderId, "FCM");
+          String token = FirebaseInstanceId.getInstance().getToken(senderId, "FCM");
+
+          if (!preventInitialRegisterTokenCallback) {
+            executeOnPushTokenReceivedCallback(token);
+          }
+
+          preventInitialRegisterTokenCallback = false;
         } catch (IOException e) {
           Log.e(TAG, "Error getting a token from FCM: " + e.getMessage(), e);
         }
@@ -44,8 +51,14 @@ public class FirebasePlugin {
     new Thread() {
       public void run() {
         try {
-//          FirebaseInstanceId.getInstance().deleteToken(senderId, "FCM");
-          FirebaseInstanceId.getInstance().deleteInstanceId();
+          // No matter the workflow, on unregister we must ensure that subsequent calls to register
+          // will trigger any callbacks.
+          preventInitialRegisterTokenCallback = false;
+
+          FirebaseInstanceId.getInstance().deleteToken(senderId, "FCM");
+          // Do not use deleteInstanceId because by default FCM automatically re-initializes
+          // the token and we get onPushTokenReceivedCallback triggered.
+//          FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (IOException e) {
           Log.e(TAG, "Error deleting token in FCM: " + e.getMessage(), e);
         }
@@ -54,10 +67,17 @@ public class FirebasePlugin {
   }
 
   public static void setOnPushTokenReceivedCallback(FirebasePluginListener callbacks) {
+    // Workflow 1: User uses the registerForPushNotifications
+    // In this case we are getting a double callback on initial app start up, since the FB instance
+    // generates a new token at application startup automatically. So we need to prevent
+    // the one triggered from the register.
+    // Workflow 2: Users uses addPushTokenReceivedCallback directly
+    // In this case we need to emit the token
     onPushTokenReceivedCallback = callbacks;
     if (cachedToken != null) {
       executeOnPushTokenReceivedCallback(cachedToken);
       cachedToken = null;
+      preventInitialRegisterTokenCallback = true;
     }
   }
 
