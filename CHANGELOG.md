@@ -3,7 +3,7 @@
 - [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 - [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
-## 8.3.0 (2019, April ?)
+## 8.2.1 (2019, April 17)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/99?closed=1)
 
 
