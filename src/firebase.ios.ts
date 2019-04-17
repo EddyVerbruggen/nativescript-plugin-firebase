@@ -58,29 +58,40 @@ firebase.areNotificationsEnabled = firebaseMessaging.areNotificationsEnabled;
 
 firebase.functions = firebaseFunctions;
 
+NSNotificationCenter.defaultCenter.addObserverForNameObjectQueueUsingBlock(
+    UIApplicationDidFinishLaunchingNotification,
+    null,
+    NSOperationQueue.mainQueue,
+    appNotification => {
+      if (!firebase._configured) {
+        firebase._configured = true;
+        if (typeof (FIRApp) !== "undefined") {
+          FIRApp.configure();
+        }
+      }
+    });
+
 firebase.addAppDelegateMethods = appDelegate => {
   // we need the launchOptions for this one so it's a bit hard to use the UIApplicationDidFinishLaunchingNotification pattern we're using for other things
-  appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
-    if (!firebase._configured) {
-      firebase._configured = true;
-      if (typeof (FIRApp) !== "undefined") {
-        FIRApp.configure();
+  // however, let's not override 'applicationDidFinishLaunchingWithOptions' if we don't really need it:
+  if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider || typeof (FBSDKApplicationDelegate) !== "undefined") {
+    appDelegate.prototype.applicationDidFinishLaunchingWithOptions = (application, launchOptions) => {
+      // If the app was terminated and iOS is launching it in result of a push notification tapped by the user, this will hold the notification data.
+      if (launchOptions) {
+        const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
+        if (remoteNotification) {
+          firebaseMessaging.handleRemoteNotification(application, remoteNotification);
+        }
       }
-    }
 
-    // If the app was terminated and iOS is launching it in result of a push notification tapped by the user, this will hold the notification data.
-    if (launchOptions) {
-      const remoteNotification = launchOptions.objectForKey(UIApplicationLaunchOptionsRemoteNotificationKey);
-      if (remoteNotification) {
-        firebaseMessaging.handleRemoteNotification(application, remoteNotification);
+      // Firebase Facebook authentication
+      if (typeof (FBSDKApplicationDelegate) !== "undefined") {
+        FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions);
       }
-    }
-    // Firebase Facebook authentication
-    if (typeof (FBSDKApplicationDelegate) !== "undefined") {
-      FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions);
-    }
-    return true;
-  };
+
+      return true;
+    };
+  }
 
   // there's no notification event to hook into for this one, so using the appDelegate
   if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRInvites) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {

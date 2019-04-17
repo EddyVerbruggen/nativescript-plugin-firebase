@@ -541,8 +541,7 @@ function _processPendingActionTakenNotifications() {
 }
 
 function _addObserver(eventName, callback) {
-  const queue = iOSUtils.getter(NSOperationQueue, NSOperationQueue.mainQueue);
-  return iOSUtils.getter(NSNotificationCenter, NSNotificationCenter.defaultCenter).addObserverForNameObjectQueueUsingBlock(eventName, null, queue, callback);
+  return NSNotificationCenter.defaultCenter.addObserverForNameObjectQueueUsingBlock(eventName, null, NSOperationQueue.mainQueue, callback);
 }
 
 // see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc
