@@ -23,6 +23,7 @@ let _messagingConnected: boolean = null;
 let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
 let _showNotifications: boolean = true;
 let _showNotificationsWhenInForeground: boolean = false;
+let _autoClearBadge: boolean = true;
 
 // Track whether or not registration for remote notifications was request.
 // This way we can suppress the "Allow notifications" consent popup until the listeners are passed in.
@@ -34,6 +35,7 @@ export function initFirebaseMessaging(options) {
   }
   _showNotifications = options.showNotifications === undefined ? _showNotifications : !!options.showNotifications;
   _showNotificationsWhenInForeground = options.showNotificationsWhenInForeground === undefined ? _showNotificationsWhenInForeground : !!options.showNotificationsWhenInForeground;
+  _autoClearBadge = options.autoClearBadge === undefined ? _autoClearBadge : !!options.autoClearBadge;
 
   if (options.onMessageReceivedCallback !== undefined) {
     addOnMessageReceivedCallback(options.onMessageReceivedCallback);
@@ -516,7 +518,7 @@ function _processPendingNotifications() {
     }
     _pendingNotifications = [];
 
-    if (app.applicationState === UIApplicationState.Active) {
+    if (app.applicationState === UIApplicationState.Active && _autoClearBadge) {
       app.applicationIconBadgeNumber = 0;
     }
   }
@@ -534,7 +536,7 @@ function _processPendingActionTakenNotifications() {
     }
     _pendingActionTakenNotifications = [];
 
-    if (app.applicationState === UIApplicationState.Active) {
+    if (app.applicationState === UIApplicationState.Active && _autoClearBadge) {
       app.applicationIconBadgeNumber = 0;
     }
   }

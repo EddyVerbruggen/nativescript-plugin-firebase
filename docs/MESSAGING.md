@@ -175,7 +175,7 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
 
-> Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0. Note that launching the app clears the badge anyway.
+> Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0. 
 
 ### Notfication-popup example
 
@@ -301,6 +301,15 @@ Add the `showWhenInForeground` flag to your payload:
     "showWhenInForeground": true
   }
 }
+```
+
+### (iOS) Disable automatic clearing the badge
+Currently by default, when launching the app, badge is cleared. You can disable the feature by passing a flag in your init option.
+
+```js
+firebase.init({
+  autoClearBadge: false
+});
 ```
 
 ## What if iOS doesn't show/receive notifications in the background?

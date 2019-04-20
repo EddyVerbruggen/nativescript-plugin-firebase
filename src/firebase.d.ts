@@ -107,6 +107,12 @@ export interface MessagingOptions {
    * Currently used on iOS only. Default false.
    */
   showNotificationsWhenInForeground?: boolean;
+
+  /**
+   * Automatically clear the badges on starting.
+   * Currently used on iOS only. Default true.
+   */
+  autoClearBadge?:boolean;
 }
 
 /**
