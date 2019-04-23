@@ -94,14 +94,14 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     application.on("resume", arg => this.runCamera());
   }
 
-  private hasCamera() {
+  private hasCamera(): boolean {
     return !!utils.ad
         .getApplicationContext()
         .getPackageManager()
         .hasSystemFeature("android.hardware.camera");
   }
 
-  private initView(nativeView) {
+  private initView(nativeView): void {
     this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
     nativeView.addView(this.surfaceView);
     this.runCamera();

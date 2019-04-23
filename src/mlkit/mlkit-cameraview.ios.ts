@@ -31,7 +31,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     return v;
   }
 
-  private canUseCamera() {
+  private canUseCamera(): boolean {
     try {
       return !!AVCaptureDeviceDiscoverySession &&
           AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo) !== null &&
@@ -41,7 +41,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     }
   }
 
-  private initView() {
+  private initView(): void {
     // find a suitable device
     this.captureDevice = AVCaptureDeviceDiscoverySession.discoverySessionWithDeviceTypesMediaTypePosition(
         <any>[AVCaptureDeviceTypeBuiltInWideAngleCamera],
