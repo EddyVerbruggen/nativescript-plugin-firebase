@@ -638,7 +638,7 @@ Upon successful authentication, Google creates an access token that can be obtai
 #### iOS
 If you didn't choose this feature during installation you can open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the `GoogleSignIn` line.
  
-Make sure the URL Scheme for `REVERSED_CLIENT_ID` is in `app/App_Resources/iOS/Info.plist`:
+Make sure the URL Scheme for `REVERSED_CLIENT_ID` is in `app/App_Resources/iOS/Info.plist`.  The value of `REVERSED_CLIENT_ID` can be found in your `App_Resources/iOS/GoogleService-Info.plist` :
  
 ```xml
 	<key>CFBundleURLTypes</key>
