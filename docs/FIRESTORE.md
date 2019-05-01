@@ -279,7 +279,7 @@ firebase.firestore().collection("dogs").doc("fave")
 ```
 
 ### Increment numbers
-To easily increment numbers (`int` or `float`), you can use the `increment` feature since plugin version 8.3.0.
+To easily increment numbers (`int` or `float`), you can use the `increment` feature since plugin version 8.2.1.
 
 ```typescript
 import { firestore } from "nativescript-plugin-firebase";
