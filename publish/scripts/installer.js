@@ -515,10 +515,10 @@ const string3 = \`
   // Per https://docs.fabric.io/apple/crashlytics/enhanced-reports.html#custom-logs :
   // Crashlytics ensures that all log entries are recorded, even if the very next line of code crashes.
   // This means that logging must incur some IO. Be careful when logging in performance-critical areas.
-  
+
   // As per the note above, enabling this can affect performance if too much logging is present.
   // stdout->_write = stdout_redirect;
-  
+
   // stderr usually only occurs during critical failures;
   // so it is usually essential to identifying crashes, especially in JS
   stderr->_write = stderr_redirect;
@@ -728,8 +728,8 @@ repositories {
 dependencies {
     def supportVersion = project.hasProperty("supportVersion") ? project.supportVersion : "26.1.0"
     def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : "16.0.1"
-    
-    if (googlePlayServicesVersion != '+' && VersionNumber.parse(googlePlayServicesVersion) < VersionNumber.parse('15.0.+')) {
+
+    if (googlePlayServicesVersion != '+' && org.gradle.util.VersionNumber.parse(googlePlayServicesVersion) < org.gradle.util.VersionNumber.parse('15.0.+')) {
         throw new GradleException(" googlePlayServicesVersion set too low, please update to at least 15.0.0 / 15.0.+ (currently set to $googlePlayServicesVersion)");
     }
 
