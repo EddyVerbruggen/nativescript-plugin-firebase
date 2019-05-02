@@ -19,3 +19,5 @@ export declare function setDouble(key: string, value: number): void;
 export declare function setUserId(userId: string): void;
 
 export declare function crash(): void;
+
+export declare function setCrashlyticsCollectionEnabled(enabled: boolean): void;

@@ -82,6 +82,8 @@ public class FirebasePlugin {
   }
 
   public static void setOnNotificationReceivedCallback(FirebasePluginListener callbacks) {
+    // TODO perhaps use this to set a badge: https://github.com/gogoout/nativescript-plugin-badge/blob/28e79f6d5614ec9b9b98bb07c67df32fdc42ba9a/src/badge.android.ts#L13
+    //  Default count=1, and perhaps pass it in via the notification payload (like on iOS)
     onNotificationReceivedCallback = callbacks;
     if (cachedNotification != null) {
       executeOnNotificationReceivedCallback(cachedNotification);

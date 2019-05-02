@@ -104,5 +104,9 @@
   <string>Required for Firebase Invites</string>
   <key>GADApplicationIdentifier</key>
   <string>ca-app-pub-9517346003011652~2508636525</string>
+
+  <!-- we enable this during init, but can also do it through crashlytics.setCrashlyticsCollectionEnabled(true) after requesting the user to opt-in -->
+  <key>firebase_crashlytics_collection_enabled</key>
+  <string>false</string>
 </dict>
 </plist>

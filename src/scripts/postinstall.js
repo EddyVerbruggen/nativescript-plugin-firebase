@@ -2251,7 +2251,7 @@ function coerce(version) {
   if (match == null)
     return null;
 
-  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0'));
+  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0')); 
 }
 
 
@@ -4940,6 +4940,7 @@ dependencies {
 
     // Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:17.6.0"
+    // ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 
     // In-App Messaging
     ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.1.1"

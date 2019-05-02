@@ -1,3 +1,5 @@
+import * as appModule from "tns-core-modules/application";
+
 declare const com: any;
 
 export function sendCrashLog(exception: any /* java.lang.Exception */): void {
@@ -55,6 +57,14 @@ export function setUserId(id: string): void {
 export function crash(): void {
   if (isCrashlyticsAvailable()) {
     com.crashlytics.android.Crashlytics.crash();
+  }
+}
+
+export function setCrashlyticsCollectionEnabled(enabled: boolean): void {
+  if (isCrashlyticsAvailable()) {
+    io.fabric.sdk.android.Fabric.with(
+        appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance(),
+        [new com.crashlytics.android.Crashlytics()]);
   }
 }
 

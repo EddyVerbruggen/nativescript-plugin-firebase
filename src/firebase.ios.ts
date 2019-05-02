@@ -383,6 +383,10 @@ firebase.init = arg => {
 
       FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
+      if (arg.crashlyticsCollectionEnabled && typeof (Crashlytics) !== "undefined") {
+        Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
+      }
+
       if (!firebase._configured) {
         firebase._configured = true;
         if (typeof (FIRApp) !== "undefined") {

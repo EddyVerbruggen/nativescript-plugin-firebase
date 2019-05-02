@@ -30,6 +30,10 @@
         android:value="ca-app-pub-9517346003011652~4795634921"/>
 
     <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
+
+    <meta-data
         android:name="com.facebook.sdk.ApplicationId"
         android:value="@string/facebook_app_id"/>
 

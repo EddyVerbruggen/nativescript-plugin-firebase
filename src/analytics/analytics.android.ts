@@ -93,7 +93,7 @@ export function logComplexEvent(options: LogComplexEventOptions): Promise<void> 
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
       ).logEvent(options.key, bundle);
 
       resolve();
@@ -112,7 +112,8 @@ export function setUserId(arg): Promise<void> {
         return;
       }
 
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()).setUserId(arg.userId);
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+          appModule.android.context || com.tns.NativeScriptApplication.getInstance()).setUserId(arg.userId);
 
       resolve();
     } catch (ex) {
@@ -135,7 +136,7 @@ export function setUserProperty(options: SetUserPropertyOptions): Promise<void> 
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
       ).setUserProperty(options.key, options.value);
 
       resolve();
@@ -155,7 +156,7 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
       ).setCurrentScreen(appModule.android.foregroundActivity, options.screenName, null);
 
       resolve();
@@ -168,12 +169,12 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
 
 export function setAnalyticsCollectionEnabled(enabled: boolean): void {
   com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-      appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+      appModule.android.context || com.tns.NativeScriptApplication.getInstance()
   ).setAnalyticsCollectionEnabled(enabled);
 }
 
 export function setSessionTimeoutDuration(seconds: number): void {
   com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-      appModule.android.currentContext || com.tns.NativeScriptApplication.getInstance()
+      appModule.android.context || com.tns.NativeScriptApplication.getInstance()
   ).setSessionTimeoutDuration(seconds * 1000); // Android expects ms
 }

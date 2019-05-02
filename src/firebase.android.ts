@@ -319,6 +319,17 @@ firebase.init = arg => {
           appModule.android.context || com.tns.NativeScriptApplication.getInstance()
       ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
+      // note that this only makes sense if crash reporting was disabled in AndroidManifest.xml
+      if (arg.crashlyticsCollectionEnabled && typeof (com.crashlytics) !== "undefined" && typeof (com.crashlytics.android.Crashlytics) !== "undefined") {
+        io.fabric.sdk.android.Fabric.with(
+            appModule.android.context || com.tns.NativeScriptApplication.getInstance(),
+            [new com.crashlytics.android.Crashlytics()]);
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+      ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
+
       if (typeof (com.google.firebase.database) !== "undefined" && typeof (com.google.firebase.database.ServerValue) !== "undefined") {
         firebase.ServerValue = {
           TIMESTAMP: firebase.toJsObject(com.google.firebase.database.ServerValue.TIMESTAMP)

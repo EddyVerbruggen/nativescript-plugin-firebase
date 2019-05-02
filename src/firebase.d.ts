@@ -125,14 +125,25 @@ export interface InitOptions extends MessagingOptions {
    * Default true.
    */
   analyticsCollectionEnabled?: boolean;
+
+  /**
+   * Allow the app to collect Crashlytics data and send it to Firebase.
+   * Can also be set later with crashlytics.setCrashReportingEnabled.
+   * Only useful in case it was disabled in AndroidManfifest.xml and/or Info.plist,
+   * see https://firebase.google.com/docs/crashlytics/customize-crash-reports
+   */
+  crashlyticsCollectionEnabled?: boolean;
+
   /**
    * Allow disk persistence. Default true for Firestore, false for regular Firebase DB.
    */
   persist?: boolean;
+
   /**
    * Get notified when the user is logged in.
    */
   onAuthStateChanged?: (data: AuthStateData) => void;
+
   /**
    * Attempt to sign out before initializing, useful in case previous
    * project token is cached which leads to following type of error:
@@ -140,6 +151,7 @@ export interface InitOptions extends MessagingOptions {
    * Default false.
    */
   iOSEmulatorFlush?: boolean;
+
   /**
    * For Firebase Storage you can pass in something like 'gs://n-plugin-test.appspot.com'
    * here so we can cache it. Otherwise pass in the 'bucket' param when using Storage features.

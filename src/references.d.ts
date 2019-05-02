@@ -50,3 +50,5 @@
 /// <reference path="./platforms/android/typings/playservices/android.d.ts" />
 /// <reference path="./platforms/android/typings/remoteconfig/android.d.ts" />
 /// <reference path="./platforms/android/typings/inappmessaging/android.d.ts" />
+/// <reference path="./platforms/android/typings/crashlytics/fabric.d.ts" />
+/// <reference path="./platforms/android/typings/crashlytics/crashlytics.d.ts" />

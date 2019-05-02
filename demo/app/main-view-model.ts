@@ -421,6 +421,7 @@ export class HelloWorldModel extends Observable {
 
   public doInit(): void {
     firebase.init({
+      crashlyticsCollectionEnabled: true,
       // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
       // analyticsCollectionEnabled: false, // default true
