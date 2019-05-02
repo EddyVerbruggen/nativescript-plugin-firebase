@@ -112,7 +112,7 @@ export interface MessagingOptions {
    * Automatically clear the badges on starting.
    * Currently used on iOS only. Default true.
    */
-  autoClearBadge?:boolean;
+  autoClearBadge?: boolean;
 }
 
 /**
