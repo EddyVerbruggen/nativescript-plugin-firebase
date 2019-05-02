@@ -9,6 +9,15 @@ You will be prompted during installation of the plugin to enable either Crashlyt
 Note that if you want to use Crashlytics, make sure your `firebase.nativescript.json` file has `"crashlytics": true` and `"crash_reporting": false`,
 then remove the `platforms` folder so these changes are picked up.
 
+## Enabling Opt-In Crashlytics Collection (GDPR, anyone?)
+Since plugin version 8.3.0 you can disable Crashlytics collection by default, and enabled it at runtime.
+
+Add [this](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/7418905a22661dfc3bf40d1a67a5e7254c89d54e/demo/app_resources/Android/src/main/AndroidManifest.xml#L32-L34) to your `AndroidManifest.xml`
+and [this](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/7418905a22661dfc3bf40d1a67a5e7254c89d54e/demo/app_resources/iOS/Info.plist#L109-L110) to your `Info.plist`, so it's disabled by default.
+
+You can then either pass `crashlyticsCollectionEnabled: true` in `firebase.init()`,
+or call `crashlytics.setCrashlyticsCollectionEnabled(true)` to enabled Crashlytics collection for this user.
+
 ## Configuration in the Firebase Console
 When setting up Crashlytics, select "This app is new to Crashlytics" and press "Next".
 Then the screen changes to something like "waiting for your first crash report".
