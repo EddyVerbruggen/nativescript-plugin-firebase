@@ -5,6 +5,7 @@ You'll be 😃 to learn this plugin has a *lite* mode that won't add any native 
 Go to you app's root folder and remove `firebase.nativescript.json`, then run `npm i`. You will be prompted `"Are you using this plugin ONLY as a Push Notification client for an external (non-Firebase) Push service? (y/n)"`. Answer:
 - `y` if you don't want to use any of the Firebase features (Firestore, Realtime DB, Storage, etc), or
 - `n` in case you do want to use some of the features (you will be asked which features later).
+- _If you want to use an external messaging provider, but ALSO want to use other Firebase features, then answer `n` as well and after finishing all questions, open `firebase.nativescript.json` and add `"external_messaging": true`. On Android that won't do anything special, but on iOS it will avoid loading the Firebase Messaging Pod._
 
 > The remainder of this document applies to both situations, so please continue reading.
 
