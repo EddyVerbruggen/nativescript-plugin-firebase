@@ -64,6 +64,13 @@ crashlytics.setFloat("test_key", 54646.45);
 crashlytics.setUserId("user#42");
 ```
 
+### `log`
+Add a message that will be logged with an error and showing int he Firebase console on the 'Logs' tab of the error details.
+
+```typescript
+crashlytics.log("more log info...");
+```
+
 ### `crash`
 For easier testing, version 8.2.0 exposed this `crash()` function of the native Firebase Crashlytics SDKs:
 
