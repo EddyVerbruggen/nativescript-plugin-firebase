@@ -113,7 +113,7 @@ function getInterpreter(localModelFile: string): FIRModelInterpreter {
       localModelRegistrationSuccess = true;
     } else {
       let localModelFilePath: string;
-      if (localModelFile.indexOf("~/") === 0) {
+      if (localModelFile.startsWith("~/")) {
         localModelFilePath = fs.knownFolders.currentApp().path + localModelFile.substring(1);
       } else {
         localModelFilePath = NSBundle.mainBundle.pathForResourceOfType(
@@ -184,7 +184,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
       });
 
       let labels: Array<string>;
-      if (options.labelsFile.indexOf("~/") === 0) {
+      if (options.labelsFile.startsWith("~/")) {
         labels = getLabelsFromAppFolder(options.labelsFile);
       } else {
         const labelsFile = NSBundle.mainBundle.pathForResourceOfType(

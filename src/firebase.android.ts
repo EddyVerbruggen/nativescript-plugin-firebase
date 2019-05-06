@@ -282,7 +282,7 @@ firebase.toJsObject = javaObj => {
           node[item.getKey()] = firebase.toJsObject(item.getValue());
         }
       } catch (e) {
-        if (JSON.stringify(e).indexOf("Attempt to use cleared object reference") > -1) {
+        if (JSON.stringify(e).includes("Attempt to use cleared object reference")) {
           console.log("Error while transforming Java to Js: " + e);
         } else {
           console.log("PLEASE REPORT THIS AT https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: Tried to serialize an unsupported type: " + javaObj.getClass().getName() + ", error: " + e);
@@ -983,7 +983,7 @@ firebase.login = arg => {
           onVerificationFailed: firebaseException => {
             firebase._verifyPhoneNumberInProgress = false;
             const errorMessage = firebaseException.getMessage();
-            if (errorMessage.indexOf("INVALID_APP_CREDENTIAL") > -1) {
+            if (errorMessage.includes("INVALID_APP_CREDENTIAL")) {
               this.reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
             } else {
               this.reject(errorMessage);
