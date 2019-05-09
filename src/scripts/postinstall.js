@@ -2251,7 +2251,7 @@ function coerce(version) {
   if (match == null)
     return null;
 
-  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0')); 
+  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0'));
 }
 
 
@@ -4726,7 +4726,7 @@ module.exports = function($logger, $projectData, hookArgs) {
           }
 
           // Logging from stdout/stderr
-          $logger.out('Add iOS crash logging');
+          $logger.info('Add iOS crash logging');
           const mainmPath = path.join($projectData.platformsDir, 'ios', 'internal', 'main.m');
           if (fs.existsSync(mainmPath)) {
             let mainmContent = fs.readFileSync(mainmPath).toString();
@@ -5050,12 +5050,12 @@ return new Promise(function(resolve, reject) {
 
             // copy correct version to destination
             if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJson))) {
-                $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
+                $logger.info("Copy " + sourceGoogleJson + " to " + destinationGoogleJson + ".");
                 fs.writeFileSync(destinationGoogleJson, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else if (fs.existsSync(sourceGoogleJson) && fs.existsSync(path.dirname(destinationGoogleJsonAlt))) {
                 // NativeScript < 4 doesn't have the 'app' folder
-                $logger.out("Copy " + sourceGoogleJson + " to " + destinationGoogleJsonAlt + ".");
+                $logger.info("Copy " + sourceGoogleJson + " to " + destinationGoogleJsonAlt + ".");
                 fs.writeFileSync(destinationGoogleJsonAlt, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else {
@@ -5173,11 +5173,11 @@ var copyPlist = function(copyPlistOpts) {
         // if we have both dev/prod versions, we copy (or overwrite) GoogleService-Info.plist in destination dir
         if (fs.existsSync(sourceGooglePlistProd) && fs.existsSync(sourceGooglePlistDev)) {
             if (copyPlistOpts.buildType==='production') { // use prod version
-                copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistProd + " to " + destinationGooglePlist + ".");
+                copyPlistOpts.$logger.info("nativescript-plugin-firebase: copy " + sourceGooglePlistProd + " to " + destinationGooglePlist + ".");
                 fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistProd));
                 return true;
             } else { // use dev version
-                copyPlistOpts.$logger.out("nativescript-plugin-firebase: copy " + sourceGooglePlistDev + " to " + destinationGooglePlist + ".");
+                copyPlistOpts.$logger.info("nativescript-plugin-firebase: copy " + sourceGooglePlistDev + " to " + destinationGooglePlist + ".");
                 fs.writeFileSync(destinationGooglePlist, fs.readFileSync(sourceGooglePlistDev));
                 return true;
             }
@@ -5222,7 +5222,7 @@ var fs = require("fs");
 module.exports = function($logger, $projectData) {
 
     return new Promise(function(resolve, reject) {
-        $logger.out("Configure firebase");
+        $logger.info("Configure firebase");
         let projectBuildGradlePath = path.join($projectData.platformsDir, "android", "build.gradle");
         if (fs.existsSync(projectBuildGradlePath)) {
             let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
