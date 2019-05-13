@@ -163,7 +163,13 @@ export function registerForPushNotifications(options?: MessagingOptions): Promis
       }
 
       initFirebaseMessaging(options);
-      getSenderId().then(senderId => org.nativescript.plugins.firebase.FirebasePlugin.registerForPushNotifications(senderId));
+
+      getSenderId()
+          .then(senderId => {
+            org.nativescript.plugins.firebase.FirebasePlugin.registerForPushNotifications(senderId);
+            resolve();
+          })
+          .catch(e => reject(e));
     } catch (ex) {
       console.log("Error in messaging.registerForPushNotifications: " + ex);
       reject(ex);
