@@ -1098,29 +1098,27 @@ module.exports = function($logger, $projectData) {
             appBuildGradleContent = appBuildGradleContent.replace("ensureMetadataOutDir.finalizedBy(buildMetadata)", "ensureMetadataOutDir.finalizedBy(buildMetadata)\\n\\t\\tbuildMetadata.finalizedBy(copyMetadata)");
             appBuildGradleContent += \`
 task copyMetadata {
-  doLast {
-    copy {
-        from "$projectDir/src/main/assets/metadata"
-        def toDir = project.hasProperty("release") ? "release" : "debug"
-        def toAssetsDir = "assets"
-
-        if (new File("$projectDir/build/intermediates/merged_assets").listFiles() != null) {
-          toAssetsDir = "merged_assets"
-          toDir = new File("$projectDir/build/intermediates/merged_assets").listFiles()[0].name
-          if (toDir == 'debug') {
-            toDir += "/mergeDebugAssets"
-          } else {
-            toDir += "/mergeReleaseAssets"
-          }
-          toDir += "/out"
-        } else if (new File("$projectDir/build/intermediates/assets").listFiles() != null) {
-          toDir = new File("$projectDir/build/intermediates/assets").listFiles()[0].name
-          if (toDir != 'debug' && toDir != 'release') {
-            toDir += "/release"
+  doFirst {
+    android.applicationVariants.all { variant ->
+      def provider = variant.getMergeAssetsProvider()
+      if (variant.buildType.name == project.selectedBuildType) {
+        def task = provider.get();
+        for (File file : task.getOutputs().getFiles()) {
+          if (!file.getPath().contains("/incremental/")) {
+            project.ext.mergedAssetsOutputPath = file.getPath()
           }
         }
-
-        into "$projectDir/build/intermediates/" + toAssetsDir + "/" + toDir + "/metadata"
+      }
+    }
+  }
+  doLast {
+    copy {
+      if (!project.mergedAssetsOutputPath) {
+        // mergedAssetsOutputPath not found fallback to the default value for android gradle plugin 3.4.0
+        project.ext.mergedAssetsOutputPath = "$projectDir/build/intermediates/assets/\${project.selectedBuildType}/out"
+      }
+        from "$projectDir/src/main/assets/metadata"
+      into "\${project.mergedAssetsOutputPath}/metadata"
     }
   }
 }\`;
