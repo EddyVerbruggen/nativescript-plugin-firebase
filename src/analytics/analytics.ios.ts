@@ -125,7 +125,7 @@ export function logComplexEvent(options: LogComplexEventOptions): Promise<void> 
         for (let p in options.parameters) {
           const param = options.parameters[p];
           if (param.type === "array" && param.value !== undefined) {
-            const listArray = new Array();
+            const listArray = [];
             for (let val in param.value) {
               const value = param.value[val];
               if (value.parameters !== undefined) {
@@ -219,4 +219,8 @@ export function setAnalyticsCollectionEnabled(enabled: boolean): void {
 
 export function setSessionTimeoutDuration(seconds: number): void {
   FIRAnalytics.setSessionTimeoutInterval(seconds);
+}
+
+export function iOSHandleOpenURL(url: any /* NSURL */): void {
+  FIRAnalytics.handleOpenURL(url);
 }

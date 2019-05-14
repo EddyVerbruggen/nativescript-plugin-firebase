@@ -75,3 +75,5 @@ export declare function setScreenName(options: SetScreenNameOptions): Promise<vo
 export declare function setAnalyticsCollectionEnabled(enabled: boolean): void;
 
 export declare function setSessionTimeoutDuration(seconds: number): void;
+
+export declare function iOSHandleOpenURL(url: any /* NSURL */): void;
