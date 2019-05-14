@@ -2,6 +2,8 @@ import * as application from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 
+declare const global: any;
+const ActivityCompatClass = useAndroidX() ? global.androidx.core.app.ActivityCompat : android.support.v4.app.ActivityCompat;
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
 // declare const com, android: any;
@@ -15,6 +17,10 @@ class SizePair {
     width: number;
     height: number;
   };
+}
+
+function useAndroidX() {
+  return global.androidx && global.androidx.appcompat;
 }
 
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
@@ -78,7 +84,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
         // invoke the permission dialog
-        (android.support.v4.app.ActivityCompat as any).requestPermissions(
+        ActivityCompatClass.requestPermissions(
             application.android.foregroundActivity || application.android.startActivity,
             [android.Manifest.permission.CAMERA],
             CAMERA_PERMISSION_REQUEST_CODE);

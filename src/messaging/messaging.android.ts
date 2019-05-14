@@ -4,7 +4,8 @@ import * as application from "tns-core-modules/application/application";
 import { PushNotificationModel } from "./messaging.ios";
 import { MessagingOptions } from "../firebase";
 
-declare const android, com, org: any;
+declare const android, com, org, global: any;
+const NotificationManagerCompatClass = useAndroidX() ? global.androidx.core.app.NotificationManagerCompat : android.support.v4.app.NotificationManagerCompat;
 
 let _launchNotification = null;
 let _senderId: string = null;
@@ -241,11 +242,15 @@ export function unsubscribeFromTopic(topicName) {
   });
 }
 
+function useAndroidX() {
+  return global.androidx && global.androidx.appcompat;
+}
+
 export function areNotificationsEnabled() {
   const androidSdkVersion = android.os.Build.VERSION.SDK_INT;
 
   if (androidSdkVersion >= 24) { // android.os.Build.VERSION_CODES.N
-    return android.support.v4.app.NotificationManagerCompat.from(application.android.context).areNotificationsEnabled();
+    return NotificationManagerCompatClass.from(application.android.context).areNotificationsEnabled();
   } else {
     console.log("NotificationManagerCompat.areNotificationsEnabled() is not supported in Android SDK VERSION " + androidSdkVersion);
     return true;
