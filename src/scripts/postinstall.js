@@ -5276,7 +5276,7 @@ task copyMetadata {
       if (variant.buildType.name == project.selectedBuildType) {
         def task = provider.get();
         for (File file : task.getOutputs().getFiles()) {
-          if(!file.getPath().contains("/incremental/")) {
+          if (!file.getPath().contains("/incremental/")) {
             project.ext.mergedAssetsOutputPath = file.getPath()
           }
         }
@@ -5285,12 +5285,12 @@ task copyMetadata {
   }
   doLast {
     copy {
-      if(!project.mergedAssetsOutputPath) {
+      if (!project.mergedAssetsOutputPath) {
         // mergedAssetsOutputPath not found fallback to the default value for android gradle plugin 3.4.0
-        project.ext.mergedAssetsOutputPath = "$projectDir/build/intermediates/assets/\${project.selectedBuildType}/out"
+        project.ext.mergedAssetsOutputPath = "$projectDir/build/intermediates/assets/" + project.selectedBuildType + "/out"
       }
       from "$projectDir/src/main/assets/metadata"
-      into "\${project.mergedAssetsOutputPath}/metadata"
+      into project.mergedAssetsOutputPath + "/metadata"
     }
   }
 }\`;
