@@ -48,6 +48,41 @@ For a list of predefined Events [check this Android reference](https://firebase.
   );
 ```
 
+### analytics.logComplexEvent
+Same thing as logEvent but you can add an `Array` or specific types (not just `string`).
+See `LogComplexEventTypeParameter` for all available types.
+
+```typescript
+import * as firebase from "nativescript-plugin-firebase";
+import { LogComplexEventTypeParameter } from "nativescript-plugin-firebase";
+
+firebase.analytics.logComplexEvent({
+  key: "view_item_list",
+  parameters: [{
+    key: "item1",
+    type: "array",
+    value: [
+      {
+        parameters: [
+          {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+          {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
+          {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
+          {key: "index", value: 1, type: LogComplexEventTypeParameter.INT}
+        ]
+      },
+      {
+        parameters: [
+          {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
+          {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
+          {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
+          {key: "index", value: 2, type: LogComplexEventTypeParameter.INT}
+        ]
+      }
+    ]
+  }]
+});
+```
+
 ### analytics.setUserProperty
 User properties are attributes you define to describe segments of your userbase, such as language preference or geographic location.
 
