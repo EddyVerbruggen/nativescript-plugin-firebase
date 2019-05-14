@@ -1115,10 +1115,10 @@ task copyMetadata {
     copy {
       if (!project.mergedAssetsOutputPath) {
         // mergedAssetsOutputPath not found fallback to the default value for android gradle plugin 3.4.0
-        project.ext.mergedAssetsOutputPath = "$projectDir/build/intermediates/assets/\${project.selectedBuildType}/out"
+        project.ext.mergedAssetsOutputPath = "$projectDir/build/intermediates/assets/" + project.selectedBuildType + "/out"
       }
-        from "$projectDir/src/main/assets/metadata"
-      into "\${project.mergedAssetsOutputPath}/metadata"
+      from "$projectDir/src/main/assets/metadata"
+      into project.mergedAssetsOutputPath + "/metadata"
     }
   }
 }\`;
