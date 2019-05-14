@@ -1,7 +1,10 @@
 export interface LogComplexEventParameter {
   key: string;
   value: any;
-  type: string;
+  /**
+   * Default "string".
+   */
+  type?: "string" | "array" | "double" | "float" | "int" | "long" | "number" | "boolean";
 }
 
 export interface LogEventParameter {
@@ -43,7 +46,8 @@ export interface LogComplexEventOptions {
    *
    *  parameters: [{
    *    key: "item_name",
-   *    value: "abc"
+   *    value: "abc",
+   *    type: "double"
    *  }, ..]
    */
   parameters?: Array<LogComplexEventParameter>;
