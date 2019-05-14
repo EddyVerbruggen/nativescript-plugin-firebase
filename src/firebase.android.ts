@@ -268,6 +268,7 @@ firebase.toJsObject = javaObj => {
       break;
     case 'android.util.ArrayMap':
     case 'android.support.v4.util.ArrayMap':
+    case 'androidx.collection.ArrayMap':
       node = {};
       for (let i = 0; i < javaObj.size(); i++) {
         node[javaObj.keyAt(i)] = firebase.toJsObject(javaObj.valueAt(i));
