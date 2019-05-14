@@ -2251,7 +2251,7 @@ function coerce(version) {
   if (match == null)
     return null;
 
-  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0'));
+  return parse((match[1] || '0') + '.' + (match[2] || '0') + '.' + (match[3] || '0')); 
 }
 
 
@@ -5271,17 +5271,24 @@ module.exports = function($logger, $projectData) {
             appBuildGradleContent += \`
 task copyMetadata {
   doFirst {
-    android.applicationVariants.all { variant ->
-      def provider = variant.getMergeAssetsProvider()
-      if (variant.buildType.name == project.selectedBuildType) {
-        def task = provider.get();
-        for (File file : task.getOutputs().getFiles()) {
-          if (!file.getPath().contains("/incremental/")) {
-            project.ext.mergedAssetsOutputPath = file.getPath()
+      // before tns-android 5.2.0 its gradle version didn't have this method implemented, so pri
+      android.applicationVariants.all { variant ->
+          if (variant.buildType.name == project.selectedBuildType) {
+              def task
+              if (variant.metaClass.respondsTo(variant, "getMergeAssetsProvider")) {
+                  def provider = variant.getMergeAssetsProvider()
+                  task = provider.get();
+              } else {
+                  // fallback for older android gradle plugin versions
+                  task = variant.getMergeAssets()
+              }
+              for (File file : task.getOutputs().getFiles()) {
+                  if (!file.getPath().contains("/incremental/")) {
+                      project.ext.mergedAssetsOutputPath = file.getPath()
+                  }
+              }
           }
-        }
       }
-    }
   }
   doLast {
     copy {
