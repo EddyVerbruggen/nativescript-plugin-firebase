@@ -680,6 +680,10 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       if (pid === 'facebook.com' && typeof (FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
         const fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
         providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
+      } else if (pid === 'google.com' && typeof (GIDSignIn) !== "undefined" && GIDSignIn.sharedInstance() && GIDSignIn.sharedInstance().currentUser) {
+        // include web compatible oauth2 token
+        const gidCurrentAccessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken;
+        providers.push({id: pid, token: gidCurrentAccessToken });
       } else {
         providers.push({id: pid});
       }
