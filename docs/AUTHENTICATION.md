@@ -534,7 +534,7 @@ Then add the following lines to your code and check for setup instructions for y
     // Optional
     facebookOptions: {
       // defaults to ['public_profile', 'email']
-      scope: ['public_profile', 'email']
+      scopes: ['public_profile', 'email'] // note: this property was renamed from "scope" in 8.4.0
     }
   }).then(
       function (result) {
@@ -611,7 +611,10 @@ Then add the following lines to your code and check for setup instructions for y
     type: firebase.LoginType.GOOGLE,
     // Optional 
     googleOptions: {
-      hostedDomain: "mygsuitedomain.com"
+      hostedDomain: "mygsuitedomain.com",
+      // NOTE: no need to add 'profile' nor 'email', because they are always provided
+      // NOTE 2: requesting scopes means you may access those properties, but they are not automatically fetched by the plugin
+      scopes: ['https://www.googleapis.com/auth/user.birthday.read']
     }
   }).then(
       function (result) {

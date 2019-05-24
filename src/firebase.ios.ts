@@ -950,14 +950,14 @@ firebase.login = arg => {
         // this requires you to set the appid and customurlscheme in app_resources/.plist
         const fbSDKLoginManager = FBSDKLoginManager.new();
         // fbSDKLoginManager.loginBehavior = FBSDKLoginBehavior.Web;
-        let scope: any = ["public_profile", "email"];
+        let scopes: any = ["public_profile", "email"];
 
-        if (arg.facebookOptions && arg.facebookOptions.scope) {
-          scope = arg.facebookOptions.scope;
+        if (arg.facebookOptions && arg.facebookOptions.scopes) {
+          scopes = arg.facebookOptions.scopes;
         }
 
         fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
-            scope,
+            scopes,
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
 
@@ -974,6 +974,10 @@ firebase.login = arg => {
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {
           sIn.hostedDomain = arg.googleOptions.hostedDomain;
+        }
+
+        if (arg.googleOptions && arg.googleOptions.scopes) {
+          sIn.scopes = arg.googleOptions.scopes;
         }
 
         let delegate = GIDSignInDelegateImpl.new().initWithCallback((user: GIDGoogleUser, error: NSError) => {

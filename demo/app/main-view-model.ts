@@ -1146,7 +1146,13 @@ export class HelloWorldModel extends Observable {
   public doLoginByGoogle(): void {
     firebase.login({
       // note that you need to enable Google auth in your firebase instance
-      type: firebase.LoginType.GOOGLE
+      type: firebase.LoginType.GOOGLE,
+      googleOptions: {
+        scopes: [
+            "https://www.googleapis.com/auth/contacts.readonly",
+            "https://www.googleapis.com/auth/user.birthday.read"
+        ]
+      }
     }).then(
         result => {
           console.log("Google login OK: " + JSON.stringify(result));

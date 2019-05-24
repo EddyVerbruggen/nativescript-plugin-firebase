@@ -267,13 +267,19 @@ export interface FirebasePhoneLoginOptions {
 
 export interface FirebaseGoogleLoginOptions {
   hostedDomain?: string;
+  /**
+   * You can add scopes like "https://www.googleapis.com/auth/contacts.readonly" and "https://www.googleapis.com/auth/user.birthday.read"
+   *
+   * Default: ["profile", "email"]
+   */
+  scopes?: Array<string>;
 }
 
 export interface FirebaseFacebookLoginOptions {
   /**
    * Default: ["public_profile", "email"]
    */
-  scope?: string[];
+  scopes?: Array<string>;
 }
 
 export interface FirebaseCustomLoginOptions {

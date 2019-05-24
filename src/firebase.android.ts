@@ -1113,6 +1113,14 @@ firebase.login = arg => {
           googleSignInOptionsBuilder.setHostedDomain(arg.googleOptions.hostedDomain);
         }
 
+        if (arg.googleOptions && arg.googleOptions.scopes) {
+          const scopesArray = [];
+          if (arg.googleOptions.scopes.length > 1) {
+            arg.googleOptions.scopes.forEach(s => scopesArray.push(new com.google.android.gms.common.api.Scope(s)));
+          }
+          googleSignInOptionsBuilder.requestScopes(new com.google.android.gms.common.api.Scope(arg.googleOptions.scopes[0]), scopesArray);
+        }
+
         const googleSignInOptions = googleSignInOptionsBuilder.build();
 
         const onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
