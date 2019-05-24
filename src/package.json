@@ -127,9 +127,10 @@
   "dependencies": {
     "fs-extra": "~2.1.0",
     "nativescript-hook": "~0.2.4",
+    "nativescript-shared-notification-delegate": "0.0.2",
     "prompt-lite": "~0.1.0",
-    "xcode": "~0.9.0",
-    "semver": "^5.0.0"
+    "semver": "^5.0.0",
+    "xcode": "~0.9.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

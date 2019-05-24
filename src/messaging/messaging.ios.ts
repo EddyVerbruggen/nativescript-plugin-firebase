@@ -10,6 +10,7 @@ import {
   IosInteractiveNotificationType
 } from "./messaging";
 import { MessagingOptions } from "../firebase";
+import { DelegateObserver, SharedNotificationDelegate } from "nativescript-shared-notification-delegate";
 
 let _notificationActionTakenCallback: Function;
 let _pendingNotifications: Array<any> = [];
@@ -18,7 +19,7 @@ let _pushToken: any;
 let _receivedPushTokenCallback: Function;
 let _receivedNotificationCallback: Function;
 let _registerForRemoteNotificationsRanThisSession = false;
-let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
+let _userNotificationCenterDelegateObserver: FirebaseNotificationDelegateObserverImpl;
 let _messagingConnected: boolean = null;
 let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
 let _showNotifications: boolean = true;
@@ -407,7 +408,7 @@ function _registerForRemoteNotifications() {
     });
 
     if (_showNotifications) {
-      _userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback((unnotification, actionIdentifier?, inputText?) => {
+      _userNotificationCenterDelegateObserver = new FirebaseNotificationDelegateObserverImpl((unnotification, actionIdentifier?, inputText?) => {
         // if the app is in the foreground then this method will receive the notification
         // if the app is in the background, and user has responded to interactive notification, then this method will receive the notification
         // if the app is in the background, and user views a notification, applicationDidReceiveRemoteNotificationFetchCompletionHandler will receive it
@@ -434,7 +435,7 @@ function _registerForRemoteNotifications() {
         }
       });
 
-      curNotCenter.delegate = _userNotificationCenterDelegate;
+      SharedNotificationDelegate.addObserver(_userNotificationCenterDelegateObserver);
     }
 
     if (typeof (FIRMessaging) !== "undefined") {
@@ -546,25 +547,16 @@ function _addObserver(eventName, callback) {
   return NSNotificationCenter.defaultCenter.addObserverForNameObjectQueueUsingBlock(eventName, null, NSOperationQueue.mainQueue, callback);
 }
 
-// see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc
-class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNotificationCenterDelegate {
-  public static ObjCProtocols = [];
-
-  static new(): UNUserNotificationCenterDelegateImpl {
-    if (UNUserNotificationCenterDelegateImpl.ObjCProtocols.length === 0 && typeof (UNUserNotificationCenterDelegate) !== "undefined") {
-      UNUserNotificationCenterDelegateImpl.ObjCProtocols.push(UNUserNotificationCenterDelegate);
-    }
-    return <UNUserNotificationCenterDelegateImpl>super.new();
-  }
+class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
+  observerUniqueKey = "firebase-messaging";
 
   private callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void;
 
-  public initWithCallback(callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void): UNUserNotificationCenterDelegateImpl {
+  constructor(callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void) {
     this.callback = callback;
-    return this;
   }
 
-  public userNotificationCenterWillPresentNotificationWithCompletionHandler(center: UNUserNotificationCenter, notification: UNNotification, completionHandler: (p1: UNNotificationPresentationOptions) => void): void {
+  public userNotificationCenterWillPresentNotificationWithCompletionHandler(center: UNUserNotificationCenter, notification: UNNotification, completionHandler: (p1: UNNotificationPresentationOptions) => void, next: () => void): void {
     const userInfo = notification.request.content.userInfo;
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
 
@@ -582,7 +574,7 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
     }
   }
 
-  public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void): void {
+  public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void, next: () => void): void {
     // let's ignore "dismiss" actions
     if (response && response.actionIdentifier === UNNotificationDismissActionIdentifier) {
       completionHandler();
