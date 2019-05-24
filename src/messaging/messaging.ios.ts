@@ -559,6 +559,10 @@ class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
   public userNotificationCenterWillPresentNotificationWithCompletionHandler(center: UNUserNotificationCenter, notification: UNNotification, completionHandler: (p1: UNNotificationPresentationOptions) => void, next: () => void): void {
     const userInfo = notification.request.content.userInfo;
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
+    if (!userInfoJSON["gcm.message_id"]) { // not a firebase message!
+      next();
+      return;
+    }
 
     if (_showNotificationsWhenInForeground || // Default value, in case we always want to show when in foreground.
         userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
@@ -575,6 +579,12 @@ class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
   }
 
   public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void, next: () => void): void {
+    const userInfo = response.notification.request.content.userInfo;
+    const userInfoJSON = firebaseUtils.toJsObject(userInfo);
+    if (!userInfoJSON["gcm.message_id"]) { // not a firebase message!
+      next();
+      return;
+    }
     // let's ignore "dismiss" actions
     if (response && response.actionIdentifier === UNNotificationDismissActionIdentifier) {
       completionHandler();
