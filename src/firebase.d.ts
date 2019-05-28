@@ -823,6 +823,30 @@ export namespace firestore {
     readonly includeMetadataChanges?: boolean;
   }
 
+  export interface GetOptions {
+    /**
+     * Describes whether we should get from server or cache.
+     *
+     * Setting to 'default' (or not setting at all), causes Firestore to try to
+     * retrieve an up-to-date (server-retrieved) snapshot, but fall back to
+     * returning cached data if the server can't be reached.
+     *
+     * Setting to 'server' causes Firestore to avoid the cache, generating an
+     * error if the server cannot be reached. Note that the cache will still be
+     * updated if the server request succeeds. Also note that latency-compensation
+     * still takes effect, so any pending write operations will be visible in the
+     * returned data (merged into the server-provided data).
+     *
+     * Setting to 'cache' causes Firestore to immediately return a value from the
+     * cache, ignoring the server completely (implying that the returned value
+     * may be stale with respect to the value on the server.) If there is no data
+     * in the cache to satisfy the `get()` call, `DocumentReference.get()` will
+     * return an error and `QuerySnapshot.get()` will return an empty
+     * `QuerySnapshot` with no documents.
+     */
+    source?: 'default' | 'server' | 'cache';
+  }
+
   export interface DocumentReference {
     readonly discriminator: "docRef";
 
@@ -839,7 +863,7 @@ export namespace firestore {
 
     set: (document: any, options?: SetOptions) => Promise<void>;
 
-    get: () => Promise<DocumentSnapshot>;
+    get: (options?: GetOptions) => Promise<DocumentSnapshot>;
 
     update: (document: any) => Promise<void>;
 
@@ -853,7 +877,7 @@ export namespace firestore {
   }
 
   export interface Query {
-    get(): Promise<QuerySnapshot>;
+    get(options?: GetOptions): Promise<QuerySnapshot>;
 
     where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;
 
@@ -1026,9 +1050,9 @@ export namespace firestore {
 
   function set(collectionPath: string, documentPath: string, document: any, options?: any): Promise<void>;
 
-  function getCollection(collectionPath: string): Promise<QuerySnapshot>;
+  function getCollection(collectionPath: string, options?: GetOptions): Promise<QuerySnapshot>;
 
-  function getDocument(collectionPath: string, documentPath: string): Promise<DocumentSnapshot>;
+  function getDocument(collectionPath: string, documentPath: string, options?: GetOptions): Promise<DocumentSnapshot>;
 
   function update(collectionPath: string, documentPath: string, document: any): Promise<void>;
 

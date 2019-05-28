@@ -34,7 +34,9 @@ export class FirestoreComponent {
             .collection("availability")
             .doc("hello");
 
-    helloRef.get().then(snapshot => console.log(snapshot.data()))
+    helloRef.get({ source: "cache"})
+        .then(snapshot => console.log(snapshot.data()))
+        .catch(err => console.log("issue854 err: " + err));
   }
 
   loginAnonymously(): void {
@@ -161,7 +163,7 @@ export class FirestoreComponent {
   firestoreGet(): void {
     const collectionRef: firestore.CollectionReference = firebase.firestore().collection("dogs");
     console.log(">> collectionRef.parent: " + collectionRef.parent); // should be null (has no parent)
-    collectionRef.get()
+    collectionRef.get({ source: "server"})
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => console.log(`${doc.id} => ${JSON.stringify(doc.data())}`));
         })

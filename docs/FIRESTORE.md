@@ -31,13 +31,14 @@ A 'collection' is at the root of any Firestore interaction. Data is stored as a 
 const citiesCollection = firebase.firestore().collection("cities");
 ```
 
-### `collection.get()`
+### `collection.get(options?)`
 To get all documents inside a collection:
 
 ```typescript
 const citiesCollection = firebase.firestore().collection("cities");
 
-citiesCollection.get().then(querySnapshot => {
+// note that the options object is optional, but you can use it to specify the source of data ("server", "cache", "default").
+citiesCollection.get({ source: "server" }).then(querySnapshot => {
   querySnapshot.forEach(doc => {
     console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
   });
@@ -116,13 +117,14 @@ const citiesCollection = firebase.firestore().collection("cities");
 const sanFranciscoDocument = citiesCollection.doc("SF");
 ```
 
-### `collection.doc().get()`
+### `collection.doc().get(options?)`
 To get the data inside a document (and check whether or not the document actually exists):
 
 ```typescript
 const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
 
-sanFranciscoDocument.get().then(doc => {
+// note that the options object is optional, but you can use it to specify the source of data ("server", "cache", "default").
+sanFranciscoDocument.get({ source: "cache" }).then(doc => {
   if (doc.exists) {
     console.log(`Document data: ${JSON.stringify(doc.data())}`);
   } else {

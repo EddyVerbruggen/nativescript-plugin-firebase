@@ -6,7 +6,8 @@ import {
   firestore,
   GetAuthTokenOptions,
   IdTokenResult,
-  OnDisconnect as OnDisconnectBase, QueryOptions,
+  OnDisconnect as OnDisconnectBase,
+  QueryOptions,
   User
 } from "./firebase";
 import {
@@ -2048,7 +2049,7 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
     parent: firebase.firestore._getDocumentReference(colRef.parent),
     doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
     add: document => firebase.firestore.add(collectionPath, document),
-    get: () => firebase.firestore.get(collectionPath),
+    get: (options?: firestore.GetOptions) => firebase.firestore.get(collectionPath, options),
     where: (fieldPath: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(collectionPath, fieldPath, opStr, value),
     orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
@@ -2074,7 +2075,7 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
     path: docRef.path,
     collection: cp => firebase.firestore.collection(`${collectionPath}/${docRef.documentID}/${cp}`),
     set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.documentID, data, options),
-    get: () => firebase.firestore.getDocument(collectionPath, docRef.documentID),
+    get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.documentID, options),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.documentID, data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.documentID),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
@@ -2281,7 +2282,7 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
   });
 };
 
-firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
+firebase.firestore.getCollection = (collectionPath: string, options?: firestore.GetOptions): Promise<firestore.QuerySnapshot> => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof (FIRFirestore) === "undefined") {
@@ -2289,10 +2290,19 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
         return;
       }
 
+      let source = FIRFirestoreSource.Default;
+      if (options && options.source) {
+        if (options.source === "cache") {
+          source = FIRFirestoreSource.Cache
+        } else if (options.source === "server") {
+          source = FIRFirestoreSource.Server;
+        }
+      }
+
       const defaultFirestore = FIRFirestore.firestore();
       defaultFirestore
           .collectionWithPath(collectionPath)
-          .getDocumentsWithCompletion((snapshot: FIRQuerySnapshot, error: NSError) => {
+          .getDocumentsWithSourceCompletion(source, (snapshot: FIRQuerySnapshot, error: NSError) => {
             if (error) {
               reject(error.localizedDescription);
             } else {
@@ -2307,11 +2317,11 @@ firebase.firestore.getCollection = (collectionPath: string): Promise<firestore.Q
   });
 };
 
-firebase.firestore.get = (collectionPath: string): Promise<firestore.QuerySnapshot> => {
-  return firebase.firestore.getCollection(collectionPath);
+firebase.firestore.get = (collectionPath: string, options?: firestore.GetOptions): Promise<firestore.QuerySnapshot> => {
+  return firebase.firestore.getCollection(collectionPath, options);
 };
 
-firebase.firestore.getDocument = (collectionPath: string, documentPath: string): Promise<firestore.DocumentSnapshot> => {
+firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<firestore.DocumentSnapshot> => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof (FIRFirestore) === "undefined") {
@@ -2319,10 +2329,19 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string):
         return;
       }
 
+      let source = FIRFirestoreSource.Default;
+      if (options && options.source) {
+        if (options.source === "cache") {
+          source = FIRFirestoreSource.Cache
+        } else if (options.source === "server") {
+          source = FIRFirestoreSource.Server;
+        }
+      }
+
       FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
           .documentWithPath(documentPath)
-          .getDocumentWithCompletion((snapshot: FIRDocumentSnapshot, error: NSError) => {
+          .getDocumentWithSourceCompletion(source, (snapshot: FIRDocumentSnapshot, error: NSError) => {
             if (error) {
               reject(error.localizedDescription);
             } else {
