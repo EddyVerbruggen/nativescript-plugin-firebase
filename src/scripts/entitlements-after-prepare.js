@@ -23,8 +23,8 @@ function patchPodsBundlesPlugins(podsFile) {
   }
 }
 
-module.exports = function (logger, platformsData, projectData, hookArgs) {
-  var platform = hookArgs.platform.toLowerCase(),
+module.exports = function (projectData, hookArgs) {
+  var platform = (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform)).toLowerCase(),
       appResourcesDirectoryPath = projectData.appResourcesDirectoryPath,
       entitlementsFile = path.join(appResourcesDirectoryPath, "iOS", projectData.projectName + ".entitlements"),
       projectRoot = path.join(projectData.platformsDir, "ios"),
