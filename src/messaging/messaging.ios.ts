@@ -177,7 +177,13 @@ export function addBackgroundRemoteNotificationHandler(appDelegate) {
   };
 
   appDelegate.prototype.applicationDidFailToRegisterForRemoteNotificationsWithError = (application: UIApplication, error: NSError) => {
-    _rejectWhenDidFailToRegisterForNotifications && _rejectWhenDidFailToRegisterForNotifications(error.localizedDescription);
+    if (error.localizedDescription.indexOf("not supported in the simulator") > -1) {
+      // Why? See https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/1277
+      // Note that this method will also be invoked on a simulator when the consent popup is declined
+      _resolveWhenDidRegisterForNotifications && _resolveWhenDidRegisterForNotifications();
+    } else {
+      _rejectWhenDidFailToRegisterForNotifications && _rejectWhenDidFailToRegisterForNotifications(error.localizedDescription);
+    }
   };
 
   appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
