@@ -169,7 +169,7 @@ export class PushViewModel extends Observable {
   public doRegisterForPushNotifications(): void {
     messaging.registerForPushNotifications({
       onPushTokenReceivedCallback: (token: string): void => {
-        console.log("Firebase plugin received a push token: " + token);
+        console.log(">>>> Firebase plugin received a push token: " + token);
       },
 
       onMessageReceivedCallback: (message: Message) => {
@@ -191,7 +191,9 @@ export class PushViewModel extends Observable {
       // Currently used on iOS only. Default false.
       // When false, you can still force showing it when the app is in the foreground by adding 'showWhenInForeground' to the notification as mentioned in the readme.
       showNotificationsWhenInForeground: false
-    }).then(() => console.log("Registered for push"));
+    })
+        .then(() => console.log(">>>> Registered for push"))
+        .catch(err => console.log(">>>> Failed to register for push"));
   }
 
   public doSubscribeToTopic(): void {

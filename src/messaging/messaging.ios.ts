@@ -25,6 +25,9 @@ let _showNotifications: boolean = true;
 let _showNotificationsWhenInForeground: boolean = false;
 let _autoClearBadge: boolean = true;
 
+let _resolveWhenDidRegisterForNotifications;
+let _rejectWhenDidFailToRegisterForNotifications;
+
 // Track whether or not registration for remote notifications was request.
 // This way we can suppress the "Allow notifications" consent popup until the listeners are passed in.
 const NOTIFICATIONS_REGISTRATION_KEY = "Firebase-RegisterForRemoteNotifications";
@@ -52,7 +55,7 @@ export function addOnMessageReceivedCallback(callback: Function) {
       applicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
 
       _receivedNotificationCallback = callback;
-      _registerForRemoteNotifications();
+      _registerForRemoteNotifications(resolve, reject);
       _processPendingNotifications();
 
       resolve();
@@ -83,8 +86,7 @@ export function registerForPushNotifications(options?: MessagingOptions): Promis
     try {
       initFirebaseMessaging(options);
       _registerForRemoteNotificationsRanThisSession = false;
-      _registerForRemoteNotifications();
-      resolve();
+      _registerForRemoteNotifications(resolve, reject);
     } catch (ex) {
       console.log("Error in messaging.registerForPushNotifications: " + ex);
       reject(ex);
@@ -155,6 +157,12 @@ export function addOnPushTokenReceivedCallback(callback) {
 
 export function addBackgroundRemoteNotificationHandler(appDelegate) {
   appDelegate.prototype.applicationDidRegisterForRemoteNotificationsWithDeviceToken = (application: UIApplication, deviceToken: NSData) => {
+    if (areNotificationsEnabled()) {
+      _resolveWhenDidRegisterForNotifications && _resolveWhenDidRegisterForNotifications();
+    } else {
+      _rejectWhenDidFailToRegisterForNotifications && _rejectWhenDidFailToRegisterForNotifications();
+    }
+
     if (typeof (FIRMessaging) !== "undefined") {
       // make sure Firebase has the latest APNs token (issue #982)
       FIRMessaging.messaging().APNSToken = deviceToken;
@@ -166,6 +174,10 @@ export function addBackgroundRemoteNotificationHandler(appDelegate) {
         _receivedPushTokenCallback(token);
       }
     }
+  };
+
+  appDelegate.prototype.applicationDidFailToRegisterForRemoteNotificationsWithError = (application: UIApplication, error: NSError) => {
+    _rejectWhenDidFailToRegisterForNotifications && _rejectWhenDidFailToRegisterForNotifications(error.localizedDescription);
   };
 
   appDelegate.prototype.applicationDidReceiveRemoteNotificationFetchCompletionHandler = (app, notification, completionHandler) => {
@@ -377,18 +389,22 @@ const updateUserInfo = userInfoJSON => {
   userInfoJSON.aps = undefined;
 };
 
-function _registerForRemoteNotifications() {
+function _registerForRemoteNotifications(resolve?, reject?) {
   let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
   if (!app) {
-    application.on("launch", () => _registerForRemoteNotifications());
+    application.on("launch", () => _registerForRemoteNotifications(resolve, reject));
     return;
   }
 
   if (_registerForRemoteNotificationsRanThisSession) {
+    resolve && resolve();
     return;
   }
 
   _registerForRemoteNotificationsRanThisSession = true;
+
+  _resolveWhenDidRegisterForNotifications = resolve;
+  _rejectWhenDidFailToRegisterForNotifications = reject;
 
   if (parseInt(device.osVersion) >= 10) {
     const authorizationOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge;
@@ -399,10 +415,12 @@ function _registerForRemoteNotifications() {
           app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
         }
         if (app !== null) {
+          // see https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications
           firebaseUtils.invokeOnRunLoop(() => app.registerForRemoteNotifications());
         }
       } else {
         console.log("Error requesting push notification auth: " + error);
+        reject && reject(error.localizedDescription);
       }
     });
 
