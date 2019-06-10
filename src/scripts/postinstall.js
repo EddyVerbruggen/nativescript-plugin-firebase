@@ -4544,7 +4544,7 @@ function writePodFile(result) {
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
 # With NativeScript < 5.2 we can't bump Firebase/Core beyond 5.15.0, but with 5.2+ we can
-pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '5.20.1' : '5.15.0') + `'
+pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.2.0' : '5.15.0') + `'
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
@@ -4595,9 +4595,6 @@ end`) + `
 # AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Invites
-` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
-
 # Dynamic Links
 ` + (isSelected(result.dynamic_links) ? `` : `#`) + `pod 'Firebase/DynamicLinks'
 
@@ -4614,8 +4611,8 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_smartreply) ? `` : `#`) + `pod 'Firebase/MLNLSmartReply'
 
 # Facebook Authentication
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit', '~> 4.38.0'
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit', '~> 4.38.0'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
 
 # Google Authentication
 ` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`);

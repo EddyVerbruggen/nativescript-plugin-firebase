@@ -3,6 +3,13 @@
 - [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 - [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 9.0.0 (2019, June xx)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/103?closed=1)
+
+> Make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS SDKs
+
+> Firebase Invites has been removed - use Dynamic Links instead! Also see https://firebase.google.com/docs/invites/deprecation and https://firebase.google.com/docs/dynamic-links/use-cases/user-to-user
+
 ## 8.3.2 (2019, May 14)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/101?closed=1)
 
