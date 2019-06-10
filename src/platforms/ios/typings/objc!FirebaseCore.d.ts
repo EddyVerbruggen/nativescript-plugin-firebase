@@ -1,19 +1,4 @@
 
-declare class FIRAnalyticsConfiguration extends NSObject {
-
-	static alloc(): FIRAnalyticsConfiguration; // inherited from NSObject
-
-	static new(): FIRAnalyticsConfiguration; // inherited from NSObject
-
-	static sharedInstance(): FIRAnalyticsConfiguration;
-
-	setAnalyticsCollectionEnabled(analyticsCollectionEnabled: boolean): void;
-
-	setMinimumSessionInterval(minimumSessionInterval: number): void;
-
-	setSessionTimeoutInterval(sessionTimeoutInterval: number): void;
-}
-
 declare class FIRApp extends NSObject {
 
 	static alloc(): FIRApp; // inherited from NSObject
@@ -46,8 +31,6 @@ declare class FIRConfiguration extends NSObject {
 	static alloc(): FIRConfiguration; // inherited from NSObject
 
 	static new(): FIRConfiguration; // inherited from NSObject
-
-	analyticsConfiguration: FIRAnalyticsConfiguration;
 
 	static readonly sharedInstance: FIRConfiguration;
 

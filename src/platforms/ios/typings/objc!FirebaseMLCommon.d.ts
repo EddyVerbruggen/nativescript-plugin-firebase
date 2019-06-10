@@ -31,6 +31,14 @@ declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
 	initWithAllowsCellularAccessAllowsBackgroundDownloading(allowsCellularAccess: boolean, allowsBackgroundDownloading: boolean): this;
 }
 
+declare var FIRModelDownloadDidFailNotification: string;
+
+declare var FIRModelDownloadDidSucceedNotification: string;
+
+declare var FIRModelDownloadUserInfoKeyError: string;
+
+declare var FIRModelDownloadUserInfoKeyRemoteModel: string;
+
 declare class FIRModelManager extends NSObject {
 
 	static alloc(): FIRModelManager; // inherited from NSObject
@@ -38,6 +46,10 @@ declare class FIRModelManager extends NSObject {
 	static modelManager(): FIRModelManager;
 
 	static new(): FIRModelManager; // inherited from NSObject
+
+	downloadRemoteModel(remoteModel: FIRRemoteModel): NSProgress;
+
+	isRemoteModelDownloaded(remoteModel: FIRRemoteModel): boolean;
 
 	localModelWithName(name: string): FIRLocalModel;
 

@@ -161,8 +161,6 @@ declare class FIRDatabaseReference extends FIRDatabaseQuery {
 
 	child(pathString: string): FIRDatabaseReference;
 
-	childByAppendingPath(pathString: string): FIRDatabaseReference;
-
 	childByAutoId(): FIRDatabaseReference;
 
 	description(): string;

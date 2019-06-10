@@ -87,7 +87,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
       // Firebase Facebook authentication
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
-        FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions);
+        FBSDKApplicationDelegate.sharedInstance.applicationDidFinishLaunchingWithOptions(application, launchOptions);
       }
 
       return true;
@@ -99,7 +99,7 @@ firebase.addAppDelegateMethods = appDelegate => {
     appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = (application, url, sourceApplication, annotation) => {
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
-        result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
+        result = FBSDKApplicationDelegate.sharedInstance.applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation);
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
@@ -140,7 +140,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
-        result = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(
+        result = FBSDKApplicationDelegate.sharedInstance.applicationOpenURLSourceApplicationAnnotation(
             application,
             url,
             options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
@@ -382,7 +382,7 @@ firebase.init = arg => {
         FIROptions.defaultOptions().deepLinkURLScheme = NSBundle.mainBundle.bundleIdentifier;
       }
 
-      FIRAnalyticsConfiguration.sharedInstance().setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
+      FIRAnalytics.setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
 
       if (!firebase._configured) {
         firebase._configured = true;
@@ -679,8 +679,7 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       const pid = firUserInfo.valueForKey("providerID");
       // the app may have dropped Facebook support, so check if the native class is still there
       if (pid === 'facebook.com' && typeof (FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
-        const fbCurrentAccessToken = FBSDKAccessToken.currentAccessToken();
-        providers.push({id: pid, token: fbCurrentAccessToken ? fbCurrentAccessToken.tokenString : null});
+        providers.push({id: pid, token: FBSDKAccessToken.currentAccessToken ? FBSDKAccessToken.currentAccessToken.tokenString : null});
       } else if (pid === 'google.com' && typeof (GIDSignIn) !== "undefined" && GIDSignIn.sharedInstance() && GIDSignIn.sharedInstance().currentUser) {
         // include web compatible oauth2 token
         const gidCurrentAccessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken;
@@ -900,12 +899,12 @@ firebase.login = arg => {
         }
 
         if (arg.customOptions.token) {
-          fAuth.signInAndRetrieveDataWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
+          fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
               .then(
                   token => {
-                    fAuth.signInAndRetrieveDataWithCustomTokenCompletion(token, onCompletionWithAuthResult);
+                    fAuth.signInWithCustomTokenCompletion(token, onCompletionWithAuthResult);
                   },
                   error => {
                     reject(error);
@@ -928,7 +927,7 @@ firebase.login = arg => {
           } else {
             // headless facebook auth
             // var fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(fbSDKLoginManagerLoginResult.token.tokenString);
-            const fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken().tokenString);
+            const fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken.tokenString);
             if (fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
@@ -957,7 +956,7 @@ firebase.login = arg => {
           scopes = arg.facebookOptions.scopes;
         }
 
-        fbSDKLoginManager.logInWithReadPermissionsFromViewControllerHandler(
+        fbSDKLoginManager.logInWithPermissionsFromViewControllerHandler(
             scopes,
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
@@ -1057,12 +1056,11 @@ firebase.reauthenticate = arg => {
         authCredential = FIRGoogleAuthProvider.credentialWithIDTokenAccessToken(firebase._gIDAuthentication.idToken, firebase._gIDAuthentication.accessToken);
 
       } else if (arg.type === firebase.LoginType.FACEBOOK) {
-        const currentAccessToken = FBSDKAccessToken.currentAccessToken();
-        if (!currentAccessToken) {
+        if (!FBSDKAccessToken.currentAccessToken) {
           reject("Not currently logged in with Facebook");
           return;
         }
-        authCredential = FIRFacebookAuthProvider.credentialWithAccessToken(currentAccessToken.tokenString);
+        authCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken.tokenString);
       }
 
       if (authCredential === null) {
@@ -1290,7 +1288,7 @@ firebase._addObservers = (to, updateCallback) => {
 firebase.keepInSync = (path, switchOn) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = FIRDatabase.database().reference().childByAppendingPath(path);
+      const where = FIRDatabase.database().reference().child(path);
       where.keepSynced(switchOn);
       resolve();
     } catch (ex) {
@@ -1303,7 +1301,7 @@ firebase.keepInSync = (path, switchOn) => {
 firebase.addChildEventListener = (updateCallback, path) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().child(path);
       resolve({
         path: path,
         listeners: firebase._addObservers(where, updateCallback)
@@ -1318,7 +1316,7 @@ firebase.addChildEventListener = (updateCallback, path) => {
 firebase.addValueEventListener = (updateCallback, path) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().child(path);
       const listener = where.observeEventTypeWithBlockWithCancelBlock(
           FIRDataEventType.Value,
           snapshot => {
@@ -1343,7 +1341,7 @@ firebase.addValueEventListener = (updateCallback, path) => {
 firebase.getValue = path => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().child(path);
       where.observeSingleEventOfTypeWithBlockWithCancelBlock(
           FIRDataEventType.Value,
           snapshot => {
@@ -1362,7 +1360,7 @@ firebase.getValue = path => {
 firebase.removeEventListeners = (listeners, path) => {
   return new Promise((resolve, reject) => {
     try {
-      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().child(path);
       for (let i = 0; i < listeners.length; i++) {
         const listener = listeners[i];
         where.removeObserverWithHandle(listener);
@@ -1378,7 +1376,7 @@ firebase.removeEventListeners = (listeners, path) => {
 firebase.push = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      const ref = FIRDatabase.database().reference().childByAppendingPath(path).childByAutoId();
+      const ref = FIRDatabase.database().reference().child(path).childByAutoId();
       ref.setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
         error ? reject(error.localizedDescription) : resolve({key: ref.key});
       });
@@ -1392,7 +1390,7 @@ firebase.push = (path, val) => {
 firebase.setValue = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
-      FIRDatabase.database().reference().childByAppendingPath(path).setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
+      FIRDatabase.database().reference().child(path).setValueWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
         error ? reject(error.localizedDescription) : resolve();
       });
     } catch (ex) {
@@ -1406,7 +1404,7 @@ firebase.update = (path, val) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof val === "object") {
-        FIRDatabase.database().reference().childByAppendingPath(path).updateChildValuesWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
+        FIRDatabase.database().reference().child(path).updateChildValuesWithCompletionBlock(val, (error: NSError, dbRef: FIRDatabaseReference) => {
           error ? reject(error.localizedDescription) : resolve();
         });
       } else {
@@ -1414,7 +1412,7 @@ firebase.update = (path, val) => {
         const pathPrefix = path.substring(0, lastPartOfPath);
         const pathSuffix = path.substring(lastPartOfPath + 1);
         const updateObject = '{"' + pathSuffix + '" : "' + val + '"}';
-        FIRDatabase.database().reference().childByAppendingPath(pathPrefix).updateChildValuesWithCompletionBlock(JSON.parse(updateObject), (error: NSError, dbRef: FIRDatabaseReference) => {
+        FIRDatabase.database().reference().child(pathPrefix).updateChildValuesWithCompletionBlock(JSON.parse(updateObject), (error: NSError, dbRef: FIRDatabaseReference) => {
           error ? reject(error.localizedDescription) : resolve();
         });
       }
@@ -1428,7 +1426,7 @@ firebase.update = (path, val) => {
 firebase.query = (updateCallback: (data: FBDataSingleEvent) => void, path: string, options: QueryOptions): Promise<any> => {
   return new Promise<any>((resolve, reject) => {
     try {
-      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().childByAppendingPath(path);
+      const where = path === undefined ? FIRDatabase.database().reference() : FIRDatabase.database().reference().child(path);
       let query: FIRDatabaseQuery;
 
       // orderBy
@@ -1540,7 +1538,7 @@ firebase.query = (updateCallback: (data: FBDataSingleEvent) => void, path: strin
 firebase.remove = path => {
   return new Promise((resolve, reject) => {
     try {
-      FIRDatabase.database().reference().childByAppendingPath(path).setValueWithCompletionBlock(null, (error: NSError, dbRef: FIRDatabaseReference) => {
+      FIRDatabase.database().reference().child(path).setValueWithCompletionBlock(null, (error: NSError, dbRef: FIRDatabaseReference) => {
         error ? reject(error.localizedDescription) : resolve();
       });
     } catch (ex) {
@@ -1618,7 +1616,7 @@ class OnDisconnect implements OnDisconnectBase {
           const pathPrefix = this.path.substring(0, lastPartOfPath);
           const pathSuffix = this.path.substring(lastPartOfPath + 1);
           const updateObject = '{"' + pathSuffix + '" : "' + values + '"}';
-          FIRDatabase.database().reference().childByAppendingPath(pathPrefix).updateChildValuesWithCompletionBlock(JSON.parse(updateObject), (error: NSError, dbRef: FIRDatabaseReference) => {
+          FIRDatabase.database().reference().child(pathPrefix).updateChildValuesWithCompletionBlock(JSON.parse(updateObject), (error: NSError, dbRef: FIRDatabaseReference) => {
             error ? reject(error.localizedDescription) : resolve();
           });
         }

@@ -15,8 +15,6 @@ declare class FIRInstanceID extends NSObject {
 
 	instanceIDWithHandler(handler: (p1: FIRInstanceIDResult, p2: NSError) => void): void;
 
-	token(): string;
-
 	tokenWithAuthorizedEntityScopeOptionsHandler(authorizedEntity: string, scope: string, options: NSDictionary<any, any>, handler: (p1: string, p2: NSError) => void): void;
 }
 

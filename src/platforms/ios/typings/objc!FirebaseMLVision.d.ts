@@ -814,7 +814,9 @@ declare const enum FIRVisionImageLabelerType {
 
 	OnDevice = 0,
 
-	Cloud = 1
+	Cloud = 1,
+
+	OnDeviceAutoML = 2
 }
 
 declare class FIRVisionImageMetadata extends NSObject {

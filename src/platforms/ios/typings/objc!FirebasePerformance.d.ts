@@ -143,10 +143,6 @@ declare class FIRTrace extends NSObject implements FIRPerformanceAttributable {
 
 	conformsToProtocol(aProtocol: any /* Protocol */): boolean;
 
-	incrementCounterNamed(counterName: string): void;
-
-	incrementCounterNamedBy(counterName: string, incrementValue: number): void;
-
 	incrementMetricByInt(metricName: string, incrementValue: number): void;
 
 	isEqual(object: any): boolean;

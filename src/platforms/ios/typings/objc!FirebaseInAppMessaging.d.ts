@@ -21,6 +21,23 @@ declare class FIRInAppMessaging extends NSObject {
 	messageDisplayComponent: FIRInAppMessagingDisplay;
 
 	messageDisplaySuppressed: boolean;
+
+	triggerEvent(eventName: string): void;
+}
+
+declare class FIRInAppMessagingAction extends NSObject {
+
+	static alloc(): FIRInAppMessagingAction; // inherited from NSObject
+
+	static new(): FIRInAppMessagingAction; // inherited from NSObject
+
+	readonly actionText: string;
+
+	readonly actionURL: NSURL;
+
+	constructor(o: { actionText: string; actionURL: NSURL; });
+
+	initWithActionTextActionURL(actionText: string, actionURL: NSURL): this;
 }
 
 declare class FIRInAppMessagingActionButton extends NSObject {
@@ -80,6 +97,33 @@ declare class FIRInAppMessagingCampaignInfo extends NSObject {
 	initWithMessageIDCampaignNameRenderAsTestMessage(messageID: string, campaignName: string, renderAsTestMessage: boolean): this;
 }
 
+declare class FIRInAppMessagingCardDisplay extends FIRInAppMessagingDisplayMessage {
+
+	static alloc(): FIRInAppMessagingCardDisplay; // inherited from NSObject
+
+	static new(): FIRInAppMessagingCardDisplay; // inherited from NSObject
+
+	readonly body: string;
+
+	readonly displayBackgroundColor: UIColor;
+
+	readonly landscapeImageData: FIRInAppMessagingImageData;
+
+	readonly portraitImageData: FIRInAppMessagingImageData;
+
+	readonly primaryActionButton: FIRInAppMessagingActionButton;
+
+	readonly primaryActionURL: NSURL;
+
+	readonly secondaryActionButton: FIRInAppMessagingActionButton;
+
+	readonly secondaryActionURL: NSURL;
+
+	readonly textColor: UIColor;
+
+	readonly title: string;
+}
+
 declare const enum FIRInAppMessagingDismissType {
 
 	TypeUserSwipe = 0,
@@ -102,13 +146,15 @@ declare var FIRInAppMessagingDisplay: {
 
 interface FIRInAppMessagingDisplayDelegate extends NSObjectProtocol {
 
-	displayErrorForMessageError(inAppMessage: FIRInAppMessagingDisplayMessage, error: NSError): void;
+	displayErrorForMessageError?(inAppMessage: FIRInAppMessagingDisplayMessage, error: NSError): void;
 
-	impressionDetectedForMessage(inAppMessage: FIRInAppMessagingDisplayMessage): void;
+	impressionDetectedForMessage?(inAppMessage: FIRInAppMessagingDisplayMessage): void;
 
-	messageClicked(inAppMessage: FIRInAppMessagingDisplayMessage): void;
+	messageClicked?(inAppMessage: FIRInAppMessagingDisplayMessage): void;
 
-	messageDismissedDismissType(inAppMessage: FIRInAppMessagingDisplayMessage, dismissType: FIRInAppMessagingDismissType): void;
+	messageClickedWithAction?(inAppMessage: FIRInAppMessagingDisplayMessage, action: FIRInAppMessagingAction): void;
+
+	messageDismissedDismissType?(inAppMessage: FIRInAppMessagingDisplayMessage, dismissType: FIRInAppMessagingDismissType): void;
 }
 declare var FIRInAppMessagingDisplayDelegate: {
 
@@ -138,7 +184,9 @@ declare const enum FIRInAppMessagingDisplayMessageType {
 
 	Banner = 1,
 
-	ImageOnly = 2
+	ImageOnly = 2,
+
+	Card = 3
 }
 
 declare const enum FIRInAppMessagingDisplayTriggerType {

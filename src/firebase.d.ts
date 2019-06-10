@@ -1130,6 +1130,3 @@ export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBac
 
 // remote config
 export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
-
-// crash logging
-export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;

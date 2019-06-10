@@ -3,6 +3,8 @@ declare class FIRMessaging extends NSObject {
 
 	static alloc(): FIRMessaging; // inherited from NSObject
 
+	static extensionHelper(): FIRMessagingExtensionHelper;
+
 	static messaging(): FIRMessaging;
 
 	static new(): FIRMessaging; // inherited from NSObject
@@ -21,11 +23,7 @@ declare class FIRMessaging extends NSObject {
 
 	appDidReceiveMessage(message: NSDictionary<any, any>): FIRMessagingMessageInfo;
 
-	connectWithCompletion(handler: (p1: NSError) => void): void;
-
 	deleteFCMTokenForSenderIDCompletion(senderID: string, completion: (p1: NSError) => void): void;
-
-	disconnect(): void;
 
 	retrieveFCMTokenForSenderIDCompletion(senderID: string, completion: (p1: string, p2: NSError) => void): void;
 
@@ -78,7 +76,18 @@ declare const enum FIRMessagingError {
 
 	OperationInProgress = 5,
 
-	InvalidRequest = 7
+	InvalidRequest = 7,
+
+	InvalidTopicName = 8
+}
+
+declare class FIRMessagingExtensionHelper extends NSObject {
+
+	static alloc(): FIRMessagingExtensionHelper; // inherited from NSObject
+
+	static new(): FIRMessagingExtensionHelper; // inherited from NSObject
+
+	populateNotificationContentWithContentHandler(content: UNMutableNotificationContent, contentHandler: (p1: UNNotificationContent) => void): void;
 }
 
 declare class FIRMessagingMessageInfo extends NSObject {
@@ -108,6 +117,8 @@ declare class FIRMessagingRemoteMessage extends NSObject {
 	static new(): FIRMessagingRemoteMessage; // inherited from NSObject
 
 	readonly appData: NSDictionary<any, any>;
+
+	readonly messageID: string;
 }
 
 declare var FIRMessagingSendErrorNotification: string;

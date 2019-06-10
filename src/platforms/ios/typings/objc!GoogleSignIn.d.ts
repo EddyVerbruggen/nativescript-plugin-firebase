@@ -44,6 +44,8 @@ declare class GIDGoogleUser extends NSObject implements NSCoding {
 
 	readonly authentication: GIDAuthentication;
 
+	readonly grantedScopes: NSArray<any>;
+
 	readonly hostedDomain: string;
 
 	readonly profile: GIDProfileData;
@@ -137,11 +139,11 @@ declare class GIDSignInButton extends UIControl {
 
 	static appearanceForTraitCollectionWhenContainedIn(trait: UITraitCollection, ContainerClass: typeof NSObject): GIDSignInButton; // inherited from UIAppearance
 
-	static appearanceForTraitCollectionWhenContainedInInstancesOfClasses(trait: UITraitCollection, containerTypes: NSArray<typeof NSObject>): GIDSignInButton; // inherited from UIAppearance
+	static appearanceForTraitCollectionWhenContainedInInstancesOfClasses(trait: UITraitCollection, containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GIDSignInButton; // inherited from UIAppearance
 
 	static appearanceWhenContainedIn(ContainerClass: typeof NSObject): GIDSignInButton; // inherited from UIAppearance
 
-	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject>): GIDSignInButton; // inherited from UIAppearance
+	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GIDSignInButton; // inherited from UIAppearance
 
 	static new(): GIDSignInButton; // inherited from NSObject
 
@@ -187,7 +189,9 @@ declare const enum GIDSignInErrorCode {
 
 	kGIDSignInErrorCodeHasNoAuthInKeychain = -4,
 
-	kGIDSignInErrorCodeCanceled = -5
+	kGIDSignInErrorCodeCanceled = -5,
+
+	kGIDSignInErrorCodeEMM = -6
 }
 
 interface GIDSignInUIDelegate extends NSObjectProtocol {
