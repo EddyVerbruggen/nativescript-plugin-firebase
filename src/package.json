@@ -104,15 +104,24 @@
     "Messaging",
     "Remote Configuration",
     "Storage",
-    "Crash Reporting",
+    "Crashlytics",
     "Analytics",
     "Facebook",
     "Google",
     "AdMob",
-    "Invites",
+    "In-App Messaging",
+    "Performance Monitoring",
     "Dynamic Links",
     "ML Kit",
-    "Machine Learning"
+    "Machine Learning",
+    "Barcode Scanning",
+    "Face Detection",
+    "Image Labeling",
+    "Landmark Recognition",
+    "Smart Reply",
+    "Natural Language",
+    "Custom Model",
+    "Text Recognition"
   ],
   "author": {
     "name": "Eddy Verbruggen",
@@ -133,9 +142,9 @@
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
-    "tns-core-modules": "~5.1.1",
-    "tns-platform-declarations": "~5.1.1",
+    "tns-core-modules": "~5.4.2",
+    "tns-platform-declarations": "~5.4.2",
     "tslint": "^5.1.0",
-    "typescript": "~3.2.2"
+    "typescript": "~3.3.3"
   }
 }

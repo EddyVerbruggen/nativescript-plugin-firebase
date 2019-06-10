@@ -31,7 +31,7 @@
     created() {
       // wire up an 'onMessageClicked' callback
       inappmessaging.onMessageClicked(message => {
-        console.log(">> inappmessaging onMessageClicked, campaign: " + message.campaignName);
+        console.log(">> inappmessaging onMessageClicked, campaign: " + message.campaignName + ", with url: " + message.actionURL);
         this.message = `Campaign ${message.campaignName} clicked`;
       });
 

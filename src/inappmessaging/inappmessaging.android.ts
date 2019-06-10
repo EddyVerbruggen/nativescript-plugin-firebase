@@ -1,6 +1,6 @@
-import { OnMessageCallbackData } from "./inappmessaging";
+import { OnMessageImpressionCallbackData, OnMessageClickedCallbackData } from "./inappmessaging";
 
-export function onMessageClicked(callback: (data: OnMessageCallbackData) => void): void {
+export function onMessageClicked(callback: (data: OnMessageClickedCallbackData) => void): void {
   const listener = new com.google.firebase.inappmessaging.FirebaseInAppMessagingClickListener({
     messageClicked: (message: com.google.firebase.inappmessaging.model.InAppMessage, action: com.google.firebase.inappmessaging.model.Action) => {
       console.log(">> listener, messageClicked");
@@ -16,7 +16,7 @@ export function onMessageClicked(callback: (data: OnMessageCallbackData) => void
   com.google.firebase.inappmessaging.FirebaseInAppMessaging.getInstance().addClickListener(listener)
 }
 
-export function onMessageImpression(callback: (data: OnMessageCallbackData) => void): void {
+export function onMessageImpression(callback: (data: OnMessageImpressionCallbackData) => void): void {
   const listener = new com.google.firebase.inappmessaging.FirebaseInAppMessagingImpressionListener({
     impressionDetected: (message: com.google.firebase.inappmessaging.model.InAppMessage) => {
       console.log(">> listener, impressionDetected");

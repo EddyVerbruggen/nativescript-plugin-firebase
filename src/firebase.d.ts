@@ -549,18 +549,6 @@ export interface Message {
   data: any;
 }
 
-export interface SendCrashLogOptions {
-  /**
-   * Any custom logging you want to send to Firebase.
-   */
-  message: string;
-
-  /**
-   * Also log to the device console. Default false.
-   */
-  showInConsole: boolean;
-}
-
 export function init(options?: InitOptions): Promise<any>;
 
 // Database
@@ -638,67 +626,6 @@ export function enableLogging(logger?: boolean | ((a: string) => any), persisten
  * Tells the client to keep its local cache in sync with the server automatically.
  */
 export function keepInSync(path: string, switchOn: boolean): Promise<any>;
-
-// Invites module
-export namespace invites {
-
-  export enum MATCH_TYPE {
-    WEAK,
-    STRONG
-  }
-
-  export interface SendInvitationOptions {
-    /**
-     * Invitation title you want to send.
-     */
-    title: string;
-
-    /**
-     * Sets the default message sent with invitations.
-     */
-    message: string;
-
-    /**
-     * Sets the link into your app that is sent with invitations.
-     */
-    deepLink?: string;
-
-    /**
-     * Sets the call-to-action text of the button rendered in email invitations. Cannot exceed 32 characters.
-     */
-    callToActionText?: string;
-
-    /**
-     * Sets the URL of a custom image to include in email invitations. The image must be square and around 600x600 pixels. The image can be no larger than 4000x4000 pixels.
-     */
-    customImage?: string;
-
-    /**
-     * If you have an Android version of your app and you want to send an invitation that can be opened on Android in addition to iOS.
-     */
-    androidClientID?: string;
-
-    /**
-     * You can find your iOS app's client ID in the GoogleService-Info.plist file you downloaded from the Firebase console.
-     */
-    iosClientID?: string;
-  }
-
-  export interface SendInvitationResult {
-    count: number;
-    invitationIds: any;
-  }
-
-  export interface GetInvitationResult {
-    deepLink: string;
-    matchType?: MATCH_TYPE;
-    invitationId: string;
-  }
-
-  function sendInvitation(options: SendInvitationOptions): Promise<SendInvitationResult>;
-
-  function getInvitation(): Promise<GetInvitationResult>;
-}
 
 export namespace dynamicLinks {
   export enum MATCH_CONFIDENCE {

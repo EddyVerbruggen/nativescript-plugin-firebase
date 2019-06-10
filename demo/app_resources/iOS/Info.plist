@@ -100,8 +100,6 @@
     <key>NSAllowsArbitraryLoadsInWebContent</key>
     <true/>
   </dict>
-  <key>NSContactsUsageDescription</key>
-  <string>Required for Firebase Invites</string>
   <key>GADApplicationIdentifier</key>
   <string>ca-app-pub-9517346003011652~2508636525</string>
 

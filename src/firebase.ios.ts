@@ -1,28 +1,11 @@
 import * as application from "tns-core-modules/application/application";
-import {
-  ActionCodeSettings,
-  DataSnapshot,
-  FBDataSingleEvent,
-  firestore,
-  GetAuthTokenOptions,
-  IdTokenResult,
-  OnDisconnect as OnDisconnectBase,
-  QueryOptions,
-  User
-} from "./firebase";
-import {
-  DocumentSnapshot as DocumentSnapshotBase,
-  FieldValue,
-  firebase,
-  GeoPoint,
-  isDocumentReference
-} from "./firebase-common";
+import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
+import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as firebaseFunctions from './functions/functions';
 import * as firebaseMessaging from "./messaging/messaging";
 import { firebaseUtils } from "./utils";
 
 firebase._gIDAuthentication = null;
-firebase._cachedInvitation = null;
 firebase._cachedDynamicLink = null;
 firebase._configured = false;
 
@@ -95,7 +78,7 @@ firebase.addAppDelegateMethods = appDelegate => {
   }
 
   // there's no notification event to hook into for this one, so using the appDelegate
-  if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRInvites) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
+  if (typeof (FBSDKApplicationDelegate) !== "undefined" || typeof (GIDSignIn) !== "undefined" || typeof (FIRDynamicLink) !== "undefined") {
     appDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = (application, url, sourceApplication, annotation) => {
       let result = false;
       if (typeof (FBSDKApplicationDelegate) !== "undefined") {
@@ -106,22 +89,10 @@ firebase.addAppDelegateMethods = appDelegate => {
         result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
       }
 
-      if (typeof (FIRInvites) !== "undefined") {
-        const receivedInvite: FIRReceivedInvite = FIRInvites.handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
-        if (receivedInvite) {
-          console.log("Deep link from " + sourceApplication + ", Invite ID: " + receivedInvite.inviteId + ", App URL: " + receivedInvite.deepLink);
-          firebase._cachedInvitation = {
-            deepLink: receivedInvite.deepLink,
-            matchType: receivedInvite.matchType,
-            invitationId: receivedInvite.inviteId
-          };
-          result = true;
-        }
-      }
-
       if (typeof (FIRDynamicLink) !== "undefined") {
-        const dynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url);
+        const dynamicLink: FIRDynamicLink = FIRDynamicLinks.dynamicLinks().dynamicLinkFromCustomSchemeURL(url);
         if (dynamicLink) {
+          console.log("Dynamic link from " + sourceApplication + ", URL: " + dynamicLink.url.absoluteString);
           firebase._cachedDynamicLink = {
             url: dynamicLink.url.absoluteString,
             // matchConfidence: dynamicLink.matchConfidence,
@@ -306,7 +277,7 @@ firebase.addOnDynamicLinkReceivedCallback = callback => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof (FIRDynamicLink) === "undefined") {
-        reject("Enable FIRInvites in Podfile first");
+        reject("Set 'dynamic_links' to 'true' in firebase.nativescript.json and remove the platforms/ios folder");
         return;
       }
 
@@ -1068,12 +1039,17 @@ firebase.reauthenticate = arg => {
         return;
       }
 
-      const onCompletion = error => {
+      const onCompletion = (authResult: FIRAuthDataResult, error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
 
         } else {
-          resolve();
+          resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
+
+          firebase.notifyAuthStateListeners({
+            loggedIn: true,
+            user: toLoginResult(authResult.user)
+          });
         }
       };
       user.reauthenticateWithCredentialCompletion(authCredential, onCompletion);
@@ -1716,134 +1692,6 @@ firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
  * END Realtime Database Functions
  ***********************************************/
 
-firebase.sendCrashLog = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-      // TODO generate typings again and see if 'FIRCrashLog' is available
-      /*
-      if (typeof(FIRCrashLog) === "undefined") {
-        reject("Make sure 'Firebase/Crash' is in the plugin's Podfile - and if it is there's currently a problem with this Pod which is outside out span of control :(");
-        return;
-      }
-
-      if (!arg.message) {
-        reject("The mandatory 'message' argument is missing");
-        return;
-      }
-
-      if (arg.showInConsole) {
-        FIRCrashNSLog(arg.message);
-      } else {
-        FIRCrashLog(arg.message);
-      }
-      */
-
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.sendCrashLog: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.invites.sendInvitation = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-
-      if (typeof (FIRInvites) === "undefined") {
-        reject("Make sure 'Firebase/Invites' is in the plugin's Podfile");
-        return;
-      }
-
-      if (!arg.message || !arg.title) {
-        reject("The mandatory 'message' or 'title' argument is missing");
-        return;
-      }
-
-      // note that this returns the wrong type, so need to use 'performSelector' below
-      const inviteDialog = FIRInvites.inviteDialog();
-
-      // A message hint for the dialog. Note this manifests differently depending on the
-      // received invitation type. For example, in an email invite this appears as the subject.
-      // inviteDialog.setMessage(arg.message);
-      inviteDialog.performSelectorWithObject("setMessage:", arg.message);
-
-      // Title for the dialog, this is what the user sees before sending the invites.
-      // inviteDialog.setTitle(arg.title);
-      inviteDialog.performSelectorWithObject("setTitle:", arg.title);
-
-      if (arg.deepLink) {
-        // inviteDialog.setDeepLink(arg.deeplink);
-        inviteDialog.performSelectorWithObject("setDeepLink:", arg.deeplink);
-      }
-
-      if (arg.callToActionText) {
-        // inviteDialog.setCallToActionText(arg.callToActionText);
-        inviteDialog.performSelectorWithObject("setCallToActionText:", arg.callToActionText);
-      }
-
-      if (arg.customImage) {
-        // inviteDialog.setCustomImage(arg.customImage);
-        inviteDialog.performSelectorWithObject("setCustomImage:", arg.customImage);
-      }
-
-      if (arg.androidClientID) {
-        const targetApplication = FIRInvitesTargetApplication.new();
-        targetApplication.androidClientID = arg.androidClientID;
-        // inviteDialog.setOtherPlatformsTargetApplication(targetApplication);
-        inviteDialog.performSelectorWithObject("setOtherPlatformsTargetApplication:", targetApplication);
-      }
-
-      let delegate = FIRInviteDelegateImpl.new().initWithCallback((invitationIds: NSArray<string>, error: NSError) => {
-        if (error === null) {
-          const ids = firebaseUtils.toJsObject(invitationIds);
-          resolve({
-            count: invitationIds.count,
-            invitationIds: ids
-          });
-        } else {
-          reject(error.localizedDescription);
-        }
-        CFRelease(delegate);
-        delegate = undefined;
-      });
-      // This opens the contact picker UI, so making sure this is retained
-      CFRetain(delegate);
-      // inviteDialog.setInviteDelegate(delegate);
-      inviteDialog.performSelectorWithObject("setInviteDelegate:", delegate);
-
-      // inviteDialog.open();
-      inviteDialog.performSelector("open");
-
-    } catch (ex) {
-      console.log("Error in firebase.sendInvitation: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.invites.getInvitation = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (typeof (FIRInvites) === "undefined") {
-        reject("Make sure 'Firebase/Invites' is in the plugin's Podfile");
-        return;
-      }
-
-      if (firebase._cachedInvitation !== null) {
-        resolve(firebase._cachedInvitation);
-        firebase.cachedInvitation = null;
-      } else {
-        reject("Not launched by invitation");
-      }
-
-    } catch (ex) {
-      console.log("Error in firebase.getInvitation: " + ex);
-      reject(ex);
-    }
-  });
-};
-
 firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.WriteBatch => {
   class FirestoreWriteBatch implements firestore.WriteBatch {
     constructor() {
@@ -1853,18 +1701,18 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
       fixSpecialFields(data);
       nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    }
+    };
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
       fixSpecialFields(data);
       nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    }
+    };
 
     public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
       nativeWriteBatch.deleteDocument(documentRef.ios);
       return this;
-    }
+    };
 
     commit(): Promise<void> {
       return new Promise<void>((resolve, reject) => {
@@ -1890,19 +1738,19 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
     public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
       const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError(documentRef.ios);
       return new DocumentSnapshot(docSnapshot);
-    }
+    };
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    }
+    };
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    }
+    };
 
     public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
       nativeTransaction.deleteDocument(documentRef.ios);
@@ -2436,28 +2284,6 @@ firebase.firestore.endAt = (collectionPath: string, document: DocumentSnapshot, 
 firebase.firestore.endBefore = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
   return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeDocument(document.ios));
 };
-
-class FIRInviteDelegateImpl extends NSObject implements FIRInviteDelegate {
-  public static ObjCProtocols = [];
-
-  static new(): FIRInviteDelegateImpl {
-    if (FIRInviteDelegateImpl.ObjCProtocols.length === 0 && typeof (FIRInviteDelegate) !== "undefined") {
-      FIRInviteDelegateImpl.ObjCProtocols.push(FIRInviteDelegate);
-    }
-    return <FIRInviteDelegateImpl>super.new();
-  }
-
-  private callback: (invitationIds: NSArray<string>, error: NSError) => void;
-
-  public initWithCallback(callback: (invitationIds: NSArray<string>, error: NSError) => void): FIRInviteDelegateImpl {
-    this.callback = callback;
-    return this;
-  }
-
-  public inviteFinishedWithInvitationsError(invitationIds: NSArray<string>, error: NSError): void {
-    this.callback(invitationIds, error);
-  }
-}
 
 class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {
   public static ObjCProtocols = [];

@@ -1777,56 +1777,17 @@ export class HelloWorldModel extends Observable {
     firebase.reauthenticate({
       type: firebase.LoginType.FACEBOOK
     }).then(
-        () => {
+        result => {
+          console.log("Facebook login OK: " + JSON.stringify(result));
           alert({
-            title: "Re-authenticated Facebook user",
-            okButtonText: "OK"
+            title: "Reauthenticated with Facebook",
+            message: JSON.stringify(result),
+            okButtonText: "Nice!"
           });
         },
         error => {
           alert({
             title: "Re-authenticate error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
-  }
-
-  public sendInvitation(): void {
-    firebase.invites.sendInvitation({
-      title: "Invite title here",
-      message: "Invite message here"
-    }).then(
-        result => { // SendInvitationResult
-          alert({
-            title: result.count + " invitations sent",
-            message: "ID's: " + JSON.stringify(result.invitationIds),
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "sendInvitation error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
-  }
-
-  public getInvitation(): void {
-    firebase.invites.getInvitation().then(
-        result => { // GetInvitationResult
-          alert({
-            title: "Invitation result",
-            message: JSON.stringify(result),
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "getInvitation error",
             message: error,
             okButtonText: "OK"
           });
@@ -1878,28 +1839,6 @@ export class HelloWorldModel extends Observable {
       this.firebaseTrace.incrementMetric("foo_metric", 1);
       console.log(">> metric incremented");
     }
-  }
-
-  public doLogMessage(): void {
-    firebase.sendCrashLog({
-      message: "Hey, I was logged!",
-      showInConsole: true
-    }).then(
-        () => {
-          alert({
-            title: "Message logged",
-            message: "Check the Firebase console",
-            okButtonText: "Okay"
-          });
-        },
-        error => {
-          alert({
-            title: "Logging error",
-            message: error,
-            okButtonText: "OK"
-          });
-        }
-    );
   }
 
   public doCrash(): void {

@@ -2,24 +2,8 @@ import * as appModule from "tns-core-modules/application";
 import { AndroidActivityResultEventData } from "tns-core-modules/application";
 import lazy from "tns-core-modules/utils/lazy";
 import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
-import {
-  ActionCodeSettings,
-  DataSnapshot,
-  FBDataSingleEvent,
-  FBErrorData,
-  firestore,
-  GetAuthTokenOptions,
-  IdTokenResult,
-  OnDisconnect as OnDisconnectBase, QueryOptions,
-  User
-} from "./firebase";
-import {
-  DocumentSnapshot as DocumentSnapshotBase,
-  FieldValue,
-  firebase,
-  GeoPoint,
-  isDocumentReference
-} from "./firebase-common";
+import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, FBErrorData, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
+import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
 import * as firebaseMessaging from "./messaging/messaging";
 
@@ -52,7 +36,6 @@ let fbCallbackManager = null;
 let initializeArguments: any;
 
 const GOOGLE_SIGNIN_INTENT_ID = 123;
-const REQUEST_INVITE_INTENT_ID = 48;
 
 const authEnabled = lazy(() => typeof (com.google.firebase.auth) !== "undefined" && typeof (com.google.firebase.auth.FirebaseAuth) !== "undefined");
 const messagingEnabled = lazy(() => typeof (com.google.firebase.messaging) !== "undefined");
@@ -2002,162 +1985,6 @@ firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
  * END Realtime Database Functions
  ***********************************************/
 
-firebase.sendCrashLog = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-
-      if (typeof (com.google.firebase.crash) === "undefined") {
-        reject("Make sure firebase-crash is in the plugin's include.gradle");
-        return;
-      }
-
-      if (!arg.message) {
-        reject("The mandatory 'message' argument is missing");
-        return;
-      }
-
-      com.google.firebase.crash.FirebaseCrash.log(arg.message);
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.sendCrashLog: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.invites.sendInvitation = arg => {
-  return new Promise((resolve, reject) => {
-    try {
-
-      if (typeof (com.google.android.gms.appinvite) === "undefined") {
-        reject("Make sure firebase-invites is in the plugin's include.gradle");
-        return;
-      }
-
-      if (!arg.message || !arg.title) {
-        reject("The mandatory 'message' or 'title' argument is missing");
-        return;
-      }
-
-      const builder = new com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder(arg.title).setMessage(arg.message);
-
-      if (arg.deepLink) {
-        builder.setDeepLink(android.net.Uri.parse(arg.deepLink));
-      }
-
-      if (arg.callToActionText) {
-        builder.setCallToActionText(arg.callToActionText);
-      }
-
-      if (arg.customImage) {
-        builder.setCustomImage(android.net.Uri.parse(arg.customImage));
-      }
-
-      if (arg.iosClientID) {
-        builder.setOtherPlatformsTargetApplication(com.google.android.gms.appinvite.AppInviteInvitation.IntentBuilder.PlatformMode.PROJECT_PLATFORM_IOS, arg.iosClientID);
-      }
-
-      const firebaseInviteIntent = builder.build();
-
-      (appModule.android.foregroundActivity || appModule.android.startActivity).startActivityForResult(firebaseInviteIntent, REQUEST_INVITE_INTENT_ID);
-
-      const callback = (eventData: AndroidActivityResultEventData) => {
-        if (eventData.requestCode === REQUEST_INVITE_INTENT_ID) {
-          appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
-          if (eventData.resultCode === android.app.Activity.RESULT_OK) {
-            // Get the invitation IDs of all sent messages
-            const ids = com.google.android.gms.appinvite.AppInviteInvitation.getInvitationIds(eventData.resultCode, eventData.intent);
-
-            try {
-              resolve({
-                count: ids.length,
-                invitationIds: firebase.toJsObject(ids)
-              });
-            } catch (e) {
-              reject(e);
-            }
-
-          } else {
-            if (eventData.resultCode === 3) {
-              reject("Resultcode 3, see http://stackoverflow.com/questions/37883664/result-code-3-when-implementing-appinvites");
-            } else {
-              reject("Resultcode: " + eventData.resultCode);
-            }
-          }
-        }
-      };
-      appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
-
-    } catch (ex) {
-      console.log("Error in firebase.sendInvitation: " + ex);
-      reject(ex);
-    }
-  });
-};
-
-firebase.invites.getInvitation = () => {
-  return new Promise((resolve, reject) => {
-    try {
-
-      if (typeof (com.google.android.gms.appinvite) === "undefined") {
-        reject("Make sure firebase-invites is in the plugin's include.gradle");
-        return;
-      }
-
-      const onConnectionFailedListener = new com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener({
-        onConnectionFailed: connectionResult => {
-          // we shouldn't reject on connection failure as the invitation link may still be available locally
-          // reject(connectionResult.getErrorMessage());
-        }
-      });
-
-      firebase._mGoogleInviteApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
-          .addOnConnectionFailedListener(onConnectionFailedListener)
-          .addApi(com.google.android.gms.appinvite.AppInvite.API)
-          .build();
-
-      firebase._mGoogleInviteApiClient.connect();
-
-      const firebaseDynamicLinks = com.google.firebase.dynamiclinks.FirebaseDynamicLinks.getInstance();
-
-      const onSuccessListener = new gmsTasks.OnSuccessListener({
-        onSuccess: pendingDynamicLinkData => {
-          if (pendingDynamicLinkData === null) {
-            reject("Not launched by invitation");
-            return;
-          }
-
-          // get the deeplink
-          const deepLinkUri = pendingDynamicLinkData.getLink();
-
-          // extract invite
-          const firebaseAppInvite = com.google.firebase.appinvite.FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
-
-          resolve({
-            deepLink: deepLinkUri === null ? null : deepLinkUri.toString(),
-            matchType: deepLinkUri === null ? null : 1,
-            invitationId: firebaseAppInvite.getInvitationId() // string | null
-          });
-        }
-      });
-
-      const onFailureListener = new gmsTasks.OnFailureListener({
-        onFailure: exception => {
-          reject(exception.getMessage());
-        }
-      });
-
-      firebaseDynamicLinks.getDynamicLink(appModule.android.startActivity.getIntent())
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
-
-    } catch (ex) {
-      console.log("Error in firebase.getInvitation: " + ex);
-      reject(ex);
-    }
-  });
-};
-
 class FirestoreWriteBatch implements firestore.WriteBatch {
 
   public nativeWriteBatch: com.google.firebase.firestore.WriteBatch;
@@ -2169,17 +1996,17 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
       this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
     }
     return this;
-  }
+  };
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
     this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
     return this;
-  }
+  };
 
   public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
     this.nativeWriteBatch.delete(documentRef.android);
     return this;
-  }
+  };
 
   public commit(): Promise<void> {
     return new Promise<void>((resolve, reject) => {

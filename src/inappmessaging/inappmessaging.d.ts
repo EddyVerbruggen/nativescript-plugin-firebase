@@ -1,7 +1,13 @@
-export interface OnMessageCallbackData {
+export interface OnMessageImpressionCallbackData {
   campaignName: string;
 }
 
-export declare function onMessageClicked(callback: (data: OnMessageCallbackData) => void): void;
+export interface OnMessageClickedCallbackData {
+  campaignName: string;
+  actionText?: string;
+  actionURL?: string;
+}
 
-export declare function onMessageImpression(callback: (data: OnMessageCallbackData) => void): void;
+export declare function onMessageImpression(callback: (data: OnMessageImpressionCallbackData) => void): void;
+
+export declare function onMessageClicked(callback: (data: OnMessageClickedCallbackData) => void): void;

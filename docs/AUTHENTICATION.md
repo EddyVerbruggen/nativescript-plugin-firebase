@@ -292,7 +292,7 @@ Enable email-password login in your firebase instance, and flip the "E-mail link
 This login type allows your users to login without providing a password. They can simply click a link
 and get redirected to the app. The app may even run on a different device.
 
-Enable dynamic links, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md), because the user
+Enable dynamic links, as described in the [Dynamic Links readme](./DYNAMIC_LINKS.md), because the user
 that receives the link will need to be redirected to your app.
 
 #### iOS configuration
@@ -300,7 +300,7 @@ that receives the link will need to be redirected to your app.
 
 #### Android configuration
 - Specify the package name of your app in the Firebase console.
-- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md).
+- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme](./DYNAMIC_LINKS.md).
 - Also add an `android:host` for the `emailLinkOptions.url` to your `app/App_Resources/Android/AndroidManifest.xml` file as described in that readme.
 
 <details>
@@ -777,6 +777,8 @@ Some security-sensitive actions (deleting an account, changing a password) requi
 If you perform one of these actions, and the user signed in too long ago, the action fails.
 When this happens (or to prevent it from happening), re-authenticate the user.
 
+> Since plugin version 9.0.0 the Promise will resolve the user in the result. Older version don't return anything.
+
 ```js
   firebase.reauthenticate({
     type: firebase.LoginType.PASSWORD, // or GOOGLE / FACEBOOK
@@ -786,10 +788,11 @@ When this happens (or to prevent it from happening), re-authenticate the user.
       password: 'thePassword'
     }
   }).then(
-      function () {
-        // you can now safely delete the account / change the password
+      function (result) {
+        // you can now safely delete the account / change the password, etc
         dialogs.alert({
           title: "Re-authenticated user",
+          message: JSON.stringify(result),
           okButtonText: "OK"
         });
       },

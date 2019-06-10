@@ -4363,10 +4363,6 @@ function promptQuestions() {
     description: 'Are you using Firebase Crashlytics? (y/n)',
     default: 'n'
   }, {
-    name: 'crash_reporting',
-    description: 'Are you using Firebase Crash Reporting? (answer "n" if you want to use Crashlytics instead) (y/n)',
-    default: 'n'
-  }, {
     name: 'storage',
     description: 'Are you using Firebase Storage? (y/n)',
     default: 'n'
@@ -4385,10 +4381,6 @@ function promptQuestions() {
   }, {
     name: 'admob',
     description: 'Are you using AdMob? (y/n)',
-    default: 'n'
-  }, {
-    name: 'invites',
-    description: 'Are you using Firebase Invites? (y/n)',
     default: 'n'
   }, {
     name: 'dynamic_links',
@@ -4562,9 +4554,6 @@ pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.2.0' : '5.15.0')
 
 # Performance Monitoring
 ` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'Firebase/Performance'
-
-# Crash Reporting
-` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
 
 # Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
@@ -4929,9 +4918,6 @@ dependencies {
     // Performance Monitoring
     ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:16.2.5"
 
-    // Crash Reporting
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-crash:16.2.1"
-
     // Crashlytics
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.9.9"
 
@@ -4966,9 +4952,6 @@ dependencies {
 
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
-
-    // Invites
-    ` + (isSelected(result.invites) ? `` : `//`) + ` implementation "com.google.firebase:firebase-invites:16.1.1"
 
     // Dynamic Links
     ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:16.1.8"

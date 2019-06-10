@@ -19,7 +19,6 @@ let _receivedPushTokenCallback: Function;
 let _receivedNotificationCallback: Function;
 let _registerForRemoteNotificationsRanThisSession = false;
 let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
-let _messagingConnected: boolean = null;
 let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
 let _showNotifications: boolean = true;
 let _showNotificationsWhenInForeground: boolean = false;
@@ -258,26 +257,8 @@ export function prepAppDelegate() {
   _addObserver(UIApplicationDidBecomeActiveNotification, appNotification => {
     _processPendingNotifications();
 
-    if (!_messagingConnected) {
-      _messagingConnectWithCompletion();
-    }
-  });
-
-  _addObserver(UIApplicationDidEnterBackgroundNotification, appNotification => {
-    // Firebase notifications (FCM)
-    if (_messagingConnected) {
-      FIRMessaging.messaging().disconnect();
-    }
-  });
-
-  _addObserver(UIApplicationWillEnterForegroundNotification, appNotification => {
-    // Firebase notifications (FCM)
-    if (_messagingConnected !== null) {
-      FIRMessaging.messaging().connectWithCompletion(error => {
-        if (!error) {
-          _messagingConnected = true;
-        }
-      });
+    if (typeof (FIRMessaging) !== "undefined") {
+      FIRMessaging.messaging().shouldEstablishDirectChannel = true;
     }
   });
 }
@@ -326,17 +307,11 @@ export const onTokenRefreshNotification = token => {
   if (_receivedPushTokenCallback) {
     _receivedPushTokenCallback(token);
   }
-
-  _messagingConnectWithCompletion();
 };
 
 export class IosInteractivePushSettings {
   actions: Array<IosInteractiveNotificationAction>;
   categories: Array<IosInteractiveNotificationCategory>;
-
-  constructor() {
-
-  }
 }
 
 export enum IosInteractiveNotificationActionOptions {
@@ -351,10 +326,6 @@ export class IosPushSettings {
   alert: boolean;
   notificationCallback: Function;
   interactiveSettings: IosInteractivePushSettings;
-
-  constructor() {
-
-  }
 }
 
 export class PushNotificationModel {
@@ -494,27 +465,6 @@ function _registerForRemoteNotifications(resolve?, reject?) {
     });
     app.registerUserNotificationSettings(notificationSettings);
   }
-}
-
-function _messagingConnectWithCompletion() {
-  return new Promise((resolve, reject) => {
-    if (typeof (FIRMessaging) === "undefined") {
-      resolve();
-      return;
-    }
-
-    FIRMessaging.messaging().connectWithCompletion(error => {
-      if (error) {
-        // this is not fatal and it scares the hell out of ppl so not logging it
-        // console.log("Firebase was unable to connect to FCM. Error: " + error);
-        return reject(error);
-      }
-
-      _messagingConnected = true;
-      resolve();
-    });
-
-  });
 }
 
 function _addOnNotificationActionTakenCallback(callback: Function) {

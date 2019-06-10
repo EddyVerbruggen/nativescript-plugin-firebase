@@ -100,7 +100,5 @@
     <key>NSAllowsArbitraryLoadsInWebContent</key>
     <true/>
   </dict>
-  <key>NSContactsUsageDescription</key>
-  <string>Required for Firebase Invites</string>
 </dict>
 </plist>

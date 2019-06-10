@@ -1,13 +1,13 @@
-import { OnMessageCallbackData } from "./inappmessaging";
+import { OnMessageImpressionCallbackData, OnMessageClickedCallbackData } from "./inappmessaging";
 
 let _firInAppMessagingDisplayDelegate: FIRInAppMessagingDisplayDelegateImpl;
 
-export function onMessageClicked(callback: (data: OnMessageCallbackData) => void): void {
+export function onMessageClicked(callback: (data: OnMessageClickedCallbackData) => void): void {
   ensureDelegate();
   _firInAppMessagingDisplayDelegate.setOnMessageClickedCallback(callback);
 }
 
-export function onMessageImpression(callback: (data: OnMessageCallbackData) => void): void {
+export function onMessageImpression(callback: (data: OnMessageImpressionCallbackData) => void): void {
   ensureDelegate();
   _firInAppMessagingDisplayDelegate.setOnMessageImpressionCallback(callback);
 }
@@ -28,14 +28,14 @@ class FIRInAppMessagingDisplayDelegateImpl extends NSObject implements FIRInAppM
     return <FIRInAppMessagingDisplayDelegateImpl>super.new();
   }
 
-  private onMessageClickedCallback: (data: OnMessageCallbackData) => void;
-  private onMessageImpressionCallback: (data: OnMessageCallbackData) => void;
+  private onMessageClickedCallback: (data: OnMessageClickedCallbackData) => void;
+  private onMessageImpressionCallback: (data: OnMessageImpressionCallbackData) => void;
 
-  public setOnMessageClickedCallback(callback: (data: OnMessageCallbackData) => void): void {
+  public setOnMessageClickedCallback(callback: (data: OnMessageClickedCallbackData) => void): void {
     this.onMessageClickedCallback = callback;
   }
 
-  public setOnMessageImpressionCallback(callback: (data: OnMessageCallbackData) => void): void {
+  public setOnMessageImpressionCallback(callback: (data: OnMessageImpressionCallbackData) => void): void {
     this.onMessageImpressionCallback = callback;
   }
 
@@ -54,6 +54,15 @@ class FIRInAppMessagingDisplayDelegateImpl extends NSObject implements FIRInAppM
     console.log("InAppMessaging clicked");
     this.onMessageClickedCallback && this.onMessageClickedCallback({
       campaignName: inAppMessage.campaignInfo.campaignName
+    });
+  }
+
+  messageClickedWithAction(inAppMessage: FIRInAppMessagingDisplayMessage, action: FIRInAppMessagingAction): void {
+    console.log("InAppMessaging clicked with action, text: " + action.actionText + ", url: " + action.actionURL);
+    this.onMessageClickedCallback && this.onMessageClickedCallback({
+      campaignName: inAppMessage.campaignInfo.campaignName,
+      actionText: action.actionText,
+      actionURL: action.actionURL.absoluteString
     });
   }
 
