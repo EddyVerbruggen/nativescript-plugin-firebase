@@ -224,7 +224,7 @@
             <Button row="49" col="1" text="set int crashlytics" tap="{{ doSetCrashlyticInt }}" class="button button-crash"/>
             <Button row="50" colSpan="2" text="SetUserId" tap="{{ doSetUserId }}" class="button button-crash"/>
 
-            <Label row="51" colSpan="2" text="Performance Monitoring" class="subtitle"/>
+            <Label row="51" colSpan="2" text="Perf. Monitoring (see the console log)" class="subtitle"/>
             <Button row="52" col="0" text="start trace" tap="{{ startPerformanceMonitoringTrace }}" class="button button-performance"/>
             <Button row="52" col="1" text="stop trace" tap="{{ stopPerformanceMonitoringTrace }}" class="button button-performance"/>
             <Button row="53" col="0" text="set value trace" tap="{{ setValuePerformanceMonitoring }}" class="button button-performance"/>

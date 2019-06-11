@@ -72,10 +72,8 @@
     "ios.list-devices": "tns device ios --available-devices",
     "generate.typings.ios": "echo '##### Make sure to first run demo-ng.ios #####' && cd ../demo-ng && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo-ng/typings!'",
     "generate.typings.android": "echo '##### Download the latest relevant .aar file from https://mvnrepository.com/artifact/com.google.firebase, rename .aar to .zip and extract it. Then move classes.jar to the plugin /src folder' && java -jar ../../android-dts-generator/dts-generator/build/libs/dts-generator.jar -input ./classes.jar -output platforms/android/typings/$npm_package_config_typings && rimraf classes.jar && echo '##### Done! Deleted src/classes.jar, and generated typings in src/platforms/android/typings/'",
-    "generate.typings.android.admob": "npm run generate.typings.android --nativescript-plugin-firebase:typings=admob",
     "generate.typings.android.analytics": "npm run generate.typings.android --nativescript-plugin-firebase:typings=analytics-impl",
     "generate.typings.android.auth": "npm run generate.typings.android --nativescript-plugin-firebase:typings=auth",
-    "generate.typings.android.core": "npm run generate.typings.android --nativescript-plugin-firebase:typings=core",
     "generate.typings.android.database": "npm run generate.typings.android --nativescript-plugin-firebase:typings=database --nativescript-plugin-firebase:typingsproject=demo",
     "generate.typings.android.dynamiclinks": "npm run generate.typings.android --nativescript-plugin-firebase:typings=dynamiclinks --nativescript-plugin-firebase:typingsproject=demo",
     "generate.typings.android.firestore": "npm run generate.typings.android --nativescript-plugin-firebase:typings=firestore",
@@ -86,7 +84,8 @@
     "generate.typings.android.functions": "npm run generate.typings.android --nativescript-plugin-firebase:typings=functions",
     "generate.typings.android.mlkit": "npm run generate.typings.android --nativescript-plugin-firebase:typings=mlkit",
     "generate.typings.android.crashlytics": "npm run generate.typings.android --nativescript-plugin-firebase:typings=crashlytics",
-    "generate.typings.android.inappmessaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=inappmessaging"
+    "generate.typings.android.inappmessaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=inappmessaging",
+    "generate.typings.android.performance": "npm run generate.typings.android --nativescript-plugin-firebase:typings=performance"
   },
   "repository": {
     "type": "git",

@@ -517,14 +517,13 @@ firebase.getRemoteConfig = arg => {
       // Get a Remote Config object instance
       const firebaseRemoteConfig = com.google.firebase.remoteconfig.FirebaseRemoteConfig.getInstance();
 
-      // Enable developer mode to allow for frequent refreshes of the cache
-      const remoteConfigSettings = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder()
-          .setDeveloperModeEnabled(arg.developerMode || false)
-          .build();
+      // Enable developer mode to allow for frequent refreshes of the cache (this changed, see https://firebase.google.com/support/release-notes/android#version_1700)
+      const remoteConfigSettingsBuilder = new com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder();
+      if (arg.developerMode === true) {
+        remoteConfigSettingsBuilder.setFetchTimeoutInSeconds(0);
+      }
 
-      firebaseRemoteConfig.setConfigSettings(remoteConfigSettings);
-
-      const addOnCompleteListener = new gmsTasks.OnCompleteListener({
+      const addOnSetDefaultsCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
@@ -539,8 +538,8 @@ firebase.getRemoteConfig = arg => {
                     const lastFetch = new Date(lastFetchTime);
 
                     const result = {
-                      lastFetch: lastFetch,
-                      throttled: throttled,
+                      lastFetch,
+                      throttled,
                       properties: {}
                     };
 
@@ -582,9 +581,21 @@ firebase.getRemoteConfig = arg => {
         }
       });
 
-      const defaults = firebase.getRemoteConfigDefaults(arg.properties);
-      firebaseRemoteConfig.setDefaultsAsync(firebase.toHashMap(defaults))
-          .addOnCompleteListener(addOnCompleteListener);
+      const addOnSetConfigSettingsCompleteListener = new gmsTasks.OnCompleteListener({
+        onComplete: task => {
+          if (!task.isSuccessful()) {
+            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+          } else {
+            const defaults = firebase.getRemoteConfigDefaults(arg.properties);
+            firebaseRemoteConfig.setDefaultsAsync(firebase.toHashMap(defaults))
+                .addOnCompleteListener(addOnSetDefaultsCompleteListener);
+          }
+        }
+      });
+
+      firebaseRemoteConfig.setConfigSettingsAsync(remoteConfigSettingsBuilder.build())
+          .addOnCompleteListener(addOnSetConfigSettingsCompleteListener);
+
     };
 
     try {
@@ -1187,10 +1198,16 @@ firebase.reauthenticate = arg => {
       const onCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (task.isSuccessful()) {
-            resolve();
+            const user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+            const loginResult = toLoginResult(user);
+
+            firebase.notifyAuthStateListeners({
+              loggedIn: true,
+              user: loginResult
+            });
+            resolve(loginResult);
           } else {
-            // TODO extract error
-            reject("Reathentication failed");
+            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           }
         }
       });

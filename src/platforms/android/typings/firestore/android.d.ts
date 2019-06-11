@@ -422,6 +422,7 @@ declare module com {
 					public static getInstance(): com.google.firebase.firestore.FirebaseFirestore;
 					public static getInstance(param0: com.google.firebase.FirebaseApp): com.google.firebase.firestore.FirebaseFirestore;
 					public collection(param0: string): com.google.firebase.firestore.CollectionReference;
+					public collectionGroup(param0: string): com.google.firebase.firestore.Query;
 					public getApp(): com.google.firebase.FirebaseApp;
 					public disableNetwork(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public static setLoggingEnabled(param0: boolean): void;
@@ -1009,6 +1010,54 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module core {
+					export class ActivityScope {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.ActivityScope>;
+						public constructor();
+						public static bind(param0: globalAndroid.app.Activity, param1: com.google.firebase.firestore.ListenerRegistration): com.google.firebase.firestore.ListenerRegistration;
+					}
+					export module ActivityScope {
+						export class CallbackList {
+							public static class: java.lang.Class<com.google.firebase.firestore.core.ActivityScope.CallbackList>;
+						}
+						export class StopListenerFragment {
+							public static class: java.lang.Class<com.google.firebase.firestore.core.ActivityScope.StopListenerFragment>;
+							public constructor();
+							public onStop(): void;
+						}
+						export class StopListenerSupportFragment {
+							public static class: java.lang.Class<com.google.firebase.firestore.core.ActivityScope.StopListenerSupportFragment>;
+							public constructor();
+							public onStop(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
+					export class AsyncEventListener<T>  extends com.google.firebase.firestore.EventListener<any> {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.AsyncEventListener<any>>;
+						public constructor(param0: java.util.concurrent.Executor, param1: com.google.firebase.firestore.EventListener<any>);
+						public mute(): void;
+						public onEvent(param0: any, param1: com.google.firebase.firestore.FirebaseFirestoreException): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
 					export class Bound {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.Bound>;
 						public sortsBeforeDocument(param0: java.util.List<com.google.firebase.firestore.core.OrderBy>, param1: com.google.firebase.firestore.model.Document): boolean;
@@ -1176,6 +1225,7 @@ declare module com {
 						public enableNetwork(): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public write(param0: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public handleRemoteEvent(param0: com.google.firebase.firestore.remote.RemoteEvent): void;
+						public isShutdown(): boolean;
 						public handleOnlineStateChange(param0: com.google.firebase.firestore.core.OnlineState): void;
 						public handleSuccessfulWrite(param0: com.google.firebase.firestore.model.mutation.MutationBatchResult): void;
 						public getDocumentsFromLocalCache(param0: com.google.firebase.firestore.core.Query): com.google.android.gms.tasks.Task<com.google.firebase.firestore.core.ViewSnapshot>;
@@ -1254,6 +1304,22 @@ declare module com {
 						public static INVALID: number;
 						public next(): number;
 						public constructor(param0: number);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
+					export class ListenerRegistrationImpl extends com.google.firebase.firestore.ListenerRegistration {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.ListenerRegistrationImpl>;
+						public constructor(param0: com.google.firebase.firestore.core.FirestoreClient, param1: com.google.firebase.firestore.core.QueryListener, param2: com.google.firebase.firestore.core.AsyncEventListener<com.google.firebase.firestore.core.ViewSnapshot>);
+						public remove(): void;
 					}
 				}
 			}
@@ -2504,6 +2570,7 @@ declare module com {
 						public start(): void;
 						public isStarted(): boolean;
 						public static databaseName(param0: string, param1: com.google.firebase.firestore.model.DatabaseId): string;
+						public static clearPersistence(param0: globalAndroid.content.Context, param1: com.google.firebase.firestore.model.DatabaseId, param2: string): void;
 					}
 					export module SQLitePersistence {
 						export class LongQuery {
@@ -5036,7 +5103,7 @@ declare module com {
 					export class CustomClassMapper {
 						public static class: java.lang.Class<com.google.firebase.firestore.util.CustomClassMapper>;
 						public constructor();
-						public static convertToCustomClass(param0: any, param1: java.lang.Class): any;
+						public static convertToCustomClass(param0: any, param1: java.lang.Class, param2: com.google.firebase.firestore.DocumentReference): any;
 						public static convertToPlainJavaTypes(param0: any): any;
 						public static convertToPlainJavaTypes(param0: java.util.Map<any,any>): java.util.Map<string,any>;
 					}
@@ -5060,11 +5127,14 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module util {
-					export class ExecutorEventListener<T>  extends com.google.firebase.firestore.EventListener<any> {
-						public static class: java.lang.Class<com.google.firebase.firestore.util.ExecutorEventListener<any>>;
-						public constructor(param0: java.util.concurrent.Executor, param1: com.google.firebase.firestore.EventListener<any>);
-						public mute(): void;
-						public onEvent(param0: any, param1: com.google.firebase.firestore.FirebaseFirestoreException): void;
+					export class DocumentId {
+						public static class: java.lang.Class<com.google.firebase.firestore.util.DocumentId>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.firestore.util.DocumentId interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+						});
+						public constructor();
 					}
 				}
 			}
@@ -5100,6 +5170,32 @@ declare module com {
 						public resetToMax(): void;
 						public backoffAndRun(param0: java.lang.Runnable): void;
 						public reset(): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module util {
+					export class FileUtil {
+						public static class: java.lang.Class<com.google.firebase.firestore.util.FileUtil>;
+						public constructor();
+						public static delete(param0: java.io.File): void;
+					}
+					export module FileUtil {
+						export class DefaultFileDeleter {
+							public static class: java.lang.Class<com.google.firebase.firestore.util.FileUtil.DefaultFileDeleter>;
+							public static delete(param0: java.io.File): void;
+						}
+						export class LegacyFileDeleter {
+							public static class: java.lang.Class<com.google.firebase.firestore.util.FileUtil.LegacyFileDeleter>;
+							public static delete(param0: java.io.File): void;
+						}
 					}
 				}
 			}
@@ -5170,37 +5266,6 @@ declare module com {
 						});
 						public constructor();
 						public onValue(param0: T): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module util {
-					export class ListenerRegistrationImpl extends com.google.firebase.firestore.ListenerRegistration {
-						public static class: java.lang.Class<com.google.firebase.firestore.util.ListenerRegistrationImpl>;
-						public constructor(param0: com.google.firebase.firestore.core.FirestoreClient, param1: com.google.firebase.firestore.core.QueryListener, param2: globalAndroid.app.Activity, param3: com.google.firebase.firestore.util.ExecutorEventListener<com.google.firebase.firestore.core.ViewSnapshot>);
-						public remove(): void;
-					}
-					export module ListenerRegistrationImpl {
-						export class CallbackList {
-							public static class: java.lang.Class<com.google.firebase.firestore.util.ListenerRegistrationImpl.CallbackList>;
-						}
-						export class StopListenerFragment {
-							public static class: java.lang.Class<com.google.firebase.firestore.util.ListenerRegistrationImpl.StopListenerFragment>;
-							public constructor();
-							public onStop(): void;
-						}
-						export class StopListenerSupportFragment {
-							public static class: java.lang.Class<com.google.firebase.firestore.util.ListenerRegistrationImpl.StopListenerSupportFragment>;
-							public constructor();
-							public onStop(): void;
-						}
 					}
 				}
 			}
@@ -10448,12 +10513,12 @@ declare module com {
 //Generics information:
 //com.google.firebase.firestore.EventListener:1
 //com.google.firebase.firestore.Transaction.Function:1
+//com.google.firebase.firestore.core.AsyncEventListener:1
 //com.google.firebase.firestore.model.BasePath:1
 //com.google.firebase.firestore.remote.AbstractStream:3
 //com.google.firebase.firestore.remote.Stream:1
 //com.google.firebase.firestore.util.Consumer:1
 //com.google.firebase.firestore.util.CustomClassMapper.BeanMapper:1
-//com.google.firebase.firestore.util.ExecutorEventListener:1
 //com.google.firebase.firestore.util.IncomingStreamObserver:1
 //com.google.firebase.firestore.util.Listener:1
 //com.google.firebase.firestore.util.Supplier:1

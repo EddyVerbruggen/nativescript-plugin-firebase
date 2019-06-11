@@ -726,63 +726,64 @@ dependencies {
     implementation "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    implementation "com.google.firebase:firebase-core:16.0.8"
+    implementation "com.google.firebase:firebase-core:16.0.9"
 
     // for reading google-services.json and configuration
     implementation "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:16.2.1"
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:17.0.0"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:16.1.0"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:17.0.0"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:18.2.0"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:19.0.2"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:16.5.0"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:17.0.0"
 
     // Performance Monitoring
-    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:16.2.5"
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:17.0.2"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.9.9"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
 
     // Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:17.6.0"
+    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:18.0.0"
     // ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 
     // In-App Messaging
-    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.1.1"
+    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.2.0"
     // not entirely sure this is needed, but doesn't hurt.. make sure to check the compatible version when bumping firebase-inappmessaging-display
     ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.squareup.picasso:picasso:2.5.2"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:16.1.0"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:17.0.0"
 
     // Cloud Functions
-    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:16.3.0"
+    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:17.0.0"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:17.2.0"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:17.2.1"
 
     // ML Kit
-    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:19.0.3"
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:20.0.0"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
-    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:18.0.0"
-    ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:18.2.0"
-    ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:18.0.3"
-    ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:18.0.0"
+    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:19.0.0"
+    ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:19.0.1"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:19.0.1"
+    ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:19.0.1"
 
     // Facebook Authentication
-    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }
+    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-core:5.0.1"
+    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-login:5.0.1"
 
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
     // Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:16.1.8"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:17.0.0"
 }
 
 apply plugin: "com.google.gms.google-services"

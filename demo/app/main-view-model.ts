@@ -1697,10 +1697,12 @@ export class HelloWorldModel extends Observable {
     firebase.reauthenticate({
       type: firebase.LoginType.GOOGLE
     }).then(
-        () => {
+        result => {
+          console.log("Google login OK: " + JSON.stringify(result));
           alert({
-            title: "Re-authenticated Google user",
-            okButtonText: "OK"
+            title: "Reauthenticated with Google",
+            message: JSON.stringify(result),
+            okButtonText: "Nice!"
           });
         },
         error => {

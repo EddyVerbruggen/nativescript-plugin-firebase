@@ -1022,12 +1022,12 @@ firebase.reauthenticate = arg => {
           reject(error.localizedDescription);
 
         } else {
-          resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
-
           firebase.notifyAuthStateListeners({
             loggedIn: true,
             user: toLoginResult(authResult.user)
           });
+
+          resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
         }
       };
       user.reauthenticateWithCredentialCompletion(authCredential, onCompletion);

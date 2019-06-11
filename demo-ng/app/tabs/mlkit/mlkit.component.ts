@@ -256,7 +256,7 @@ export class MLKitComponent {
       }).then((languageIdResult: MLKitNaturalLanguageIdentificationResult) => {
         alert({
           title: `Result`,
-          message: `Language code: ${languageIdResult.languageCode}`,
+          message: `Language code: ${languageIdResult ? languageIdResult.languageCode : "Unknown" }`,
           okButtonText: "OK"
         });
       }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));

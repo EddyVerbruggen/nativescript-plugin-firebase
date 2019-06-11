@@ -23,6 +23,39 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module functions {
+				export class ContextProvider {
+					public static class: java.lang.Class<com.google.firebase.functions.ContextProvider>;
+					/**
+					 * Constructs a new instance of the com.google.firebase.functions.ContextProvider interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+						getContext(): com.google.android.gms.tasks.Task<com.google.firebase.functions.HttpsCallableContext>;
+					});
+					public constructor();
+					public getContext(): com.google.android.gms.tasks.Task<com.google.firebase.functions.HttpsCallableContext>;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module functions {
+				export class FirebaseContextProvider extends com.google.firebase.functions.ContextProvider {
+					public static class: java.lang.Class<com.google.firebase.functions.FirebaseContextProvider>;
+					public getContext(): com.google.android.gms.tasks.Task<com.google.firebase.functions.HttpsCallableContext>;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module functions {
 				export class FirebaseFunctions {
 					public static class: java.lang.Class<com.google.firebase.functions.FirebaseFunctions>;
 					public static getInstance(param0: com.google.firebase.FirebaseApp): com.google.firebase.functions.FirebaseFunctions;
@@ -79,10 +112,64 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module functions {
+				export class FunctionsMultiResourceComponent {
+					public static class: java.lang.Class<com.google.firebase.functions.FunctionsMultiResourceComponent>;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module functions {
+				export class FunctionsRegistrar {
+					public static class: java.lang.Class<com.google.firebase.functions.FunctionsRegistrar>;
+					public constructor();
+					public getComponents(): java.util.List<com.google.firebase.components.Component<any>>;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module functions {
+				export class HttpsCallOptions {
+					public static class: java.lang.Class<com.google.firebase.functions.HttpsCallOptions>;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module functions {
+				export class HttpsCallableContext {
+					public static class: java.lang.Class<com.google.firebase.functions.HttpsCallableContext>;
+					public getAuthToken(): string;
+					public getInstanceIdToken(): string;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module functions {
 				export class HttpsCallableReference {
 					public static class: java.lang.Class<com.google.firebase.functions.HttpsCallableReference>;
 					public call(): com.google.android.gms.tasks.Task<com.google.firebase.functions.HttpsCallableResult>;
+					public withTimeout(param0: number, param1: java.util.concurrent.TimeUnit): com.google.firebase.functions.HttpsCallableReference;
 					public call(param0: any): com.google.android.gms.tasks.Task<com.google.firebase.functions.HttpsCallableResult>;
+					public setTimeout(param0: number, param1: java.util.concurrent.TimeUnit): void;
 				}
 			}
 		}
@@ -106,73 +193,11 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module functions {
-				export class a {
-					public static class: java.lang.Class<com.google.firebase.functions.a>;
-					/**
-					 * Constructs a new instance of the com.google.firebase.functions.a interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-					 */
-					public constructor(implementation: {
-						a(): com.google.android.gms.tasks.Task<com.google.firebase.functions.c>;
-					});
+				export class Serializer {
+					public static class: java.lang.Class<com.google.firebase.functions.Serializer>;
+					public encode(param0: any): any;
 					public constructor();
-					public a(): com.google.android.gms.tasks.Task<com.google.firebase.functions.c>;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module functions {
-				export module a {
-					export class a {
-						public static class: java.lang.Class<com.google.firebase.functions.a.a>;
-						public static a(param0: any): any;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module functions {
-				export class b extends com.google.firebase.functions.a {
-					public static class: java.lang.Class<com.google.firebase.functions.b>;
-					public a(): com.google.android.gms.tasks.Task<com.google.firebase.functions.c>;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module functions {
-				export class c {
-					public static class: java.lang.Class<com.google.firebase.functions.c>;
-					public b(): string;
-					public a(): string;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module functions {
-				export class d {
-					public static class: java.lang.Class<com.google.firebase.functions.d>;
-					public b(param0: any): any;
-					public constructor();
-					public a(param0: any): any;
+					public decode(param0: any): any;
 				}
 			}
 		}

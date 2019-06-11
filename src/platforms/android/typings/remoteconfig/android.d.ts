@@ -2221,7 +2221,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzeh {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeh>;
-							public clear(): void;
+							public call(): any;
 						}
 					}
 				}
@@ -2238,7 +2238,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzei {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzei>;
-							public then(param0: any): com.google.android.gms.tasks.Task;
+							public clear(): void;
 						}
 					}
 				}
@@ -2272,7 +2272,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzek {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzek>;
-							public execute(param0: java.lang.Runnable): void;
+							public then(param0: any): com.google.android.gms.tasks.Task;
 						}
 					}
 				}
@@ -2289,7 +2289,6 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzel {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzel>;
-							public call(): any;
 						}
 					}
 				}
@@ -2304,8 +2303,44 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzem<TResult>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzem<any>>;
+						export class zzem {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzem>;
+							public execute(param0: java.lang.Runnable): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export class zzen {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzen>;
+							public hashCode(): number;
+							public toString(): string;
+							public equals(param0: any): boolean;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export class zzeo<TResult>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeo<any>>;
 							public onFailure(param0: java.lang.Exception): void;
 							public await(param0: number, param1: java.util.concurrent.TimeUnit): boolean;
 							public onSuccess(param0: TResult): void;
@@ -2324,43 +2359,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzen {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzen>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzeo {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeo>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
 						export class zzep {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzep>;
-							public hashCode(): number;
-							public toString(): string;
-							public equals(param0: any): boolean;
 						}
 					}
 				}
@@ -2377,7 +2377,6 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzeq {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeq>;
-							public constructor(param0: globalAndroid.content.Context, param1: string, param2: com.google.firebase.iid.FirebaseInstanceId, param3: com.google.firebase.analytics.connector.AnalyticsConnector, param4: string, param5: java.util.concurrent.Executor, param6: com.google.android.gms.common.util.Clock, param7: java.util.Random, param8: any /* com.google.android.gms.internal.firebase_remote_config.zzeh*/, param9: any /* com.google.android.gms.internal.firebase_remote_config.zzcy*/, param10: any /* com.google.android.gms.internal.firebase_remote_config.zzev*/);
 						}
 					}
 				}
@@ -2394,6 +2393,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzer {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzer>;
+							public then(param0: com.google.android.gms.tasks.Task): any;
 						}
 					}
 				}
@@ -2410,15 +2410,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzes {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzes>;
-							public getLong(param0: string): number;
-							public getAll(): java.util.Map<string,com.google.firebase.remoteconfig.FirebaseRemoteConfigValue>;
-							public getString(param0: string): string;
-							public getByteArray(param0: string): native.Array<number>;
-							public getValue(param0: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
-							public getKeysByPrefix(param0: string): java.util.Set<string>;
-							public getDouble(param0: string): number;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzeh*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzeh*/);
-							public getBoolean(param0: string): boolean;
+							public constructor(param0: globalAndroid.content.Context, param1: string, param2: com.google.firebase.iid.FirebaseInstanceId, param3: com.google.firebase.analytics.connector.AnalyticsConnector, param4: string, param5: java.util.concurrent.Executor, param6: com.google.android.gms.common.util.Clock, param7: java.util.Random, param8: any /* com.google.android.gms.internal.firebase_remote_config.zzei*/, param9: any /* com.google.android.gms.internal.firebase_remote_config.zzcy*/, param10: any /* com.google.android.gms.internal.firebase_remote_config.zzev*/);
 						}
 					}
 				}
@@ -2435,7 +2427,6 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzet {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzet>;
-							public then(param0: com.google.android.gms.tasks.Task): any;
 						}
 					}
 				}
@@ -2452,6 +2443,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzeu {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeu>;
+							public then(param0: any): com.google.android.gms.tasks.Task;
 						}
 					}
 				}
@@ -2469,6 +2461,7 @@ declare module com {
 						export class zzev {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzev>;
 							public getInfo(): com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
+							public setConfigSettings(param0: com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings): void;
 							public isDeveloperModeEnabled(): boolean;
 							public clear(): void;
 							public getFetchTimeoutInSeconds(): number;
@@ -2490,6 +2483,15 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzew {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzew>;
+							public getLong(param0: string): number;
+							public getAll(): java.util.Map<string,com.google.firebase.remoteconfig.FirebaseRemoteConfigValue>;
+							public getString(param0: string): string;
+							public getByteArray(param0: string): native.Array<number>;
+							public getValue(param0: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
+							public getKeysByPrefix(param0: string): java.util.Set<string>;
+							public getDouble(param0: string): number;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzei*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzei*/);
+							public getBoolean(param0: string): boolean;
 						}
 					}
 				}
@@ -2574,14 +2576,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfa extends com.google.firebase.remoteconfig.FirebaseRemoteConfigValue {
+						export class zzfa {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfa>;
-							public asLong(): number;
-							public asDouble(): number;
-							public asBoolean(): boolean;
-							public asString(): string;
-							public asByteArray(): native.Array<number>;
-							public getSource(): number;
 						}
 					}
 				}
@@ -2612,7 +2608,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfc extends java.lang.ThreadLocal<java.text.DateFormat> {
+						export class zzfc {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfc>;
 						}
 					}
@@ -2645,73 +2641,14 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfe {
+						export class zzfe extends com.google.firebase.remoteconfig.FirebaseRemoteConfigValue {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe>;
-						}
-						export module zzfe {
-							export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zza,com.google.android.gms.internal.firebase_remote_config.zzfe.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zza>;
-								public isInitialized(): boolean;
-								public getTimestamp(): number;
-							}
-							export module zza {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zza,com.google.android.gms.internal.firebase_remote_config.zzfe.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zza.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzb extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb,com.google.android.gms.internal.firebase_remote_config.zzfe.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb>;
-								public isInitialized(): boolean;
-								public getKey(): string;
-							}
-							export module zzb {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb,com.google.android.gms.internal.firebase_remote_config.zzfe.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzc extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc,com.google.android.gms.internal.firebase_remote_config.zzfe.zzc.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc>;
-								public isInitialized(): boolean;
-							}
-							export module zzc {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc,com.google.android.gms.internal.firebase_remote_config.zzfe.zzc.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzd extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd,com.google.android.gms.internal.firebase_remote_config.zzfe.zzd.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd>;
-								public getNamespace(): string;
-								public isInitialized(): boolean;
-							}
-							export module zzd {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd,com.google.android.gms.internal.firebase_remote_config.zzfe.zzd.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zze extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zze,com.google.android.gms.internal.firebase_remote_config.zzfe.zze.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zze>;
-								public isInitialized(): boolean;
-							}
-							export module zze {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zze,com.google.android.gms.internal.firebase_remote_config.zzfe.zze.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zze.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzf extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf,com.google.android.gms.internal.firebase_remote_config.zzfe.zzf.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf>;
-								public isInitialized(): boolean;
-							}
-							export module zzf {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf,com.google.android.gms.internal.firebase_remote_config.zzfe.zzf.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf.zza>;
-									public isInitialized(): boolean;
-								}
-							}
+							public asLong(): number;
+							public asDouble(): number;
+							public asBoolean(): boolean;
+							public asString(): string;
+							public asByteArray(): native.Array<number>;
+							public getSource(): number;
 						}
 					}
 				}
@@ -2742,7 +2679,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfg {
+						export class zzfg extends java.lang.ThreadLocal<java.text.DateFormat> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfg>;
 						}
 					}
@@ -2760,7 +2697,6 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzfh {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfh>;
-							public constructor();
 						}
 					}
 				}
@@ -2775,8 +2711,73 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfi extends com.google.android.gms.internal.firebase_remote_config.zzfh {
+						export class zzfi {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi>;
+						}
+						export module zzfi {
+							export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzfi.zza,com.google.android.gms.internal.firebase_remote_config.zzfi.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zza>;
+								public isInitialized(): boolean;
+								public getTimestamp(): number;
+							}
+							export module zza {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzfi.zza,com.google.android.gms.internal.firebase_remote_config.zzfi.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zza.zza>;
+									public isInitialized(): boolean;
+								}
+							}
+							export class zzb extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzfi.zzb,com.google.android.gms.internal.firebase_remote_config.zzfi.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzb>;
+								public isInitialized(): boolean;
+								public getKey(): string;
+							}
+							export module zzb {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzfi.zzb,com.google.android.gms.internal.firebase_remote_config.zzfi.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzb.zza>;
+									public isInitialized(): boolean;
+								}
+							}
+							export class zzc extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzfi.zzc,com.google.android.gms.internal.firebase_remote_config.zzfi.zzc.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzc>;
+								public isInitialized(): boolean;
+							}
+							export module zzc {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzfi.zzc,com.google.android.gms.internal.firebase_remote_config.zzfi.zzc.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzc.zza>;
+									public isInitialized(): boolean;
+								}
+							}
+							export class zzd extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzfi.zzd,com.google.android.gms.internal.firebase_remote_config.zzfi.zzd.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzd>;
+								public getNamespace(): string;
+								public isInitialized(): boolean;
+							}
+							export module zzd {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzfi.zzd,com.google.android.gms.internal.firebase_remote_config.zzfi.zzd.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzd.zza>;
+									public isInitialized(): boolean;
+								}
+							}
+							export class zze extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzfi.zze,com.google.android.gms.internal.firebase_remote_config.zzfi.zze.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zze>;
+								public isInitialized(): boolean;
+							}
+							export module zze {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzfi.zze,com.google.android.gms.internal.firebase_remote_config.zzfi.zze.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zze.zza>;
+									public isInitialized(): boolean;
+								}
+							}
+							export class zzf extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzfi.zzf,com.google.android.gms.internal.firebase_remote_config.zzfi.zzf.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzf>;
+								public isInitialized(): boolean;
+							}
+							export module zzf {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzfi.zzf,com.google.android.gms.internal.firebase_remote_config.zzfi.zzf.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi.zzf.zza>;
+									public isInitialized(): boolean;
+								}
+							}
 						}
 					}
 				}
@@ -2822,11 +2823,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzfk {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfk>;
-							public close(): void;
-							public setIndent(param0: string): void;
-							public constructor(param0: java.io.Writer);
-							public setLenient(param0: boolean): void;
-							public flush(): void;
+							public constructor();
 						}
 					}
 				}
@@ -2858,10 +2855,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzfm<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzim*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfm<any,any>>;
-							public constructor();
-							public isInitialized(): boolean;
+						export class zzfm extends com.google.android.gms.internal.firebase_remote_config.zzfk {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfm>;
 						}
 					}
 				}
@@ -2893,9 +2888,13 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfo<MessageType>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfo<any>>;
-							public constructor();
+						export class zzfo {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfo>;
+							public close(): void;
+							public setIndent(param0: string): void;
+							public constructor(param0: java.io.Writer);
+							public setLenient(param0: boolean): void;
+							public flush(): void;
 						}
 					}
 				}
@@ -2928,8 +2927,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfq>;
+						export abstract class zzfq<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zziq*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfq<any,any>>;
+							public constructor();
+							public isInitialized(): boolean;
 						}
 					}
 				}
@@ -2972,8 +2973,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfs {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfs>;
+						export class zzfs<MessageType>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfs<any>>;
+							public constructor();
 						}
 					}
 				}
@@ -3004,9 +3006,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzfu {
+						export class zzfu {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfu>;
-							public constructor();
 						}
 					}
 				}
@@ -3046,10 +3047,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzfw extends com.google.android.gms.internal.firebase_remote_config.zzfy {
+						export class zzfw {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfw>;
-							public nextByte(): number;
-							public hasNext(): boolean;
 						}
 					}
 				}
@@ -3084,10 +3083,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzfy extends com.google.android.gms.internal.firebase_remote_config.zzgc {
+						export abstract class zzfy {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfy>;
-							public nextByte(): number;
-							public remove(): void;
+							public constructor();
 						}
 					}
 				}
@@ -3134,9 +3132,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzga extends com.google.android.gms.internal.firebase_remote_config.zzgh {
+						export class zzga extends com.google.android.gms.internal.firebase_remote_config.zzgc {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzga>;
-							public size(): number;
+							public nextByte(): number;
+							public hasNext(): boolean;
 						}
 					}
 				}
@@ -3167,16 +3166,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgc extends java.util.Iterator<java.lang.Byte> {
+						export abstract class zzgc extends com.google.android.gms.internal.firebase_remote_config.zzgg {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgc>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzgc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								nextByte(): number;
-							});
-							public constructor();
 							public nextByte(): number;
+							public remove(): void;
 						}
 					}
 				}
@@ -3214,8 +3207,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzge extends com.google.android.gms.internal.firebase_remote_config.zzfx {
+						export class zzge extends com.google.android.gms.internal.firebase_remote_config.zzgh {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzge>;
+							public size(): number;
 						}
 					}
 				}
@@ -3246,8 +3240,16 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgg extends com.google.android.gms.internal.firebase_remote_config.zzgd {
+						export class zzgg extends java.util.Iterator<java.lang.Byte> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgg>;
+							/**
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzgg interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								nextByte(): number;
+							});
+							public constructor();
+							public nextByte(): number;
 						}
 					}
 				}
@@ -3262,7 +3264,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgh extends com.google.android.gms.internal.firebase_remote_config.zzge {
+						export class zzgh extends com.google.android.gms.internal.firebase_remote_config.zzgi {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgh>;
 							public size(): number;
 							public equals(param0: any): boolean;
@@ -3280,7 +3282,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgi {
+						export abstract class zzgi extends com.google.android.gms.internal.firebase_remote_config.zzfx {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgi>;
 						}
 					}
@@ -3315,11 +3317,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgk extends com.google.android.gms.internal.firebase_remote_config.zzgj {
+						export class zzgk extends com.google.android.gms.internal.firebase_remote_config.zzgd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgk>;
-							public readFloat(): number;
-							public readDouble(): number;
-							public readString(): string;
 						}
 					}
 				}
@@ -3353,13 +3352,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgm extends com.google.android.gms.internal.firebase_remote_config.zzjc {
+						export class zzgm {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgm>;
-							public readFloat(): number;
-							public getTag(): number;
-							public readDouble(): number;
-							public readString(): string;
-							public readStringList(param0: java.util.List<string>): void;
 						}
 					}
 				}
@@ -3396,16 +3390,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzgo extends com.google.android.gms.internal.firebase_remote_config.zzfu {
+						export class zzgo extends com.google.android.gms.internal.firebase_remote_config.zzgj {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgo>;
-						}
-						export module zzgo {
-							export class zza extends com.google.android.gms.internal.firebase_remote_config.zzgo {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgo.zza>;
-							}
-							export class zzb {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgo.zzb>;
-							}
+							public readFloat(): number;
+							public readDouble(): number;
+							public readString(): string;
 						}
 					}
 				}
@@ -3436,8 +3425,13 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgq {
+						export class zzgq extends com.google.android.gms.internal.firebase_remote_config.zzjg {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgq>;
+							public readFloat(): number;
+							public getTag(): number;
+							public readDouble(): number;
+							public readString(): string;
+							public readStringList(param0: java.util.List<string>): void;
 						}
 					}
 				}
@@ -3452,7 +3446,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgr extends com.google.android.gms.internal.firebase_remote_config.zzkq {
+						export class zzgr {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgr>;
 						}
 					}
@@ -3468,8 +3462,16 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgs<ContainingType, Type>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgs<any,any>>;
+						export abstract class zzgs extends com.google.android.gms.internal.firebase_remote_config.zzfy {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgs>;
+						}
+						export module zzgs {
+							export class zza {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgs.zza>;
+							}
+							export class zzb extends com.google.android.gms.internal.firebase_remote_config.zzgs {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgs.zzb>;
+							}
 						}
 					}
 				}
@@ -3508,15 +3510,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgu {
+						export class zzgu extends com.google.android.gms.internal.firebase_remote_config.zzku {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgu>;
-						}
-						export module zzgu {
-							export class zza {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgu.zza>;
-								public equals(param0: any): boolean;
-								public hashCode(): number;
-							}
 						}
 					}
 				}
@@ -3547,8 +3542,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzgw<T>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgw<any>>;
+						export class zzgw<ContainingType, Type>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgw<any,any>>;
 						}
 					}
 				}
@@ -3566,6 +3561,13 @@ declare module com {
 						export class zzgx {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgx>;
 						}
+						export module zzgx {
+							export class zza {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgx.zza>;
+								public equals(param0: any): boolean;
+								public hashCode(): number;
+							}
+						}
 					}
 				}
 			}
@@ -3579,7 +3581,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgy extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzgw<any>*/ {
+						export class zzgy extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzgz<any>*/ {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgy>;
 						}
 					}
@@ -3595,8 +3597,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzgz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgz>;
+						export abstract class zzgz<T>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgz<any>>;
 						}
 					}
 				}
@@ -3650,8 +3652,6 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzhb {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhb>;
-							public id(): number;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzhb>*/;
 						}
 					}
 				}
@@ -3673,11 +3673,11 @@ declare module com {
 							 */
 							public constructor(implementation: {
 								zzgn(): number;
-								zzgo(): any /* com.google.android.gms.internal.firebase_remote_config.zzkk*/;
+								zzgo(): any /* com.google.android.gms.internal.firebase_remote_config.zzko*/;
 								zzgp(): any /* com.google.android.gms.internal.firebase_remote_config.zzkr*/;
 								zzgq(): boolean;
 								zzgr(): boolean;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzip*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzim*/): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
+								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzip*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zziq*/): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
 								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zziv*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zziv*/): any /* com.google.android.gms.internal.firebase_remote_config.zziv*/;
 							});
 							public constructor();
@@ -3697,7 +3697,6 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzhd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhd>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzhd>*/;
 						}
 					}
 				}
@@ -3728,8 +3727,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzhf extends com.google.android.gms.internal.firebase_remote_config.zzin {
+						export class zzhf {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhf>;
+							public id(): number;
+							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzhf>*/;
 						}
 					}
 				}
@@ -3768,36 +3769,53 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzhh<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfm<any,any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh<any,any>>;
+						export class zzhh {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh>;
+							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzhh>*/;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export abstract class zzhi<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfq<any,any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi<any,any>>;
 							public constructor();
 							public hashCode(): number;
 							public toString(): string;
 							public equals(param0: any): boolean;
 							public isInitialized(): boolean;
 						}
-						export module zzhh {
-							export class zza<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfp<any,any>*/ {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zza<any,any>>;
+						export module zzhi {
+							export class zza<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfs<any>*/ {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi.zza<any>>;
+								public constructor(param0: any);
+								public constructor();
+							}
+							export class zzb<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfp<any,any>*/ {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<any,any>>;
 								public constructor(param0: any);
 								public isInitialized(): boolean;
 								public constructor();
 							}
-							export abstract class zzb<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<any,any>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zzb<any,any>>;
+							export class zzc<ContainingType, Type>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzgw<any,any>*/ {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi.zzc<any,any>>;
+							}
+							export abstract class zzd<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<any,any>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi.zzd<any,any>>;
 								public isInitialized(): boolean;
 								public constructor();
 							}
-							export class zzc<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfo<any>*/ {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zzc<any>>;
-								public constructor(param0: any);
-								public constructor();
-							}
-							export class zzd extends java.lang.Object {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zzd>;
-							}
-							export class zze<ContainingType, Type>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzgs<any,any>*/ {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zze<any,any>>;
+							export class zze extends java.lang.Object {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi.zze>;
 							}
 						}
 					}
@@ -3813,25 +3831,24 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzhi {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi>;
-							public static hashCode(param0: native.Array<number>): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhj extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Integer> {
+						export class zzhj extends com.google.android.gms.internal.firebase_remote_config.zzin {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhj>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export class zzhk extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Integer> {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhk>;
 							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
 							public remove(param0: number): any;
 							public size(): number;
@@ -3841,29 +3858,6 @@ declare module com {
 							public removeRange(param0: number, param1: number): void;
 							public getInt(param0: number): number;
 							public addAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhk>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzhk interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzbc(param0: number): boolean;
-							});
-							public constructor();
 						}
 					}
 				}
@@ -3903,7 +3897,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzhm {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhm>;
-							public constructor(param0: string);
+							public static hashCode(param0: native.Array<number>): number;
 						}
 					}
 				}
@@ -3924,8 +3918,8 @@ declare module com {
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzhn<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zzeu(): void;
-								zzet(): boolean;
+								zzes(): void;
+								zzer(): boolean;
 								zzu(param0: number): any /* com.google.android.gms.internal.firebase_remote_config.zzhn<E>*/;
 							});
 							public constructor();
@@ -3945,7 +3939,13 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzho {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzho>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzho>*/;
+							/**
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzho interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								zzbc(param0: number): boolean;
+							});
+							public constructor();
 						}
 					}
 				}
@@ -3960,7 +3960,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzhp extends com.google.android.gms.internal.firebase_remote_config.zzhm {
+						export class zzhp extends com.google.android.gms.internal.firebase_remote_config.zzhq {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhp>;
 							public constructor(param0: string);
 						}
@@ -3979,6 +3979,7 @@ declare module com {
 					export module firebase_remote_config {
 						export class zzhq {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhq>;
+							public constructor(param0: string);
 						}
 					}
 				}
@@ -4012,11 +4013,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzhs<K>  extends java.util.Iterator<java.util.Map.Entry<any,any>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhs<any>>;
-							public constructor(param0: java.util.Iterator<java.util.Map.Entry<any,any>>);
-							public hasNext(): boolean;
-							public remove(): void;
+						export class zzhs {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhs>;
+							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzhs>*/;
 						}
 					}
 				}
@@ -4050,14 +4049,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzhu extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfr<string>*/ {
+						export class zzhu {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhu>;
-							public constructor();
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public size(): number;
-							public clear(): void;
-							public constructor(param0: number);
-							public addAll(param0: java.util.Collection<any>): boolean;
 						}
 					}
 				}
@@ -4091,8 +4084,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export abstract class zzhw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhw>;
+						export class zzhw<K>  extends java.util.Iterator<java.util.Map.Entry<any,any>> {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhw<any>>;
+							public constructor(param0: java.util.Iterator<java.util.Map.Entry<any,any>>);
+							public hasNext(): boolean;
+							public remove(): void;
 						}
 					}
 				}
@@ -4133,8 +4129,14 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzhy extends com.google.android.gms.internal.firebase_remote_config.zzhw {
+						export class zzhy extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfr<string>*/ {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhy>;
+							public constructor();
+							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
+							public size(): number;
+							public clear(): void;
+							public constructor(param0: number);
+							public addAll(param0: java.util.Collection<any>): boolean;
 						}
 					}
 				}
@@ -4188,17 +4190,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzia extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Long> {
+						export abstract class zzia {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzia>;
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public remove(param0: number): any;
-							public size(): number;
-							public hashCode(): number;
-							public remove(param0: any): boolean;
-							public equals(param0: any): boolean;
-							public removeRange(param0: number, param1: number): void;
-							public getLong(param0: number): number;
-							public addAll(param0: java.util.Collection<any>): boolean;
 						}
 					}
 				}
@@ -4213,7 +4206,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzib extends com.google.android.gms.internal.firebase_remote_config.zzhw {
+						export class zzib extends com.google.android.gms.internal.firebase_remote_config.zzia {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzib>;
 						}
 					}
@@ -4229,7 +4222,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzic extends com.google.android.gms.internal.firebase_remote_config.zzin {
+						export class zzic extends com.google.android.gms.internal.firebase_remote_config.zzia {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzic>;
 						}
 					}
@@ -4245,7 +4238,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzid extends com.google.android.gms.internal.firebase_remote_config.zzje {
+						export class zzid extends com.google.android.gms.internal.firebase_remote_config.zzji {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzid>;
 							public constructor();
 						}
@@ -4262,8 +4255,17 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzie<K, V>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzie<any,any>>;
+						export class zzie extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Long> {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzie>;
+							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
+							public remove(param0: number): any;
+							public size(): number;
+							public hashCode(): number;
+							public remove(param0: any): boolean;
+							public equals(param0: any): boolean;
+							public removeRange(param0: number, param1: number): void;
+							public getLong(param0: number): number;
+							public addAll(param0: java.util.Collection<any>): boolean;
 						}
 					}
 				}
@@ -4294,16 +4296,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzig<K, V>  extends java.util.LinkedHashMap<any,any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzig<any,any>>;
-							public entrySet(): java.util.Set<java.util.Map.Entry<any,any>>;
-							public hashCode(): number;
-							public remove(param0: any): any;
-							public clear(): void;
-							public isMutable(): boolean;
-							public put(param0: any, param1: any): any;
-							public equals(param0: any): boolean;
-							public putAll(param0: java.util.Map<any,any>): void;
+						export class zzig extends com.google.android.gms.internal.firebase_remote_config.zzin {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzig>;
 						}
 					}
 				}
@@ -4334,8 +4328,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzii extends com.google.android.gms.internal.firebase_remote_config.zzij {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzii>;
+						export class zzii<K, V>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzii<any,any>>;
 						}
 					}
 				}
@@ -4356,12 +4350,12 @@ declare module com {
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzij interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
+								zzp(param0: any): java.util.Map<any,any>;
 								zzq(param0: any): java.util.Map<any,any>;
-								zzs(param0: any): java.util.Map<any,any>;
-								zzt(param0: any): boolean;
-								zzu(param0: any): any;
-								zzv(param0: any): any;
-								zzr(param0: any): any /* com.google.android.gms.internal.firebase_remote_config.zzih<any,any>*/;
+								zzr(param0: any): boolean;
+								zzs(param0: any): any;
+								zzt(param0: any): any;
+								zzu(param0: any): any /* com.google.android.gms.internal.firebase_remote_config.zzih<any,any>*/;
 								zzd(param0: any, param1: any): any;
 								zzc(param0: number, param1: any, param2: any): number;
 							});
@@ -4380,17 +4374,16 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzik {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzik>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzik interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzhy(): number;
-								zzhz(): boolean;
-								zzia(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-							});
-							public constructor();
+						export class zzik<K, V>  extends java.util.LinkedHashMap<any,any> {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzik<any,any>>;
+							public entrySet(): java.util.Set<java.util.Map.Entry<any,any>>;
+							public hashCode(): number;
+							public remove(param0: any): any;
+							public clear(): void;
+							public isMutable(): boolean;
+							public put(param0: any, param1: any): any;
+							public equals(param0: any): boolean;
+							public putAll(param0: java.util.Map<any,any>): void;
 						}
 					}
 				}
@@ -4421,22 +4414,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzim extends com.google.android.gms.internal.firebase_remote_config.zzio {
+						export class zzim extends com.google.android.gms.internal.firebase_remote_config.zzij {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzim>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzim interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzgo*/): void;
-								zzgy(): number;
-								zzeo(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
-								zzhb(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzha(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								isInitialized(): boolean;
-							});
-							public constructor();
-							public isInitialized(): boolean;
 						}
 					}
 				}
@@ -4457,8 +4436,8 @@ declare module com {
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzin interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zzg(param0: java.lang.Class<any>): boolean;
-								zzh(param0: java.lang.Class<any>): any /* com.google.android.gms.internal.firebase_remote_config.zzik*/;
+								zzh(param0: java.lang.Class<any>): boolean;
+								zzi(param0: java.lang.Class<any>): any /* com.google.android.gms.internal.firebase_remote_config.zzio*/;
 							});
 							public constructor();
 						}
@@ -4481,11 +4460,11 @@ declare module com {
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzio interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								isInitialized(): boolean;
+								zzib(): number;
+								zzic(): boolean;
+								zzid(): any /* com.google.android.gms.internal.firebase_remote_config.zziq*/;
 							});
 							public constructor();
-							public isInitialized(): boolean;
 						}
 					}
 				}
@@ -4500,16 +4479,16 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzip extends com.google.android.gms.internal.firebase_remote_config.zzio {
+						export class zzip extends com.google.android.gms.internal.firebase_remote_config.zzis {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzip>;
 							/**
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzip interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zzgw(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								zzgv(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzim*/): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
+								zzhb(): any /* com.google.android.gms.internal.firebase_remote_config.zziq*/;
+								zzha(): any /* com.google.android.gms.internal.firebase_remote_config.zziq*/;
+								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zziq*/): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
+								zzgw(): any /* com.google.android.gms.internal.firebase_remote_config.zziq*/;
 								isInitialized(): boolean;
 							});
 							public constructor();
@@ -4528,11 +4507,22 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zziq<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziq<any>>;
-							public hashCode(param0: any): number;
-							public newInstance(): any;
-							public equals(param0: any, param1: any): boolean;
+						export class zziq extends com.google.android.gms.internal.firebase_remote_config.zzis {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziq>;
+							/**
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziq interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzgs*/): void;
+								zzgs(): number;
+								zzep(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
+								zzgv(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
+								zzgu(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
+								zzgw(): any /* com.google.android.gms.internal.firebase_remote_config.zziq*/;
+								isInitialized(): boolean;
+							});
+							public constructor();
+							public isInitialized(): boolean;
 						}
 					}
 				}
@@ -4563,11 +4553,17 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzis<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzis<any>>;
-							public hashCode(param0: any): number;
-							public newInstance(): any;
-							public equals(param0: any, param1: any): boolean;
+						export class zzis {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzis>;
+							/**
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzis interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								zzgw(): any /* com.google.android.gms.internal.firebase_remote_config.zziq*/;
+								isInitialized(): boolean;
+							});
+							public constructor();
+							public isInitialized(): boolean;
 						}
 					}
 				}
@@ -4598,16 +4594,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zziu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziu>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziu interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								newInstance(param0: any): any;
-							});
-							public constructor();
-							public newInstance(param0: any): any;
+						export class zziu<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziu<any>>;
+							public hashCode(param0: any): number;
+							public newInstance(): any;
+							public equals(param0: any, param1: any): boolean;
 						}
 					}
 				}
@@ -4622,19 +4613,19 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zziv extends com.google.android.gms.internal.firebase_remote_config.zzim {
+						export class zziv extends com.google.android.gms.internal.firebase_remote_config.zziq {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziv>;
 							/**
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziv interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
 								zzie(): any /* com.google.android.gms.internal.firebase_remote_config.zziv*/;
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzgo*/): void;
-								zzgy(): number;
-								zzeo(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
-								zzhb(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzha(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
+								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzgs*/): void;
+								zzgs(): number;
+								zzep(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
+								zzgv(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
+								zzgu(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
+								zzgw(): any /* com.google.android.gms.internal.firebase_remote_config.zziq*/;
 								isInitialized(): boolean;
 							});
 							public constructor();
@@ -4653,8 +4644,11 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zziw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziw>;
+						export class zziw<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziw<any>>;
+							public hashCode(param0: any): number;
+							public newInstance(): any;
+							public equals(param0: any, param1: any): boolean;
 						}
 					}
 				}
@@ -4669,7 +4663,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzix extends com.google.android.gms.internal.firebase_remote_config.zziu {
+						export class zzix extends com.google.android.gms.internal.firebase_remote_config.zziy {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzix>;
 							public newInstance(param0: any): any;
 						}
@@ -4692,8 +4686,10 @@ declare module com {
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziy interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
+								newInstance(param0: any): any;
 							});
 							public constructor();
+							public newInstance(param0: any): any;
 						}
 					}
 				}
@@ -4748,15 +4744,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzja<E>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfr<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzja<any>>;
-							public remove(param0: number): any;
-							public set(param0: number, param1: any): any;
-							public add(param0: any): boolean;
-							public size(): number;
-							public remove(param0: any): boolean;
-							public add(param0: number, param1: any): void;
-							public get(param0: number): any;
+						export class zzja {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzja>;
 						}
 					}
 				}
@@ -4793,55 +4782,8 @@ declare module com {
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzjc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zzfz(): number;
-								getTag(): number;
-								zzga(): boolean;
-								readDouble(): number;
-								readFloat(): number;
-								zzfc(): number;
-								zzfd(): number;
-								zzfe(): number;
-								zzff(): number;
-								zzfg(): number;
-								zzfh(): boolean;
-								readString(): string;
-								zzfi(): string;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): any;
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): any;
-								zzfj(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
-								zzfk(): number;
-								zzfl(): number;
-								zzfm(): number;
-								zzfn(): number;
-								zzfo(): number;
-								zzfp(): number;
-								zzc(param0: java.util.List<java.lang.Double>): void;
-								zzd(param0: java.util.List<java.lang.Float>): void;
-								zze(param0: java.util.List<java.lang.Long>): void;
-								zzf(param0: java.util.List<java.lang.Long>): void;
-								zzg(param0: java.util.List<java.lang.Integer>): void;
-								zzh(param0: java.util.List<java.lang.Long>): void;
-								zzi(param0: java.util.List<java.lang.Integer>): void;
-								zzj(param0: java.util.List<java.lang.Boolean>): void;
-								readStringList(param0: java.util.List<string>): void;
-								zzk(param0: java.util.List<string>): void;
-								zza(param0: java.util.List, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
-								zzb(param0: java.util.List, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
-								zzl(param0: any /* java.util.List<com.google.android.gms.internal.firebase_remote_config.zzfx>*/): void;
-								zzm(param0: java.util.List<java.lang.Integer>): void;
-								zzn(param0: java.util.List<java.lang.Integer>): void;
-								zzo(param0: java.util.List<java.lang.Integer>): void;
-								zzp(param0: java.util.List<java.lang.Long>): void;
-								zzq(param0: java.util.List<java.lang.Integer>): void;
-								zzr(param0: java.util.List<java.lang.Long>): void;
-								zza(param0: java.util.Map, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzih<any,any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
 							});
 							public constructor();
-							public readFloat(): number;
-							public getTag(): number;
-							public readDouble(): number;
-							public readString(): string;
-							public readStringList(param0: java.util.List<string>): void;
 						}
 					}
 				}
@@ -4856,7 +4798,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjd extends com.google.android.gms.internal.firebase_remote_config.zzik {
+						export class zzjd extends com.google.android.gms.internal.firebase_remote_config.zzio {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjd>;
 						}
 					}
@@ -4872,15 +4814,15 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzje {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzje>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzje interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzj(param0: java.lang.Class): any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/;
-							});
-							public constructor();
+						export class zzje<E>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfr<any>*/ {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzje<any>>;
+							public remove(param0: number): any;
+							public set(param0: number, param1: any): any;
+							public add(param0: any): boolean;
+							public size(): number;
+							public remove(param0: any): boolean;
+							public add(param0: number, param1: any): void;
+							public get(param0: number): any;
 						}
 					}
 				}
@@ -4901,9 +4843,9 @@ declare module com {
 							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzjf<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
-								zza(param0: T, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzkq*/): void;
-								zza(param0: T, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjc*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
-								zza(param0: T, param1: native.Array<number>, param2: number, param3: number, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzfs*/): void;
+								zza(param0: T, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzku*/): void;
+								zza(param0: T, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjg*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgx*/): void;
+								zza(param0: T, param1: native.Array<number>, param2: number, param3: number, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzfw*/): void;
 								zzm(param0: T): void;
 								zzy(param0: T): boolean;
 								newInstance(): T;
@@ -4930,17 +4872,61 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjg<K, V>  extends java.util.AbstractMap<any,any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjg<any,any>>;
-							public get(param0: any): any;
-							public entrySet(): java.util.Set<java.util.Map.Entry<any,any>>;
-							public size(): number;
-							public hashCode(): number;
-							public remove(param0: any): any;
-							public containsKey(param0: any): boolean;
-							public clear(): void;
-							public equals(param0: any): boolean;
-							public isImmutable(): boolean;
+						export class zzjg {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjg>;
+							/**
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzjg interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								zzfz(): number;
+								getTag(): number;
+								zzga(): boolean;
+								readDouble(): number;
+								readFloat(): number;
+								zzfc(): number;
+								zzfd(): number;
+								zzfe(): number;
+								zzff(): number;
+								zzfg(): number;
+								zzfh(): boolean;
+								readString(): string;
+								zzfi(): string;
+								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzgx*/): any;
+								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzgx*/): any;
+								zzfj(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
+								zzfk(): number;
+								zzfl(): number;
+								zzfm(): number;
+								zzfn(): number;
+								zzfo(): number;
+								zzfp(): number;
+								zzc(param0: java.util.List<java.lang.Double>): void;
+								zzd(param0: java.util.List<java.lang.Float>): void;
+								zze(param0: java.util.List<java.lang.Long>): void;
+								zzf(param0: java.util.List<java.lang.Long>): void;
+								zzg(param0: java.util.List<java.lang.Integer>): void;
+								zzh(param0: java.util.List<java.lang.Long>): void;
+								zzi(param0: java.util.List<java.lang.Integer>): void;
+								zzj(param0: java.util.List<java.lang.Boolean>): void;
+								readStringList(param0: java.util.List<string>): void;
+								zzk(param0: java.util.List<string>): void;
+								zza(param0: java.util.List, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgx*/): void;
+								zzb(param0: java.util.List, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgx*/): void;
+								zzl(param0: any /* java.util.List<com.google.android.gms.internal.firebase_remote_config.zzfx>*/): void;
+								zzm(param0: java.util.List<java.lang.Integer>): void;
+								zzn(param0: java.util.List<java.lang.Integer>): void;
+								zzo(param0: java.util.List<java.lang.Integer>): void;
+								zzp(param0: java.util.List<java.lang.Long>): void;
+								zzq(param0: java.util.List<java.lang.Integer>): void;
+								zzr(param0: java.util.List<java.lang.Long>): void;
+								zza(param0: java.util.Map, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzih<any,any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgx*/): void;
+							});
+							public constructor();
+							public readFloat(): number;
+							public getTag(): number;
+							public readDouble(): number;
+							public readString(): string;
+							public readStringList(param0: java.util.List<string>): void;
 						}
 					}
 				}
@@ -4971,10 +4957,15 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzji extends java.util.Iterator<java.util.Map.Entry<any,any>> {
+						export class zzji {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzji>;
-							public hasNext(): boolean;
-							public remove(): void;
+							/**
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzji interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								zzj(param0: java.lang.Class): any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/;
+							});
+							public constructor();
 						}
 					}
 				}
@@ -4989,7 +4980,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjj extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjg<any,any>*/ {
+						export class zzjj extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjk<any,any>*/ {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjj>;
 						}
 					}
@@ -5005,8 +4996,17 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjk>;
+						export class zzjk<K, V>  extends java.util.AbstractMap<any,any> {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjk<any,any>>;
+							public get(param0: any): any;
+							public entrySet(): java.util.Set<java.util.Map.Entry<any,any>>;
+							public size(): number;
+							public hashCode(): number;
+							public remove(param0: any): any;
+							public containsKey(param0: any): boolean;
+							public clear(): void;
+							public equals(param0: any): boolean;
+							public isImmutable(): boolean;
 						}
 					}
 				}
@@ -5038,9 +5038,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjm extends java.lang.Iterable<any> {
+						export class zzjm extends java.util.Iterator<java.util.Map.Entry<any,any>> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjm>;
-							public iterator(): java.util.Iterator<any>;
+							public hasNext(): boolean;
+							public remove(): void;
 						}
 					}
 				}
@@ -5074,10 +5075,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjo extends java.util.Iterator<java.util.Map.Entry<any,any>> {
+						export class zzjo {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjo>;
-							public hasNext(): boolean;
-							public remove(): void;
 						}
 					}
 				}
@@ -5113,8 +5112,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjq extends com.google.android.gms.internal.firebase_remote_config.zzik {
+						export class zzjq extends java.lang.Iterable<any> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjq>;
+							public iterator(): java.util.Iterator<any>;
 						}
 					}
 				}
@@ -5150,9 +5150,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjs extends com.google.android.gms.internal.firebase_remote_config.zzjv {
+						export class zzjs extends java.util.Iterator<java.util.Map.Entry<any,any>> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjs>;
-							public size(): number;
+							public hasNext(): boolean;
+							public remove(): void;
 						}
 					}
 				}
@@ -5183,9 +5184,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzju {
+						export class zzju extends com.google.android.gms.internal.firebase_remote_config.zzio {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzju>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzim*/);
 						}
 					}
 				}
@@ -5225,10 +5225,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjw {
+						export class zzjw extends com.google.android.gms.internal.firebase_remote_config.zzjv {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjw>;
-							public hashCode(): number;
-							public equals(param0: any): boolean;
+							public size(): number;
 						}
 					}
 				}
@@ -5259,12 +5258,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjy extends java.util.AbstractList<string> {
+						export class zzjy {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjy>;
-							public listIterator(param0: number): java.util.ListIterator<string>;
-							public iterator(): java.util.Iterator<string>;
-							public size(): number;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzhx*/);
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zziq*/);
 						}
 					}
 				}
@@ -5279,7 +5275,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzjz extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjx<com.google.android.gms.internal.firebase_remote_config.zzjw,com.google.android.gms.internal.firebase_remote_config.zzjw>*/ {
+						export class zzjz extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjx<com.google.android.gms.internal.firebase_remote_config.zzka,com.google.android.gms.internal.firebase_remote_config.zzka>*/ {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjz>;
 						}
 					}
@@ -5313,10 +5309,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzka extends java.util.Iterator<string> {
+						export class zzka {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzka>;
-							public hasNext(): boolean;
-							public remove(): void;
+							public hashCode(): number;
+							public equals(param0: any): boolean;
 						}
 					}
 				}
@@ -5352,8 +5348,12 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkc extends java.security.PrivilegedExceptionAction<sun.misc.Unsafe> {
+						export class zzkc extends java.util.AbstractList<string> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkc>;
+							public listIterator(param0: number): java.util.ListIterator<string>;
+							public iterator(): java.util.Iterator<string>;
+							public size(): number;
+							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzhx*/);
 						}
 					}
 				}
@@ -5372,16 +5372,16 @@ declare module com {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd>;
 						}
 						export module zzkd {
-							export class zza extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzc {
+							export class zza extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzd {
 								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zza>;
 							}
-							export class zzb extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzc {
+							export class zzb extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzd {
 								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zzb>;
 							}
-							export abstract class zzc {
+							export class zzc extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzd {
 								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zzc>;
 							}
-							export class zzd extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzc {
+							export abstract class zzd {
 								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zzd>;
 							}
 						}
@@ -5398,8 +5398,10 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzke {
+						export class zzke extends java.util.Iterator<string> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzke>;
+							public hasNext(): boolean;
+							public remove(): void;
 						}
 					}
 				}
@@ -5414,7 +5416,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkf {
+						export class zzkf extends java.security.PrivilegedExceptionAction<sun.misc.Unsafe> {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkf>;
 						}
 					}
@@ -5430,7 +5432,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkg extends com.google.android.gms.internal.firebase_remote_config.zzkh {
+						export class zzkg {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkg>;
 						}
 					}
@@ -5462,7 +5464,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzki extends com.google.android.gms.internal.firebase_remote_config.zzkh {
+						export class zzki {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzki>;
 						}
 					}
@@ -5494,9 +5496,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkk {
+						export class zzkk extends com.google.android.gms.internal.firebase_remote_config.zzkh {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkk>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzkk>*/;
 						}
 					}
 				}
@@ -5527,7 +5528,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkm extends com.google.android.gms.internal.firebase_remote_config.zzkk {
+						export class zzkm extends com.google.android.gms.internal.firebase_remote_config.zzkh {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkm>;
 						}
 					}
@@ -5543,7 +5544,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkn extends com.google.android.gms.internal.firebase_remote_config.zzkk {
+						export class zzkn extends com.google.android.gms.internal.firebase_remote_config.zzko {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkn>;
 						}
 					}
@@ -5559,8 +5560,9 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzko extends com.google.android.gms.internal.firebase_remote_config.zzkk {
+						export class zzko {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzko>;
+							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzko>*/;
 						}
 					}
 				}
@@ -5575,7 +5577,7 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkp extends com.google.android.gms.internal.firebase_remote_config.zzkk {
+						export class zzkp extends com.google.android.gms.internal.firebase_remote_config.zzko {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkp>;
 						}
 					}
@@ -5591,10 +5593,97 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkq {
+						export class zzkq extends com.google.android.gms.internal.firebase_remote_config.zzko {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkq>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export class zzkr {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkr>;
+							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzkr>*/;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export class zzks extends com.google.android.gms.internal.firebase_remote_config.zzko {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzks>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export class zzkt {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt>;
+						}
+						export module zzkt {
+							export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzkt.zza,com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zza>;
+								public isInitialized(): boolean;
+							}
+							export module zza {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzkt.zza,com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>;
+									public isInitialized(): boolean;
+								}
+							}
+							export class zzb extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb,com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb>;
+								public isInitialized(): boolean;
+							}
+							export module zzb {
+								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhi.zzb<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb,com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzis*/  {
+									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>;
+									public isInitialized(): boolean;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_remote_config {
+						export class zzku {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzku>;
 							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzkq interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzku interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 							 */
 							public constructor(implementation: {
 								zzgd(): number;
@@ -5654,63 +5743,8 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_remote_config {
-						export class zzkr {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkr>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzkr>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzks {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzks>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt>;
-						}
-						export module zzkt {
-							export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzkt.zza,com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zza>;
-								public isInitialized(): boolean;
-							}
-							export module zza {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzkt.zza,com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzb extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb,com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb>;
-								public isInitialized(): boolean;
-							}
-							export module zzb {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb,com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>;
-									public isInitialized(): boolean;
-								}
-							}
+						export class zzkv {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkv>;
 						}
 					}
 				}
@@ -6030,20 +6064,6 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class BuildConfig {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.BuildConfig>;
-					public static VERSION_NAME: string;
-					public constructor();
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module remoteconfig {
 				export class FirebaseRemoteConfig {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfig>;
 					public static DEFAULT_VALUE_FOR_STRING: string;
@@ -6059,36 +6079,27 @@ declare module com {
 					public static LAST_FETCH_STATUS_FAILURE: number;
 					public static LAST_FETCH_STATUS_THROTTLED: number;
 					public setDefaults(param0: java.util.Map<string,any>): void;
-					public setDefaults(param0: java.util.Map<string,any>, param1: string): void;
-					public getKeysByPrefix(param0: string, param1: string): java.util.Set<string>;
 					public getInfo(): com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
 					public static getInstance(): com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 					public ensureInitialized(): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo>;
-					public getString(param0: string, param1: string): string;
+					public getString(param0: string): string;
+					public fetchAndActivate(): com.google.android.gms.tasks.Task<java.lang.Boolean>;
 					public activate(): com.google.android.gms.tasks.Task<java.lang.Boolean>;
+					public getKeysByPrefix(param0: string): java.util.Set<string>;
 					public setConfigSettings(param0: com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings): void;
+					public setConfigSettingsAsync(param0: com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public getBoolean(param0: string): boolean;
+					public fetch(param0: number): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public setDefaultsAsync(param0: java.util.Map<string,any>): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public fetch(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public getValue(param0: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
-					public getBoolean(param0: string, param1: string): boolean;
 					public setDefaultsAsync(param0: number): com.google.android.gms.tasks.Task<java.lang.Void>;
-					public activateFetched(): boolean;
-					public getLong(param0: string): number;
-					public activateFetched(param0: string): boolean;
-					public getLong(param0: string, param1: string): number;
-					public getString(param0: string): string;
-					public getByteArray(param0: string, param1: string): native.Array<number>;
-					public fetchAndActivate(): com.google.android.gms.tasks.Task<java.lang.Boolean>;
-					public getKeysByPrefix(param0: string): java.util.Set<string>;
-					public getDouble(param0: string, param1: string): number;
-					public fetch(param0: number): com.google.android.gms.tasks.Task<java.lang.Void>;
-					public setDefaults(param0: number, param1: string): void;
 					public getByteArray(param0: string): native.Array<number>;
+					public activateFetched(): boolean;
 					public getDouble(param0: string): number;
 					public reset(): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public getLong(param0: string): number;
 					public setDefaults(param0: number): void;
-					public getValue(param0: string, param1: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 					public getAll(): java.util.Map<string,com.google.firebase.remoteconfig.FirebaseRemoteConfigValue>;
 					public static getInstance(param0: com.google.firebase.FirebaseApp): com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 				}
@@ -6103,6 +6114,8 @@ declare module com {
 			export module remoteconfig {
 				export class FirebaseRemoteConfigClientException extends com.google.firebase.remoteconfig.FirebaseRemoteConfigException {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException>;
+					public constructor(param0: string, param1: java.lang.Throwable);
+					public constructor(param0: string);
 				}
 			}
 		}
@@ -6117,7 +6130,6 @@ declare module com {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigException>;
 					public constructor(param0: string, param1: java.lang.Throwable);
 					public constructor(param0: string);
-					public constructor();
 				}
 			}
 		}
@@ -6132,7 +6144,6 @@ declare module com {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchException>;
 					public constructor(param0: string, param1: java.lang.Throwable);
 					public constructor(param0: string);
-					public constructor();
 				}
 			}
 		}
@@ -6148,7 +6159,6 @@ declare module com {
 					public getThrottleEndTimeMillis(): number;
 					public constructor(param0: string, param1: java.lang.Throwable);
 					public constructor(param0: string);
-					public constructor();
 					public constructor(param0: string, param1: number);
 					public constructor(param0: number);
 				}
@@ -6175,6 +6185,23 @@ declare module com {
 					public getFetchTimeMillis(): number;
 					public getConfigSettings(): com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 					public getLastFetchStatus(): number;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module remoteconfig {
+				export class FirebaseRemoteConfigServerException extends com.google.firebase.remoteconfig.FirebaseRemoteConfigException {
+					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException>;
+					public getHttpStatusCode(): number;
+					public constructor(param0: string, param1: java.lang.Throwable);
+					public constructor(param0: string);
+					public constructor(param0: number, param1: string, param2: java.lang.Throwable);
+					public constructor(param0: number, param1: string);
 				}
 			}
 		}
@@ -6270,7 +6297,7 @@ declare module com {
 			export module remoteconfig {
 				export class zza {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zza>;
-					public then(param0: com.google.android.gms.tasks.Task): any;
+					public call(): any;
 				}
 			}
 		}
@@ -6309,7 +6336,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzd {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzd>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+					public then(param0: com.google.android.gms.tasks.Task): any;
 				}
 			}
 		}
@@ -6322,7 +6349,7 @@ declare module com {
 			export module remoteconfig {
 				export class zze {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zze>;
-					public onSuccess(param0: any): void;
+					public then(param0: any): com.google.android.gms.tasks.Task;
 				}
 			}
 		}
@@ -6335,7 +6362,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzf {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzf>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+					public onSuccess(param0: any): void;
 				}
 			}
 		}
@@ -6348,7 +6375,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzg {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzg>;
-					public onComplete(param0: com.google.android.gms.tasks.Task): void;
+					public then(param0: any): com.google.android.gms.tasks.Task;
 				}
 			}
 		}
@@ -6361,7 +6388,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzh {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzh>;
-					public then(param0: com.google.android.gms.tasks.Task): any;
+					public onComplete(param0: com.google.android.gms.tasks.Task): void;
 				}
 			}
 		}
@@ -6374,7 +6401,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzi {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzi>;
-					public onComplete(param0: com.google.android.gms.tasks.Task): void;
+					public then(param0: com.google.android.gms.tasks.Task): any;
 				}
 			}
 		}
@@ -6387,7 +6414,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzj {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzj>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+					public onComplete(param0: com.google.android.gms.tasks.Task): void;
 				}
 			}
 		}
@@ -6400,7 +6427,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzk {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzk>;
-					public call(): any;
+					public then(param0: any): com.google.android.gms.tasks.Task;
 				}
 			}
 		}
@@ -6413,7 +6440,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzl {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzl>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+					public call(): any;
 				}
 			}
 		}
@@ -6426,6 +6453,7 @@ declare module com {
 			export module remoteconfig {
 				export class zzm {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzm>;
+					public then(param0: any): com.google.android.gms.tasks.Task;
 				}
 			}
 		}
@@ -6438,7 +6466,6 @@ declare module com {
 			export module remoteconfig {
 				export class zzn {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzn>;
-					public call(): any;
 				}
 			}
 		}
@@ -6476,6 +6503,19 @@ declare module com {
 			export module remoteconfig {
 				export class zzq {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzq>;
+					public call(): any;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module remoteconfig {
+				export class zzr {
+					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzr>;
 					public create(param0: com.google.firebase.components.ComponentContainer): any;
 				}
 			}
@@ -6487,33 +6527,33 @@ declare module com {
 //com.google.android.gms.internal.firebase_remote_config.zzbl:2
 //com.google.android.gms.internal.firebase_remote_config.zzdb:1
 //com.google.android.gms.internal.firebase_remote_config.zzdi:1
-//com.google.android.gms.internal.firebase_remote_config.zzem:1
+//com.google.android.gms.internal.firebase_remote_config.zzeo:1
 //com.google.android.gms.internal.firebase_remote_config.zzf:1
-//com.google.android.gms.internal.firebase_remote_config.zzfm:2
-//com.google.android.gms.internal.firebase_remote_config.zzfo:1
 //com.google.android.gms.internal.firebase_remote_config.zzfp:2
+//com.google.android.gms.internal.firebase_remote_config.zzfq:2
 //com.google.android.gms.internal.firebase_remote_config.zzfr:1
-//com.google.android.gms.internal.firebase_remote_config.zzgs:2
-//com.google.android.gms.internal.firebase_remote_config.zzgw:1
+//com.google.android.gms.internal.firebase_remote_config.zzfs:1
+//com.google.android.gms.internal.firebase_remote_config.zzgw:2
+//com.google.android.gms.internal.firebase_remote_config.zzgz:1
 //com.google.android.gms.internal.firebase_remote_config.zzha:1
 //com.google.android.gms.internal.firebase_remote_config.zzhc:1
-//com.google.android.gms.internal.firebase_remote_config.zzhh:2
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zza:2
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zzb:2
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zzc:1
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zze:2
+//com.google.android.gms.internal.firebase_remote_config.zzhi:2
+//com.google.android.gms.internal.firebase_remote_config.zzhi.zza:1
+//com.google.android.gms.internal.firebase_remote_config.zzhi.zzb:2
+//com.google.android.gms.internal.firebase_remote_config.zzhi.zzc:2
+//com.google.android.gms.internal.firebase_remote_config.zzhi.zzd:2
 //com.google.android.gms.internal.firebase_remote_config.zzhn:1
-//com.google.android.gms.internal.firebase_remote_config.zzhs:1
 //com.google.android.gms.internal.firebase_remote_config.zzht:1
-//com.google.android.gms.internal.firebase_remote_config.zzie:2
-//com.google.android.gms.internal.firebase_remote_config.zzig:2
+//com.google.android.gms.internal.firebase_remote_config.zzhw:1
 //com.google.android.gms.internal.firebase_remote_config.zzih:2
-//com.google.android.gms.internal.firebase_remote_config.zziq:1
-//com.google.android.gms.internal.firebase_remote_config.zzis:1
+//com.google.android.gms.internal.firebase_remote_config.zzii:2
+//com.google.android.gms.internal.firebase_remote_config.zzik:2
+//com.google.android.gms.internal.firebase_remote_config.zziu:1
+//com.google.android.gms.internal.firebase_remote_config.zziw:1
 //com.google.android.gms.internal.firebase_remote_config.zziz:1
-//com.google.android.gms.internal.firebase_remote_config.zzja:1
+//com.google.android.gms.internal.firebase_remote_config.zzje:1
 //com.google.android.gms.internal.firebase_remote_config.zzjf:1
-//com.google.android.gms.internal.firebase_remote_config.zzjg:2
+//com.google.android.gms.internal.firebase_remote_config.zzjk:2
 //com.google.android.gms.internal.firebase_remote_config.zzjx:2
 //com.google.android.gms.internal.firebase_remote_config.zzn:1
 

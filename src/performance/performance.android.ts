@@ -1,5 +1,3 @@
-declare const com: any;
-
 export function startTrace(name: string): FirebaseTrace {
   const trace = com.google.firebase.perf.FirebasePerformance.getInstance().newTrace(name);
   trace.start();
@@ -7,7 +5,7 @@ export function startTrace(name: string): FirebaseTrace {
 }
 
 export class FirebaseTrace {
-  constructor(private nativeTrace: any /* com.google.firebase.perf.metrics.Trace */) {
+  constructor(private nativeTrace: com.google.firebase.perf.metrics.Trace) {
   }
 
   setValue(attribute: string, value: string): void {

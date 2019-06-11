@@ -1,5161 +1,32 @@
-/// <reference path="./_helpers.d.ts" />
-import javautilconcurrentScheduledExecutorService = java.util.concurrent.ScheduledExecutorService;
-/// <reference path="./com.google.android.gms.internal.zzdrg.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrh.d.ts" />
-/// <reference path="./com.google.firebase.FirebaseApp.d.ts" />
-/// <reference path="./java.util.concurrent.ScheduledExecutorService.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdoc {
-						public zza(param0: com.google.android.gms.internal.zzdrh): void;
-						public zza(param0: boolean, param1: com.google.android.gms.internal.zzdrg): void;
-						public constructor(param0: com.google.firebase.FirebaseApp, param1: javautilconcurrentScheduledExecutorService);
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangException = java.lang.Exception;
-/// <reference path="./java.lang.Exception.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdod {
-						public onFailure(param0: javalangException): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdoe {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzekv.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdof {
-						public zzb(param0: com.google.android.gms.internal.zzekv): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdog {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangRunnable = java.lang.Runnable;
-/// <reference path="./java.lang.Runnable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdoh {
-						public constructor();
-						public shutdown(): void;
-						public restart(): void;
-						public zzl(param0: javalangRunnable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javautilList = java.util.List;
-/// <reference path="./com.google.android.gms.internal.zzdpu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpz.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrv.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdto.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvs.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxy.d.ts" />
-/// <reference path="./com.google.firebase.FirebaseApp.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.concurrent.ScheduledExecutorService.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdoi {
-						public zzb(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdto;
-						public zza(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdrv;
-						public zzc(param0: com.google.android.gms.internal.zzdro): string;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdpu, param2: com.google.android.gms.internal.zzdpw, param3: com.google.android.gms.internal.zzdpz): com.google.android.gms.internal.zzdpy;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdxy, param2: javautilList): com.google.android.gms.internal.zzdxx;
-						public zza(param0: javautilconcurrentScheduledExecutorService): com.google.android.gms.internal.zzdrf;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: string): com.google.android.gms.internal.zzdvs;
-						public constructor(param0: com.google.firebase.FirebaseApp);
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangThrowable = java.lang.Throwable;
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdoj extends com.google.android.gms.internal.zzeaf {
-						public zzn(param0: javalangRunnable): void;
-						public shutdown(): void;
-						public restart(): void;
-						public zzf(param0: javalangThrowable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdok {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdol {
-						public zzbe(param0: boolean): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-import androidcontentContext = android.content.Context;
-import javautilSet = java.util.Set;
-/// <reference path="./android.content.Context.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Set.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdom {
-						public zzbn(param0: number): javautilSet;
-						public zzbpz(): number;
-						public zzbqa(): javautilList;
-						public zzbqb(): void;
-						public setTransactionSuccessful(): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbpy(): javautilList;
-						public zzb(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zzbk(param0: number): void;
-						public zza(param0: com.google.android.gms.internal.zzdvy): void;
-						public zza(param0: number, param1: javautilSet): void;
-						public zzbl(param0: number): void;
-						public zzbm(param0: number): void;
-						public zze(param0: javautilSet): javautilSet;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdvu): void;
-						public constructor(param0: androidcontentContext, param1: com.google.android.gms.internal.zzdro, param2: string);
-						public endTransaction(): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: number): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: number): void;
-						public beginTransaction(): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zza(param0: number, param1: javautilSet, param2: javautilSet): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangObject = java.lang.Object;
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdon {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdoo {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-import androiddatabasesqliteSQLiteDatabase = android.database.sqlite.SQLiteDatabase;
-/// <reference path="./android.content.Context.d.ts" />
-/// <reference path="./android.database.sqlite.SQLiteDatabase.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdop {
-						public onUpgrade(param0: androiddatabasesqliteSQLiteDatabase, param1: number, param2: number): void;
-						public constructor(param0: androidcontentContext, param1: string);
-						public onCreate(param0: androiddatabasesqliteSQLiteDatabase): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrg.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrh.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrf {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdrf interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: boolean, param1: com.google.android.gms.internal.zzdrg): void;
-							zza(param0: com.google.android.gms.internal.zzdrh): void;
-						});
-						public zza(param0: com.google.android.gms.internal.zzdrh): void;
-						public zza(param0: boolean, param1: com.google.android.gms.internal.zzdrg): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrg {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdrg interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzpc(param0: string): void;
-							onError(param0: string): void;
-						});
-						public zzpc(param0: string): void;
-						public onError(param0: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrh {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdrh interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzpl(param0: string): void;
-						});
-						public zzpl(param0: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdru.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdww.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.firebase.database.ChildEventListener.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdri extends com.google.android.gms.internal.zzdrt {
-						public zza(param0: com.google.android.gms.internal.zzdru): void;
-						public constructor();
-						public zza(param0: com.google.android.gms.internal.zzdwt, param1: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwu;
-						public equals(param0: javalangObject): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdww): boolean;
-						public hashCode(): number;
-						public zzc(param0: com.google.android.gms.internal.zzdrt): boolean;
-						public toString(): string;
-						public zza(param0: com.google.firebase.database.DatabaseError): void;
-						public zza(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdrt;
-						public constructor(param0: com.google.android.gms.internal.zzdsf, param1: com.google.firebase.database.ChildEventListener, param2: com.google.android.gms.internal.zzdxe);
-						public zza(param0: com.google.android.gms.internal.zzdwu): void;
-						public zzbsl(): com.google.android.gms.internal.zzdxe;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrj {
-					}
-				}
-			}
-		}
-	}
-}
-
-import javautilMap = java.util.Map;
-import javautilIterator = java.util.Iterator;
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrk {
-						public static zzaf(param0: javautilMap): com.google.android.gms.internal.zzdrk;
-						public zzb(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public iterator(): javautilIterator;
-						public static zzae(param0: javautilMap): com.google.android.gms.internal.zzdrk;
-						public zzci(param0: boolean): javautilMap;
-						public zzg(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdrk;
-						public equals(param0: javalangObject): boolean;
-						public zzbsp(): javautilMap;
-						public zze(param0: com.google.android.gms.internal.zzdsc): boolean;
-						public zzbso(): javautilList;
-						public hashCode(): number;
-						public zzbsn(): com.google.android.gms.internal.zzdyx;
-						public toString(): string;
-						public static zzbsm(): com.google.android.gms.internal.zzdrk;
-						public zzd(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdrk;
-						public zzf(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zze(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdrk;
-						public zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdrk;
-						public zzb(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): com.google.android.gms.internal.zzdrk;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrl {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrm {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrn {
-						public static zzlya: com.google.android.gms.internal.zzdya;
-						public static zzlyb: com.google.android.gms.internal.zzdya;
-						public static zzlyc: com.google.android.gms.internal.zzdya;
-						public static zzlyd: com.google.android.gms.internal.zzdya;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpz.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrv.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdto.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxy.d.ts" />
-/// <reference path="./com.google.firebase.FirebaseApp.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdro {
-						public zzlye: com.google.android.gms.internal.zzdrv;
-						public zzlyf: com.google.android.gms.internal.zzdrf;
-						public zzlyg: com.google.android.gms.internal.zzdto;
-						public zzlyh: string;
-						public zzlyi: com.google.android.gms.internal.zzdxy;
-						public zzltv: boolean;
-						public cacheSize: number;
-						public zzlrk: com.google.firebase.FirebaseApp;
-						public constructor();
-						public zzbsu(): com.google.android.gms.internal.zzdxy;
-						public isPersistenceEnabled(): boolean;
-						public zzbsv(): com.google.android.gms.internal.zzdpu;
-						public zzpy(): string;
-						public zzbss(): void;
-						public zzbsw(): number;
-						public zzbsx(): com.google.android.gms.internal.zzdrv;
-						public zza(param0: com.google.android.gms.internal.zzdpw, param1: com.google.android.gms.internal.zzdpz): com.google.android.gms.internal.zzdpy;
-						public zzpm(param0: string): com.google.android.gms.internal.zzdxw;
-						public zzbsy(): string;
-						public zzbst(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpt.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrp {
-						public zza(param0: boolean, param1: com.google.android.gms.internal.zzdpt): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrq {
-						public zzpc(param0: string): void;
-						public onError(param0: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.firebase.FirebaseApp.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrr extends com.google.android.gms.internal.zzdro {
-						public constructor();
-						public zzpo(param0: string): void;
-						public zzd(param0: com.google.firebase.FirebaseApp): void;
-						public setPersistenceCacheSizeBytes(param0: number): void;
-						public setPersistenceEnabled(param0: boolean): void;
-						public setLogLevel(param0: com.google.firebase.database.Logger.Level): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrs {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdru.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdww.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export abstract class zzdrt {
-						public zza(param0: com.google.firebase.database.DatabaseError): void;
-						public zza(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdrt;
-						public zza(param0: com.google.android.gms.internal.zzdru): void;
-						public constructor();
-						public zza(param0: com.google.android.gms.internal.zzdwt, param1: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwu;
-						public zza(param0: com.google.android.gms.internal.zzdww): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdwu): void;
-						public zzc(param0: com.google.android.gms.internal.zzdrt): boolean;
-						public zzbsl(): com.google.android.gms.internal.zzdxe;
-						public zzbsz(): void;
-						public zzbta(): boolean;
-						public zzcj(param0: boolean): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdru {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdru interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzd(param0: com.google.android.gms.internal.zzdrt): void;
-						});
-						public zzd(param0: com.google.android.gms.internal.zzdrt): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Runnable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrv {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdrv interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzl(param0: javalangRunnable): void;
-							shutdown(): void;
-							restart(): void;
-						});
-						public shutdown(): void;
-						public restart(): void;
-						public zzl(param0: javalangRunnable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpz.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrv.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdto.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvs.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxy.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.concurrent.ScheduledExecutorService.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrw {
-						public static zzlyq: com.google.android.gms.internal.zzdrw;
-						public zzb(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdto;
-						public zza(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdrv;
-						public zzc(param0: com.google.android.gms.internal.zzdro): string;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdpu, param2: com.google.android.gms.internal.zzdpw, param3: com.google.android.gms.internal.zzdpz): com.google.android.gms.internal.zzdpy;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdxy, param2: javautilList): com.google.android.gms.internal.zzdxx;
-						public static isActive(): boolean;
-						public static values(): native.Array<com.google.android.gms.internal.zzdrw>;
-						public zza(param0: javautilconcurrentScheduledExecutorService): com.google.android.gms.internal.zzdrf;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: string): com.google.android.gms.internal.zzdvs;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangThread = java.lang.Thread;
-import javalangThreadUncaughtExceptionHandler = java.lang.Thread.UncaughtExceptionHandler;
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.lang.Thread.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrx {
-						public zza(param0: javalangThread, param1: string): void;
-						public zza(param0: javalangThread, param1: javalangThreadUncaughtExceptionHandler): void;
-						public zza(param0: javalangThread, param1: boolean): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.lang.Thread.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdry {
-						public zza(param0: javalangThread, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javautilconcurrentThreadFactory = java.util.concurrent.ThreadFactory;
-/// <reference path="./com.google.android.gms.internal.zzdut.d.ts" />
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
-/// <reference path="./java.util.concurrent.ThreadFactory.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdrz extends com.google.android.gms.internal.zzeaf {
-						public getThreadFactory(): javautilconcurrentThreadFactory;
-						public zzn(param0: javalangRunnable): void;
-						public shutdown(): void;
-						public zzbtc(): com.google.android.gms.internal.zzdut;
-						public restart(): void;
-						public zzf(param0: javalangThrowable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpz.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrv.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdto.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvs.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxy.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.concurrent.ScheduledExecutorService.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsa {
-						public static zzlyu: com.google.android.gms.internal.zzdsa;
-						public zzb(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdto;
-						public zza(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdrv;
-						public zzc(param0: com.google.android.gms.internal.zzdro): string;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdpu, param2: com.google.android.gms.internal.zzdpw, param3: com.google.android.gms.internal.zzdpz): com.google.android.gms.internal.zzdpy;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdxy, param2: javautilList): com.google.android.gms.internal.zzdxx;
-						public zza(param0: javautilconcurrentScheduledExecutorService): com.google.android.gms.internal.zzdrf;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: string): com.google.android.gms.internal.zzdvs;
-						public static values(): native.Array<com.google.android.gms.internal.zzdsa>;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsb extends com.google.android.gms.internal.zzeaf {
-						public zzn(param0: javalangRunnable): void;
-						public shutdown(): void;
-						public restart(): void;
-						public zzf(param0: javalangThrowable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsc {
-						public iterator(): javautilIterator;
-						public equals(param0: javalangObject): boolean;
-						public constructor(param0: javautilList);
-						public static zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdsc;
-						public zzbte(): string;
-						public constructor(param0: native.Array<com.google.android.gms.internal.zzdya>);
-						public hashCode(): number;
-						public zza(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdsc;
-						public zzj(param0: com.google.android.gms.internal.zzdsc): number;
-						public toString(): string;
-						public zzbtj(): com.google.android.gms.internal.zzdya;
-						public zzi(param0: com.google.android.gms.internal.zzdsc): boolean;
-						public static zzbtd(): com.google.android.gms.internal.zzdsc;
-						public zzbtg(): com.google.android.gms.internal.zzdya;
-						public zzbtf(): javautilList;
-						public isEmpty(): boolean;
-						public zzbti(): com.google.android.gms.internal.zzdsc;
-						public size(): number;
-						public zzh(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdsc;
-						public zzbth(): com.google.android.gms.internal.zzdsc;
-						public constructor(param0: string);
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsd {
-						public hasNext(): boolean;
-						public remove(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdpz.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrv.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdto.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvs.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxy.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.concurrent.ScheduledExecutorService.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdse {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdse interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdxy, param2: javautilList): com.google.android.gms.internal.zzdxx;
-							zza(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdrv;
-							zzb(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdto;
-							zza(param0: javautilconcurrentScheduledExecutorService): com.google.android.gms.internal.zzdrf;
-							zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdpu, param2: com.google.android.gms.internal.zzdpw, param3: com.google.android.gms.internal.zzdpz): com.google.android.gms.internal.zzdpy;
-							zzc(param0: com.google.android.gms.internal.zzdro): string;
-							zza(param0: com.google.android.gms.internal.zzdro, param1: string): com.google.android.gms.internal.zzdvs;
-						});
-						public zzb(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdto;
-						public zza(param0: com.google.android.gms.internal.zzdro): com.google.android.gms.internal.zzdrv;
-						public zzc(param0: com.google.android.gms.internal.zzdro): string;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdpu, param2: com.google.android.gms.internal.zzdpw, param3: com.google.android.gms.internal.zzdpz): com.google.android.gms.internal.zzdpy;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdxy, param2: javautilList): com.google.android.gms.internal.zzdxx;
-						public zza(param0: javautilconcurrentScheduledExecutorService): com.google.android.gms.internal.zzdrf;
-						public zza(param0: com.google.android.gms.internal.zzdro, param1: string): com.google.android.gms.internal.zzdvs;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangLong = java.lang.Long;
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdti.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.firebase.database.FirebaseDatabase.d.ts" />
-/// <reference path="./java.lang.Long.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsf {
-						public getDatabase(): com.google.firebase.database.FirebaseDatabase;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-						public zzbtl(): com.google.android.gms.internal.zzdti;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: com.google.firebase.database.DatabaseReference.CompletionListener, param3: javautilMap): void;
-						public zze(param0: com.google.android.gms.internal.zzdrt): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.firebase.database.Transaction.Handler, param2: boolean): void;
-						public zzl(param0: javalangRunnable): void;
-						public zzb(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-						public toString(): string;
-						public zza(param0: javautilList, param1: javalangObject, param2: boolean, param3: javalangLong): void;
-						public onDisconnect(): void;
-						public zzac(param0: javautilMap): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javautilMap, param2: com.google.firebase.database.DatabaseReference.CompletionListener, param3: javautilMap): void;
-						public zzbrf(): void;
-						public zza(param0: javautilList, param1: javautilList, param2: javalangLong): void;
-						public zzn(param0: javalangRunnable): void;
-						public purgeOutstandingWrites(): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-						public zzcg(param0: boolean): void;
-						public zzf(param0: com.google.android.gms.internal.zzdrt): void;
-						public zzbtm(): number;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: boolean): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsg {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsh {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsi {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsj {
-						public zzf(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.firebase.database.DataSnapshot.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsk {
-						public onCancelled(param0: com.google.firebase.database.DatabaseError): void;
-						public onDataChange(param0: com.google.firebase.database.DataSnapshot): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsl {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsm {
-						public zzd(param0: com.google.android.gms.internal.zzdwm): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsn {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdso {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsp {
-						public zzd(param0: com.google.android.gms.internal.zzdwm): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsq {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsr {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdss {
-						public zzpl(param0: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdst {
-						public zzd(param0: com.google.android.gms.internal.zzdwm): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsu {
-						public zze(param0: com.google.android.gms.internal.zzdwm): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsv {
-						public zzd(param0: com.google.android.gms.internal.zzdwm): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsw {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzduo.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdus.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsx {
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus, param2: com.google.android.gms.internal.zzdpx, param3: com.google.android.gms.internal.zzduo): void;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsy {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzduo.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdus.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdsz {
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus, param2: com.google.android.gms.internal.zzdpx, param3: com.google.android.gms.internal.zzduo): void;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdta {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtb {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtc {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtd {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdte {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtf {
-						public zzbc(param0: string, param1: string): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtg {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdth {
-						public static zzmaz: number;
-						public static zzmba: number;
-						public static zzmbb: number;
-						public static zzmbc: number;
-						public static zzmbd: number;
-						public static zzmbe: number;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdti {
-						public host: string;
-						public secure: boolean;
-						public zzjdy: string;
-						public zzmbg: string;
-						public constructor();
-						public equals(param0: javalangObject): boolean;
-						public hashCode(): number;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdti.d.ts" />
-/// <reference path="./com.google.firebase.database.FirebaseDatabase.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtj {
-						public constructor();
-						public static zza(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdti, param2: com.google.firebase.database.FirebaseDatabase): com.google.android.gms.internal.zzdsf;
-						public static zzd(param0: com.google.android.gms.internal.zzdro): void;
-						public static zzl(param0: com.google.android.gms.internal.zzdsf): void;
-						public static zzk(param0: com.google.android.gms.internal.zzdsf): void;
-						public static zze(param0: com.google.android.gms.internal.zzdro): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtk {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtl {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtm {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtn {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Runnable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdto {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdto interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzn(param0: javalangRunnable): void;
-							shutdown(): void;
-							restart(): void;
-						});
-						public zzn(param0: javalangRunnable): void;
-						public shutdown(): void;
-						public restart(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzead.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtp {
-						public static zza(param0: com.google.android.gms.internal.zzead): javautilMap;
-						public static zza(param0: com.google.android.gms.internal.zzdyx, param1: javautilMap): com.google.android.gms.internal.zzdyx;
-						public static zza(param0: com.google.android.gms.internal.zzdrk, param1: javautilMap): com.google.android.gms.internal.zzdrk;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtq {
-						public zzf(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtr extends com.google.android.gms.internal.zzdyf {
-						public zzb(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdts {
-						public constructor(param0: com.google.android.gms.internal.zzdyx);
-						public zzg(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zzbtq(): com.google.android.gms.internal.zzdyx;
-						public zzp(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdtx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtt {
-						public zzq(param0: com.google.android.gms.internal.zzdsc): boolean;
-						public constructor();
-						public zzh(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdtx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtu extends com.google.android.gms.internal.zzdyf {
-						public zzb(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdtt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtv {
-						public zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdtt): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdtt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtw {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdtw interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdtt): void;
-						});
-						public zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdtt): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtx {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdtx interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzf(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						});
-						public zzf(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvd.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvi.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvs.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzeal.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdty {
-						public zza(param0: com.google.android.gms.internal.zzdvi, param1: com.google.android.gms.internal.zzdvd, param2: com.google.android.gms.internal.zzdyx): javautilList;
-						public zzbts(): boolean;
-						public zzr(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public constructor(param0: com.google.android.gms.internal.zzdvs);
-						public zzc(param0: com.google.android.gms.internal.zzdxe): boolean;
-						public zzb(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdxf;
-						public isEmpty(): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdrt, param2: com.google.firebase.database.DatabaseError): com.google.android.gms.internal.zzeal;
-						public zzbtt(): com.google.android.gms.internal.zzdxf;
-						public zza(param0: com.google.android.gms.internal.zzdrt, param1: com.google.android.gms.internal.zzdvd, param2: com.google.android.gms.internal.zzdwr): javautilList;
-						public zzbtr(): javautilList;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdur.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdus.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvs.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzead.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdtz {
-						public zza(param0: com.google.android.gms.internal.zzdus): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javautilMap, param2: com.google.android.gms.internal.zzdus): javautilList;
-						public constructor(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdvs, param2: com.google.android.gms.internal.zzdur);
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: com.google.android.gms.internal.zzdyx, param3: number, param4: boolean, param5: boolean): javautilList;
-						public zzb(param0: com.google.android.gms.internal.zzdsc, param1: javautilList): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.firebase.database.DatabaseError): javautilList;
-						public zzc(param0: com.google.android.gms.internal.zzdsc, param1: javautilList): com.google.android.gms.internal.zzdyx;
-						public zzi(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): javautilList;
-						public zzg(param0: com.google.android.gms.internal.zzdrt): javautilList;
-						public zzs(param0: com.google.android.gms.internal.zzdsc): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: com.google.android.gms.internal.zzdus): javautilList;
-						public zza(param0: number, param1: boolean, param2: boolean, param3: com.google.android.gms.internal.zzead): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javautilMap): javautilList;
-						public isEmpty(): boolean;
-						public zzh(param0: com.google.android.gms.internal.zzdrt): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: com.google.android.gms.internal.zzdrk, param3: number, param4: boolean): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javautilList, param2: com.google.android.gms.internal.zzdus): javautilList;
-						public zzbtu(): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: boolean): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdua {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdub {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduc {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdud {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdue {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduf {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdug {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduh {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdui {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduj {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduk {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdul {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdum {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdun {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduo {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzduo interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzb(param0: com.google.firebase.database.DatabaseError): javautilList;
-						});
-						public zzb(param0: com.google.firebase.database.DatabaseError): javautilList;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdru.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdww.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdup extends com.google.android.gms.internal.zzdrt {
-						public zza(param0: com.google.firebase.database.DatabaseError): void;
-						public zza(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdrt;
-						public zza(param0: com.google.android.gms.internal.zzdru): void;
-						public constructor();
-						public zza(param0: com.google.android.gms.internal.zzdwt, param1: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwu;
-						public equals(param0: javalangObject): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdww): boolean;
-						public constructor(param0: com.google.android.gms.internal.zzdxe);
-						public zza(param0: com.google.android.gms.internal.zzdwu): void;
-						public hashCode(): number;
-						public zzc(param0: com.google.android.gms.internal.zzdrt): boolean;
-						public zzbsl(): com.google.android.gms.internal.zzdxe;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpn.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdtz.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxf.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduq {
-						public zzb(param0: com.google.firebase.database.DatabaseError): javautilList;
-						public zzbre(): com.google.android.gms.internal.zzdpn;
-						public zzbrd(): boolean;
-						public constructor(param0: com.google.android.gms.internal.zzdtz, param1: com.google.android.gms.internal.zzdxf);
-						public zzbrc(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdpx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzduo.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdus.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdur {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdur interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus, param2: com.google.android.gms.internal.zzdpx, param3: com.google.android.gms.internal.zzduo): void;
-							zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus): void;
-						});
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus, param2: com.google.android.gms.internal.zzdpx, param3: com.google.android.gms.internal.zzduo): void;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdus): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdus {
-						public equals(param0: javalangObject): boolean;
-						public constructor(param0: number);
-						public zzbtw(): number;
-						public hashCode(): number;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.lang.Thread.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdut {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdut interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: javalangThread, param1: string): void;
-							zza(param0: javalangThread, param1: boolean): void;
-							zza(param0: javalangThread, param1: javalangThreadUncaughtExceptionHandler): void;
-							<clinit>(): void;
-						});
-						public static zzmcx: com.google.android.gms.internal.zzdut;
-						public zza(param0: javalangThread, param1: string): void;
-						public zza(param0: javalangThread, param1: javalangThreadUncaughtExceptionHandler): void;
-						public zza(param0: javalangThread, param1: boolean): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.lang.Thread.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduu {
-						public zza(param0: javalangThread, param1: string): void;
-						public zza(param0: javalangThread, param1: javalangThreadUncaughtExceptionHandler): void;
-						public zza(param0: javalangThread, param1: boolean): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdut.d.ts" />
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.util.concurrent.ThreadFactory.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduv {
-						public shutdown(): void;
-						public restart(): void;
-						public constructor(param0: javautilconcurrentThreadFactory, param1: com.google.android.gms.internal.zzdut);
-						public zzl(param0: javalangRunnable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.lang.Thread.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduw {
-						public newThread(param0: javalangRunnable): javalangThread;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdux {
-						public zzbtx(): number;
-						public equals(param0: javalangObject): boolean;
-						public zzbpw(): com.google.android.gms.internal.zzdsc;
-						public isVisible(): boolean;
-						public hashCode(): number;
-						public zzbtz(): com.google.android.gms.internal.zzdrk;
-						public constructor(param0: number, param1: com.google.android.gms.internal.zzdsc, param2: com.google.android.gms.internal.zzdyx, param3: boolean);
-						public zzbty(): com.google.android.gms.internal.zzdyx;
-						public zzbua(): boolean;
-						public constructor(param0: number, param1: com.google.android.gms.internal.zzdsc, param2: com.google.android.gms.internal.zzdrk);
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduy {
-						public static zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdru.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdww.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./com.google.firebase.database.ValueEventListener.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzduz extends com.google.android.gms.internal.zzdrt {
-						public zza(param0: com.google.android.gms.internal.zzdru): void;
-						public constructor();
-						public constructor(param0: com.google.android.gms.internal.zzdsf, param1: com.google.firebase.database.ValueEventListener, param2: com.google.android.gms.internal.zzdxe);
-						public zza(param0: com.google.android.gms.internal.zzdwt, param1: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwu;
-						public equals(param0: javalangObject): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdww): boolean;
-						public hashCode(): number;
-						public zzc(param0: com.google.android.gms.internal.zzdrt): boolean;
-						public toString(): string;
-						public zza(param0: com.google.firebase.database.DatabaseError): void;
-						public zza(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdrt;
-						public zza(param0: com.google.android.gms.internal.zzdwu): void;
-						public zzbsl(): com.google.android.gms.internal.zzdxe;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdux.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvd.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Long.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdva {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdsc, param2: com.google.android.gms.internal.zzdyx, param3: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public constructor();
-						public zzt(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdvd;
-						public zzbv(param0: number): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: javalangLong, param3: boolean): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: javautilList, param3: boolean): com.google.android.gms.internal.zzdyx;
-						public zzbud(): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: com.google.android.gms.internal.zzdyw, param3: boolean, param4: com.google.android.gms.internal.zzdyp): com.google.android.gms.internal.zzdyw;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: javalangLong): void;
-						public zzj(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzu(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbu(param0: number): com.google.android.gms.internal.zzdux;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdya, param2: com.google.android.gms.internal.zzdwr): com.google.android.gms.internal.zzdyx;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvb {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvc {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdva.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvd {
-						public constructor(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdva);
-						public zzu(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzb(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdvd;
-						public zzd(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzc(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdyx, param1: com.google.android.gms.internal.zzdyw, param2: boolean, param3: com.google.android.gms.internal.zzdyp): com.google.android.gms.internal.zzdyw;
-						public zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdwr): com.google.android.gms.internal.zzdyx;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdve {
-						public static zzbue(): com.google.android.gms.internal.zzdve;
-						public zzj(param0: com.google.android.gms.internal.zzdrt): void;
-						public zzd(param0: com.google.android.gms.internal.zzdrt): void;
-						public zzi(param0: com.google.android.gms.internal.zzdrt): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvi.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwg.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvf extends com.google.android.gms.internal.zzdvi {
-						public constructor(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdwg, param2: boolean);
-						public constructor(param0: com.google.android.gms.internal.zzdvj, param1: com.google.android.gms.internal.zzdvk, param2: com.google.android.gms.internal.zzdsc);
-						public zzbuf(): com.google.android.gms.internal.zzdwg;
-						public zzbug(): boolean;
-						public zzc(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdvi;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvi.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvg extends com.google.android.gms.internal.zzdvi {
-						public constructor(param0: com.google.android.gms.internal.zzdvk, param1: com.google.android.gms.internal.zzdsc);
-						public constructor(param0: com.google.android.gms.internal.zzdvj, param1: com.google.android.gms.internal.zzdvk, param2: com.google.android.gms.internal.zzdsc);
-						public zzc(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdvi;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvi.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvh extends com.google.android.gms.internal.zzdvi {
-						public zzbuh(): com.google.android.gms.internal.zzdrk;
-						public constructor(param0: com.google.android.gms.internal.zzdvj, param1: com.google.android.gms.internal.zzdvk, param2: com.google.android.gms.internal.zzdsc);
-						public constructor(param0: com.google.android.gms.internal.zzdvk, param1: com.google.android.gms.internal.zzdsc, param2: com.google.android.gms.internal.zzdrk);
-						public zzc(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdvi;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export abstract class zzdvi {
-						public zzmdx: com.google.android.gms.internal.zzdvk;
-						public zzlqw: com.google.android.gms.internal.zzdsc;
-						public constructor(param0: com.google.android.gms.internal.zzdvj, param1: com.google.android.gms.internal.zzdvk, param2: com.google.android.gms.internal.zzdsc);
-						public zzbpw(): com.google.android.gms.internal.zzdsc;
-						public zzbui(): com.google.android.gms.internal.zzdvk;
-						public zzbuj(): com.google.android.gms.internal.zzdvj;
-						public zzc(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdvi;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvj {
-						public static zzmdy: com.google.android.gms.internal.zzdvj;
-						public static zzmdz: com.google.android.gms.internal.zzdvj;
-						public static zzmea: com.google.android.gms.internal.zzdvj;
-						public static zzmeb: com.google.android.gms.internal.zzdvj;
-						public static values(): native.Array<com.google.android.gms.internal.zzdvj>;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdxb.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvk {
-						public static zzmed: com.google.android.gms.internal.zzdvk;
-						public static zzmee: com.google.android.gms.internal.zzdvk;
-						public zzbuk(): boolean;
-						public zzbul(): boolean;
-						public static zzc(param0: com.google.android.gms.internal.zzdxb): com.google.android.gms.internal.zzdvk;
-						public toString(): string;
-						public zzbum(): com.google.android.gms.internal.zzdxb;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvl {
-						public static zzmei: com.google.android.gms.internal.zzdvl;
-						public static zzmej: com.google.android.gms.internal.zzdvl;
-						public static values(): native.Array<com.google.android.gms.internal.zzdvl>;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvi.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvm extends com.google.android.gms.internal.zzdvi {
-						public constructor(param0: com.google.android.gms.internal.zzdvj, param1: com.google.android.gms.internal.zzdvk, param2: com.google.android.gms.internal.zzdsc);
-						public constructor(param0: com.google.android.gms.internal.zzdvk, param1: com.google.android.gms.internal.zzdsc, param2: com.google.android.gms.internal.zzdyx);
-						public zzbun(): com.google.android.gms.internal.zzdyx;
-						public zzc(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdvi;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvn {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdvn interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzj(param0: number, param1: number): boolean;
-							zzbw(param0: number): boolean;
-							zzbuo(): number;
-							zzbup(): number;
-							<clinit>(): void;
-						});
-						public static zzmem: com.google.android.gms.internal.zzdvn;
-						public zzbw(param0: number): boolean;
-						public zzbuo(): number;
-						public zzbup(): number;
-						public zzj(param0: number, param1: number): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvo {
-						public zzbw(param0: number): boolean;
-						public zzbuo(): number;
-						public zzbup(): number;
-						public zzj(param0: number, param1: number): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javautilconcurrentCallable = java.util.concurrent.Callable;
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvn.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Set.d.ts" />
-/// <reference path="./java.util.concurrent.Callable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvp {
-						public zzd(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public zzc(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public zzbqb(): void;
-						public zzi(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzf(param0: javautilconcurrentCallable): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet): void;
-						public zzg(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzbpy(): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet, param2: javautilSet): void;
-						public zzbk(param0: number): void;
-						public zzf(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwr;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdyx): void;
-						public zzh(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzk(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: number): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: number): void;
-						public constructor(param0: com.google.android.gms.internal.zzdro, param1: com.google.android.gms.internal.zzdvt, param2: com.google.android.gms.internal.zzdvn);
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvq {
-						public zzbw(param0: number): boolean;
-						public constructor(param0: number);
-						public zzbuo(): number;
-						public zzbup(): number;
-						public zzj(param0: number, param1: number): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Set.d.ts" />
-/// <reference path="./java.util.concurrent.Callable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvr {
-						public zzd(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public zzc(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public constructor();
-						public zzbqb(): void;
-						public zzi(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzf(param0: javautilconcurrentCallable): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet): void;
-						public zzg(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzbpy(): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet, param2: javautilSet): void;
-						public zzbk(param0: number): void;
-						public zzf(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwr;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdyx): void;
-						public zzh(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzk(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: number): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: number): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Set.d.ts" />
-/// <reference path="./java.util.concurrent.Callable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvs {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdvs interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: number): void;
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: number): void;
-							zzbk(param0: number): void;
-							zzbqb(): void;
-							zzk(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-							zzc(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-							zzbpy(): javautilList;
-							zzf(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwr;
-							zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdyx): void;
-							zzd(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-							zzg(param0: com.google.android.gms.internal.zzdxe): void;
-							zzh(param0: com.google.android.gms.internal.zzdxe): void;
-							zzi(param0: com.google.android.gms.internal.zzdxe): void;
-							zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet): void;
-							zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet, param2: javautilSet): void;
-							zzf(param0: javautilconcurrentCallable): javalangObject;
-						});
-						public zzd(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public zzc(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public zzbqb(): void;
-						public zzi(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzf(param0: javautilconcurrentCallable): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet): void;
-						public zzg(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzbpy(): javautilList;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: javautilSet, param2: javautilSet): void;
-						public zzbk(param0: number): void;
-						public zzf(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdwr;
-						public zza(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdyx): void;
-						public zzh(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzk(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: number): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: number): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-/// <reference path="./java.util.Set.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvt {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdvt interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: number): void;
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: number): void;
-							zzbk(param0: number): void;
-							zzbpy(): javautilList;
-							zzbqb(): void;
-							zza(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-							zzb(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-							zzbpz(): number;
-							zza(param0: com.google.android.gms.internal.zzdvy): void;
-							zzbl(param0: number): void;
-							zzbqa(): javautilList;
-							zzbm(param0: number): void;
-							zza(param0: number, param1: javautilSet): void;
-							zza(param0: number, param1: javautilSet, param2: javautilSet): void;
-							zzbn(param0: number): javautilSet;
-							zze(param0: javautilSet): javautilSet;
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdvu): void;
-							beginTransaction(): void;
-							endTransaction(): void;
-							setTransactionSuccessful(): void;
-						});
-						public zzbn(param0: number): javautilSet;
-						public zzbpz(): number;
-						public zzbqb(): void;
-						public zzbqa(): javautilList;
-						public setTransactionSuccessful(): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbpy(): javautilList;
-						public zzb(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zzbk(param0: number): void;
-						public zza(param0: com.google.android.gms.internal.zzdvy): void;
-						public zza(param0: number, param1: javautilSet): void;
-						public zzbl(param0: number): void;
-						public zzbm(param0: number): void;
-						public zze(param0: javautilSet): javautilSet;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdvu): void;
-						public endTransaction(): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx, param2: number): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdrk, param2: number): void;
-						public beginTransaction(): void;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): void;
-						public zza(param0: number, param1: javautilSet, param2: javautilSet): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvu {
-						public zzy(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdvu;
-						public constructor();
-						public zzbur(): boolean;
-						public equals(param0: javalangObject): boolean;
-						public zza(param0: javalangObject, param1: com.google.android.gms.internal.zzdwj): javalangObject;
-						public zzw(param0: com.google.android.gms.internal.zzdsc): boolean;
-						public hashCode(): number;
-						public zzv(param0: com.google.android.gms.internal.zzdsc): boolean;
-						public zzd(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdvu;
-						public toString(): string;
-						public zzx(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdvu;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvv {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvw {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvx {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvy {
-						public id: number;
-						public zzmey: com.google.android.gms.internal.zzdxe;
-						public zzmez: number;
-						public complete: boolean;
-						public zzimj: boolean;
-						public equals(param0: javalangObject): boolean;
-						public hashCode(): number;
-						public zzbus(): com.google.android.gms.internal.zzdvy;
-						public constructor(param0: number, param1: com.google.android.gms.internal.zzdxe, param2: number, param3: boolean, param4: boolean);
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvn.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvy.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzead.d.ts" />
-/// <reference path="./java.util.Set.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdvz {
-						public constructor(param0: com.google.android.gms.internal.zzdvt, param1: com.google.android.gms.internal.zzdxw, param2: com.google.android.gms.internal.zzead);
-						public zzz(param0: com.google.android.gms.internal.zzdsc): void;
-						public zzac(param0: com.google.android.gms.internal.zzdsc): boolean;
-						public zzg(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzab(param0: com.google.android.gms.internal.zzdsc): void;
-						public zzm(param0: com.google.android.gms.internal.zzdxe): boolean;
-						public zzbut(): number;
-						public zzl(param0: com.google.android.gms.internal.zzdxe): void;
-						public zzaa(param0: com.google.android.gms.internal.zzdsc): javautilSet;
-						public zzk(param0: com.google.android.gms.internal.zzdxe): com.google.android.gms.internal.zzdvy;
-						public zza(param0: com.google.android.gms.internal.zzdvn): com.google.android.gms.internal.zzdvu;
-						public zzh(param0: com.google.android.gms.internal.zzdxe): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwa {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwb {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwc {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwd {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwe {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwf {
-					}
-				}
-			}
-		}
-	}
-}
-
-import javautilCollection = java.util.Collection;
-/// <reference path="./com.google.android.gms.internal.zzdos.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwk.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Collection.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwg {
-						public constructor(param0: javalangObject);
-						public iterator(): javautilIterator;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdwk): com.google.android.gms.internal.zzdsc;
-						public zzb(param0: javalangObject, param1: com.google.android.gms.internal.zzdwj): javalangObject;
-						public equals(param0: javalangObject): boolean;
-						public zzag(param0: com.google.android.gms.internal.zzdsc): javalangObject;
-						public values(): javautilCollection;
-						public hashCode(): number;
-						public zze(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdwg;
-						public zzb(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject): com.google.android.gms.internal.zzdwg;
-						public zzaf(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdsc;
-						public zzb(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdwk): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdwg): com.google.android.gms.internal.zzdwg;
-						public toString(): string;
-						public zzai(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdwg;
-						public zza(param0: com.google.android.gms.internal.zzdwj): void;
-						public getValue(): javalangObject;
-						public isEmpty(): boolean;
-						public zzaj(param0: com.google.android.gms.internal.zzdsc): javalangObject;
-						public static zzbuv(): com.google.android.gms.internal.zzdwg;
-						public zzbuw(): com.google.android.gms.internal.zzdos;
-						public zzb(param0: com.google.android.gms.internal.zzdwk): boolean;
-						public zzah(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdwg;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwh {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwi {
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwj {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdwj interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-						});
-						public zza(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject, param2: javalangObject): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwk {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdwk interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzbl(param0: javalangObject): boolean;
-							<clinit>(): void;
-						});
-						public static zzmfn: com.google.android.gms.internal.zzdwk;
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwl {
-						public zzbl(param0: javalangObject): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwo.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdwp.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwm {
-						public constructor();
-						public zza(param0: com.google.android.gms.internal.zzdwp): void;
-						public zzak(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdwm;
-						public zza(param0: com.google.android.gms.internal.zzdwo, param1: boolean): boolean;
-						public getValue(): javalangObject;
-						public setValue(param0: javalangObject): void;
-						public zzbpw(): com.google.android.gms.internal.zzdsc;
-						public zza(param0: com.google.android.gms.internal.zzdwp, param1: boolean, param2: boolean): void;
-						public toString(): string;
-						public hasChildren(): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwn {
-						public zzd(param0: com.google.android.gms.internal.zzdwm): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwo {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdwo interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zze(param0: com.google.android.gms.internal.zzdwm): boolean;
-						});
-						public zze(param0: com.google.android.gms.internal.zzdwm): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwm.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwp {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdwp interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzd(param0: com.google.android.gms.internal.zzdwm): void;
-						});
-						public zzd(param0: com.google.android.gms.internal.zzdwm): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwq {
-						public zzmbq: javautilMap;
-						public value: javalangObject;
-						public constructor();
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwr {
-						public zzbuz(): boolean;
-						public zzal(param0: com.google.android.gms.internal.zzdsc): boolean;
-						public constructor(param0: com.google.android.gms.internal.zzdyq, param1: boolean, param2: boolean);
-						public zzbuy(): boolean;
-						public zzbpt(): com.google.android.gms.internal.zzdyx;
-						public zzf(param0: com.google.android.gms.internal.zzdya): boolean;
-						public zzbva(): com.google.android.gms.internal.zzdyq;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdws {
-						public constructor(param0: com.google.android.gms.internal.zzdrt, param1: com.google.firebase.database.DatabaseError, param2: com.google.android.gms.internal.zzdsc);
-						public zzbvb(): void;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdww.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwt {
-						public static zzd(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdwt;
-						public static zza(param0: com.google.android.gms.internal.zzdyq): com.google.android.gms.internal.zzdwt;
-						public static zzc(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyq): com.google.android.gms.internal.zzdwt;
-						public zzbvc(): com.google.android.gms.internal.zzdya;
-						public zzbvf(): com.google.android.gms.internal.zzdyq;
-						public static zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyq): com.google.android.gms.internal.zzdwt;
-						public toString(): string;
-						public static zzc(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdwt;
-						public static zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx, param2: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdwt;
-						public static zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyq, param2: com.google.android.gms.internal.zzdyq): com.google.android.gms.internal.zzdwt;
-						public zzbve(): com.google.android.gms.internal.zzdya;
-						public static zzb(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyq): com.google.android.gms.internal.zzdwt;
-						public zzg(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdwt;
-						public zzbvd(): com.google.android.gms.internal.zzdww;
-						public zzbva(): com.google.android.gms.internal.zzdyq;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdww.d.ts" />
-/// <reference path="./com.google.firebase.database.DataSnapshot.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwu {
-						public zzbvb(): void;
-						public zzbvh(): string;
-						public constructor(param0: com.google.android.gms.internal.zzdww, param1: com.google.android.gms.internal.zzdrt, param2: com.google.firebase.database.DataSnapshot, param3: string);
-						public zzbvd(): com.google.android.gms.internal.zzdww;
-						public toString(): string;
-						public zzbvg(): com.google.firebase.database.DataSnapshot;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwv {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdwv interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzbvb(): void;
-							toString(): string;
-						});
-						public zzbvb(): void;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdww {
-						public static zzmge: com.google.android.gms.internal.zzdww;
-						public static zzmgf: com.google.android.gms.internal.zzdww;
-						public static zzmgg: com.google.android.gms.internal.zzdww;
-						public static zzmgh: com.google.android.gms.internal.zzdww;
-						public static zzmgi: com.google.android.gms.internal.zzdww;
-						public static values(): native.Array<com.google.android.gms.internal.zzdww>;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwx {
-						public zza(param0: javautilList, param1: com.google.android.gms.internal.zzdyq, param2: javautilList): javautilList;
-						public constructor(param0: com.google.android.gms.internal.zzdxe);
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwy {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdro.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdwz {
-						public zzat(param0: javautilList): void;
-						public constructor(param0: com.google.android.gms.internal.zzdro);
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxa {
-						public run(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdxq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxb {
-						public static zzmgp: com.google.android.gms.internal.zzdxb;
-						public zzga(param0: number): com.google.android.gms.internal.zzdxb;
-						public zzbvt(): javautilMap;
-						public zzbvw(): com.google.android.gms.internal.zzdxq;
-						public hashCode(): number;
-						public zzbvv(): string;
-						public zzb(param0: com.google.android.gms.internal.zzdyx, param1: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdxb;
-						public zzbvk(): com.google.android.gms.internal.zzdya;
-						public zzbvp(): boolean;
-						public zzbvo(): boolean;
-						public getLimit(): number;
-						public zzbvj(): com.google.android.gms.internal.zzdyx;
-						public zzbvm(): com.google.android.gms.internal.zzdyx;
-						public constructor();
-						public zza(param0: com.google.android.gms.internal.zzdyp): com.google.android.gms.internal.zzdxb;
-						public equals(param0: javalangObject): boolean;
-						public zzbvl(): boolean;
-						public zzbvq(): com.google.android.gms.internal.zzdyp;
-						public zzbvi(): boolean;
-						public toString(): string;
-						public zzbvn(): com.google.android.gms.internal.zzdya;
-						public zzbvs(): boolean;
-						public zzbvu(): boolean;
-						public static zzag(param0: javautilMap): com.google.android.gms.internal.zzdxb;
-						public zza(param0: com.google.android.gms.internal.zzdyx, param1: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdxb;
-						public zzfz(param0: number): com.google.android.gms.internal.zzdxb;
-						public isDefault(): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxc {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxd {
-						public static zzmgy: number;
-						public static zzmgz: number;
-						public static values$50KLMJ33DTMIUPRFDTJMOP9FCPKN4PB2C5PMABR4C5Q62OJ1EDIIUORFE9IIUTJ9CLRIUKBLCLP7IK31E9GMQSP4APKMATQ6E9NMQEO_0(): native.Array<number>;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxb.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxe {
-						public constructor(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdxb);
-						public zzbvx(): com.google.android.gms.internal.zzdxb;
-						public zzbvu(): boolean;
-						public equals(param0: javalangObject): boolean;
-						public zzbpw(): com.google.android.gms.internal.zzdsc;
-						public zzbvq(): com.google.android.gms.internal.zzdyp;
-						public isDefault(): boolean;
-						public hashCode(): number;
-						public static zzam(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdxe;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdrt.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvd.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvi.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxg.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxh.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxf {
-						public zzb(param0: com.google.android.gms.internal.zzdrt): void;
-						public zzk(param0: com.google.android.gms.internal.zzdrt): javautilList;
-						public constructor(param0: com.google.android.gms.internal.zzdxe, param1: com.google.android.gms.internal.zzdxh);
-						public zzr(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbvy(): com.google.android.gms.internal.zzdxe;
-						public zza(param0: com.google.android.gms.internal.zzdrt, param1: com.google.firebase.database.DatabaseError): javautilList;
-						public zzb(param0: com.google.android.gms.internal.zzdvi, param1: com.google.android.gms.internal.zzdvd, param2: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdxg;
-						public isEmpty(): boolean;
-						public zzbvz(): com.google.android.gms.internal.zzdyx;
-						public zzbwa(): com.google.android.gms.internal.zzdyx;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxg {
-						public zzmhf: javautilList;
-						public zzmhg: javautilList;
-						public constructor(param0: javautilList, param1: javautilList);
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxh {
-						public zzbwc(): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: boolean, param2: boolean): com.google.android.gms.internal.zzdxh;
-						public constructor(param0: com.google.android.gms.internal.zzdwr, param1: com.google.android.gms.internal.zzdwr);
-						public zzbwb(): com.google.android.gms.internal.zzdwr;
-						public zzb(param0: com.google.android.gms.internal.zzdyq, param1: boolean, param2: boolean): com.google.android.gms.internal.zzdxh;
-						public zzbwe(): com.google.android.gms.internal.zzdyx;
-						public zzbwd(): com.google.android.gms.internal.zzdwr;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdvd.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdvi.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxh.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxl.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxi {
-						public constructor(param0: com.google.android.gms.internal.zzdxq);
-						public zza(param0: com.google.android.gms.internal.zzdxh, param1: com.google.android.gms.internal.zzdvi, param2: com.google.android.gms.internal.zzdvd, param3: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdxl;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxj {
-						public zzh(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdyp, param1: com.google.android.gms.internal.zzdyw, param2: boolean): com.google.android.gms.internal.zzdyw;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxk {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdxh.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxl {
-						public zzmhc: com.google.android.gms.internal.zzdxh;
-						public zzmhg: javautilList;
-						public constructor(param0: com.google.android.gms.internal.zzdxh, param1: javautilList);
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdvd.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxh.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxm {
-						public constructor(param0: com.google.android.gms.internal.zzdvd, param1: com.google.android.gms.internal.zzdxh, param2: com.google.android.gms.internal.zzdyx);
-						public zzh(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdyp, param1: com.google.android.gms.internal.zzdyw, param2: boolean): com.google.android.gms.internal.zzdyw;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdwt.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxn {
-						public zza(param0: com.google.android.gms.internal.zzdwt): void;
-						public constructor();
-						public zzbwf(): javautilList;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxn.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxo {
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyq, param2: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbwg(): com.google.android.gms.internal.zzdxq;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdya, param2: com.google.android.gms.internal.zzdyx, param3: com.google.android.gms.internal.zzdsc, param4: com.google.android.gms.internal.zzdxr, param5: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbvq(): com.google.android.gms.internal.zzdyp;
-						public zzbwh(): boolean;
-						public constructor(param0: com.google.android.gms.internal.zzdyp);
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxb.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxn.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxp {
-						public constructor(param0: com.google.android.gms.internal.zzdxb);
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyq, param2: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbwg(): com.google.android.gms.internal.zzdxq;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdya, param2: com.google.android.gms.internal.zzdyx, param3: com.google.android.gms.internal.zzdsc, param4: com.google.android.gms.internal.zzdxr, param5: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbvq(): com.google.android.gms.internal.zzdyp;
-						public zzbwh(): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxn.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxq {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdxq interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdya, param2: com.google.android.gms.internal.zzdyx, param3: com.google.android.gms.internal.zzdsc, param4: com.google.android.gms.internal.zzdxr, param5: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-							zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyq, param2: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-							zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-							zzbwh(): boolean;
-							zzbwg(): com.google.android.gms.internal.zzdxq;
-							zzbvq(): com.google.android.gms.internal.zzdyp;
-						});
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyq, param2: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbwg(): com.google.android.gms.internal.zzdxq;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdya, param2: com.google.android.gms.internal.zzdyx, param3: com.google.android.gms.internal.zzdsc, param4: com.google.android.gms.internal.zzdxr, param5: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbvq(): com.google.android.gms.internal.zzdyp;
-						public zzbwh(): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxr {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdxr interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzh(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-							zza(param0: com.google.android.gms.internal.zzdyp, param1: com.google.android.gms.internal.zzdyw, param2: boolean): com.google.android.gms.internal.zzdyw;
-						});
-						public zzh(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdyp, param1: com.google.android.gms.internal.zzdyw, param2: boolean): com.google.android.gms.internal.zzdyw;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxb.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxn.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxr.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxs {
-						public zza(param0: com.google.android.gms.internal.zzdyw): boolean;
-						public constructor(param0: com.google.android.gms.internal.zzdxb);
-						public zzbwi(): com.google.android.gms.internal.zzdyw;
-						public zzbwj(): com.google.android.gms.internal.zzdyw;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyq, param2: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbwg(): com.google.android.gms.internal.zzdxq;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdya, param2: com.google.android.gms.internal.zzdyx, param3: com.google.android.gms.internal.zzdsc, param4: com.google.android.gms.internal.zzdxr, param5: com.google.android.gms.internal.zzdxn): com.google.android.gms.internal.zzdyq;
-						public zzbvq(): com.google.android.gms.internal.zzdyp;
-						public zzbwh(): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdyq, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangBoolean = java.lang.Boolean;
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdys.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Boolean.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdxz extends com.google.android.gms.internal.zzdys {
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public equals(param0: javalangObject): boolean;
-						public getChildCount(): number;
-						public constructor(param0: javalangBoolean, param1: com.google.android.gms.internal.zzdyx);
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public hashCode(): number;
-						public getValue(param0: boolean): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdys): number;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbwt(): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbwl(): com.google.android.gms.internal.zzdyu;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdya {
-						public equals(param0: javalangObject): boolean;
-						public hashCode(): number;
-						public zzbwr(): boolean;
-						public static zzpq(param0: string): com.google.android.gms.internal.zzdya;
-						public static zzbwn(): com.google.android.gms.internal.zzdya;
-						public static zzbwo(): com.google.android.gms.internal.zzdya;
-						public static zzbwp(): com.google.android.gms.internal.zzdya;
-						public intValue(): number;
-						public zzi(param0: com.google.android.gms.internal.zzdya): number;
-						public toString(): string;
-						public static zzbwm(): com.google.android.gms.internal.zzdya;
-						public zzbwq(): boolean;
-						public asString(): string;
-					}
-					export module zzdya {
-						export class zza extends com.google.android.gms.internal.zzdya {
-							public zzbwr(): boolean;
-							public intValue(): number;
-							public toString(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyb {
-					}
-				}
-			}
-		}
-	}
-}
-
-import javautilComparator = java.util.Comparator;
-/// <reference path="./com.google.android.gms.internal.zzdos.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Comparator.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyc {
-						public static zzmih: javautilComparator;
-						public iterator(): javautilIterator;
-						public constructor(param0: com.google.android.gms.internal.zzdos, param1: com.google.android.gms.internal.zzdyx);
-						public hashCode(): number;
-						public zzbwv(): com.google.android.gms.internal.zzdya;
-						public zzbww(): com.google.android.gms.internal.zzdya;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzg(param0: com.google.android.gms.internal.zzdyx): number;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public constructor();
-						public getChildCount(): number;
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public equals(param0: javalangObject): boolean;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdyf, param1: boolean): void;
-						public getValue(param0: boolean): javalangObject;
-						public toString(): string;
-						public zzbwt(): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzbqf(): javautilIterator;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyd {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdye {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export abstract class zzdyf {
-						public constructor();
-						public zzb(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyg {
-						public hasNext(): boolean;
-						public constructor(param0: javautilIterator);
-						public remove(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.util.List.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyh {
-						public static zzh(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyh;
-						public zzbqw(): javautilList;
-						public zzbqx(): javautilList;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyi extends com.google.android.gms.internal.zzdyf {
-						public zzb(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyl.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyj {
-						public constructor(param0: com.google.android.gms.internal.zzdyl);
-						public zzbwy(): number;
-						public zzbwz(): com.google.android.gms.internal.zzdsc;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdyj.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyk {
-						public constructor(param0: com.google.android.gms.internal.zzdyx);
-						public zze(param0: com.google.android.gms.internal.zzdyj): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdyj.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyl {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdyl interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zze(param0: com.google.android.gms.internal.zzdyj): boolean;
-						});
-						public zze(param0: com.google.android.gms.internal.zzdyj): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdys.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdym extends com.google.android.gms.internal.zzdys {
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public equals(param0: javalangObject): boolean;
-						public getChildCount(): number;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public hashCode(): number;
-						public getValue(param0: boolean): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdys): number;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbwt(): boolean;
-						public constructor(param0: javautilMap, param1: com.google.android.gms.internal.zzdyx);
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbwl(): com.google.android.gms.internal.zzdyu;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangDouble = java.lang.Double;
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdys.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Double.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyn extends com.google.android.gms.internal.zzdys {
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public equals(param0: javalangObject): boolean;
-						public getChildCount(): number;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public hashCode(): number;
-						public getValue(param0: boolean): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdys): number;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbwt(): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public constructor(param0: javalangDouble, param1: com.google.android.gms.internal.zzdyx);
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbwl(): com.google.android.gms.internal.zzdyu;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyo extends com.google.android.gms.internal.zzdyc implements com.google.android.gms.internal.zzdyx {
-						public iterator(): javautilIterator;
-						public getChildCount(): number;
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public equals(param0: javalangObject): boolean;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public hashCode(): number;
-						public zza(param0: com.google.android.gms.internal.zzdyf, param1: boolean): void;
-						public getValue(param0: boolean): javalangObject;
-						public toString(): string;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbwt(): boolean;
-						public zzg(param0: com.google.android.gms.internal.zzdyx): number;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public static zzbxe(): com.google.android.gms.internal.zzdyo;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export abstract class zzdyp {
-						public constructor();
-						public zzf(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyw;
-						public zzbxf(): com.google.android.gms.internal.zzdyw;
-						public zzbxg(): string;
-						public zzi(param0: com.google.android.gms.internal.zzdyx): boolean;
-						public zza(param0: com.google.android.gms.internal.zzdyw, param1: com.google.android.gms.internal.zzdyw, param2: boolean): number;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyq {
-						public iterator(): javautilIterator;
-						public zzbxj(): com.google.android.gms.internal.zzdyw;
-						public static zzj(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-						public zzk(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-						public static zza(param0: com.google.android.gms.internal.zzdyx, param1: com.google.android.gms.internal.zzdyp): com.google.android.gms.internal.zzdyq;
-						public zzbqf(): javautilIterator;
-						public zzbxi(): com.google.android.gms.internal.zzdyw;
-						public zzbpt(): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx, param2: com.google.android.gms.internal.zzdyp): com.google.android.gms.internal.zzdya;
-						public zzg(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyq;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyr extends com.google.android.gms.internal.zzdyp {
-						public static zzbxk(): com.google.android.gms.internal.zzdyr;
-						public equals(param0: javalangObject): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyw;
-						public zzbxf(): com.google.android.gms.internal.zzdyw;
-						public zzbxg(): string;
-						public hashCode(): number;
-						public zzi(param0: com.google.android.gms.internal.zzdyx): boolean;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export abstract class zzdys {
-						public zzmii: com.google.android.gms.internal.zzdyx;
-						public iterator(): javautilIterator;
-						public getChildCount(): number;
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public getValue(param0: boolean): javalangObject;
-						public toString(): string;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdys): number;
-						public zzbwt(): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzb(param0: com.google.android.gms.internal.zzdyz): string;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbws(): string;
-						public zzbwl(): com.google.android.gms.internal.zzdyu;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyt {
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyu {
-						public static zzmjf: com.google.android.gms.internal.zzdyu;
-						public static zzmjg: com.google.android.gms.internal.zzdyu;
-						public static zzmjh: com.google.android.gms.internal.zzdyu;
-						public static zzmji: com.google.android.gms.internal.zzdyu;
-						public static values(): native.Array<com.google.android.gms.internal.zzdyu>;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdys.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Long.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyv extends com.google.android.gms.internal.zzdys {
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public equals(param0: javalangObject): boolean;
-						public getChildCount(): number;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public hashCode(): number;
-						public getValue(param0: boolean): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdys): number;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbwt(): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public constructor(param0: javalangLong, param1: com.google.android.gms.internal.zzdyx);
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbwl(): com.google.android.gms.internal.zzdyu;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyw {
-						public equals(param0: javalangObject): boolean;
-						public constructor(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx);
-						public zzbxn(): com.google.android.gms.internal.zzdya;
-						public hashCode(): number;
-						public static zzbxm(): com.google.android.gms.internal.zzdyw;
-						public zzbpt(): com.google.android.gms.internal.zzdyx;
-						public static zzbxl(): com.google.android.gms.internal.zzdyw;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyx {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzdyx interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzbwt(): boolean;
-							zzbwu(): com.google.android.gms.internal.zzdyx;
-							zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-							zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-							zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-							zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-							zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-							zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-							zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-							isEmpty(): boolean;
-							getChildCount(): number;
-							getValue(): javalangObject;
-							getValue(param0: boolean): javalangObject;
-							zzbws(): string;
-							zza(param0: com.google.android.gms.internal.zzdyz): string;
-							zzbqf(): javautilIterator;
-							<clinit>(): void;
-						});
-						public static zzmjm: com.google.android.gms.internal.zzdyc;
-						public getChildCount(): number;
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public getValue(param0: boolean): javalangObject;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbwt(): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyy extends com.google.android.gms.internal.zzdyc {
-						public equals(param0: javalangObject): boolean;
-						public getChildCount(): number;
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public zza(param0: com.google.android.gms.internal.zzdyf, param1: boolean): void;
-						public getValue(param0: boolean): javalangObject;
-						public toString(): string;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public zzbwt(): boolean;
-						public zzg(param0: com.google.android.gms.internal.zzdyx): number;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdyz {
-						public static zzmjn: com.google.android.gms.internal.zzdyz;
-						public static zzmjo: com.google.android.gms.internal.zzdyz;
-						public static values(): native.Array<com.google.android.gms.internal.zzdyz>;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdza {
-						public static zza(param0: javalangObject, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdzb extends com.google.android.gms.internal.zzdyp {
-						public constructor();
-						public equals(param0: javalangObject): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyw;
-						public constructor(param0: com.google.android.gms.internal.zzdsc);
-						public zzbxf(): com.google.android.gms.internal.zzdyw;
-						public zzbxg(): string;
-						public hashCode(): number;
-						public zzi(param0: com.google.android.gms.internal.zzdyx): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdzc extends com.google.android.gms.internal.zzdyp {
-						public static zzbxo(): com.google.android.gms.internal.zzdzc;
-						public equals(param0: javalangObject): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyw;
-						public zzbxf(): com.google.android.gms.internal.zzdyw;
-						public zzbxg(): string;
-						public hashCode(): number;
-						public zzi(param0: com.google.android.gms.internal.zzdyx): boolean;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdzd {
-						public static zzc(param0: com.google.android.gms.internal.zzdsc, param1: javalangObject): com.google.android.gms.internal.zzdyx;
-						public static zzl(param0: com.google.android.gms.internal.zzdyx): boolean;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdqp.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdze {
-						public zzm(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public constructor(param0: com.google.android.gms.internal.zzdqp);
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdys.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyu.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyz.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdzf extends com.google.android.gms.internal.zzdys {
-						public zza(param0: com.google.android.gms.internal.zzdyz): string;
-						public equals(param0: javalangObject): boolean;
-						public getChildCount(): number;
-						public zze(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzm(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdyx;
-						public hashCode(): number;
-						public getValue(param0: boolean): javalangObject;
-						public zza(param0: com.google.android.gms.internal.zzdys): number;
-						public zzan(param0: com.google.android.gms.internal.zzdsc): com.google.android.gms.internal.zzdyx;
-						public constructor(param0: string, param1: com.google.android.gms.internal.zzdyx);
-						public zzbwt(): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public zzbwu(): com.google.android.gms.internal.zzdyx;
-						public zzl(param0: com.google.android.gms.internal.zzdya): com.google.android.gms.internal.zzdya;
-						public zzk(param0: com.google.android.gms.internal.zzdya): boolean;
-						public getValue(): javalangObject;
-						public zzl(param0: com.google.android.gms.internal.zzdsc, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyx;
-						public isEmpty(): boolean;
-						public zzbqf(): javautilIterator;
-						public zzbwl(): com.google.android.gms.internal.zzdyu;
-						public zzbws(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdzg {
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdya.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyw.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzdzh extends com.google.android.gms.internal.zzdyp {
-						public equals(param0: javalangObject): boolean;
-						public zzf(param0: com.google.android.gms.internal.zzdya, param1: com.google.android.gms.internal.zzdyx): com.google.android.gms.internal.zzdyw;
-						public static zzbxp(): com.google.android.gms.internal.zzdzh;
-						public zzbxf(): com.google.android.gms.internal.zzdyw;
-						public zzbxg(): string;
-						public hashCode(): number;
-						public zzi(param0: com.google.android.gms.internal.zzdyx): boolean;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzead {
-						/**
-						 * Constructs a new instance of the com.google.android.gms.internal.zzead interface with the provided implementation.
-						 */
-						public constructor(implementation: {
-							zzbyg(): number;
-						});
-						public zzbyg(): number;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeae {
-						public constructor();
-						public zzbyg(): number;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdut.d.ts" />
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
-/// <reference path="./java.util.concurrent.ScheduledExecutorService.d.ts" />
-/// <reference path="./java.util.concurrent.ThreadFactory.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export abstract class zzeaf {
-						public getThreadFactory(): javautilconcurrentThreadFactory;
-						public constructor();
-						public zzn(param0: javalangRunnable): void;
-						public shutdown(): void;
-						public static zzh(param0: javalangThrowable): string;
-						public zzbtc(): com.google.android.gms.internal.zzdut;
-						public restart(): void;
-						public zzbra(): javautilconcurrentScheduledExecutorService;
-						public zzf(param0: javalangThrowable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeag {
-						public afterExecute(param0: javalangRunnable, param1: javalangThrowable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Runnable.d.ts" />
-/// <reference path="./java.lang.Thread.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeah {
-						public newThread(param0: javalangRunnable): javalangThread;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Thread.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeai {
-						public uncaughtException(param0: javalangThread, param1: javalangThrowable): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeaj {
-						public static zzn(param0: com.google.android.gms.internal.zzdyx): number;
-						public static zzo(param0: com.google.android.gms.internal.zzdyx): number;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzead.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeak {
-						public constructor(param0: com.google.android.gms.internal.zzead, param1: number);
-						public zzbyg(): number;
-						public zzbx(param0: number): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.lang.Object.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeal {
-						public getFirst(): javalangObject;
-						public equals(param0: javalangObject): boolean;
-						public constructor(param0: javalangObject, param1: javalangObject);
-						public hashCode(): number;
-						public zzbyh(): javalangObject;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdti.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeam {
-						public zzlqn: com.google.android.gms.internal.zzdti;
-						public zzlqw: com.google.android.gms.internal.zzdsc;
-						public constructor();
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzean {
-						public static zzby(param0: number): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangInteger = java.lang.Integer;
-/// <reference path="./com.google.android.gms.internal.zzeal.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzeam.d.ts" />
-/// <reference path="./java.lang.Integer.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeao {
-						public static zzpv(param0: string): string;
-						public static zzb(param0: boolean, param1: string): void;
-						public static zzb(param0: com.google.firebase.database.DatabaseReference.CompletionListener): com.google.android.gms.internal.zzeal;
-						public static zzi(param0: number, param1: number): number;
-						public static zzck(param0: boolean): void;
-						public static zzs(param0: number, param1: number): number;
-						public static zzpu(param0: string): com.google.android.gms.internal.zzeam;
-						public static zzpx(param0: string): javalangInteger;
-						public static zzpw(param0: string): string;
-						public static zzj(param0: number): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseReference.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeap {
-						public onComplete(param0: com.google.firebase.database.DatabaseError, param1: com.google.firebase.database.DatabaseReference): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeaq {
-						public static zzpz(param0: string): void;
-						public static zzqa(param0: string): void;
-						public static zzbo(param0: javalangObject): void;
-						public static zzpy(param0: string): void;
-						public static zzao(param0: com.google.android.gms.internal.zzdsc): void;
-						public static zzb(param0: com.google.android.gms.internal.zzdsc, param1: javautilMap): javautilMap;
-					}
-				}
-			}
-		}
-	}
-}
-
-import javalangClass = java.lang.Class;
-/// <reference path="./com.google.firebase.database.GenericTypeIndicator.d.ts" />
-/// <reference path="./java.lang.Class.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzear {
-						public static zza(param0: javalangObject, param1: com.google.firebase.database.GenericTypeIndicator): javalangObject;
-						public static zzbp(param0: javalangObject): javalangObject;
-						public static zzah(param0: javautilMap): javautilMap;
-						public static zza(param0: javalangObject, param1: javalangClass): javalangObject;
-					}
-				}
-			}
-		}
-	}
-}
+/// <reference path="android-declarations.d.ts"/>
 
-/// <reference path="./java.lang.Class.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
 declare module com {
 	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export class zzeas {
-						public zzbu(param0: javalangObject): javautilMap;
-						public constructor(param0: javalangClass);
-						public zze(param0: javautilMap, param1: javautilMap): javalangObject;
-					}
+		export module firebase {
+			export module database {
+				export class BuildConfig {
+					public static class: java.lang.Class<com.google.firebase.database.BuildConfig>;
+					public static DEBUG: boolean;
+					public static APPLICATION_ID: string;
+					public static BUILD_TYPE: string;
+					public static FLAVOR: string;
+					public static VERSION_CODE: number;
+					public static VERSION_NAME: string;
+					public constructor();
 				}
 			}
 		}
 	}
 }
 
-/// <reference path="./com.google.firebase.database.DataSnapshot.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class ChildEventListener {
+					public static class: java.lang.Class<com.google.firebase.database.ChildEventListener>;
 					/**
-					 * Constructs a new instance of the com.google.firebase.database.ChildEventListener interface with the provided implementation.
+					 * Constructs a new instance of the com.google.firebase.database.ChildEventListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
 						onChildAdded(param0: com.google.firebase.database.DataSnapshot, param1: string): void;
@@ -5164,6 +35,7 @@ declare module com {
 						onChildMoved(param0: com.google.firebase.database.DataSnapshot, param1: string): void;
 						onCancelled(param0: com.google.firebase.database.DatabaseError): void;
 					});
+					public constructor();
 					public onChildChanged(param0: com.google.firebase.database.DataSnapshot, param1: string): void;
 					public onCancelled(param0: com.google.firebase.database.DatabaseError): void;
 					public onChildRemoved(param0: com.google.firebase.database.DataSnapshot): void;
@@ -5175,31 +47,25 @@ declare module com {
 	}
 }
 
-import javalangIterable = java.lang.Iterable;
-/// <reference path="./com.google.firebase.database.DatabaseReference.d.ts" />
-/// <reference path="./com.google.firebase.database.GenericTypeIndicator.d.ts" />
-/// <reference path="./java.lang.Class.d.ts" />
-/// <reference path="./java.lang.Iterable.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class DataSnapshot {
+					public static class: java.lang.Class<com.google.firebase.database.DataSnapshot>;
+					public getValue(): any;
 					public child(param0: string): com.google.firebase.database.DataSnapshot;
 					public getRef(): com.google.firebase.database.DatabaseReference;
 					public getChildrenCount(): number;
-					public getPriority(): javalangObject;
-					public getValue(): javalangObject;
-					public getValue(param0: javalangClass): javalangObject;
+					public getValue(param0: java.lang.Class): any;
+					public getValue(param0: com.google.firebase.database.GenericTypeIndicator<any>): any;
 					public exists(): boolean;
-					public getValue(param0: boolean): javalangObject;
-					public getValue(param0: com.google.firebase.database.GenericTypeIndicator): javalangObject;
 					public getKey(): string;
+					public getPriority(): any;
 					public hasChild(param0: string): boolean;
 					public toString(): string;
-					public getChildren(): javalangIterable;
+					public getChildren(): java.lang.Iterable<com.google.firebase.database.DataSnapshot>;
+					public getValue(param0: boolean): any;
 					public hasChildren(): boolean;
 				}
 			}
@@ -5207,14 +73,12 @@ declare module com {
 	}
 }
 
-/// <reference path="./com.google.firebase.database.DatabaseException.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class DatabaseError {
+					public static class: java.lang.Class<com.google.firebase.database.DatabaseError>;
 					public static DATA_STALE: number;
 					public static OPERATION_FAILED: number;
 					public static PERMISSION_DENIED: number;
@@ -5228,13 +92,14 @@ declare module com {
 					public static NETWORK_ERROR: number;
 					public static WRITE_CANCELED: number;
 					public static UNKNOWN_ERROR: number;
-					public static zzbb(param0: string, param1: string): com.google.firebase.database.DatabaseError;
+					public static fromStatus(param0: string): com.google.firebase.database.DatabaseError;
 					public toString(): string;
-					public static zzox(param0: string): com.google.firebase.database.DatabaseError;
+					public static fromStatus(param0: string, param1: string, param2: string): com.google.firebase.database.DatabaseError;
+					public static fromCode(param0: number): com.google.firebase.database.DatabaseError;
+					public static fromException(param0: java.lang.Throwable): com.google.firebase.database.DatabaseError;
 					public getMessage(): string;
 					public toException(): com.google.firebase.database.DatabaseException;
-					public static zzfx(param0: number): com.google.firebase.database.DatabaseError;
-					public static fromException(param0: javalangThrowable): com.google.firebase.database.DatabaseError;
+					public static fromStatus(param0: string, param1: string): com.google.firebase.database.DatabaseError;
 					public getDetails(): string;
 					public getCode(): number;
 				}
@@ -5243,14 +108,13 @@ declare module com {
 	}
 }
 
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.lang.Throwable.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class DatabaseException {
-					public constructor(param0: string, param1: javalangThrowable);
+					public static class: java.lang.Class<com.google.firebase.database.DatabaseException>;
+					public constructor(param0: string, param1: java.lang.Throwable);
 					public constructor(param0: string);
 				}
 			}
@@ -5258,52 +122,47 @@ declare module com {
 	}
 }
 
-/// <reference path="./com.google.android.gms.tasks.Task.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseReference.d.ts" />
-/// <reference path="./com.google.firebase.database.FirebaseDatabase.d.ts" />
-/// <reference path="./com.google.firebase.database.OnDisconnect.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class DatabaseReference extends com.google.firebase.database.Query {
-					public setValue(param0: javalangObject, param1: javalangObject, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public removeValue(): com.google.android.gms.tasks.Task;
+					public static class: java.lang.Class<com.google.firebase.database.DatabaseReference>;
 					public runTransaction(param0: com.google.firebase.database.Transaction.Handler, param1: boolean): void;
 					public getDatabase(): com.google.firebase.database.FirebaseDatabase;
-					public updateChildren(param0: javautilMap, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
 					public static goOffline(): void;
 					public getRoot(): com.google.firebase.database.DatabaseReference;
-					public setPriority(param0: javalangObject): com.google.android.gms.tasks.Task;
-					public equals(param0: javalangObject): boolean;
-					public updateChildren(param0: javautilMap): com.google.android.gms.tasks.Task;
+					public setPriority(param0: any, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public updateChildren(param0: java.util.Map<string,any>, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public setValue(param0: any, param1: any): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public getKey(): string;
-					public setPriority(param0: javalangObject, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public equals(param0: any): boolean;
 					public toString(): string;
-					public setValue(param0: javalangObject): com.google.android.gms.tasks.Task;
 					public getParent(): com.google.firebase.database.DatabaseReference;
 					public removeValue(param0: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public setValue(param0: javalangObject, param1: javalangObject): com.google.android.gms.tasks.Task;
 					public onDisconnect(): com.google.firebase.database.OnDisconnect;
+					public setValue(param0: any, param1: any, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public setPriority(param0: any): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public removeValue(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public static goOnline(): void;
+					public setValue(param0: any): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public updateChildren(param0: java.util.Map<string,any>): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public runTransaction(param0: com.google.firebase.database.Transaction.Handler): void;
 					public hashCode(): number;
 					public child(param0: string): com.google.firebase.database.DatabaseReference;
 					public push(): com.google.firebase.database.DatabaseReference;
-					public setValue(param0: javalangObject, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public setValue(param0: any, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
 				}
 				export module DatabaseReference {
 					export class CompletionListener {
+						public static class: java.lang.Class<com.google.firebase.database.DatabaseReference.CompletionListener>;
 						/**
-						 * Constructs a new instance of the com.google.firebase.database.DatabaseReference$CompletionListener interface with the provided implementation.
+						 * Constructs a new instance of the com.google.firebase.database.DatabaseReference$CompletionListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 						 */
 						public constructor(implementation: {
 							onComplete(param0: com.google.firebase.database.DatabaseError, param1: com.google.firebase.database.DatabaseReference): void;
 						});
+						public constructor();
 						public onComplete(param0: com.google.firebase.database.DatabaseError, param1: com.google.firebase.database.DatabaseReference): void;
 					}
 				}
@@ -5316,26 +175,40 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module database {
-				export class Exclude {
-					/**
-					 * Constructs a new instance of the com.google.firebase.database.Exclude interface with the provided implementation.
-					 */
-					public constructor(implementation: {
-					});
+				export class DatabaseRegistrar {
+					public static class: java.lang.Class<com.google.firebase.database.DatabaseRegistrar>;
+					public constructor();
+					public getComponents(): java.util.List<com.google.firebase.components.Component<any>>;
 				}
 			}
 		}
 	}
 }
 
-/// <reference path="./com.google.firebase.FirebaseApp.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseReference.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export class Exclude {
+					public static class: java.lang.Class<com.google.firebase.database.Exclude>;
+					/**
+					 * Constructs a new instance of the com.google.firebase.database.Exclude interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+					});
+					public constructor();
+				}
+			}
+		}
+	}
+}
+
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class FirebaseDatabase {
+					public static class: java.lang.Class<com.google.firebase.database.FirebaseDatabase>;
 					public static getInstance(param0: com.google.firebase.FirebaseApp): com.google.firebase.database.FirebaseDatabase;
 					public setLogLevel(param0: com.google.firebase.database.Logger.Level): void;
 					public getReferenceFromUrl(param0: string): com.google.firebase.database.DatabaseReference;
@@ -5361,7 +234,20 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module database {
-				export class GenericTypeIndicator {
+				export class FirebaseDatabaseComponent {
+					public static class: java.lang.Class<com.google.firebase.database.FirebaseDatabaseComponent>;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export abstract class GenericTypeIndicator<T>  extends java.lang.Object {
+					public static class: java.lang.Class<com.google.firebase.database.GenericTypeIndicator<any>>;
 					public constructor();
 				}
 			}
@@ -5374,31 +260,52 @@ declare module com {
 		export module firebase {
 			export module database {
 				export class IgnoreExtraProperties {
+					public static class: java.lang.Class<com.google.firebase.database.IgnoreExtraProperties>;
 					/**
-					 * Constructs a new instance of the com.google.firebase.database.IgnoreExtraProperties interface with the provided implementation.
+					 * Constructs a new instance of the com.google.firebase.database.IgnoreExtraProperties interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
 					});
+					public constructor();
 				}
 			}
 		}
 	}
 }
 
-/// <reference path="./java.lang.String.d.ts" />
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export class InternalHelpers {
+					public static class: java.lang.Class<com.google.firebase.database.InternalHelpers>;
+					public constructor();
+					public static createDatabaseForTests(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.database.core.RepoInfo, param2: com.google.firebase.database.core.DatabaseConfig): com.google.firebase.database.FirebaseDatabase;
+					public static createDataSnapshot(param0: com.google.firebase.database.DatabaseReference, param1: com.google.firebase.database.snapshot.IndexedNode): com.google.firebase.database.DataSnapshot;
+					public static createReference(param0: com.google.firebase.database.core.Repo, param1: com.google.firebase.database.core.Path): com.google.firebase.database.DatabaseReference;
+					public static createMutableData(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.MutableData;
+				}
+			}
+		}
+	}
+}
+
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class Logger {
+					public static class: java.lang.Class<com.google.firebase.database.Logger>;
 					/**
-					 * Constructs a new instance of the com.google.firebase.database.Logger interface with the provided implementation.
+					 * Constructs a new instance of the com.google.firebase.database.Logger interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
 					});
+					public constructor();
 				}
 				export module Logger {
 					export class Level {
+						public static class: java.lang.Class<com.google.firebase.database.Logger.Level>;
 						public static DEBUG: com.google.firebase.database.Logger.Level;
 						public static INFO: com.google.firebase.database.Logger.Level;
 						public static WARN: com.google.firebase.database.Logger.Level;
@@ -5413,29 +320,25 @@ declare module com {
 	}
 }
 
-/// <reference path="./com.google.firebase.database.GenericTypeIndicator.d.ts" />
-/// <reference path="./java.lang.Class.d.ts" />
-/// <reference path="./java.lang.Iterable.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class MutableData {
-					public setPriority(param0: javalangObject): void;
-					public equals(param0: javalangObject): boolean;
+					public static class: java.lang.Class<com.google.firebase.database.MutableData>;
+					public getValue(): any;
+					public getChildren(): java.lang.Iterable<com.google.firebase.database.MutableData>;
+					public setValue(param0: any): void;
 					public getChildrenCount(): number;
-					public getPriority(): javalangObject;
+					public getValue(param0: java.lang.Class): any;
+					public setPriority(param0: any): void;
+					public getValue(param0: com.google.firebase.database.GenericTypeIndicator<any>): any;
 					public child(param0: string): com.google.firebase.database.MutableData;
-					public getValue(): javalangObject;
-					public getValue(param0: javalangClass): javalangObject;
-					public setValue(param0: javalangObject): void;
-					public getValue(param0: com.google.firebase.database.GenericTypeIndicator): javalangObject;
 					public getKey(): string;
+					public getPriority(): any;
+					public equals(param0: any): boolean;
 					public hasChild(param0: string): boolean;
 					public toString(): string;
-					public getChildren(): javalangIterable;
 					public hasChildren(): boolean;
 				}
 			}
@@ -5443,28 +346,25 @@ declare module com {
 	}
 }
 
-/// <reference path="./com.google.android.gms.tasks.Task.d.ts" />
-/// <reference path="./java.lang.Object.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
-/// <reference path="./java.util.Map.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class OnDisconnect {
-					public setValue(param0: javalangObject, param1: string, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public removeValue(): com.google.android.gms.tasks.Task;
-					public updateChildren(param0: javautilMap, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public setValue(param0: javalangObject, param1: string): com.google.android.gms.tasks.Task;
-					public updateChildren(param0: javautilMap): com.google.android.gms.tasks.Task;
-					public setValue(param0: javalangObject, param1: javautilMap, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public setValue(param0: javalangObject, param1: number, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public setValue(param0: javalangObject, param1: number): com.google.android.gms.tasks.Task;
-					public setValue(param0: javalangObject): com.google.android.gms.tasks.Task;
+					public static class: java.lang.Class<com.google.firebase.database.OnDisconnect>;
+					public setValue(param0: any, param1: number, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public updateChildren(param0: java.util.Map<string,any>, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public setValue(param0: any, param1: java.util.Map, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public cancel(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public removeValue(param0: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public cancel(): com.google.android.gms.tasks.Task;
+					public removeValue(): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public setValue(param0: any, param1: number): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public setValue(param0: any): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public setValue(param0: any, param1: string): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public updateChildren(param0: java.util.Map<string,any>): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public cancel(param0: com.google.firebase.database.DatabaseReference.CompletionListener): void;
-					public setValue(param0: javalangObject, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public setValue(param0: any, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					public setValue(param0: any, param1: string, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
 				}
 			}
 		}
@@ -5476,12 +376,14 @@ declare module com {
 		export module firebase {
 			export module database {
 				export class PropertyName {
+					public static class: java.lang.Class<com.google.firebase.database.PropertyName>;
 					/**
-					 * Constructs a new instance of the com.google.firebase.database.PropertyName interface with the provided implementation.
+					 * Constructs a new instance of the com.google.firebase.database.PropertyName interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
 						value(): string;
 					});
+					public constructor();
 					public value(): string;
 				}
 			}
@@ -5489,20 +391,15 @@ declare module com {
 	}
 }
 
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdxe.d.ts" />
-/// <reference path="./com.google.firebase.database.ChildEventListener.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseReference.d.ts" />
-/// <reference path="./com.google.firebase.database.ValueEventListener.d.ts" />
-/// <reference path="./java.lang.String.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class Query {
-					public zzlqp: com.google.android.gms.internal.zzdsf;
-					public zzlqw: com.google.android.gms.internal.zzdsc;
+					public static class: java.lang.Class<com.google.firebase.database.Query>;
+					public repo: com.google.firebase.database.core.Repo;
+					public path: com.google.firebase.database.core.Path;
+					public params: com.google.firebase.database.core.view.QueryParams;
 					public removeEventListener(param0: com.google.firebase.database.ValueEventListener): void;
 					public endAt(param0: number, param1: string): com.google.firebase.database.Query;
 					public keepSynced(param0: boolean): void;
@@ -5517,6 +414,7 @@ declare module com {
 					public equalTo(param0: number, param1: string): com.google.firebase.database.Query;
 					public orderByChild(param0: string): com.google.firebase.database.Query;
 					public equalTo(param0: number): com.google.firebase.database.Query;
+					public getPath(): com.google.firebase.database.core.Path;
 					public equalTo(param0: string): com.google.firebase.database.Query;
 					public endAt(param0: string, param1: string): com.google.firebase.database.Query;
 					public orderByPriority(): com.google.firebase.database.Query;
@@ -5525,6 +423,7 @@ declare module com {
 					public limitToLast(param0: number): com.google.firebase.database.Query;
 					public addListenerForSingleValueEvent(param0: com.google.firebase.database.ValueEventListener): void;
 					public equalTo(param0: string, param1: string): com.google.firebase.database.Query;
+					public getRepo(): com.google.firebase.database.core.Repo;
 					public addChildEventListener(param0: com.google.firebase.database.ChildEventListener): com.google.firebase.database.ChildEventListener;
 					public equalTo(param0: boolean): com.google.firebase.database.Query;
 					public addValueEventListener(param0: com.google.firebase.database.ValueEventListener): com.google.firebase.database.ValueEventListener;
@@ -5533,22 +432,21 @@ declare module com {
 					public orderByValue(): com.google.firebase.database.Query;
 					public endAt(param0: number): com.google.firebase.database.Query;
 					public orderByKey(): com.google.firebase.database.Query;
-					public zzbpx(): com.google.android.gms.internal.zzdxe;
+					public getSpec(): com.google.firebase.database.core.view.QuerySpec;
 					public startAt(param0: boolean, param1: string): com.google.firebase.database.Query;
-					public zzbpw(): com.google.android.gms.internal.zzdsc;
 				}
 			}
 		}
 	}
 }
 
-/// <reference path="./java.util.Map.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class ServerValue {
-					public static TIMESTAMP: javautilMap;
+					public static class: java.lang.Class<com.google.firebase.database.ServerValue>;
+					public static TIMESTAMP: java.util.Map<string,string>;
 					public constructor();
 				}
 			}
@@ -5561,45 +459,47 @@ declare module com {
 		export module firebase {
 			export module database {
 				export class ThrowOnExtraProperties {
+					public static class: java.lang.Class<com.google.firebase.database.ThrowOnExtraProperties>;
 					/**
-					 * Constructs a new instance of the com.google.firebase.database.ThrowOnExtraProperties interface with the provided implementation.
+					 * Constructs a new instance of the com.google.firebase.database.ThrowOnExtraProperties interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
 					});
+					public constructor();
 				}
 			}
 		}
 	}
 }
 
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.firebase.database.DataSnapshot.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-/// <reference path="./com.google.firebase.database.MutableData.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class Transaction {
+					public static class: java.lang.Class<com.google.firebase.database.Transaction>;
 					public constructor();
 					public static success(param0: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result;
 					public static abort(): com.google.firebase.database.Transaction.Result;
 				}
 				export module Transaction {
 					export class Handler {
+						public static class: java.lang.Class<com.google.firebase.database.Transaction.Handler>;
 						/**
-						 * Constructs a new instance of the com.google.firebase.database.Transaction$Handler interface with the provided implementation.
+						 * Constructs a new instance of the com.google.firebase.database.Transaction$Handler interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 						 */
 						public constructor(implementation: {
 							doTransaction(param0: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result;
 							onComplete(param0: com.google.firebase.database.DatabaseError, param1: boolean, param2: com.google.firebase.database.DataSnapshot): void;
 						});
+						public constructor();
 						public onComplete(param0: com.google.firebase.database.DatabaseError, param1: boolean, param2: com.google.firebase.database.DataSnapshot): void;
 						public doTransaction(param0: com.google.firebase.database.MutableData): com.google.firebase.database.Transaction.Result;
 					}
 					export class Result {
+						public static class: java.lang.Class<com.google.firebase.database.Transaction.Result>;
 						public isSuccess(): boolean;
-						public zzbpt(): com.google.android.gms.internal.zzdyx;
+						public getNode(): com.google.firebase.database.snapshot.Node;
 					}
 				}
 			}
@@ -5607,230 +507,20 @@ declare module com {
 	}
 }
 
-/// <reference path="./com.google.firebase.database.DataSnapshot.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
 declare module com {
 	export module google {
 		export module firebase {
 			export module database {
 				export class ValueEventListener {
+					public static class: java.lang.Class<com.google.firebase.database.ValueEventListener>;
 					/**
-					 * Constructs a new instance of the com.google.firebase.database.ValueEventListener interface with the provided implementation.
+					 * Constructs a new instance of the com.google.firebase.database.ValueEventListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
 						onDataChange(param0: com.google.firebase.database.DataSnapshot): void;
 						onCancelled(param0: com.google.firebase.database.DatabaseError): void;
 					});
-					public onCancelled(param0: com.google.firebase.database.DatabaseError): void;
-					public onDataChange(param0: com.google.firebase.database.DataSnapshot): void;
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zza {
-					public iterator(): javautilIterator;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzb {
-					public hasNext(): boolean;
-					public remove(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzc {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzd {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zze {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzf {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzg {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.android.gms.internal.zzdsc.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdsf.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyq.d.ts" />
-/// <reference path="./com.google.android.gms.internal.zzdyx.d.ts" />
-/// <reference path="./com.google.firebase.database.DataSnapshot.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseReference.d.ts" />
-/// <reference path="./com.google.firebase.database.MutableData.d.ts" />
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzh {
-					public static zza(param0: com.google.android.gms.internal.zzdyx): com.google.firebase.database.MutableData;
-					public static zza(param0: com.google.firebase.database.DatabaseReference, param1: com.google.android.gms.internal.zzdyq): com.google.firebase.database.DataSnapshot;
-					public static zza(param0: com.google.android.gms.internal.zzdsf, param1: com.google.android.gms.internal.zzdsc): com.google.firebase.database.DatabaseReference;
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzi {
-					public iterator(): javautilIterator;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzj {
-					public hasNext(): boolean;
-					public remove(): void;
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./java.util.Iterator.d.ts" />
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzk {
-					public iterator(): javautilIterator;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzl {
-					public hasNext(): boolean;
-					public remove(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzm {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzn {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzo {
-					public run(): void;
-				}
-			}
-		}
-	}
-}
-
-/// <reference path="./com.google.firebase.database.DataSnapshot.d.ts" />
-/// <reference path="./com.google.firebase.database.DatabaseError.d.ts" />
-declare module com {
-	export module google {
-		export module firebase {
-			export module database {
-				export class zzp {
+					public constructor();
 					public onCancelled(param0: com.google.firebase.database.DatabaseError): void;
 					public onDataChange(param0: com.google.firebase.database.DataSnapshot): void;
 				}
@@ -5843,8 +533,16 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module database {
-				export class zzq {
-					public run(): void;
+				export module android {
+					export abstract class AndroidAuthTokenProvider extends com.google.firebase.database.core.AuthTokenProvider {
+						public static class: java.lang.Class<com.google.firebase.database.android.AndroidAuthTokenProvider>;
+						public static forUnauthenticatedAccess(): com.google.firebase.database.core.AuthTokenProvider;
+						public constructor();
+						public static forAuthenticatedAccess(param0: com.google.firebase.auth.internal.InternalAuthProvider): com.google.firebase.database.core.AuthTokenProvider;
+						public removeTokenChangeListener(param0: com.google.firebase.database.core.AuthTokenProvider.TokenChangeListener): void;
+						public getToken(param0: boolean, param1: com.google.firebase.database.core.AuthTokenProvider.GetTokenCompletionListener): void;
+						public addTokenChangeListener(param0: java.util.concurrent.ExecutorService, param1: com.google.firebase.database.core.AuthTokenProvider.TokenChangeListener): void;
+					}
 				}
 			}
 		}
@@ -5855,8 +553,14 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module database {
-				export class zzr {
-					public run(): void;
+				export module android {
+					export class AndroidEventTarget extends com.google.firebase.database.core.EventTarget {
+						public static class: java.lang.Class<com.google.firebase.database.android.AndroidEventTarget>;
+						public constructor();
+						public shutdown(): void;
+						public postEvent(param0: java.lang.Runnable): void;
+						public restart(): void;
+					}
 				}
 			}
 		}
@@ -5867,8 +571,19 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module database {
-				export class zzs {
-					public run(): void;
+				export module android {
+					export class AndroidPlatform extends com.google.firebase.database.core.Platform {
+						public static class: java.lang.Class<com.google.firebase.database.android.AndroidPlatform>;
+						public newPersistentConnection(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.connection.ConnectionContext, param2: com.google.firebase.database.connection.HostInfo, param3: com.google.firebase.database.connection.PersistentConnection.Delegate): com.google.firebase.database.connection.PersistentConnection;
+						public getSSLCacheDirectory(): java.io.File;
+						public getPlatformVersion(): string;
+						public newLogger(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.logging.Logger.Level, param2: java.util.List<string>): com.google.firebase.database.logging.Logger;
+						public getUserAgent(param0: com.google.firebase.database.core.Context): string;
+						public createPersistenceManager(param0: com.google.firebase.database.core.Context, param1: string): com.google.firebase.database.core.persistence.PersistenceManager;
+						public newEventTarget(param0: com.google.firebase.database.core.Context): com.google.firebase.database.core.EventTarget;
+						public newRunLoop(param0: com.google.firebase.database.core.Context): com.google.firebase.database.core.RunLoop;
+						public constructor(param0: com.google.firebase.FirebaseApp);
+					}
 				}
 			}
 		}
@@ -5879,10 +594,4067 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module database {
-				export class zzt {
+				export module android {
+					export class SqlPersistenceStorageEngine extends com.google.firebase.database.core.persistence.PersistenceStorageEngine {
+						public static class: java.lang.Class<com.google.firebase.database.android.SqlPersistenceStorageEngine>;
+						public updateTrackedQueryKeys(param0: number, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>, param2: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+						public mergeIntoServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+						public close(): void;
+						public loadTrackedQueryKeys(param0: number): java.util.Set<com.google.firebase.database.snapshot.ChildKey>;
+						public pruneCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.persistence.PruneForest): void;
+						public loadTrackedQueryKeys(param0: java.util.Set<java.lang.Long>): java.util.Set<com.google.firebase.database.snapshot.ChildKey>;
+						public saveTrackedQueryKeys(param0: number, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+						public saveTrackedQuery(param0: com.google.firebase.database.core.persistence.TrackedQuery): void;
+						public serverCache(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public beginTransaction(): void;
+						public serverCacheEstimatedSizeInBytes(): number;
+						public deleteTrackedQuery(param0: number): void;
+						public constructor(param0: globalAndroid.content.Context, param1: com.google.firebase.database.core.Context, param2: string);
+						public setTransactionSuccessful(): void;
+						public saveUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: number): void;
+						public loadUserWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+						public overwriteServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+						public removeAllUserWrites(): void;
+						public saveUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: number): void;
+						public resetPreviouslyActiveTrackedQueries(param0: number): void;
+						public purgeCache(): void;
+						public endTransaction(): void;
+						public loadTrackedQueries(): java.util.List<com.google.firebase.database.core.persistence.TrackedQuery>;
+						public removeUserWrite(param0: number): void;
+						public mergeIntoServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+					}
+					export module SqlPersistenceStorageEngine {
+						export class PersistentCacheOpenHelper {
+							public static class: java.lang.Class<com.google.firebase.database.android.SqlPersistenceStorageEngine.PersistentCacheOpenHelper>;
+							public onUpgrade(param0: globalAndroid.database.sqlite.SQLiteDatabase, param1: number, param2: number): void;
+							public onCreate(param0: globalAndroid.database.sqlite.SQLiteDatabase): void;
+							public constructor(param0: globalAndroid.content.Context, param1: string);
+						}
+					}
 				}
 			}
 		}
 	}
 }
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module annotations {
+					export class NotNull {
+						public static class: java.lang.Class<com.google.firebase.database.annotations.NotNull>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.annotations.NotNull interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							value(): string;
+						});
+						public constructor();
+						public value(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module annotations {
+					export class Nullable {
+						public static class: java.lang.Class<com.google.firebase.database.annotations.Nullable>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.annotations.Nullable interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							value(): string;
+						});
+						public constructor();
+						public value(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class CompoundHash {
+						public static class: java.lang.Class<com.google.firebase.database.connection.CompoundHash>;
+						public getPosts(): java.util.List<java.util.List<string>>;
+						public constructor(param0: java.util.List<java.util.List<string>>, param1: java.util.List<string>);
+						public getHashes(): java.util.List<string>;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class Connection extends com.google.firebase.database.connection.WebsocketConnection.Delegate {
+						public static class: java.lang.Class<com.google.firebase.database.connection.Connection>;
+						public close(): void;
+						public sendRequest(param0: java.util.Map<string,any>, param1: boolean): void;
+						public open(): void;
+						public onMessage(param0: java.util.Map<string,any>): void;
+						public constructor(param0: com.google.firebase.database.connection.ConnectionContext, param1: com.google.firebase.database.connection.HostInfo, param2: string, param3: com.google.firebase.database.connection.Connection.Delegate, param4: string);
+						public onDisconnect(param0: boolean): void;
+						public injectConnectionFailure(): void;
+						public close(param0: com.google.firebase.database.connection.Connection.DisconnectReason): void;
+					}
+					export module Connection {
+						export class Delegate {
+							public static class: java.lang.Class<com.google.firebase.database.connection.Connection.Delegate>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.connection.Connection$Delegate interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onCacheHost(param0: string): void;
+								onReady(param0: number, param1: string): void;
+								onDataMessage(param0: java.util.Map<string,any>): void;
+								onDisconnect(param0: com.google.firebase.database.connection.Connection.DisconnectReason): void;
+								onKill(param0: string): void;
+							});
+							public constructor();
+							public onReady(param0: number, param1: string): void;
+							public onKill(param0: string): void;
+							public onCacheHost(param0: string): void;
+							public onDisconnect(param0: com.google.firebase.database.connection.Connection.DisconnectReason): void;
+							public onDataMessage(param0: java.util.Map<string,any>): void;
+						}
+						export class DisconnectReason {
+							public static class: java.lang.Class<com.google.firebase.database.connection.Connection.DisconnectReason>;
+							public static SERVER_RESET: com.google.firebase.database.connection.Connection.DisconnectReason;
+							public static OTHER: com.google.firebase.database.connection.Connection.DisconnectReason;
+							public static valueOf(param0: string): com.google.firebase.database.connection.Connection.DisconnectReason;
+							public static values(): native.Array<com.google.firebase.database.connection.Connection.DisconnectReason>;
+						}
+						export class State {
+							public static class: java.lang.Class<com.google.firebase.database.connection.Connection.State>;
+							public static REALTIME_CONNECTING: com.google.firebase.database.connection.Connection.State;
+							public static REALTIME_CONNECTED: com.google.firebase.database.connection.Connection.State;
+							public static REALTIME_DISCONNECTED: com.google.firebase.database.connection.Connection.State;
+							public static values(): native.Array<com.google.firebase.database.connection.Connection.State>;
+							public static valueOf(param0: string): com.google.firebase.database.connection.Connection.State;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class ConnectionAuthTokenProvider {
+						public static class: java.lang.Class<com.google.firebase.database.connection.ConnectionAuthTokenProvider>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.connection.ConnectionAuthTokenProvider interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							getToken(param0: boolean, param1: com.google.firebase.database.connection.ConnectionAuthTokenProvider.GetTokenCallback): void;
+						});
+						public constructor();
+						public getToken(param0: boolean, param1: com.google.firebase.database.connection.ConnectionAuthTokenProvider.GetTokenCallback): void;
+					}
+					export module ConnectionAuthTokenProvider {
+						export class GetTokenCallback {
+							public static class: java.lang.Class<com.google.firebase.database.connection.ConnectionAuthTokenProvider.GetTokenCallback>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.connection.ConnectionAuthTokenProvider$GetTokenCallback interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onSuccess(param0: string): void;
+								onError(param0: string): void;
+							});
+							public constructor();
+							public onError(param0: string): void;
+							public onSuccess(param0: string): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class ConnectionContext {
+						public static class: java.lang.Class<com.google.firebase.database.connection.ConnectionContext>;
+						public constructor(param0: com.google.firebase.database.logging.Logger, param1: com.google.firebase.database.connection.ConnectionAuthTokenProvider, param2: java.util.concurrent.ScheduledExecutorService, param3: boolean, param4: string, param5: string, param6: string);
+						public isPersistenceEnabled(): boolean;
+						public getAuthTokenProvider(): com.google.firebase.database.connection.ConnectionAuthTokenProvider;
+						public getExecutorService(): java.util.concurrent.ScheduledExecutorService;
+						public getUserAgent(): string;
+						public getLogger(): com.google.firebase.database.logging.Logger;
+						public getClientSdkVersion(): string;
+						public getSslCacheDirectory(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class ConnectionUtils {
+						public static class: java.lang.Class<com.google.firebase.database.connection.ConnectionUtils>;
+						public constructor();
+						public static pathToString(param0: java.util.List<string>): string;
+						public static hardAssert(param0: boolean): void;
+						public static longFromObject(param0: any): java.lang.Long;
+						public static stringToPath(param0: string): java.util.List<string>;
+						public static hardAssert(param0: boolean, param1: string, param2: native.Array<any>): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class Constants {
+						public static class: java.lang.Class<com.google.firebase.database.connection.Constants>;
+						public static DOT_INFO_SERVERTIME_OFFSET: string;
+						public static WIRE_PROTOCOL_VERSION: string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class HostInfo {
+						public static class: java.lang.Class<com.google.firebase.database.connection.HostInfo>;
+						public static getConnectionUrl(param0: string, param1: boolean, param2: string, param3: string): java.net.URI;
+						public isSecure(): boolean;
+						public getHost(): string;
+						public constructor(param0: string, param1: string, param2: boolean);
+						public toString(): string;
+						public getNamespace(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class ListenHashProvider {
+						public static class: java.lang.Class<com.google.firebase.database.connection.ListenHashProvider>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.connection.ListenHashProvider interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							getSimpleHash(): string;
+							shouldIncludeCompoundHash(): boolean;
+							getCompoundHash(): com.google.firebase.database.connection.CompoundHash;
+						});
+						public constructor();
+						public shouldIncludeCompoundHash(): boolean;
+						public getSimpleHash(): string;
+						public getCompoundHash(): com.google.firebase.database.connection.CompoundHash;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class PersistentConnection {
+						public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnection>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.connection.PersistentConnection interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							initialize(): void;
+							shutdown(): void;
+							refreshAuthToken(): void;
+							refreshAuthToken(param0: string): void;
+							listen(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.ListenHashProvider, param3: java.lang.Long, param4: com.google.firebase.database.connection.RequestResultCallback): void;
+							unlisten(param0: java.util.List<string>, param1: java.util.Map<string,any>): void;
+							purgeOutstandingWrites(): void;
+							put(param0: java.util.List<string>, param1: any, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+							compareAndPut(param0: java.util.List<string>, param1: any, param2: string, param3: com.google.firebase.database.connection.RequestResultCallback): void;
+							merge(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+							onDisconnectPut(param0: java.util.List<string>, param1: any, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+							onDisconnectMerge(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+							onDisconnectCancel(param0: java.util.List<string>, param1: com.google.firebase.database.connection.RequestResultCallback): void;
+							interrupt(param0: string): void;
+							resume(param0: string): void;
+							isInterrupted(param0: string): boolean;
+						});
+						public constructor();
+						public onDisconnectCancel(param0: java.util.List<string>, param1: com.google.firebase.database.connection.RequestResultCallback): void;
+						public put(param0: java.util.List<string>, param1: any, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+						public unlisten(param0: java.util.List<string>, param1: java.util.Map<string,any>): void;
+						public isInterrupted(param0: string): boolean;
+						public refreshAuthToken(): void;
+						public onDisconnectPut(param0: java.util.List<string>, param1: any, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+						public listen(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.ListenHashProvider, param3: java.lang.Long, param4: com.google.firebase.database.connection.RequestResultCallback): void;
+						public shutdown(): void;
+						public purgeOutstandingWrites(): void;
+						public resume(param0: string): void;
+						public refreshAuthToken(param0: string): void;
+						public interrupt(param0: string): void;
+						public initialize(): void;
+						public compareAndPut(param0: java.util.List<string>, param1: any, param2: string, param3: com.google.firebase.database.connection.RequestResultCallback): void;
+						public onDisconnectMerge(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+						public merge(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+					}
+					export module PersistentConnection {
+						export class Delegate {
+							public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnection.Delegate>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.connection.PersistentConnection$Delegate interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onDataUpdate(param0: java.util.List<string>, param1: any, param2: boolean, param3: java.lang.Long): void;
+								onRangeMergeUpdate(param0: java.util.List<string>, param1: java.util.List<com.google.firebase.database.connection.RangeMerge>, param2: java.lang.Long): void;
+								onConnect(): void;
+								onDisconnect(): void;
+								onAuthStatus(param0: boolean): void;
+								onServerInfoUpdate(param0: java.util.Map<string,any>): void;
+							});
+							public constructor();
+							public onServerInfoUpdate(param0: java.util.Map<string,any>): void;
+							public onAuthStatus(param0: boolean): void;
+							public onConnect(): void;
+							public onDataUpdate(param0: java.util.List<string>, param1: any, param2: boolean, param3: java.lang.Long): void;
+							public onDisconnect(): void;
+							public onRangeMergeUpdate(param0: java.util.List<string>, param1: java.util.List<com.google.firebase.database.connection.RangeMerge>, param2: java.lang.Long): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class PersistentConnectionImpl implements com.google.firebase.database.connection.Connection.Delegate, com.google.firebase.database.connection.PersistentConnection {
+						public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnectionImpl>;
+						public onDisconnectCancel(param0: java.util.List<string>, param1: com.google.firebase.database.connection.RequestResultCallback): void;
+						public onReady(param0: number, param1: string): void;
+						public put(param0: java.util.List<string>, param1: any, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+						public unlisten(param0: java.util.List<string>, param1: java.util.Map<string,any>): void;
+						public isInterrupted(param0: string): boolean;
+						public onDataMessage(param0: java.util.Map<string,any>): void;
+						public refreshAuthToken(): void;
+						public onKill(param0: string): void;
+						public onDisconnectPut(param0: java.util.List<string>, param1: any, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+						public onCacheHost(param0: string): void;
+						public listen(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.ListenHashProvider, param3: java.lang.Long, param4: com.google.firebase.database.connection.RequestResultCallback): void;
+						public openNetworkConnection(param0: string): void;
+						public injectConnectionFailure(): void;
+						public shutdown(): void;
+						public purgeOutstandingWrites(): void;
+						public resume(param0: string): void;
+						public onDisconnect(param0: com.google.firebase.database.connection.Connection.DisconnectReason): void;
+						public interrupt(param0: string): void;
+						public refreshAuthToken(param0: string): void;
+						public constructor(param0: com.google.firebase.database.connection.ConnectionContext, param1: com.google.firebase.database.connection.HostInfo, param2: com.google.firebase.database.connection.PersistentConnection.Delegate);
+						public initialize(): void;
+						public compareAndPut(param0: java.util.List<string>, param1: any, param2: string, param3: com.google.firebase.database.connection.RequestResultCallback): void;
+						public onDisconnectMerge(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+						public merge(param0: java.util.List<string>, param1: java.util.Map<string,any>, param2: com.google.firebase.database.connection.RequestResultCallback): void;
+					}
+					export module PersistentConnectionImpl {
+						export class ConnectionRequestCallback {
+							public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionRequestCallback>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.connection.PersistentConnectionImpl$ConnectionRequestCallback interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onResponse(param0: java.util.Map<string,any>): void;
+							});
+							public constructor();
+							public onResponse(param0: java.util.Map<string,any>): void;
+						}
+						export class ConnectionState {
+							public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState>;
+							public static Disconnected: com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState;
+							public static GettingToken: com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState;
+							public static Connecting: com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState;
+							public static Authenticating: com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState;
+							public static Connected: com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState;
+							public static values(): native.Array<com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState>;
+							public static valueOf(param0: string): com.google.firebase.database.connection.PersistentConnectionImpl.ConnectionState;
+						}
+						export class ListenQuerySpec {
+							public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnectionImpl.ListenQuerySpec>;
+							public constructor(param0: java.util.List<string>, param1: java.util.Map<string,any>);
+							public hashCode(): number;
+							public toString(): string;
+							public equals(param0: any): boolean;
+						}
+						export class OutstandingDisconnect {
+							public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnectionImpl.OutstandingDisconnect>;
+							public getPath(): java.util.List<string>;
+							public getOnComplete(): com.google.firebase.database.connection.RequestResultCallback;
+							public getAction(): string;
+							public getData(): any;
+						}
+						export class OutstandingListen {
+							public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnectionImpl.OutstandingListen>;
+							public getHashFunction(): com.google.firebase.database.connection.ListenHashProvider;
+							public toString(): string;
+							public getQuery(): com.google.firebase.database.connection.PersistentConnectionImpl.ListenQuerySpec;
+							public getTag(): java.lang.Long;
+						}
+						export class OutstandingPut {
+							public static class: java.lang.Class<com.google.firebase.database.connection.PersistentConnectionImpl.OutstandingPut>;
+							public wasSent(): boolean;
+							public getOnComplete(): com.google.firebase.database.connection.RequestResultCallback;
+							public getAction(): string;
+							public markSent(): void;
+							public getRequest(): java.util.Map<string,any>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class RangeMerge {
+						public static class: java.lang.Class<com.google.firebase.database.connection.RangeMerge>;
+						public getOptExclusiveStart(): java.util.List<string>;
+						public getOptInclusiveEnd(): java.util.List<string>;
+						public getSnap(): any;
+						public constructor(param0: java.util.List<string>, param1: java.util.List<string>, param2: any);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class RequestResultCallback {
+						public static class: java.lang.Class<com.google.firebase.database.connection.RequestResultCallback>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.connection.RequestResultCallback interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							onRequestResult(param0: string, param1: string): void;
+						});
+						public constructor();
+						public onRequestResult(param0: string, param1: string): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export class WebsocketConnection {
+						public static class: java.lang.Class<com.google.firebase.database.connection.WebsocketConnection>;
+						public constructor(param0: com.google.firebase.database.connection.ConnectionContext, param1: com.google.firebase.database.connection.HostInfo, param2: string, param3: com.google.firebase.database.connection.WebsocketConnection.Delegate, param4: string);
+						public send(param0: java.util.Map<string,any>): void;
+						public start(): void;
+						public close(): void;
+						public open(): void;
+					}
+					export module WebsocketConnection {
+						export class Delegate {
+							public static class: java.lang.Class<com.google.firebase.database.connection.WebsocketConnection.Delegate>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.connection.WebsocketConnection$Delegate interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onMessage(param0: java.util.Map<string,any>): void;
+								onDisconnect(param0: boolean): void;
+							});
+							public constructor();
+							public onMessage(param0: java.util.Map<string,any>): void;
+							public onDisconnect(param0: boolean): void;
+						}
+						export class WSClient {
+							public static class: java.lang.Class<com.google.firebase.database.connection.WebsocketConnection.WSClient>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.connection.WebsocketConnection$WSClient interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								connect(): void;
+								close(): void;
+								send(param0: string): void;
+							});
+							public constructor();
+							public close(): void;
+							public send(param0: string): void;
+							public connect(): void;
+						}
+						export class WSClientTubesock implements com.google.firebase.database.connection.WebsocketConnection.WSClient, com.google.firebase.database.tubesock.WebSocketEventHandler {
+							public static class: java.lang.Class<com.google.firebase.database.connection.WebsocketConnection.WSClientTubesock>;
+							public onClose(): void;
+							public send(param0: string): void;
+							public close(): void;
+							public onLogMessage(param0: string): void;
+							public onOpen(): void;
+							public connect(): void;
+							public onMessage(param0: com.google.firebase.database.tubesock.WebSocketMessage): void;
+							public onError(param0: com.google.firebase.database.tubesock.WebSocketException): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export module util {
+						export class RetryHelper {
+							public static class: java.lang.Class<com.google.firebase.database.connection.util.RetryHelper>;
+							public setMaxDelay(): void;
+							public cancel(): void;
+							public retry(param0: java.lang.Runnable): void;
+							public signalSuccess(): void;
+						}
+						export module RetryHelper {
+							export class Builder {
+								public static class: java.lang.Class<com.google.firebase.database.connection.util.RetryHelper.Builder>;
+								public withRetryExponent(param0: number): com.google.firebase.database.connection.util.RetryHelper.Builder;
+								public build(): com.google.firebase.database.connection.util.RetryHelper;
+								public constructor(param0: java.util.concurrent.ScheduledExecutorService, param1: com.google.firebase.database.logging.Logger, param2: string);
+								public withJitterFactor(param0: number): com.google.firebase.database.connection.util.RetryHelper.Builder;
+								public withMaxDelay(param0: number): com.google.firebase.database.connection.util.RetryHelper.Builder;
+								public withMinDelayAfterFailure(param0: number): com.google.firebase.database.connection.util.RetryHelper.Builder;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module connection {
+					export module util {
+						export class StringListReader {
+							public static class: java.lang.Class<com.google.firebase.database.connection.util.StringListReader>;
+							public constructor();
+							public skip(param0: number): number;
+							public close(): void;
+							public read(): number;
+							public toString(): string;
+							public reset(): void;
+							public mark(param0: number): void;
+							public markSupported(): boolean;
+							public read(param0: native.Array<string>, param1: number, param2: number): number;
+							public freeze(): void;
+							public ready(): boolean;
+							public addString(param0: string): void;
+							public read(param0: java.nio.CharBuffer): number;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class AuthTokenProvider {
+						public static class: java.lang.Class<com.google.firebase.database.core.AuthTokenProvider>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.core.AuthTokenProvider interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							getToken(param0: boolean, param1: com.google.firebase.database.core.AuthTokenProvider.GetTokenCompletionListener): void;
+							addTokenChangeListener(param0: java.util.concurrent.ExecutorService, param1: com.google.firebase.database.core.AuthTokenProvider.TokenChangeListener): void;
+							removeTokenChangeListener(param0: com.google.firebase.database.core.AuthTokenProvider.TokenChangeListener): void;
+						});
+						public constructor();
+						public removeTokenChangeListener(param0: com.google.firebase.database.core.AuthTokenProvider.TokenChangeListener): void;
+						public getToken(param0: boolean, param1: com.google.firebase.database.core.AuthTokenProvider.GetTokenCompletionListener): void;
+						public addTokenChangeListener(param0: java.util.concurrent.ExecutorService, param1: com.google.firebase.database.core.AuthTokenProvider.TokenChangeListener): void;
+					}
+					export module AuthTokenProvider {
+						export class GetTokenCompletionListener {
+							public static class: java.lang.Class<com.google.firebase.database.core.AuthTokenProvider.GetTokenCompletionListener>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.AuthTokenProvider$GetTokenCompletionListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onSuccess(param0: string): void;
+								onError(param0: string): void;
+							});
+							public constructor();
+							public onError(param0: string): void;
+							public onSuccess(param0: string): void;
+						}
+						export class TokenChangeListener {
+							public static class: java.lang.Class<com.google.firebase.database.core.AuthTokenProvider.TokenChangeListener>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.AuthTokenProvider$TokenChangeListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onTokenChange(param0: string): void;
+								onTokenChange(): void;
+							});
+							public constructor();
+							public onTokenChange(param0: string): void;
+							public onTokenChange(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ChildEventRegistration extends com.google.firebase.database.core.EventRegistration {
+						public static class: java.lang.Class<com.google.firebase.database.core.ChildEventRegistration>;
+						public constructor(param0: com.google.firebase.database.core.Repo, param1: com.google.firebase.database.ChildEventListener, param2: com.google.firebase.database.core.view.QuerySpec);
+						public respondsTo(param0: com.google.firebase.database.core.view.Event.EventType): boolean;
+						public fireEvent(param0: com.google.firebase.database.core.view.DataEvent): void;
+						public constructor();
+						public isSameListener(param0: com.google.firebase.database.core.EventRegistration): boolean;
+						public createEvent(param0: com.google.firebase.database.core.view.Change, param1: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.DataEvent;
+						public clone(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.EventRegistration;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public fireCancelEvent(param0: com.google.firebase.database.DatabaseError): void;
+						public getQuerySpec(): com.google.firebase.database.core.view.QuerySpec;
+						public toString(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class CompoundWrite extends java.lang.Iterable<java.util.Map.Entry<com.google.firebase.database.core.Path,com.google.firebase.database.snapshot.Node>> {
+						public static class: java.lang.Class<com.google.firebase.database.core.CompoundWrite>;
+						public static fromPathMerge(param0: java.util.Map<com.google.firebase.database.core.Path,com.google.firebase.database.snapshot.Node>): com.google.firebase.database.core.CompoundWrite;
+						public childCompoundWrites(): java.util.Map<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.core.CompoundWrite>;
+						public hasCompleteWrite(param0: com.google.firebase.database.core.Path): boolean;
+						public rootWrite(): com.google.firebase.database.snapshot.Node;
+						public childCompoundWrite(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.CompoundWrite;
+						public addWrite(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.CompoundWrite;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public iterator(): java.util.Iterator<java.util.Map.Entry<com.google.firebase.database.core.Path,com.google.firebase.database.snapshot.Node>>;
+						public removeWrite(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.CompoundWrite;
+						public static fromValue(param0: java.util.Map<string,any>): com.google.firebase.database.core.CompoundWrite;
+						public getValue(param0: boolean): java.util.Map<string,any>;
+						public toString(): string;
+						public addWrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.CompoundWrite;
+						public static fromChildMerge(param0: java.util.Map<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.snapshot.Node>): com.google.firebase.database.core.CompoundWrite;
+						public static emptyWrite(): com.google.firebase.database.core.CompoundWrite;
+						public getCompleteNode(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public getCompleteChildren(): java.util.List<com.google.firebase.database.snapshot.NamedNode>;
+						public apply(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public addWrites(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): com.google.firebase.database.core.CompoundWrite;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class Constants {
+						public static class: java.lang.Class<com.google.firebase.database.core.Constants>;
+						public static DOT_INFO: com.google.firebase.database.snapshot.ChildKey;
+						public static DOT_INFO_SERVERTIME_OFFSET: com.google.firebase.database.snapshot.ChildKey;
+						public static DOT_INFO_AUTHENTICATED: com.google.firebase.database.snapshot.ChildKey;
+						public static DOT_INFO_CONNECTED: com.google.firebase.database.snapshot.ChildKey;
+						public static WIRE_PROTOCOL_VERSION: string;
+						public constructor();
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class Context {
+						public static class: java.lang.Class<com.google.firebase.database.core.Context>;
+						public logger: com.google.firebase.database.logging.Logger;
+						public eventTarget: com.google.firebase.database.core.EventTarget;
+						public authTokenProvider: com.google.firebase.database.core.AuthTokenProvider;
+						public runLoop: com.google.firebase.database.core.RunLoop;
+						public persistenceKey: string;
+						public loggedComponents: java.util.List<string>;
+						public userAgent: string;
+						public logLevel: com.google.firebase.database.logging.Logger.Level;
+						public persistenceEnabled: boolean;
+						public cacheSize: number;
+						public firebaseApp: com.google.firebase.FirebaseApp;
+						public getOptDebugLogComponents(): java.util.List<string>;
+						public getLogger(param0: string): com.google.firebase.database.logging.LogWrapper;
+						public getPersistenceCacheSizeBytes(): number;
+						public getRunLoop(): com.google.firebase.database.core.RunLoop;
+						public constructor();
+						public isPersistenceEnabled(): boolean;
+						public isStopped(): boolean;
+						public getAuthTokenProvider(): com.google.firebase.database.core.AuthTokenProvider;
+						public getUserAgent(): string;
+						public getConnectionContext(): com.google.firebase.database.connection.ConnectionContext;
+						public getLogger(): com.google.firebase.database.logging.Logger;
+						public getSessionPersistenceKey(): string;
+						public requireStarted(): void;
+						public newPersistentConnection(param0: com.google.firebase.database.connection.HostInfo, param1: com.google.firebase.database.connection.PersistentConnection.Delegate): com.google.firebase.database.connection.PersistentConnection;
+						public getSSLCacheDirectory(): java.io.File;
+						public getPlatformVersion(): string;
+						public getEventTarget(): com.google.firebase.database.core.EventTarget;
+						public assertUnfrozen(): void;
+						public getLogger(param0: string, param1: string): com.google.firebase.database.logging.LogWrapper;
+						public isFrozen(): boolean;
+						public getLogLevel(): com.google.firebase.database.logging.Logger.Level;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class DatabaseConfig extends com.google.firebase.database.core.Context {
+						public static class: java.lang.Class<com.google.firebase.database.core.DatabaseConfig>;
+						public constructor();
+						public setLogger(param0: com.google.firebase.database.logging.Logger): void;
+						public setSessionPersistenceKey(param0: string): void;
+						public setPersistenceCacheSizeBytes(param0: number): void;
+						public setFirebaseApp(param0: com.google.firebase.FirebaseApp): void;
+						public setAuthTokenProvider(param0: com.google.firebase.database.core.AuthTokenProvider): void;
+						public setPersistenceEnabled(param0: boolean): void;
+						public setDebugLogComponents(param0: java.util.List<string>): void;
+						public setLogLevel(param0: com.google.firebase.database.Logger.Level): void;
+						public setEventTarget(param0: com.google.firebase.database.core.EventTarget): void;
+						public setRunLoop(param0: com.google.firebase.database.core.RunLoop): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export abstract class EventRegistration {
+						public static class: java.lang.Class<com.google.firebase.database.core.EventRegistration>;
+						public respondsTo(param0: com.google.firebase.database.core.view.Event.EventType): boolean;
+						public constructor();
+						public isSameListener(param0: com.google.firebase.database.core.EventRegistration): boolean;
+						public createEvent(param0: com.google.firebase.database.core.view.Change, param1: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.DataEvent;
+						public clone(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.EventRegistration;
+						public setOnZombied(param0: com.google.firebase.database.core.EventRegistrationZombieListener): void;
+						public isUserInitiated(): boolean;
+						public fireCancelEvent(param0: com.google.firebase.database.DatabaseError): void;
+						public getQuerySpec(): com.google.firebase.database.core.view.QuerySpec;
+						public fireEvent(param0: com.google.firebase.database.core.view.DataEvent): void;
+						public isZombied(): boolean;
+						public setIsUserInitiated(param0: boolean): void;
+						public zombify(): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class EventRegistrationZombieListener {
+						public static class: java.lang.Class<com.google.firebase.database.core.EventRegistrationZombieListener>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.core.EventRegistrationZombieListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							onZombied(param0: com.google.firebase.database.core.EventRegistration): void;
+						});
+						public constructor();
+						public onZombied(param0: com.google.firebase.database.core.EventRegistration): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class EventTarget {
+						public static class: java.lang.Class<com.google.firebase.database.core.EventTarget>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.core.EventTarget interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							postEvent(param0: java.lang.Runnable): void;
+							shutdown(): void;
+							restart(): void;
+						});
+						public constructor();
+						public shutdown(): void;
+						public postEvent(param0: java.lang.Runnable): void;
+						public restart(): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class Path extends java.lang.Object {
+						public static class: java.lang.Class<com.google.firebase.database.core.Path>;
+						public child(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.Path;
+						public wireFormat(): string;
+						public static getRelative(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.Path): com.google.firebase.database.core.Path;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public constructor(param0: native.Array<com.google.firebase.database.snapshot.ChildKey>);
+						public toString(): string;
+						public getParent(): com.google.firebase.database.core.Path;
+						public getFront(): com.google.firebase.database.snapshot.ChildKey;
+						public popFront(): com.google.firebase.database.core.Path;
+						public isEmpty(): boolean;
+						public contains(param0: com.google.firebase.database.core.Path): boolean;
+						public static getEmptyPath(): com.google.firebase.database.core.Path;
+						public constructor(param0: java.util.List<string>);
+						public size(): number;
+						public compareTo(param0: com.google.firebase.database.core.Path): number;
+						public child(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.Path;
+						public getBack(): com.google.firebase.database.snapshot.ChildKey;
+						public asList(): java.util.List<string>;
+						public iterator(): java.util.Iterator<com.google.firebase.database.snapshot.ChildKey>;
+						public constructor(param0: string);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class Platform {
+						public static class: java.lang.Class<com.google.firebase.database.core.Platform>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.core.Platform interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							newLogger(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.logging.Logger.Level, param2: java.util.List<string>): com.google.firebase.database.logging.Logger;
+							newEventTarget(param0: com.google.firebase.database.core.Context): com.google.firebase.database.core.EventTarget;
+							newRunLoop(param0: com.google.firebase.database.core.Context): com.google.firebase.database.core.RunLoop;
+							newPersistentConnection(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.connection.ConnectionContext, param2: com.google.firebase.database.connection.HostInfo, param3: com.google.firebase.database.connection.PersistentConnection.Delegate): com.google.firebase.database.connection.PersistentConnection;
+							getUserAgent(param0: com.google.firebase.database.core.Context): string;
+							getPlatformVersion(): string;
+							createPersistenceManager(param0: com.google.firebase.database.core.Context, param1: string): com.google.firebase.database.core.persistence.PersistenceManager;
+							getSSLCacheDirectory(): java.io.File;
+						});
+						public constructor();
+						public newPersistentConnection(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.connection.ConnectionContext, param2: com.google.firebase.database.connection.HostInfo, param3: com.google.firebase.database.connection.PersistentConnection.Delegate): com.google.firebase.database.connection.PersistentConnection;
+						public getSSLCacheDirectory(): java.io.File;
+						public getPlatformVersion(): string;
+						public newLogger(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.logging.Logger.Level, param2: java.util.List<string>): com.google.firebase.database.logging.Logger;
+						public getUserAgent(param0: com.google.firebase.database.core.Context): string;
+						public createPersistenceManager(param0: com.google.firebase.database.core.Context, param1: string): com.google.firebase.database.core.persistence.PersistenceManager;
+						public newEventTarget(param0: com.google.firebase.database.core.Context): com.google.firebase.database.core.EventTarget;
+						public newRunLoop(param0: com.google.firebase.database.core.Context): com.google.firebase.database.core.RunLoop;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class Repo extends com.google.firebase.database.connection.PersistentConnection.Delegate {
+						public static class: java.lang.Class<com.google.firebase.database.core.Repo>;
+						public dataUpdateCount: number;
+						public getDatabase(): com.google.firebase.database.FirebaseDatabase;
+						public onServerInfoUpdate(param0: com.google.firebase.database.snapshot.ChildKey, param1: any): void;
+						public onDisconnectCancel(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+						public onServerInfoUpdate(param0: java.util.Map<string,any>): void;
+						public postEvent(param0: java.lang.Runnable): void;
+						public onDataUpdate(param0: java.util.List<string>, param1: any, param2: boolean, param3: java.lang.Long): void;
+						public getRepoInfo(): com.google.firebase.database.core.RepoInfo;
+						public getServerTime(): number;
+						public toString(): string;
+						public keepSynced(param0: com.google.firebase.database.core.view.QuerySpec, param1: boolean): void;
+						public onDisconnect(): void;
+						public addEventCallback(param0: com.google.firebase.database.core.EventRegistration): void;
+						public setHijackHash(param0: boolean): void;
+						public updateChildren(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: com.google.firebase.database.DatabaseReference.CompletionListener, param3: java.util.Map<string,any>): void;
+						public purgeOutstandingWrites(): void;
+						public onAuthStatus(param0: boolean): void;
+						public startTransaction(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.Transaction.Handler, param2: boolean): void;
+						public onDisconnectSetValue(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+						public onDisconnectUpdate(param0: com.google.firebase.database.core.Path, param1: java.util.Map<com.google.firebase.database.core.Path,com.google.firebase.database.snapshot.Node>, param2: com.google.firebase.database.DatabaseReference.CompletionListener, param3: java.util.Map<string,any>): void;
+						public onRangeMergeUpdate(param0: java.util.List<string>, param1: java.util.List<com.google.firebase.database.connection.RangeMerge>, param2: java.lang.Long): void;
+						public scheduleNow(param0: java.lang.Runnable): void;
+						public onConnect(): void;
+						public removeEventCallback(param0: com.google.firebase.database.core.EventRegistration): void;
+						public setValue(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.DatabaseReference.CompletionListener): void;
+					}
+					export module Repo {
+						export class TransactionData extends java.lang.Comparable<com.google.firebase.database.core.Repo.TransactionData> {
+							public static class: java.lang.Class<com.google.firebase.database.core.Repo.TransactionData>;
+							public compareTo(param0: com.google.firebase.database.core.Repo.TransactionData): number;
+						}
+						export class TransactionStatus {
+							public static class: java.lang.Class<com.google.firebase.database.core.Repo.TransactionStatus>;
+							public static INITIALIZING: com.google.firebase.database.core.Repo.TransactionStatus;
+							public static RUN: com.google.firebase.database.core.Repo.TransactionStatus;
+							public static SENT: com.google.firebase.database.core.Repo.TransactionStatus;
+							public static COMPLETED: com.google.firebase.database.core.Repo.TransactionStatus;
+							public static SENT_NEEDS_ABORT: com.google.firebase.database.core.Repo.TransactionStatus;
+							public static NEEDS_ABORT: com.google.firebase.database.core.Repo.TransactionStatus;
+							public static values(): native.Array<com.google.firebase.database.core.Repo.TransactionStatus>;
+							public static valueOf(param0: string): com.google.firebase.database.core.Repo.TransactionStatus;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class RepoInfo {
+						public static class: java.lang.Class<com.google.firebase.database.core.RepoInfo>;
+						public host: string;
+						public secure: boolean;
+						public namespace: string;
+						public internalHost: string;
+						public constructor();
+						public toDebugString(): string;
+						public isSecure(): boolean;
+						public isDemoHost(): boolean;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public isCustomHost(): boolean;
+						public toString(): string;
+						public getConnectionURL(param0: string): java.net.URI;
+						public isCacheableHost(): boolean;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class RepoManager {
+						public static class: java.lang.Class<com.google.firebase.database.core.RepoManager>;
+						public static interrupt(param0: com.google.firebase.database.core.Context): void;
+						public static resume(param0: com.google.firebase.database.core.Context): void;
+						public constructor();
+						public static resume(param0: com.google.firebase.database.core.Repo): void;
+						public static interrupt(param0: com.google.firebase.database.core.Repo): void;
+						public static getRepo(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.core.RepoInfo): com.google.firebase.database.core.Repo;
+						public static createRepo(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.core.RepoInfo, param2: com.google.firebase.database.FirebaseDatabase): com.google.firebase.database.core.Repo;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class RunLoop {
+						public static class: java.lang.Class<com.google.firebase.database.core.RunLoop>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.core.RunLoop interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							scheduleNow(param0: java.lang.Runnable): void;
+							schedule(param0: java.lang.Runnable, param1: number): java.util.concurrent.ScheduledFuture;
+							shutdown(): void;
+							restart(): void;
+						});
+						public constructor();
+						public shutdown(): void;
+						public scheduleNow(param0: java.lang.Runnable): void;
+						public restart(): void;
+						public schedule(param0: java.lang.Runnable, param1: number): java.util.concurrent.ScheduledFuture;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ServerValues {
+						public static class: java.lang.Class<com.google.firebase.database.core.ServerValues>;
+						public static NAME_SUBKEY_SERVERVALUE: string;
+						public static generateServerValues(param0: com.google.firebase.database.core.utilities.Clock): java.util.Map<string,any>;
+						public static resolveDeferredValueSnapshot(param0: com.google.firebase.database.snapshot.Node, param1: java.util.Map<string,any>): com.google.firebase.database.snapshot.Node;
+						public constructor();
+						public static resolveDeferredValueMerge(param0: com.google.firebase.database.core.CompoundWrite, param1: java.util.Map<string,any>): com.google.firebase.database.core.CompoundWrite;
+						public static resolveDeferredValue(param0: any, param1: java.util.Map<string,any>): any;
+						public static resolveDeferredValueTree(param0: com.google.firebase.database.core.SparseSnapshotTree, param1: java.util.Map<string,any>): com.google.firebase.database.core.SparseSnapshotTree;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class SnapshotHolder {
+						public static class: java.lang.Class<com.google.firebase.database.core.SnapshotHolder>;
+						public getRootNode(): com.google.firebase.database.snapshot.Node;
+						public constructor(param0: com.google.firebase.database.snapshot.Node);
+						public getNode(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public update(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class SparseSnapshotTree {
+						public static class: java.lang.Class<com.google.firebase.database.core.SparseSnapshotTree>;
+						public constructor();
+						public remember(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+						public forget(param0: com.google.firebase.database.core.Path): boolean;
+						public forEachChild(param0: com.google.firebase.database.core.SparseSnapshotTree.SparseSnapshotChildVisitor): void;
+						public forEachTree(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.SparseSnapshotTree.SparseSnapshotTreeVisitor): void;
+					}
+					export module SparseSnapshotTree {
+						export class SparseSnapshotChildVisitor {
+							public static class: java.lang.Class<com.google.firebase.database.core.SparseSnapshotTree.SparseSnapshotChildVisitor>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.SparseSnapshotTree$SparseSnapshotChildVisitor interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								visitChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.core.SparseSnapshotTree): void;
+							});
+							public constructor();
+							public visitChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.core.SparseSnapshotTree): void;
+						}
+						export class SparseSnapshotTreeVisitor {
+							public static class: java.lang.Class<com.google.firebase.database.core.SparseSnapshotTree.SparseSnapshotTreeVisitor>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.SparseSnapshotTree$SparseSnapshotTreeVisitor interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								visitTree(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+							});
+							public constructor();
+							public visitTree(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class SyncPoint {
+						public static class: java.lang.Class<com.google.firebase.database.core.SyncPoint>;
+						public hasCompleteView(): boolean;
+						public viewForQuery(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.View;
+						public viewExistsForQuery(param0: com.google.firebase.database.core.view.QuerySpec): boolean;
+						public addEventRegistration(param0: com.google.firebase.database.core.EventRegistration, param1: com.google.firebase.database.core.WriteTreeRef, param2: com.google.firebase.database.core.view.CacheNode): java.util.List<com.google.firebase.database.core.view.DataEvent>;
+						public getCompleteView(): com.google.firebase.database.core.view.View;
+						public removeEventRegistration(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.core.EventRegistration, param2: com.google.firebase.database.DatabaseError): com.google.firebase.database.core.utilities.Pair<java.util.List<com.google.firebase.database.core.view.QuerySpec>,java.util.List<com.google.firebase.database.core.view.Event>>;
+						public constructor(param0: com.google.firebase.database.core.persistence.PersistenceManager);
+						public isEmpty(): boolean;
+						public applyOperation(param0: com.google.firebase.database.core.operation.Operation, param1: com.google.firebase.database.core.WriteTreeRef, param2: com.google.firebase.database.snapshot.Node): java.util.List<com.google.firebase.database.core.view.DataEvent>;
+						public getCompleteServerCache(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public getQueryViews(): java.util.List<com.google.firebase.database.core.view.View>;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class SyncTree {
+						public static class: java.lang.Class<com.google.firebase.database.core.SyncTree>;
+						public applyTaggedQueryMerge(param0: com.google.firebase.database.core.Path, param1: java.util.Map<com.google.firebase.database.core.Path,com.google.firebase.database.snapshot.Node>, param2: com.google.firebase.database.core.Tag): java.util.List<any>;
+						public addEventRegistration(param0: com.google.firebase.database.core.EventRegistration): java.util.List<any>;
+						public calcCompleteEventCache(param0: com.google.firebase.database.core.Path, param1: java.util.List<java.lang.Long>): com.google.firebase.database.snapshot.Node;
+						public applyTaggedQueryOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.core.Tag): java.util.List<any>;
+						public applyServerOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): java.util.List<any>;
+						public applyUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: com.google.firebase.database.core.CompoundWrite, param3: number, param4: boolean): java.util.List<any>;
+						public removeEventRegistration(param0: com.google.firebase.database.core.EventRegistration): java.util.List<com.google.firebase.database.core.view.Event>;
+						public constructor(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.core.persistence.PersistenceManager, param2: com.google.firebase.database.core.SyncTree.ListenProvider);
+						public applyListenComplete(param0: com.google.firebase.database.core.Path): java.util.List<any>;
+						public keepSynced(param0: com.google.firebase.database.core.view.QuerySpec, param1: boolean): void;
+						public applyUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.snapshot.Node, param3: number, param4: boolean, param5: boolean): java.util.List<any>;
+						public ackUserWrite(param0: number, param1: boolean, param2: boolean, param3: com.google.firebase.database.core.utilities.Clock): java.util.List<any>;
+						public applyTaggedRangeMerges(param0: com.google.firebase.database.core.Path, param1: java.util.List<com.google.firebase.database.snapshot.RangeMerge>, param2: com.google.firebase.database.core.Tag): java.util.List<any>;
+						public isEmpty(): boolean;
+						public removeAllWrites(): java.util.List<any>;
+						public applyServerMerge(param0: com.google.firebase.database.core.Path, param1: java.util.Map<com.google.firebase.database.core.Path,com.google.firebase.database.snapshot.Node>): java.util.List<any>;
+						public applyServerRangeMerges(param0: com.google.firebase.database.core.Path, param1: java.util.List<com.google.firebase.database.snapshot.RangeMerge>): java.util.List<any>;
+						public removeAllEventRegistrations(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.DatabaseError): java.util.List<com.google.firebase.database.core.view.Event>;
+						public applyTaggedListenComplete(param0: com.google.firebase.database.core.Tag): java.util.List<any>;
+					}
+					export module SyncTree {
+						export class CompletionListener {
+							public static class: java.lang.Class<com.google.firebase.database.core.SyncTree.CompletionListener>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.SyncTree$CompletionListener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onListenComplete(param0: com.google.firebase.database.DatabaseError): java.util.List<any>;
+							});
+							public constructor();
+							public onListenComplete(param0: com.google.firebase.database.DatabaseError): java.util.List<any>;
+						}
+						export class KeepSyncedEventRegistration extends com.google.firebase.database.core.EventRegistration {
+							public static class: java.lang.Class<com.google.firebase.database.core.SyncTree.KeepSyncedEventRegistration>;
+							public constructor();
+							public fireCancelEvent(param0: com.google.firebase.database.DatabaseError): void;
+							public getQuerySpec(): com.google.firebase.database.core.view.QuerySpec;
+							public createEvent(param0: com.google.firebase.database.core.view.Change, param1: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.DataEvent;
+							public hashCode(): number;
+							public fireEvent(param0: com.google.firebase.database.core.view.DataEvent): void;
+							public isSameListener(param0: com.google.firebase.database.core.EventRegistration): boolean;
+							public constructor(param0: com.google.firebase.database.core.view.QuerySpec);
+							public clone(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.EventRegistration;
+							public equals(param0: any): boolean;
+							public respondsTo(param0: com.google.firebase.database.core.view.Event.EventType): boolean;
+						}
+						export class ListenContainer implements com.google.firebase.database.connection.ListenHashProvider, com.google.firebase.database.core.SyncTree.CompletionListener {
+							public static class: java.lang.Class<com.google.firebase.database.core.SyncTree.ListenContainer>;
+							public onListenComplete(param0: com.google.firebase.database.DatabaseError): java.util.List<any>;
+							public constructor(param0: com.google.firebase.database.core.SyncTree, param1: com.google.firebase.database.core.view.View);
+							public getSimpleHash(): string;
+							public getCompoundHash(): com.google.firebase.database.connection.CompoundHash;
+							public shouldIncludeCompoundHash(): boolean;
+						}
+						export class ListenProvider {
+							public static class: java.lang.Class<com.google.firebase.database.core.SyncTree.ListenProvider>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.SyncTree$ListenProvider interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								startListening(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.core.Tag, param2: com.google.firebase.database.connection.ListenHashProvider, param3: com.google.firebase.database.core.SyncTree.CompletionListener): void;
+								stopListening(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.core.Tag): void;
+							});
+							public constructor();
+							public stopListening(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.core.Tag): void;
+							public startListening(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.core.Tag, param2: com.google.firebase.database.connection.ListenHashProvider, param3: com.google.firebase.database.core.SyncTree.CompletionListener): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class Tag {
+						public static class: java.lang.Class<com.google.firebase.database.core.Tag>;
+						public constructor(param0: number);
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getTagNumber(): number;
+						public toString(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ThreadBackgroundExecutor {
+						public static class: java.lang.Class<com.google.firebase.database.core.ThreadBackgroundExecutor>;
+						public constructor();
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ThreadInitializer {
+						public static class: java.lang.Class<com.google.firebase.database.core.ThreadInitializer>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.core.ThreadInitializer interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							setName(param0: java.lang.Thread, param1: string): void;
+							setDaemon(param0: java.lang.Thread, param1: boolean): void;
+							setUncaughtExceptionHandler(param0: java.lang.Thread, param1: java.lang.Thread.UncaughtExceptionHandler): void;
+							<clinit>(): void;
+						});
+						public constructor();
+						public static defaultInstance: com.google.firebase.database.core.ThreadInitializer;
+						public setName(param0: java.lang.Thread, param1: string): void;
+						public setUncaughtExceptionHandler(param0: java.lang.Thread, param1: java.lang.Thread.UncaughtExceptionHandler): void;
+						public setDaemon(param0: java.lang.Thread, param1: boolean): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ThreadPoolEventTarget extends com.google.firebase.database.core.EventTarget {
+						public static class: java.lang.Class<com.google.firebase.database.core.ThreadPoolEventTarget>;
+						public shutdown(): void;
+						public constructor(param0: java.util.concurrent.ThreadFactory, param1: com.google.firebase.database.core.ThreadInitializer);
+						public postEvent(param0: java.lang.Runnable): void;
+						public restart(): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class UserWriteRecord {
+						public static class: java.lang.Class<com.google.firebase.database.core.UserWriteRecord>;
+						public constructor(param0: number, param1: com.google.firebase.database.core.Path, param2: com.google.firebase.database.snapshot.Node, param3: boolean);
+						public isMerge(): boolean;
+						public constructor(param0: number, param1: com.google.firebase.database.core.Path, param2: com.google.firebase.database.core.CompoundWrite);
+						public isVisible(): boolean;
+						public getMerge(): com.google.firebase.database.core.CompoundWrite;
+						public isOverwrite(): boolean;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPath(): com.google.firebase.database.core.Path;
+						public getOverwrite(): com.google.firebase.database.snapshot.Node;
+						public getWriteId(): number;
+						public toString(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ValidationPath {
+						public static class: java.lang.Class<com.google.firebase.database.core.ValidationPath>;
+						public static MAX_PATH_LENGTH_BYTES: number;
+						public static MAX_PATH_DEPTH: number;
+						public static validateWithObject(param0: com.google.firebase.database.core.Path, param1: any): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ValueEventRegistration extends com.google.firebase.database.core.EventRegistration {
+						public static class: java.lang.Class<com.google.firebase.database.core.ValueEventRegistration>;
+						public respondsTo(param0: com.google.firebase.database.core.view.Event.EventType): boolean;
+						public fireEvent(param0: com.google.firebase.database.core.view.DataEvent): void;
+						public constructor();
+						public constructor(param0: com.google.firebase.database.core.Repo, param1: com.google.firebase.database.ValueEventListener, param2: com.google.firebase.database.core.view.QuerySpec);
+						public isSameListener(param0: com.google.firebase.database.core.EventRegistration): boolean;
+						public createEvent(param0: com.google.firebase.database.core.view.Change, param1: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.DataEvent;
+						public clone(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.EventRegistration;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public fireCancelEvent(param0: com.google.firebase.database.DatabaseError): void;
+						public getQuerySpec(): com.google.firebase.database.core.view.QuerySpec;
+						public toString(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class WriteTree {
+						public static class: java.lang.Class<com.google.firebase.database.core.WriteTree>;
+						public childWrites(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.WriteTreeRef;
+						public constructor();
+						public removeWrite(param0: number): boolean;
+						public getCompleteWriteData(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public calcEventCacheAfterServerOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.Path, param2: com.google.firebase.database.snapshot.Node, param3: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public calcCompleteChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.ChildKey, param2: com.google.firebase.database.core.view.CacheNode): com.google.firebase.database.snapshot.Node;
+						public calcCompleteEventCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: java.util.List<java.lang.Long>, param3: boolean): com.google.firebase.database.snapshot.Node;
+						public calcNextNodeAfterPost(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.snapshot.NamedNode, param3: boolean, param4: com.google.firebase.database.snapshot.Index): com.google.firebase.database.snapshot.NamedNode;
+						public calcCompleteEventCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public purgeAllWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+						public calcCompleteEventCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: java.util.List<java.lang.Long>): com.google.firebase.database.snapshot.Node;
+						public getWrite(param0: number): com.google.firebase.database.core.UserWriteRecord;
+						public addMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: java.lang.Long): void;
+						public shadowingWrite(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public calcCompleteEventChildren(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public addOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: java.lang.Long, param3: boolean): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class WriteTreeRef {
+						public static class: java.lang.Class<com.google.firebase.database.core.WriteTreeRef>;
+						public calcNextNodeAfterPost(param0: com.google.firebase.database.snapshot.Node, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean, param3: com.google.firebase.database.snapshot.Index): com.google.firebase.database.snapshot.NamedNode;
+						public calcCompleteEventCache(param0: com.google.firebase.database.snapshot.Node, param1: java.util.List<java.lang.Long>, param2: boolean): com.google.firebase.database.snapshot.Node;
+						public constructor(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.WriteTree);
+						public calcCompleteEventChildren(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public calcEventCacheAfterServerOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public calcCompleteEventCache(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public shadowingWrite(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public calcCompleteEventCache(param0: com.google.firebase.database.snapshot.Node, param1: java.util.List<java.lang.Long>): com.google.firebase.database.snapshot.Node;
+						public child(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.WriteTreeRef;
+						public calcCompleteChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.core.view.CacheNode): com.google.firebase.database.snapshot.Node;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export class ZombieEventManager extends com.google.firebase.database.core.EventRegistrationZombieListener {
+						public static class: java.lang.Class<com.google.firebase.database.core.ZombieEventManager>;
+						public recordEventRegistration(param0: com.google.firebase.database.core.EventRegistration): void;
+						public static getInstance(): com.google.firebase.database.core.ZombieEventManager;
+						public zombifyForRemove(param0: com.google.firebase.database.core.EventRegistration): void;
+						public onZombied(param0: com.google.firebase.database.core.EventRegistration): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module operation {
+						export class AckUserWrite extends com.google.firebase.database.core.operation.Operation {
+							public static class: java.lang.Class<com.google.firebase.database.core.operation.AckUserWrite>;
+							public operationForChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.operation.Operation;
+							public constructor(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.utilities.ImmutableTree<java.lang.Boolean>, param2: boolean);
+							public isRevert(): boolean;
+							public toString(): string;
+							public constructor(param0: com.google.firebase.database.core.operation.Operation.OperationType, param1: com.google.firebase.database.core.operation.OperationSource, param2: com.google.firebase.database.core.Path);
+							public getAffectedTree(): com.google.firebase.database.core.utilities.ImmutableTree<java.lang.Boolean>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module operation {
+						export class ListenComplete extends com.google.firebase.database.core.operation.Operation {
+							public static class: java.lang.Class<com.google.firebase.database.core.operation.ListenComplete>;
+							public operationForChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.operation.Operation;
+							public toString(): string;
+							public constructor(param0: com.google.firebase.database.core.operation.Operation.OperationType, param1: com.google.firebase.database.core.operation.OperationSource, param2: com.google.firebase.database.core.Path);
+							public constructor(param0: com.google.firebase.database.core.operation.OperationSource, param1: com.google.firebase.database.core.Path);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module operation {
+						export class Merge extends com.google.firebase.database.core.operation.Operation {
+							public static class: java.lang.Class<com.google.firebase.database.core.operation.Merge>;
+							public operationForChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.operation.Operation;
+							public toString(): string;
+							public constructor(param0: com.google.firebase.database.core.operation.OperationSource, param1: com.google.firebase.database.core.Path, param2: com.google.firebase.database.core.CompoundWrite);
+							public constructor(param0: com.google.firebase.database.core.operation.Operation.OperationType, param1: com.google.firebase.database.core.operation.OperationSource, param2: com.google.firebase.database.core.Path);
+							public getChildren(): com.google.firebase.database.core.CompoundWrite;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module operation {
+						export abstract class Operation {
+							public static class: java.lang.Class<com.google.firebase.database.core.operation.Operation>;
+							public type: com.google.firebase.database.core.operation.Operation.OperationType;
+							public source: com.google.firebase.database.core.operation.OperationSource;
+							public path: com.google.firebase.database.core.Path;
+							public operationForChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.operation.Operation;
+							public getPath(): com.google.firebase.database.core.Path;
+							public constructor(param0: com.google.firebase.database.core.operation.Operation.OperationType, param1: com.google.firebase.database.core.operation.OperationSource, param2: com.google.firebase.database.core.Path);
+							public getSource(): com.google.firebase.database.core.operation.OperationSource;
+							public getType(): com.google.firebase.database.core.operation.Operation.OperationType;
+						}
+						export module Operation {
+							export class OperationType {
+								public static class: java.lang.Class<com.google.firebase.database.core.operation.Operation.OperationType>;
+								public static Overwrite: com.google.firebase.database.core.operation.Operation.OperationType;
+								public static Merge: com.google.firebase.database.core.operation.Operation.OperationType;
+								public static AckUserWrite: com.google.firebase.database.core.operation.Operation.OperationType;
+								public static ListenComplete: com.google.firebase.database.core.operation.Operation.OperationType;
+								public static values(): native.Array<com.google.firebase.database.core.operation.Operation.OperationType>;
+								public static valueOf(param0: string): com.google.firebase.database.core.operation.Operation.OperationType;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module operation {
+						export class OperationSource {
+							public static class: java.lang.Class<com.google.firebase.database.core.operation.OperationSource>;
+							public static USER: com.google.firebase.database.core.operation.OperationSource;
+							public static SERVER: com.google.firebase.database.core.operation.OperationSource;
+							public constructor(param0: com.google.firebase.database.core.operation.OperationSource.Source, param1: com.google.firebase.database.core.view.QueryParams, param2: boolean);
+							public isFromUser(): boolean;
+							public getQueryParams(): com.google.firebase.database.core.view.QueryParams;
+							public toString(): string;
+							public static forServerTaggedQuery(param0: com.google.firebase.database.core.view.QueryParams): com.google.firebase.database.core.operation.OperationSource;
+							public isTagged(): boolean;
+							public isFromServer(): boolean;
+						}
+						export module OperationSource {
+							export class Source {
+								public static class: java.lang.Class<com.google.firebase.database.core.operation.OperationSource.Source>;
+								public static User: com.google.firebase.database.core.operation.OperationSource.Source;
+								public static Server: com.google.firebase.database.core.operation.OperationSource.Source;
+								public static values(): native.Array<com.google.firebase.database.core.operation.OperationSource.Source>;
+								public static valueOf(param0: string): com.google.firebase.database.core.operation.OperationSource.Source;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module operation {
+						export class Overwrite extends com.google.firebase.database.core.operation.Operation {
+							public static class: java.lang.Class<com.google.firebase.database.core.operation.Overwrite>;
+							public operationForChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.operation.Operation;
+							public constructor(param0: com.google.firebase.database.core.operation.OperationSource, param1: com.google.firebase.database.core.Path, param2: com.google.firebase.database.snapshot.Node);
+							public toString(): string;
+							public getSnapshot(): com.google.firebase.database.snapshot.Node;
+							public constructor(param0: com.google.firebase.database.core.operation.Operation.OperationType, param1: com.google.firebase.database.core.operation.OperationSource, param2: com.google.firebase.database.core.Path);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class CachePolicy {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.CachePolicy>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.persistence.CachePolicy interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								shouldPrune(param0: number, param1: number): boolean;
+								shouldCheckCacheSize(param0: number): boolean;
+								getPercentOfQueriesToPruneAtOnce(): number;
+								getMaxNumberOfQueriesToKeep(): number;
+								<clinit>(): void;
+							});
+							public constructor();
+							public static NONE: com.google.firebase.database.core.persistence.CachePolicy;
+							public shouldCheckCacheSize(param0: number): boolean;
+							public shouldPrune(param0: number, param1: number): boolean;
+							public getMaxNumberOfQueriesToKeep(): number;
+							public getPercentOfQueriesToPruneAtOnce(): number;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class DefaultPersistenceManager extends com.google.firebase.database.core.persistence.PersistenceManager {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.DefaultPersistenceManager>;
+							public saveUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: number): void;
+							public setQueryComplete(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+							public applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+							public loadUserWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+							public updateServerCache(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.snapshot.Node): void;
+							public setQueryActive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public saveUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: number): void;
+							public constructor(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.core.persistence.PersistenceStorageEngine, param2: com.google.firebase.database.core.persistence.CachePolicy);
+							public runInTransaction(param0: java.util.concurrent.Callable): any;
+							public removeAllUserWrites(): void;
+							public updateServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+							public setQueryInactive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public serverCache(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.CacheNode;
+							public constructor(param0: com.google.firebase.database.core.Context, param1: com.google.firebase.database.core.persistence.PersistenceStorageEngine, param2: com.google.firebase.database.core.persistence.CachePolicy, param3: com.google.firebase.database.core.utilities.Clock);
+							public setTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+							public removeUserWrite(param0: number): void;
+							public updateTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>, param2: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class LRUCachePolicy extends com.google.firebase.database.core.persistence.CachePolicy {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.LRUCachePolicy>;
+							public maxSizeBytes: number;
+							public shouldCheckCacheSize(param0: number): boolean;
+							public shouldPrune(param0: number, param1: number): boolean;
+							public getMaxNumberOfQueriesToKeep(): number;
+							public getPercentOfQueriesToPruneAtOnce(): number;
+							public constructor(param0: number);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class NoopPersistenceManager extends com.google.firebase.database.core.persistence.PersistenceManager {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.NoopPersistenceManager>;
+							public constructor();
+							public saveUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: number): void;
+							public setQueryComplete(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+							public applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+							public loadUserWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+							public updateServerCache(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.snapshot.Node): void;
+							public setQueryActive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public saveUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: number): void;
+							public runInTransaction(param0: java.util.concurrent.Callable): any;
+							public removeAllUserWrites(): void;
+							public updateServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+							public setQueryInactive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public serverCache(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.CacheNode;
+							public setTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+							public removeUserWrite(param0: number): void;
+							public updateTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>, param2: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class PersistenceManager {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.PersistenceManager>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.persistence.PersistenceManager interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								saveUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: number): void;
+								saveUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: number): void;
+								removeUserWrite(param0: number): void;
+								removeAllUserWrites(): void;
+								applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+								applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+								loadUserWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+								serverCache(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.CacheNode;
+								updateServerCache(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.snapshot.Node): void;
+								updateServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+								setQueryActive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+								setQueryInactive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+								setQueryComplete(param0: com.google.firebase.database.core.view.QuerySpec): void;
+								setTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+								updateTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>, param2: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+								runInTransaction(param0: java.util.concurrent.Callable): any;
+							});
+							public constructor();
+							public saveUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: number): void;
+							public setQueryComplete(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+							public applyUserWriteToServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+							public loadUserWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+							public updateServerCache(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.snapshot.Node): void;
+							public setQueryActive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public saveUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: number): void;
+							public runInTransaction(param0: java.util.concurrent.Callable): any;
+							public removeAllUserWrites(): void;
+							public updateServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+							public setQueryInactive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public serverCache(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.view.CacheNode;
+							public setTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+							public removeUserWrite(param0: number): void;
+							public updateTrackedQueryKeys(param0: com.google.firebase.database.core.view.QuerySpec, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>, param2: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class PersistenceStorageEngine {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.PersistenceStorageEngine>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.persistence.PersistenceStorageEngine interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								saveUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: number): void;
+								saveUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: number): void;
+								removeUserWrite(param0: number): void;
+								loadUserWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+								removeAllUserWrites(): void;
+								serverCache(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+								overwriteServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+								mergeIntoServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+								mergeIntoServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+								serverCacheEstimatedSizeInBytes(): number;
+								saveTrackedQuery(param0: com.google.firebase.database.core.persistence.TrackedQuery): void;
+								deleteTrackedQuery(param0: number): void;
+								loadTrackedQueries(): java.util.List<com.google.firebase.database.core.persistence.TrackedQuery>;
+								resetPreviouslyActiveTrackedQueries(param0: number): void;
+								saveTrackedQueryKeys(param0: number, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+								updateTrackedQueryKeys(param0: number, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>, param2: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+								loadTrackedQueryKeys(param0: number): java.util.Set<com.google.firebase.database.snapshot.ChildKey>;
+								loadTrackedQueryKeys(param0: java.util.Set<java.lang.Long>): java.util.Set<com.google.firebase.database.snapshot.ChildKey>;
+								pruneCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.persistence.PruneForest): void;
+								beginTransaction(): void;
+								endTransaction(): void;
+								setTransactionSuccessful(): void;
+								close(): void;
+							});
+							public constructor();
+							public close(): void;
+							public saveUserMerge(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite, param2: number): void;
+							public pruneCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.persistence.PruneForest): void;
+							public mergeIntoServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+							public resetPreviouslyActiveTrackedQueries(param0: number): void;
+							public loadUserWrites(): java.util.List<com.google.firebase.database.core.UserWriteRecord>;
+							public saveUserOverwrite(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node, param2: number): void;
+							public saveTrackedQueryKeys(param0: number, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+							public serverCache(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+							public mergeIntoServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.CompoundWrite): void;
+							public loadTrackedQueryKeys(param0: number): java.util.Set<com.google.firebase.database.snapshot.ChildKey>;
+							public endTransaction(): void;
+							public removeAllUserWrites(): void;
+							public beginTransaction(): void;
+							public overwriteServerCache(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): void;
+							public updateTrackedQueryKeys(param0: number, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>, param2: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): void;
+							public loadTrackedQueries(): java.util.List<com.google.firebase.database.core.persistence.TrackedQuery>;
+							public loadTrackedQueryKeys(param0: java.util.Set<java.lang.Long>): java.util.Set<com.google.firebase.database.snapshot.ChildKey>;
+							public deleteTrackedQuery(param0: number): void;
+							public removeUserWrite(param0: number): void;
+							public serverCacheEstimatedSizeInBytes(): number;
+							public saveTrackedQuery(param0: com.google.firebase.database.core.persistence.TrackedQuery): void;
+							public setTransactionSuccessful(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class PruneForest {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.PruneForest>;
+							public constructor();
+							public hashCode(): number;
+							public child(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.persistence.PruneForest;
+							public prunesAnything(): boolean;
+							public shouldPruneUnkeptDescendants(param0: com.google.firebase.database.core.Path): boolean;
+							public child(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.persistence.PruneForest;
+							public keepAll(param0: com.google.firebase.database.core.Path, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): com.google.firebase.database.core.persistence.PruneForest;
+							public toString(): string;
+							public affectsPath(param0: com.google.firebase.database.core.Path): boolean;
+							public foldKeptNodes(param0: any, param1: com.google.firebase.database.core.utilities.ImmutableTree.TreeVisitor<any,any>): any;
+							public prune(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.persistence.PruneForest;
+							public shouldKeep(param0: com.google.firebase.database.core.Path): boolean;
+							public pruneAll(param0: com.google.firebase.database.core.Path, param1: java.util.Set<com.google.firebase.database.snapshot.ChildKey>): com.google.firebase.database.core.persistence.PruneForest;
+							public equals(param0: any): boolean;
+							public keep(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.persistence.PruneForest;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class TrackedQuery {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.TrackedQuery>;
+							public id: number;
+							public querySpec: com.google.firebase.database.core.view.QuerySpec;
+							public lastUse: number;
+							public complete: boolean;
+							public active: boolean;
+							public setComplete(): com.google.firebase.database.core.persistence.TrackedQuery;
+							public setActiveState(param0: boolean): com.google.firebase.database.core.persistence.TrackedQuery;
+							public hashCode(): number;
+							public toString(): string;
+							public constructor(param0: number, param1: com.google.firebase.database.core.view.QuerySpec, param2: number, param3: boolean, param4: boolean);
+							public updateLastUse(param0: number): com.google.firebase.database.core.persistence.TrackedQuery;
+							public equals(param0: any): boolean;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module persistence {
+						export class TrackedQueryManager {
+							public static class: java.lang.Class<com.google.firebase.database.core.persistence.TrackedQueryManager>;
+							public ensureCompleteTrackedQuery(param0: com.google.firebase.database.core.Path): void;
+							public constructor(param0: com.google.firebase.database.core.persistence.PersistenceStorageEngine, param1: com.google.firebase.database.logging.LogWrapper, param2: com.google.firebase.database.core.utilities.Clock);
+							public setQueryCompleteIfExists(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public setQueriesComplete(param0: com.google.firebase.database.core.Path): void;
+							public setQueryActive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public getKnownCompleteChildren(param0: com.google.firebase.database.core.Path): java.util.Set<com.google.firebase.database.snapshot.ChildKey>;
+							public setQueryInactive(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public hasActiveDefaultQuery(param0: com.google.firebase.database.core.Path): boolean;
+							public isQueryComplete(param0: com.google.firebase.database.core.view.QuerySpec): boolean;
+							public countOfPrunableQueries(): number;
+							public pruneOldQueries(param0: com.google.firebase.database.core.persistence.CachePolicy): com.google.firebase.database.core.persistence.PruneForest;
+							public removeTrackedQuery(param0: com.google.firebase.database.core.view.QuerySpec): void;
+							public findTrackedQuery(param0: com.google.firebase.database.core.view.QuerySpec): com.google.firebase.database.core.persistence.TrackedQuery;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class Clock {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.Clock>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.utilities.Clock interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								millis(): number;
+							});
+							public constructor();
+							public millis(): number;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class DefaultClock extends com.google.firebase.database.core.utilities.Clock {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.DefaultClock>;
+							public constructor();
+							public millis(): number;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export abstract class DefaultRunLoop extends com.google.firebase.database.core.RunLoop {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.DefaultRunLoop>;
+							public constructor();
+							public schedule(param0: java.lang.Runnable, param1: number): java.util.concurrent.ScheduledFuture;
+							public getThreadFactory(): java.util.concurrent.ThreadFactory;
+							public getThreadInitializer(): com.google.firebase.database.core.ThreadInitializer;
+							public static messageForException(param0: java.lang.Throwable): string;
+							public scheduleNow(param0: java.lang.Runnable): void;
+							public handleException(param0: java.lang.Throwable): void;
+							public getExecutorService(): java.util.concurrent.ScheduledExecutorService;
+							public restart(): void;
+							public shutdown(): void;
+						}
+						export module DefaultRunLoop {
+							export class FirebaseThreadFactory {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.DefaultRunLoop.FirebaseThreadFactory>;
+								public newThread(param0: java.lang.Runnable): java.lang.Thread;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class ImmutableTree<T>  extends java.lang.Iterable<java.util.Map.Entry<com.google.firebase.database.core.Path,any>> {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.ImmutableTree<any>>;
+							public getValue(): any;
+							public findRootMostPathWithValue(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.Path;
+							public hashCode(): number;
+							public leafMostValue(param0: com.google.firebase.database.core.Path): any;
+							public toString(): string;
+							public getChildren(): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.core.utilities.ImmutableTree<any>>;
+							public fold(param0: any, param1: com.google.firebase.database.core.utilities.ImmutableTree.TreeVisitor<any,any>): any;
+							public values(): java.util.Collection<any>;
+							public static emptyInstance(): com.google.firebase.database.core.utilities.ImmutableTree<any>;
+							public foreach(param0: com.google.firebase.database.core.utilities.ImmutableTree.TreeVisitor<any,java.lang.Void>): void;
+							public findRootMostMatchingPath(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.utilities.Predicate<any>): com.google.firebase.database.core.Path;
+							public constructor(param0: any, param1: com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.core.utilities.ImmutableTree<any>>);
+							public get(param0: com.google.firebase.database.core.Path): any;
+							public getChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.utilities.ImmutableTree<any>;
+							public iterator(): java.util.Iterator<java.util.Map.Entry<com.google.firebase.database.core.Path,any>>;
+							public containsMatchingValue(param0: com.google.firebase.database.core.utilities.Predicate<any>): boolean;
+							public leafMostValueMatching(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.utilities.Predicate<any>): any;
+							public remove(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.utilities.ImmutableTree<any>;
+							public set(param0: com.google.firebase.database.core.Path, param1: any): com.google.firebase.database.core.utilities.ImmutableTree<any>;
+							public subtree(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.utilities.ImmutableTree<any>;
+							public setTree(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.utilities.ImmutableTree<any>): com.google.firebase.database.core.utilities.ImmutableTree<any>;
+							public rootMostValue(param0: com.google.firebase.database.core.Path): any;
+							public isEmpty(): boolean;
+							public equals(param0: any): boolean;
+							public constructor(param0: any);
+							public rootMostValueMatching(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.utilities.Predicate<any>): any;
+						}
+						export module ImmutableTree {
+							export class TreeVisitor<T, R>  extends java.lang.Object {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.ImmutableTree.TreeVisitor<any,any>>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.database.core.utilities.ImmutableTree$TreeVisitor interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									onNodeValue(param0: com.google.firebase.database.core.Path, param1: T, param2: R): R;
+								});
+								public constructor();
+								public onNodeValue(param0: com.google.firebase.database.core.Path, param1: T, param2: R): R;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class NodeSizeEstimator {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.NodeSizeEstimator>;
+							public constructor();
+							public static estimateSerializedNodeSize(param0: com.google.firebase.database.snapshot.Node): number;
+							public static nodeCount(param0: com.google.firebase.database.snapshot.Node): number;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class OffsetClock extends com.google.firebase.database.core.utilities.Clock {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.OffsetClock>;
+							public setOffset(param0: number): void;
+							public constructor(param0: com.google.firebase.database.core.utilities.Clock, param1: number);
+							public millis(): number;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class Pair<T, U>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.Pair<any,any>>;
+							public constructor(param0: T, param1: U);
+							public hashCode(): number;
+							public toString(): string;
+							public getSecond(): U;
+							public equals(param0: any): boolean;
+							public getFirst(): T;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class ParsedUrl {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.ParsedUrl>;
+							public repoInfo: com.google.firebase.database.core.RepoInfo;
+							public path: com.google.firebase.database.core.Path;
+							public constructor();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class Predicate<T>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.Predicate<any>>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.utilities.Predicate<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								evaluate(param0: T): boolean;
+								<clinit>(): void;
+							});
+							public constructor();
+							public static TRUE: com.google.firebase.database.core.utilities.Predicate<any>;
+							public evaluate(param0: T): boolean;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class PushIdGenerator {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.PushIdGenerator>;
+							public constructor();
+							public static generatePushChildName(param0: number): string;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class Tree<T>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.Tree<any>>;
+							public constructor();
+							public setValue(param0: T): void;
+							public constructor(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.core.utilities.Tree<T>, param2: com.google.firebase.database.core.utilities.TreeNode<T>);
+							public toString(): string;
+							public forEachDescendant(param0: com.google.firebase.database.core.utilities.Tree.TreeVisitor<T>): void;
+							public forEachAncestor(param0: com.google.firebase.database.core.utilities.Tree.TreeFilter<T>, param1: boolean): boolean;
+							public lastNodeOnPath(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.utilities.TreeNode<T>;
+							public getParent(): com.google.firebase.database.core.utilities.Tree<T>;
+							public forEachDescendant(param0: com.google.firebase.database.core.utilities.Tree.TreeVisitor<T>, param1: boolean, param2: boolean): void;
+							public subTree(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.utilities.Tree<T>;
+							public getValue(): T;
+							public getPath(): com.google.firebase.database.core.Path;
+							public forEachDescendant(param0: com.google.firebase.database.core.utilities.Tree.TreeVisitor<T>, param1: boolean): void;
+							public getName(): com.google.firebase.database.snapshot.ChildKey;
+							public hasChildren(): boolean;
+							public isEmpty(): boolean;
+							public forEachAncestor(param0: com.google.firebase.database.core.utilities.Tree.TreeFilter<T>): boolean;
+							public forEachChild(param0: com.google.firebase.database.core.utilities.Tree.TreeVisitor<T>): void;
+						}
+						export module Tree {
+							export class TreeFilter<T>  extends java.lang.Object {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.Tree.TreeFilter<any>>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.database.core.utilities.Tree$TreeFilter interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									filterTreeNode(param0: com.google.firebase.database.core.utilities.Tree<T>): boolean;
+								});
+								public constructor();
+								public filterTreeNode(param0: com.google.firebase.database.core.utilities.Tree<T>): boolean;
+							}
+							export class TreeVisitor<T>  extends java.lang.Object {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.Tree.TreeVisitor<any>>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.database.core.utilities.Tree$TreeVisitor interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									visitTree(param0: com.google.firebase.database.core.utilities.Tree<T>): void;
+								});
+								public constructor();
+								public visitTree(param0: com.google.firebase.database.core.utilities.Tree<T>): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class TreeNode<T>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.TreeNode<any>>;
+							public children: java.util.Map<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.core.utilities.TreeNode<T>>;
+							public value: T;
+							public constructor();
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class Utilities {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.Utilities>;
+							public constructor();
+							public static hardAssert(param0: boolean): void;
+							public static wrapOnComplete(param0: com.google.firebase.database.DatabaseReference.CompletionListener): com.google.firebase.database.core.utilities.Pair<com.google.android.gms.tasks.Task<java.lang.Void>,com.google.firebase.database.DatabaseReference.CompletionListener>;
+							public static splitIntoFrames(param0: string, param1: number): native.Array<string>;
+							public static castOrNull(param0: any, param1: java.lang.Class): any;
+							public static sha1HexDigest(param0: string): string;
+							public static tryParseInt(param0: string): java.lang.Integer;
+							public static hardAssert(param0: boolean, param1: string): void;
+							public static stringHashV2Representation(param0: string): string;
+							public static doubleToHashString(param0: number): string;
+							public static compareInts(param0: number, param1: number): number;
+							public static compareLongs(param0: number, param1: number): number;
+							public static parseUrl(param0: string): com.google.firebase.database.core.utilities.ParsedUrl;
+							public static getOrNull(param0: any, param1: string, param2: java.lang.Class): any;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export class Validation {
+							public static class: java.lang.Class<com.google.firebase.database.core.utilities.Validation>;
+							public constructor();
+							public static validateWritablePath(param0: com.google.firebase.database.core.Path): void;
+							public static validateNullableKey(param0: string): void;
+							public static validateWritableObject(param0: any): void;
+							public static validatePathString(param0: string): void;
+							public static validateWritableKey(param0: string): void;
+							public static parseAndValidateUpdate(param0: com.google.firebase.database.core.Path, param1: java.util.Map<string,any>): java.util.Map<com.google.firebase.database.core.Path,com.google.firebase.database.snapshot.Node>;
+							public static validateRootPathString(param0: string): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export module encoding {
+							export class CustomClassMapper {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.encoding.CustomClassMapper>;
+								public static convertToPlainJavaTypes(param0: java.util.Map<string,any>): java.util.Map<string,any>;
+								public static convertToCustomClass(param0: any, param1: com.google.firebase.database.GenericTypeIndicator<any>): any;
+								public constructor();
+								public static convertToCustomClass(param0: any, param1: java.lang.Class): any;
+								public static convertToPlainJavaTypes(param0: any): any;
+							}
+							export module CustomClassMapper {
+								export class BeanMapper<T>  extends java.lang.Object {
+									public static class: java.lang.Class<com.google.firebase.database.core.utilities.encoding.CustomClassMapper.BeanMapper<any>>;
+									public deserialize(param0: java.util.Map<string,any>, param1: java.util.Map<java.lang.reflect.TypeVariable<java.lang.Class<T>>,java.lang.reflect.Type>): T;
+									public constructor(param0: java.lang.Class<T>);
+									public serialize(param0: T): java.util.Map<string,any>;
+									public deserialize(param0: java.util.Map<string,any>): T;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export module tuple {
+							export class NameAndPriority extends java.lang.Comparable<com.google.firebase.database.core.utilities.tuple.NameAndPriority> {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.tuple.NameAndPriority>;
+								public getPriority(): com.google.firebase.database.snapshot.Node;
+								public compareTo(param0: com.google.firebase.database.core.utilities.tuple.NameAndPriority): number;
+								public constructor(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node);
+								public getName(): com.google.firebase.database.snapshot.ChildKey;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export module tuple {
+							export class NodeAndPath {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.tuple.NodeAndPath>;
+								public constructor(param0: com.google.firebase.database.snapshot.Node, param1: com.google.firebase.database.core.Path);
+								public getNode(): com.google.firebase.database.snapshot.Node;
+								public setNode(param0: com.google.firebase.database.snapshot.Node): void;
+								public getPath(): com.google.firebase.database.core.Path;
+								public setPath(param0: com.google.firebase.database.core.Path): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module utilities {
+						export module tuple {
+							export class PathAndId {
+								public static class: java.lang.Class<com.google.firebase.database.core.utilities.tuple.PathAndId>;
+								public getId(): number;
+								public constructor(param0: com.google.firebase.database.core.Path, param1: number);
+								public getPath(): com.google.firebase.database.core.Path;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class CacheNode {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.CacheNode>;
+							public isCompleteForPath(param0: com.google.firebase.database.core.Path): boolean;
+							public isCompleteForChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+							public isFullyInitialized(): boolean;
+							public isFiltered(): boolean;
+							public constructor(param0: com.google.firebase.database.snapshot.IndexedNode, param1: boolean, param2: boolean);
+							public getIndexedNode(): com.google.firebase.database.snapshot.IndexedNode;
+							public getNode(): com.google.firebase.database.snapshot.Node;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class CancelEvent extends com.google.firebase.database.core.view.Event {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.CancelEvent>;
+							public getPath(): com.google.firebase.database.core.Path;
+							public constructor(param0: com.google.firebase.database.core.EventRegistration, param1: com.google.firebase.database.DatabaseError, param2: com.google.firebase.database.core.Path);
+							public toString(): string;
+							public fire(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class Change {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.Change>;
+							public static childRemovedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.IndexedNode): com.google.firebase.database.core.view.Change;
+							public getOldIndexedNode(): com.google.firebase.database.snapshot.IndexedNode;
+							public getEventType(): com.google.firebase.database.core.view.Event.EventType;
+							public static childAddedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.view.Change;
+							public static childRemovedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.view.Change;
+							public changeWithPrevName(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.view.Change;
+							public static childChangedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.IndexedNode, param2: com.google.firebase.database.snapshot.IndexedNode): com.google.firebase.database.core.view.Change;
+							public getIndexedNode(): com.google.firebase.database.snapshot.IndexedNode;
+							public static childAddedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.IndexedNode): com.google.firebase.database.core.view.Change;
+							public toString(): string;
+							public getPrevName(): com.google.firebase.database.snapshot.ChildKey;
+							public static childMovedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.view.Change;
+							public static valueChange(param0: com.google.firebase.database.snapshot.IndexedNode): com.google.firebase.database.core.view.Change;
+							public static childChangedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.view.Change;
+							public getChildKey(): com.google.firebase.database.snapshot.ChildKey;
+							public static childMovedChange(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.IndexedNode): com.google.firebase.database.core.view.Change;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class DataEvent extends com.google.firebase.database.core.view.Event {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.DataEvent>;
+							public getPreviousName(): string;
+							public getEventType(): com.google.firebase.database.core.view.Event.EventType;
+							public getPath(): com.google.firebase.database.core.Path;
+							public getSnapshot(): com.google.firebase.database.DataSnapshot;
+							public toString(): string;
+							public constructor(param0: com.google.firebase.database.core.view.Event.EventType, param1: com.google.firebase.database.core.EventRegistration, param2: com.google.firebase.database.DataSnapshot, param3: string);
+							public fire(): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class Event {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.Event>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.core.view.Event interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								getPath(): com.google.firebase.database.core.Path;
+								fire(): void;
+								toString(): string;
+							});
+							public constructor();
+							public getPath(): com.google.firebase.database.core.Path;
+							public toString(): string;
+							public fire(): void;
+						}
+						export module Event {
+							export class EventType {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.Event.EventType>;
+								public static CHILD_REMOVED: com.google.firebase.database.core.view.Event.EventType;
+								public static CHILD_ADDED: com.google.firebase.database.core.view.Event.EventType;
+								public static CHILD_MOVED: com.google.firebase.database.core.view.Event.EventType;
+								public static CHILD_CHANGED: com.google.firebase.database.core.view.Event.EventType;
+								public static VALUE: com.google.firebase.database.core.view.Event.EventType;
+								public static values(): native.Array<com.google.firebase.database.core.view.Event.EventType>;
+								public static valueOf(param0: string): com.google.firebase.database.core.view.Event.EventType;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class EventGenerator {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.EventGenerator>;
+							public constructor(param0: com.google.firebase.database.core.view.QuerySpec);
+							public generateEventsForChanges(param0: java.util.List<com.google.firebase.database.core.view.Change>, param1: com.google.firebase.database.snapshot.IndexedNode, param2: java.util.List<com.google.firebase.database.core.EventRegistration>): java.util.List<com.google.firebase.database.core.view.DataEvent>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class EventRaiser {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.EventRaiser>;
+							public raiseEvents(param0: java.util.List<any>): void;
+							public constructor(param0: com.google.firebase.database.core.Context);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class QueryParams {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.QueryParams>;
+							public static DEFAULT_PARAMS: com.google.firebase.database.core.view.QueryParams;
+							public limitToFirst(param0: number): com.google.firebase.database.core.view.QueryParams;
+							public hashCode(): number;
+							public getIndexEndName(): com.google.firebase.database.snapshot.ChildKey;
+							public getIndex(): com.google.firebase.database.snapshot.Index;
+							public hasEnd(): boolean;
+							public toString(): string;
+							public getIndexStartValue(): com.google.firebase.database.snapshot.Node;
+							public isValid(): boolean;
+							public endAt(param0: com.google.firebase.database.snapshot.Node, param1: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.view.QueryParams;
+							public hasAnchoredLimit(): boolean;
+							public constructor();
+							public getIndexStartName(): com.google.firebase.database.snapshot.ChildKey;
+							public isDefault(): boolean;
+							public getIndexEndValue(): com.google.firebase.database.snapshot.Node;
+							public orderBy(param0: com.google.firebase.database.snapshot.Index): com.google.firebase.database.core.view.QueryParams;
+							public hasLimit(): boolean;
+							public limitToLast(param0: number): com.google.firebase.database.core.view.QueryParams;
+							public isViewFromLeft(): boolean;
+							public hasStart(): boolean;
+							public loadsAllData(): boolean;
+							public getNodeFilter(): com.google.firebase.database.core.view.filter.NodeFilter;
+							public getWireProtocolParams(): java.util.Map<string,any>;
+							public startAt(param0: com.google.firebase.database.snapshot.Node, param1: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.core.view.QueryParams;
+							public toJSON(): string;
+							public static fromQueryObject(param0: java.util.Map<string,any>): com.google.firebase.database.core.view.QueryParams;
+							public equals(param0: any): boolean;
+							public getLimit(): number;
+						}
+						export module QueryParams {
+							export class ViewFrom {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.QueryParams.ViewFrom>;
+								public static LEFT: com.google.firebase.database.core.view.QueryParams.ViewFrom;
+								public static RIGHT: com.google.firebase.database.core.view.QueryParams.ViewFrom;
+								public static values(): native.Array<com.google.firebase.database.core.view.QueryParams.ViewFrom>;
+								public static valueOf(param0: string): com.google.firebase.database.core.view.QueryParams.ViewFrom;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class QuerySpec {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.QuerySpec>;
+							public isDefault(): boolean;
+							public loadsAllData(): boolean;
+							public constructor(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.view.QueryParams);
+							public getPath(): com.google.firebase.database.core.Path;
+							public hashCode(): number;
+							public getParams(): com.google.firebase.database.core.view.QueryParams;
+							public static fromPathAndQueryObject(param0: com.google.firebase.database.core.Path, param1: java.util.Map<string,any>): com.google.firebase.database.core.view.QuerySpec;
+							public getIndex(): com.google.firebase.database.snapshot.Index;
+							public toString(): string;
+							public static defaultQueryAtPath(param0: com.google.firebase.database.core.Path): com.google.firebase.database.core.view.QuerySpec;
+							public equals(param0: any): boolean;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class View {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.View>;
+							public addEventRegistration(param0: com.google.firebase.database.core.EventRegistration): void;
+							public removeEventRegistration(param0: com.google.firebase.database.core.EventRegistration, param1: com.google.firebase.database.DatabaseError): java.util.List<com.google.firebase.database.core.view.Event>;
+							public getCompleteNode(): com.google.firebase.database.snapshot.Node;
+							public applyOperation(param0: com.google.firebase.database.core.operation.Operation, param1: com.google.firebase.database.core.WriteTreeRef, param2: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.view.View.OperationResult;
+							public getQuery(): com.google.firebase.database.core.view.QuerySpec;
+							public constructor(param0: com.google.firebase.database.core.view.QuerySpec, param1: com.google.firebase.database.core.view.ViewCache);
+							public getCompleteServerCache(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+							public isEmpty(): boolean;
+							public getInitialEvents(param0: com.google.firebase.database.core.EventRegistration): java.util.List<com.google.firebase.database.core.view.DataEvent>;
+							public getServerCache(): com.google.firebase.database.snapshot.Node;
+							public getEventCache(): com.google.firebase.database.snapshot.Node;
+						}
+						export module View {
+							export class OperationResult {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.View.OperationResult>;
+								public events: java.util.List<com.google.firebase.database.core.view.DataEvent>;
+								public changes: java.util.List<com.google.firebase.database.core.view.Change>;
+								public constructor(param0: java.util.List<com.google.firebase.database.core.view.DataEvent>, param1: java.util.List<com.google.firebase.database.core.view.Change>);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class ViewCache {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.ViewCache>;
+							public getEventCache(): com.google.firebase.database.core.view.CacheNode;
+							public updateEventSnap(param0: com.google.firebase.database.snapshot.IndexedNode, param1: boolean, param2: boolean): com.google.firebase.database.core.view.ViewCache;
+							public getCompleteServerSnap(): com.google.firebase.database.snapshot.Node;
+							public getCompleteEventSnap(): com.google.firebase.database.snapshot.Node;
+							public getServerCache(): com.google.firebase.database.core.view.CacheNode;
+							public constructor(param0: com.google.firebase.database.core.view.CacheNode, param1: com.google.firebase.database.core.view.CacheNode);
+							public updateServerSnap(param0: com.google.firebase.database.snapshot.IndexedNode, param1: boolean, param2: boolean): com.google.firebase.database.core.view.ViewCache;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export class ViewProcessor {
+							public static class: java.lang.Class<com.google.firebase.database.core.view.ViewProcessor>;
+							public constructor(param0: com.google.firebase.database.core.view.filter.NodeFilter);
+							public revertUserWrite(param0: com.google.firebase.database.core.view.ViewCache, param1: com.google.firebase.database.core.Path, param2: com.google.firebase.database.core.WriteTreeRef, param3: com.google.firebase.database.snapshot.Node, param4: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.core.view.ViewCache;
+							public applyOperation(param0: com.google.firebase.database.core.view.ViewCache, param1: com.google.firebase.database.core.operation.Operation, param2: com.google.firebase.database.core.WriteTreeRef, param3: com.google.firebase.database.snapshot.Node): com.google.firebase.database.core.view.ViewProcessor.ProcessorResult;
+						}
+						export module ViewProcessor {
+							export class ProcessorResult {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.ViewProcessor.ProcessorResult>;
+								public viewCache: com.google.firebase.database.core.view.ViewCache;
+								public changes: java.util.List<com.google.firebase.database.core.view.Change>;
+								public constructor(param0: com.google.firebase.database.core.view.ViewCache, param1: java.util.List<com.google.firebase.database.core.view.Change>);
+							}
+							export class WriteTreeCompleteChildSource extends com.google.firebase.database.core.view.filter.NodeFilter.CompleteChildSource {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.ViewProcessor.WriteTreeCompleteChildSource>;
+								public constructor(param0: com.google.firebase.database.core.WriteTreeRef, param1: com.google.firebase.database.core.view.ViewCache, param2: com.google.firebase.database.snapshot.Node);
+								public getCompleteChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+								public getChildAfterChild(param0: com.google.firebase.database.snapshot.Index, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): com.google.firebase.database.snapshot.NamedNode;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export module filter {
+							export class ChildChangeAccumulator {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.filter.ChildChangeAccumulator>;
+								public getChanges(): java.util.List<com.google.firebase.database.core.view.Change>;
+								public constructor();
+								public trackChildChange(param0: com.google.firebase.database.core.view.Change): void;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export module filter {
+							export class IndexedFilter extends com.google.firebase.database.core.view.filter.NodeFilter {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.filter.IndexedFilter>;
+								public constructor(param0: com.google.firebase.database.snapshot.Index);
+								public getIndexedFilter(): com.google.firebase.database.core.view.filter.NodeFilter;
+								public getIndex(): com.google.firebase.database.snapshot.Index;
+								public updateChild(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.ChildKey, param2: com.google.firebase.database.snapshot.Node, param3: com.google.firebase.database.core.Path, param4: com.google.firebase.database.core.view.filter.NodeFilter.CompleteChildSource, param5: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+								public updatePriority(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+								public filtersNodes(): boolean;
+								public updateFullNode(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.IndexedNode, param2: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export module filter {
+							export class LimitedFilter extends com.google.firebase.database.core.view.filter.NodeFilter {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.filter.LimitedFilter>;
+								public getIndexedFilter(): com.google.firebase.database.core.view.filter.NodeFilter;
+								public getIndex(): com.google.firebase.database.snapshot.Index;
+								public updateChild(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.ChildKey, param2: com.google.firebase.database.snapshot.Node, param3: com.google.firebase.database.core.Path, param4: com.google.firebase.database.core.view.filter.NodeFilter.CompleteChildSource, param5: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+								public updatePriority(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+								public filtersNodes(): boolean;
+								public constructor(param0: com.google.firebase.database.core.view.QueryParams);
+								public updateFullNode(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.IndexedNode, param2: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export module filter {
+							export class NodeFilter {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.filter.NodeFilter>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.database.core.view.filter.NodeFilter interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									updateChild(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.ChildKey, param2: com.google.firebase.database.snapshot.Node, param3: com.google.firebase.database.core.Path, param4: com.google.firebase.database.core.view.filter.NodeFilter.CompleteChildSource, param5: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+									updateFullNode(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.IndexedNode, param2: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+									updatePriority(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+									filtersNodes(): boolean;
+									getIndexedFilter(): com.google.firebase.database.core.view.filter.NodeFilter;
+									getIndex(): com.google.firebase.database.snapshot.Index;
+								});
+								public constructor();
+								public getIndexedFilter(): com.google.firebase.database.core.view.filter.NodeFilter;
+								public getIndex(): com.google.firebase.database.snapshot.Index;
+								public updateChild(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.ChildKey, param2: com.google.firebase.database.snapshot.Node, param3: com.google.firebase.database.core.Path, param4: com.google.firebase.database.core.view.filter.NodeFilter.CompleteChildSource, param5: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+								public updatePriority(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+								public filtersNodes(): boolean;
+								public updateFullNode(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.IndexedNode, param2: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+							}
+							export module NodeFilter {
+								export class CompleteChildSource {
+									public static class: java.lang.Class<com.google.firebase.database.core.view.filter.NodeFilter.CompleteChildSource>;
+									/**
+									 * Constructs a new instance of the com.google.firebase.database.core.view.filter.NodeFilter$CompleteChildSource interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+									 */
+									public constructor(implementation: {
+										getCompleteChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+										getChildAfterChild(param0: com.google.firebase.database.snapshot.Index, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): com.google.firebase.database.snapshot.NamedNode;
+									});
+									public constructor();
+									public getChildAfterChild(param0: com.google.firebase.database.snapshot.Index, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): com.google.firebase.database.snapshot.NamedNode;
+									public getCompleteChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module core {
+					export module view {
+						export module filter {
+							export class RangedFilter extends com.google.firebase.database.core.view.filter.NodeFilter {
+								public static class: java.lang.Class<com.google.firebase.database.core.view.filter.RangedFilter>;
+								public getIndexedFilter(): com.google.firebase.database.core.view.filter.NodeFilter;
+								public getEndPost(): com.google.firebase.database.snapshot.NamedNode;
+								public matches(param0: com.google.firebase.database.snapshot.NamedNode): boolean;
+								public getStartPost(): com.google.firebase.database.snapshot.NamedNode;
+								public getIndex(): com.google.firebase.database.snapshot.Index;
+								public updateChild(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.ChildKey, param2: com.google.firebase.database.snapshot.Node, param3: com.google.firebase.database.core.Path, param4: com.google.firebase.database.core.view.filter.NodeFilter.CompleteChildSource, param5: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+								public updatePriority(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+								public filtersNodes(): boolean;
+								public constructor(param0: com.google.firebase.database.core.view.QueryParams);
+								public updateFullNode(param0: com.google.firebase.database.snapshot.IndexedNode, param1: com.google.firebase.database.snapshot.IndexedNode, param2: com.google.firebase.database.core.view.filter.ChildChangeAccumulator): com.google.firebase.database.snapshot.IndexedNode;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module logging {
+					export class AndroidLogger extends com.google.firebase.database.logging.DefaultLogger {
+						public static class: java.lang.Class<com.google.firebase.database.logging.AndroidLogger>;
+						public warn(param0: string, param1: string): void;
+						public buildLogMessage(param0: com.google.firebase.database.logging.Logger.Level, param1: string, param2: string, param3: number): string;
+						public info(param0: string, param1: string): void;
+						public constructor(param0: com.google.firebase.database.logging.Logger.Level, param1: java.util.List<string>);
+						public onLogMessage(param0: com.google.firebase.database.logging.Logger.Level, param1: string, param2: string, param3: number): void;
+						public error(param0: string, param1: string): void;
+						public debug(param0: string, param1: string): void;
+						public getLogLevel(): com.google.firebase.database.logging.Logger.Level;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module logging {
+					export class DefaultLogger extends com.google.firebase.database.logging.Logger {
+						public static class: java.lang.Class<com.google.firebase.database.logging.DefaultLogger>;
+						public warn(param0: string, param1: string): void;
+						public buildLogMessage(param0: com.google.firebase.database.logging.Logger.Level, param1: string, param2: string, param3: number): string;
+						public shouldLog(param0: com.google.firebase.database.logging.Logger.Level, param1: string): boolean;
+						public info(param0: string, param1: string): void;
+						public constructor(param0: com.google.firebase.database.logging.Logger.Level, param1: java.util.List<string>);
+						public onLogMessage(param0: com.google.firebase.database.logging.Logger.Level, param1: string, param2: string, param3: number): void;
+						public error(param0: string, param1: string): void;
+						public debug(param0: string, param1: string): void;
+						public getLogLevel(): com.google.firebase.database.logging.Logger.Level;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module logging {
+					export class LogWrapper {
+						public static class: java.lang.Class<com.google.firebase.database.logging.LogWrapper>;
+						public constructor(param0: com.google.firebase.database.logging.Logger, param1: string);
+						public debug(param0: string, param1: native.Array<any>): void;
+						public debug(param0: string, param1: java.lang.Throwable, param2: native.Array<any>): void;
+						public warn(param0: string): void;
+						public info(param0: string): void;
+						public logsDebug(): boolean;
+						public warn(param0: string, param1: java.lang.Throwable): void;
+						public constructor(param0: com.google.firebase.database.logging.Logger, param1: string, param2: string);
+						public error(param0: string, param1: java.lang.Throwable): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module logging {
+					export class Logger {
+						public static class: java.lang.Class<com.google.firebase.database.logging.Logger>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.logging.Logger interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							onLogMessage(param0: com.google.firebase.database.logging.Logger.Level, param1: string, param2: string, param3: number): void;
+							getLogLevel(): com.google.firebase.database.logging.Logger.Level;
+						});
+						public constructor();
+						public onLogMessage(param0: com.google.firebase.database.logging.Logger.Level, param1: string, param2: string, param3: number): void;
+						public getLogLevel(): com.google.firebase.database.logging.Logger.Level;
+					}
+					export module Logger {
+						export class Level {
+							public static class: java.lang.Class<com.google.firebase.database.logging.Logger.Level>;
+							public static DEBUG: com.google.firebase.database.logging.Logger.Level;
+							public static INFO: com.google.firebase.database.logging.Logger.Level;
+							public static WARN: com.google.firebase.database.logging.Logger.Level;
+							public static ERROR: com.google.firebase.database.logging.Logger.Level;
+							public static NONE: com.google.firebase.database.logging.Logger.Level;
+							public static valueOf(param0: string): com.google.firebase.database.logging.Logger.Level;
+							public static values(): native.Array<com.google.firebase.database.logging.Logger.Level>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class BooleanNode extends com.google.firebase.database.snapshot.LeafNode<com.google.firebase.database.snapshot.BooleanNode> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.BooleanNode>;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHash(): string;
+						public getChildCount(): number;
+						public getValue(): any;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.BooleanNode;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public compareLeafValues(param0: any): number;
+						public getValue(param0: boolean): any;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public compareLeafValues(param0: com.google.firebase.database.snapshot.BooleanNode): number;
+						public constructor(param0: java.lang.Boolean, param1: com.google.firebase.database.snapshot.Node);
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+						public getLeafType(): com.google.firebase.database.snapshot.LeafNode.LeafType;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class ChildKey extends java.lang.Comparable<com.google.firebase.database.snapshot.ChildKey> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.ChildKey>;
+						public static getMaxName(): com.google.firebase.database.snapshot.ChildKey;
+						public static getPriorityKey(): com.google.firebase.database.snapshot.ChildKey;
+						public hashCode(): number;
+						public equals(param0: any): boolean;
+						public intValue(): number;
+						public toString(): string;
+						public isPriorityChildName(): boolean;
+						public static getInfoKey(): com.google.firebase.database.snapshot.ChildKey;
+						public asString(): string;
+						public static fromString(param0: string): com.google.firebase.database.snapshot.ChildKey;
+						public isInt(): boolean;
+						public static getMinName(): com.google.firebase.database.snapshot.ChildKey;
+						public compareTo(param0: com.google.firebase.database.snapshot.ChildKey): number;
+					}
+					export module ChildKey {
+						export class IntegerChildKey extends com.google.firebase.database.snapshot.ChildKey {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.ChildKey.IntegerChildKey>;
+							public isInt(): boolean;
+							public intValue(): number;
+							public toString(): string;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class ChildrenNode extends com.google.firebase.database.snapshot.Node {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.ChildrenNode>;
+						public static NAME_ONLY_COMPARATOR: java.util.Comparator<com.google.firebase.database.snapshot.ChildKey>;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public getValue(): any;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getValue(param0: boolean): any;
+						public constructor(param0: com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.snapshot.Node>, param1: com.google.firebase.database.snapshot.Node);
+						public iterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public isEmpty(): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getLastChildKey(): com.google.firebase.database.snapshot.ChildKey;
+						public forEachChild(param0: com.google.firebase.database.snapshot.ChildrenNode.ChildVisitor): void;
+						public getHash(): string;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public constructor();
+						public forEachChild(param0: com.google.firebase.database.snapshot.ChildrenNode.ChildVisitor, param1: boolean): void;
+						public getChildCount(): number;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public compareTo(param0: com.google.firebase.database.snapshot.Node): number;
+						public getFirstChildKey(): com.google.firebase.database.snapshot.ChildKey;
+						public toString(): string;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+					}
+					export module ChildrenNode {
+						export abstract class ChildVisitor extends com.google.firebase.database.collection.LLRBNode.NodeVisitor<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.snapshot.Node> {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.ChildrenNode.ChildVisitor>;
+							public constructor();
+							public visitChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): void;
+							public visitEntry(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): void;
+						}
+						export class NamedNodeIterator extends java.util.Iterator<com.google.firebase.database.snapshot.NamedNode> {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.ChildrenNode.NamedNodeIterator>;
+							public constructor(param0: java.util.Iterator<java.util.Map.Entry<com.google.firebase.database.snapshot.ChildKey,com.google.firebase.database.snapshot.Node>>);
+							public hasNext(): boolean;
+							public remove(): void;
+							public next(): com.google.firebase.database.snapshot.NamedNode;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class CompoundHash {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.CompoundHash>;
+						public getPosts(): java.util.List<com.google.firebase.database.core.Path>;
+						public static fromNode(param0: com.google.firebase.database.snapshot.Node, param1: com.google.firebase.database.snapshot.CompoundHash.SplitStrategy): com.google.firebase.database.snapshot.CompoundHash;
+						public static fromNode(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.CompoundHash;
+						public getHashes(): java.util.List<string>;
+					}
+					export module CompoundHash {
+						export class CompoundHashBuilder {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.CompoundHash.CompoundHashBuilder>;
+							public currentPath(): com.google.firebase.database.core.Path;
+							public constructor(param0: com.google.firebase.database.snapshot.CompoundHash.SplitStrategy);
+							public currentHashLength(): number;
+							public buildingRange(): boolean;
+						}
+						export class SimpleSizeSplitStrategy extends com.google.firebase.database.snapshot.CompoundHash.SplitStrategy {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.CompoundHash.SimpleSizeSplitStrategy>;
+							public shouldSplit(param0: com.google.firebase.database.snapshot.CompoundHash.CompoundHashBuilder): boolean;
+							public constructor(param0: com.google.firebase.database.snapshot.Node);
+						}
+						export class SplitStrategy {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.CompoundHash.SplitStrategy>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.snapshot.CompoundHash$SplitStrategy interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								shouldSplit(param0: com.google.firebase.database.snapshot.CompoundHash.CompoundHashBuilder): boolean;
+							});
+							public constructor();
+							public shouldSplit(param0: com.google.firebase.database.snapshot.CompoundHash.CompoundHashBuilder): boolean;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class DeferredValueNode extends com.google.firebase.database.snapshot.LeafNode<com.google.firebase.database.snapshot.DeferredValueNode> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.DeferredValueNode>;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHash(): string;
+						public constructor(param0: java.util.Map<any,any>, param1: com.google.firebase.database.snapshot.Node);
+						public getChildCount(): number;
+						public getValue(): any;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public compareLeafValues(param0: any): number;
+						public getValue(param0: boolean): any;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.DeferredValueNode;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public compareLeafValues(param0: com.google.firebase.database.snapshot.DeferredValueNode): number;
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+						public getLeafType(): com.google.firebase.database.snapshot.LeafNode.LeafType;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class DoubleNode extends com.google.firebase.database.snapshot.LeafNode<com.google.firebase.database.snapshot.DoubleNode> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.DoubleNode>;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHash(): string;
+						public getChildCount(): number;
+						public getValue(): any;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public compareLeafValues(param0: any): number;
+						public getValue(param0: boolean): any;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.DoubleNode;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public constructor(param0: java.lang.Double, param1: com.google.firebase.database.snapshot.Node);
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public compareLeafValues(param0: com.google.firebase.database.snapshot.DoubleNode): number;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+						public getLeafType(): com.google.firebase.database.snapshot.LeafNode.LeafType;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class EmptyNode extends com.google.firebase.database.snapshot.ChildrenNode implements com.google.firebase.database.snapshot.Node {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.EmptyNode>;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHash(): string;
+						public getChildCount(): number;
+						public getValue(): any;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public static Empty(): com.google.firebase.database.snapshot.EmptyNode;
+						public compareTo(param0: com.google.firebase.database.snapshot.Node): number;
+						public getValue(param0: boolean): any;
+						public toString(): string;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public iterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.EmptyNode;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export abstract class Index extends java.util.Comparator<com.google.firebase.database.snapshot.NamedNode> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.Index>;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): number;
+						public constructor();
+						public isDefinedOn(param0: com.google.firebase.database.snapshot.Node): boolean;
+						public maxPost(): com.google.firebase.database.snapshot.NamedNode;
+						public static fromQueryDefinition(param0: string): com.google.firebase.database.snapshot.Index;
+						public makePost(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.NamedNode;
+						public minPost(): com.google.firebase.database.snapshot.NamedNode;
+						public getQueryDefinition(): string;
+						public indexedValueChanged(param0: com.google.firebase.database.snapshot.Node, param1: com.google.firebase.database.snapshot.Node): boolean;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class IndexedNode extends java.lang.Iterable<com.google.firebase.database.snapshot.NamedNode> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.IndexedNode>;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+						public hasIndex(param0: com.google.firebase.database.snapshot.Index): boolean;
+						public iterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public updateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+						public static from(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.IndexedNode;
+						public static from(param0: com.google.firebase.database.snapshot.Node, param1: com.google.firebase.database.snapshot.Index): com.google.firebase.database.snapshot.IndexedNode;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public getLastChild(): com.google.firebase.database.snapshot.NamedNode;
+						public getNode(): com.google.firebase.database.snapshot.Node;
+						public getFirstChild(): com.google.firebase.database.snapshot.NamedNode;
+						public getPredecessorChildName(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.snapshot.Index): com.google.firebase.database.snapshot.ChildKey;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class KeyIndex extends com.google.firebase.database.snapshot.Index {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.KeyIndex>;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): number;
+						public isDefinedOn(param0: com.google.firebase.database.snapshot.Node): boolean;
+						public maxPost(): com.google.firebase.database.snapshot.NamedNode;
+						public makePost(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.NamedNode;
+						public getQueryDefinition(): string;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode): number;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public static getInstance(): com.google.firebase.database.snapshot.KeyIndex;
+						public toString(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export abstract class LeafNode<T>  extends com.google.firebase.database.snapshot.Node {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.LeafNode<any>>;
+						public priority: com.google.firebase.database.snapshot.Node;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public getValue(): any;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPriorityHash(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+						public compareLeafValues(param0: any): number;
+						public leafCompare(param0: com.google.firebase.database.snapshot.LeafNode<any>): number;
+						public getValue(param0: boolean): any;
+						public iterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public getHash(): string;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getChildCount(): number;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public compareTo(param0: com.google.firebase.database.snapshot.Node): number;
+						public toString(): string;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+						public getLeafType(): com.google.firebase.database.snapshot.LeafNode.LeafType;
+					}
+					export module LeafNode {
+						export class LeafType {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.LeafNode.LeafType>;
+							public static DeferredValue: com.google.firebase.database.snapshot.LeafNode.LeafType;
+							public static Boolean: com.google.firebase.database.snapshot.LeafNode.LeafType;
+							public static Number: com.google.firebase.database.snapshot.LeafNode.LeafType;
+							public static String: com.google.firebase.database.snapshot.LeafNode.LeafType;
+							public static valueOf(param0: string): com.google.firebase.database.snapshot.LeafNode.LeafType;
+							public static values(): native.Array<com.google.firebase.database.snapshot.LeafNode.LeafType>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class LongNode extends com.google.firebase.database.snapshot.LeafNode<com.google.firebase.database.snapshot.LongNode> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.LongNode>;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHash(): string;
+						public getChildCount(): number;
+						public getValue(): any;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public compareLeafValues(param0: any): number;
+						public getValue(param0: boolean): any;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public constructor(param0: java.lang.Long, param1: com.google.firebase.database.snapshot.Node);
+						public compareLeafValues(param0: com.google.firebase.database.snapshot.LongNode): number;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.LongNode;
+						public getLeafType(): com.google.firebase.database.snapshot.LeafNode.LeafType;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class NamedNode {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.NamedNode>;
+						public static getMaxNode(): com.google.firebase.database.snapshot.NamedNode;
+						public getName(): com.google.firebase.database.snapshot.ChildKey;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public static getMinNode(): com.google.firebase.database.snapshot.NamedNode;
+						public constructor(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node);
+						public getNode(): com.google.firebase.database.snapshot.Node;
+						public toString(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class Node extends java.lang.Object {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.Node>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.snapshot.Node interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							isLeafNode(): boolean;
+							getPriority(): com.google.firebase.database.snapshot.Node;
+							getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+							getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+							updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+							getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+							getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+							updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+							updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+							hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+							isEmpty(): boolean;
+							getChildCount(): number;
+							getValue(): any;
+							getValue(param0: boolean): any;
+							getHash(): string;
+							getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+							reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+							<clinit>(): void;
+						});
+						public constructor();
+						public static MAX_NODE: com.google.firebase.database.snapshot.ChildrenNode;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHash(): string;
+						public getChildCount(): number;
+						public getValue(): any;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public getValue(param0: boolean): any;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+					}
+					export module Node {
+						export class HashVersion {
+							public static class: java.lang.Class<com.google.firebase.database.snapshot.Node.HashVersion>;
+							public static V1: com.google.firebase.database.snapshot.Node.HashVersion;
+							public static V2: com.google.firebase.database.snapshot.Node.HashVersion;
+							public static values(): native.Array<com.google.firebase.database.snapshot.Node.HashVersion>;
+							public static valueOf(param0: string): com.google.firebase.database.snapshot.Node.HashVersion;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class NodeUtilities {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.NodeUtilities>;
+						public constructor();
+						public static NodeFromJSON(param0: any): com.google.firebase.database.snapshot.Node;
+						public static NodeFromJSON(param0: any, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public static nameAndPriorityCompare(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node, param2: com.google.firebase.database.snapshot.ChildKey, param3: com.google.firebase.database.snapshot.Node): number;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class PathIndex extends com.google.firebase.database.snapshot.Index {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.PathIndex>;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): number;
+						public constructor();
+						public isDefinedOn(param0: com.google.firebase.database.snapshot.Node): boolean;
+						public maxPost(): com.google.firebase.database.snapshot.NamedNode;
+						public makePost(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.NamedNode;
+						public constructor(param0: com.google.firebase.database.core.Path);
+						public getQueryDefinition(): string;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode): number;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class PriorityIndex extends com.google.firebase.database.snapshot.Index {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.PriorityIndex>;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): number;
+						public isDefinedOn(param0: com.google.firebase.database.snapshot.Node): boolean;
+						public maxPost(): com.google.firebase.database.snapshot.NamedNode;
+						public makePost(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.NamedNode;
+						public getQueryDefinition(): string;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode): number;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public toString(): string;
+						public static getInstance(): com.google.firebase.database.snapshot.PriorityIndex;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class PriorityUtilities {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.PriorityUtilities>;
+						public static NullPriority(): com.google.firebase.database.snapshot.Node;
+						public constructor();
+						public static parsePriority(param0: any): com.google.firebase.database.snapshot.Node;
+						public static isValidPriority(param0: com.google.firebase.database.snapshot.Node): boolean;
+						public static parsePriority(param0: com.google.firebase.database.core.Path, param1: any): com.google.firebase.database.snapshot.Node;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class RangeMerge {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.RangeMerge>;
+						public constructor(param0: com.google.firebase.database.connection.RangeMerge);
+						public applyTo(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public constructor(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.core.Path, param2: com.google.firebase.database.snapshot.Node);
+						public toString(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class StringNode extends com.google.firebase.database.snapshot.LeafNode<com.google.firebase.database.snapshot.StringNode> {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.StringNode>;
+						public getImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.Node;
+						public compareLeafValues(param0: com.google.firebase.database.snapshot.StringNode): number;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public getHash(): string;
+						public getChildCount(): number;
+						public updatePriority(param0: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.StringNode;
+						public getValue(): any;
+						public getSuccessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public getPredecessorChildKey(param0: com.google.firebase.database.snapshot.ChildKey): com.google.firebase.database.snapshot.ChildKey;
+						public reverseIterator(): java.util.Iterator<com.google.firebase.database.snapshot.NamedNode>;
+						public compareLeafValues(param0: any): number;
+						public getValue(param0: boolean): any;
+						public getChild(param0: com.google.firebase.database.core.Path): com.google.firebase.database.snapshot.Node;
+						public isLeafNode(): boolean;
+						public getPriority(): com.google.firebase.database.snapshot.Node;
+						public updateImmediateChild(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public constructor(param0: string, param1: com.google.firebase.database.snapshot.Node);
+						public hasChild(param0: com.google.firebase.database.snapshot.ChildKey): boolean;
+						public updateChild(param0: com.google.firebase.database.core.Path, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.Node;
+						public isEmpty(): boolean;
+						public getHashRepresentation(param0: com.google.firebase.database.snapshot.Node.HashVersion): string;
+						public getLeafType(): com.google.firebase.database.snapshot.LeafNode.LeafType;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module snapshot {
+					export class ValueIndex extends com.google.firebase.database.snapshot.Index {
+						public static class: java.lang.Class<com.google.firebase.database.snapshot.ValueIndex>;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode, param2: boolean): number;
+						public isDefinedOn(param0: com.google.firebase.database.snapshot.Node): boolean;
+						public maxPost(): com.google.firebase.database.snapshot.NamedNode;
+						public makePost(param0: com.google.firebase.database.snapshot.ChildKey, param1: com.google.firebase.database.snapshot.Node): com.google.firebase.database.snapshot.NamedNode;
+						public getQueryDefinition(): string;
+						public compare(param0: com.google.firebase.database.snapshot.NamedNode, param1: com.google.firebase.database.snapshot.NamedNode): number;
+						public hashCode(): number;
+						public equals(param0: any): boolean;
+						public toString(): string;
+						public static getInstance(): com.google.firebase.database.snapshot.ValueIndex;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class MessageBuilderFactory {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.MessageBuilderFactory>;
+					}
+					export module MessageBuilderFactory {
+						export class BinaryBuilder extends com.google.firebase.database.tubesock.MessageBuilderFactory.Builder {
+							public static class: java.lang.Class<com.google.firebase.database.tubesock.MessageBuilderFactory.BinaryBuilder>;
+							public appendBytes(param0: native.Array<number>): boolean;
+							public toMessage(): com.google.firebase.database.tubesock.WebSocketMessage;
+						}
+						export class Builder {
+							public static class: java.lang.Class<com.google.firebase.database.tubesock.MessageBuilderFactory.Builder>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.database.tubesock.MessageBuilderFactory$Builder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								appendBytes(param0: native.Array<number>): boolean;
+								toMessage(): com.google.firebase.database.tubesock.WebSocketMessage;
+							});
+							public constructor();
+							public appendBytes(param0: native.Array<number>): boolean;
+							public toMessage(): com.google.firebase.database.tubesock.WebSocketMessage;
+						}
+						export class TextBuilder extends com.google.firebase.database.tubesock.MessageBuilderFactory.Builder {
+							public static class: java.lang.Class<com.google.firebase.database.tubesock.MessageBuilderFactory.TextBuilder>;
+							public appendBytes(param0: native.Array<number>): boolean;
+							public toMessage(): com.google.firebase.database.tubesock.WebSocketMessage;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class ThreadInitializer {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.ThreadInitializer>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.tubesock.ThreadInitializer interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							setName(param0: java.lang.Thread, param1: string): void;
+						});
+						public constructor();
+						public setName(param0: java.lang.Thread, param1: string): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class WebSocket {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocket>;
+						public static setThreadFactory(param0: java.util.concurrent.ThreadFactory, param1: com.google.firebase.database.tubesock.ThreadInitializer): void;
+						public blockClose(): void;
+						public constructor(param0: com.google.firebase.database.connection.ConnectionContext, param1: java.net.URI);
+						public close(): void;
+						public setEventHandler(param0: com.google.firebase.database.tubesock.WebSocketEventHandler): void;
+						public constructor(param0: com.google.firebase.database.connection.ConnectionContext, param1: java.net.URI, param2: string, param3: java.util.Map<string,string>);
+						public connect(): void;
+						public constructor(param0: com.google.firebase.database.connection.ConnectionContext, param1: java.net.URI, param2: string);
+						public send(param0: string): void;
+						public send(param0: native.Array<number>): void;
+					}
+					export module WebSocket {
+						export class State {
+							public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocket.State>;
+							public static NONE: com.google.firebase.database.tubesock.WebSocket.State;
+							public static CONNECTING: com.google.firebase.database.tubesock.WebSocket.State;
+							public static CONNECTED: com.google.firebase.database.tubesock.WebSocket.State;
+							public static DISCONNECTING: com.google.firebase.database.tubesock.WebSocket.State;
+							public static DISCONNECTED: com.google.firebase.database.tubesock.WebSocket.State;
+							public static values(): native.Array<com.google.firebase.database.tubesock.WebSocket.State>;
+							public static valueOf(param0: string): com.google.firebase.database.tubesock.WebSocket.State;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class WebSocketEventHandler {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocketEventHandler>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.database.tubesock.WebSocketEventHandler interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							onOpen(): void;
+							onMessage(param0: com.google.firebase.database.tubesock.WebSocketMessage): void;
+							onClose(): void;
+							onError(param0: com.google.firebase.database.tubesock.WebSocketException): void;
+							onLogMessage(param0: string): void;
+						});
+						public constructor();
+						public onOpen(): void;
+						public onMessage(param0: com.google.firebase.database.tubesock.WebSocketMessage): void;
+						public onError(param0: com.google.firebase.database.tubesock.WebSocketException): void;
+						public onLogMessage(param0: string): void;
+						public onClose(): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class WebSocketException {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocketException>;
+						public constructor(param0: string, param1: java.lang.Throwable);
+						public constructor(param0: string);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class WebSocketHandshake {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocketHandshake>;
+						public constructor(param0: java.net.URI, param1: string, param2: java.util.Map<string,string>);
+						public verifyServerHandshakeHeaders(param0: java.util.HashMap<string,string>): void;
+						public getHandshake(): native.Array<number>;
+						public verifyServerStatusLine(param0: string): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class WebSocketMessage {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocketMessage>;
+						public constructor(param0: native.Array<number>);
+						public isBinary(): boolean;
+						public getBytes(): native.Array<number>;
+						public isText(): boolean;
+						public getText(): string;
+						public constructor(param0: string);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class WebSocketReceiver {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocketReceiver>;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module tubesock {
+					export class WebSocketWriter {
+						public static class: java.lang.Class<com.google.firebase.database.tubesock.WebSocketWriter>;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module util {
+					export class GAuthToken {
+						public static class: java.lang.Class<com.google.firebase.database.util.GAuthToken>;
+						public static tryParseFromString(param0: string): com.google.firebase.database.util.GAuthToken;
+						public serializeToString(): string;
+						public constructor(param0: string, param1: java.util.Map<string,any>);
+						public getAuth(): java.util.Map<string,any>;
+						public getToken(): string;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module database {
+				export module util {
+					export class JsonMapper {
+						public static class: java.lang.Class<com.google.firebase.database.util.JsonMapper>;
+						public static serializeJson(param0: java.util.Map<string,any>): string;
+						public constructor();
+						public static serializeJsonValue(param0: any): string;
+						public static parseJson(param0: string): java.util.Map<string,any>;
+						public static parseJsonValue(param0: string): any;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+//Generics information:
+//com.google.firebase.database.GenericTypeIndicator:1
+//com.google.firebase.database.core.utilities.ImmutableTree:1
+//com.google.firebase.database.core.utilities.ImmutableTree.TreeVisitor:2
+//com.google.firebase.database.core.utilities.Pair:2
+//com.google.firebase.database.core.utilities.Predicate:1
+//com.google.firebase.database.core.utilities.Tree:1
+//com.google.firebase.database.core.utilities.Tree.TreeFilter:1
+//com.google.firebase.database.core.utilities.Tree.TreeVisitor:1
+//com.google.firebase.database.core.utilities.TreeNode:1
+//com.google.firebase.database.core.utilities.encoding.CustomClassMapper.BeanMapper:1
+//com.google.firebase.database.snapshot.LeafNode:1
 
