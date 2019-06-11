@@ -8,7 +8,7 @@ import {
   UploadFileResult
 } from "./storage";
 
-declare const android, com: any;
+const gmsTasks = (<any>com.google.android.gms).tasks;
 
 function getStorageRef(reject, arg) {
   if (typeof(com.google.firebase.storage) === "undefined") {
@@ -42,7 +42,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
 
       const storageReference = storageRef.child(arg.remoteFullPath);
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: uploadTaskSnapshot => {
           const metadata = uploadTaskSnapshot.getMetadata();
           resolve({
@@ -57,14 +57,14 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
           reject("Upload failed. " + exception);
         }
       });
 
       const onProgressListener = new com.google.firebase.storage.OnProgressListener({
-        onProgress: snapshot => {
+        onProgress: (snapshot: any) => {
           if (typeof(arg.onProgress) === "function") {
             const fractionCompleted = snapshot.getBytesTransferred() / snapshot.getTotalByteCount();
             arg.onProgress({
@@ -139,11 +139,11 @@ export function downloadFile(arg: DownloadFileOptions): Promise<string> {
 
       const storageReference = storageRef.child(arg.remoteFullPath);
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: downloadTaskSnapshot => resolve()
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => reject("Download failed. " + exception)
       });
 
@@ -189,13 +189,13 @@ export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
 
       const storageReference = storageRef.child(arg.remoteFullPath);
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: uri => {
           resolve(uri.toString());
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
           reject(exception.getMessage());
         }
@@ -224,13 +224,13 @@ export function deleteFile(arg: DeleteFileOptions): Promise<void> {
 
       const storageReference = storageRef.child(arg.remoteFullPath);
 
-      const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: () => {
           resolve();
         }
       });
 
-      const onFailureListener = new com.google.android.gms.tasks.OnFailureListener({
+      const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
           reject(exception.getMessage());
         }

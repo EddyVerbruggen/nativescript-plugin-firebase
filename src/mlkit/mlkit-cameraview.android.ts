@@ -6,8 +6,6 @@ declare const global: any;
 const ActivityCompatClass = useAndroidX() ? global.androidx.core.app.ActivityCompat : android.support.v4.app.ActivityCompat;
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
-// declare const com, android: any;
-
 class SizePair {
   pictureSize: {
     width: number;

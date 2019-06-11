@@ -4,7 +4,7 @@ import * as application from "tns-core-modules/application/application";
 import { PushNotificationModel } from "./messaging.ios";
 import { MessagingOptions } from "../firebase";
 
-declare const android, com, org, global: any;
+declare const com, global: any;
 const NotificationManagerCompatClass = useAndroidX() ? global.androidx.core.app.NotificationManagerCompat : android.support.v4.app.NotificationManagerCompat;
 
 let _launchNotification = null;
@@ -119,7 +119,8 @@ export function addOnMessageReceivedCallback(callback) {
 
       org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
           new org.nativescript.plugins.firebase.FirebasePluginListener({
-            success: notification => callback(JSON.parse(notification))
+            success: notification => callback(JSON.parse(notification)),
+            error: err => console.log("Error handling message: " + err)
           })
       );
 

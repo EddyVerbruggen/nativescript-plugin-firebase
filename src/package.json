@@ -85,7 +85,8 @@
     "generate.typings.android.mlkit": "npm run generate.typings.android --nativescript-plugin-firebase:typings=mlkit",
     "generate.typings.android.crashlytics": "npm run generate.typings.android --nativescript-plugin-firebase:typings=crashlytics",
     "generate.typings.android.inappmessaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=inappmessaging",
-    "generate.typings.android.performance": "npm run generate.typings.android --nativescript-plugin-firebase:typings=performance"
+    "generate.typings.android.performance": "npm run generate.typings.android --nativescript-plugin-firebase:typings=performance",
+    "generate.typings.android.nativescript-android-lib": "npm run generate.typings.android --nativescript-plugin-firebase:typings=nativescript-android-lib"
   },
   "repository": {
     "type": "git",
