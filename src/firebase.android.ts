@@ -405,33 +405,6 @@ firebase.init = arg => {
   });
 };
 
-firebase.fetchProvidersForEmail = email => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (typeof (email) !== "string") {
-        reject("A parameter representing an email address is required.");
-        return;
-      }
-
-      const onCompleteListener = new gmsTasks.OnCompleteListener({
-        onComplete: task /* <ProviderQueryResult> */ => {
-          if (!task.isSuccessful()) {
-            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-          } else {
-            const providerList = task.getResult().getProviders();
-            resolve(firebase.toJsObject(providerList));
-          }
-        }
-      });
-
-      com.google.firebase.auth.FirebaseAuth.getInstance().fetchProvidersForEmail(email).addOnCompleteListener(onCompleteListener);
-    } catch (ex) {
-      console.log("Error in firebase.fetchProvidersForEmail: " + ex);
-      reject(ex);
-    }
-  });
-};
-
 firebase.fetchSignInMethodsForEmail = email => {
   return new Promise((resolve, reject) => {
     try {

@@ -1007,8 +1007,6 @@ export function logout(): Promise<any>;
 
 export function unlink(providerId: string): Promise<User>;
 
-export function fetchProvidersForEmail(email: string): Promise<Array<string>>;
-
 export function fetchSignInMethodsForEmail(email: string): Promise<Array<string>>;
 
 export function sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<any>;

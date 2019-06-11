@@ -182,7 +182,7 @@ firebase.addAppDelegateMethods = appDelegate => {
                 }
               };
               const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailLink(rememberedEmail, userActivity.webpageURL.absoluteString);
-              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
               fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
@@ -227,28 +227,6 @@ firebase.addAppDelegateMethods = appDelegate => {
   if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
     firebaseMessaging.addBackgroundRemoteNotificationHandler(appDelegate);
   }
-};
-
-firebase.fetchProvidersForEmail = email => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (typeof (email) !== "string") {
-        reject("A parameter representing an email address is required.");
-        return;
-      }
-
-      FIRAuth.auth().fetchProvidersForEmailCompletion(email, (providerNSArray, error) => {
-        if (error) {
-          reject(error.localizedDescription);
-        } else {
-          resolve(firebaseUtils.toJsObject(providerNSArray));
-        }
-      });
-    } catch (ex) {
-      console.log("Error in firebase.fetchProvidersForEmail: " + ex);
-      reject(ex);
-    }
-  });
 };
 
 firebase.fetchSignInMethodsForEmail = email => {
@@ -781,12 +759,12 @@ firebase.login = arg => {
             if (error) {
               // ignore, as this one was probably already linked, so just return the user
               log("--- linking error: " + error.localizedDescription);
-              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             } else {
               onCompletionWithAuthResult(authData, error);
             }
           };
-          fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+          fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
         } else {
           fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletionWithAuthResult);
@@ -851,14 +829,14 @@ firebase.login = arg => {
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(authData, error);
                 }
               };
-              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
             } else {
-              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }, arg.phoneOptions.verificationPrompt);
         });
@@ -905,15 +883,15 @@ firebase.login = arg => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   log("--- linking error: " + error.localizedDescription);
-                  fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(authData);
                 }
               };
-              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }
         };
@@ -963,15 +941,15 @@ firebase.login = arg => {
               const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(user);
                 }
               };
-              fAuth.currentUser.linkAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInAndRetrieveDataWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
 
           } else {

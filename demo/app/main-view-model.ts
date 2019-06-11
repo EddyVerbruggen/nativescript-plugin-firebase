@@ -97,35 +97,6 @@ export class HelloWorldModel extends Observable {
         );
   }
 
-  public doWebFetchProvidersForEmail(): void {
-    const user = firebaseWebApi.auth().currentUser;
-    if (!user || !user.email) {
-      alert({
-        title: "Can't fetch providers",
-        message: "No user with an emailaddress logged in.",
-        okButtonText: "OK, makes sense.."
-      });
-      return;
-    }
-
-    firebaseWebApi.auth().fetchProvidersForEmail(user.email).then(
-        result => {
-          alert({
-            title: `Providers for ${user.email}`,
-            message: JSON.stringify(result), // likely to be ["password"]
-            okButtonText: "Thanks!"
-          });
-        },
-        errorMessage => {
-          alert({
-            title: "Fetch Providers for Email error",
-            message: errorMessage,
-            okButtonText: "OK, pity.."
-          });
-        }
-    );
-  }
-
   public doWebFetchSignInMethodsForEmail(): void {
     const user = firebaseWebApi.auth().currentUser;
     if (!user || !user.email) {
@@ -897,37 +868,6 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
-  }
-
-  public doFetchProvidersForEmail(): void {
-    firebase.getCurrentUser().then(
-        user => {
-          if (!user || !user.email) {
-            alert({
-              title: "Can't fetch providers",
-              message: "No user with emailaddress logged in.",
-              okButtonText: "OK, makes sense.."
-            });
-            return;
-          }
-
-          firebase.fetchProvidersForEmail(user.email).then(
-              result => {
-                alert({
-                  title: `Providers for ${user.email}`,
-                  message: JSON.stringify(result), // likely to be ["password"]
-                  okButtonText: "Thanks!"
-                });
-              },
-              errorMessage => {
-                alert({
-                  title: "Fetch Providers for Email error",
-                  message: errorMessage,
-                  okButtonText: "OK, pity.."
-                });
-              }
-          );
-        });
   }
 
   public doFetchSignInMethodsForEmail(): void {

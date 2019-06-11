@@ -28,8 +28,7 @@
             <Button row="2" col="0" text="anonymous login" tap="{{ doWebLoginAnonymously }}" class="button"/>
             <Button row="2" col="1" text="passwd login" tap="{{ doWebLoginByPassword }}" class="button"/>
 
-            <Button row="3" col="0" text="providers for email" tap="{{ doWebFetchProvidersForEmail }}" class="button"/>
-            <Button row="3" col="1" text="email sign-in methods" tap="{{ doWebFetchSignInMethodsForEmail }}" class="button"/>
+            <Button row="3" col="0" colSpan="2" text="email sign-in methods" tap="{{ doWebFetchSignInMethodsForEmail }}" class="button"/>
 
             <Button row="4" col="0" text="create pwd user" tap="{{ doWebCreateUser }}" class="button"/>
             <Button row="4" col="1" text="get current user" tap="{{ doWebGetCurrentUser }}" class="button"/>
@@ -116,8 +115,7 @@
             <Button row="8" col="0" text="phone login" tap="{{ doLoginByPhone }}" class="button"/>
             <Button row="8" col="1" text="update profile" tap="{{ doUpdateProfile }}" class="button"/>
 
-            <Button row="9" col="0" text="providers for email" tap="{{ doFetchProvidersForEmail }}" class="button"/>
-            <Button row="9" col="1" text="email sign-in methods" tap="{{ doFetchSignInMethodsForEmail }}" class="button"/>
+            <Button row="9" col="0" colSpan="2" text="email sign-in methods" tap="{{ doFetchSignInMethodsForEmail }}" class="button"/>
 
             <Button row="10" col="0" text="re-auth passwd" tap="{{ doReauthenticatePwdUser }}" class="button"/>
             <Button row="10" col="1" text="re-auth Facebook" tap="{{ doReauthenticateFacebookUser }}" class="button"/>
