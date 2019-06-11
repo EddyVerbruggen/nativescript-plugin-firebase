@@ -1,5 +1,5 @@
 ﻿import "./bundle-config";
-import * as application from 'tns-core-modules/application';
+import * as application from "tns-core-modules/application";
 import { UnhandledErrorEventData } from "tns-core-modules/application";
 
 // added this here so we can do some wiring

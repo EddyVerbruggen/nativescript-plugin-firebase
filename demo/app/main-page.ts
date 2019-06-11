@@ -1,6 +1,6 @@
-import * as observable from 'tns-core-modules/data/observable';
-import * as pages from 'tns-core-modules/ui/page';
-import { HelloWorldModel } from './main-view-model';
+import * as observable from "tns-core-modules/data/observable";
+import * as pages from "tns-core-modules/ui/page";
+import { HelloWorldModel } from "./main-view-model";
 
 const model = new HelloWorldModel();
 

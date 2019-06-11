@@ -16,7 +16,7 @@ import { Observable } from "tns-core-modules/data/observable";
 import * as fs from "tns-core-modules/file-system";
 import { isAndroid, isIOS } from "tns-core-modules/platform";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
-import { MessagingViewModel } from './messaging-view-model';
+import { MessagingViewModel } from "./messaging-view-model";
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
