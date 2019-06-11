@@ -56,7 +56,7 @@ export function setUserId(id: string): void {
 
 export function crash(): void {
   if (isCrashlyticsAvailable()) {
-    com.crashlytics.android.Crashlytics.crash();
+    com.crashlytics.android.Crashlytics.getInstance().crash();
   }
 }
 
