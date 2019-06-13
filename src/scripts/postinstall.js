@@ -4699,11 +4699,13 @@ module.exports = function($logger, $projectData, hookArgs) {
           if (fs.existsSync(xcodeProjectPath)) {
             var xcodeProject = xcode.project(xcodeProjectPath);
             xcodeProject.parseSync();
-	    // Xcode 10 require input File Field set to $(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)
-	    // see https://firebase.google.com/docs/crashlytics/get-started
-            var options = { shellPath: '/bin/sh', shellScript: '\"\${PODS_ROOT}/Fabric/run\"',
-			    inputPaths: ['"\$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\"']
-			};
+
+            // Xcode 10 requires 'inputPaths' set, see https://firebase.google.com/docs/crashlytics/get-started
+            var options = {
+              shellPath: '/bin/sh', shellScript: '\"\${PODS_ROOT}/Fabric/run\"',
+              inputPaths: ['"\$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\"']
+            };
+
             xcodeProject.addBuildPhase(
               [], 'PBXShellScriptBuildPhase', 'Configure Crashlytics', undefined, options
             ).buildPhase;
