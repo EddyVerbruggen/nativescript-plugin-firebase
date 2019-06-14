@@ -513,7 +513,8 @@ const string3 = \`
 \`;
 
 module.exports = function($logger, $projectData, hookArgs) {
-  const platform = (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform)).toLowerCase();
+  const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+  const platform = (platformFromHookArgs  || '').toLowerCase();
   return new Promise(function(resolve, reject) {
     const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare)) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
     if (isNativeProjectPrepared) {
@@ -615,7 +616,8 @@ function writeBuildscriptHookForFirestore(enable) {
 const path = require('path');
 
 module.exports = function($logger, $projectData, hookArgs) {
-  const platform = (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform)).toLowerCase();
+  const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+  const platform = (platformFromHookArgs  || '').toLowerCase();
   return new Promise(function(resolve, reject) {
     const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
     if (isNativeProjectPrepared) {
@@ -828,7 +830,8 @@ return new Promise(function(resolve, reject) {
         }
 
         var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
-        var platform = (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform)).toLowerCase();
+        const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+        const platform = (platformFromHookArgs  || '').toLowerCase();
 
         /* Create info file in platforms dir so we can detect changes in environment and force prepare if needed */
 
