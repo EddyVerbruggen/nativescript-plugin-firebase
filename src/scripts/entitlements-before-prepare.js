@@ -1,10 +1,10 @@
 var fs = require('fs');
 var path = require('path');
 
-module.exports = function (logger, platformsData, projectData, hookArgs) {
-  var platform = hookArgs.platform.toLowerCase(),
-      appResourcesDirectoryPath = projectData.appResourcesDirectoryPath,
-      entitlementsFile = path.join(appResourcesDirectoryPath, "iOS", projectData.projectName + ".entitlements"),
+module.exports = function (hookArgs, $projectData) {
+  var platform = (hookArgs.platform || hookArgs.prepareData.platform).toLowerCase(),
+      appResourcesDirectoryPath = $projectData.appResourcesDirectoryPath,
+      entitlementsFile = path.join(appResourcesDirectoryPath, "iOS", $projectData.projectName + ".entitlements"),
       platformResourcesDirectory = path.join(appResourcesDirectoryPath, 'iOS');
 
   // look for both <projectname.entitlements and app.entitlements
@@ -18,7 +18,7 @@ module.exports = function (logger, platformsData, projectData, hookArgs) {
       try {
         var buildData = fs.readFileSync(target).toString();
         if (!buildData.toString().match(/^\s*CODE_SIGN_ENTITLEMENTS/mg)) {
-          fs.appendFileSync(target, '\nCODE_SIGN_ENTITLEMENTS = ' + path.join(projectData.projectName, projectData.projectName + '.entitlements'));
+          fs.appendFileSync(target, '\nCODE_SIGN_ENTITLEMENTS = ' + path.join($projectData.projectName, $projectData.projectName + '.entitlements'));
         }
       } catch (error) {
         console.log("Error in hook 'entitlements-before-prepare.js': " + error);
