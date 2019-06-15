@@ -4685,7 +4685,8 @@ const string3 = \`
 \`;
 
 module.exports = function($logger, $projectData, hookArgs) {
-  const platform = hookArgs.platform.toLowerCase();
+  const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+  const platform = (platformFromHookArgs  || '').toLowerCase();
   return new Promise(function(resolve, reject) {
     const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
     if (isNativeProjectPrepared) {
@@ -4793,7 +4794,8 @@ function writeBuildscriptHookForFirestore(enable) {
 const path = require('path');
 
 module.exports = function($logger, $projectData, hookArgs) {
-  const platform = hookArgs.platform.toLowerCase();
+  const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+  const platform = (platformFromHookArgs  || '').toLowerCase();
   return new Promise(function(resolve, reject) {
     const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
     if (isNativeProjectPrepared) {
@@ -4985,7 +4987,7 @@ function writeGoogleServiceCopyHook() {
   console.log("Install google-service.json after-prepare copy hook.");
   try {
     var afterPrepareScriptContent =
-`
+        `
 var path = require("path");
 var fs = require("fs");
 
@@ -4994,7 +4996,7 @@ module.exports = function($logger, $projectData, hookArgs) {
 return new Promise(function(resolve, reject) {
 
         /* Decide whether to prepare for dev or prod environment */
-        var isReleaseBuild = !!(hookArgs.appFilesUpdaterOptions || hookArgs.prepareData).release;
+        var isReleaseBuild = (hookArgs.appFilesUpdaterOptions || hookArgs.prepareData).release;
         var validProdEnvs = ['prod','production'];
         var isProdEnv = false; // building with --env.prod or --env.production flag
         var env = (hookArgs.platformSpecificData || hookArgs.prepareData).env;
@@ -5006,7 +5008,8 @@ return new Promise(function(resolve, reject) {
         }
 
         var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
-        var platform = (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform) || '').toLowerCase();
+        const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+        const platform = (platformFromHookArgs  || '').toLowerCase();
 
         /* Create info file in platforms dir so we can detect changes in environment and force prepare if needed */
 
@@ -5069,7 +5072,6 @@ return new Promise(function(resolve, reject) {
     });
 };
 `;
-
     var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-copy-google-services.js");
     var afterPrepareDirPath = path.dirname(scriptPath);
     var hooksDirPath = path.dirname(afterPrepareDirPath);
@@ -5096,7 +5098,7 @@ return new Promise(function(resolve, reject) {
 var path = require("path");
 var fs = require("fs");
 
-module.exports = function($logger, $projectData, hookArgs) {
+module.exports = function($logger, hookArgs) {
     return new Promise(function(resolve, reject) {
 
         /* Decide whether to prepare for dev or prod environment */
@@ -5119,9 +5121,10 @@ module.exports = function($logger, $projectData, hookArgs) {
             for which environment {development|prod} the project was prepared. If needed, we delete the NS .nsprepareinfo
             file so we force a new prepare
         */
-        var platform = (hookArgs.checkForChangesOpts || hookArgs.prepareData).platform.toLowerCase();
-        var platformsDir = $projectData.platformsDir;
-        var appResourcesDirectoryPath = $projectData.appResourcesDirectoryPath;
+        var platform = (hookArgs.checkForChangesOpts || hookArgs.platformData).platform.toLowerCase();
+        var projectData = (hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData) || hookArgs.projectData;
+        var platformsDir = projectData.platformsDir;
+        var appResourcesDirectoryPath = projectData.appResourcesDirectoryPath;
         var forcePrepare = true; // whether to force NS to run prepare, defaults to true
         var npfInfoPath = path.join(platformsDir, platform, ".pluginfirebaseinfo");
         var nsPrepareInfoPath = path.join(platformsDir, platform, ".nsprepareinfo");

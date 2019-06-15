@@ -516,7 +516,7 @@ module.exports = function($logger, $projectData, hookArgs) {
   const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
   const platform = (platformFromHookArgs  || '').toLowerCase();
   return new Promise(function(resolve, reject) {
-    const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare)) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
+    const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
     if (isNativeProjectPrepared) {
       try {
         if (platform === 'ios') {
