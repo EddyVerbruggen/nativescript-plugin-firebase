@@ -58,7 +58,7 @@
     "test.ios.device": "cd ../demo && tns platform remove ios && tns test ios",
     "test.android": "cd ../demo && tns test android --justlaunch",
     "preparedemo": "npm run tsc && npm run package && cd ../demo && tns plugin add ../publish/package/*.tgz && tns install",
-    "preparedemo-ng": "npm run tsc && npm run package && cd ../demo-ng && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
+    "preparedemo-ng": "npm run tsc && npm run package && cd ../demo-ng && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz",
     "preparedemo-push": "npm run tsc && npm run package && cd ../demo-push && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
     "preparedemo-vue": "npm run tsc && npm run package && cd ../demo-vue && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
     "setupandinstall": "npm i && npm run tsc && npm run package && cd ../demo && npm i && cd ../demo-ng && npm i && cd ../demo-push && npm i && cd ../src && npm run tsc && cd ../demo && tns plugin add ../src && cd ../demo-ng && tns plugin add ../src  && cd ../demo-push && tns plugin add ../src && cd ../src",

@@ -6,9 +6,15 @@
 ## 9.0.0 (2019, June xx)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/103?closed=1)
 
-> Make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS SDKs
+#### BREAKING CHANGES
+
+> `fetchProvidersForEmail` has been removed - use `fetchSignInMethodsForEmail` instead.
 
 > Firebase Invites has been removed - use Dynamic Links instead! Also see https://firebase.google.com/docs/invites/deprecation and https://firebase.google.com/docs/dynamic-links/use-cases/user-to-user
+
+> If you're on NativeScript < 5.2 and target iOS, then it's recommended to stick with a plugin version < 9.0.0 because you _may_ run into incompatibilities with certain features.
+
+> Also, make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS SDKs.
 
 ## 8.3.2 (2019, May 14)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/101?closed=1)
