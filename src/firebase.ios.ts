@@ -327,7 +327,7 @@ firebase.init = arg => {
       initializeArguments = arg;
 
       // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
-      if (FIROptions.defaultOptions() !== null) {
+      if (FIROptions && FIROptions.defaultOptions() !== null) {
         FIROptions.defaultOptions().deepLinkURLScheme = NSBundle.mainBundle.bundleIdentifier;
       }
 
