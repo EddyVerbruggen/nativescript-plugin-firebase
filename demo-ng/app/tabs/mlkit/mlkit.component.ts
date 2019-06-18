@@ -338,7 +338,6 @@ export class MLKitComponent {
   }
 
   private scanBarcodeOnDevice(imageSource: ImageSource): void {
-    console.log(">>> imageSource.rotationAngle: " + imageSource.rotationAngle);
     firebase.mlkit.barcodescanning.scanBarcodesOnDevice({
       image: imageSource,
       formats: [BarcodeFormat.QR_CODE, BarcodeFormat.EAN_13]

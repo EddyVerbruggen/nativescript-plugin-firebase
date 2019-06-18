@@ -6,10 +6,10 @@
   "nativescript": {
     "id": "org.nativescript.firebasedemo.firestore",
     "tns-android": {
-      "version": "5.2.0"
+      "version": "5.4.0"
     },
     "tns-ios": {
-      "version": "5.2.0"
+      "version": "5.4.0"
     }
   },
   "dependencies": {
@@ -40,7 +40,7 @@
     "babylon": "6.18.0",
     "lazy": "1.0.11",
     "nativescript-dev-typescript": "~0.7.0",
-    "nativescript-dev-webpack": "^0.15.1",
+    "nativescript-dev-webpack": "0.24.1",
     "typescript": "~2.8.0"
   }
 }
