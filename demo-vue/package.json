@@ -14,7 +14,7 @@
     }
   },
   "dependencies": {
-    "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-9.0.0.tgz",
+    "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-9.0.1.tgz",
     "nativescript-theme-core": "^1.0.4",
     "nativescript-vue": "^2.0.0",
     "tns-core-modules": "^5.0.2"
