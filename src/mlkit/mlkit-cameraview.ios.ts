@@ -9,6 +9,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private previewLayer: AVCaptureVideoPreviewLayer;
   private cameraView: TNSMLKitCameraView;
 
+  public lastVisionImage;
+
   disposeNativeView(): void {
     super.disposeNativeView();
     if (this.captureSession) {
@@ -216,6 +218,8 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
     const onComplete = () => {
       this.detectorBusy = false;
     };
+
+    this.owner.get().lastVisionImage = image;
 
     if (this.detector.detectInImageCompletion) {
       this.detector.detectInImageCompletion(this.uiImageToFIRVisionImage(image), (result, error) => {

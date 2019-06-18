@@ -17,10 +17,9 @@ export interface MLKitScanBarcodesResultBounds {
 export interface MLKitScanBarcodesResultBarcode {
   value: string;
   format: string;
+  bounds?: MLKitScanBarcodesResultBounds;
   ios?: any;
   android?: any;
-  bounds?: MLKitScanBarcodesResultBounds;
-  // TODO details
 }
 
 export interface MLKitScanBarcodesOnDeviceResult extends MLKitVisionResult {

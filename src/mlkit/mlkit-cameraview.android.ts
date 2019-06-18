@@ -26,7 +26,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private bytesToByteBuffer = new Map();
   private pendingFrameData = null;
   protected rotation;
-  protected lastVisionImage;
+  public lastVisionImage;
   private detector: any;
   private camera;
 

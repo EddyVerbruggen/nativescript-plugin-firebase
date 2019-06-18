@@ -1,4 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
+import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./index";
 import { MLKitVisionOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
@@ -44,11 +45,47 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
         for (let i = 0, l = barcodes.count; i < l; i++) {
           const barcode: FIRVisionBarcode = barcodes.objectAtIndex(i);
+          const image: UIImage = this.lastVisionImage;
+
+          // the iOS image is rotated, so compensate for it when reporting these
+          let { x, y } = barcode.frame.origin;
+          let { width, height } = barcode.frame.size;
+
+          if (image) {
+            const origX = x;
+            const origWidth = width;
+
+            if (iosUtils.isLandscape()) {
+              if (UIDevice.currentDevice.orientation === UIDeviceOrientation.LandscapeRight) {
+                // the image is rotated 180 degrees
+                x = image.size.width - (width + x);
+                y = image.size.height - (height + y);
+              }
+            } else {
+              // the image is rotated 90 degrees to the left
+              x = image.size.height - (height + y);
+              y = origX;
+              width = height;
+              height = origWidth;
+            }
+
+            console.log("iosUtils.isLandscape(): " + iosUtils.isLandscape() + ", deviceOrientation: " + UIDevice.currentDevice.orientation);
+          }
+
           result.barcodes.push({
             value: barcode.rawValue,
             format: BarcodeFormat[barcode.format],
             ios: barcode,
-            bounds: barcode.frame
+            bounds: {
+              origin: {
+                x,
+                y
+              },
+              size: {
+                width,
+                height
+              }
+            }
           });
         }
 
