@@ -5121,7 +5121,7 @@ module.exports = function($logger, hookArgs) {
             for which environment {development|prod} the project was prepared. If needed, we delete the NS .nsprepareinfo
             file so we force a new prepare
         */
-        var platform = (hookArgs.checkForChangesOpts || hookArgs.platformData).platform.toLowerCase();
+        var platform = (hookArgs.checkForChangesOpts || hookArgs.prepareData).platform.toLowerCase();
         var projectData = (hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData) || hookArgs.projectData;
         var platformsDir = projectData.platformsDir;
         var appResourcesDirectoryPath = projectData.appResourcesDirectoryPath;
