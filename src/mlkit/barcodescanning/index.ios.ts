@@ -46,6 +46,8 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
         for (let i = 0, l = barcodes.count; i < l; i++) {
           const barcode: FIRVisionBarcode = barcodes.objectAtIndex(i);
           const image: UIImage = this.lastVisionImage;
+          let imageWidth = image.size.width;
+          let imageHeight = image.size.height;
 
           // the iOS image is rotated, so compensate for it when reporting these
           let { x, y } = barcode.frame.origin;
@@ -54,6 +56,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
           if (image) {
             const origX = x;
             const origWidth = width;
+            const origImageWidth = imageWidth;
 
             if (iosUtils.isLandscape()) {
               if (UIDevice.currentDevice.orientation === UIDeviceOrientation.LandscapeRight) {
@@ -67,9 +70,9 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
               y = origX;
               width = height;
               height = origWidth;
+              imageWidth = imageHeight;
+              imageHeight = origImageWidth;
             }
-
-            console.log("iosUtils.isLandscape(): " + iosUtils.isLandscape() + ", deviceOrientation: " + UIDevice.currentDevice.orientation);
           }
 
           result.barcodes.push({
@@ -85,6 +88,10 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
                 width,
                 height
               }
+            },
+            image: {
+              width: imageWidth,
+              height: imageHeight
             }
           });
         }
@@ -122,7 +129,10 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
     try {
       const barcodeDetector = getBarcodeDetector(options.formats);
 
-      barcodeDetector.detectInImageCompletion(getImage(options), (barcodes: NSArray<FIRVisionBarcode>, error: NSError) => {
+      const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
+      const firImage = FIRVisionImage.alloc().initWithImage(image);
+
+      barcodeDetector.detectInImageCompletion(firImage, (barcodes: NSArray<FIRVisionBarcode>, error: NSError) => {
         if (error !== null) {
           reject(error.localizedDescription);
 
@@ -137,7 +147,11 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
               value: barcode.rawValue,
               format: BarcodeFormat[barcode.format],
               ios: barcode,
-              bounds: barcode.frame
+              bounds: barcode.frame,
+              image: {
+                width: image.size.width,
+                height: image.size.height
+              }
             });
           }
           resolve(result);
@@ -148,9 +162,4 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
       reject(ex);
     }
   });
-}
-
-function getImage(options: MLKitVisionOptions): FIRVisionImage {
-  const image: UIImage = options.image instanceof ImageSource ? options.image.ios : options.image.imageSource.ios;
-  return FIRVisionImage.alloc().initWithImage(image);
 }

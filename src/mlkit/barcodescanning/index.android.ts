@@ -1,6 +1,5 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult, MLKitScanBarcodesResultBounds } from "./";
-import { MLKitVisionOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 import * as application from "tns-core-modules/application";
 
@@ -68,6 +67,9 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
         };
 
         if (barcodes && barcodes.size() > 0) {
+
+          const image: android.graphics.Bitmap = this.lastVisionImage ? this.lastVisionImage.getBitmap() : null;
+
           // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
           for (let i = 0; i < barcodes.size(); i++) {
             const barcode = barcodes.get(i);
@@ -75,7 +77,11 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
               value: barcode.getRawValue(),
               format: BarcodeFormat[barcode.getFormat()],
               android: barcode,
-              bounds: boundingBoxToBounds(barcode.getBoundingBox())
+              bounds: boundingBoxToBounds(barcode.getBoundingBox()),
+              image: !image ? null : {
+                width: image.getWidth(),
+                height: image.getHeight()
+              }
             });
           }
 
@@ -124,6 +130,9 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
     try {
       const firebaseVisionBarcodeDetector = getBarcodeDetector(options.formats);
 
+      const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
+      const firImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
+
       const onSuccessListener = new gmsTasks.OnSuccessListener({
         onSuccess: barcodes => {
           const result = <MLKitScanBarcodesOnDeviceResult>{
@@ -138,7 +147,11 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
                 value: barcode.getRawValue(),
                 format: BarcodeFormat[barcode.getFormat()],
                 android: barcode,
-                bounds: boundingBoxToBounds(barcode.getBoundingBox())
+                bounds: boundingBoxToBounds(barcode.getBoundingBox()),
+                image: {
+                  width: image.getWidth(),
+                  height: image.getHeight()
+                }
               });
             }
           }
@@ -153,7 +166,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
       });
 
       firebaseVisionBarcodeDetector
-          .detectInImage(getImage(options))
+          .detectInImage(firImage)
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 
@@ -162,9 +175,4 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
       reject(ex);
     }
   });
-}
-
-function getImage(options: MLKitVisionOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
-  const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
-  return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 }
