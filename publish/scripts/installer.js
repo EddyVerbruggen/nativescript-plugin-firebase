@@ -4,7 +4,15 @@ var prompt = require('prompt-lite');
 
 const { execSync } = require('child_process');
 const semver = require('semver');
-const tnsVersionFull = execSync('tns --version', { encoding: 'ascii'});
+// In case the current Node.js version is not supported by CLI, a warning in `tns --version` output is shown.
+// Sample output:
+//
+/*Support for Node.js ^8.0.0 is deprecated and will be removed in one of the next releases of NativeScript. Please, upgrade to the latest Node.js LTS version.
+
+6.0.0
+*/
+// Extract the actual version (6.0.0) from it.
+const tnsVersionFull = (execSync('tns --version', { encoding: 'ascii'}).match(/^(?:\d+\.){2}\d+.*?$/m) || [])[0];
 
 // iOS modern build system is supported from version NativeScript-CLI version 5.2.0
 const supportsIOSModernBuildSystem = tnsVersionFull.indexOf("5.2.0-") > -1 || semver.gte(tnsVersionFull, "5.2.0");
