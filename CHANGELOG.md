@@ -16,6 +16,8 @@
 
 > Firebase Invites has been removed - use Dynamic Links instead! Also see https://firebase.google.com/docs/invites/deprecation and https://firebase.google.com/docs/dynamic-links/use-cases/user-to-user
 
+> Firebase crash reporting has been removed from the SDKs. Use Crashlytics instead. This also means `firebase.sendCrashLog` is gone. Use `firebase.crashlytics.sendCrashLog()` instead.
+
 > If you're on NativeScript < 5.2 and target iOS, then it's recommended to stick with a plugin version < 9.0.0 because you _may_ run into incompatibilities with certain features.
 
 > Also, make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS SDKs.
