@@ -117,119 +117,124 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       if (!this.surfaceView) {
         return;
       }
-      const surfaceHolder = this.surfaceView.getHolder();
-      const cameraFacingRequested = this.preferFrontCamera ? android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT : android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
-      const cameraInfo = new android.hardware.Camera.CameraInfo();
+      try {
 
-      let requestedCameraId = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK; // use this as the default
-      for (let i = 0; i < android.hardware.Camera.getNumberOfCameras(); ++i) {
-        android.hardware.Camera.getCameraInfo(i, cameraInfo);
-        if (cameraInfo.facing === cameraFacingRequested) {
-          requestedCameraId = i;
-          break;
-        }
-      }
-      this.camera = android.hardware.Camera.open(requestedCameraId);
+        const surfaceHolder = this.surfaceView.getHolder();
+        const cameraFacingRequested = this.preferFrontCamera ? android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT : android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
+        const cameraInfo = new android.hardware.Camera.CameraInfo();
 
-      let sizePair = this.selectSizePair(this.camera, 1400, 1200); // TODO based on wrapping frame
-
-      if (!sizePair) {
-        console.log("Could not find suitable preview size.");
-        return;
-      }
-
-      const pictureSize = sizePair.pictureSize;
-      const previewSize = sizePair.previewSize;
-
-      console.log("sizePair.pictureSize: " + pictureSize.width + "x" + pictureSize.height);
-      console.log("sizePair.previewSize: " + previewSize.width + "x" + previewSize.height);
-
-      const parameters = this.camera.getParameters();
-
-      if (pictureSize) {
-        parameters.setPictureSize(pictureSize.width, pictureSize.height);
-      }
-      parameters.setPreviewSize(previewSize.width, previewSize.height);
-      parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
-
-      this.setRotation(this.camera, parameters, requestedCameraId);
-
-      if (parameters.getSupportedFocusModes().contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
-        parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-      }
-
-      if (this.torchOn) {
-        if (parameters.getSupportedFlashModes() && parameters.getSupportedFlashModes().contains(android.hardware.Camera.Parameters.FLASH_MODE_TORCH)) {
-          parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
-        }
-      }
-
-      this.camera.setParameters(parameters);
-
-      this.detector = this.createDetector();
-      const onSuccessListener = this.createSuccessListener();
-      const onFailureListener = this.createFailureListener();
-
-      let metadata =
-          new com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.Builder()
-              .setFormat(com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-              .setWidth(previewSize.width)
-              .setHeight(previewSize.height)
-              .setRotation(this.rotation)
-              .build();
-
-      let throttle = 0;
-      this.camera.setPreviewCallbackWithBuffer(new android.hardware.Camera.PreviewCallback({
-        onPreviewFrame: (byteArray, camera) => {
-
-          if (this.pendingFrameData !== null) {
-            camera.addCallbackBuffer(this.pendingFrameData.array());
-            this.pendingFrameData = null;
-          }
-
-          if (!this.bytesToByteBuffer.has(byteArray)) {
-            console.log("Skipping frame");
-            return;
-          }
-
-          this.pendingFrameData = this.bytesToByteBuffer.get(byteArray);
-
-          if (throttle++ % this.processEveryNthFrame !== 0) {
-            return;
-          }
-
-          let data = this.pendingFrameData;
-          // pendingFrameData = null;
-
-          if (this.detector.processImage) {
-            this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
-            this.detector
-                .processImage(this.lastVisionImage)
-                .addOnSuccessListener(onSuccessListener)
-                .addOnFailureListener(onFailureListener);
-          } else if (this.detector.detectInImage) {
-            this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
-            this.detector
-                .detectInImage(this.lastVisionImage)
-                .addOnSuccessListener(onSuccessListener)
-                .addOnFailureListener(onFailureListener);
-          } else {
-            this.runDetector(data, previewSize.width, previewSize.height);
+        let requestedCameraId = android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK; // use this as the default
+        for (let i = 0; i < android.hardware.Camera.getNumberOfCameras(); ++i) {
+          android.hardware.Camera.getCameraInfo(i, cameraInfo);
+          if (cameraInfo.facing === cameraFacingRequested) {
+            requestedCameraId = i;
+            break;
           }
         }
-      }));
+        this.camera = android.hardware.Camera.open(requestedCameraId);
 
-      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
-      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
-      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
-      this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+        let sizePair = this.selectSizePair(this.camera, 1400, 1200); // TODO based on wrapping frame
 
-      this.camera.setPreviewDisplay(surfaceHolder);
+        if (!sizePair) {
+          console.log("Could not find suitable preview size.");
+          return;
+        }
 
-      if (!this.pause) {
-        this.camera.startPreview();
+        const pictureSize = sizePair.pictureSize;
+        const previewSize = sizePair.previewSize;
+
+        console.log("sizePair.pictureSize: " + pictureSize.width + "x" + pictureSize.height);
+        console.log("sizePair.previewSize: " + previewSize.width + "x" + previewSize.height);
+
+        const parameters = this.camera.getParameters();
+
+        if (pictureSize) {
+          parameters.setPictureSize(pictureSize.width, pictureSize.height);
+        }
+        parameters.setPreviewSize(previewSize.width, previewSize.height);
+        parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
+
+        this.setRotation(this.camera, parameters, requestedCameraId);
+
+        if (parameters.getSupportedFocusModes().contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+          parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+        }
+
+        if (this.torchOn) {
+          if (parameters.getSupportedFlashModes() && parameters.getSupportedFlashModes().contains(android.hardware.Camera.Parameters.FLASH_MODE_TORCH)) {
+            parameters.setFlashMode(android.hardware.Camera.Parameters.FLASH_MODE_TORCH);
+          }
+        }
+
+        this.camera.setParameters(parameters);
+
+        this.detector = this.createDetector();
+        const onSuccessListener = this.createSuccessListener();
+        const onFailureListener = this.createFailureListener();
+
+        let metadata =
+            new com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.Builder()
+                .setFormat(com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                .setWidth(previewSize.width)
+                .setHeight(previewSize.height)
+                .setRotation(this.rotation)
+                .build();
+
+        let throttle = 0;
+        this.camera.setPreviewCallbackWithBuffer(new android.hardware.Camera.PreviewCallback({
+          onPreviewFrame: (byteArray, camera) => {
+
+            if (this.pendingFrameData !== null) {
+              camera.addCallbackBuffer(this.pendingFrameData.array());
+              this.pendingFrameData = null;
+            }
+
+            if (!this.bytesToByteBuffer.has(byteArray)) {
+              console.log("Skipping frame");
+              return;
+            }
+
+            this.pendingFrameData = this.bytesToByteBuffer.get(byteArray);
+
+            if (throttle++ % this.processEveryNthFrame !== 0) {
+              return;
+            }
+
+            let data = this.pendingFrameData;
+            // pendingFrameData = null;
+
+            if (this.detector.processImage) {
+              this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
+              this.detector
+                  .processImage(this.lastVisionImage)
+                  .addOnSuccessListener(onSuccessListener)
+                  .addOnFailureListener(onFailureListener);
+            } else if (this.detector.detectInImage) {
+              this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
+              this.detector
+                  .detectInImage(this.lastVisionImage)
+                  .addOnSuccessListener(onSuccessListener)
+                  .addOnFailureListener(onFailureListener);
+            } else {
+              this.runDetector(data, previewSize.width, previewSize.height);
+            }
+          }
+        }));
+
+        this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+        this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+        this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+        this.camera.addCallbackBuffer(this.createPreviewBuffer(previewSize));
+
+        this.camera.setPreviewDisplay(surfaceHolder);
+
+        if (!this.pause) {
+          this.camera.startPreview();
+        }
+
+      } catch (e) {
+        console.log("Error in Firebase MLKit's runCamera function: " + e);
       }
-
     }, 500);
   }
 
