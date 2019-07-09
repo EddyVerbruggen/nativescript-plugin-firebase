@@ -141,12 +141,31 @@ export function addOnMessageReceivedCallback(callback) {
 export function addOnPushTokenReceivedCallback(callback) {
   return new Promise((resolve, reject) => {
     try {
+      let tokenReturned = false;
       org.nativescript.plugins.firebase.FirebasePlugin.setOnPushTokenReceivedCallback(
           new org.nativescript.plugins.firebase.FirebasePluginListener({
-            success: token => callback(token),
+            success: token => {
+              tokenReturned = true;
+              callback(token);
+            },
             error: err => console.log("addOnPushTokenReceivedCallback error: " + err)
           })
       );
+
+      // make sure we return a token if we already have it
+      setTimeout(() => {
+        if (!tokenReturned) {
+          getSenderId().then(senderId => {
+            org.nativescript.plugins.firebase.FirebasePlugin.getCurrentPushToken(
+                senderId,
+                new org.nativescript.plugins.firebase.FirebasePluginListener({
+                  success: token => callback(token),
+                  error: err => console.log(err)
+                })
+            );
+          });
+        }
+      }, 2000);
 
       resolve();
     } catch (ex) {
