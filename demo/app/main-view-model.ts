@@ -402,7 +402,7 @@ export class HelloWorldModel extends Observable {
           this.set("userEmailOrPhone", data.user.email ? data.user.email : (data.user.phoneNumber ? data.user.phoneNumber : "N/A"));
         }
       },
-      // uncomment in order to testi push wiring during 'init' for iOS (instead of adding these callbacks later):
+      // uncomment in order to test push wiring during 'init' (instead of adding these callbacks later):
       /*
       onPushTokenReceivedCallback: token => {
         // you can use this token to send to your own backend server,
@@ -410,8 +410,7 @@ export class HelloWorldModel extends Observable {
         console.log("Firebase plugin received a push token: " + token);
         // this is for iOS, to copy the token onto the clipboard
         if (isIOS) {
-          const pasteboard = iosUtils.getter(UIPasteboard, UIPasteboard.generalPasteboard);
-          pasteboard.setValueForPasteboardType("[Firebase demo app] Last push token received: " + token, kUTTypePlainText);
+          UIPasteboard.generalPasteboard.setValueForPasteboardType("[Firebase demo app] Last push token received: " + token, kUTTypePlainText);
         }
       },
       onMessageReceivedCallback: message => {
