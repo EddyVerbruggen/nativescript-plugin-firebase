@@ -1,6 +1,5 @@
 import { device } from "tns-core-modules/platform/platform";
 import { DeviceType } from "tns-core-modules/ui/enums/enums";
-import { ios as iOSUtils } from "tns-core-modules/utils/utils";
 import { firebase } from "../firebase-common";
 import { BannerOptions, InterstitialOptions, PreloadRewardedVideoAdOptions, ShowRewardedVideoAdOptions } from "./admob";
 import { AD_SIZE, BANNER_DEFAULTS, rewardedVideoCallbacks } from "./admob-common";
@@ -26,7 +25,7 @@ export function showBanner(arg: BannerOptions): Promise<any> {
         firebase.admob.adView = null;
       }
 
-      BANNER_DEFAULTS.view = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController.view;
+      BANNER_DEFAULTS.view = UIApplication.sharedApplication.keyWindow.rootViewController.view;
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
       _bannerOptions = settings;
       const view = settings.view;
@@ -61,8 +60,8 @@ export function showBanner(arg: BannerOptions): Promise<any> {
         adRequest.keywords = settings.keywords;
       }
 
-      firebase.admob.adView.rootViewController = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController;
-      // var statusbarFrame = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).statusBarFrame;
+      firebase.admob.adView.rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+      // var statusbarFrame = UIApplication.sharedApplication.statusBarFrame;
 
       firebase.admob.adView.loadRequest(adRequest);
 
@@ -141,7 +140,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
       // if no arg is passed, the interstitial has probably been preloaded
       if (!arg) {
         if (firebase.admob.interstitialView) {
-          firebase.admob.interstitialView.presentFromRootViewController(iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+          firebase.admob.interstitialView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
           resolve();
         } else {
           reject("Please call 'preloadInterstitial' first");
@@ -158,7 +157,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
           reject(error.localizedDescription);
         } else {
           // now we can safely show it
-          firebase.admob.interstitialView.presentFromRootViewController(iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+          firebase.admob.interstitialView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
           resolve();
         }
         CFRelease(delegate);
@@ -268,7 +267,7 @@ export function showRewardedVideoAd(arg?: ShowRewardedVideoAdOptions): Promise<a
         rewardedVideoCallbacks.onCompleted = arg.onCompleted;
       }
 
-      firebase.admob.rewardedAdVideoView.presentFromRootViewController(iOSUtils.getter(UIApplication, UIApplication.sharedApplication).keyWindow.rootViewController);
+      firebase.admob.rewardedAdVideoView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
       resolve();
 
     } catch (ex) {
@@ -315,7 +314,7 @@ function _getBannerType(size): any {
     // return kGADAdSizeSkyscraper;
     return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size === AD_SIZE.SMART_BANNER || size === AD_SIZE.FLUID) {
-    const orientation = iOSUtils.getter(UIDevice, UIDevice.currentDevice).orientation;
+    const orientation = UIDevice.currentDevice.orientation;
     const isIPad = device.deviceType === DeviceType.Tablet;
     if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;

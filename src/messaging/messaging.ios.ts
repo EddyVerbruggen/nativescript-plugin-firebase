@@ -1,15 +1,10 @@
-import * as application from "tns-core-modules/application/application";
 import * as applicationSettings from "tns-core-modules/application-settings";
-import { ios as iOSUtils } from "tns-core-modules/utils/utils";
+import * as application from "tns-core-modules/application/application";
 import { device } from "tns-core-modules/platform/platform";
-import { firebaseUtils } from "../utils";
-import { firebase } from "../firebase-common";
-import {
-  IosInteractiveNotificationAction,
-  IosInteractiveNotificationCategory,
-  IosInteractiveNotificationType
-} from "./messaging";
 import { MessagingOptions } from "../firebase";
+import { firebase } from "../firebase-common";
+import { firebaseUtils } from "../utils";
+import { IosInteractiveNotificationAction, IosInteractiveNotificationCategory, IosInteractiveNotificationType } from "./messaging";
 
 let _notificationActionTakenCallback: Function;
 let _pendingNotifications: Array<any> = [];
@@ -235,9 +230,8 @@ export function registerForInteractivePush(model?: PushNotificationModel): void 
     nativeCategories.push(nativeCategory);
   });
 
-  const center = iOSUtils.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
   const nsSetCategories = <NSSet<UNNotificationCategory>>new NSSet(<any>nativeCategories);
-  center.setNotificationCategories(nsSetCategories);
+  UNUserNotificationCenter.currentNotificationCenter().setNotificationCategories(nsSetCategories);
 
   if (model.onNotificationActionTakenCallback) {
     _addOnNotificationActionTakenCallback(model.onNotificationActionTakenCallback);
@@ -341,11 +335,9 @@ export class NotificationActionResponse {
 }
 
 export function areNotificationsEnabled() {
-  let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
-
   // to check if also the app is registered use app.registeredForRemoteNotifications,
   // this below checks if user has enabled notifications for the app
-  return app.currentUserNotificationSettings.types > 0;
+  return UIApplication.sharedApplication.currentUserNotificationSettings.types > 0;
 }
 
 const updateUserInfo = userInfoJSON => {
@@ -367,7 +359,7 @@ const updateUserInfo = userInfoJSON => {
 };
 
 function _registerForRemoteNotifications(resolve?, reject?) {
-  let app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+  let app = UIApplication.sharedApplication;
   if (!app) {
     application.on("launch", () => _registerForRemoteNotifications(resolve, reject));
     return;
@@ -385,11 +377,10 @@ function _registerForRemoteNotifications(resolve?, reject?) {
 
   if (parseInt(device.osVersion) >= 10) {
     const authorizationOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge;
-    const curNotCenter = iOSUtils.getter(UNUserNotificationCenter, UNUserNotificationCenter.currentNotificationCenter);
-    curNotCenter.requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, (granted, error) => {
+    UNUserNotificationCenter.currentNotificationCenter().requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, (granted, error) => {
       if (!error) {
         if (app === null) {
-          app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+          app = UIApplication.sharedApplication;
         }
         if (app !== null) {
           // see https://developer.apple.com/documentation/uikit/uiapplication/1623078-registerforremotenotifications
@@ -421,7 +412,7 @@ function _registerForRemoteNotifications(resolve?, reject?) {
           }
         }
 
-        userInfoJSON.foreground = iOSUtils.getter(UIApplication, UIApplication.sharedApplication).applicationState === UIApplicationState.Active;
+        userInfoJSON.foreground = UIApplication.sharedApplication.applicationState === UIApplicationState.Active;
 
         _pendingNotifications.push(userInfoJSON);
         if (_receivedNotificationCallback) {
@@ -429,7 +420,7 @@ function _registerForRemoteNotifications(resolve?, reject?) {
         }
       });
 
-      curNotCenter.delegate = _userNotificationCenterDelegate;
+      UNUserNotificationCenter.currentNotificationCenter().delegate = _userNotificationCenterDelegate;
     }
 
     if (typeof (FIRMessaging) !== "undefined") {
@@ -444,7 +435,7 @@ function _registerForRemoteNotifications(resolve?, reject?) {
           userInfoJSON.body = asJs.body;
         }
 
-        const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+        const app = UIApplication.sharedApplication;
         if (app.applicationState === UIApplicationState.Active) {
           userInfoJSON.foreground = true;
           if (_receivedNotificationCallback) {
@@ -481,7 +472,7 @@ function _addOnNotificationActionTakenCallback(callback: Function) {
 }
 
 function _processPendingNotifications() {
-  const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+  const app = UIApplication.sharedApplication;
   if (!app) {
     application.on("launch", () => _processPendingNotifications());
     return;
@@ -499,7 +490,7 @@ function _processPendingNotifications() {
 }
 
 function _processPendingActionTakenNotifications() {
-  const app = iOSUtils.getter(UIApplication, UIApplication.sharedApplication);
+  const app = UIApplication.sharedApplication;
   if (!app) {
     application.on("launch", () => _processPendingNotifications());
     return;
