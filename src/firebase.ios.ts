@@ -1679,18 +1679,18 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
       fixSpecialFields(data);
       nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    };
+    }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
       fixSpecialFields(data);
       nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    };
+    }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
       nativeWriteBatch.deleteDocument(documentRef.ios);
       return this;
-    };
+    }
 
     commit(): Promise<void> {
       return new Promise<void>((resolve, reject) => {
@@ -1716,19 +1716,19 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
     public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
       const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError(documentRef.ios);
       return new DocumentSnapshot(docSnapshot);
-    };
+    }
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    };
+    }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    };
+    }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
       nativeTransaction.deleteDocument(documentRef.ios);
@@ -2117,7 +2117,7 @@ firebase.firestore.getCollection = (collectionPath: string, options?: firestore.
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
-          source = FIRFirestoreSource.Cache
+          source = FIRFirestoreSource.Cache;
         } else if (options.source === "server") {
           source = FIRFirestoreSource.Server;
         }
@@ -2156,7 +2156,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
-          source = FIRFirestoreSource.Cache
+          source = FIRFirestoreSource.Cache;
         } else if (options.source === "server") {
           source = FIRFirestoreSource.Server;
         }

@@ -1986,17 +1986,17 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
       this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
     }
     return this;
-  };
+  }
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
     this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
     return this;
-  };
+  }
 
   public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
     this.nativeWriteBatch.delete(documentRef.android);
     return this;
-  };
+  }
 
   public commit(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -2441,7 +2441,7 @@ firebase.firestore.getCollection = (collectionPath: string, options?: firestore.
       let source = com.google.firebase.firestore.Source.DEFAULT;
       if (options && options.source) {
         if (options.source === "cache") {
-          source = com.google.firebase.firestore.Source.CACHE
+          source = com.google.firebase.firestore.Source.CACHE;
         } else if (options.source === "server") {
           source = com.google.firebase.firestore.Source.SERVER;
         }
@@ -2488,7 +2488,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
       let source = com.google.firebase.firestore.Source.DEFAULT;
       if (options && options.source) {
         if (options.source === "cache") {
-          source = com.google.firebase.firestore.Source.CACHE
+          source = com.google.firebase.firestore.Source.CACHE;
         } else if (options.source === "server") {
           source = com.google.firebase.firestore.Source.SERVER;
         }
