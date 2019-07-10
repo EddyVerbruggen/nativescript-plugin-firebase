@@ -68,7 +68,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
         if (barcodes && barcodes.size() > 0) {
 
-          const image: android.graphics.Bitmap = this.lastVisionImage ? this.lastVisionImage.getBitmap() : null;
+          const image: android.graphics.Bitmap = this.lastVisionImage && this.lastVisionImage.getBitmap ? this.lastVisionImage.getBitmap() : null;
 
           // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
           for (let i = 0; i < barcodes.size(); i++) {
