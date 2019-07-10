@@ -22,7 +22,7 @@ function getStorageRef(reject, arg) {
   }
 
   if (arg.bucket) {
-    return com.google.firebase.storage.FirebaseStorage.getInstance().getReferenceFromUrl(arg.bucket);
+    return com.google.firebase.storage.FirebaseStorage.getInstance(arg.bucket).getReference();
   } else if (firebase.storageBucket) {
     return firebase.storageBucket;
   } else {
