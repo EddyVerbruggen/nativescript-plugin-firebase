@@ -12,6 +12,7 @@ Go to you app's root folder and remove `firebase.nativescript.json`, then run `n
 ## Demo app
 I've tried applying best practices to a [dedicated push-only demo app](/demo-push).
 
+## ⚠️ Important ⚠️
 Two important things to keep in mind are:
 - `require` (not `import`!) the plugin in [app.js/app.ts](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/e18e546ac1b96fea1d7ce71c5ae3453a8955cc17/demo-push/app/app.ts#L5) (or `main.ts`, or any other file that bootstraps your app).
 - Show [your own consent screen](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/e18e546ac1b96fea1d7ce71c5ae3453a8955cc17/demo-push/app/push-view-model.ts#L33-L43) before iOS requests permission, because **a)** the default popup (that'll also still be shown) isn't very friendly/configurable, and **b)** once the user denies permission they have to go to the settings app as you app can only request permission once.
