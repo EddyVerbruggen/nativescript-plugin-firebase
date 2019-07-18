@@ -331,7 +331,9 @@ firebase.init = arg => {
         FIROptions.defaultOptions().deepLinkURLScheme = NSBundle.mainBundle.bundleIdentifier;
       }
 
-      FIRAnalytics.setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
+      if (typeof (FIRAnalytics) !== "undefined" && FIRAnalytics.setAnalyticsCollectionEnabled) {
+        FIRAnalytics.setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
+      }
 
       if (!firebase._configured) {
         firebase._configured = true;
