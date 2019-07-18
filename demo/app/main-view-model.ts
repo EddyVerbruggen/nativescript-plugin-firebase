@@ -395,7 +395,7 @@ export class HelloWorldModel extends Observable {
       crashlyticsCollectionEnabled: true,
       // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
-      // analyticsCollectionEnabled: false, // default true
+      analyticsCollectionEnabled: false, // default true
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
         if (data.loggedIn) {
