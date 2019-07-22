@@ -477,7 +477,7 @@ firebase.getRemoteConfig = arg => {
           resolve(result);
 
         } else {
-          reject(error.localizedDescription);
+          reject(error ? error.localizedDescription : "Unknown error, fetch status: " + remoteConfigFetchStatus);
         }
       };
 
