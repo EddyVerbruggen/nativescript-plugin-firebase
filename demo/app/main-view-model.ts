@@ -466,10 +466,11 @@ export class HelloWorldModel extends Observable {
     firebase.analytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
-      parameters: [{ // optional
-        key: "item_id",
-        value: "p7655"
-      },
+      parameters: [
+        { // optional
+          key: "item_id",
+          value: "p7655"
+        },
         {
           key: "item_name",
           value: "abcd"
@@ -1088,8 +1089,8 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.GOOGLE,
       googleOptions: {
         scopes: [
-            "https://www.googleapis.com/auth/contacts.readonly",
-            "https://www.googleapis.com/auth/user.birthday.read"
+          "https://www.googleapis.com/auth/contacts.readonly",
+          "https://www.googleapis.com/auth/user.birthday.read"
         ]
       }
     }).then(

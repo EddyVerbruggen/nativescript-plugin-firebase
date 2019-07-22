@@ -1,15 +1,12 @@
-import {
-  LogEventOptions,
-  SetScreenNameOptions,
-  SetUserPropertyOptions,
-  LogComplexEventOptions
-} from "./analytics";
+import { LogComplexEventOptions, LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from "./analytics";
+import { validateAnalyticsKey, validateAnalyticsParam } from "./analytics-common";
 
 export function logEvent(options: LogEventOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-      if (options.key === undefined) {
-        reject("Argument 'key' is missing");
+      const validationError = validateAnalyticsKey(options.key);
+      if (validationError !== undefined) {
+        reject(validationError);
         return;
       }
 
@@ -17,6 +14,12 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       if (options.parameters !== undefined) {
         for (let p in options.parameters) {
           const param = options.parameters[p];
+          const validationParamError = validateAnalyticsParam(param);
+          if (validationParamError !== undefined) {
+            reject(validationParamError);
+            return;
+          }
+
           if (param.value !== undefined) {
             dic.setObjectForKey(param.value, param.key);
           }
