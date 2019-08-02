@@ -8,7 +8,7 @@ import {
   UploadFileResult
 } from "./storage";
 
-const gmsTasks = (<any>com.google.android.gms).tasks;
+const gmsTasks = com.google.android.gms ? (<any>com.google.android.gms).tasks : undefined;
 
 function getStorageRef(reject, arg) {
   if (typeof(com.google.firebase.storage) === "undefined") {
