@@ -8,7 +8,17 @@ Although using push messages in your Firebase app is really easy setting it up i
 If you didn't choose this feature during installation you can add `"messaging": true` to `<app-root>/firebase.nativescript.json` and remove the `<app-root>/platforms` folder.
 
 ### Android
-No additional setup required.
+
+#### Push notification icon and color
+
+If you want to use a specific icon for the push notification, it has to be configured in the <application> tag in the AndroidManifest.xml
+
+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@drawable/your_drawable_name" />
+    <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+      android:resource="@color/ns_primary" />
+      
+#### Background notification quirks
 
 There is a little quirk: you will currently not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
 
