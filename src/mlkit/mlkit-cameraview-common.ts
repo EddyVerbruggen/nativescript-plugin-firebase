@@ -55,14 +55,19 @@ export abstract class MLKitCameraView extends ContentView {
 
   protected updateTorch(): void {
     // implemented in concrete classes
-  };
+  }
 
   protected pauseScanning(): void {
     // implemented in concrete classes
-  };
+  }
 
   protected resumeScanning(): void {
     // implemented in concrete classes
+  }
+
+  protected preProcessImage(image: any): any {
+    // implemented in concrete classes
+    return image;
   }
 }
 

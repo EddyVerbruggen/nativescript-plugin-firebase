@@ -10,6 +10,7 @@ const gmsTasks = (<any>com.google.android.gms).tasks;
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
   private player: android.media.MediaPlayer;
+  private inverseThrottle = 0;
 
   disposeNativeView(): void {
     super.disposeNativeView();
@@ -24,7 +25,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
     if (this.formats) {
       formats = [];
       const requestedFormats = this.formats.split(",");
-      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]))
+      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]));
     }
 
     if (this.beepOnScan) {
@@ -98,7 +99,15 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
       }
     });
   }
+
+  protected preProcessImage(byteArray: any) {
+    if (this.supportInverseBarcodes && this.inverseThrottle++ % 2 === 0) {
+      return byteArray = org.nativescript.plugins.firebase.mlkit.BitmapUtil.byteArrayBitwiseNotHelper(byteArray);
+    }
+    return byteArray;
+  }
 }
+
 
 function boundingBoxToBounds(rect: any): MLKitScanBarcodesResultBounds {
   return {
@@ -110,7 +119,7 @@ function boundingBoxToBounds(rect: any): MLKitScanBarcodesResultBounds {
       width: rect.width(),
       height: rect.height()
     }
-  }
+  };
 }
 
 function getBarcodeDetector(formats?: Array<BarcodeFormat>): any {

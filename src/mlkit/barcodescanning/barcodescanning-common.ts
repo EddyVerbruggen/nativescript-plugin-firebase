@@ -37,10 +37,17 @@ export const reportDuplicatesProperty = new Property<MLKitBarcodeScanner, boolea
   valueConverter: booleanConverter
 });
 
+export const supportInverseBarcodesProperty = new Property<MLKitBarcodeScanner, boolean>({
+    name: "supportInverseBarcodes",
+    defaultValue: false,
+    valueConverter: booleanConverter
+});
+
 export abstract class MLKitBarcodeScanner extends MLKitCameraView {
   protected formats: string;
   protected beepOnScan: boolean;
   protected reportDuplicates: boolean;
+  protected supportInverseBarcodes: boolean;
 
   [formatsProperty.setNative](value: string) {
     this.formats = value;
@@ -53,8 +60,13 @@ export abstract class MLKitBarcodeScanner extends MLKitCameraView {
   [reportDuplicatesProperty.setNative](value: boolean) {
     this.reportDuplicates = value;
   }
+
+  [supportInverseBarcodesProperty.setNative](value: boolean) {
+      this.supportInverseBarcodes = value;
+  }
 }
 
 formatsProperty.register(MLKitBarcodeScanner);
 beepOnScanProperty.register(MLKitBarcodeScanner);
 reportDuplicatesProperty.register(MLKitBarcodeScanner);
+supportInverseBarcodesProperty.register(MLKitBarcodeScanner);

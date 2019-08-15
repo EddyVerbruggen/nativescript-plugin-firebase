@@ -9,18 +9,19 @@ export { BarcodeFormat };
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
   private player: AVAudioPlayer;
+  private inverseThrottle = 0;
 
   protected createDetector(): any {
     let formats: Array<BarcodeFormat>;
     if (this.formats) {
       formats = [];
       const requestedFormats = this.formats.split(",");
-      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]))
+      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]));
     }
 
     if (this.beepOnScan) {
       // play nice with others when playing sound
-      AVAudioSession.sharedInstance().setCategoryModeOptionsError(AVAudioSessionCategoryPlayback, AVAudioSessionModeDefault, AVAudioSessionCategoryOptions.MixWithOthers)
+      AVAudioSession.sharedInstance().setCategoryModeOptionsError(AVAudioSessionCategoryPlayback, AVAudioSessionModeDefault, AVAudioSessionCategoryOptions.MixWithOthers);
 
       // prepare an audio player, with a sound file bundled in our custom fwk
       const barcodeBundlePath = NSBundle.bundleWithIdentifier("org.nativescript.plugin.firebase.MLKit").bundlePath;
@@ -106,11 +107,25 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
           this.player.play();
         }
       }
-    }
+    };
   }
 
   protected rotateRecording(): boolean {
     return false;
+  }
+
+  protected preProcessImage(image: any): any {
+    if (this.supportInverseBarcodes && this.inverseThrottle++ % 2 === 0) {
+      const filter = CIFilter.filterWithName('CIColorInvert');
+      let ciImg = CIImage.alloc().initWithImage(image);
+      filter.setValueForKey(ciImg, kCIInputImageKey);
+      filter.setDefaults();
+      ciImg = filter.outputImage;
+      const context = CIContext.alloc().init();
+      const cgImg = context.createCGImageFromRect(ciImg, ciImg.extent);
+      image = UIImage.alloc().initWithCGImage(cgImg);
+    }
+    return image;
   }
 }
 

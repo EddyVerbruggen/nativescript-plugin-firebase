@@ -24,7 +24,7 @@ export interface MLKitVisionCloudOptions extends MLKitVisionOptions {
   /**
    * Defaults to 10.
    */
-  maxResults?: number
+  maxResults?: number;
 }
 
 export interface MLKitVisionResult {

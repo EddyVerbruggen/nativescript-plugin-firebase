@@ -194,11 +194,13 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
               return;
             }
 
-            this.pendingFrameData = this.bytesToByteBuffer.get(byteArray);
-
             if (throttle++ % this.processEveryNthFrame !== 0) {
               return;
             }
+
+            byteArray = this.preProcessImage(byteArray);
+
+            this.pendingFrameData = this.bytesToByteBuffer.get(byteArray);
 
             let data = this.pendingFrameData;
             // pendingFrameData = null;
@@ -250,7 +252,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     if (this.camera != null) {
       this.camera.stopPreview();
     }
-  };
+  }
 
   protected resumeScanning(): void {
     this.runCamera();
