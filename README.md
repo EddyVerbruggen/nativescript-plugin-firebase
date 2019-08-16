@@ -78,7 +78,7 @@ Please update your [NativeScript-Vue](https://github.com/nativescript-vue/vue-cl
 aligns perfectly with this plugin (because that template is now much more similar to a regular NativeScript project).
 
 If you want a demo using Vue and Firestore, then [check out this project](https://github.com/EddyVerbruggen/footplr),
-if you want one with Realtime DB, [check out this one](https://github.com/jlooper/elocute/tree/master/mobile-v2).
+if you want one with Realtime DB, [check out this one](https://github.com/jlooper/mixology-mobile).
 
 ### iOS (Cocoapods)
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.
