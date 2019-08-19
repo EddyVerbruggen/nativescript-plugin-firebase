@@ -323,6 +323,7 @@ const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.barcodescanning.scanBarcodesOnDevice({
   image: imageSource,
+  supportInverseBarcodes: true, // only set to true if you need this as it's degrades performance slightly
   formats: [BarcodeFormat.QR_CODE, BarcodeFormat.CODABAR] // limit recognition to certain formats (faster), or leave out entirely for all formats (default)
 })
 .then((result: MLKitScanBarcodesOnDeviceResult) => console.log(JSON.stringify(result.barcodes)))
@@ -344,6 +345,7 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
     beepOnScan="true"
     formats="QR_CODE, EAN_8, EAN_13"
     preferFrontCamera="false"
+    supportInverseBarcodes="false"
     [torchOn]="torchOn"
     (scanResult)="onBarcodeScanningResult($event)">
 </MLKitBarcodeScanner>
