@@ -179,6 +179,8 @@ declare class FIRAuthDataResult extends NSObject {
 
 	readonly additionalUserInfo: FIRAdditionalUserInfo;
 
+	readonly credential: FIRAuthCredential;
+
 	readonly user: FIRUser;
 }
 
@@ -301,6 +303,8 @@ declare const enum FIRAuthErrorCode {
 	InvalidDynamicLinkDomain = 17074,
 
 	GameKitNotLinked = 17076,
+
+	MissingClientIdentifier = 17993,
 
 	KeychainError = 17995,
 
@@ -448,6 +452,8 @@ declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCo
 	readonly IDToken: string;
 
 	readonly accessToken: string;
+
+	readonly secret: string;
 
 	static readonly supportsSecureCoding: boolean; // inherited from NSSecureCoding
 

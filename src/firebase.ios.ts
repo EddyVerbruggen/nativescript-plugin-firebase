@@ -86,7 +86,7 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
-        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
+        result = result || GIDSignIn.sharedInstance().handleURL(url);
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -119,10 +119,7 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
-        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-            url,
-            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+        result = result || GIDSignIn.sharedInstance().handleURL(url);
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -444,6 +441,7 @@ firebase.getRemoteConfig = arg => {
       const firebaseRemoteConfig = FIRRemoteConfig.remoteConfig();
 
       // Enable developer mode to allow for frequent refreshes of the cache
+      // TODO this is deprecated (but not removed yet), see https://firebase.google.com/support/release-notes/ios#remote-config_2
       firebaseRemoteConfig.configSettings = new FIRRemoteConfigSettings({developerModeEnabled: arg.developerMode || false});
 
       const dic: any = NSMutableDictionary.new();
@@ -919,8 +917,7 @@ firebase.login = arg => {
         }
 
         const sIn = GIDSignIn.sharedInstance();
-        // allow custom controller for variety of use cases
-        sIn.uiDelegate = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
+        sIn.presentingViewController = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {

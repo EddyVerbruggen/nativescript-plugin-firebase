@@ -637,6 +637,24 @@ declare var GADDefaultInAppPurchaseDelegate: {
 	prototype: GADDefaultInAppPurchaseDelegate;
 };
 
+interface GADDelayedAdRenderingDelegate extends NSObjectProtocol {
+
+	adLoaderShouldDelayRenderingWithResumeHandler(adLoader: GADAdLoader, resumeHandler: () => void): boolean;
+}
+declare var GADDelayedAdRenderingDelegate: {
+
+	prototype: GADDelayedAdRenderingDelegate;
+};
+
+declare class GADDelayedAdRenderingOptions extends GADAdLoaderOptions {
+
+	static alloc(): GADDelayedAdRenderingOptions; // inherited from NSObject
+
+	static new(): GADDelayedAdRenderingOptions; // inherited from NSObject
+
+	delegate: GADDelayedAdRenderingDelegate;
+}
+
 declare class GADDisplayAdMeasurement extends NSObject {
 
 	static alloc(): GADDisplayAdMeasurement; // inherited from NSObject
@@ -864,6 +882,46 @@ declare class GADInitializationStatus extends NSObject implements NSCopying {
 	readonly adapterStatusesByClassName: NSDictionary<string, GADAdapterStatus>;
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
+}
+
+declare class GADInstreamAd extends NSObject {
+
+	static alloc(): GADInstreamAd; // inherited from NSObject
+
+	static loadAdWithAdTagCompletionHandler(adTag: string, completionHandler: (p1: GADInstreamAd, p2: NSError) => void): void;
+
+	static loadAdWithAdUnitIDRequestMediaAspectRatioCompletionHandler(adUnitID: string, request: GADRequest, mediaAspectRatio: GADMediaAspectRatio, completionHandler: (p1: GADInstreamAd, p2: NSError) => void): void;
+
+	static new(): GADInstreamAd; // inherited from NSObject
+
+	readonly aspectRatio: number;
+
+	readonly currentTime: number;
+
+	readonly duration: number;
+
+	readonly videoController: GADVideoController;
+}
+
+declare class GADInstreamAdView extends UIView {
+
+	static alloc(): GADInstreamAdView; // inherited from NSObject
+
+	static appearance(): GADInstreamAdView; // inherited from UIAppearance
+
+	static appearanceForTraitCollection(trait: UITraitCollection): GADInstreamAdView; // inherited from UIAppearance
+
+	static appearanceForTraitCollectionWhenContainedIn(trait: UITraitCollection, ContainerClass: typeof NSObject): GADInstreamAdView; // inherited from UIAppearance
+
+	static appearanceForTraitCollectionWhenContainedInInstancesOfClasses(trait: UITraitCollection, containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADInstreamAdView; // inherited from UIAppearance
+
+	static appearanceWhenContainedIn(ContainerClass: typeof NSObject): GADInstreamAdView; // inherited from UIAppearance
+
+	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADInstreamAdView; // inherited from UIAppearance
+
+	static new(): GADInstreamAdView; // inherited from NSObject
+
+	ad: GADInstreamAd;
 }
 
 declare class GADInterstitial extends NSObject {
@@ -1176,60 +1234,6 @@ declare class GADMediatedNativeAdNotificationSource extends NSObject {
 
 	static new(): GADMediatedNativeAdNotificationSource; // inherited from NSObject
 }
-
-interface GADMediatedNativeAppInstallAd extends GADMediatedNativeAd {
-
-	adChoicesView?(): UIView;
-
-	body(): string;
-
-	callToAction(): string;
-
-	hasVideoContent?(): boolean;
-
-	headline(): string;
-
-	icon(): GADNativeAdImage;
-
-	images(): NSArray<GADNativeAdImage>;
-
-	mediaView?(): UIView;
-
-	price(): string;
-
-	starRating(): NSDecimalNumber;
-
-	store(): string;
-}
-declare var GADMediatedNativeAppInstallAd: {
-
-	prototype: GADMediatedNativeAppInstallAd;
-};
-
-interface GADMediatedNativeContentAd extends GADMediatedNativeAd {
-
-	adChoicesView?(): UIView;
-
-	advertiser(): string;
-
-	body(): string;
-
-	callToAction(): string;
-
-	hasVideoContent?(): boolean;
-
-	headline(): string;
-
-	images(): NSArray<GADNativeAdImage>;
-
-	logo(): GADNativeAdImage;
-
-	mediaView?(): UIView;
-}
-declare var GADMediatedNativeContentAd: {
-
-	prototype: GADMediatedNativeContentAd;
-};
 
 interface GADMediatedUnifiedNativeAd extends NSObjectProtocol {
 
@@ -1701,208 +1705,6 @@ declare class GADNativeAdViewAdOptions extends GADAdLoaderOptions {
 
 	preferredAdChoicesPosition: GADAdChoicesPosition;
 }
-
-declare class GADNativeAppInstallAd extends GADNativeAd {
-
-	static alloc(): GADNativeAppInstallAd; // inherited from NSObject
-
-	static new(): GADNativeAppInstallAd; // inherited from NSObject
-
-	readonly body: string;
-
-	readonly callToAction: string;
-
-	readonly headline: string;
-
-	readonly icon: GADNativeAdImage;
-
-	readonly images: NSArray<GADNativeAdImage>;
-
-	readonly price: string;
-
-	readonly starRating: NSDecimalNumber;
-
-	readonly store: string;
-
-	readonly videoController: GADVideoController;
-
-	registerAdViewAssetViews(adView: UIView, assetViews: NSDictionary<string, UIView>): void;
-
-	registerAdViewClickableAssetViewsNonclickableAssetViews(adView: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>): void;
-
-	unregisterAdView(): void;
-}
-
-declare var GADNativeAppInstallAdChoicesViewAsset: string;
-
-interface GADNativeAppInstallAdLoaderDelegate extends GADAdLoaderDelegate {
-
-	adLoaderDidReceiveNativeAppInstallAd(adLoader: GADAdLoader, nativeAppInstallAd: GADNativeAppInstallAd): void;
-}
-declare var GADNativeAppInstallAdLoaderDelegate: {
-
-	prototype: GADNativeAppInstallAdLoaderDelegate;
-};
-
-declare class GADNativeAppInstallAdView extends UIView {
-
-	static alloc(): GADNativeAppInstallAdView; // inherited from NSObject
-
-	static appearance(): GADNativeAppInstallAdView; // inherited from UIAppearance
-
-	static appearanceForTraitCollection(trait: UITraitCollection): GADNativeAppInstallAdView; // inherited from UIAppearance
-
-	static appearanceForTraitCollectionWhenContainedIn(trait: UITraitCollection, ContainerClass: typeof NSObject): GADNativeAppInstallAdView; // inherited from UIAppearance
-
-	static appearanceForTraitCollectionWhenContainedInInstancesOfClasses(trait: UITraitCollection, containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADNativeAppInstallAdView; // inherited from UIAppearance
-
-	static appearanceWhenContainedIn(ContainerClass: typeof NSObject): GADNativeAppInstallAdView; // inherited from UIAppearance
-
-	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADNativeAppInstallAdView; // inherited from UIAppearance
-
-	static new(): GADNativeAppInstallAdView; // inherited from NSObject
-
-	adChoicesView: GADAdChoicesView;
-
-	bodyView: UIView;
-
-	callToActionView: UIView;
-
-	headlineView: UIView;
-
-	iconView: UIView;
-
-	imageView: UIView;
-
-	mediaView: GADMediaView;
-
-	nativeAppInstallAd: GADNativeAppInstallAd;
-
-	priceView: UIView;
-
-	starRatingView: UIView;
-
-	storeView: UIView;
-}
-
-declare var GADNativeAppInstallAttributionIconAsset: string;
-
-declare var GADNativeAppInstallAttributionTextAsset: string;
-
-declare var GADNativeAppInstallBackgroundAsset: string;
-
-declare var GADNativeAppInstallBodyAsset: string;
-
-declare var GADNativeAppInstallCallToActionAsset: string;
-
-declare var GADNativeAppInstallHeadlineAsset: string;
-
-declare var GADNativeAppInstallIconAsset: string;
-
-declare var GADNativeAppInstallImageAsset: string;
-
-declare var GADNativeAppInstallMediaViewAsset: string;
-
-declare var GADNativeAppInstallPriceAsset: string;
-
-declare var GADNativeAppInstallStarRatingAsset: string;
-
-declare var GADNativeAppInstallStoreAsset: string;
-
-declare class GADNativeContentAd extends GADNativeAd {
-
-	static alloc(): GADNativeContentAd; // inherited from NSObject
-
-	static new(): GADNativeContentAd; // inherited from NSObject
-
-	readonly advertiser: string;
-
-	readonly body: string;
-
-	readonly callToAction: string;
-
-	readonly headline: string;
-
-	readonly images: NSArray<GADNativeAdImage>;
-
-	readonly logo: GADNativeAdImage;
-
-	readonly videoController: GADVideoController;
-
-	registerAdViewAssetViews(adView: UIView, assetViews: NSDictionary<string, UIView>): void;
-
-	registerAdViewClickableAssetViewsNonclickableAssetViews(adView: UIView, clickableAssetViews: NSDictionary<string, UIView>, nonclickableAssetViews: NSDictionary<string, UIView>): void;
-
-	unregisterAdView(): void;
-}
-
-declare var GADNativeContentAdChoicesViewAsset: string;
-
-interface GADNativeContentAdLoaderDelegate extends GADAdLoaderDelegate {
-
-	adLoaderDidReceiveNativeContentAd(adLoader: GADAdLoader, nativeContentAd: GADNativeContentAd): void;
-}
-declare var GADNativeContentAdLoaderDelegate: {
-
-	prototype: GADNativeContentAdLoaderDelegate;
-};
-
-declare class GADNativeContentAdView extends UIView {
-
-	static alloc(): GADNativeContentAdView; // inherited from NSObject
-
-	static appearance(): GADNativeContentAdView; // inherited from UIAppearance
-
-	static appearanceForTraitCollection(trait: UITraitCollection): GADNativeContentAdView; // inherited from UIAppearance
-
-	static appearanceForTraitCollectionWhenContainedIn(trait: UITraitCollection, ContainerClass: typeof NSObject): GADNativeContentAdView; // inherited from UIAppearance
-
-	static appearanceForTraitCollectionWhenContainedInInstancesOfClasses(trait: UITraitCollection, containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADNativeContentAdView; // inherited from UIAppearance
-
-	static appearanceWhenContainedIn(ContainerClass: typeof NSObject): GADNativeContentAdView; // inherited from UIAppearance
-
-	static appearanceWhenContainedInInstancesOfClasses(containerTypes: NSArray<typeof NSObject> | typeof NSObject[]): GADNativeContentAdView; // inherited from UIAppearance
-
-	static new(): GADNativeContentAdView; // inherited from NSObject
-
-	adChoicesView: GADAdChoicesView;
-
-	advertiserView: UIView;
-
-	bodyView: UIView;
-
-	callToActionView: UIView;
-
-	headlineView: UIView;
-
-	imageView: UIView;
-
-	logoView: UIView;
-
-	mediaView: GADMediaView;
-
-	nativeContentAd: GADNativeContentAd;
-}
-
-declare var GADNativeContentAdvertiserAsset: string;
-
-declare var GADNativeContentAttributionIconAsset: string;
-
-declare var GADNativeContentAttributionTextAsset: string;
-
-declare var GADNativeContentBackgroundAsset: string;
-
-declare var GADNativeContentBodyAsset: string;
-
-declare var GADNativeContentCallToActionAsset: string;
-
-declare var GADNativeContentHeadlineAsset: string;
-
-declare var GADNativeContentImageAsset: string;
-
-declare var GADNativeContentLogoAsset: string;
-
-declare var GADNativeContentMediaViewAsset: string;
 
 declare class GADNativeCustomTemplateAd extends GADNativeAd {
 

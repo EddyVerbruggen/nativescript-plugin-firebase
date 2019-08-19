@@ -166,6 +166,8 @@ declare class FIRFirestore extends NSObject {
 
 	batch(): FIRWriteBatch;
 
+	clearPersistenceWithCompletion(completion: (p1: NSError) => void): void;
+
 	collectionGroupWithID(collectionID: string): FIRQuery;
 
 	collectionWithPath(collectionPath: string): FIRCollectionReference;

@@ -633,38 +633,38 @@ declare var FBSDKCopying: {
 	prototype: FBSDKCopying;
 };
 
+declare const enum FBSDKCoreError {
+
+	ErrorReserved = 0,
+
+	ErrorEncryption = 1,
+
+	ErrorInvalidArgument = 2,
+
+	ErrorUnknown = 3,
+
+	ErrorNetwork = 4,
+
+	ErrorAppEventsFlush = 5,
+
+	ErrorGraphRequestNonTextMimeTypeReturned = 6,
+
+	ErrorGraphRequestProtocolMismatch = 7,
+
+	ErrorGraphRequestGraphAPI = 8,
+
+	ErrorDialogUnavailable = 9,
+
+	ErrorAccessTokenRequired = 10,
+
+	ErrorAppVersionUnsupported = 11,
+
+	ErrorBrowserUnavailable = 12
+}
+
 declare var FBSDKCoreKitVersionNumber: number;
 
 declare var FBSDKCoreKitVersionString: interop.Reference<number>;
-
-declare const enum FBSDKError {
-
-	Reserved = 0,
-
-	Encryption = 1,
-
-	InvalidArgument = 2,
-
-	Unknown = 3,
-
-	Network = 4,
-
-	AppEventsFlush = 5,
-
-	GraphRequestNonTextMimeTypeReturned = 6,
-
-	GraphRequestProtocolMismatch = 7,
-
-	GraphRequestGraphAPI = 8,
-
-	DialogUnavailable = 9,
-
-	AccessTokenRequired = 10,
-
-	AppVersionUnsupported = 11,
-
-	BrowserUnavailable = 12
-}
 
 declare var FBSDKErrorArgumentCollectionKey: string;
 
@@ -1031,6 +1031,8 @@ declare class FBSDKSettings extends NSObject {
 	static graphAPIVersion: string;
 
 	static graphErrorRecoveryEnabled: boolean;
+
+	static instrumentEnabled: boolean;
 
 	static limitEventAndDataUsage: boolean;
 
