@@ -143,9 +143,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         const pictureSize = sizePair.pictureSize;
         const previewSize = sizePair.previewSize;
 
-        console.log("sizePair.pictureSize: " + pictureSize.width + "x" + pictureSize.height);
-        console.log("sizePair.previewSize: " + previewSize.width + "x" + previewSize.height);
-
         const parameters = this.camera.getParameters();
 
         if (pictureSize) {
@@ -203,7 +200,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
             }
 
             let data = this.pendingFrameData;
-            // pendingFrameData = null;
 
             if (this.detector.processImage) {
               this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);

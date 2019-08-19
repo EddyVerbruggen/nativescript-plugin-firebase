@@ -8,13 +8,13 @@ declare const com: any;
 export class MLKitObjectDetection extends MLKitObjectDetectionBase {
 
   protected createDetector(): any {
-    return getDetector(true, this.classify, this.multiple);
+    return getDetector(this.classify, this.multiple);
   }
 
   protected createSuccessListener(): any {
     return new com.google.android.gms.tasks.OnSuccessListener({
       onSuccess: objects => {
-        console.log(">> onSuccess @ " + new Date().getTime() + ", objects: " + objects);
+        console.log(">> onSuccess @ " + new Date().getTime() + ", objects: " + objects.size());
 
         if (objects.size() === 0) return;
 
@@ -37,9 +37,9 @@ export class MLKitObjectDetection extends MLKitObjectDetectionBase {
   }
 }
 
-function getDetector(stream: boolean, classify: boolean, multiple: boolean): com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetector {
+function getDetector(classify: boolean, multiple: boolean): com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetector {
   const builder = new com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions.Builder()
-      .setDetectorMode(stream ? com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions.STREAM_MODE : com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions.SINGLE_IMAGE_MODE);
+      .setDetectorMode(com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions.SINGLE_IMAGE_MODE);
 
   if (classify) {
     builder.enableClassification();
@@ -55,7 +55,7 @@ function getDetector(stream: boolean, classify: boolean, multiple: boolean): com
 export function detectObjects(options: MLKitObjectDetectionOptions): Promise<MLKitObjectDetectionResult> {
   return new Promise((resolve, reject) => {
     try {
-      const firebaseObjectDetector = getDetector(false, options.classify, options.multiple);
+      const firebaseObjectDetector = getDetector(options.classify, options.multiple);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: objects => {
