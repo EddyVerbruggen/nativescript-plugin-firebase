@@ -245,30 +245,28 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     let measuredWidth = this.surfaceView.getMeasuredWidth();
     let measuredHeight = this.surfaceView.getMeasuredHeight();
 
-    let scale = width/height;
-    let invertedScale = height/width;
-    let measuredScale = measuredWidth/measuredHeight;
+    let scale = width / height;
+    let invertedScale = height / width;
+    let measuredScale = measuredWidth / measuredHeight;
 
     let scaleX = 1, scaleY = 1;
-    if( this.rotation == 1 || this.rotation == 3 ){
-      if( measuredScale <= scale ){
+    if (this.rotation == 1 || this.rotation == 3) {
+      if (measuredScale <= scale) {
         scaleY = (measuredWidth * scale) / measuredHeight;
-      }
-      else{
+      } else {
         scaleX = (measuredHeight * scale) / measuredWidth;
       }
-    }
-    else{
-      if( measuredScale >= invertedScale ){
+    } else {
+      if (measuredScale >= invertedScale) {
         scaleY = (measuredWidth * invertedScale) / measuredHeight;
-      }
-      else{
+      } else {
         scaleX = (measuredHeight * invertedScale) / measuredWidth;
       }
     }
-    
-    this.surfaceView.setScaleX( scaleX );
-    this.surfaceView.setScaleY( scaleY );
+
+    console.log(">> scaled fixed to: " + scaleX + " x " + scaleY);
+    this.surfaceView.setScaleX(scaleX);
+    this.surfaceView.setScaleY(scaleY);
   }
 
   protected updateTorch(): void {

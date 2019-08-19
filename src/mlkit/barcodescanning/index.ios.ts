@@ -1,7 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./index";
-import { MLKitVisionOptions } from "../index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
 export { BarcodeFormat };

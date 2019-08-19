@@ -16,6 +16,7 @@
 /// <reference path="./platforms/ios/typings/objc!FirebaseMessaging.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseMLCommon.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseMLVision.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseMLVisionObjectDetection.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseMLModelInterpreter.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebasePerformance.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseRemoteConfig.d.ts" />

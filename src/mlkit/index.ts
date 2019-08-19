@@ -2,6 +2,7 @@ import * as textrecognition from "./textrecognition";
 import * as barcodescanning from "./barcodescanning";
 import * as facedetection from "./facedetection";
 import * as imagelabeling from "./imagelabeling";
+import * as objectdetection from "./objectdetection";
 import * as landmarkrecognition from "./landmarkrecognition";
 import * as custommodel from "./custommodel";
 import * as naturallanguageidentification from "./naturallanguageidentification";
@@ -43,6 +44,7 @@ export {
   barcodescanning,
   facedetection,
   imagelabeling,
+  objectdetection,
   landmarkrecognition,
   custommodel,
   naturallanguageidentification,

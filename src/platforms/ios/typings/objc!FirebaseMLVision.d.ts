@@ -83,6 +83,10 @@ declare class FIRVision extends NSObject {
 
 	faceDetectorWithOptions(options: FIRVisionFaceDetectorOptions): FIRVisionFaceDetector;
 
+	objectDetector(): FIRVisionObjectDetector;
+
+	objectDetectorWithOptions(options: FIRVisionObjectDetectorOptions): FIRVisionObjectDetector;
+
 	onDeviceImageLabeler(): FIRVisionImageLabeler;
 
 	onDeviceImageLabelerWithOptions(options: FIRVisionOnDeviceImageLabelerOptions): FIRVisionImageLabeler;

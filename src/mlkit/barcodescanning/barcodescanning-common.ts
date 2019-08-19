@@ -38,9 +38,9 @@ export const reportDuplicatesProperty = new Property<MLKitBarcodeScanner, boolea
 });
 
 export const supportInverseBarcodesProperty = new Property<MLKitBarcodeScanner, boolean>({
-    name: "supportInverseBarcodes",
-    defaultValue: false,
-    valueConverter: booleanConverter
+  name: "supportInverseBarcodes",
+  defaultValue: false,
+  valueConverter: booleanConverter
 });
 
 export abstract class MLKitBarcodeScanner extends MLKitCameraView {
@@ -62,7 +62,7 @@ export abstract class MLKitBarcodeScanner extends MLKitCameraView {
   }
 
   [supportInverseBarcodesProperty.setNative](value: boolean) {
-      this.supportInverseBarcodes = value;
+    this.supportInverseBarcodes = value;
   }
 }
 

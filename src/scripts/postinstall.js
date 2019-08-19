@@ -4424,6 +4424,10 @@ function promptQuestions() {
         description: 'With Ml Kit, do you want to label images? (y/n)',
         default: 'n'
       }, {
+        name: 'ml_kit_object_detection',
+        description: 'With Ml Kit, do you want to use Object Detection and Tracking? (y/n)',
+        default: 'n'
+      }, {
         name: 'ml_kit_custom_model',
         description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
         default: 'n'
@@ -4601,6 +4605,7 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_barcode_scanning) ? `` : `#`) + `pod 'Firebase/MLVisionBarcodeModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_face_detection) ? `` : `#`) + `pod 'Firebase/MLVisionFaceModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_object_detection) ? `` : `#`) + `pod 'Firebase/MLVisionObjectDetection'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNaturalLanguage'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNLLanguageID'
@@ -4956,6 +4961,7 @@ dependencies {
     // ML Kit
     ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:22.0.0"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:18.0.0"
+    ` + (isSelected(result.ml_kit_object_detection) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-object-detection-model:18.0.0"
     ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:20.0.1"
     ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:20.0.2"
     ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.2"

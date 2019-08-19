@@ -5,10 +5,8 @@ import * as ImagePicker from "nativescript-imagepicker";
 import { BarcodeFormat, MLKitScanBarcodesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/barcodescanning";
 import { MLKitCustomModelResult } from "nativescript-plugin-firebase/mlkit/custommodel";
 import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlkit/facedetection";
-import {
-  MLKitImageLabelingCloudResult,
-  MLKitImageLabelingOnDeviceResult
-} from "nativescript-plugin-firebase/mlkit/imagelabeling";
+import { MLKitImageLabelingCloudResult, MLKitImageLabelingOnDeviceResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
+import { MLKitObjectDetectionResult } from "nativescript-plugin-firebase/mlkit/objectdetection";
 import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
 import { MLKitNaturalLanguageIdentificationResult } from "nativescript-plugin-firebase/mlkit/naturallanguageidentification";
 import { MLKitSmartReplyConversationMessage } from "nativescript-plugin-firebase/mlkit/smartreply";
@@ -35,6 +33,7 @@ export class MLKitComponent {
     "Text recognition (cloud)",
     "Barcode scanning (on device)",
     "Face detection (on device)",
+    "Detect Objects (on device)",
     "Image labeling (on device)",
     "Image labeling (cloud)",
     "Custom model",
@@ -47,6 +46,7 @@ export class MLKitComponent {
     "Text recognition",
     "Barcode scanning",
     "Face detection",
+    "Object detection",
     "Image labeling",
     "Custom model",
     "Language identification"
@@ -69,6 +69,8 @@ export class MLKitComponent {
         to = "/tabs/mlkit/barcodescanning";
       } else if (pickedItem === "Face detection") {
         to = "/tabs/mlkit/facedetection";
+      } else if (pickedItem === "Object detection") {
+        to = "/tabs/mlkit/objectdetection";
       } else if (pickedItem === "Image labeling") {
         to = "/tabs/mlkit/imagelabeling";
       } else if (pickedItem === "Custom model") {
@@ -189,6 +191,8 @@ export class MLKitComponent {
         this.labelImageOnDevice(imageSource);
       } else if (pickedItem === "Image labeling (cloud)") {
         this.labelImageCloud(imageSource);
+      } else if (pickedItem === "Detect Objects (on device)") {
+        this.detectObjects(imageSource);
       } else if (pickedItem === "Landmark recognition (cloud)") {
         this.recognizeLandmarkCloud(imageSource);
       } else if (pickedItem === "Custom model") {
@@ -256,7 +260,7 @@ export class MLKitComponent {
       }).then((languageIdResult: MLKitNaturalLanguageIdentificationResult) => {
         alert({
           title: `Result`,
-          message: `Language code: ${languageIdResult ? languageIdResult.languageCode : "Unknown" }`,
+          message: `Language code: ${languageIdResult ? languageIdResult.languageCode : "Unknown"}`,
           okButtonText: "OK"
         });
       }).catch(errorMessage => console.log("ML Kit error: " + errorMessage));
@@ -417,7 +421,19 @@ export class MLKitComponent {
         .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
   }
 
-  // onScanResultImage(event): void {
-  //   this.scannedImage = event.value;
-  // }
+  private detectObjects(imageSource: ImageSource): void {
+    firebase.mlkit.objectdetection.detectObjects({
+      image: imageSource,
+      classify: true,
+      multiple: true
+    }).then(
+        (result: MLKitObjectDetectionResult) => {
+          alert({
+            title: `Result`,
+            message: JSON.stringify(result.objects),
+            okButtonText: "OK"
+          });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
 }
