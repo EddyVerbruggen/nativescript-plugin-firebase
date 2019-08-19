@@ -81,6 +81,7 @@ To be able to use Cloud features you need to do two things:
 |---|---|---
 |[Text recognition](#text-recognition)|✅|✅
 |[Face detection](#face-detection)|✅|
+|[Object detection and tracking](#object-detection-and-tracking)|✅|
 |[Barcode scanning](#barcode-scanning)|✅|
 |[Image labeling](#image-labeling)|✅|✅
 |[Landmark recognition](#landmark-recognition)||✅
@@ -267,6 +268,46 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
     [torchOn]="torchOn"
     (scanResult)="onFaceDetectionResult($event)">
 </MLKitFaceDetection>
+```
+
+### Object detection and tracking
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_object_detection.png" height="124px" alt="ML Kit - Object detection and tracking"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/object-detection)
+
+#### Still image
+
+```typescript
+import { MLKitObjectDetectionResult } from "nativescript-plugin-firebase/mlkit/objectdetection";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.objectdetection.detectObjects({
+  image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
+  classify: true, // default false, attempts to classify the object(s) if true
+  multiple: true // default false, attempts to detect multiple objects (instead of only the most prominent one) when true
+})
+.then((result: MLKitObjectDetectionResult) => console.log(JSON.stringify(result.objects)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Live camera feed
+The basics are explained above for 'Text recognition', so we're only showing the differences here.
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitObjectDetection", () => require("nativescript-plugin-firebase/mlkit/objectdetection").MLKitObjectDetection);
+```
+
+```html
+<MLKitObjectDetection
+    width="260"
+    height="380"
+    classify="true"
+    multiple="false"
+    processEveryNthFrame="20"
+    [torchOn]="torchOn"
+    (scanResult)="onObjectDetectionResult($event)">
+</MLKitObjectDetection>
 ```
 
 ### Barcode scanning

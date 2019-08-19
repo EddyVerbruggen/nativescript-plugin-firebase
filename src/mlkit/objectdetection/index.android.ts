@@ -1,5 +1,6 @@
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitVisionOptions, } from "../";
+import { MLKitScanBarcodesResultBounds } from "../barcodescanning";
 import { MLKitObjectDetectionOptions, MLKitObjectDetectionResult, MLKitObjectDetectionResultItem } from "./";
 import { MLKitObjectDetection as MLKitObjectDetectionBase, ObjectDetectionCategory } from "./objectdetection-common";
 
@@ -22,9 +23,11 @@ export class MLKitObjectDetection extends MLKitObjectDetectionBase {
           objects: []
         };
 
+        const image: android.graphics.Bitmap = this.lastVisionImage && this.lastVisionImage.getBitmap ? this.lastVisionImage.getBitmap() : null;
+
         // see https://github.com/firebase/quickstart-android/blob/0f4c86877fc5f771cac95797dffa8bd026dd9dc7/mlkit/app/src/main/java/com/google/firebase/samples/apps/mlkit/textrecognition/TextRecognitionProcessor.java#L62
         for (let i = 0; i < objects.size(); i++) {
-          result.objects.push(getMLKitObjectDetectionResultItem(objects.get(i)));
+          result.objects.push(getMLKitObjectDetectionResultItem(objects.get(i), image));
         }
 
         this.notify({
@@ -57,6 +60,9 @@ export function detectObjects(options: MLKitObjectDetectionOptions): Promise<MLK
     try {
       const firebaseObjectDetector = getDetector(options.classify, options.multiple);
 
+      const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
+      const firImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
+
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: objects => {
           const result = <MLKitObjectDetectionResult>{
@@ -65,7 +71,7 @@ export function detectObjects(options: MLKitObjectDetectionOptions): Promise<MLK
 
           if (objects) {
             for (let i = 0; i < objects.size(); i++) {
-              result.objects.push(getMLKitObjectDetectionResultItem(objects.get(i)));
+              result.objects.push(getMLKitObjectDetectionResultItem(objects.get(i), image));
             }
           }
 
@@ -79,7 +85,7 @@ export function detectObjects(options: MLKitObjectDetectionOptions): Promise<MLK
       });
 
       firebaseObjectDetector
-          .processImage(getImage(options))
+          .processImage(firImage)
           .addOnSuccessListener(onSuccessListener)
           .addOnFailureListener(onFailureListener);
 
@@ -90,18 +96,33 @@ export function detectObjects(options: MLKitObjectDetectionOptions): Promise<MLK
   });
 }
 
-function getMLKitObjectDetectionResultItem(obj: com.google.firebase.ml.vision.objects.FirebaseVisionObject): MLKitObjectDetectionResultItem {
+function getMLKitObjectDetectionResultItem(obj: com.google.firebase.ml.vision.objects.FirebaseVisionObject, image: android.graphics.Bitmap): MLKitObjectDetectionResultItem {
   return {
     id: obj.getTrackingId() ? obj.getTrackingId().intValue() : undefined,
     confidence: obj.getClassificationConfidence() ? obj.getClassificationConfidence().doubleValue() : undefined,
     category: ObjectDetectionCategory[obj.getClassificationCategory()],
-    // TODO
-    image: undefined,
-    bounds: undefined
+    bounds: boundingBoxToBounds(obj.getBoundingBox()),
+    image: !image ? null : {
+      width: image.getWidth(),
+      height: image.getHeight()
+    }
   };
 }
 
 function getImage(options: MLKitVisionOptions): any /* com.google.firebase.ml.vision.common.FirebaseVisionImage */ {
   const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
   return com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
+}
+
+function boundingBoxToBounds(rect: any): MLKitScanBarcodesResultBounds {
+  return {
+    origin: {
+      x: rect.left,
+      y: rect.top
+    },
+    size: {
+      width: rect.width(),
+      height: rect.height()
+    }
+  };
 }
