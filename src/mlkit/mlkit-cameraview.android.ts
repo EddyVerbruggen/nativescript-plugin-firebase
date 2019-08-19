@@ -155,6 +155,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
 
         this.setRotation(this.camera, parameters, requestedCameraId);
+        this.fixStretch(previewSize.width, previewSize.height);
 
         if (parameters.getSupportedFocusModes().contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
           parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
@@ -238,6 +239,36 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         console.log("Error in Firebase MLKit's runCamera function: " + e);
       }
     }, 500);
+  }
+
+  private fixStretch(width, height): void {
+    let measuredWidth = this.surfaceView.getMeasuredWidth();
+    let measuredHeight = this.surfaceView.getMeasuredHeight();
+
+    let scale = width/height;
+    let invertedScale = height/width;
+    let measuredScale = measuredWidth/measuredHeight;
+
+    let scaleX = 1, scaleY = 1;
+    if( this.rotation == 1 || this.rotation == 3 ){
+      if( measuredScale <= scale ){
+        scaleY = (measuredWidth * scale) / measuredHeight;
+      }
+      else{
+        scaleX = (measuredHeight * scale) / measuredWidth;
+      }
+    }
+    else{
+      if( measuredScale >= invertedScale ){
+        scaleY = (measuredWidth * invertedScale) / measuredHeight;
+      }
+      else{
+        scaleX = (measuredHeight * invertedScale) / measuredWidth;
+      }
+    }
+    
+    this.surfaceView.setScaleX( scaleX );
+    this.surfaceView.setScaleY( scaleY );
   }
 
   protected updateTorch(): void {
