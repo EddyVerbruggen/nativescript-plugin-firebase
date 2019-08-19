@@ -18,7 +18,7 @@ export interface MLKitObjectDetectionResultItem {
    */
   id?: number;
   confidence: number;
-  category: any; // TODO
+  category: any;
   bounds: MLKitObjectDetectionResultItemBounds;
   image: {
     width: number;

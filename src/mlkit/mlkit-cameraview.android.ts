@@ -264,7 +264,6 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
     }
 
-    console.log(">> scaled fixed to: " + scaleX + " x " + scaleY);
     this.surfaceView.setScaleX(scaleX);
     this.surfaceView.setScaleY(scaleY);
   }

@@ -91,11 +91,9 @@ export function detectObjects(options: MLKitObjectDetectionOptions): Promise<MLK
 }
 
 function getMLKitObjectDetectionResultItem(obj: com.google.firebase.ml.vision.objects.FirebaseVisionObject): MLKitObjectDetectionResultItem {
-  console.log("getMLKitObjectDetectionResultItem");
-  console.log("obj: " + obj);
   return {
-    id: obj.getTrackingId().intValue(),
-    confidence: obj.getClassificationConfidence().doubleValue(),
+    id: obj.getTrackingId() ? obj.getTrackingId().intValue() : undefined,
+    confidence: obj.getClassificationConfidence() ? obj.getClassificationConfidence().doubleValue() : undefined,
     category: ObjectDetectionCategory[obj.getClassificationCategory()],
     // TODO
     image: undefined,
