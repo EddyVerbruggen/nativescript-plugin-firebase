@@ -6,15 +6,14 @@ declare const global: any;
 const ActivityCompatClass = useAndroidX() ? global.androidx.core.app.ActivityCompat : android.support.v4.app.ActivityCompat;
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
+interface SizeWH {
+  width: number;
+  height: number;
+}
+
 class SizePair {
-  pictureSize: {
-    width: number;
-    height: number;
-  };
-  previewSize: {
-    width: number;
-    height: number;
-  };
+  pictureSize: SizeWH;
+  previewSize: SizeWH;
 }
 
 function useAndroidX() {
@@ -29,6 +28,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   public lastVisionImage;
   private detector: any;
   private camera;
+  private metadata;
 
   disposeNativeView(): void {
     super.disposeNativeView();
@@ -154,10 +154,16 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
 
         application.off("orientationChanged");
-        application.on("orientationChanged", () => this.setRotation(this.camera, parameters, requestedCameraId));
+        application.on("orientationChanged", () => {
+          this.setRotation(this.camera, parameters, requestedCameraId);
+          setTimeout(() => {
+            this.fixStretch(previewSize);
+            this.setMetadata(previewSize);
+          }, 700);
+        });
 
         this.setRotation(this.camera, parameters, requestedCameraId);
-        this.fixStretch(previewSize.width, previewSize.height);
+        this.fixStretch(previewSize);
 
         if (parameters.getSupportedFocusModes().contains(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
           parameters.setFocusMode(android.hardware.Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
@@ -175,13 +181,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         const onSuccessListener = this.createSuccessListener();
         const onFailureListener = this.createFailureListener();
 
-        let metadata =
-            new com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.Builder()
-                .setFormat(com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-                .setWidth(previewSize.width)
-                .setHeight(previewSize.height)
-                .setRotation(this.rotation)
-                .build();
+        this.setMetadata(previewSize);
 
         let throttle = 0;
         this.camera.setPreviewCallbackWithBuffer(new android.hardware.Camera.PreviewCallback({
@@ -207,13 +207,13 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
             let data = this.pendingFrameData;
 
             if (this.detector.processImage) {
-              this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
+              this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, this.metadata);
               this.detector
                   .processImage(this.lastVisionImage)
                   .addOnSuccessListener(onSuccessListener)
                   .addOnFailureListener(onFailureListener);
             } else if (this.detector.detectInImage) {
-              this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
+              this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, this.metadata);
               this.detector
                   .detectInImage(this.lastVisionImage)
                   .addOnSuccessListener(onSuccessListener)
@@ -241,12 +241,22 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     }, 500);
   }
 
-  private fixStretch(width, height): void {
+  private setMetadata(previewSize: SizeWH): void {
+    this.metadata =
+        new com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.Builder()
+            .setFormat(com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+            .setWidth(previewSize.width)
+            .setHeight(previewSize.height)
+            .setRotation(this.rotation)
+            .build();
+  }
+
+  private fixStretch(previewSize: SizeWH): void {
     let measuredWidth = this.surfaceView.getMeasuredWidth();
     let measuredHeight = this.surfaceView.getMeasuredHeight();
 
-    let scale = width / height;
-    let invertedScale = height / width;
+    let scale = previewSize.width / previewSize.height;
+    let invertedScale = previewSize.height / previewSize.width;
     let measuredScale = measuredWidth / measuredHeight;
 
     let scaleX = 1, scaleY = 1;
@@ -264,8 +274,11 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       }
     }
 
-    this.surfaceView.setScaleX(scaleX);
-    this.surfaceView.setScaleY(scaleY);
+    // make sure the new size covers the entire viewport requested
+    const correction = scaleX / scaleY > 1 ? scaleX / scaleY : 1;
+
+    this.surfaceView.setScaleX(scaleX * correction);
+    this.surfaceView.setScaleY(scaleY * correction);
   }
 
   protected updateTorch(): void {
