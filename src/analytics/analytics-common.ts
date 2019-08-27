@@ -9,7 +9,7 @@ export function validateAnalyticsKey(key: string): string | undefined {
     return "Argument 'key' must be 40 characters or fewer";
   }
 
-  if (!key.match(/^[a-zA-Z][a-zA-Z_]+$/)) {
+  if (!key.match(/^[a-zA-Z0-9][a-zA-Z0-9_]+$/)) {
     return "Argument 'key' can only contain alphanumeric characters and underscores and must start with an alphanumeric character";
   }
 
@@ -67,7 +67,7 @@ function validateAnalyticsParamKey(key: string): string | undefined {
     return "Param 'key' must be 40 characters or fewer";
   }
 
-  if (!key.match(/^[a-zA-Z][a-zA-Z_]+$/)) {
+  if (!key.match(/^[a-zA-Z0-9][a-zA-Z0-9_]+$/)) {
     return "Param 'key' can only contain alphanumeric characters and underscores and must start with an alphanumeric character";
   }
 
