@@ -85,9 +85,9 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
         // invoke the permission dialog
         ActivityCompatClass.requestPermissions(
-          application.android.foregroundActivity || application.android.startActivity,
-          [android.Manifest.permission.CAMERA],
-          CAMERA_PERMISSION_REQUEST_CODE);
+            application.android.foregroundActivity || application.android.startActivity,
+            [android.Manifest.permission.CAMERA],
+            CAMERA_PERMISSION_REQUEST_CODE);
       }
     } else {
       console.log("There's no Camera on this device :(");
@@ -102,9 +102,9 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   private hasCamera(): boolean {
     return !!utils.ad
-      .getApplicationContext()
-      .getPackageManager()
-      .hasSystemFeature("android.hardware.camera");
+        .getApplicationContext()
+        .getPackageManager()
+        .hasSystemFeature("android.hardware.camera");
   }
 
   private initView(nativeView): void {
@@ -154,7 +154,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
 
         application.off("orientationChanged");
-        application.on("orientationChanged", () => { this.setRotation(this.camera, parameters, requestedCameraId ); });
+        application.on("orientationChanged", () => this.setRotation(this.camera, parameters, requestedCameraId));
 
         this.setRotation(this.camera, parameters, requestedCameraId);
         this.fixStretch(previewSize.width, previewSize.height);
@@ -176,12 +176,12 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         const onFailureListener = this.createFailureListener();
 
         let metadata =
-          new com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.Builder()
-            .setFormat(com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
-            .setWidth(previewSize.width)
-            .setHeight(previewSize.height)
-            .setRotation(this.rotation)
-            .build();
+            new com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.Builder()
+                .setFormat(com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
+                .setWidth(previewSize.width)
+                .setHeight(previewSize.height)
+                .setRotation(this.rotation)
+                .build();
 
         let throttle = 0;
         this.camera.setPreviewCallbackWithBuffer(new android.hardware.Camera.PreviewCallback({
@@ -209,15 +209,15 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
             if (this.detector.processImage) {
               this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
               this.detector
-                .processImage(this.lastVisionImage)
-                .addOnSuccessListener(onSuccessListener)
-                .addOnFailureListener(onFailureListener);
+                  .processImage(this.lastVisionImage)
+                  .addOnSuccessListener(onSuccessListener)
+                  .addOnFailureListener(onFailureListener);
             } else if (this.detector.detectInImage) {
               this.lastVisionImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromByteBuffer(data, metadata);
               this.detector
-                .detectInImage(this.lastVisionImage)
-                .addOnSuccessListener(onSuccessListener)
-                .addOnFailureListener(onFailureListener);
+                  .detectInImage(this.lastVisionImage)
+                  .addOnSuccessListener(onSuccessListener)
+                  .addOnFailureListener(onFailureListener);
             } else {
               this.runDetector(data, previewSize.width, previewSize.height);
             }
@@ -414,5 +414,4 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     camera.setDisplayOrientation(displayAngle);
     parameters.setRotation(angle);
   }
-
 }
