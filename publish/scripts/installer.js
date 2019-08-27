@@ -395,6 +395,10 @@ pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.6.0' : '5.15.0')
 # Performance Monitoring
 ` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'Firebase/Performance'
 
+# A/B Testing dependency, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/1375
+` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'FirebaseABTesting', '= 3.0'
+` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'FirebaseABTesting', '= 3.0'
+
 # Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Crashlytics'
