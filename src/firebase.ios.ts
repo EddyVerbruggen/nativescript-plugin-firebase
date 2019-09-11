@@ -198,7 +198,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
         } else {
           result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, (dynamicLink, error) => {
-            if (dynamicLink.url !== null) {
+            if (dynamicLink !== null && dynamicLink.url !== null) {
               if (firebase._dynamicLinkCallback) {
                 firebase._dynamicLinkCallback({
                   url: dynamicLink.url.absoluteString,
