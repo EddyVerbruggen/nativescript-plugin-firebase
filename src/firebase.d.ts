@@ -994,7 +994,7 @@ export namespace functions {
 
   export type HttpsCallable<I, O> = (callableData: I) => Promise<O>;
 
-  export function httpsCallable<I, O>(callableFunctionName: string, region: SupportedRegions): HttpsCallable<I, O>;
+  export function httpsCallable<I, O>(callableFunctionName: string, region?: SupportedRegions): HttpsCallable<I, O>;
 }
 
 // Auth
