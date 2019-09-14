@@ -1,7 +1,8 @@
-import { HttpsCallable, SUPPORTED_REGIONS } from './functions';
+import { HttpsCallable } from './functions';
 import { firebaseUtils } from '../utils';
+import * as firebase from '../firebase';
 
-export function httpsCallable<I = {}, O = {}>(functionName: string, region?: SUPPORTED_REGIONS): HttpsCallable<I, O> {
+export function httpsCallable<I = {}, O = {}>(functionName: string, region?: firebase.functions.SupportedRegions): HttpsCallable<I, O> {
 
   const functions = region ? FIRFunctions.functionsForRegion(region) : FIRFunctions.functions();
 
