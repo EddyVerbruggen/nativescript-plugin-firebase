@@ -1,9 +1,9 @@
-import { HttpsCallable } from './functions';
+import { HttpsCallable, SUPPORTED_REGIONS } from './functions';
 import { firebaseUtils } from '../utils';
 
-export function httpsCallable<I = {}, O = {}>(functionName: string): HttpsCallable<I, O> {
+export function httpsCallable<I = {}, O = {}>(functionName: string, region?: SUPPORTED_REGIONS): HttpsCallable<I, O> {
 
-  const functions = FIRFunctions.functions();
+  const functions = region ? FIRFunctions.functionsForRegion(region) : FIRFunctions.functions();
 
   return (data: I) => new Promise((resolve, reject) => {
 

@@ -1,8 +1,8 @@
-import { HttpsCallable } from "./functions";
+import { HttpsCallable, SUPPORTED_REGIONS } from "./functions";
 import { firebase } from "../firebase-common";
 
-export function httpsCallable<I = {}, O = {}>(functionName: string): HttpsCallable<I, O> {
-  const instance = com.google.firebase.functions.FirebaseFunctions.getInstance();
+export function httpsCallable<I = {}, O = {}>(functionName: string, region: SUPPORTED_REGIONS = "us-central1"): HttpsCallable<I, O> {
+  const instance = com.google.firebase.functions.FirebaseFunctions.getInstance(region);
 
   return (data: I) => new Promise<O>((resolve, reject) => {
 
