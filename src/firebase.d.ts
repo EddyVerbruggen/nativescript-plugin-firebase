@@ -990,9 +990,11 @@ export namespace firestore {
 }
 
 export namespace functions {
+  export type SupportedRegions = "us-central1" | "us-east1" | "us-east4" | "europe-west1" | "europe-west2" | "asia-east2" | "asia-northeast1";
+
   export type HttpsCallable<I, O> = (callableData: I) => Promise<O>;
 
-  export function httpsCallable<I, O>(callableFunctionName: string): HttpsCallable<I, O>;
+  export function httpsCallable<I, O>(callableFunctionName: string, region?: SupportedRegions): HttpsCallable<I, O>;
 }
 
 // Auth
