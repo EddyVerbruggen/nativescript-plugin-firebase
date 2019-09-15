@@ -1,6 +1,6 @@
-import { HttpsCallable } from './functions';
+import * as firebase from "../firebase";
 import { firebaseUtils } from '../utils';
-import * as firebase from '../firebase';
+import { HttpsCallable } from './functions';
 
 export function httpsCallable<I = {}, O = {}>(functionName: string, region?: firebase.functions.SupportedRegions): HttpsCallable<I, O> {
 
