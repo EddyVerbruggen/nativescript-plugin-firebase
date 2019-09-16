@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "9.1.1",
+  "version": "9.2.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -69,7 +69,7 @@
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-plugin-firebase && cd ../src",
     "android.list-devices": "tns device android --available-devices",
     "ios.list-devices": "tns device ios --available-devices",
-    "generate.typings.ios": "echo '##### Make sure to first run demo-ng.ios #####' && cd ../demo-ng && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo-ng/typings!'",
+    "generate.typings.ios": "echo '##### Make sure to first run demo-ng.ios #####' && cd ../demo-ng && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns run ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo-ng/typings!'",
     "generate.typings.android": "echo '##### Download the latest relevant .aar file from https://mvnrepository.com/artifact/com.google.firebase, rename .aar to .zip and extract it. Then move classes.jar to the plugin /src folder' && java -jar ../../android-dts-generator/dts-generator/build/libs/dts-generator.jar -input ./classes.jar -output platforms/android/typings/$npm_package_config_typings && rimraf classes.jar && echo '##### Done! Deleted src/classes.jar, and generated typings in src/platforms/android/typings/'",
     "generate.typings.android.analytics": "npm run generate.typings.android --nativescript-plugin-firebase:typings=analytics-impl",
     "generate.typings.android.auth": "npm run generate.typings.android --nativescript-plugin-firebase:typings=auth",
@@ -141,9 +141,9 @@
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
-    "tns-core-modules": "~5.4.2",
-    "tns-platform-declarations": "~5.4.2",
+    "tns-core-modules": "~6.1.1",
+    "tns-platform-declarations": "~6.1.1",
     "tslint": "^5.1.0",
-    "typescript": "~3.3.3"
+    "typescript": "~3.4.5"
   }
 }

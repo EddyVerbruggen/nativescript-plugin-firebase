@@ -2,7 +2,7 @@ import * as application from "tns-core-modules/application";
 import * as utils from "tns-core-modules/utils/utils";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 
-declare const global: any;
+declare const android, global: any;
 const ActivityCompatClass = useAndroidX() ? global.androidx.core.app.ActivityCompat : android.support.v4.app.ActivityCompat;
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 

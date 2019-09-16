@@ -4,7 +4,7 @@ import * as application from "tns-core-modules/application/application";
 import { PushNotificationModel } from "./messaging.ios";
 import { MessagingOptions } from "../firebase";
 
-declare const com, global: any;
+declare const android, com, global: any;
 const NotificationManagerCompatClass = useAndroidX() ? global.androidx.core.app.NotificationManagerCompat : android.support.v4.app.NotificationManagerCompat;
 
 let _launchNotification = null;
