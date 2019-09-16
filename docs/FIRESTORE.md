@@ -421,13 +421,23 @@ firebase.firestore().runTransaction(transaction => {
 ### Firestore configurations: `settings()`
 > You must set these before invoking any other methods!
 
-Setting cacheSizeBytes is Android only
-
-You can modify `host`, `ssl` and `cacheSizeBytes`.  (`timestampsInSnapshots` shouldn't be used as it will be deprecated)
+You can modify `host`, `ssl` and `cacheSizeBytes` (this one is Android only).  (`timestampsInSnapshots` shouldn't be used as it will be deprecated)
 See [docs](https://firebase.google.com/docs/reference/js/firebase.firestore.Settings) for more information.
 
 ```typescript
    firebase.firestore.settings({});
 
    firebaseWebApi.firestore().settings({"host" : "Example", "ssl" : false});
+```
+
+### Clearing persistence data: `clearPersistence()`
+> You should do this before any other interactions with the database.
+
+This clears the persistent storage including pending writes and cached documents.
+This is intended to help write reliable test, not so much for production usage.
+
+```typescript
+firebase.firestore.clearPersistence()
+   .then(() => console.log("Persistence data cleared"))
+   .catch(error => console.log(`Error clearing persistence data: ${error}`));
 ```
