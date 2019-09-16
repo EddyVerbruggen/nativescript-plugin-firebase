@@ -38,5 +38,9 @@ export namespace firestore {
     settings(settings: firebase.firestore.Settings): void {
       firebase.firestore.settings(settings);
     }
+
+    clearPersistence(): Promise<void> {
+      return firebase.firestore.clearPersistence();
+    }
   }
 }

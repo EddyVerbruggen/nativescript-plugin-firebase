@@ -987,6 +987,8 @@ export namespace firestore {
   function runTransaction(updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void>;
 
   function batch(): firestore.WriteBatch;
+
+  function clearPersistence(): Promise<void>;
 }
 
 export namespace functions {

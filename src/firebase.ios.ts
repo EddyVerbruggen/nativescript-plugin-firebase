@@ -1669,6 +1669,12 @@ firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
  * END Realtime Database Functions
  ***********************************************/
 
+const ensureFirestore = (): void => {
+  if (typeof (FIRFirestore) === "undefined") {
+    throw new Error("Make sure 'firestore' is enabled in 'firebase.nativescript.json', then clean the node_modules and platforms folders");
+  }
+};
+
 firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.WriteBatch => {
   class FirestoreWriteBatch implements firestore.WriteBatch {
     constructor() {
@@ -1704,6 +1710,7 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
 };
 
 firebase.firestore.batch = (): firestore.WriteBatch => {
+  ensureFirestore();
   return new firebase.firestore.WriteBatch(FIRFirestore.firestore().batch());
 };
 
@@ -1739,6 +1746,7 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
 };
 
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     FIRFirestore.firestore().runTransactionWithBlockCompletion(
         (nativeTransaction: FIRTransaction, err: any) => {
@@ -1765,13 +1773,18 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
   }
 };
 
-firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
-  try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
+firebase.firestore.clearPersistence = (): Promise<void> => {
+  ensureFirestore();
+  return new Promise<void>((resolve, reject) => {
+    FIRFirestore.firestore().clearPersistenceWithCompletion((error: NSError) => {
+      error ? reject(error.localizedDescription) : resolve();
+    })
+  });
+};
 
+firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
+  ensureFirestore();
+  try {
     if (!firebase.initialized) {
       console.log("Please run firebase.init() before firebase.firestore.collection()");
       return null;
@@ -1907,12 +1920,8 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
 };
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
     if (!firebase.initialized) {
       console.log("Please run firebase.init() before firebase.firestore.doc()");
       return null;
@@ -1928,21 +1937,14 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 };
 
 firebase.firestore.docRef = (documentPath: string): firestore.DocumentReference => {
-  if (typeof (FIRFirestore) === "undefined") {
-    console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-    return null;
-  }
-
+  ensureFirestore();
   return firebase.firestore._getDocumentReference(FIRFirestore.firestore().documentWithPath(documentPath));
 };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
       fixSpecialFields(document);
       const defaultFirestore = FIRFirestore.firestore();
       const fIRDocumentReference = defaultFirestore
@@ -1963,13 +1965,9 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 };
 
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
@@ -2051,13 +2049,9 @@ function fixSpecialField(item): any {
 }
 
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
@@ -2079,13 +2073,9 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 };
 
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
           .documentWithPath(documentPath);
@@ -2106,13 +2096,9 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 };
 
 firebase.firestore.getCollection = (collectionPath: string, options?: firestore.GetOptions): Promise<firestore.QuerySnapshot> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
@@ -2145,13 +2131,9 @@ firebase.firestore.get = (collectionPath: string, options?: firestore.GetOptions
 };
 
 firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<firestore.DocumentSnapshot> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
@@ -2202,12 +2184,8 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
 };
 
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
     query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
     value = fixSpecialField(value);
 

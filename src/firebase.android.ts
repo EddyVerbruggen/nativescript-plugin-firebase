@@ -1975,6 +1975,12 @@ firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
  * END Realtime Database Functions
  ***********************************************/
 
+const ensureFirestore = (): void => {
+  if (typeof (com.google.firebase.firestore) === "undefined") {
+    throw new Error("Make sure 'firestore' is enabled in 'firebase.nativescript.json', then clean the node_modules and platforms folders");
+  }
+};
+
 class FirestoreWriteBatch implements firestore.WriteBatch {
 
   public nativeWriteBatch: com.google.firebase.firestore.WriteBatch;
@@ -2118,14 +2124,27 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
   }
 };
 
+firebase.firestore.clearPersistence = (): Promise<void> => {
+  ensureFirestore();
+  return new Promise<void>((resolve, reject) => {
+    const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+    const onSuccessListener = new gmsTasks.OnSuccessListener({
+      onSuccess: () => resolve()
+    });
+
+    const onFailureListener = new gmsTasks.OnFailureListener({
+      onFailure: exception => reject(exception.getMessage())
+    });
+
+    db.clearPersistence()
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener);
+  });
+};
+
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
+  ensureFirestore();
   try {
-
-    if (typeof (com.google.firebase.firestore) === "undefined") {
-      console.log("Make sure firebase-firestore is in the plugin's include.gradle");
-      return null;
-    }
-
     if (!firebase.initialized) {
       console.log("Please run firebase.init() before firebase.firestore.collection()");
       return null;
@@ -2248,12 +2267,8 @@ firebase.firestore._getCollectionReference = (colRef?: JCollectionReference): fi
 };
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
+  ensureFirestore();
   try {
-    if (typeof (com.google.firebase.firestore) === "undefined") {
-      console.log("Make sure firebase-firestore is in the plugin's include.gradle");
-      return null;
-    }
-
     if (!firebase.initialized) {
       console.log("Please run firebase.init() before firebase.firestore.doc()");
       return null;
@@ -2270,24 +2285,15 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 };
 
 firebase.firestore.docRef = (documentPath: string): firestore.DocumentReference => {
-  if (typeof (com.google.firebase.firestore) === "undefined") {
-    console.log("Make sure firebase-firestore is in the plugin's include.gradle");
-    return null;
-  }
-
+  ensureFirestore();
   const db: com.google.firebase.firestore.FirebaseFirestore = com.google.firebase.firestore.FirebaseFirestore.getInstance();
   return firebase.firestore._getDocumentReference(db.document(documentPath));
 };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
+  ensureFirestore();
   return new Promise<firestore.DocumentReference>((resolve, reject) => {
     try {
-
-      if (typeof (com.google.firebase.firestore) === "undefined") {
-        reject("Make sure firebase-firestore is in the plugin's include.gradle");
-        return;
-      }
-
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
       const onSuccessListener = new gmsTasks.OnSuccessListener({
@@ -2313,14 +2319,9 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 };
 
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-
-      if (typeof (com.google.firebase.firestore) === "undefined") {
-        reject("Make sure firebase-firestore is in the plugin's include.gradle");
-        return;
-      }
-
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
       const onSuccessListener = new gmsTasks.OnSuccessListener({
@@ -2352,14 +2353,9 @@ firebase.firestore.set = (collectionPath: string, documentPath: string, document
 };
 
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-
-      if (typeof (com.google.firebase.firestore) === "undefined") {
-        reject("Make sure firebase-firestore is in the plugin's include.gradle");
-        return;
-      }
-
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
       const onSuccessListener = new gmsTasks.OnSuccessListener({
@@ -2384,14 +2380,9 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 };
 
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-
-      if (typeof (com.google.firebase.firestore) === "undefined") {
-        reject("Make sure firebase-firestore is in the plugin's include.gradle");
-        return;
-      }
-
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
       const onSuccessListener = new gmsTasks.OnSuccessListener({
@@ -2416,14 +2407,9 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 };
 
 firebase.firestore.getCollection = (collectionPath: string, options?: firestore.GetOptions): Promise<firestore.QuerySnapshot> => {
+  ensureFirestore();
   return new Promise<firestore.QuerySnapshot>((resolve, reject) => {
     try {
-
-      if (typeof (com.google.firebase.firestore) === "undefined") {
-        reject("Make sure firebase-firestore is in the plugin's include.gradle");
-        return;
-      }
-
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
       const onCompleteListener = new gmsTasks.OnCompleteListener({
@@ -2463,14 +2449,9 @@ firebase.firestore.get = (collectionPath: string, options?: firestore.GetOptions
 };
 
 firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<firestore.DocumentSnapshot> => {
+  ensureFirestore();
   return new Promise<firestore.DocumentSnapshot>((resolve, reject) => {
     try {
-
-      if (typeof (com.google.firebase.firestore) === "undefined") {
-        reject("Make sure firebase-firestore is in the plugin's include.gradle");
-        return;
-      }
-
       const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
       const onCompleteListener = new gmsTasks.OnCompleteListener({
@@ -2534,12 +2515,8 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
 };
 
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: com.google.firebase.firestore.Query): firestore.Query => {
+  ensureFirestore();
   try {
-    if (typeof (com.google.firebase.firestore) === "undefined") {
-      console.log("Make sure firebase-firestore is in the plugin's include.gradle");
-      return null;
-    }
-
     const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
     query = query || db.collection(collectionPath);
 
