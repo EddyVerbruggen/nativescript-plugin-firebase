@@ -3,6 +3,13 @@
 - [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 - [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 10.0.0 (2019, Sep 16)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/109?closed=1)
+
+> Make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS (and Android) SDKs.
+
+> This version requires a minimum version of NativeScript 5.2. For MLKit features on iOS it's recommended to use a minimum `tns-ios` version of 6.1.0, otherwise you may run into build issues.
+
 ## 9.1.1 (2019, Aug 27)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/110?closed=1)
 

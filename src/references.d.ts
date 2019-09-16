@@ -42,6 +42,7 @@
 /// <reference path="./platforms/android/typings/functions/android.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-common.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-vision.d.ts" />
+/// <reference path="./platforms/android/typings/mlkit/ml-vision-face-model.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-model-interpreter.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-plugin-lib.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-natural-language.d.ts" />

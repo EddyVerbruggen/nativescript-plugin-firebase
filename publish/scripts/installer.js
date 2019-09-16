@@ -2,31 +2,6 @@ var fs = require('fs');
 var path = require('path');
 var prompt = require('prompt-lite');
 
-const { execSync } = require('child_process');
-const semver = require('semver');
-// In case the current Node.js version is not supported by CLI, a warning in `tns --version` output is shown.
-// Sample output:
-//
-/*Support for Node.js ^8.0.0 is deprecated and will be removed in one of the next releases of NativeScript. Please, upgrade to the latest Node.js LTS version.
-
-6.0.0
-*/
-// Extract the actual version (6.0.0) from it.
-const tnsVersionFull = (execSync('tns --version', { encoding: 'ascii'}).match(/^(?:\d+\.){2}\d+.*?$/m) || [])[0];
-
-// iOS modern build system is supported from version NativeScript-CLI version 5.2.0
-const supportsIOSModernBuildSystem = tnsVersionFull.indexOf("5.2.0-") > -1 || semver.gte(tnsVersionFull, "5.2.0");
-
-// Custom gradle buildscripts are supported from NativeScript-Android version 5.3.0 (TODO this actually checks the CLI version)
-const supportsGradleBuildscripts = tnsVersionFull.indexOf("5.3.0-") > -1 || semver.gte(tnsVersionFull, "5.3.0");
-
-// TODO use this when writing stuff like 'com.android.support' below, because {N} 6 will have to use AndroidX
-const supportsAndroidX = semver.gte(tnsVersionFull, "6.0.0");
-
-if (!supportsIOSModernBuildSystem) {
-  console.log(`You're using NativeScript ${tnsVersionFull}.. which doesn't support the latest Firestore and in-app-messaging SDKs. Upgrade NativeScript to at least 5.2.0 if you need those!\n\n`);
-}
-
 // Default settings for a few prompts
 var usingiOS = false, usingAndroid = false, externalPushClientOnly = false;
 
@@ -167,6 +142,10 @@ function askAndroidPromptResult(result) {
  */
 function promptQuestions() {
   prompt.get([{
+    name: 'analytics',
+    description: 'Do you want to enable Firebase Analytics? (y/n)',
+    default: 'y'
+  }, {
     name: 'firestore',
     description: 'Are you using Firestore? (y/n)',
     default: 'n'
@@ -289,7 +268,7 @@ function promptQuestionsResult(result) {
     }
     writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
-    writeBuildscriptHookForFirestore(isSelected(result.firestore) && !supportsIOSModernBuildSystem);
+    writeBuildscriptHookForFirestore(isSelected(result.firestore));
   }
 
   if (usingAndroid) {
@@ -370,14 +349,13 @@ function writePodFile(result) {
   if (!fs.existsSync(directories.ios)) {
     fs.mkdirSync(directories.ios);
   }
-  // TODO if we want to _optionally_ include Analytics, see step 4.2: https://firebase.google.com/docs/ios/setup
   try {
     fs.writeFileSync(directories.ios + '/Podfile',
 // The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
-# With NativeScript < 5.2 we can't bump Firebase/Core beyond 5.15.0, but with 5.2+ we can
-pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.8.1' : '5.15.0') + `'
+# Analytics
+` + (!externalPushClientOnly && (!isPresent(result.analytics) || isSelected(result.analytics)) ? `` : `#`) + `pod 'Firebase/Analytics'
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
@@ -385,10 +363,8 @@ pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.8.1' : '5.15.0')
 # Realtime DB
 ` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
 
-# Cloud Firestore (sticking to 0.14 for now because of build error - see https://github.com/firebase/firebase-ios-sdk/issues/2177)
-` + (isSelected(result.firestore) && !supportsIOSModernBuildSystem ? `` : `#`) + `pod 'FirebaseFirestore', '~> 0.14.0'
-# .. unless the modern build system is supported, then we can use the latest version (NativeScript 5.2+)
-` + (isSelected(result.firestore) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/Firestore'
+# Cloud Firestore
+` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
 
 # Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
@@ -413,8 +389,8 @@ end`) + `
 # Firebase Cloud Messaging (FCM)
 ` + (isSelected(result.messaging) && !isSelected(result.external_messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
-# Firebase In-App Messaging (supported on NativeScript 5.2+)
-` + (isSelected(result.in_app_messaging) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
+# Firebase In-App Messaging
+` + (isSelected(result.in_app_messaging) ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
 
 # Firebase Cloud Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
@@ -748,53 +724,54 @@ dependencies {
     implementation "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    implementation "com.google.firebase:firebase-core:17.0.1"
+
+    ` + (!externalPushClientOnly && isSelected(result.analytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.0"
 
     // for reading google-services.json and configuration
     implementation "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:18.1.0"
+    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:19.0.0"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:18.0.1"
+    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:19.1.0"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:20.2.0"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:21.1.1"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:18.0.0"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:19.0.1"
 
     // Performance Monitoring
-    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:18.0.1"
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:19.0.0"
 
     // Crashlytics
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
 
     // Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:19.0.1"
+    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:20.0.0"
     // ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 
     // In-App Messaging
-    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:18.0.2"
+    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:19.0.0"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:18.1.1"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:19.0.1"
 
     // Cloud Functions
-    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:18.1.0"
+    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:19.0.1"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:18.1.1"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:18.2.0"
 
     // ML Kit
-    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:22.0.0"
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:23.0.0"
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:18.0.0"
-    ` + (isSelected(result.ml_kit_object_detection) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-object-detection-model:18.0.0"
-    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:20.0.1"
-    ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:20.0.2"
-    ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.2"
-    ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.2"
+    ` + (isSelected(result.ml_kit_object_detection) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-object-detection-model:19.0.1"
+    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:21.0.0"
+    ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:21.0.2"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.5"
+    ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.5"
 
     // Facebook Authentication
     ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-core:5.4.0"
@@ -804,7 +781,7 @@ dependencies {
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
     // Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:18.0.0"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:19.0.0"
 }
 
 apply plugin: "com.google.gms.google-services"

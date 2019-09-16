@@ -1,13 +1,13 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "9.2.0",
+  "version": "10.0.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
-      "android": "3.0.0",
-      "ios": "3.0.0"
+      "android": "5.2.0",
+      "ios": "5.2.0"
     },
     "plugin": {
       "nan": "true",
