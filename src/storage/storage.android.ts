@@ -1,17 +1,43 @@
 import { File } from "tns-core-modules/file-system";
 import { firebase } from "../firebase-common";
-import {
-  DeleteFileOptions,
-  DownloadFileOptions,
-  GetDownloadUrlOptions,
-  UploadFileOptions,
-  UploadFileResult
-} from "./storage";
+import { DeleteFileOptions, DownloadFileOptions, GetDownloadUrlOptions, ListOptions, Reference, UploadFileOptions, UploadFileResult } from "./storage";
+import { ListResult as ListResultBase } from "./storage-common";
 
 const gmsTasks = com.google.android.gms ? (<any>com.google.android.gms).tasks : undefined;
 
+function getReference(nativeReference: com.google.firebase.storage.StorageReference, listOptions: ListOptions): Reference {
+  return {
+    android: nativeReference,
+    bucket: nativeReference.getBucket(),
+    name: nativeReference.getName(),
+    fullPath: nativeReference.getPath(),
+    listAll: (): Promise<ListResult> => listAll({remoteFullPath: nativeReference.getPath(), bucket: listOptions.bucket})
+  }
+}
+
+function getReferences(nativeReferences: java.util.List<com.google.firebase.storage.StorageReference>, listOptions: ListOptions): Array<Reference> {
+  const references: Array<Reference> = [];
+  for (let i = 0; i < nativeReferences.size(); i++) {
+    const ref: com.google.firebase.storage.StorageReference = nativeReferences.get(i);
+    references.push(getReference(ref, listOptions));
+  }
+  return references;
+}
+
+class ListResult extends ListResultBase {
+  android: com.google.firebase.storage.ListResult;
+
+  constructor(private listResult: com.google.firebase.storage.ListResult, private listOptions: ListOptions) {
+    super(getReferences(listResult.getItems(), listOptions), getReferences(listResult.getPrefixes(), listOptions), listResult.getPageToken());
+    this.android = listResult;
+    // don't expose these
+    delete this.listResult;
+    delete this.listOptions;
+  }
+}
+
 function getStorageRef(reject, arg) {
-  if (typeof(com.google.firebase.storage) === "undefined") {
+  if (typeof (com.google.firebase.storage) === "undefined") {
     reject("Uncomment firebase-storage in the plugin's include.gradle first");
     return;
   }
@@ -65,7 +91,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
 
       const onProgressListener = new com.google.firebase.storage.OnProgressListener({
         onProgress: (snapshot: any) => {
-          if (typeof(arg.onProgress) === "function") {
+          if (typeof (arg.onProgress) === "function") {
             const fractionCompleted = snapshot.getBytesTransferred() / snapshot.getTotalByteCount();
             arg.onProgress({
               fractionCompleted: fractionCompleted,
@@ -76,7 +102,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
       });
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
+        if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
@@ -150,7 +176,7 @@ export function downloadFile(arg: DownloadFileOptions): Promise<string> {
       let localFilePath;
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
+        if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
@@ -242,6 +268,38 @@ export function deleteFile(arg: DeleteFileOptions): Promise<void> {
 
     } catch (ex) {
       console.log("Error in firebase.deleteFile: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function listAll(listOptions: ListOptions): Promise<ListResult> {
+  return new Promise<ListResult>((resolve, reject) => {
+    try {
+      const storageRef = getStorageRef(reject, listOptions);
+
+      if (!storageRef) {
+        return;
+      }
+
+      const onSuccessListener = new gmsTasks.OnSuccessListener({
+        onSuccess: result => resolve(new ListResult(result, listOptions))
+      });
+
+      const onFailureListener = new gmsTasks.OnFailureListener({
+        onFailure: exception => {
+          reject(exception.getCause() ? exception.getCause().getMessage() : exception.getMessage());
+        }
+      });
+
+      const storageReference = storageRef.child(listOptions.remoteFullPath);
+
+      storageReference.listAll()
+          .addOnSuccessListener(onSuccessListener)
+          .addOnFailureListener(onFailureListener);
+
+    } catch (ex) {
+      console.log("Error in firebase.listAll: " + ex);
       reject(ex);
     }
   });

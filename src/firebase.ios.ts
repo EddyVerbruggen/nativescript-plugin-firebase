@@ -1778,7 +1778,7 @@ firebase.firestore.clearPersistence = (): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
     FIRFirestore.firestore().clearPersistenceWithCompletion((error: NSError) => {
       error ? reject(error.localizedDescription) : resolve();
-    })
+    });
   });
 };
 

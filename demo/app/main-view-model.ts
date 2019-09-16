@@ -1,15 +1,5 @@
 import * as firebase from "nativescript-plugin-firebase";
-import {
-  AddEventListenerResult,
-  admob as firebaseAdMob,
-  crashlytics as firebaseCrashlytics,
-  IdTokenResult,
-  GetRemoteConfigResult,
-  LogComplexEventTypeParameter,
-  performance as firebasePerformance,
-  storage as firebaseStorage,
-  User
-} from "nativescript-plugin-firebase";
+import { AddEventListenerResult, admob as firebaseAdMob, crashlytics as firebaseCrashlytics, GetRemoteConfigResult, IdTokenResult, LogComplexEventTypeParameter, performance as firebasePerformance, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
 import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
 import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performance";
 import { Observable } from "tns-core-modules/data/observable";
@@ -385,6 +375,29 @@ export class HelloWorldModel extends Observable {
         });
   }
 
+  public doWebListAll(): void {
+    firebaseWebApi.storage().ref()
+        .child("uploads/images")
+        .listAll()
+        .then(result => {
+          console.log(JSON.stringify(result));
+
+          // dump all items
+          result.items.forEach(item => {
+            item.listAll()
+                .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err))
+          });
+
+          // dump all prefixes
+          result.prefixes.forEach(prefix => {
+            prefix.listAll()
+                .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err))
+          })
+        })
+        .catch(err => console.log(err));
+  }
 
   /***********************************************
    * Native API usage examples
@@ -1568,6 +1581,31 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
+  }
+
+  public doListAll(): void {
+    firebaseStorage.listAll(
+        {
+          remoteFullPath: "uploads/images"
+        })
+        .then(result => {
+          console.log(JSON.stringify(result));
+
+          // dump all items
+          result.items.forEach(item => {
+            item.listAll()
+                .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err))
+          });
+
+          // dump all prefixes
+          result.prefixes.forEach(prefix => {
+            prefix.listAll()
+                .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err))
+          })
+        })
+        .catch(err => console.log(err));
   }
 
   public doUploadFile(): void {
