@@ -179,6 +179,10 @@ declare class FIRFirestore extends NSObject {
 	enableNetworkWithCompletion(completion: (p1: NSError) => void): void;
 
 	runTransactionWithBlockCompletion(updateBlock: (p1: FIRTransaction, p2: interop.Pointer | interop.Reference<NSError>) => any, completion: (p1: any, p2: NSError) => void): void;
+
+	terminateWithCompletion(completion: (p1: NSError) => void): void;
+
+	waitForPendingWritesWithCompletion(completion: (p1: NSError) => void): void;
 }
 
 declare const enum FIRFirestoreErrorCode {

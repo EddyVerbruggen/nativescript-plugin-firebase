@@ -21,13 +21,13 @@ declare class GIDAuthentication extends NSObject implements NSSecureCoding {
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
 	fetcherAuthorizer(): GTMFetcherAuthorizationProtocol;
 
 	getTokensWithHandler(handler: (p1: GIDAuthentication, p2: NSError) => void): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 
 	refreshTokensWithHandler(handler: (p1: GIDAuthentication, p2: NSError) => void): void;
 }
@@ -54,9 +54,9 @@ declare class GIDGoogleUser extends NSObject implements NSSecureCoding {
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class GIDProfileData extends NSObject implements NSCopying, NSSecureCoding {
@@ -81,11 +81,11 @@ declare class GIDProfileData extends NSObject implements NSCopying, NSSecureCodi
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
 	imageURLWithDimension(dimension: number): NSURL;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class GIDSignIn extends NSObject {

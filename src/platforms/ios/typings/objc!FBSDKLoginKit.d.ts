@@ -160,6 +160,8 @@ declare class FBSDKLoginButton extends FBSDKButton {
 
 	static new(): FBSDKLoginButton; // inherited from NSObject
 
+	static systemButtonWithImageTargetAction(image: UIImage, target: any, action: string): FBSDKLoginButton; // inherited from UIButton
+
 	defaultAudience: FBSDKDefaultAudience;
 
 	delegate: FBSDKLoginButtonDelegate;

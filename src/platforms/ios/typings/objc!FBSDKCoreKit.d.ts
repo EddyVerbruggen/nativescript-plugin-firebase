@@ -59,11 +59,11 @@ declare class FBSDKAccessToken extends NSObject implements FBSDKCopying, NSSecur
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
 	hasGranted(permission: string): boolean;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 
 	initWithTokenStringPermissionsDeclinedPermissionsExpiredPermissionsAppIDUserIDExpirationDateRefreshDateDataAccessExpirationDate(tokenString: string, permissions: NSArray<string> | string[], declinedPermissions: NSArray<string> | string[], expiredPermissions: NSArray<string> | string[], appID: string, userID: string, expirationDate: Date, refreshDate: Date, dataAccessExpirationDate: Date): this;
 
@@ -622,6 +622,8 @@ declare class FBSDKButton extends UIButton {
 	static buttonWithType(buttonType: UIButtonType): FBSDKButton; // inherited from UIButton
 
 	static new(): FBSDKButton; // inherited from NSObject
+
+	static systemButtonWithImageTargetAction(image: UIImage, target: any, action: string): FBSDKButton; // inherited from UIButton
 }
 
 interface FBSDKCopying extends NSCopying, NSObjectProtocol {
@@ -947,11 +949,11 @@ declare class FBSDKProfile extends NSObject implements NSCopying, NSSecureCoding
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
 	imageURLForPictureModeSize(mode: FBSDKProfilePictureMode, size: CGSize): NSURL;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 
 	initWithUserIDFirstNameMiddleNameLastNameNameLinkURLRefreshDate(userID: string, firstName: string, middleName: string, lastName: string, name: string, linkURL: NSURL, refreshDate: Date): this;
 

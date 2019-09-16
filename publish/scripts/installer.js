@@ -370,13 +370,14 @@ function writePodFile(result) {
   if (!fs.existsSync(directories.ios)) {
     fs.mkdirSync(directories.ios);
   }
+  // TODO if we want to _optionally_ include Analytics, see step 4.2: https://firebase.google.com/docs/ios/setup
   try {
     fs.writeFileSync(directories.ios + '/Podfile',
 // The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
 # With NativeScript < 5.2 we can't bump Firebase/Core beyond 5.15.0, but with 5.2+ we can
-pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.6.0' : '5.15.0') + `'
+pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.8.1' : '5.15.0') + `'
 
 # Authentication
 ` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
@@ -394,10 +395,6 @@ pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '6.6.0' : '5.15.0')
 
 # Performance Monitoring
 ` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'Firebase/Performance'
-
-# A/B Testing dependency, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues/1375
-` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'FirebaseABTesting', '= 3.0'
-` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'FirebaseABTesting', '= 3.0'
 
 # Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'

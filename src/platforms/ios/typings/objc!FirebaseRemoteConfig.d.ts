@@ -140,3 +140,7 @@ declare class FIRRemoteConfigValue extends NSObject implements NSCopying {
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 }
+
+declare var FirebaseRemoteConfigVersionNumber: number;
+
+declare var FirebaseRemoteConfigVersionString: interop.Reference<number>;

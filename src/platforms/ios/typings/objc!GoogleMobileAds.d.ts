@@ -288,6 +288,8 @@ declare class GADAppOpenAd extends NSObject {
 	static loadWithAdUnitIDRequestOrientationCompletionHandler(adUnitID: string, request: GADRequest, orientation: UIInterfaceOrientation, completionHandler: (p1: GADAppOpenAd, p2: NSError) => void): void;
 
 	static new(): GADAppOpenAd; // inherited from NSObject
+
+	readonly responseInfo: GADResponseInfo;
 }
 
 declare class GADAppOpenAdView extends UIView {
@@ -375,6 +377,8 @@ declare class GADBannerView extends UIView {
 
 	readonly mediatedAdView: UIView;
 
+	readonly responseInfo: GADResponseInfo;
+
 	rootViewController: UIViewController;
 
 	constructor(o: { adSize: GADAdSize; });
@@ -408,6 +412,8 @@ declare var GADBannerViewDelegate: {
 };
 
 declare function GADClosestValidSizeForAdSizes(original: GADAdSize, possibleAdSizes: NSArray<NSValue>): GADAdSize;
+
+declare var GADCustomEventAdNetworkClassName: string;
 
 interface GADCustomEventBanner extends NSObjectProtocol {
 
@@ -840,6 +846,8 @@ declare const enum GADGender {
 	kGADGenderFemale = 2
 }
 
+declare var GADGoogleAdNetworkClassName: string;
+
 declare class GADInAppPurchase extends NSObject {
 
 	static alloc(): GADInAppPurchase; // inherited from NSObject
@@ -900,6 +908,8 @@ declare class GADInstreamAd extends NSObject {
 
 	readonly duration: number;
 
+	readonly responseInfo: GADResponseInfo;
+
 	readonly videoController: GADVideoController;
 }
 
@@ -941,6 +951,8 @@ declare class GADInterstitial extends NSObject {
 	inAppPurchaseDelegate: GADInAppPurchaseDelegate;
 
 	readonly isReady: boolean;
+
+	readonly responseInfo: GADResponseInfo;
 
 	constructor(o: { adUnitID: string; });
 
@@ -1413,11 +1425,7 @@ declare var GADMediationAdapter: {
 
 	networkExtrasClass(): typeof NSObject;
 
-	setUp?(): void;
-
 	setUpWithConfigurationCompletionHandler?(configuration: GADMediationServerConfiguration, completionHandler: (p1: NSError) => void): void;
-
-	updateConfiguration?(configuration: GADMediationServerConfiguration): void;
 
 	version(): GADVersionNumber;
 };
@@ -1833,11 +1841,7 @@ declare var GADRTBAdapter: {
 
 	networkExtrasClass(): typeof NSObject;
 
-	setUp?(): void;
-
 	setUpWithConfigurationCompletionHandler?(configuration: GADMediationServerConfiguration, completionHandler: (p1: NSError) => void): void;
-
-	updateConfiguration?(configuration: GADMediationServerConfiguration): void;
 
 	version(): GADVersionNumber;
 };
@@ -1929,6 +1933,17 @@ declare class GADRequestError extends NSError {
 	static new(): GADRequestError; // inherited from NSObject
 }
 
+declare class GADResponseInfo extends NSObject {
+
+	static alloc(): GADResponseInfo; // inherited from NSObject
+
+	static new(): GADResponseInfo; // inherited from NSObject
+
+	readonly adNetworkClassName: string;
+
+	readonly responseIdentifier: string;
+}
+
 declare class GADRewardBasedVideoAd extends NSObject {
 
 	static alloc(): GADRewardBasedVideoAd; // inherited from NSObject
@@ -1994,6 +2009,8 @@ declare class GADRewardedAd extends NSObject {
 	readonly adUnitID: string;
 
 	readonly ready: boolean;
+
+	readonly responseInfo: GADResponseInfo;
 
 	readonly reward: GADAdReward;
 
@@ -2158,6 +2175,8 @@ declare class GADUnifiedNativeAd extends NSObject {
 	readonly muteThisAdReasons: NSArray<GADMuteThisAdReason>;
 
 	readonly price: string;
+
+	readonly responseInfo: GADResponseInfo;
 
 	rootViewController: UIViewController;
 

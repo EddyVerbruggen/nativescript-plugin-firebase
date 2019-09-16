@@ -459,9 +459,9 @@ declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCo
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvider {
@@ -531,9 +531,9 @@ declare class FIRPhoneAuthCredential extends FIRAuthCredential implements NSSecu
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIRPhoneAuthProvider extends NSObject {

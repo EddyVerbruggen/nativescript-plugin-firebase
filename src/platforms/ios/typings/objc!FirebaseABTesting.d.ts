@@ -3,8 +3,6 @@ declare var FIRActivateExperimentEventName: string;
 
 declare var FIRClearExperimentEventName: string;
 
-declare var FIRDefaultExperimentOverflowPolicy: number;
-
 declare class FIRExperimentController extends NSObject {
 
 	static alloc(): FIRExperimentController; // inherited from NSObject
@@ -14,8 +12,6 @@ declare class FIRExperimentController extends NSObject {
 	static sharedInstance(): FIRExperimentController;
 
 	latestExperimentStartTimestampBetweenTimestampAndPayloads(timestamp: number, payloads: NSArray<NSData> | NSData[]): number;
-
-	updateExperimentsWithServiceOriginEventsPolicyLastStartTimePayloads(origin: string, events: FIRLifecycleEvents, policy: any, lastStartTime: number, payloads: NSArray<NSData> | NSData[]): void;
 }
 
 declare var FIRExpireExperimentEventName: string;
@@ -40,3 +36,7 @@ declare class FIRLifecycleEvents extends NSObject {
 declare var FIRSetExperimentEventName: string;
 
 declare var FIRTimeoutExperimentEventName: string;
+
+declare var FirebaseABTestingVersionNumber: number;
+
+declare var FirebaseABTestingVersionString: interop.Reference<number>;
