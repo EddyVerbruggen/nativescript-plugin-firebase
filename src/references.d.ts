@@ -26,6 +26,7 @@
 /// <reference path="./platforms/ios/typings/objc!FirebaseMLNaturalLanguage.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseMLNLLanguageID.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseMLNLSmartReply.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseMLNLTranslate.d.ts" />
 
 /// <reference path="./platforms/ios/typings/objc!TNSMLKitCamera.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!TNSCrashlyticsLogger.d.ts" />
@@ -46,6 +47,7 @@
 /// <reference path="./platforms/android/typings/mlkit/ml-model-interpreter.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-plugin-lib.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-natural-language.d.ts" />
+/// <reference path="./platforms/android/typings/mlkit/ml-translate.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-smart-reply.d.ts" />
 /// <reference path="./platforms/android/typings/mlkit/ml-translate.d.ts" />
 /// <reference path="./platforms/android/typings/performance/android.d.ts" />

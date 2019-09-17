@@ -21,6 +21,10 @@ export function identifyNaturalLanguage(options: MLKitNaturalLanguageIdentificat
       languageIdentifier.identifyLanguage(options.text)
           .addOnSuccessListener(new (<any>com.google.android.gms).tasks.OnSuccessListener({
             onSuccess: languageCode => {
+              console.log("languageCode: " + languageCode);
+              console.log(languageCode);
+              console.log(typeof languageCode);
+              console.log("languageCode.");
               if (languageCode && languageCode !== "und") {
                 resolve({ languageCode })
               } else {

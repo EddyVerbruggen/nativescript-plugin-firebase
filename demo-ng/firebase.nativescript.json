@@ -25,5 +25,6 @@
   "ml_kit_object_detection": true,
   "ml_kit_custom_model": true,
   "ml_kit_natural_language_identification": true,
+  "ml_kit_natural_language_translation": true,
   "ml_kit_natural_language_smartreply": true
 }
