@@ -1673,6 +1673,10 @@ const ensureFirestore = (): void => {
   if (typeof (FIRFirestore) === "undefined") {
     throw new Error("Make sure 'firestore' is enabled in 'firebase.nativescript.json', then clean the node_modules and platforms folders");
   }
+
+  if (!firebase.initialized) {
+    throw new Error("Please run firebase.init() before using Firestore");
+  }
 };
 
 firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.WriteBatch => {
@@ -1785,14 +1789,19 @@ firebase.firestore.clearPersistence = (): Promise<void> => {
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
   ensureFirestore();
   try {
-    if (!firebase.initialized) {
-      console.log("Please run firebase.init() before firebase.firestore.collection()");
-      return null;
-    }
-
     return firebase.firestore._getCollectionReference(FIRFirestore.firestore().collectionWithPath(collectionPath));
   } catch (ex) {
     console.log("Error in firebase.firestore.collection: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.collectionGroup = (id: string): firestore.CollectionGroup => {
+  ensureFirestore();
+  try {
+    return firebase.firestore._getCollectionGroupQuery(FIRFirestore.firestore().collectionGroupWithID(id));
+  } catch (ex) {
+    console.log("Error in firebase.firestore.collectionGroup: " + ex);
     return null;
   }
 };
@@ -1897,6 +1906,16 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
   };
 };
 
+firebase.firestore._getCollectionGroupQuery = (query?: FIRQuery): firestore.CollectionGroup => {
+  if (!query) {
+    return null;
+  }
+
+  return {
+    where: (property: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(undefined, property, opStr, value, query)
+  };
+};
+
 firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): firestore.DocumentReference => {
   if (!docRef) {
     return null;
@@ -1922,11 +1941,6 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
   ensureFirestore();
   try {
-    if (!firebase.initialized) {
-      console.log("Please run firebase.init() before firebase.firestore.doc()");
-      return null;
-    }
-
     const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
     const fIRDocumentReference = documentPath ? fIRCollectionReference.documentWithPath(documentPath) : fIRCollectionReference.documentWithAutoID();
     return firebase.firestore._getDocumentReference(fIRDocumentReference);

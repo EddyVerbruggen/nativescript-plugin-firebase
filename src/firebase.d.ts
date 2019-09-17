@@ -824,6 +824,10 @@ export namespace firestore {
     endBefore(snapshot: DocumentSnapshot): Query;
   }
 
+  export interface CollectionGroup {
+    where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;
+  }
+
   export interface CollectionReference extends Query {
     readonly id: string;
 
@@ -969,6 +973,8 @@ export namespace firestore {
   }
 
   function collection(collectionPath: string): CollectionReference;
+
+  function collectionGroup(id: string): CollectionGroup;
 
   function doc(collectionPath: string, documentPath?: string): DocumentReference;
 

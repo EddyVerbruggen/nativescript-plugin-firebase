@@ -2156,6 +2156,17 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
+firebase.firestore.collectionGroup = (id: string): firestore.CollectionGroup => {
+  ensureFirestore();
+  try {
+    const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+    return firebase.firestore._getCollectionGroupQuery(db.collectionGroup(id));
+  } catch (ex) {
+    console.log("Error in firebase.firestore.collectionGroup: " + ex);
+    return null;
+  }
+};
+
 firebase.firestore.onDocumentSnapshot = (docRef: com.google.firebase.firestore.DocumentReference, optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError: (docOrError: DocumentSnapshot | Error) => void, onError: (error: Error) => void): () => void => {
   let options = com.google.firebase.firestore.MetadataChanges.EXCLUDE;
   let onNextCallback: (snapshot: DocumentSnapshot) => void;
@@ -2237,6 +2248,16 @@ firebase.firestore._getDocumentReference = (docRef?: JDocumentReference): firest
     delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     android: docRef
+  };
+};
+
+firebase.firestore._getCollectionGroupQuery = (query?: com.google.firebase.firestore.Query): firestore.CollectionGroup => {
+  if (!query) {
+    return null;
+  }
+
+  return {
+    where: (property: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(undefined, property, opStr, value, query)
   };
 };
 

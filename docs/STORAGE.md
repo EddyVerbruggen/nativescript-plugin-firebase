@@ -212,6 +212,9 @@ In this example we'll determine the remote URL of the previously uploaded file.
 Note that your security rules must be version "2" for this to work,
 so if it fails try adding this at the top of your rules defined for your storage bucket: `rules_version = '2';`
 
+Also note that this will require an index in your db, so make sure to `catch` any errors when invoking this method
+and log out any error messages so you can easily copy-paste the required index into your browser URL bar.
+
 <details>
  <summary>Native API</summary>
 
@@ -225,6 +228,10 @@ so if it fails try adding this at the top of your rules defined for your storage
       function (result) {
           console.log(JSON.stringify(result));
           // see the Web API example below for an advanced example
+      },
+      function (error) {
+          // probably related to a missing index or security rules, see the notes in the readme above
+          console.log(error);
       }
   );
 ```

@@ -395,6 +395,13 @@ export class FirestoreComponent {
         .catch(err => console.log("Delete failed, error: " + err));
   }
 
+  firestoreCollectionGroupQuery(): void {
+    firebase.firestore().collectionGroup("cities").where("population", ">=", 1_000_000)
+        .get()
+        .then(result => console.log(JSON.stringify(result)))
+        .catch(err => console.log("Delete failed, error: " + err));
+  }
+
   doWebGetValueForCompanies(): void {
     const path = "/companies";
     firebase.database().ref(path)
