@@ -49,10 +49,10 @@ export interface MLKitScanBarcodesOnDeviceOptions extends MLKitVisionOptions {
    */
   reportDuplicates?: boolean;
 
-    /**
-     * Support for scanning inverse barcodes.
-     * Default false.
-     */
+  /**
+   * Support for scanning inverse barcodes.
+   * Default false.
+   */
   supportInverseBarcodes?: boolean;
 }
 

@@ -3,7 +3,7 @@
 - [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 - [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
-## 10.0.0 (2019, Sep 16)
+## 10.0.0 (2019, Sep 17)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/109?closed=1)
 
 > Make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS (and Android) SDKs.
