@@ -386,15 +386,15 @@ export class HelloWorldModel extends Observable {
           result.items.forEach(item => {
             item.listAll()
                 .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
-                .catch(err => console.log(err))
+                .catch(err => console.log(err));
           });
 
           // dump all prefixes
           result.prefixes.forEach(prefix => {
             prefix.listAll()
                 .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
-                .catch(err => console.log(err))
-          })
+                .catch(err => console.log(err));
+          });
         })
         .catch(err => console.log(err));
   }
@@ -1595,15 +1595,15 @@ export class HelloWorldModel extends Observable {
           result.items.forEach(item => {
             item.listAll()
                 .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
-                .catch(err => console.log(err))
+                .catch(err => console.log(err));
           });
 
           // dump all prefixes
           result.prefixes.forEach(prefix => {
             prefix.listAll()
                 .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
-                .catch(err => console.log(err))
-          })
+                .catch(err => console.log(err));
+          });
         })
         .catch(err => console.log(err));
   }
