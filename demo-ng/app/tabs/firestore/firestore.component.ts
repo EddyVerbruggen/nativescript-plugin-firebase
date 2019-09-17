@@ -398,8 +398,12 @@ export class FirestoreComponent {
   firestoreCollectionGroupQuery(): void {
     firebase.firestore().collectionGroup("cities").where("population", ">=", 1_000_000)
         .get()
-        .then(result => console.log(JSON.stringify(result)))
-        .catch(err => console.log("Delete failed, error: " + err));
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            console.log(`City with >= 1M population: ${doc.id} => ${JSON.stringify(doc.data())}`);
+          });
+        })
+        .catch(err => console.log("Querying collection group failed, error: " + err));
   }
 
   doWebGetValueForCompanies(): void {

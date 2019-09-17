@@ -255,6 +255,23 @@ query
     });
 ```
 
+### [Collection Group Queries](https://firebase.google.com/docs/firestore/query-data/queries#collection-group-query): `collectionGroup.where()`
+A collection group consists of all collections with the same ID. By default, queries retrieve results from a single collection in your database. Use a collection group query to retrieve documents from a collection group instead of from a single collection.
+
+Note that this will require an *index* in your db, so make sure to `catch` any errors when invoking this method
+and log out any error messages so you can easily copy-paste the required index into your browser URL bar.
+
+```typescript
+// "Gimme all cities with a population of at least a million"
+firebase.firestore().collectionGroup("cities").where("population", ">=", 1_000_000)
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        console.log(`City with >= 1M population: ${doc.id} => ${JSON.stringify(doc.data())}`);
+      });
+    })
+    .catch(err => console.log("Querying collection group failed, error: " + err));
+```
+
 ### Delete an entire document: `collection.doc().delete()`
 Entirely remove a document from a collection:
 
