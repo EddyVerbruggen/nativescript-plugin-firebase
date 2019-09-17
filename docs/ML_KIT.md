@@ -86,6 +86,7 @@ To be able to use Cloud features you need to do two things:
 |[Image labeling](#image-labeling)|✅|✅
 |[Landmark recognition](#landmark-recognition)||✅
 |[Natural language identification](#natural-language-identification)|✅|
+|[Translate text](#translate-text)|✅|
 |[Smart reply](#smart-reply)|✅|
 |[Custom model inference](#custom-model-inference)|✅|✅
 
@@ -447,6 +448,34 @@ firebase.mlkit.naturallanguageidentification.identifyNaturalLanguage({
 })
 .then((languageIdResult: MLKitNaturalLanguageIdentificationResult) => console.log(`Language code: ${languageIdResult.languageCode}`))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+### Translate text (Android only for now)
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_translation.png" height="153px" alt="ML Kit - Translate text"/>
+
+> Because of a model download bug on iOS it currently only works on Android.
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/translation)
+
+#### Still image
+You could use MLKit to perform OCR, then identify the language, and then translate it to another language.
+Check [demo-ng](demo-ng) if you're interested in such an approach.
+
+```typescript
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.translation.ensureTranslationModelDownloaded({
+  from: "nl",
+  to: "en"
+}).then(() => {
+    firebase.mlkit.translation.translateText({
+      from: "nl",
+      to: "en",
+      text: "De kat krabt de krullen van de trap" // some Dutch text
+    })
+    .then(result => console.log(`Translated to English: ${result}`))
+    .catch(console.error)
+}).catch(console.error);
 ```
 
 ### Smart reply

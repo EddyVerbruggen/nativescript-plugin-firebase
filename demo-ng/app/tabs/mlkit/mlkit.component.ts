@@ -308,7 +308,7 @@ export class MLKitComponent {
           console.log(`Translating '${languageIdResult.languageCode}' to 'en'`);
 
           firebase.mlkit.translation.ensureTranslationModelDownloaded({
-            from: "" + languageIdResult.languageCode,
+            from: languageIdResult.languageCode,
             to: "en"
           }).then(() => {
             firebase.mlkit.translation.translateText({
