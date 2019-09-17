@@ -450,10 +450,10 @@ firebase.mlkit.naturallanguageidentification.identifyNaturalLanguage({
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
-### Translate text (Android only for now)
-<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_translation.png" height="153px" alt="ML Kit - Translate text"/>
+### Translate text
+> ⚠️ Because of a model-download bug on iOS this feature currently only works on Android.
 
-> Because of a model download bug on iOS it currently only works on Android.
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_translation.png" height="153px" alt="ML Kit - Translate text"/>
 
 [Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/translation)
 
