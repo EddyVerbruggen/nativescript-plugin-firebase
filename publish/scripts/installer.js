@@ -730,7 +730,7 @@ dependencies {
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
 
-    ` + (!externalPushClientOnly && isSelected(result.analytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.0"
+    ` + (!externalPushClientOnly && (!isPresent(result.analytics) || isSelected(result.analytics)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.0"
 
     // for reading google-services.json and configuration
     implementation "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
@@ -759,6 +759,8 @@ dependencies {
 
     // In-App Messaging
     ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:19.0.0"
+    // Analytics seems to be required for In-App Messaging
+    ` + (isSelected(result.in_app_messaging) && !isSelected(result.analytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.0"
 
     // Cloud Storage
     ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:19.0.1"
