@@ -162,7 +162,7 @@ export function addBackgroundRemoteNotificationHandler(appDelegate) {
       FIRMessaging.messaging().APNSToken = deviceToken;
     } else {
       // if Firebase Messaging isn't used, the developer cares about the APNs token, so pass it to the app
-      const token = deviceToken.description.replace(/[< >]/g, "");
+      const token = deviceToken.debugDescription.replace(/[< >]/g, "");
       _pushToken = token;
       if (_receivedPushTokenCallback) {
         _receivedPushTokenCallback(token);
