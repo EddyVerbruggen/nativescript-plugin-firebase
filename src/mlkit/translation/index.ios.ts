@@ -31,7 +31,7 @@ function _downloadTranslationModelIfNeeded(options: MLKitTranslationModelDownloa
       const firTranslatorOptions = FIRTranslatorOptions.alloc().initWithSourceLanguageTargetLanguage(FIRTranslateLanguageForLanguageCode(options.from), FIRTranslateLanguageForLanguageCode(options.to));
       const nl = FIRNaturalLanguage.naturalLanguage();
 
-      // this line currently (plugin v 10.0.0) errors: CONSOLE ERROR file:///node_modules/@angular/core/fesm5/core.js:26769:0: Error: -[FIRTranslateRemoteModel initWithName:allowsModelUpdates:initialConditions:updateConditions:isBaseModel:]: unrecognized selector sent to instance 0x280567360
+      // this line currently (since plugin v 10.0.0) errors: CONSOLE ERROR file:///node_modules/@angular/core/fesm5/core.js:26769:0: Error: -[FIRTranslateRemoteModel initWithName:allowsModelUpdates:initialConditions:updateConditions:isBaseModel:]: unrecognized selector sent to instance 0x280567360
       const firTranslator = nl.translatorWithOptions(firTranslatorOptions);
 
       const firModelDownloadConditions = FIRModelDownloadConditions.alloc().initWithAllowsCellularAccessAllowsBackgroundDownloading(false, true);
