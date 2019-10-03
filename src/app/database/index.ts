@@ -33,7 +33,7 @@ export namespace database {
      */
     public off(eventType?: string, callback?: (a: DataSnapshot, b?: string | null) => any, context?: Object | null): void {
       // TODO: use callback rather than remove ALL listeners for a given eventType
-      this.queryObject.off(eventType);
+      this.queryObject.off(eventType, callback);
     }
 
     /**

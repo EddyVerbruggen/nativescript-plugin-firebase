@@ -1396,6 +1396,7 @@ firebase.webQuery = (path: string): QueryBase => {
 
 class Query implements QueryBase {
   private query: FIRDatabaseQuery | FIRDatabaseReference; // Keep track of internal query state allowing us to chain filter/range/limit
+  private internalListenerMap: Map<any, Array<any>> = new Map(); // A map to keep track of callbacks to this specific Query Object
   private static eventListenerMap: Map<string, Array<any>> = new Map(); // A map to keep track all all the listeners attached for the specified eventType
 
   constructor(private dbRef: FIRDatabaseReference, private path: string) {
@@ -1408,6 +1409,12 @@ class Query implements QueryBase {
         || eventType === "child_removed" || eventType === "child_moved") {
         const firDataEventType = this.eventToFIRDataEventType(eventType);
         const firDatabaseHandle = this.attachEventObserver(this.query, firDataEventType, callback, cancelCallbackOrContext);
+
+        if (!this.internalListenerMap.has(callback)) {
+          this.internalListenerMap.set(callback, []);
+        }
+        this.internalListenerMap.get(callback).push(firDatabaseHandle); // Incase someone uses the same callback multiple times on same query
+
         if (!Query.eventListenerMap.has(eventType)) {
           Query.eventListenerMap.set(eventType, []);
         }
@@ -1448,14 +1455,18 @@ class Query implements QueryBase {
     });
   }
 
-  off(eventType?: string): void {
+  off(eventType?: string, callback?: (a: DataSnapshot, b?: string | null) => any): void {
     // Remove all events if none specified
     if (!eventType) {
       Query.eventListenerMap.forEach((value: any[], key: string) => {
         firebase.removeEventListeners(value, this.path);
       });
     } else { // Remove only the event specified by the user
-      if (Query.eventListenerMap.get(eventType)) {
+      if (callback) {
+        if (this.internalListenerMap.has(callback)) {
+          firebase.removeEventListeners(this.internalListenerMap.get(callback), this.path);
+        }
+      } else if (Query.eventListenerMap.get(eventType)) {
         firebase.removeEventListeners(Query.eventListenerMap.get(eventType), this.path);
       }
     }
