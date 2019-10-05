@@ -65,3 +65,7 @@ fn("Nativescript-Plugin-Firebase!")
     .catch((errorMessage: string) => console.log("Callable Function Error: " + errorMessage));
 ```
 </details>
+
+### `useFunctionsEmulator`
+Changes this instance to point to a Cloud Functions emulator running locally.
+See [the Firebase docs](https://firebase.google.com/docs/functions/local-emulator).

@@ -28,3 +28,8 @@ export function httpsCallable<I = {}, O = {}>(functionName: string, region: fire
         }));
   });
 }
+
+export function useFunctionsEmulator(origin: string): void {
+  com.google.firebase.functions.FirebaseFunctions.getInstance()
+      .useFunctionsEmulator(origin);
+}

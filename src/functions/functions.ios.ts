@@ -2,9 +2,18 @@ import * as firebase from "../firebase";
 import { firebaseUtils } from '../utils';
 import { HttpsCallable } from './functions';
 
+let functions: FIRFunctions;
+
+function getFunctions(region?: firebase.functions.SupportedRegions): FIRFunctions {
+  if (!functions) {
+    functions = region ? FIRFunctions.functionsForRegion(region) : FIRFunctions.functions();
+  }
+  return functions;
+}
+
 export function httpsCallable<I = {}, O = {}>(functionName: string, region?: firebase.functions.SupportedRegions): HttpsCallable<I, O> {
 
-  const functions = region ? FIRFunctions.functionsForRegion(region) : FIRFunctions.functions();
+  const functions = getFunctions();
 
   return (data: I) => new Promise((resolve, reject) => {
 
@@ -27,4 +36,9 @@ export function httpsCallable<I = {}, O = {}>(functionName: string, region?: fir
       callable.callWithCompletion(handleCompletion);
     }
   });
+}
+
+export function useFunctionsEmulator(origin: string): void {
+  const functions = getFunctions();
+  functions.useFunctionsEmulatorOrigin(origin);
 }
