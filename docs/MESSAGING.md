@@ -41,7 +41,7 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 	<string>development</string>
 ```
 
-> Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` in the iOS folder name, see the path above.
+> Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` is the iOS folder name, see the path above.
 
 #### Allow processing when a background push is received
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
