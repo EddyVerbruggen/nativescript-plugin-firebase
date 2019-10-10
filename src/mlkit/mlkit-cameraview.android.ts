@@ -3,7 +3,10 @@ import * as utils from "tns-core-modules/utils/utils";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 
 declare const android, global: any;
+
 const ActivityCompatClass = useAndroidX() ? global.androidx.core.app.ActivityCompat : android.support.v4.app.ActivityCompat;
+const ContentPackageName = useAndroidX() ? global.androidx.core.content : android.support.v4.content;
+
 const CAMERA_PERMISSION_REQUEST_CODE = 502;
 
 interface SizeWH {
@@ -61,8 +64,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     let nativeView = super.createNativeView();
 
     if (this.hasCamera()) {
-      // no permission required for older Android versions
-      if (android.os.Build.VERSION.SDK_INT < 23) {
+      if (this.wasCameraPermissionGranted()) {
         this.initView(nativeView);
       } else {
         const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
@@ -105,6 +107,15 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         .getApplicationContext()
         .getPackageManager()
         .hasSystemFeature("android.hardware.camera");
+  }
+
+  private wasCameraPermissionGranted() {
+    let hasPermission = android.os.Build.VERSION.SDK_INT < 23; // Android M. (6.0)
+    if (!hasPermission) {
+      hasPermission = android.content.pm.PackageManager.PERMISSION_GRANTED ===
+          ContentPackageName.ContextCompat.checkSelfPermission(utils.ad.getApplicationContext(), android.Manifest.permission.CAMERA);
+    }
+    return hasPermission;
   }
 
   private initView(nativeView): void {
