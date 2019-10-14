@@ -523,7 +523,7 @@ firebase.mlkit.smartreply.suggestReplies({
 - On Android, make sure the model is not compressed by adding [your model's file extension to app.gradle](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/57969d0a62d761bffb98b19db85af88bfae858dd/demo-ng/app/App_Resources/Android/app.gradle#L22).
 - Only "Quantized" models can be used. Not "Float" models, so `modelInput.type` below must be set to `QUANT`.
 - The `modelInput.shape` parameter below must specify your model's dimensions. If you're not sure, use the script in the paragraph "Specify the model's input and output" at [the Firebase docs](https://firebase.google.com/docs/ml-kit/ios/use-custom-models).
-- If you're using Webpack, make sure to have it copy the model and labels files to the bundled app as well. [Here's an example.](../demo-ng/webpack.config.js)
+- If you're using Webpack, make sure to have it copy the model and labels files to the bundled app as well. [Here's an example.](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/816a529be7f19bad1bbd572b77835ab8e557f32d/demo-ng/webpack.config.js#L275)
 
 #### Still image (on-device)
 
