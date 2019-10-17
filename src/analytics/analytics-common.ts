@@ -1,5 +1,7 @@
 import { LogEventParameter } from "./analytics";
 
+export const ENABLE_ANALYTICS_HINT = "Add 'analytics: true' to firebase.nativescript.json and remove the platforms folder";
+
 export function validateAnalyticsKey(key: string): string | undefined {
   if (key === undefined || key === null) {
     return "Argument 'key' is missing";
