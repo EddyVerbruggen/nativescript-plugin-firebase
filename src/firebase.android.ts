@@ -299,7 +299,7 @@ firebase.init = arg => {
       arg = arg || {};
       initializeArguments = arg;
 
-      if (typeof (com.google.firebase.analytics) !== "undefined") {
+      if (typeof (com.google.firebase.analytics) !== "undefined" && typeof (com.google.firebase.analytics.FirebaseAnalytics) !== "undefined") {
         com.google.firebase.analytics.FirebaseAnalytics.getInstance(
             appModule.android.context || com.tns.NativeScriptApplication.getInstance()
         ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
