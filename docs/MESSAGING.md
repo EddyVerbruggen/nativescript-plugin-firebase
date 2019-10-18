@@ -43,6 +43,13 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 
 > Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` is the iOS folder name, see the path above.
 
+> Note that when shipping to the iOS App Store or Google Play, the entitlements file needs to be updated to reflect production:
+
+```xml
+	<key>aps-environment</key>
+	<string>production</string>
+```
+
 #### Allow processing when a background push is received
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
 
@@ -60,6 +67,7 @@ Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) 
 To listen to received notifications while in the foreground or when your app moves from the background to the foreground, add a handler to `init`.
 
 Any pending notifications (while your app was not in the foreground) will trigger the `onMessageReceivedCallback` handler.
+`onMessageReceivedCallback` is *required* for push notifications to be enabled (even if the function is empty).  Users will not be prompted to allow to push notifications without it.
 
 ##### JavaScript
 ```js
@@ -128,6 +136,7 @@ behaviour and handle the notifications yourself on the `onMessageReceivedCallbac
 
 ```js
 firebase.init({
+  // ..
   showNotifications: false,
 });
 ```
@@ -144,6 +153,7 @@ parameters/data when sending the push notification, you need to set the `showNot
 
 ```js
 firebase.init({
+  // ..
   showNotificationsWhenInForeground: true,
 });
 ```
