@@ -198,6 +198,8 @@ This results in a payload of:
 - App in the foreground: `{"foo":"bar", "gcm.message_id":"0:1522952720644653%3194ccac3194ccac", "foreground":true, "title":"My title", "body":"My text"}`
 - App in the background: `{"foo":"bar", "gcm.message_id":"0:1522952737879515%3194ccac3194ccac", "title":"My title", "body":"My text", "foreground":false}`
 
+Note that on iOS, when the notification was tapped, the payload will contain `notificationTapped: true`. That may help you with some logic in your app.
+
 ### (iOS) background notification example
 
 > Take note of `content_available:true` here

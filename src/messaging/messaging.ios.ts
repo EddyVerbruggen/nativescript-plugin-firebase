@@ -407,9 +407,14 @@ function _registerForRemoteNotifications(resolve?, reject?) {
             userInfoJSON,
             inputText
           });
+
           if (_notificationActionTakenCallback) {
             _processPendingActionTakenNotifications();
           }
+
+          userInfoJSON.notificationTapped = actionIdentifier === UNNotificationDefaultActionIdentifier;
+        } else {
+          userInfoJSON.notificationTapped = false;
         }
 
         userInfoJSON.foreground = UIApplication.sharedApplication.applicationState === UIApplicationState.Active;

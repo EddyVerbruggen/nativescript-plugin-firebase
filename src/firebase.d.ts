@@ -548,6 +548,11 @@ export interface Message {
    * Any other data you may have added to the notification.
    */
   data: any;
+  /**
+   * Indicates whether or not the notification was tapped.
+   * iOS only.
+   */
+  notificationTapped?: boolean;
 }
 
 export function init(options?: InitOptions): Promise<any>;

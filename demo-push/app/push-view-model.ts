@@ -48,6 +48,7 @@ export class PushViewModel extends Observable {
     messaging.getCurrentPushToken()
         .then(token => {
           // may be null/undefined if not known yet
+          console.log(token);
           alert({
             title: "Current Push Token",
             message: (!token ? "Not received yet (note that on iOS this does not work on a simulator)" : token + ("\n\nSee the console log if you want to copy-paste it.")),
@@ -192,7 +193,7 @@ export class PushViewModel extends Observable {
       // Whether you want this plugin to always handle the notifications when the app is in foreground.
       // Currently used on iOS only. Default false.
       // When false, you can still force showing it when the app is in the foreground by adding 'showWhenInForeground' to the notification as mentioned in the readme.
-      showNotificationsWhenInForeground: false
+      showNotificationsWhenInForeground: true
     })
         .then(() => console.log(">>>> Registered for push"))
         .catch(err => console.log(">>>> Failed to register for push"));
