@@ -220,7 +220,7 @@ Each action has a type of either `button` or `input`, and you can set `options` 
 - Make the text red to indicate something will be removed/deleted/killed: `destructive`.
 
 Consider this example, where an interactive push notification is received which the user expands and picks the fourth option.
-He then types his reply, and (because of how the action was configured) the app launches and captures the reply.
+They then type their reply, and (because of how the action was configured) the app launches and captures the reply.
 
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive01.png" height="270px" alt="Interactive Notification, part 1"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive02.png" height="270px" alt="Interactive Notification, part 2"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive03.png" height="270px" alt="Interactive Notification, part 3"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive04.png" height="270px" alt="Interactive Notification, part 4"/>
 
