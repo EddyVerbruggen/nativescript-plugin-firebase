@@ -2801,7 +2801,7 @@ var path = __webpack_require__(/*! path */ 3);
 var prompt = __webpack_require__(/*! prompt-lite */ 1);
 
 // Default settings for a few prompts
-var usingiOS = false, usingAndroid = false, externalPushClientOnly = false;
+var usingiOS = false, usingAndroid = false, externalPushClient = false;
 
 // The directories where the Podfile and include.gradle are stored
 var directories = {
@@ -2820,6 +2820,8 @@ function mergeConfig(result) {
   for (var key in result) {
     config[key] = isSelected(result[key]);
   }
+  // note that the semantics of "external_push_client_only" changed to "external push client" with plugin version 10.1.0
+  externalPushClient = isSelected(config["external_push_client_only"]);
 }
 
 function saveConfig() {
@@ -2846,32 +2848,13 @@ if (process.argv.indexOf("config") === -1 && fs.existsSync(pluginConfigPath)) {
   console.log("Config file exists (" + pluginConfigFile + ")");
   askiOSPromptResult(config);
   askAndroidPromptResult(config);
-  askExternalPushMessagingOnlyPromptResult(config);
   promptQuestionsResult(config);
 } else if (!isInteractive()) {
   console.log("No existing " + pluginConfigFile + " config file found and terminal is not interactive! Default configuration will be used.");
 } else {
   console.log("No existing " + pluginConfigFile + " config file found, so let's configure the Firebase plugin!");
   prompt.start();
-  askExternalPushMessagingOnlyPrompt();
-}
-
-/**
- * Prompt the user if they are integrating Firebase with iOS
- */
-function askExternalPushMessagingOnlyPrompt() {
-  prompt.get({
-    name: 'external_push_client_only',
-    description: 'Are you using this plugin ONLY as a Push Notification client for an external (non-Firebase) Push service? (y/n)',
-    default: 'n'
-  }, function (err, result) {
-    if (err) {
-      return console.log(err);
-    }
-    mergeConfig(result);
-    askExternalPushMessagingOnlyPromptResult(result);
-    askiOSPrompt();
-  });
+  askiOSPrompt();
 }
 
 /**
@@ -2890,12 +2873,6 @@ function askiOSPrompt() {
     askiOSPromptResult(result);
     askAndroidPrompt();
   });
-}
-
-function askExternalPushMessagingOnlyPromptResult(result) {
-  if (isSelected(result.external_push_client_only)) {
-    externalPushClientOnly = true;
-  }
 }
 
 function askiOSPromptResult(result) {
@@ -2918,11 +2895,8 @@ function askAndroidPrompt() {
     }
     mergeConfig(result);
     askAndroidPromptResult(result);
-    if ((usingiOS || usingAndroid) && !externalPushClientOnly) {
+    if (usingiOS || usingAndroid) {
       promptQuestions();
-    } else if (externalPushClientOnly) {
-      promptQuestionsResult(result);
-      askSaveConfigPrompt();
     } else {
       askSaveConfigPrompt();
     }
@@ -2962,6 +2936,10 @@ function promptQuestions() {
   }, {
     name: 'performance_monitoring',
     description: 'Are you using Performance Monitoring? (y/n)',
+    default: 'n'
+  }, {
+    name: 'external_push_client_only',
+    description: 'Are you using this plugin as a Push Notification client for an external (NOT Firebase Cloud Messaging) Push service? (y/n)',
     default: 'n'
   }, {
     name: 'messaging',
@@ -3065,9 +3043,7 @@ function promptQuestions() {
 
 function promptQuestionsResult(result) {
   if (usingiOS) {
-    if (!externalPushClientOnly) {
-      writePodFile(result);
-    }
+    writePodFile(result);
     writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
     writeBuildscriptHookForFirestore(isSelected(result.firestore));
@@ -3078,7 +3054,7 @@ function promptQuestionsResult(result) {
     writeGoogleServiceCopyHook();
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
-    activateAndroidPushNotificationsLib(isSelected(result.messaging) || externalPushClientOnly);
+    activateAndroidPushNotificationsLib(isSelected(result.messaging) || isSelected(result.external_push_client_only));
     activateAndroidMLKitCustomModelLib(isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model));
   }
 
@@ -3157,13 +3133,13 @@ function writePodFile(result) {
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
 # Analytics
-` + (!externalPushClientOnly && (!isPresent(result.analytics) || isSelected(result.analytics)) ? `` : `#`) + `pod 'Firebase/Analytics'
+` + (isSelected(result.analytics) || (!isSelected(result.external_push_client_only) && !isPresent(result.analytics)) ? `` : `#`) + `pod 'Firebase/Analytics'
 
 # Authentication
-` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
+` + (isSelected(result.authentication) || (!isSelected(result.external_push_client_only) && !isPresent(result.external_push_client_only)) ? `` : `#`) + `pod 'Firebase/Auth'
 
 # Realtime DB
-` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
+` + (isSelected(result.realtimedb) || (!isSelected(result.external_push_client_only) && !isPresent(result.realtimedb)) ? `` : `#`) + `pod 'Firebase/Database'
 
 # Cloud Firestore
 ` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
@@ -3189,7 +3165,7 @@ post_install do |installer|
 end`) + `
 
 # Firebase Cloud Messaging (FCM)
-` + (isSelected(result.messaging) && !isSelected(result.external_messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
+` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
 # Firebase In-App Messaging
 ` + (isSelected(result.in_app_messaging) ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
@@ -3528,16 +3504,16 @@ dependencies {
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
 
-    ` + (!externalPushClientOnly && (!isPresent(result.analytics) || isSelected(result.analytics)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.0"
+    ` + (isSelected(result.analytics) || (!isSelected(result.external_push_client_only) && !isPresent(result.analytics)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.0"
 
     // for reading google-services.json and configuration
     implementation "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:19.0.0"
+    ` + (isSelected(result.authentication) || (!isSelected(result.external_push_client_only) && !isPresent(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:19.0.0"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:19.1.0"
+    ` + (isSelected(result.realtimedb) || (!isSelected(result.external_push_client_only) && !isPresent(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:19.1.0"
 
     // Cloud Firestore
     ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:21.1.1"
@@ -3552,8 +3528,8 @@ dependencies {
     ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
 
     // Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:20.0.0"
-    // ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "me.leolin:ShortcutBadger:1.1.22@aar"
+    ` + (isSelected(result.messaging) || isSelected(result.external_push_client_only) ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:20.0.0"
+    // ` + (isSelected(result.messaging) || isSelected(result.external_push_client_only) ? `` : `//`) + ` implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 
     // In-App Messaging
     ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:19.0.0"
@@ -3798,9 +3774,9 @@ var copyPlist = function(copyPlistOpts) {
                 return true;
             }
         } else if (!fs.existsSync(destinationGooglePlist)) { // single GoogleService-Info.plist modus but missing`;
-    if (externalPushClientOnly) {
+    if (externalPushClient) {
       beforeCheckForChangesContent += `
-            return true; // this is a push-only project, so this is allowed`;
+            return true; // this may be a push-only project, so this is allowed`;
     } else {
       beforeCheckForChangesContent += `
             copyPlistOpts.$logger.warn("nativescript-plugin-firebase: " + destinationGooglePlist + " does not exist. Please follow the installation instructions from the documentation");

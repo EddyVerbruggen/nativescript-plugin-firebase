@@ -1,8 +1,9 @@
-import { Observable } from "tns-core-modules/data/observable";
-import { messaging, Message } from "nativescript-plugin-firebase/messaging";
-import { alert, confirm } from "tns-core-modules/ui/dialogs";
-import * as platform from "tns-core-modules/platform";
+import * as firebase from "nativescript-plugin-firebase";
+import { Message, messaging } from "nativescript-plugin-firebase/messaging";
 import * as applicationSettings from "tns-core-modules/application-settings";
+import { Observable } from "tns-core-modules/data/observable";
+import * as platform from "tns-core-modules/platform";
+import { alert, confirm } from "tns-core-modules/ui/dialogs";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet;
@@ -26,6 +27,7 @@ export class PushViewModel extends Observable {
     if (applicationSettings.getBoolean(PushViewModel.APP_REGISTERED_FOR_NOTIFICATIONS, false)) {
       this.doRegisterPushHandlers();
     }
+    this.setScreenName("push-demo-view");
   }
 
   public doRequestConsent(): void {
@@ -240,5 +242,14 @@ export class PushViewModel extends Observable {
       message: "" + messaging.areNotificationsEnabled(),
       okButtonText: "Okay, very interesting"
     });
+  }
+
+  private setScreenName(screenName): void {
+    firebase.analytics.setScreenName(
+        {
+          screenName
+        })
+        .then(() => console.log("Analytics screen name set to: " + screenName))
+        .catch(err => console.log("Analytics error: " + err));
   }
 }
