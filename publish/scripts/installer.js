@@ -33,6 +33,7 @@ function saveConfig() {
 function readConfig() {
   try {
     config = JSON.parse(fs.readFileSync(pluginConfigPath));
+    externalPushClient = isSelected(config["external_push_client_only"]);
   } catch (e) {
     console.log("Failed reading " + pluginConfigFile);
     console.log(e);
@@ -852,7 +853,7 @@ return new Promise(function(resolve, reject) {
                 fs.writeFileSync(destinationGoogleJsonAlt, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else {
-                $logger.warn("Unable to copy google-services.json.");
+                $logger.warn("Unable to copy google-services.json. You need this file, because the Google Services Plugin cannot function without it..");
                 reject();
             }
         } else if (platform === 'ios') {
