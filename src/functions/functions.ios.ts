@@ -12,8 +12,7 @@ function getFunctions(region?: firebase.functions.SupportedRegions): FIRFunction
 }
 
 export function httpsCallable<I = {}, O = {}>(functionName: string, region?: firebase.functions.SupportedRegions): HttpsCallable<I, O> {
-
-  const functions = getFunctions();
+  const functions = getFunctions(region);
 
   return (data: I) => new Promise((resolve, reject) => {
 
