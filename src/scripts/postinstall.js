@@ -3048,6 +3048,8 @@ function promptQuestionsResult(result) {
     writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
     writeBuildscriptHookForFirestore(isSelected(result.firestore));
+    activateIOSCrashlyticsFramework(isSelected(result.crashlytics));
+    activateIOSMLKitCameraFramework(isSelected(result.ml_kit));
   }
 
   if (usingAndroid) {
@@ -3101,6 +3103,22 @@ function activateAndroidMLKitCustomModelLib(enable) {
     fs.renameSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'), path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'));
   } else if (!enable && fs.existsSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'))) {
     fs.renameSync(path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar'), path.join(directories.android, 'nativescript-firebase-mlkit-helper.jar-disabled'));
+  }
+}
+
+function activateIOSMLKitCameraFramework(enable) {
+  if (enable && fs.existsSync(path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'), path.join(directories.ios, 'TNSMLKitCamera.framework'));
+  } else if (!enable && fs.existsSync(path.join(directories.ios, 'TNSMLKitCamera.framework'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSMLKitCamera.framework'), path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'));
+  }
+}
+
+function activateIOSCrashlyticsFramework(enable) {
+  if (enable && fs.existsSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'), path.join(directories.ios, 'TNSCrashlyticsLogger.framework'));
+  } else if (!enable && fs.existsSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework'), path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'));
   }
 }
 
