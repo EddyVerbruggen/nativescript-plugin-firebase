@@ -19,7 +19,8 @@ Two important things to keep in mind are:
 > Do not run the plugin's `.init` function!
 
 ### Android
-No additional setup required.
+Open your Firebase project at the Google console and click 'Add app' to add an Android app. Follow the steps (make sure the bundle id is the same as your `nativescript.id` in `package.json` and you'll be able to download
+`google-services.json` which you'll add to your NativeScript project at `app/App_Resources/Android/google-services.json`
 
 There is a little quirk: you will currently not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
 
