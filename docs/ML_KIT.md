@@ -2,6 +2,8 @@
 
 Make sure to check out [this demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) because it has almost all ML Kit features this plugin currently supports! Steps:
 
+> Supported on Android, and iOS 10+
+
 ```bash
 git clone https://github.com/EddyVerbruggen/nativescript-plugin-firebase
 cd nativescript-plugin-firebase/src
