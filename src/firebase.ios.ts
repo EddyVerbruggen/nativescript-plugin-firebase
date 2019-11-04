@@ -631,7 +631,7 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
         providers.push({id: pid, token: FBSDKAccessToken.currentAccessToken ? FBSDKAccessToken.currentAccessToken.tokenString : null});
       } else if (pid === 'google.com' && typeof (GIDSignIn) !== "undefined" && GIDSignIn.sharedInstance() && GIDSignIn.sharedInstance().currentUser) {
         // include web compatible oauth2 token
-        var gidCurrentIdToken = GIDSignIn.sharedInstance().currentUser.authentication.idToken;
+        const gidCurrentIdToken = GIDSignIn.sharedInstance().currentUser.authentication.idToken;
         providers.push({ id: pid, token: gidCurrentIdToken });
       } else {
         providers.push({id: pid});
