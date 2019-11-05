@@ -27,7 +27,7 @@ export class PushViewModel extends Observable {
     if (applicationSettings.getBoolean(PushViewModel.APP_REGISTERED_FOR_NOTIFICATIONS, false)) {
       this.doRegisterPushHandlers();
     }
-    this.setScreenName("push-demo-view");
+    // this.setScreenName("push-demo-view");
   }
 
   public doRequestConsent(): void {
@@ -188,12 +188,12 @@ export class PushViewModel extends Observable {
       },
 
       // Whether you want this plugin to automatically display the notifications or just notify the callback. Currently used on iOS only. Default true.
-      showNotifications: true,
+      showNotifications: false,
 
       // Whether you want this plugin to always handle the notifications when the app is in foreground.
       // Currently used on iOS only. Default false.
       // When false, you can still force showing it when the app is in the foreground by adding 'showWhenInForeground' to the notification as mentioned in the readme.
-      showNotificationsWhenInForeground: true
+      showNotificationsWhenInForeground: false
     })
         .then(() => console.log(">>>> Registered for push"))
         .catch(err => console.log(">>>> Failed to register for push"));
