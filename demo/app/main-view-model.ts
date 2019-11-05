@@ -411,6 +411,7 @@ export class HelloWorldModel extends Observable {
       analyticsCollectionEnabled: false, // default true
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
+        console.log(JSON.stringify(data));
         if (data.loggedIn) {
           this.set("userEmailOrPhone", data.user.email ? data.user.email : (data.user.phoneNumber ? data.user.phoneNumber : "N/A"));
         }
