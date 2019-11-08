@@ -1106,6 +1106,11 @@ firebase.login = arg => {
           if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
             appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
             const googleSignInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(eventData.intent);
+            if (googleSignInResult === null) {
+              reject("No googleSignInResult, eventData.intent seems to be invalid");
+              return;
+            }
+
             const success = googleSignInResult.isSuccess();
             if (success) {
               const googleSignInAccount = googleSignInResult.getSignInAccount();
