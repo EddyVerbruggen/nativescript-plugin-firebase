@@ -608,7 +608,11 @@ export class HelloWorldModel extends Observable {
         "fee4cf319a242eab4701543e4c16db89c722731f",  // Eddy's iPad Pro
         "a4cbb499e279054b55c206528f8510ff7fbf20c8",  // Eddy's iPhone X
       ],
-      keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+      keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+      onClicked: () => console.log("Ad clicked"),
+      onLeftApplication: () => console.log("Ad left application (opened a browser, likely)"),
+      onOpened: () => console.log("Ad opened"),
+      onClosed: () => console.log("Ad closed")
     }).then(
         () => {
           alert({
@@ -636,8 +640,7 @@ export class HelloWorldModel extends Observable {
       iosTestDeviceIds: [
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
-      ],
-      onAdClosed: () => console.log("Interstitial closed")
+      ]
     }).then(
         () => {
           console.log("AdMob interstitial showing");
@@ -662,7 +665,10 @@ export class HelloWorldModel extends Observable {
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
       ],
-      onAdClosed: () => console.log("Interstitial closed")
+      onClosed: () => console.log("Interstitial closed"),
+      onClicked: () => console.log("Interstitial clicked"),
+      onLeftApplication: () => console.log("Interstitial left application (opened a browser, likely)"),
+      onOpened: () => console.log("Interstitial opened")
     }).then(
         () => console.log("AdMob interstitial preloaded"),
         errorMessage => {
