@@ -2600,12 +2600,22 @@ firebase.firestore.endBefore = (collectionPath: string, snapshotOrFieldValue: Do
 };
 
 firebase.firestore._getSnapshotOrFieldValues = (snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[]): any => {
-  if(snapshotOrFieldValue && snapshotOrFieldValue.android){  
+  if(snapshotOrFieldValue && snapshotOrFieldValue.android) {
     return snapshotOrFieldValue;
   } else {
     const AllFieldValues = [snapshotOrFieldValue, ...fieldValues];
-    const javaArray = Array.create('java.lang.Object',AllFieldValues.length);
-    AllFieldValues.forEach((item,index) => javaArray[index] = item);
+    const javaArray = Array.create('java.lang.Object', AllFieldValues.length);
+    AllFieldValues.forEach((value, index) => {
+      // support only Number and String type
+      // Not sure whether other types are supported by OrderBy
+      let javaValue: java.lang.String | java.lang.Double;
+      if (isNaN(value)) {
+        javaValue = new java.lang.String(value.toString());
+      } else {
+        javaValue = new java.lang.Double(value);
+      }
+      javaArray[index] = javaValue;
+    });
     return javaArray;
   }
 }
