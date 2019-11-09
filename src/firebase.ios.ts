@@ -1871,6 +1871,7 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
   return {
     id: colRef.collectionID,
     parent: firebase.firestore._getDocumentReference(colRef.parent),
+    firestore: firebase.firestore,
     doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
     add: document => firebase.firestore.add(collectionPath, document),
     get: (options?: firestore.GetOptions) => firebase.firestore.get(collectionPath, options),
@@ -1897,6 +1898,7 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
     id: docRef.documentID,
     parent: firebase.firestore._getCollectionReference(docRef.parent),
     path: docRef.path,
+    firestore: firebase.firestore,
     collection: cp => firebase.firestore.collection(`${collectionPath}/${docRef.documentID}/${cp}`),
     set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.documentID, data, options),
     get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.documentID, options),
@@ -2199,6 +2201,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
     startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, query),
     endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, query),
     endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, query),
+    firestore: firebase.firestore
   };
 };
 

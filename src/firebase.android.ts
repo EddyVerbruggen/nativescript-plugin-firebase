@@ -2213,6 +2213,7 @@ firebase.firestore._getDocumentReference = (docRef?: JDocumentReference): firest
     id: docRef.getId(),
     parent: firebase.firestore._getCollectionReference(docRef.getParent()),
     path: docRef.getPath(),
+    firestore: firebase.firestore,
     collection: cp => firebase.firestore.collection(`${collectionPath}/${docRef.getId()}/${cp}`),
     set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.getId(), data, options),
     get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.getId(), options),
@@ -2233,6 +2234,7 @@ firebase.firestore._getCollectionReference = (colRef?: JCollectionReference): fi
   return {
     id: colRef.getId(),
     parent: firebase.firestore._getDocumentReference(colRef.getParent()),
+    firestore: firebase.firestore,
     doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
     add: document => firebase.firestore.add(collectionPath, document),
     get: (options?: firestore.GetOptions) => firebase.firestore.get(collectionPath, options),
@@ -2530,6 +2532,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
     startAt: (snapshot: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, snapshot, query),
     endAt: (snapshot: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, snapshot, query),
     endBefore: (snapshot: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, snapshot, query),
+    firestore: firebase.firestore
   };
 };
 
