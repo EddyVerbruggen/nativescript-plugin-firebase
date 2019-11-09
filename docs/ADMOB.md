@@ -69,7 +69,10 @@ Go [manage your AdMob app](https://apps.admob.com) and grab the banner, then sho
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
     ],
-    keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+    keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+    onOpened: () => console.log("Ad opened"),
+    onClicked: () => console.log("Ad clicked"),
+    onLeftApplication: () => console.log("Ad left application")
   }).then(
       function () {
         console.log("AdMob banner showing");
@@ -123,7 +126,10 @@ There's two ways how you can use this function:
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
     ],
-    onAdClosed: () => console.log("Interstitial closed")
+    onClosed: () => console.log("Interstitial closed"),
+    onClicked: () => console.log("Interstitial clicked"),
+    onOpened: () => console.log("Interstitial opened"),
+    onLeftApplication: () => console.log("Interstitial left application")
   }).then(
       function () {
         console.log("AdMob interstitial preloaded, you can now call 'showInterstitial' at any time to show it without delay.");
@@ -188,11 +194,11 @@ firebase.admob.showRewardedVideoAd({
     console.log("onRewarded called with amount " + reward.amount);
     console.log("onRewarded called with type " + reward.type);
   },
-  onLeftApplication: () => console.log("onLeftApplication"),
-  onClosed: () => console.log("onClosed"),
   onOpened: () => console.log("onOpened"),
+  onClosed: () => console.log("onClosed"),
   onStarted: () => console.log("onStarted"),
   onCompleted: () => console.log("onCompleted"),
+  onLeftApplication: () => console.log("onLeftApplication")
 }).then(
       function() {
         console.log("RewardedVideoAd showing");

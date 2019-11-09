@@ -99,6 +99,40 @@ export interface DeleteFileOptions {
   remoteFullPath: string;
 }
 
+// TODO add properties/methods
+export interface Reference {
+  ios?: any;
+  android?: any;
+
+  bucket: string;
+  name: string;
+  fullPath: string;
+
+  listAll: () => Promise<ListResult>;
+}
+
+export interface ListOptions {
+  /**
+   * If you didn't pass 'storageBucket' during init() you will need to do it now.
+   * Takes the form of 'gs://n-plugin-test.appspot.com' and can be found in the Firebase console.
+   */
+  bucket?: string;
+  /**
+   * The path of an existing folder in Firebase storage.
+   * Example: 'files/2019'
+   */
+  remoteFullPath: string;
+}
+
+export interface ListResult {
+  ios?: any;
+  android?: any;
+
+  prefixes: Array<Reference>;
+  items: Array<Reference>;
+  nextPageToken?: string;
+}
+
 export declare function uploadFile(options: UploadFileOptions): Promise<UploadFileResult>;
 
 export declare function downloadFile(options: DownloadFileOptions): Promise<string>;
@@ -106,3 +140,5 @@ export declare function downloadFile(options: DownloadFileOptions): Promise<stri
 export declare function getDownloadUrl(options: GetDownloadUrlOptions): Promise<string>;
 
 export declare function deleteFile(options: DeleteFileOptions): Promise<void>;
+
+export declare function listAll(options: ListOptions): Promise<ListResult>;

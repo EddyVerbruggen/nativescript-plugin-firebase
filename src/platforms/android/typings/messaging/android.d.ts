@@ -8,7 +8,6 @@ declare module com {
 					export module firebase_messaging {
 						export class zzg {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_messaging.zzg>;
-							public static checkNotNull(param0: any): any;
 						}
 					}
 				}
@@ -93,6 +92,22 @@ declare module com {
 
 declare module com {
 	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_messaging {
+						export class zzn {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_messaging.zzn>;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
 		export module firebase {
 			export module messaging {
 				export class FirebaseMessaging {
@@ -114,7 +129,7 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module messaging {
-				export class FirebaseMessagingService {
+				export class FirebaseMessagingService extends com.google.firebase.messaging.zzc {
 					public static class: java.lang.Class<com.google.firebase.messaging.FirebaseMessagingService>;
 					public onNewToken(param0: string): void;
 					public constructor();
@@ -195,20 +210,32 @@ declare module com {
 					}
 					export class Notification {
 						public static class: java.lang.Class<com.google.firebase.messaging.RemoteMessage.Notification>;
-						public getIcon(): string;
-						public getLink(): globalAndroid.net.Uri;
+						public getDefaultSound(): boolean;
 						public getChannelId(): string;
-						public getColor(): string;
 						public getClickAction(): string;
-						public getTitleLocalizationKey(): string;
-						public getTitle(): string;
 						public getBody(): string;
 						public getBodyLocalizationArgs(): native.Array<string>;
-						public getImageUrl(): globalAndroid.net.Uri;
+						public getLocalOnly(): boolean;
+						public getDefaultVibrateSettings(): boolean;
+						public getVisibility(): java.lang.Integer;
 						public getTitleLocalizationArgs(): native.Array<string>;
-						public getTag(): string;
-						public getBodyLocalizationKey(): string;
 						public getSound(): string;
+						public getNotificationPriority(): java.lang.Integer;
+						public getVibrateTimings(): native.Array<number>;
+						public getTicker(): string;
+						public getLightSettings(): native.Array<number>;
+						public getIcon(): string;
+						public getNotificationCount(): java.lang.Integer;
+						public getLink(): globalAndroid.net.Uri;
+						public getColor(): string;
+						public getSticky(): boolean;
+						public getTitleLocalizationKey(): string;
+						public getTitle(): string;
+						public getImageUrl(): globalAndroid.net.Uri;
+						public getEventTime(): java.lang.Long;
+						public getTag(): string;
+						public getDefaultLightSettings(): boolean;
+						public getBodyLocalizationKey(): string;
 					}
 				}
 			}
@@ -240,8 +267,6 @@ declare module com {
 			export module messaging {
 				export class zza {
 					public static class: java.lang.Class<com.google.firebase.messaging.zza>;
-					public tag: string;
-					public id: number;
 				}
 			}
 		}
@@ -254,7 +279,6 @@ declare module com {
 			export module messaging {
 				export class zzb {
 					public static class: java.lang.Class<com.google.firebase.messaging.zzb>;
-					public constructor(param0: globalAndroid.content.Context, param1: string);
 				}
 			}
 		}
@@ -265,9 +289,12 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module messaging {
-				export class zzc {
+				export abstract class zzc {
 					public static class: java.lang.Class<com.google.firebase.messaging.zzc>;
-					public constructor(param0: globalAndroid.content.Context, param1: globalAndroid.os.Bundle, param2: java.util.concurrent.Executor);
+					public onBind(param0: globalAndroid.content.Intent): globalAndroid.os.IBinder;
+					public constructor();
+					public onStartCommand(param0: globalAndroid.content.Intent, param1: number, param2: number): number;
+					public onDestroy(): void;
 				}
 			}
 		}
@@ -280,8 +307,7 @@ declare module com {
 			export module messaging {
 				export class zzd {
 					public static class: java.lang.Class<com.google.firebase.messaging.zzd>;
-					public close(): void;
-					public getTask(): com.google.android.gms.tasks.Task<globalAndroid.graphics.Bitmap>;
+					public constructor(param0: globalAndroid.content.Context, param1: any /* com.google.firebase.messaging.zzk*/, param2: java.util.concurrent.Executor);
 				}
 			}
 		}
@@ -294,7 +320,7 @@ declare module com {
 			export module messaging {
 				export class zze {
 					public static class: java.lang.Class<com.google.firebase.messaging.zze>;
-					public call(): any;
+					public run(): void;
 				}
 			}
 		}
@@ -317,8 +343,85 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module messaging {
-				export class zzg extends globalAndroid.os.Parcelable.Creator<com.google.firebase.messaging.RemoteMessage> {
+				export class zzg {
 					public static class: java.lang.Class<com.google.firebase.messaging.zzg>;
+					public onComplete(param0: com.google.android.gms.tasks.Task): void;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module messaging {
+				export class zzh {
+					public static class: java.lang.Class<com.google.firebase.messaging.zzh>;
+					public execute(param0: java.lang.Runnable): void;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module messaging {
+				export class zzi {
+					public static class: java.lang.Class<com.google.firebase.messaging.zzi>;
+					public call(): any;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module messaging {
+				export class zzj {
+					public static class: java.lang.Class<com.google.firebase.messaging.zzj>;
+					public close(): void;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module messaging {
+				export class zzk {
+					public static class: java.lang.Class<com.google.firebase.messaging.zzk>;
+					public constructor(param0: globalAndroid.os.Bundle);
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module messaging {
+				export class zzl {
+					public static class: java.lang.Class<com.google.firebase.messaging.zzl>;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module messaging {
+				export class zzm extends globalAndroid.os.Parcelable.Creator<com.google.firebase.messaging.RemoteMessage> {
+					public static class: java.lang.Class<com.google.firebase.messaging.zzm>;
 					public constructor();
 				}
 			}

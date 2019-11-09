@@ -9,6 +9,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private previewLayer: AVCaptureVideoPreviewLayer;
   private cameraView: TNSMLKitCameraView;
 
+  public lastVisionImage;
+
   disposeNativeView(): void {
     super.disposeNativeView();
     if (this.captureSession) {
@@ -100,6 +102,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.cameraView.delegate = TNSMLKitCameraViewDelegateImpl.createWithOwnerResultCallbackAndOptions(
           new WeakRef(this),
           data => {},
+          this.preProcessImage,
           {});
     }, 0);
   }
@@ -164,7 +167,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     if (this.captureSession && this.captureSession.running) {
       this.captureSession.stopRunning();
     }
-  };
+  }
 
   protected resumeScanning(): void {
     if (this.captureSession && !this.captureSession.running) {
@@ -185,6 +188,7 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
   public static ObjCProtocols = [];
   private owner: WeakRef<MLKitCameraView>;
   private resultCallback: (message: any) => void;
+  private preProcessImageCallback: (image: UIImage) => UIImage;
   private options?: any;
 
   private detector: any;
@@ -192,7 +196,7 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
 
   private detectorBusy = false;
 
-  public static createWithOwnerResultCallbackAndOptions(owner: WeakRef<MLKitCameraView>, callback: (message: any) => void, options?: any): TNSMLKitCameraViewDelegateImpl {
+  public static createWithOwnerResultCallbackAndOptions(owner: WeakRef<MLKitCameraView>, callback: (message: any) => void, preProcessImageCallback: (image: UIImage) => UIImage, options?: any): TNSMLKitCameraViewDelegateImpl {
     // defer initialisation because the framework may not be available / used
     if (TNSMLKitCameraViewDelegateImpl.ObjCProtocols.length === 0 && typeof (TNSMLKitCameraViewDelegate) !== "undefined") {
       TNSMLKitCameraViewDelegateImpl.ObjCProtocols.push(TNSMLKitCameraViewDelegate);
@@ -201,6 +205,7 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
     delegate.owner = owner;
     delegate.options = options;
     delegate.resultCallback = callback;
+    delegate.preProcessImageCallback = preProcessImageCallback;
     delegate.detector = owner.get().createDetector();
     delegate.onSuccessListener = owner.get().createSuccessListener();
     return delegate;
@@ -216,6 +221,8 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
     const onComplete = () => {
       this.detectorBusy = false;
     };
+
+    this.owner.get().lastVisionImage = image;
 
     if (this.detector.detectInImageCompletion) {
       this.detector.detectInImageCompletion(this.uiImageToFIRVisionImage(image), (result, error) => {
@@ -235,6 +242,7 @@ class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraV
   }
 
   private uiImageToFIRVisionImage(image: UIImage): FIRVisionImage {
+    image = this.preProcessImageCallback(image);
     const fIRVisionImage = FIRVisionImage.alloc().initWithImage(image);
     const fIRVisionImageMetadata = FIRVisionImageMetadata.new();
     fIRVisionImageMetadata.orientation = this.owner.get().getVisionOrientation(image.imageOrientation);

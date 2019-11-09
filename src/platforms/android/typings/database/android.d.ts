@@ -2807,6 +2807,7 @@ declare module com {
 							public repoInfo: com.google.firebase.database.core.RepoInfo;
 							public path: com.google.firebase.database.core.Path;
 							public constructor();
+							public equals(param0: any): boolean;
 						}
 					}
 				}
@@ -2947,7 +2948,6 @@ declare module com {
 							public constructor();
 							public static hardAssert(param0: boolean): void;
 							public static wrapOnComplete(param0: com.google.firebase.database.DatabaseReference.CompletionListener): com.google.firebase.database.core.utilities.Pair<com.google.android.gms.tasks.Task<java.lang.Void>,com.google.firebase.database.DatabaseReference.CompletionListener>;
-							public static splitIntoFrames(param0: string, param1: number): native.Array<string>;
 							public static castOrNull(param0: any, param1: java.lang.Class): any;
 							public static sha1HexDigest(param0: string): string;
 							public static tryParseInt(param0: string): java.lang.Integer;

@@ -17,6 +17,10 @@
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
+> Plugin version **10.0.0** works with NativeScript 5.2+, and 6.1+ is recommended. Using an older version? Stick to plugin version < 10.
+
+> Interested in using NativeScript with Firebase? Check out the upcoming webinar, [NativeScript on Fire(base)](https://attendee.gotowebinar.com/register/1269693340074344450?source=plugin), on Thursday, November 21st!
+
 ## Features
 * [AdMob](docs/ADMOB.md)
 * [Analytics](docs/ANALYTICS.md)
@@ -78,7 +82,7 @@ Please update your [NativeScript-Vue](https://github.com/nativescript-vue/vue-cl
 aligns perfectly with this plugin (because that template is now much more similar to a regular NativeScript project).
 
 If you want a demo using Vue and Firestore, then [check out this project](https://github.com/EddyVerbruggen/footplr),
-if you want one with Realtime DB, [check out this one](https://github.com/jlooper/elocute/tree/master/mobile-v2).
+if you want one with Realtime DB, [check out this one](https://github.com/jlooper/mixology-mobile).
 
 ### iOS (Cocoapods)
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.

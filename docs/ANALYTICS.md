@@ -1,10 +1,14 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/analytics.png" height="85px" alt="Analytics"/>
 
 ## Enabling Analytics
-This plugin has had enalytics enabled since day 1 to collect usage and behavior data for your app. However, you were not able to push your own events. That changed with version 3.6.0 😃🔥
+This plugin has had enalytics enabled since day 1 to collect usage and behavior data for your app,
+and since version 3.6.0 you are able to push your own events.
+
+With version 10.0.0 I've been able to make Analytics an optional dependency (because the upstream SDKs made it optional as well),
+so if you want to use Analytics then nothing needs to change (enabled by default), but if you don't, you can edit `firebase.nativescript.json`
+and add `"analytics": false`, then `rm -rf node_modules platforms`.
 
 _Beware that your Analytics events in the Firebase console dashboards are updated periodically throughout the day, not real-time._
-
 
 ## Functions
 
