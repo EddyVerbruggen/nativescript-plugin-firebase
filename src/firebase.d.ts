@@ -786,6 +786,8 @@ export namespace firestore {
 
     readonly path: string;
 
+    readonly firestore: firestore;
+
     collection: (collectionPath: string) => CollectionReference;
 
     set: (document: any, options?: SetOptions) => Promise<void>;
@@ -804,6 +806,8 @@ export namespace firestore {
   }
 
   export interface Query {
+    readonly firestore: firestore;
+    
     get(options?: GetOptions): Promise<QuerySnapshot>;
 
     where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;
@@ -816,11 +820,19 @@ export namespace firestore {
 
     startAt(snapshot: DocumentSnapshot): Query;
 
+    startAt(...fieldValues: any[]): Query;
+
     startAfter(snapshot: DocumentSnapshot): Query;
+
+    startAfter(...fieldValues: any[]): Query;
 
     endAt(snapshot: DocumentSnapshot): Query;
 
+    endAt(...fieldValues: any[]): Query;
+
     endBefore(snapshot: DocumentSnapshot): Query;
+
+    endBefore(...fieldValues: any[]): Query;
   }
 
   export interface CollectionReference extends Query {
