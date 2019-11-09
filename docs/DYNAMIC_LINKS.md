@@ -59,6 +59,17 @@ applinks:app_code.app.goo.gl
 
 Where `app_code` can be found in the Firebase console at the Dynamic Links section.
 
+If you are using a custom domain, add in your App_Resources/iOS/Info.plist the following lines
+```xml
+<key>FirebaseDynamicLinksCustomDomains</key>
+<array>
+  <string>https://example.com/link</string>
+  <string>https://example.com/promos</string>
+</array>
+```
+
+See https://firebase.google.com/docs/dynamic-links/custom-domains#set_up_a_custom_domain_in_the for more info
+
 #### Copy the entitlements file
 The previous step created a the file`platforms/ios/YourAppName/(Resources/)YourAppName.entitlements`.
 Copy that file to `app/App_Resources/iOS/` (if it doesn't exist yet, otherwise merge its contents),

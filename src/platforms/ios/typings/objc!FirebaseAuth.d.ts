@@ -179,6 +179,8 @@ declare class FIRAuthDataResult extends NSObject {
 
 	readonly additionalUserInfo: FIRAdditionalUserInfo;
 
+	readonly credential: FIRAuthCredential;
+
 	readonly user: FIRUser;
 }
 
@@ -301,6 +303,8 @@ declare const enum FIRAuthErrorCode {
 	InvalidDynamicLinkDomain = 17074,
 
 	GameKitNotLinked = 17076,
+
+	MissingClientIdentifier = 17993,
 
 	KeychainError = 17995,
 
@@ -449,13 +453,15 @@ declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCo
 
 	readonly accessToken: string;
 
+	readonly secret: string;
+
 	static readonly supportsSecureCoding: boolean; // inherited from NSSecureCoding
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvider {
@@ -525,9 +531,9 @@ declare class FIRPhoneAuthCredential extends FIRAuthCredential implements NSSecu
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIRPhoneAuthProvider extends NSObject {

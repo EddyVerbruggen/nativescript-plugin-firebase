@@ -1,15 +1,5 @@
 import * as firebase from "nativescript-plugin-firebase";
-import {
-  AddEventListenerResult,
-  admob as firebaseAdMob,
-  crashlytics as firebaseCrashlytics,
-  IdTokenResult,
-  GetRemoteConfigResult,
-  LogComplexEventTypeParameter,
-  performance as firebasePerformance,
-  storage as firebaseStorage,
-  User
-} from "nativescript-plugin-firebase";
+import { AddEventListenerResult, admob as firebaseAdMob, crashlytics as firebaseCrashlytics, GetRemoteConfigResult, IdTokenResult, LogComplexEventTypeParameter, performance as firebasePerformance, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
 import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
 import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performance";
 import { Observable } from "tns-core-modules/data/observable";
@@ -385,6 +375,29 @@ export class HelloWorldModel extends Observable {
         });
   }
 
+  public doWebListAll(): void {
+    firebaseWebApi.storage().ref()
+        .child("uploads/images")
+        .listAll()
+        .then(result => {
+          console.log(JSON.stringify(result));
+
+          // dump all items
+          result.items.forEach(item => {
+            item.listAll()
+                .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+
+          // dump all prefixes
+          result.prefixes.forEach(prefix => {
+            prefix.listAll()
+                .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+        })
+        .catch(err => console.log(err));
+  }
 
   /***********************************************
    * Native API usage examples
@@ -395,14 +408,15 @@ export class HelloWorldModel extends Observable {
       crashlyticsCollectionEnabled: true,
       // storageBucket: 'gs://n-plugin-test.appspot.com',
       persist: true, // optional, default false
-      // analyticsCollectionEnabled: false, // default true
+      analyticsCollectionEnabled: false, // default true
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
+        console.log(JSON.stringify(data));
         if (data.loggedIn) {
           this.set("userEmailOrPhone", data.user.email ? data.user.email : (data.user.phoneNumber ? data.user.phoneNumber : "N/A"));
         }
       },
-      // uncomment in order to testi push wiring during 'init' for iOS (instead of adding these callbacks later):
+      // uncomment in order to test push wiring during 'init' (instead of adding these callbacks later):
       /*
       onPushTokenReceivedCallback: token => {
         // you can use this token to send to your own backend server,
@@ -410,8 +424,7 @@ export class HelloWorldModel extends Observable {
         console.log("Firebase plugin received a push token: " + token);
         // this is for iOS, to copy the token onto the clipboard
         if (isIOS) {
-          const pasteboard = iosUtils.getter(UIPasteboard, UIPasteboard.generalPasteboard);
-          pasteboard.setValueForPasteboardType("[Firebase demo app] Last push token received: " + token, kUTTypePlainText);
+          UIPasteboard.generalPasteboard.setValueForPasteboardType("[Firebase demo app] Last push token received: " + token, kUTTypePlainText);
         }
       },
       onMessageReceivedCallback: message => {
@@ -467,10 +480,11 @@ export class HelloWorldModel extends Observable {
     firebase.analytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
-      parameters: [{ // optional
-        key: "item_id",
-        value: "p7655"
-      },
+      parameters: [
+        { // optional
+          key: "item_id",
+          value: "p7655"
+        },
         {
           key: "item_name",
           value: "abcd"
@@ -594,7 +608,11 @@ export class HelloWorldModel extends Observable {
         "fee4cf319a242eab4701543e4c16db89c722731f",  // Eddy's iPad Pro
         "a4cbb499e279054b55c206528f8510ff7fbf20c8",  // Eddy's iPhone X
       ],
-      keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+      keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+      onClicked: () => console.log("Ad clicked"),
+      onLeftApplication: () => console.log("Ad left application (opened a browser, likely)"),
+      onOpened: () => console.log("Ad opened"),
+      onClosed: () => console.log("Ad closed")
     }).then(
         () => {
           alert({
@@ -622,8 +640,7 @@ export class HelloWorldModel extends Observable {
       iosTestDeviceIds: [
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
-      ],
-      onAdClosed: () => console.log("Interstitial closed")
+      ]
     }).then(
         () => {
           console.log("AdMob interstitial showing");
@@ -648,7 +665,10 @@ export class HelloWorldModel extends Observable {
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
       ],
-      onAdClosed: () => console.log("Interstitial closed")
+      onClosed: () => console.log("Interstitial closed"),
+      onClicked: () => console.log("Interstitial clicked"),
+      onLeftApplication: () => console.log("Interstitial left application (opened a browser, likely)"),
+      onOpened: () => console.log("Interstitial opened")
     }).then(
         () => console.log("AdMob interstitial preloaded"),
         errorMessage => {
@@ -1089,8 +1109,8 @@ export class HelloWorldModel extends Observable {
       type: firebase.LoginType.GOOGLE,
       googleOptions: {
         scopes: [
-            "https://www.googleapis.com/auth/contacts.readonly",
-            "https://www.googleapis.com/auth/user.birthday.read"
+          "https://www.googleapis.com/auth/contacts.readonly",
+          "https://www.googleapis.com/auth/user.birthday.read"
         ]
       }
     }).then(
@@ -1568,6 +1588,31 @@ export class HelloWorldModel extends Observable {
           });
         }
     );
+  }
+
+  public doListAll(): void {
+    firebaseStorage.listAll(
+        {
+          remoteFullPath: "uploads/images"
+        })
+        .then(result => {
+          console.log(JSON.stringify(result));
+
+          // dump all items
+          result.items.forEach(item => {
+            item.listAll()
+                .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+
+          // dump all prefixes
+          result.prefixes.forEach(prefix => {
+            prefix.listAll()
+                .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+        })
+        .catch(err => console.log(err));
   }
 
   public doUploadFile(): void {

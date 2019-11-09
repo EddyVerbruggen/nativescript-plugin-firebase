@@ -108,7 +108,7 @@ function getInterpreter(localModelFile?: string): any {
     } else {
       const firModelLocalBuilder = new com.google.firebase.ml.common.modeldownload.FirebaseLocalModel.Builder(localModelName);
 
-      if (localModelFile.startsWith("~/")) {
+      if (localModelFile.indexOf("~/") === 0) {
         firModelLocalBuilder.setFilePath(fs.knownFolders.currentApp().path + localModelFile.substring(1));
       } else {
         // note that this doesn't seem to work, let's advice users to use ~/ for now
@@ -143,7 +143,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
       const interpreter = getInterpreter(options.localModelFile);
 
       let labels: Array<string>;
-      if (options.labelsFile.startsWith("~/")) {
+      if (options.labelsFile.indexOf("~/") === 0) {
         labels = getLabelsFromAppFolder(options.labelsFile);
       } else {
         // no dice loading from assets yet, let's advice users to use ~/ for now

@@ -1,6 +1,6 @@
 import { File } from "tns-core-modules/file-system"
 import * as firebaseStorage from "../../storage/storage";
-import { UploadFileResult } from "../../storage/storage";
+import { ListResult, UploadFileResult } from "../../storage/storage";
 
 export module storage {
 
@@ -39,6 +39,12 @@ export module storage {
 
     getDownloadURL(): Promise<string> {
       return firebaseStorage.getDownloadUrl({
+        remoteFullPath: this.path
+      });
+    }
+
+    listAll(): Promise<ListResult> {
+      return firebaseStorage.listAll({
         remoteFullPath: this.path
       });
     }

@@ -103,6 +103,13 @@ public class BitmapUtil {
     return imgData;
   }
 
+  public static byte[] byteArrayBitwiseNotHelper(byte[] data) {
+    for(int i=0; i< data.length; ++i) {
+      data[i] = (byte)~data[i];
+    }
+    return data;
+  }
+
   private static Bitmap createResizedBitmap(ByteBuffer buffer, int width, int height, int modelWidth, int modelHeight) {
     YuvImage img = new YuvImage(buffer.array(), ImageFormat.NV21, width, height, null);
     ByteArrayOutputStream out = new ByteArrayOutputStream();

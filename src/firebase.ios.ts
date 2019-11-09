@@ -86,7 +86,7 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
-        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
+        result = result || GIDSignIn.sharedInstance().handleURL(url);
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -119,10 +119,7 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
-        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-            url,
-            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+        result = result || GIDSignIn.sharedInstance().handleURL(url);
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -201,7 +198,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
         } else {
           result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, (dynamicLink, error) => {
-            if (dynamicLink.url !== null) {
+            if (dynamicLink !== null && dynamicLink.url !== null) {
               if (firebase._dynamicLinkCallback) {
                 firebase._dynamicLinkCallback({
                   url: dynamicLink.url.absoluteString,
@@ -327,11 +324,13 @@ firebase.init = arg => {
       initializeArguments = arg;
 
       // if deeplinks are used, then for this scheme to work the use must have added the bundle as a scheme to their plist (this is in our docs)
-      if (FIROptions.defaultOptions() !== null) {
+      if (FIROptions && FIROptions.defaultOptions() !== null) {
         FIROptions.defaultOptions().deepLinkURLScheme = NSBundle.mainBundle.bundleIdentifier;
       }
 
-      FIRAnalytics.setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
+      if (typeof (FIRAnalytics) !== "undefined" && FIRAnalytics.setAnalyticsCollectionEnabled) {
+        FIRAnalytics.setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
+      }
 
       if (!firebase._configured) {
         firebase._configured = true;
@@ -442,6 +441,7 @@ firebase.getRemoteConfig = arg => {
       const firebaseRemoteConfig = FIRRemoteConfig.remoteConfig();
 
       // Enable developer mode to allow for frequent refreshes of the cache
+      // TODO this is deprecated (but not removed yet), see https://firebase.google.com/support/release-notes/ios#remote-config_2
       firebaseRemoteConfig.configSettings = new FIRRemoteConfigSettings({developerModeEnabled: arg.developerMode || false});
 
       const dic: any = NSMutableDictionary.new();
@@ -475,7 +475,7 @@ firebase.getRemoteConfig = arg => {
           resolve(result);
 
         } else {
-          reject(error.localizedDescription);
+          reject(error ? error.localizedDescription : "Unknown error, fetch status: " + remoteConfigFetchStatus);
         }
       };
 
@@ -631,8 +631,8 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
         providers.push({id: pid, token: FBSDKAccessToken.currentAccessToken ? FBSDKAccessToken.currentAccessToken.tokenString : null});
       } else if (pid === 'google.com' && typeof (GIDSignIn) !== "undefined" && GIDSignIn.sharedInstance() && GIDSignIn.sharedInstance().currentUser) {
         // include web compatible oauth2 token
-        const gidCurrentAccessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken;
-        providers.push({id: pid, token: gidCurrentAccessToken });
+        const gidCurrentIdToken = GIDSignIn.sharedInstance().currentUser.authentication.idToken;
+        providers.push({ id: pid, token: gidCurrentIdToken });
       } else {
         providers.push({id: pid});
       }
@@ -917,8 +917,7 @@ firebase.login = arg => {
         }
 
         const sIn = GIDSignIn.sharedInstance();
-        // allow custom controller for variety of use cases
-        sIn.uiDelegate = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
+        sIn.presentingViewController = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {
@@ -1670,6 +1669,16 @@ firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
  * END Realtime Database Functions
  ***********************************************/
 
+const ensureFirestore = (): void => {
+  if (typeof (FIRFirestore) === "undefined") {
+    throw new Error("Make sure 'firestore' is enabled in 'firebase.nativescript.json', then clean the node_modules and platforms folders");
+  }
+
+  if (!firebase.initialized) {
+    throw new Error("Please run firebase.init() before using Firestore");
+  }
+};
+
 firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.WriteBatch => {
   class FirestoreWriteBatch implements firestore.WriteBatch {
     constructor() {
@@ -1679,18 +1688,18 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
       fixSpecialFields(data);
       nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    };
+    }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
       fixSpecialFields(data);
       nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    };
+    }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
       nativeWriteBatch.deleteDocument(documentRef.ios);
       return this;
-    };
+    }
 
     commit(): Promise<void> {
       return new Promise<void>((resolve, reject) => {
@@ -1705,6 +1714,7 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
 };
 
 firebase.firestore.batch = (): firestore.WriteBatch => {
+  ensureFirestore();
   return new firebase.firestore.WriteBatch(FIRFirestore.firestore().batch());
 };
 
@@ -1716,19 +1726,19 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
     public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
       const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError(documentRef.ios);
       return new DocumentSnapshot(docSnapshot);
-    };
+    }
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
       return this;
-    };
+    }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.updateDataForDocument(<any>data, documentRef.ios);
       return this;
-    };
+    }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
       nativeTransaction.deleteDocument(documentRef.ios);
@@ -1740,6 +1750,7 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
 };
 
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     FIRFirestore.firestore().runTransactionWithBlockCompletion(
         (nativeTransaction: FIRTransaction, err: any) => {
@@ -1766,21 +1777,31 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
   }
 };
 
+firebase.firestore.clearPersistence = (): Promise<void> => {
+  ensureFirestore();
+  return new Promise<void>((resolve, reject) => {
+    FIRFirestore.firestore().clearPersistenceWithCompletion((error: NSError) => {
+      error ? reject(error.localizedDescription) : resolve();
+    });
+  });
+};
+
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
-    if (!firebase.initialized) {
-      console.log("Please run firebase.init() before firebase.firestore.collection()");
-      return null;
-    }
-
     return firebase.firestore._getCollectionReference(FIRFirestore.firestore().collectionWithPath(collectionPath));
   } catch (ex) {
     console.log("Error in firebase.firestore.collection: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.collectionGroup = (id: string): firestore.CollectionGroup => {
+  ensureFirestore();
+  try {
+    return firebase.firestore._getCollectionGroupQuery(FIRFirestore.firestore().collectionGroupWithID(id));
+  } catch (ex) {
+    console.log("Error in firebase.firestore.collectionGroup: " + ex);
     return null;
   }
 };
@@ -1886,6 +1907,16 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
   };
 };
 
+firebase.firestore._getCollectionGroupQuery = (query?: FIRQuery): firestore.CollectionGroup => {
+  if (!query) {
+    return null;
+  }
+
+  return {
+    where: (property: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(undefined, property, opStr, value, query)
+  };
+};
+
 firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): firestore.DocumentReference => {
   if (!docRef) {
     return null;
@@ -1910,17 +1941,8 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
 };
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
-    if (!firebase.initialized) {
-      console.log("Please run firebase.init() before firebase.firestore.doc()");
-      return null;
-    }
-
     const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
     const fIRDocumentReference = documentPath ? fIRCollectionReference.documentWithPath(documentPath) : fIRCollectionReference.documentWithAutoID();
     return firebase.firestore._getDocumentReference(fIRDocumentReference);
@@ -1931,21 +1953,14 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 };
 
 firebase.firestore.docRef = (documentPath: string): firestore.DocumentReference => {
-  if (typeof (FIRFirestore) === "undefined") {
-    console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-    return null;
-  }
-
+  ensureFirestore();
   return firebase.firestore._getDocumentReference(FIRFirestore.firestore().documentWithPath(documentPath));
 };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
       fixSpecialFields(document);
       const defaultFirestore = FIRFirestore.firestore();
       const fIRDocumentReference = defaultFirestore
@@ -1966,13 +1981,9 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 };
 
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
@@ -2054,13 +2065,9 @@ function fixSpecialField(item): any {
 }
 
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
@@ -2082,13 +2089,9 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 };
 
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
           .documentWithPath(documentPath);
@@ -2109,17 +2112,13 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 };
 
 firebase.firestore.getCollection = (collectionPath: string, options?: firestore.GetOptions): Promise<firestore.QuerySnapshot> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
-          source = FIRFirestoreSource.Cache
+          source = FIRFirestoreSource.Cache;
         } else if (options.source === "server") {
           source = FIRFirestoreSource.Server;
         }
@@ -2148,17 +2147,13 @@ firebase.firestore.get = (collectionPath: string, options?: firestore.GetOptions
 };
 
 firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<firestore.DocumentSnapshot> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
-          source = FIRFirestoreSource.Cache
+          source = FIRFirestoreSource.Cache;
         } else if (options.source === "server") {
           source = FIRFirestoreSource.Server;
         }
@@ -2206,12 +2201,8 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
 };
 
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
     query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
     value = fixSpecialField(value);
 

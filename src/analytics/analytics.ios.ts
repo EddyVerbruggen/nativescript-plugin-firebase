@@ -1,15 +1,17 @@
-import {
-  LogEventOptions,
-  SetScreenNameOptions,
-  SetUserPropertyOptions,
-  LogComplexEventOptions
-} from "./analytics";
+import { LogComplexEventOptions, LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from "./analytics";
+import { ENABLE_ANALYTICS_HINT, validateAnalyticsKey, validateAnalyticsParam } from "./analytics-common";
 
 export function logEvent(options: LogEventOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
     try {
-      if (options.key === undefined) {
-        reject("Argument 'key' is missing");
+      const validationError = validateAnalyticsKey(options.key);
+      if (validationError !== undefined) {
+        reject(validationError);
         return;
       }
 
@@ -17,6 +19,12 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       if (options.parameters !== undefined) {
         for (let p in options.parameters) {
           const param = options.parameters[p];
+          const validationParamError = validateAnalyticsParam(param);
+          if (validationParamError !== undefined) {
+            reject(validationParamError);
+            return;
+          }
+
           if (param.value !== undefined) {
             dic.setObjectForKey(param.value, param.key);
           }
@@ -119,6 +127,11 @@ export function logComplexEvent(options: LogComplexEventOptions): Promise<void> 
 
 export function logComplexEvent(options: LogComplexEventOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
     try {
       const dic: any = NSMutableDictionary.new();
       if (options.parameters !== undefined) {
@@ -154,9 +167,13 @@ export function logComplexEvent(options: LogComplexEventOptions): Promise<void> 
   });
 }
 
-
 export function setUserId(arg): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
     try {
       if (arg.userId === undefined) {
         reject("Argument 'userId' is missing");
@@ -175,6 +192,11 @@ export function setUserId(arg): Promise<void> {
 
 export function setUserProperty(options: SetUserPropertyOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
     try {
       if (options.key === undefined) {
         reject("Argument 'key' is missing");
@@ -197,6 +219,11 @@ export function setUserProperty(options: SetUserPropertyOptions): Promise<void> 
 
 export function setScreenName(options: SetScreenNameOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
     try {
       if (options.screenName === undefined) {
         reject("Argument 'screenName' is missing");
@@ -214,13 +241,27 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
 }
 
 export function setAnalyticsCollectionEnabled(enabled: boolean): void {
-  FIRAnalytics.setAnalyticsCollectionEnabled(enabled);
+  if (isAnalyticsAvailable()) {
+    FIRAnalytics.setAnalyticsCollectionEnabled(enabled);
+  }
 }
 
 export function setSessionTimeoutDuration(seconds: number): void {
-  FIRAnalytics.setSessionTimeoutInterval(seconds);
+  if (isAnalyticsAvailable()) {
+    FIRAnalytics.setSessionTimeoutInterval(seconds);
+  }
 }
 
 export function iOSHandleOpenURL(url: any /* NSURL */): void {
-  FIRAnalytics.handleOpenURL(url);
+  if (isAnalyticsAvailable()) {
+    FIRAnalytics.handleOpenURL(url);
+  }
+}
+
+function isAnalyticsAvailable(): boolean {
+  if (typeof (FIRAnalytics) === "undefined") {
+    console.log(ENABLE_ANALYTICS_HINT);
+    return false;
+  }
+  return true;
 }

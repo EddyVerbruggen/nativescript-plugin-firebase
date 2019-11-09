@@ -68,6 +68,8 @@ declare class FIROptions extends NSObject implements NSCopying {
 
 	androidClientID: string;
 
+	appGroupID: string;
+
 	bundleID: string;
 
 	clientID: string;

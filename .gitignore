@@ -35,6 +35,7 @@ demo/firebasefunctions/functions/lib
 !demo-push/karma.conf.js
 demo-push/*.d.ts
 demo-ng/*.d.ts
+!demo-ng/webpack.config.js
 !demo-vue/app/main.js
 !demo/references.d.ts
 !demo-push/references.d.ts

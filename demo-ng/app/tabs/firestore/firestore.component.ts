@@ -395,6 +395,17 @@ export class FirestoreComponent {
         .catch(err => console.log("Delete failed, error: " + err));
   }
 
+  firestoreCollectionGroupQuery(): void {
+    firebase.firestore().collectionGroup("cities").where("population", ">=", 1_000_000)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            console.log(`City with >= 1M population: ${doc.id} => ${JSON.stringify(doc.data())}`);
+          });
+        })
+        .catch(err => console.log("Querying collection group failed, error: " + err));
+  }
+
   doWebGetValueForCompanies(): void {
     const path = "/companies";
     firebase.database().ref(path)

@@ -1,3 +1,5 @@
+import { ENABLE_CRASHLYTICS_HINT } from "./crashlytics-common";
+
 export function sendCrashLog(exception: any /* NSError */): void {
   if (isCrashlyticsAvailable()) {
     Crashlytics.sharedInstance().recordError(exception);
@@ -65,7 +67,7 @@ export function setCrashlyticsCollectionEnabled(enabled: boolean): void {
 
 function isCrashlyticsAvailable(): boolean {
   if (typeof (Crashlytics) === "undefined") {
-    console.log("Add 'crashlytics: true' to firebase.nativescript.json and remove the platforms folder");
+    console.log(ENABLE_CRASHLYTICS_HINT);
     return false;
   }
   return true;
