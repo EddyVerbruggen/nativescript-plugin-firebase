@@ -2,6 +2,8 @@
 
 Make sure to check out [this demo app](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/tree/master/demo-ng) because it has almost all ML Kit features this plugin currently supports! Steps:
 
+> Supported on Android, and iOS 10+
+
 ```bash
 git clone https://github.com/EddyVerbruggen/nativescript-plugin-firebase
 cd nativescript-plugin-firebase/src
@@ -81,10 +83,12 @@ To be able to use Cloud features you need to do two things:
 |---|---|---
 |[Text recognition](#text-recognition)|✅|✅
 |[Face detection](#face-detection)|✅|
+|[Object detection and tracking](#object-detection-and-tracking)|✅|
 |[Barcode scanning](#barcode-scanning)|✅|
 |[Image labeling](#image-labeling)|✅|✅
 |[Landmark recognition](#landmark-recognition)||✅
 |[Natural language identification](#natural-language-identification)|✅|
+|[Translate text](#translate-text)|✅|
 |[Smart reply](#smart-reply)|✅|
 |[Custom model inference](#custom-model-inference)|✅|✅
 
@@ -269,6 +273,46 @@ registerElement("MLKitFaceDetection", () => require("nativescript-plugin-firebas
 </MLKitFaceDetection>
 ```
 
+### Object detection and tracking
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_object_detection.png" height="124px" alt="ML Kit - Object detection and tracking"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/object-detection)
+
+#### Still image
+
+```typescript
+import { MLKitObjectDetectionResult } from "nativescript-plugin-firebase/mlkit/objectdetection";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.objectdetection.detectObjects({
+  image: imageSource, // a NativeScript Image or ImageSource, see the demo for examples
+  classify: true, // default false, attempts to classify the object(s) if true
+  multiple: true // default false, attempts to detect multiple objects (instead of only the most prominent one) when true
+})
+.then((result: MLKitObjectDetectionResult) => console.log(JSON.stringify(result.objects)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Live camera feed
+The basics are explained above for 'Text recognition', so we're only showing the differences here.
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitObjectDetection", () => require("nativescript-plugin-firebase/mlkit/objectdetection").MLKitObjectDetection);
+```
+
+```html
+<MLKitObjectDetection
+    width="260"
+    height="380"
+    classify="true"
+    multiple="false"
+    processEveryNthFrame="20"
+    [torchOn]="torchOn"
+    (scanResult)="onObjectDetectionResult($event)">
+</MLKitObjectDetection>
+```
+
 ### Barcode scanning
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_barcode_scanning.png" height="153px" alt="ML Kit - Barcode scanning"/>
 
@@ -282,6 +326,7 @@ const firebase = require("nativescript-plugin-firebase");
 
 firebase.mlkit.barcodescanning.scanBarcodesOnDevice({
   image: imageSource,
+  supportInverseBarcodes: true, // only set to true if you need this as it's degrades performance slightly
   formats: [BarcodeFormat.QR_CODE, BarcodeFormat.CODABAR] // limit recognition to certain formats (faster), or leave out entirely for all formats (default)
 })
 .then((result: MLKitScanBarcodesOnDeviceResult) => console.log(JSON.stringify(result.barcodes)))
@@ -303,6 +348,7 @@ registerElement("MLKitBarcodeScanner", () => require("nativescript-plugin-fireba
     beepOnScan="true"
     formats="QR_CODE, EAN_8, EAN_13"
     preferFrontCamera="false"
+    supportInverseBarcodes="false"
     [torchOn]="torchOn"
     (scanResult)="onBarcodeScanningResult($event)">
 </MLKitBarcodeScanner>
@@ -406,6 +452,34 @@ firebase.mlkit.naturallanguageidentification.identifyNaturalLanguage({
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
 ```
 
+### Translate text
+> ⚠️ Because of a model-download bug on iOS this feature currently only works on Android.
+
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_text_translation.png" height="153px" alt="ML Kit - Translate text"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/translation)
+
+#### Still image
+You could use MLKit to perform OCR, then identify the language, and then translate it to another language.
+Check [demo-ng](demo-ng) if you're interested in such an approach.
+
+```typescript
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.translation.ensureTranslationModelDownloaded({
+  from: "nl",
+  to: "en"
+}).then(() => {
+    firebase.mlkit.translation.translateText({
+      from: "nl",
+      to: "en",
+      text: "De kat krabt de krullen van de trap" // some Dutch text
+    })
+    .then(result => console.log(`Translated to English: ${result}`))
+    .catch(console.error)
+}).catch(console.error);
+```
+
 ### Smart reply
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_smart_reply.png" height="153px" alt="ML Kit - Smart reply"/>
 
@@ -451,6 +525,7 @@ firebase.mlkit.smartreply.suggestReplies({
 - On Android, make sure the model is not compressed by adding [your model's file extension to app.gradle](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/57969d0a62d761bffb98b19db85af88bfae858dd/demo-ng/app/App_Resources/Android/app.gradle#L22).
 - Only "Quantized" models can be used. Not "Float" models, so `modelInput.type` below must be set to `QUANT`.
 - The `modelInput.shape` parameter below must specify your model's dimensions. If you're not sure, use the script in the paragraph "Specify the model's input and output" at [the Firebase docs](https://firebase.google.com/docs/ml-kit/ios/use-custom-models).
+- If you're using Webpack, make sure to have it copy the model and labels files to the bundled app as well. [Here's an example.](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/816a529be7f19bad1bbd572b77835ab8e557f32d/demo-ng/webpack.config.js#L275)
 
 #### Still image (on-device)
 

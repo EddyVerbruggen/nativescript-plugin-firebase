@@ -1,5 +1,5 @@
 /**
- * send Crashlytics Log -> android Exception or iOS Exception
+ * send Crashlytics Log -> native Android or iOS exception
  * @param exception
  */
 export declare function sendCrashLog(exception: any): void;

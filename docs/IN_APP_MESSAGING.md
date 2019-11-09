@@ -42,3 +42,17 @@ inappmessaging.onMessageImpression(message => {
   console.log("A message belonging to this campaign is being shown: " + message.campaignName);
 });
 ```
+
+### `triggerEvent`
+Trigger in-app messages programmatically.
+
+Firebase In-App Messaging by default allows you to trigger in-app messages with Google Analytics for Firebase events, with no additional integration. You can also manually trigger events programmatically with the Firebase In-App Messaging SDK’s programmatic triggers.
+
+In the In-App Messaging campaign composer, create a new campaign or select an existing campaign, and in the Scheduling step of the composer workflow, note the event ID of a newly-created or existing messaging event. Once noted, instrument your app to trigger the event by its ID.
+
+```typescript
+import { inappmessaging } from "nativescript-plugin-firebase/inappmessaging";
+
+const eventName = "myEvent";
+inappmessaging.triggerEvent(eventName);
+```

@@ -7,6 +7,10 @@ export namespace firestore {
       return firebase.firestore.collection(collectionPath);
     }
 
+    collectionGroup(id: string): firebase.firestore.CollectionGroup {
+      return firebase.firestore.collectionGroup(id);
+    }
+
     doc(path: string): firebase.firestore.DocumentReference {
       return firebase.firestore.docRef(path);
     }
@@ -37,6 +41,10 @@ export namespace firestore {
 
     settings(settings: firebase.firestore.Settings): void {
       firebase.firestore.settings(settings);
+    }
+
+    clearPersistence(): Promise<void> {
+      return firebase.firestore.clearPersistence();
     }
   }
 }

@@ -7,6 +7,11 @@ import {
 export function identifyNaturalLanguage(options: MLKitNaturalLanguageIdentificationOptions): Promise<MLKitNaturalLanguageIdentificationResult> {
   return new Promise((resolve, reject) => {
     try {
+      if (!options.text) {
+        reject("'text' property not set to a valid value");
+        return;
+      }
+
       const languageIdentifier: com.google.firebase.ml.naturallanguage.languageid.FirebaseLanguageIdentification =
           com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage.getInstance().getLanguageIdentification(
               new com.google.firebase.ml.naturallanguage.languageid.FirebaseLanguageIdentificationOptions.Builder()

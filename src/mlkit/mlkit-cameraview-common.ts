@@ -28,7 +28,7 @@ export const pauseProperty = new Property<MLKitCameraView, boolean>({
 export abstract class MLKitCameraView extends ContentView {
   static scanResultEvent: string = "scanResult";
 
-  protected lastVisionImage;
+  public lastVisionImage;
 
   protected processEveryNthFrame: number;
   protected preferFrontCamera: boolean;
@@ -55,14 +55,19 @@ export abstract class MLKitCameraView extends ContentView {
 
   protected updateTorch(): void {
     // implemented in concrete classes
-  };
+  }
 
   protected pauseScanning(): void {
     // implemented in concrete classes
-  };
+  }
 
   protected resumeScanning(): void {
     // implemented in concrete classes
+  }
+
+  protected preProcessImage(image: any): any {
+    // implemented in concrete classes
+    return image;
   }
 }
 

@@ -208,6 +208,61 @@ In this example we'll determine the remote URL of the previously uploaded file.
 ```
 </details>
 
+### listAll
+Note that your security rules must be version "2" for this to work,
+so if it fails try adding this at the top of your rules defined for your storage bucket: `rules_version = '2';`
+
+<details>
+ <summary>Native API</summary>
+
+```js
+  firebase.storage.listAll({
+    // optional, can also be passed during init() as 'storageBucket' param so we can cache it
+    bucket: 'gs://n-plugin-test.appspot.com',
+    // the full path of an existing file in your Firebase storage
+    remoteFullPath: 'uploads/images'
+  }).then(
+      function (result) {
+          console.log(JSON.stringify(result));
+          // see the Web API example below for an advanced example
+      },
+      function (error) {
+          console.log(error);
+      }
+  );
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+#### TypeScript
+
+```typescript
+firebaseWebApi.storage().ref()
+    .child("uploads/images")
+    .listAll()
+    .then(result => {
+      console.log(JSON.stringify(result));
+
+      // dump all items
+      result.items.forEach(item => {
+        item.listAll()
+            .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+            .catch(err => console.log(err))
+      });
+
+      // dump all prefixes
+      result.prefixes.forEach(prefix => {
+        prefix.listAll()
+            .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+            .catch(err => console.log(err))
+      })
+    })
+    .catch(err => console.log(err));
+```
+</details>
+
 ### deleteFile
 You can pass in remote file path to delete it.
 

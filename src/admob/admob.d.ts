@@ -23,7 +23,35 @@ export enum ERROR_CODES {
   ERROR_CODE_NO_FILL
 }
 
-export interface BannerOptions {
+interface AdLifeCycleEvents {
+  /**
+   * Called when the user is about to return to the application after clicking on an ad.
+   * For all callbacks, see https://developers.google.com/android/reference/com/google/android/gms/ads/AdListener
+   */
+  onClosed?: () => void;
+
+  /**
+   * @Deprecated please use onClosed instead. Simply remove these two letters: 'Ad'.
+   */
+  onAdClosed?: () => void;
+
+  /**
+   * Called when a click is recorded for an ad.
+   */
+  onClicked?: () => void;
+
+  /**
+   * Called when an ad opens an overlay that covers the screen.
+   */
+  onOpened?: () => void;
+
+  /**
+   * Called when an ad leaves the application (e.g., to go to the browser).
+   */
+  onLeftApplication?: () => void;
+}
+
+export interface BannerOptions extends AdLifeCycleEvents {
   /**
    * The layout of the banner.
    * Default AD_SIZE.SMART_BANNER
@@ -77,7 +105,7 @@ export interface BannerOptions {
   keywords?: string[];
 }
 
-export interface InterstitialOptions {
+export interface InterstitialOptions extends AdLifeCycleEvents {
   /**
    * When false (default) you'll get real banners.
    */
@@ -100,11 +128,6 @@ export interface InterstitialOptions {
    *   ["ce97330130c9047ce0d4430d37d713b1", ".."]
    */
   iosTestDeviceIds?: string[];
-
-  /**
-   * Invoked when the user closes the interstitial.
-   */
-  onAdClosed?: () => void;
 }
 
 export interface PreloadRewardedVideoAdOptions {
@@ -142,12 +165,9 @@ export interface RewardedVideoAdReward {
   type: string;
 }
 
-export interface RewardedVideoAdCallbacks {
-  onOpened?: () => void;
+export interface RewardedVideoAdCallbacks extends AdLifeCycleEvents {
   onStarted?: () => void;
   onCompleted?: () => void;
-  onClosed?: () => void;
-  onLeftApplication?: () => void;
   onLoaded?: () => void,
   onFailedToLoad?: (err) => void,
   onRewarded?: (reward: RewardedVideoAdReward) => void;

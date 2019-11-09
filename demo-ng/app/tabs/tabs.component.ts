@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { isAndroid } from "tns-core-modules/platform";
 import { SelectedIndexChangedEventData, TabView } from "tns-core-modules/ui/tab-view";
 
@@ -7,16 +7,8 @@ import { SelectedIndexChangedEventData, TabView } from "tns-core-modules/ui/tab-
   moduleId: module.id,
   templateUrl: "./tabs.component.html"
 })
-export class TabsComponent implements OnInit {
+export class TabsComponent {
   private _title: string;
-
-  constructor() {
-    // Use the component constructor to inject providers.
-  }
-
-  ngOnInit(): void {
-    // Init your component properties here.
-  }
 
   get title(): string {
     return this._title;
