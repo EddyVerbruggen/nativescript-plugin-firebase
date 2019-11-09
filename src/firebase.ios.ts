@@ -1879,10 +1879,10 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
     orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, colRef),
-    startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, colRef),
-    endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, colRef),
-    endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, colRef),
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue,fieldValues, colRef)
   };
 };
 
@@ -2197,10 +2197,10 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, query),
-    startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, query),
-    endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, query),
-    endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, query),
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue,fieldValues,query),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue,fieldValues,query),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue,fieldValues,query),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue,fieldValues,query),
     firestore: firebase.firestore
   };
 };
@@ -2250,20 +2250,36 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQue
   return firebase.firestore._getQuery(collectionPath, query);
 };
 
-firebase.firestore.startAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryStartingAtDocument(document.ios));
+firebase.firestore.startAfter = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterDocument(snapshotOrFieldValue.ios));
+  }else {
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterValues([snapshotOrFieldValue, ...fieldValues]));
+  }  
 };
 
-firebase.firestore.startAfter = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterDocument(document.ios));
+firebase.firestore.startAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAtDocument(snapshotOrFieldValue.ios));
+  }else {
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAtValues([snapshotOrFieldValue, ...fieldValues]));
+  } 
 };
 
-firebase.firestore.endAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryEndingAtDocument(document.ios));
+firebase.firestore.endAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingAtDocument(snapshotOrFieldValue.ios));
+  }else {
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingAtValues([snapshotOrFieldValue, ...fieldValues]));
+  }
 };
 
-firebase.firestore.endBefore = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeDocument(document.ios));
+firebase.firestore.endBefore = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeDocument(snapshotOrFieldValue.ios));
+  }else {
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeValues([snapshotOrFieldValue, ...fieldValues]));
+  }   
 };
 
 class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {
