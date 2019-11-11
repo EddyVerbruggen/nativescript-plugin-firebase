@@ -11,7 +11,7 @@ function getReference(nativeReference: com.google.firebase.storage.StorageRefere
     bucket: nativeReference.getBucket(),
     name: nativeReference.getName(),
     fullPath: nativeReference.getPath(),
-    listAll: (): Promise<ListResult> => listAll({remoteFullPath: nativeReference.getPath(), bucket: listOptions.bucket})
+    listAll: (): Promise<ListResult> => listAll({ remoteFullPath: nativeReference.getPath(), bucket: listOptions.bucket })
   }
 }
 
@@ -56,7 +56,7 @@ function getStorageRef(reject, arg) {
   }
 }
 
-export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
+export function uploadFile(arg: UploadFileOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
 
@@ -85,7 +85,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
 
       const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
-          reject("Upload failed. " + exception);
+          reject(exception);
         }
       });
 
@@ -110,9 +110,9 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
         // using 'putFile' (not 'putBytes') so Firebase can infer the mimetype
         const localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFile.path));
         storageReference.putFile(localFileUrl)
-            .addOnFailureListener(onFailureListener)
-            .addOnSuccessListener(onSuccessListener)
-            .addOnProgressListener(onProgressListener);
+          .addOnFailureListener(onFailureListener)
+          .addOnSuccessListener(onSuccessListener)
+          .addOnProgressListener(onProgressListener);
 
         /*
         var error;
@@ -138,9 +138,9 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
 
         const localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFullPath));
         storageReference.putFile(localFileUrl)
-            .addOnFailureListener(onFailureListener)
-            .addOnSuccessListener(onSuccessListener)
-            .addOnProgressListener(onProgressListener);
+          .addOnFailureListener(onFailureListener)
+          .addOnSuccessListener(onSuccessListener)
+          .addOnProgressListener(onProgressListener);
 
       } else {
         reject("One of localFile or localFullPath is required");
@@ -153,7 +153,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
   });
 }
 
-export function downloadFile(arg: DownloadFileOptions): Promise<string> {
+export function downloadFile(arg: DownloadFileOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
 
@@ -170,7 +170,7 @@ export function downloadFile(arg: DownloadFileOptions): Promise<string> {
       });
 
       const onFailureListener = new gmsTasks.OnFailureListener({
-        onFailure: exception => reject("Download failed. " + exception)
+        onFailure: exception => reject(exception)
       });
 
       let localFilePath;
@@ -193,8 +193,8 @@ export function downloadFile(arg: DownloadFileOptions): Promise<string> {
       const file = new java.io.File(localFilePath);
 
       storageReference.getFile(file)
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.downloadFile: " + ex);
@@ -203,7 +203,7 @@ export function downloadFile(arg: DownloadFileOptions): Promise<string> {
   });
 }
 
-export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
+export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
 
@@ -223,13 +223,13 @@ export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
 
       const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
-          reject(exception.getMessage());
+          reject(exception);
         }
       });
 
       storageReference.getDownloadUrl()
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.getDownloadUrl: " + ex);
@@ -238,8 +238,8 @@ export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
   });
 }
 
-export function deleteFile(arg: DeleteFileOptions): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+export function deleteFile(arg: DeleteFileOptions): Promise<any> {
+  return new Promise<any>((resolve, reject) => {
     try {
 
       const storageRef = getStorageRef(reject, arg);
@@ -258,13 +258,13 @@ export function deleteFile(arg: DeleteFileOptions): Promise<void> {
 
       const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
-          reject(exception.getMessage());
+          reject(exception);
         }
       });
 
       storageReference.delete()
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.deleteFile: " + ex);
@@ -273,8 +273,8 @@ export function deleteFile(arg: DeleteFileOptions): Promise<void> {
   });
 }
 
-export function listAll(listOptions: ListOptions): Promise<ListResult> {
-  return new Promise<ListResult>((resolve, reject) => {
+export function listAll(listOptions: ListOptions): Promise<any> {
+  return new Promise<any>((resolve, reject) => {
     try {
       const storageRef = getStorageRef(reject, listOptions);
 
@@ -288,15 +288,15 @@ export function listAll(listOptions: ListOptions): Promise<ListResult> {
 
       const onFailureListener = new gmsTasks.OnFailureListener({
         onFailure: exception => {
-          reject(exception.getCause() ? exception.getCause().getMessage() : exception.getMessage());
+          reject(exception);
         }
       });
 
       const storageReference = storageRef.child(listOptions.remoteFullPath);
 
       storageReference.listAll()
-          .addOnSuccessListener(onSuccessListener)
-          .addOnFailureListener(onFailureListener);
+        .addOnSuccessListener(onSuccessListener)
+        .addOnFailureListener(onFailureListener);
 
     } catch (ex) {
       console.log("Error in firebase.listAll: " + ex);
