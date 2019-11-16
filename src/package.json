@@ -1,6 +1,6 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "10.1.2",
+  "version": "10.2.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -77,7 +77,7 @@
     "generate.typings.android.dynamiclinks": "npm run generate.typings.android --nativescript-plugin-firebase:typings=dynamiclinks --nativescript-plugin-firebase:typingsproject=demo",
     "generate.typings.android.firestore": "npm run generate.typings.android --nativescript-plugin-firebase:typings=firestore",
     "generate.typings.android.messaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=messaging",
-    "generate.typings.android.playservices": "npm run generate.typings.android --nativescript-plugin-firebase:typings=playservices",
+    "generate.typings.android.playservices.gms": "npm run generate.typings.android --nativescript-plugin-firebase:typings=playservices/gms",
     "generate.typings.android.remoteconfig": "npm run generate.typings.android --nativescript-plugin-firebase:typings=remoteconfig",
     "generate.typings.android.storage": "npm run generate.typings.android --nativescript-plugin-firebase:typings=storage",
     "generate.typings.android.functions": "npm run generate.typings.android --nativescript-plugin-firebase:typings=functions",

@@ -298,11 +298,17 @@ declare const enum FIRAuthErrorCode {
 
 	NullUser = 17067,
 
+	DynamicLinkNotActivated = 17068,
+
 	InvalidProviderID = 17071,
 
 	InvalidDynamicLinkDomain = 17074,
 
+	RejectedCredential = 17075,
+
 	GameKitNotLinked = 17076,
+
+	MissingOrInvalidNonce = 17094,
 
 	MissingClientIdentifier = 17993,
 
@@ -472,6 +478,10 @@ declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvi
 
 	static credentialWithProviderIDIDTokenAccessToken(providerID: string, IDToken: string, accessToken: string): FIROAuthCredential;
 
+	static credentialWithProviderIDIDTokenRawNonce(providerID: string, IDToken: string, rawNonce: string): FIROAuthCredential;
+
+	static credentialWithProviderIDIDTokenRawNonceAccessToken(providerID: string, IDToken: string, rawNonce: string, accessToken: string): FIROAuthCredential;
+
 	static new(): FIROAuthProvider; // inherited from NSObject
 
 	static providerWithProviderID(providerID: string): FIROAuthProvider;
@@ -632,6 +642,8 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	linkWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
+	linkWithProviderUIDelegateCompletion(provider: FIRFederatedAuthProvider, UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
 	performSelector(aSelector: string): any;
 
 	performSelectorWithObject(aSelector: string, object: any): any;
@@ -643,6 +655,8 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 	reauthenticateAndRetrieveDataWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	reauthenticateWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
+	reauthenticateWithProviderUIDelegateCompletion(provider: FIRFederatedAuthProvider, UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	reloadWithCompletion(completion: (p1: NSError) => void): void;
 

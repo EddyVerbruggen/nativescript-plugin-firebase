@@ -122,6 +122,8 @@ declare class FIRVisionBarcode extends NSObject {
 
 	readonly phone: FIRVisionBarcodePhone;
 
+	readonly rawData: NSData;
+
 	readonly rawValue: string;
 
 	readonly sms: FIRVisionBarcodeSMS;

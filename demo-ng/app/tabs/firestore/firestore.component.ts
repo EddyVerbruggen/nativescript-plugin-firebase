@@ -277,7 +277,7 @@ export class FirestoreComponent {
   }
 
   firestoreDocumentObservable(): void {
-    this.myCity$ = Observable.create(subscriber => {
+    this.myCity$ = new Observable(subscriber => {
       const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
       docRef.onSnapshot(
           {includeMetadataChanges: true},
@@ -289,6 +289,7 @@ export class FirestoreComponent {
 
             this.zone.run(() => {
               this.city = <City>doc.data();
+              console.log("City name: " + this.city.name);
               subscriber.next(this.city);
             });
           });
@@ -296,7 +297,7 @@ export class FirestoreComponent {
   }
 
   firestoreCollectionObservable(): void {
-    this.myCities$ = Observable.create(subscriber => {
+    this.myCities$ = new Observable(subscriber => {
       const colRef: firestore.CollectionReference = firebase.firestore().collection("cities");
       colRef.onSnapshot(
           {includeMetadataChanges: true},
