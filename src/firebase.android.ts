@@ -31,6 +31,7 @@ firebase._cachedDynamicLink = null;
 // we need to cache and restore the context, otherwise the next invocation is broken
 firebase._googleSignInIdToken = null;
 firebase._facebookAccessToken = null;
+firebase._appleSignInIdToken = null;
 
 let fbCallbackManager = null;
 let initializeArguments: any;
@@ -784,6 +785,8 @@ function toLoginResult(user, additionalUserInfo?): User {
       providers.push({id: pid, token: firebase._facebookAccessToken});
     } else if (pid === 'google.com') {
       providers.push({id: pid, token: firebase._googleSignInIdToken});
+    } else if (pid === 'apple.com') {
+      providers.push({id: pid, token: firebase._appleSignInIdToken});
     } else {
       providers.push({id: pid});
     }
@@ -894,7 +897,7 @@ firebase.login = arg => {
         }
 
         const actionCodeSettings = com.google.firebase.auth.ActionCodeSettings.newBuilder()
-        // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
+            // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
             .setUrl(arg.emailLinkOptions.url)
             .setHandleCodeInApp(true)
             .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : appModule.android.context.getPackageName())
@@ -1051,14 +1054,59 @@ firebase.login = arg => {
             })
         );
 
-        let scope = ["public_profile", "email"];
-        if (arg.facebookOptions && arg.facebookOptions.scope) {
-          scope = arg.facebookOptions.scope;
+        let scopes = ["public_profile", "email"];
+        if (arg.facebookOptions && arg.facebookOptions.scopes) {
+          scopes = arg.facebookOptions.scopes;
         }
-        const permissions = AndroidUtils.collections.stringArrayToStringSet(scope);
+        const permissions = AndroidUtils.collections.stringArrayToStringSet(scopes);
 
         const activity = appModule.android.foregroundActivity;
         fbLoginManager.logInWithReadPermissions(activity, permissions);
+
+      } else if (arg.type === firebase.LoginType.APPLE) {
+        const onSuccessListener = new gmsTasks.OnSuccessListener({
+          onSuccess: (authResult: com.google.firebase.auth.AuthResult) => {
+            firebase._appleSignInIdToken = (<any>authResult.getCredential()).getIdToken();
+            firebase.notifyAuthStateListeners({
+              loggedIn: true,
+              user: toLoginResult(authResult.getUser(), authResult.getAdditionalUserInfo())
+            });
+            // TODO for reauth and linking, see https://firebase.google.com/docs/auth/android/apple#reauthentication_and_account_linking
+          }
+        });
+
+        const onFailureListener = new gmsTasks.OnFailureListener({
+          onFailure: exception => {
+            reject(exception.getMessage())
+          }
+        });
+
+        const pendingAuthResult = firebaseAuth.getPendingAuthResult();
+        if (pendingAuthResult) {
+          pendingAuthResult
+              .addOnSuccessListener(onSuccessListener)
+              .addOnFailureListener(onFailureListener);
+
+        } else {
+          // no pending result; start the sign in flow
+          const oAuthProviderBuilder = com.google.firebase.auth.OAuthProvider.newBuilder("apple.com");
+
+          let scopes = ["name", "email"];
+          if (arg.appleOptions && arg.appleOptions.scopes) {
+            scopes = arg.appleOptions.scopes;
+          }
+          oAuthProviderBuilder.setScopes(firebase.toJavaArray(scopes));
+
+          if (arg.appleOptions && arg.appleOptions.locale) {
+            oAuthProviderBuilder.addCustomParameter("locale", arg.appleOptions.locale);
+          }
+
+          const provider = oAuthProviderBuilder.build();
+
+          firebaseAuth.startActivityForSignInWithProvider(appModule.android.foregroundActivity || appModule.android.startActivity, provider)
+              .addOnSuccessListener(onSuccessListener)
+              .addOnFailureListener(onFailureListener);
+        }
 
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (typeof (com.google.android.gms.auth.api.Auth) === "undefined") {

@@ -10,6 +10,7 @@ You can sign in a user either
 * using a [custom token](#custom-login),
 * using [Facebook](#facebook-login),
 * using [Google](#google-sign-in).
+* using [Apple](#sign-in-with-apple).
 
 Each of these login mechanisms need to be enabled in your Firebase console at the 'Login & Auth' tab.
 
@@ -659,6 +660,47 @@ To solve, you will want to pass in the appropriate iOS controller of the active 
 1. If you didn't choose this feature during installation you can uncomment `google-services-auth` in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
 2. Google Sign-In requires an SHA1 fingerprint: see [Authenticating Your Client for details](https://developers.google.com/android/guides/client-auth). If you don't do this you will see the account selection popup, but you won't be able to actually sign in.
 3. Those fingerprints need to be added to your Firebase console. Go to 'project overview', 'project settings', then scroll down a bit.
+
+### Sign in with Apple
+First, enable Apple login in your Firebase instance.
+
+Also add the Services ID if you're not only using using Apple sign in on iOS. Make sure to follow all steps, including completing the "OAuth code flow configuration".
+
+Then add the following lines to your code and check for further setup instructions for your platform below.
+
+```js
+  firebase.login({
+    type: firebase.LoginType.APPLE,
+    // Optional
+    appleOptions: {
+      locale: "nl", // for Android
+      scopes: ["email"] // default ["email", "name"]
+    }
+  }).then(
+      function (result) {
+        JSON.stringify(result);
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
+#### iOS
+1. If you didn't choose this feature during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
+2. Follow [these instructions](https://firebase.google.com/docs/auth/ios/apple), including enabling Sign In for your App ID. You may need to recreate your provisioning profile as well.
+3. Add this to `app\App_Resources\iOS\*.entitlements` [as shown here](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/demo/app_resources/iOS/app.entitlements):
+
+```xml
+  <key>com.apple.developer.applesignin</key>
+  <array>
+    <string>Default</string>
+  </array>
+```
+
+#### Android
+1. If you didn't choose this feature during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
+2. Follow [these instructions](https://firebase.google.com/docs/auth/android/apple), including adding your `SHA-1` hash, website association, website ownership confirmation, creating an Apple private key. Just do everything except for adding Java code, because the plugin takes care of that.  
 
 ### getAuthToken / getIdToken
 If you want to authenticate your user from your backend server you can obtain a Firebase auth token for the currently logged in user.

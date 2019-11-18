@@ -117,7 +117,8 @@
             <Button row="8" col="0" text="phone login" tap="{{ doLoginByPhone }}" class="button"/>
             <Button row="8" col="1" text="update profile" tap="{{ doUpdateProfile }}" class="button"/>
 
-            <Button row="9" col="0" colSpan="2" text="email sign-in methods" tap="{{ doFetchSignInMethodsForEmail }}" class="button"/>
+            <Button row="9" col="0" text="Apple login" tap="{{ doSignInWithApple }}" class="button"/>
+            <Button row="9" col="1" text="sign-in methods" tap="{{ doFetchSignInMethodsForEmail }}" class="button"/>
 
             <Button row="10" col="0" text="re-auth passwd" tap="{{ doReauthenticatePwdUser }}" class="button"/>
             <Button row="10" col="1" text="re-auth Facebook" tap="{{ doReauthenticateFacebookUser }}" class="button"/>

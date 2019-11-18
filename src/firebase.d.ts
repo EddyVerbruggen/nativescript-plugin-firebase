@@ -36,7 +36,11 @@ export enum LoginType {
    * This requires you to pass in the 'emailLinkOptions' as well.
    * Note that 'Firebase Dynamic Links' must be enabled for this login type to work.
    */
-  EMAIL_LINK
+  EMAIL_LINK,
+  /**
+   * Apple
+   */
+  APPLE
 }
 
 export enum LogComplexEventTypeParameter {
@@ -283,6 +287,21 @@ export interface FirebaseFacebookLoginOptions {
   scopes?: Array<string>;
 }
 
+export type AppleLoginScope = "name" | "email";
+
+export interface AppleLoginOptions {
+  /**
+   * Default: ["name", "email"]
+   */
+  scopes?: Array<AppleLoginScope>;
+  /**
+   * Android only.
+   * Supported locales: https://developer.apple.com/documentation/signinwithapplejs/incorporating_sign_in_with_apple_into_other_platforms#3332112
+   * Default: "en".
+   */
+  locale?: string;
+}
+
 export interface FirebaseCustomLoginOptions {
   /**
    * The JSON Web Token (JWT) to use for authentication.
@@ -312,6 +331,7 @@ export interface LoginOptions {
   phoneOptions?: FirebasePhoneLoginOptions;
   googleOptions?: FirebaseGoogleLoginOptions;
   facebookOptions?: FirebaseFacebookLoginOptions;
+  appleOptions?: AppleLoginOptions;
   customOptions?: FirebaseCustomLoginOptions;
   ios?: LoginIOSOptions;
 

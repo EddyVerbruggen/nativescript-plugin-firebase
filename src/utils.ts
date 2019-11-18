@@ -1,3 +1,7 @@
+/**
+ * iOS Utils file
+ */
+
 import { firebase } from "./firebase-common";
 import { getClass } from "tns-core-modules/utils/types";
 
