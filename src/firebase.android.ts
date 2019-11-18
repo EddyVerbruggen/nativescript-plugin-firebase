@@ -2602,9 +2602,12 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
       query = query.whereGreaterThanOrEqualTo(fieldPath, firebase.toValue(value));
     } else if (opStr === ">") {
       query = query.whereGreaterThan(fieldPath, firebase.toValue(value));
+    } else if (opStr === "in") {
+      query = query.whereIn(fieldPath, firebase.toValue(value));
     } else if (opStr === "array-contains") {
-      // TODO remove 'any' when typings have been updated
-      query = (<any>query).whereArrayContains(fieldPath, firebase.toValue(value));
+      query = query.whereArrayContains(fieldPath, firebase.toValue(value));
+    } else if (opStr === "array-contains-any") {
+      query = query.whereArrayContainsAny(fieldPath, firebase.toValue(value));
     } else {
       console.log("Illegal argument for opStr: " + opStr);
       return null;

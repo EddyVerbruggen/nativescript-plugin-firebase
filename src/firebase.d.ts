@@ -668,7 +668,7 @@ export namespace dynamicLinks {
 
 export namespace firestore {
   export type DocumentData = { [field: string]: any };
-  export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>' | 'array-contains';
+  export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>' | 'in' | 'array-contains'  | 'array-contains-any';
   export type OrderByDirection = 'desc' | 'asc';
 
   export interface GeoPoint {
