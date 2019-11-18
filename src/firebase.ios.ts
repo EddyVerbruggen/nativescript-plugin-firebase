@@ -637,7 +637,7 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       } else if (pid === "google.com" && typeof (GIDSignIn) !== "undefined" && GIDSignIn.sharedInstance() && GIDSignIn.sharedInstance().currentUser) {
         // include web compatible oauth2 token
         const gidCurrentIdToken = GIDSignIn.sharedInstance().currentUser.authentication.idToken;
-        providers.push({ id: pid, token: gidCurrentIdToken });
+        providers.push({id: pid, token: gidCurrentIdToken});
       } else if (pid === "apple.com") {
         // TODO
       } else {
@@ -1946,10 +1946,10 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
     orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
-    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
-    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
-    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue,fieldValues, colRef)
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue, fieldValues, colRef)
   };
 };
 
@@ -2238,10 +2238,10 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue,fieldValues,query),
-    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue,fieldValues,query),
-    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue,fieldValues,query),
-    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue,fieldValues,query),
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue, fieldValues, query),
     firestore: firebase.firestore
   };
 };
@@ -2292,35 +2292,35 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQue
 };
 
 firebase.firestore.startAfter = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
-  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
     return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterDocument(snapshotOrFieldValue.ios));
-  }else {
+  } else {
     return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterValues([snapshotOrFieldValue, ...fieldValues]));
-  }  
+  }
 };
 
 firebase.firestore.startAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
-  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
     return firebase.firestore._getQuery(collectionPath, query.queryStartingAtDocument(snapshotOrFieldValue.ios));
-  }else {
+  } else {
     return firebase.firestore._getQuery(collectionPath, query.queryStartingAtValues([snapshotOrFieldValue, ...fieldValues]));
-  } 
+  }
 };
 
 firebase.firestore.endAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
-  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
     return firebase.firestore._getQuery(collectionPath, query.queryEndingAtDocument(snapshotOrFieldValue.ios));
-  }else {
+  } else {
     return firebase.firestore._getQuery(collectionPath, query.queryEndingAtValues([snapshotOrFieldValue, ...fieldValues]));
   }
 };
 
 firebase.firestore.endBefore = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
-  if(snapshotOrFieldValue && snapshotOrFieldValue.ios){
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
     return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeDocument(snapshotOrFieldValue.ios));
-  }else {
+  } else {
     return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeValues([snapshotOrFieldValue, ...fieldValues]));
-  }   
+  }
 };
 
 class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {

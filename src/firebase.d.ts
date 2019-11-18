@@ -668,7 +668,7 @@ export namespace dynamicLinks {
 
 export namespace firestore {
   export type DocumentData = { [field: string]: any };
-  export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>' | 'in' | 'array-contains'  | 'array-contains-any';
+  export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>' | 'in' | 'array-contains' | 'array-contains-any';
   export type OrderByDirection = 'desc' | 'asc';
 
   export interface GeoPoint {
@@ -812,7 +812,7 @@ export namespace firestore {
 
     readonly path: string;
 
-    readonly firestore: firestore;
+    readonly firestore: any;
 
     collection: (collectionPath: string) => CollectionReference;
 
@@ -832,8 +832,8 @@ export namespace firestore {
   }
 
   export interface Query {
-    readonly firestore: firestore;
-    
+    readonly firestore: any;
+
     get(options?: GetOptions): Promise<QuerySnapshot>;
 
     where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;

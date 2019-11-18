@@ -2333,10 +2333,10 @@ firebase.firestore._getCollectionReference = (colRef?: JCollectionReference): fi
     orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
-    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
-    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue,fieldValues, colRef),
-    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue,fieldValues, colRef)
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue, fieldValues, colRef)
   };
 };
 
@@ -2581,10 +2581,10 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue,fieldValues,query),
-    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue,fieldValues,query),
-    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue,fieldValues,query),
-    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue,fieldValues,query),
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue, fieldValues, query),
     firestore: firebase.firestore
   };
 };
@@ -2635,28 +2635,28 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: com.go
 };
 
 firebase.firestore.startAfter = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: com.google.firebase.firestore.Query): firestore.Query => {
-  return firebase.firestore._getQuery(collectionPath, query.startAfter(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue,fieldValues)));
+  return firebase.firestore._getQuery(collectionPath, query.startAfter(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue, fieldValues)));
 };
 
 firebase.firestore.startAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: com.google.firebase.firestore.Query): firestore.Query => {
-  return firebase.firestore._getQuery(collectionPath, query.startAt(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue,fieldValues)));
+  return firebase.firestore._getQuery(collectionPath, query.startAt(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue, fieldValues)));
 };
 
 firebase.firestore.endAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: com.google.firebase.firestore.Query): firestore.Query => {
-  return firebase.firestore._getQuery(collectionPath, query.endAt(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue,fieldValues)));
+  return firebase.firestore._getQuery(collectionPath, query.endAt(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue, fieldValues)));
 };
 
 firebase.firestore.endBefore = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: com.google.firebase.firestore.Query): firestore.Query => {
-  return firebase.firestore._getQuery(collectionPath, query.endBefore(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue,fieldValues)));
+  return firebase.firestore._getQuery(collectionPath, query.endBefore(firebase.firestore._getSnapshotOrFieldValues(snapshotOrFieldValue, fieldValues)));
 };
 
 firebase.firestore._getSnapshotOrFieldValues = (snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[]): any => {
-  if(snapshotOrFieldValue && snapshotOrFieldValue.android) {
-    return snapshotOrFieldValue;
+  if (snapshotOrFieldValue && snapshotOrFieldValue.android) {
+    return snapshotOrFieldValue.android;
   } else {
-    const AllFieldValues = [snapshotOrFieldValue, ...fieldValues];
-    const javaArray = Array.create('java.lang.Object', AllFieldValues.length);
-    AllFieldValues.forEach((value, index) => {
+    const allFieldValues = [snapshotOrFieldValue, ...fieldValues];
+    const javaArray = Array.create("java.lang.Object", allFieldValues.length);
+    allFieldValues.forEach((value, index) => {
       // support only Number and String type
       // Not sure whether other types are supported by OrderBy
       let javaValue: java.lang.String | java.lang.Double;
@@ -2669,7 +2669,7 @@ firebase.firestore._getSnapshotOrFieldValues = (snapshotOrFieldValue: DocumentSn
     });
     return javaArray;
   }
-}
+};
 
 export type JDocumentReference = com.google.firebase.firestore.DocumentReference;
 export type JCollectionReference = com.google.firebase.firestore.CollectionReference;
