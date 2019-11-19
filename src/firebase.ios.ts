@@ -940,7 +940,7 @@ firebase.login = arg => {
             } else {
               console.log("Unknown scope: " + scope);
             }
-          })
+          });
         }
 
         appleIDRequest.requestedScopes = scopes;
