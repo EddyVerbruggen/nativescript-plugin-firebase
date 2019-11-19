@@ -52,6 +52,7 @@
 /// <reference path="./platforms/android/typings/mlkit/ml-translate.d.ts" />
 /// <reference path="./platforms/android/typings/performance/android.d.ts" />
 /// <reference path="./platforms/android/typings/playservices/android.d.ts" />
+/// <reference path="./platforms/android/typings/playservices/gms/android.d.ts" />
 /// <reference path="./platforms/android/typings/remoteconfig/android.d.ts" />
 /// <reference path="./platforms/android/typings/inappmessaging/android.d.ts" />
 /// <reference path="./platforms/android/typings/crashlytics/fabric.d.ts" />

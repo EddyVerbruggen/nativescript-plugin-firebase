@@ -10,7 +10,6 @@ import { MessagingViewModel } from "./messaging-view-model";
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
 
-
 declare const Crashlytics: any;
 
 export class HelloWorldModel extends Observable {
@@ -1093,6 +1092,26 @@ export class HelloWorldModel extends Observable {
             okButtonText: "Nice!"
           });
         },
+        errorMessage => {
+          alert({
+            title: "Login error",
+            message: errorMessage,
+            okButtonText: "OK, pity"
+          });
+        }
+    );
+  }
+
+  public doSignInWithApple(): void {
+    firebase.login({
+      // note that you need to enable "Sign in with Apple" in your firebase instance
+      type: firebase.LoginType.APPLE,
+      appleOptions: {
+        locale: "nl",
+        scopes: ["email"]
+      }
+    }).then(
+        result => console.log("Apple login OK: " + JSON.stringify(result)),
         errorMessage => {
           alert({
             title: "Login error",

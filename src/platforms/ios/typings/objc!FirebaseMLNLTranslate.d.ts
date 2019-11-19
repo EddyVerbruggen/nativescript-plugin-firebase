@@ -134,8 +134,6 @@ declare class FIRTranslateRemoteModel extends FIRRemoteModel {
 
 	static new(): FIRTranslateRemoteModel; // inherited from NSObject
 
-	static translateRemoteModelForAppLanguageConditions(app: FIRApp, language: FIRTranslateLanguage, conditions: FIRModelDownloadConditions): FIRTranslateRemoteModel;
-
 	static translateRemoteModelWithLanguage(language: FIRTranslateLanguage): FIRTranslateRemoteModel;
 
 	readonly language: FIRTranslateLanguage;

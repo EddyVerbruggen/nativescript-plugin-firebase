@@ -58,6 +58,7 @@ export const firebase: any = {
     CUSTOM: "custom",
     FACEBOOK: "facebook",
     GOOGLE: "google",
+    APPLE: "apple",
     EMAIL_LINK: "emailLink"
   },
   LogComplexEventTypeParameter: {

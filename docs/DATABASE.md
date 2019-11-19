@@ -256,8 +256,11 @@ Removes values in multiple locations
 ```
 
 ### addChildEventListener
+
 To listen for changes in your database you can pass in a listener callback function.
 You get to control which path inside you database you want to listen to, by default it's `/` which is the entire database.
+
+If you have defined access rules that depend on authentication, add listeners after authentication, attempting to access data not authorized by the access rules will prevent your listener from working properly, even if you add them at first. listing some data as just added, which seems to be a bug in Firebase's access rules system.
 
 The plugin will take care of serializing native data structures to JSON data.
 

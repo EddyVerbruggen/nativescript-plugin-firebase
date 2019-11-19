@@ -277,7 +277,7 @@ export class FirestoreComponent {
   }
 
   firestoreDocumentObservable(): void {
-    this.myCity$ = Observable.create(subscriber => {
+    this.myCity$ = new Observable(subscriber => {
       const docRef: firestore.DocumentReference = firebase.firestore().collection("cities").doc("SF");
       docRef.onSnapshot(
           {includeMetadataChanges: true},
@@ -289,6 +289,7 @@ export class FirestoreComponent {
 
             this.zone.run(() => {
               this.city = <City>doc.data();
+              console.log("City name: " + this.city.name);
               subscriber.next(this.city);
             });
           });
@@ -296,7 +297,7 @@ export class FirestoreComponent {
   }
 
   firestoreCollectionObservable(): void {
-    this.myCities$ = Observable.create(subscriber => {
+    this.myCities$ = new Observable(subscriber => {
       const colRef: firestore.CollectionReference = firebase.firestore().collection("cities");
       colRef.onSnapshot(
           {includeMetadataChanges: true},
@@ -357,24 +358,25 @@ export class FirestoreComponent {
 
   firestoreWhereOrderLimit(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
-        .where("state", "==", "CA")
+        // .where("state", "==", "CA")
+        .where("state", "in", ["CA", "WA"])
         .where("population", "<", 99999999)
         .orderBy("population", "desc")
-        .limit(2);
+        .limit(4);
 
     query
         .get()
         .then((querySnapshot: firestore.QuerySnapshot) => {
           querySnapshot.forEach(doc => {
-            console.log(`Large Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
+            console.log(`Large CA/WA city: ${doc.id} => ${JSON.stringify(doc.data())}`);
           });
         })
         .catch(err => console.log("firestoreWhereOrderLimit failed, error: " + err));
   }
 
-  firestoreWhereCityHasALake(): void {
+  firestoreWhereCityHasALakeAndOrMountain(): void {
     const query: firestore.Query = firebase.firestore().collection("cities")
-        .where("landmarks", "array-contains", "lake");
+        .where("landmarks", "array-contains-any", ["mountain", "lake"]);
 
     query
         .get()

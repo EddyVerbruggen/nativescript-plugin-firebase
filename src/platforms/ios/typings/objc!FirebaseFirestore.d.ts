@@ -164,6 +164,8 @@ declare class FIRFirestore extends NSObject {
 
 	settings: FIRFirestoreSettings;
 
+	addSnapshotsInSyncListener(listener: () => void): FIRListenerRegistration;
+
 	batch(): FIRWriteBatch;
 
 	clearPersistenceWithCompletion(completion: (p1: NSError) => void): void;
@@ -326,6 +328,10 @@ declare class FIRQuery extends NSObject {
 
 	queryWhereFieldArrayContains(field: string, value: any): FIRQuery;
 
+	queryWhereFieldArrayContainsAny(field: string, values: NSArray<any> | any[]): FIRQuery;
+
+	queryWhereFieldIn(field: string, values: NSArray<any> | any[]): FIRQuery;
+
 	queryWhereFieldIsEqualTo(field: string, value: any): FIRQuery;
 
 	queryWhereFieldIsGreaterThan(field: string, value: any): FIRQuery;
@@ -337,6 +343,10 @@ declare class FIRQuery extends NSObject {
 	queryWhereFieldIsLessThanOrEqualTo(field: string, value: any): FIRQuery;
 
 	queryWhereFieldPathArrayContains(path: FIRFieldPath, value: any): FIRQuery;
+
+	queryWhereFieldPathArrayContainsAny(path: FIRFieldPath, values: NSArray<any> | any[]): FIRQuery;
+
+	queryWhereFieldPathIn(path: FIRFieldPath, values: NSArray<any> | any[]): FIRQuery;
 
 	queryWhereFieldPathIsEqualTo(path: FIRFieldPath, value: any): FIRQuery;
 
