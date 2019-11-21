@@ -19,8 +19,6 @@
 
 > Plugin version **10.0.0** works with NativeScript 5.2+, and 6.1+ is recommended. Using an older version? Stick to plugin version < 10.
 
-> Interested in using NativeScript with Firebase? Check out the upcoming webinar, [NativeScript on Fire(base)](https://attendee.gotowebinar.com/register/1269693340074344450?source=plugin), on Thursday, November 21st!
-
 ## Features
 * [AdMob](docs/ADMOB.md)
 * [Analytics](docs/ANALYTICS.md)
