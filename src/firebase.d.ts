@@ -268,6 +268,9 @@ export interface FirebasePhoneLoginOptions {
    * Default: "Verification code".
    */
   verificationPrompt?: string;
+  android?: {
+    timeout: number;
+  }
 }
 
 export interface FirebaseGoogleLoginOptions {

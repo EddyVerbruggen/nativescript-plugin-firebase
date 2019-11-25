@@ -985,9 +985,10 @@ firebase.login = arg => {
 
         firebase._verifyPhoneNumberInProgress = true;
 
+        let timeout = arg.phoneOptions.android ? arg.phoneOptions.android.timeout : 60;
         com.google.firebase.auth.PhoneAuthProvider.getInstance().verifyPhoneNumber(
           arg.phoneOptions.phoneNumber,
-          60, // timeout (in seconds, because of the next argument)
+          timeout, // timeout (in seconds, because of the next argument)
           java.util.concurrent.TimeUnit.SECONDS,
           appModule.android.foregroundActivity,
           new OnVerificationStateChangedCallbacks());
