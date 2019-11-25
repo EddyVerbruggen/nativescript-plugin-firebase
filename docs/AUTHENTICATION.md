@@ -444,7 +444,11 @@ Note that changing a password may fail if your login for this `email` was too lo
     type: firebase.LoginType.PHONE,
     phoneOptions: {
       phoneNumber: '+12345678900',
-      verificationPrompt: "The received verification code" // default "Verification code"
+      verificationPrompt: "The received verification code", // default "Verification code"
+      // Optional
+      android: {
+          timeout: 30 // The maximum amount of time you are willing to wait for SMS auto-retrieval to be completed by the library
+      }
     }
   }).then(
       function (result) {
