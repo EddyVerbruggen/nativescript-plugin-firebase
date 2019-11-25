@@ -269,6 +269,11 @@ export interface FirebasePhoneLoginOptions {
    */
   verificationPrompt?: string;
   android?: {
+    /**
+     * The maximum amount of time you are willing to wait for SMS auto-retrieval to be completed by the library. Maximum allowed value is 2 minutes. Use 0 to disable SMS-auto-retrieval. If you specified a positive value less than 30 seconds, library will default to 30 seconds.
+     * Default: 60 (seconds)
+     * See: https://firebase.google.com/docs/reference/android/com/google/firebase/auth/PhoneAuthProvider
+     */
     timeout: number;
   }
 }
