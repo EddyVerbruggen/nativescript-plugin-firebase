@@ -275,7 +275,7 @@ export interface FirebasePhoneLoginOptions {
      * See: https://firebase.google.com/docs/reference/android/com/google/firebase/auth/PhoneAuthProvider
      */
     timeout: number;
-  }
+  };
 }
 
 export interface FirebaseGoogleLoginOptions {
