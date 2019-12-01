@@ -6,7 +6,7 @@ import { MLKitAutoML as MLKitAutoMLBase } from "./automl-common";
 export class MLKitAutoML extends MLKitAutoMLBase {
 
   protected createDetector(): any {
-    return getDetector(this.confidenceThreshold);
+    return getDetector(this.localModelResourceFolder, this.confidenceThreshold);
   }
 
   protected createSuccessListener(): any {
@@ -41,8 +41,8 @@ export class MLKitAutoML extends MLKitAutoMLBase {
   }
 }
 
-function getDetector(confidenceThreshold?: number): FIRVisionImageLabeler {
-  const manifestPath = NSBundle.mainBundle.pathForResourceOfTypeInDirectory("manifest", "json", "leftright");
+function getDetector(localModelResourceFolder: string, confidenceThreshold?: number): FIRVisionImageLabeler {
+  const manifestPath = NSBundle.mainBundle.pathForResourceOfTypeInDirectory("manifest", "json", localModelResourceFolder);
   const fIRAutoMLLocalModel = FIRAutoMLLocalModel.alloc().initWithManifestPath(manifestPath);
 
   const options = FIRVisionOnDeviceAutoMLImageLabelerOptions.alloc().initWithLocalModel(fIRAutoMLLocalModel);
@@ -56,7 +56,7 @@ function getDetector(confidenceThreshold?: number): FIRVisionImageLabeler {
 export function labelImage(options: MLKitAutoMLOptions): Promise<MLKitAutoMLResult> {
   return new Promise((resolve, reject) => {
     try {
-      const labelDetector = getDetector(options.confidenceThreshold);
+      const labelDetector = getDetector(options.localModelResourceFolder, options.confidenceThreshold);
 
       labelDetector.processImageCompletion(getImage(options), (labels: NSArray<FIRVisionImageLabel>, error: NSError) => {
         if (error !== null) {

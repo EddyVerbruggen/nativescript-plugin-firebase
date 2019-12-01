@@ -42,8 +42,8 @@ android:
     - sys-img-armeabi-v7a-android-21
 
 before_install:
-#  - sudo pip install --upgrade pip
-#  - sudo pip install six
+  - sudo pip install --upgrade pip
+  - sudo pip install six
 
 install:
   - echo no | npm install -g nativescript

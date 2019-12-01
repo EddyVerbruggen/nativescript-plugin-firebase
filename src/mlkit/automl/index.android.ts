@@ -8,7 +8,7 @@ declare const com: any;
 export class MLKitAutoML extends MLKitAutoMLBase {
 
   protected createDetector(): any {
-    return getDetector(this.confidenceThreshold);
+    return getDetector(this.localModelResourceFolder, this.confidenceThreshold);
   }
 
   protected createSuccessListener(): any {
@@ -44,19 +44,26 @@ export class MLKitAutoML extends MLKitAutoMLBase {
   }
 }
 
-function getDetector(confidenceThreshold: number): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler {
+function getDetector(localModelResourceFolder: string, confidenceThreshold: number): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler {
+  // TODO also support cloud hosted models
+  const model = new com.google.firebase.ml.vision.automl.FirebaseAutoMLLocalModel.Builder()
+      .setAssetFilePath(localModelResourceFolder + "/manifest.json") // TODO this..
+      // .setFilePath() // .. or this
+      .build();
+
   const labelDetectorOptions =
-      new com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceAutoMLImageLabelerOptions.Builder()
+      new com.google.firebase.ml.vision.label.FirebaseVisionOnDeviceAutoMLImageLabelerOptions.Builder(model)
           .setConfidenceThreshold(confidenceThreshold)
           .build();
 
-  return com.google.firebase.ml.vision.FirebaseVision.getInstance().getOnDeviceAutoMLImageLabeler(labelDetectorOptions);
+  return com.google.firebase.ml.vision.FirebaseVision.getInstance()
+      .getOnDeviceAutoMLImageLabeler(labelDetectorOptions);
 }
 
 export function labelImage(options: MLKitAutoMLOptions): Promise<MLKitAutoMLResult> {
   return new Promise((resolve, reject) => {
     try {
-      const firebaseVisionAutoMLImageLabeler = getDetector(options.confidenceThreshold || 0.5);
+      const firebaseVisionAutoMLImageLabeler = getDetector(options.localModelResourceFolder, options.confidenceThreshold || 0.5);
 
       const onSuccessListener = new com.google.android.gms.tasks.OnSuccessListener({
         onSuccess: labels => {

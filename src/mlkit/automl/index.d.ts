@@ -13,6 +13,11 @@ export interface MLKitAutoMLResult extends MLKitVisionResult {
 
 export interface MLKitAutoMLOptions extends MLKitVisionOptions {
   /**
+   * The folder name in your App_Resources/iOS or App_Resources/Android/src/main/assets folder.
+   */
+  localModelResourceFolder: string;
+
+  /**
    * Evaluate your model in the Firebase console to determine an appropriate value.
    * 0.5 by default.
    */

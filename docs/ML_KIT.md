@@ -90,6 +90,7 @@ To be able to use Cloud features you need to do two things:
 |[Natural language identification](#natural-language-identification)|✅|
 |[Translate text](#translate-text)|✅|
 |[Smart reply](#smart-reply)|✅|
+|[AutoML Vision Edge](#automl-vision-edge)|✅|✅
 |[Custom model inference](#custom-model-inference)|✅|✅
 
 ### Text recognition
@@ -511,6 +512,46 @@ firebase.mlkit.smartreply.suggestReplies({
   conversation
 }).then((suggestions: Array<string>) => console.log(JSON.stringify(suggestions)))
 .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+### AutoML Vision Edge
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/mlkit_automl.png" height="153px" alt="ML Kit - AutoML Vision Edge"/>
+
+[Firebase documentation 🌎](https://firebase.google.com/docs/ml-kit/automl-image-labeling)
+
+> NOTE: currently only local models are supported (not cloud models), but it's fairly easy to add those so open an issue if you need it. See the demo-ng folder for an example.
+
+#### Still image (on-device)
+
+```typescript
+import { MLKitAutoMLResult } from "nativescript-plugin-firebase/mlkit/automl";
+const firebase = require("nativescript-plugin-firebase");
+
+firebase.mlkit.automl.labelImage({
+  localModelResourceFolder: "leftright", 
+  image: imageSource,
+  confidenceThreshold: 0.6 // this will only return labels with at least 0.6 (60%) confidence. Default 0.5.
+})
+.then((result: MLKitAutoMLResult) => console.log(JSON.stringify(result.labels)))
+.catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+```
+
+#### Live camera feed
+The basics are explained above for 'Text recognition', so we're only showing the differences here.
+
+```typescript
+import { registerElement } from "nativescript-angular/element-registry";
+registerElement("MLKitAutoML", () => require("nativescript-plugin-firebase/mlkit/automl").MLKitAutoML);
+```
+
+```html
+<MLKitAutoML
+    width="260"
+    height="380"
+    localModelResourceFolder="leftright"
+    confidenceThreshold="0.6"
+    (scanResult)="onAutoMLResult($event)">
+</MLKitImageLabeling>
 ```
 
 ### Custom model inference

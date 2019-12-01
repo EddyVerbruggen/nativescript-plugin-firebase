@@ -459,6 +459,7 @@ export class MLKitComponent {
   private autoML(imageSource: ImageSource): void {
     firebase.mlkit.automl.labelImage({
       image: imageSource,
+      localModelResourceFolder: "leftright",
       confidenceThreshold: 0.3
     }).then(
         (result: MLKitAutoMLResult) => {
