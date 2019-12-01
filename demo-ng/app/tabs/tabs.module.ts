@@ -12,6 +12,7 @@ import { FaceDetectionComponent } from "~/tabs/mlkit/facedetection/facedetection
 import { ObjectDetectionComponent } from "~/tabs/mlkit/objectdetection/objectdetection.component";
 import { ImageLabelingComponent } from "~/tabs/mlkit/imagelabeling/imagelabeling.component";
 import { CustomModelComponent } from "~/tabs/mlkit/custommodel/custommodel.component";
+import { AutoMLComponent } from "~/tabs/mlkit/automl/automl.component";
 import { LanguageIdentificationComponent } from "~/tabs/mlkit/languageidentification/languageidentification.component";
 
 import { registerElement } from "nativescript-angular/element-registry";
@@ -21,6 +22,7 @@ registerElement("MLKitObjectDetection", () => require("nativescript-plugin-fireb
 registerElement("MLKitTextRecognition", () => require("nativescript-plugin-firebase/mlkit/textrecognition").MLKitTextRecognition);
 registerElement("MLKitImageLabeling", () => require("nativescript-plugin-firebase/mlkit/imagelabeling").MLKitImageLabeling);
 registerElement("MLKitCustomModel", () => require("nativescript-plugin-firebase/mlkit/custommodel").MLKitCustomModel);
+registerElement("MLKitAutoML", () => require("nativescript-plugin-firebase/mlkit/automl").MLKitAutoML);
 
 @NgModule({
   imports: [
@@ -37,6 +39,7 @@ registerElement("MLKitCustomModel", () => require("nativescript-plugin-firebase/
     TabsComponent,
     TextRecognitionComponent,
     CustomModelComponent,
+    AutoMLComponent,
     LanguageIdentificationComponent
   ],
   schemas: [

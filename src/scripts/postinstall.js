@@ -2993,39 +2993,43 @@ function promptQuestions() {
     } else {
       prompt.get([{
         name: 'ml_kit_text_recognition',
-        description: 'With Ml Kit, do you want to recognize text? (y/n)',
+        description: 'With ML Kit, do you want to recognize text? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_barcode_scanning',
-        description: 'With Ml Kit, do you want to scan barcodes? (y/n)',
+        description: 'With ML Kit, do you want to scan barcodes? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_face_detection',
-        description: 'With Ml Kit, do you want to detect faces? (y/n)',
+        description: 'With ML Kit, do you want to detect faces? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_image_labeling',
-        description: 'With Ml Kit, do you want to label images? (y/n)',
+        description: 'With ML Kit, do you want to label images? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_object_detection',
-        description: 'With Ml Kit, do you want to use Object Detection and Tracking? (y/n)',
+        description: 'With ML Kit, do you want to use Object Detection and Tracking? (y/n)',
+        default: 'n'
+      }, {
+        name: 'ml_kit_automl',
+        description: 'With ML Kit, do you want to use AutoML Vision Edge to label images with your own models? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_custom_model',
-        description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
+        description: 'With ML Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_natural_language_identification',
-        description: 'With Ml Kit, do you want to recognize natural languages? (y/n)',
+        description: 'With ML Kit, do you want to recognize natural languages? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_natural_language_translation',
-        description: 'With Ml Kit, do you want to translate text? (y/n)',
+        description: 'With ML Kit, do you want to translate text? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_natural_language_smartreply',
-        description: 'With Ml Kit, do you want to use smart reply? (y/n)',
+        description: 'With ML Kit, do you want to use smart reply? (y/n)',
         default: 'n'
       }], function (mlkitErr, mlkitResult) {
         if (mlkitErr) {
@@ -3211,6 +3215,7 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_object_detection) ? `` : `#`) + `pod 'Firebase/MLVisionObjectDetection'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_automl) ? `` : `#`) + `pod 'Firebase/MLVisionAutoML'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNaturalLanguage'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNLLanguageID'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_translation) ? `` : `#`) + `pod 'Firebase/MLNLTranslate'
@@ -3571,6 +3576,7 @@ dependencies {
     ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:19.0.0"
     ` + (isSelected(result.ml_kit_object_detection) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-object-detection-model:19.0.3"
     ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:22.0.1"
+    ` + (isSelected(result.ml_kit_automl) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-automl:18.0.3"
     ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) || isSelected(result.ml_kit_natural_language_translation) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:22.0.0"
     ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.7"
     ` + (isSelected(result.ml_kit_natural_language_translation) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-translate-model:20.0.7"

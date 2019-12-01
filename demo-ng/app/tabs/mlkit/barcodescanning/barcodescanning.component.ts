@@ -22,9 +22,8 @@ export class BarcodeScanningComponent extends AbstractMLKitViewComponent {
 
     if (this.barcodes.length > 0) {
       console.log("this.barcodes: " + JSON.stringify(this.barcodes));
-      console.log("pausing the scanner for 1 second (to show the 'pause' feature)");
-      this.pause = true;
-      setTimeout(() => this.pause = false, 1000)
+      // this.pause = true;
+      // setTimeout(() => this.pause = false, 500)
     }
   }
 }

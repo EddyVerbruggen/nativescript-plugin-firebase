@@ -7,10 +7,9 @@
       width="100%"
       height="100%"
       formats="QR_CODE, UPC_A, EAN_13"
-      beepOnScan="true"
+      beepOnScan="false"
       supportInverseBarcodes="false"
-      android:processEveryNthFrame="5"
-      ios:processEveryNthFrame="10"
+      processEveryNthFrame="10"
       [torchOn]="torchOn"
       [pause]="pause"
       (scanResult)="onBarcodeScanResult($event)">

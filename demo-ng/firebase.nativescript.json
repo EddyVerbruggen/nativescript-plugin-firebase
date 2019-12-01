@@ -23,6 +23,7 @@
   "ml_kit_face_detection": true,
   "ml_kit_image_labeling": true,
   "ml_kit_object_detection": true,
+  "ml_kit_automl": true,
   "ml_kit_custom_model": true,
   "ml_kit_natural_language_identification": true,
   "ml_kit_natural_language_translation": true,

@@ -8,6 +8,7 @@ import { MLKitDetectFacesOnDeviceResult } from "nativescript-plugin-firebase/mlk
 import { MLKitImageLabelingCloudResult, MLKitImageLabelingOnDeviceResult } from "nativescript-plugin-firebase/mlkit/imagelabeling";
 import { MLKitLandmarkRecognitionCloudResult } from "nativescript-plugin-firebase/mlkit/landmarkrecognition";
 import { MLKitNaturalLanguageIdentificationResult } from "nativescript-plugin-firebase/mlkit/naturallanguageidentification";
+import { MLKitAutoMLResult } from "nativescript-plugin-firebase/mlkit/automl";
 import { MLKitObjectDetectionResult } from "nativescript-plugin-firebase/mlkit/objectdetection";
 import { MLKitSmartReplyConversationMessage } from "nativescript-plugin-firebase/mlkit/smartreply";
 import { MLKitRecognizeTextResult } from "nativescript-plugin-firebase/mlkit/textrecognition";
@@ -37,6 +38,7 @@ export class MLKitComponent {
     "Image labeling (on device)",
     "Image labeling (cloud)",
     "Custom model",
+    "AutoML",
     "Landmark recognition (cloud)",
     "Language identification",
     "Text translation (to EN)",
@@ -50,6 +52,7 @@ export class MLKitComponent {
     "Object detection",
     "Image labeling",
     "Custom model",
+    "AutoML",
     "Language identification"
   ];
 
@@ -76,6 +79,8 @@ export class MLKitComponent {
         to = "/tabs/mlkit/imagelabeling";
       } else if (pickedItem === "Custom model") {
         to = "/tabs/mlkit/custommodel";
+      } else if (pickedItem === "AutoML") {
+        to = "/tabs/mlkit/automl";
       } else if (pickedItem === "Language identification") {
         to = "/tabs/mlkit/languageidentification";
       }
@@ -199,6 +204,8 @@ export class MLKitComponent {
         this.recognizeLandmarkCloud(imageSource);
       } else if (pickedItem === "Custom model") {
         this.customModel(imageSource);
+      } else if (pickedItem === "AutoML") {
+        this.autoML(imageSource);
       } else if (pickedItem === "Language identification") {
         this.languageIdentification(imageSource);
       } else if (pickedItem === "Text translation (to EN)") {
@@ -440,6 +447,21 @@ export class MLKitComponent {
       confidenceThreshold: 0.3
     }).then(
         (result: MLKitImageLabelingOnDeviceResult) => {
+          alert({
+            title: `Result`,
+            message: JSON.stringify(result.labels),
+            okButtonText: "OK"
+          });
+        })
+        .catch(errorMessage => console.log("ML Kit error: " + errorMessage));
+  }
+
+  private autoML(imageSource: ImageSource): void {
+    firebase.mlkit.automl.labelImage({
+      image: imageSource,
+      confidenceThreshold: 0.3
+    }).then(
+        (result: MLKitAutoMLResult) => {
           alert({
             title: `Result`,
             message: JSON.stringify(result.labels),
