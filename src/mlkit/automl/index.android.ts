@@ -47,7 +47,7 @@ export class MLKitAutoML extends MLKitAutoMLBase {
 function getDetector(localModelResourceFolder: string, confidenceThreshold: number): com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler {
   // TODO also support cloud hosted models
   const model = new com.google.firebase.ml.vision.automl.FirebaseAutoMLLocalModel.Builder()
-      .setAssetFilePath(localModelResourceFolder + "/manifest.json") // TODO this..
+      .setAssetFilePath(localModelResourceFolder + "/manifest.json") // we can use this..
       // .setFilePath() // .. or this
       .build();
 
