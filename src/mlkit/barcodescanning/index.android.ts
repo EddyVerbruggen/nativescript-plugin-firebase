@@ -76,6 +76,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
             const barcode = barcodes.get(i);
             result.barcodes.push({
               value: barcode.getRawValue(),
+              displayValue: barcode.getDisplayValue(),
               format: BarcodeFormat[barcode.getFormat()],
               android: barcode,
               bounds: boundingBoxToBounds(barcode.getBoundingBox()),
@@ -154,6 +155,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
               const barcode = barcodes.get(i);
               result.barcodes.push({
                 value: barcode.getRawValue(),
+                displayValue: barcode.getDisplayValue(),
                 format: BarcodeFormat[barcode.getFormat()],
                 android: barcode,
                 bounds: boundingBoxToBounds(barcode.getBoundingBox()),

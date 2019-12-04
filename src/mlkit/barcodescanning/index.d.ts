@@ -16,6 +16,7 @@ export interface MLKitScanBarcodesResultBounds {
 
 export interface MLKitScanBarcodesResultBarcode {
   value: string;
+  displayValue: string;
   format: string;
   bounds: MLKitScanBarcodesResultBounds;
   image: {
