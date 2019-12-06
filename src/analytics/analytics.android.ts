@@ -35,7 +35,7 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || appModule.getNativeApplication()
       ).logEvent(options.key, bundle);
 
       resolve();
@@ -65,7 +65,7 @@ export function logComplexEvent(options: LogComplexEventOptions): Promise<void> 
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || appModule.getNativeApplication()
       ).logEvent(options.key, bundle);
 
       resolve();
@@ -90,7 +90,7 @@ export function setUserId(arg): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()).setUserId(arg.userId);
+          appModule.android.context || appModule.getNativeApplication()).setUserId(arg.userId);
 
       resolve();
     } catch (ex) {
@@ -118,7 +118,7 @@ export function setUserProperty(options: SetUserPropertyOptions): Promise<void> 
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || appModule.getNativeApplication()
       ).setUserProperty(options.key, options.value);
 
       resolve();
@@ -143,7 +143,7 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || appModule.getNativeApplication()
       ).setCurrentScreen(appModule.android.foregroundActivity, options.screenName, null);
 
       resolve();
@@ -157,7 +157,7 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
 export function setAnalyticsCollectionEnabled(enabled: boolean): void {
   if (isAnalyticsAvailable()) {
     com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-        appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+        appModule.android.context || appModule.getNativeApplication()
     ).setAnalyticsCollectionEnabled(enabled);
   }
 }
@@ -165,7 +165,7 @@ export function setAnalyticsCollectionEnabled(enabled: boolean): void {
 export function setSessionTimeoutDuration(seconds: number): void {
   if (isAnalyticsAvailable()) {
     com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-        appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+        appModule.android.context || appModule.getNativeApplication()
     ).setSessionTimeoutDuration(seconds * 1000); // Android expects ms
   }
 }
