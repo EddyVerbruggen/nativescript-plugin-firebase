@@ -64,7 +64,7 @@ export function crash(): void {
 export function setCrashlyticsCollectionEnabled(enabled: boolean): void {
   if (isCrashlyticsAvailable()) {
     io.fabric.sdk.android.Fabric.with(
-        appModule.android.nativeApp,
+        appModule.getNativeApplication(),
         [new com.crashlytics.android.Crashlytics()]);
   }
 }
