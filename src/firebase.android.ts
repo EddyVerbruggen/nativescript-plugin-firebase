@@ -302,14 +302,14 @@ firebase.init = arg => {
 
       if (typeof (com.google.firebase.analytics) !== "undefined" && typeof (com.google.firebase.analytics.FirebaseAnalytics) !== "undefined") {
         com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+          appModule.android.context || appModule.android.nativeApp
         ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
       }
 
       // note that this only makes sense if crash reporting was disabled in AndroidManifest.xml
       if (arg.crashlyticsCollectionEnabled && typeof (com.crashlytics) !== "undefined" && typeof (com.crashlytics.android.Crashlytics) !== "undefined") {
         io.fabric.sdk.android.Fabric.with(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance(),
+          appModule.android.context || appModule.android.nativeApp,
           [new com.crashlytics.android.Crashlytics()]);
       }
 
@@ -478,7 +478,7 @@ firebase.getRemoteConfigDefaults = properties => {
 };
 
 firebase._isGooglePlayServicesAvailable = () => {
-  const ctx = appModule.android.foregroundActivity || appModule.android.startActivity || com.tns.NativeScriptApplication.getInstance();
+  const ctx = appModule.android.foregroundActivity || appModule.android.startActivity || appModule.android.nativeApp;
   const googleApiAvailability = com.google.android.gms.common.GoogleApiAvailability.getInstance();
   const playServiceStatusSuccess = 0; // com.google.android.gms.common.ConnectionResult.SUCCESS;
   const playServicesStatus = googleApiAvailability.isGooglePlayServicesAvailable(ctx);
@@ -1021,7 +1021,7 @@ firebase.login = arg => {
 
         // Lazy loading the Facebook callback manager
         if (!fbCallbackManager) {
-          com.facebook.FacebookSdk.sdkInitialize(com.tns.NativeScriptApplication.getInstance());
+          com.facebook.FacebookSdk.sdkInitialize(appModule.android.nativeApp);
           fbCallbackManager = com.facebook.CallbackManager.Factory.create();
         }
 
@@ -1143,7 +1143,7 @@ firebase.login = arg => {
           }
         });
 
-        firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(com.tns.NativeScriptApplication.getInstance())
+        firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.android.nativeApp)
           .addOnConnectionFailedListener(onConnectionFailedListener)
           .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
           .build();
