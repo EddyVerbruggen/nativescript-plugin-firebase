@@ -1071,7 +1071,7 @@ firebase.login = arg => {
             const loginResult = toLoginResult(authResult.getUser(), authResult.getAdditionalUserInfo());
             firebase.notifyAuthStateListeners({
               loggedIn: true,
-              user: loginResult)
+              user: loginResult
             });
             resolve(loginResult);
             // TODO for reauth and linking, see https://firebase.google.com/docs/auth/android/apple#reauthentication_and_account_linking
