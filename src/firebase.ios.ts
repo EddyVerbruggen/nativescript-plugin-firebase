@@ -947,9 +947,9 @@ firebase.login = arg => {
         appleIDRequest.nonce = sha256Nonce;
 
         const authorizationController = ASAuthorizationController.alloc().initWithAuthorizationRequests([appleIDRequest]);
-
-        authorizationController.delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(
-            new WeakRef(this), resolve, reject);
+        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(new WeakRef(this), resolve, reject);
+        CFRetain(delegate);
+        authorizationController.delegate = delegate;
 
         authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(
             new WeakRef(this));
@@ -2475,6 +2475,7 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
                 user: toLoginResult(authResult.user)
               });
               this.resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
+              CFRelease(this);
             }
           });
     }
