@@ -1068,10 +1068,12 @@ firebase.login = arg => {
         const onSuccessListener = new gmsTasks.OnSuccessListener({
           onSuccess: (authResult: com.google.firebase.auth.AuthResult) => {
             firebase._appleSignInIdToken = (<any>authResult.getCredential()).getIdToken();
+            const loginResult = toLoginResult(authResult.getUser(), authResult.getAdditionalUserInfo());
             firebase.notifyAuthStateListeners({
               loggedIn: true,
-              user: toLoginResult(authResult.getUser(), authResult.getAdditionalUserInfo())
+              user: loginResult)
             });
+            resolve(loginResult);
             // TODO for reauth and linking, see https://firebase.google.com/docs/auth/android/apple#reauthentication_and_account_linking
           }
         });
