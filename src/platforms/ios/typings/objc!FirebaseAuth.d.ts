@@ -90,6 +90,8 @@ declare class FIRAuth extends NSObject {
 
 	settings: FIRAuthSettings;
 
+	readonly userAccessGroup: string;
+
 	addAuthStateDidChangeListener(listener: (p1: FIRAuth, p2: FIRUser) => void): NSObjectProtocol;
 
 	addIDTokenDidChangeListener(listener: (p1: FIRAuth, p2: FIRUser) => void): NSObjectProtocol;
@@ -104,13 +106,13 @@ declare class FIRAuth extends NSObject {
 
 	confirmPasswordResetWithCodeNewPasswordCompletion(code: string, newPassword: string, completion: (p1: NSError) => void): void;
 
-	createUserAndRetrieveDataWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
-
 	createUserWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	fetchProvidersForEmailCompletion(email: string, completion: (p1: NSArray<string>, p2: NSError) => void): void;
 
 	fetchSignInMethodsForEmailCompletion(email: string, completion: (p1: NSArray<string>, p2: NSError) => void): void;
+
+	getStoredUserForAccessGroupError(accessGroup: string): FIRUser;
 
 	isSignInWithEmailLink(link: string): boolean;
 
@@ -128,15 +130,9 @@ declare class FIRAuth extends NSObject {
 
 	signInAndRetrieveDataWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
-	signInAndRetrieveDataWithCustomTokenCompletion(token: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
-
-	signInAndRetrieveDataWithEmailPasswordCompletion(email: string, password: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
-
-	signInAnonymouslyAndRetrieveDataWithCompletion(completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
-
 	signInAnonymouslyWithCompletion(completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
-	signInWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRUser, p2: NSError) => void): void;
+	signInWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	signInWithCustomTokenCompletion(token: string, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
@@ -151,6 +147,8 @@ declare class FIRAuth extends NSObject {
 	updateCurrentUserCompletion(user: FIRUser, completion: (p1: NSError) => void): void;
 
 	useAppLanguage(): void;
+
+	useUserAccessGroupError(accessGroup: string): boolean;
 
 	verifyPasswordResetCodeCompletion(code: string, completion: (p1: string, p2: NSError) => void): void;
 }
@@ -180,6 +178,8 @@ declare class FIRAuthDataResult extends NSObject {
 	static new(): FIRAuthDataResult; // inherited from NSObject
 
 	readonly additionalUserInfo: FIRAdditionalUserInfo;
+
+	readonly credential: FIRAuthCredential;
 
 	readonly user: FIRUser;
 }
@@ -298,11 +298,19 @@ declare const enum FIRAuthErrorCode {
 
 	NullUser = 17067,
 
+	DynamicLinkNotActivated = 17068,
+
 	InvalidProviderID = 17071,
 
 	InvalidDynamicLinkDomain = 17074,
 
+	RejectedCredential = 17075,
+
 	GameKitNotLinked = 17076,
+
+	MissingOrInvalidNonce = 17094,
+
+	MissingClientIdentifier = 17993,
 
 	KeychainError = 17995,
 
@@ -312,8 +320,6 @@ declare const enum FIRAuthErrorCode {
 }
 
 declare var FIRAuthErrorDomain: string;
-
-declare var FIRAuthErrorNameKey: string;
 
 declare var FIRAuthErrorUserInfoEmailKey: string;
 
@@ -365,8 +371,6 @@ declare var FIRAuthUIDelegate: {
 	prototype: FIRAuthUIDelegate;
 };
 
-declare var FIRAuthUpdatedCredentialKey: string;
-
 declare class FIREmailAuthProvider extends NSObject {
 
 	static alloc(): FIREmailAuthProvider; // inherited from NSObject
@@ -381,8 +385,6 @@ declare class FIREmailAuthProvider extends NSObject {
 declare var FIREmailAuthProviderID: string;
 
 declare var FIREmailLinkAuthSignInMethod: string;
-
-declare var FIREmailPasswordAuthProviderID: string;
 
 declare var FIREmailPasswordAuthSignInMethod: string;
 
@@ -447,8 +449,6 @@ declare var FIRGoogleAuthProviderID: string;
 
 declare var FIRGoogleAuthSignInMethod: string;
 
-declare var FIRMicrosoftAuthProviderID: string;
-
 declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCoding {
 
 	static alloc(): FIROAuthCredential; // inherited from NSObject
@@ -459,15 +459,15 @@ declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCo
 
 	readonly accessToken: string;
 
-	readonly pendingToken: string;
+	readonly secret: string;
 
 	static readonly supportsSecureCoding: boolean; // inherited from NSSecureCoding
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvider {
@@ -478,7 +478,9 @@ declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvi
 
 	static credentialWithProviderIDIDTokenAccessToken(providerID: string, IDToken: string, accessToken: string): FIROAuthCredential;
 
-	static credentialWithProviderIDIDTokenAccessTokenPendingToken(providerID: string, IDToken: string, accessToken: string, pendingToken: string): FIROAuthCredential;
+	static credentialWithProviderIDIDTokenRawNonce(providerID: string, IDToken: string, rawNonce: string): FIROAuthCredential;
+
+	static credentialWithProviderIDIDTokenRawNonceAccessToken(providerID: string, IDToken: string, rawNonce: string, accessToken: string): FIROAuthCredential;
 
 	static new(): FIROAuthProvider; // inherited from NSObject
 
@@ -539,9 +541,9 @@ declare class FIRPhoneAuthCredential extends FIRAuthCredential implements NSSecu
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIRPhoneAuthProvider extends NSObject {
@@ -638,7 +640,9 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	linkAndRetrieveDataWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
-	linkWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRUser, p2: NSError) => void): void;
+	linkWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
+	linkWithProviderUIDelegateCompletion(provider: FIRFederatedAuthProvider, UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	performSelector(aSelector: string): any;
 
@@ -650,7 +654,9 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	reauthenticateAndRetrieveDataWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
-	reauthenticateWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: NSError) => void): void;
+	reauthenticateWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
+	reauthenticateWithProviderUIDelegateCompletion(provider: FIRFederatedAuthProvider, UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
 	reloadWithCompletion(completion: (p1: NSError) => void): void;
 
@@ -715,8 +721,6 @@ declare class FIRUserProfileChangeRequest extends NSObject {
 
 	commitChangesWithCompletion(completion: (p1: NSError) => void): void;
 }
-
-declare var FIRYahooAuthProviderID: string;
 
 declare var FirebaseAuthVersionNum: number;
 

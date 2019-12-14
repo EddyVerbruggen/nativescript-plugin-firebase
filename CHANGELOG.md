@@ -3,6 +3,91 @@
 - [Firebase iOS SDK Changelog](https://firebase.google.com/support/release-notes/ios)
 - [Firebase Android SDK Changelog](https://firebase.google.com/support/release-notes/android)
 
+## 10.3.2 (2019, Dec 11)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/120?closed=1)
+
+
+## 10.3.1 (2019, Dec 6)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/119?closed=1)
+
+
+## 10.3.0 (2019, Dec 2)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/118?closed=1)
+
+
+## 10.2.1 (2019, Nov 26)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/117?closed=1)
+
+
+## 10.2.0 (2019, Nov 18)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/116?closed=1)
+
+
+## 10.1.1 (2019, Oct 29)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/114?closed=1)
+
+
+## 10.1.0 (2019, Oct 18)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/113?closed=1)
+
+
+## 10.0.2 (2019, Oct 16)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/112?closed=1)
+
+
+## 10.0.1 (2019, Sep 30)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/111?closed=1)
+
+
+## 10.0.0 (2019, Sep 17)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/109?closed=1)
+
+> Make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS (and Android) SDKs.
+
+> This version requires a minimum version of NativeScript 5.2. For MLKit features on iOS it's recommended to use a minimum `tns-ios` version of 6.1.0, otherwise you may run into build issues.
+
+
+## 9.1.1 (2019, Aug 27)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/110?closed=1)
+
+
+## 9.1.0 (2019, Aug 19)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/104?closed=1)
+
+> Make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS (and Android) SDKs.
+
+
+## 9.0.4 (2019, July 22)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/108?closed=1)
+
+
+## 9.0.3 (2019, July 10)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/107?closed=1)
+
+
+## 9.0.2 (2019, July 9)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/106?closed=1)
+
+
+## 9.0.1 (2019, June 18)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/105?closed=1)
+
+
+## 9.0.0 (2019, June 18)
+[Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/103?closed=1)
+
+#### BREAKING CHANGES
+
+> `fetchProvidersForEmail` has been removed - use `fetchSignInMethodsForEmail` instead.
+
+> Firebase Invites has been removed - use Dynamic Links instead! Also see https://firebase.google.com/docs/invites/deprecation and https://firebase.google.com/docs/dynamic-links/use-cases/user-to-user
+
+> Firebase crash reporting has been removed from the SDKs. Use Crashlytics instead. This also means `firebase.sendCrashLog` is gone. Use `firebase.crashlytics.sendCrashLog()` instead.
+
+> If you're on NativeScript < 5.2 and target iOS, then it's recommended to stick with a plugin version < 9.0.0 because you _may_ run into incompatibilities with certain features.
+
+> Also, make sure to run a `pod repo update` on your dev machine, because this version includes the latest Firebase iOS SDKs.
+
 ## 8.3.2 (2019, May 14)
 [Fixes & Enhancements](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/milestone/101?closed=1)
 

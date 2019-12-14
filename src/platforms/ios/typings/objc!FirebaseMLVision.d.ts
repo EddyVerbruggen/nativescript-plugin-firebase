@@ -83,6 +83,12 @@ declare class FIRVision extends NSObject {
 
 	faceDetectorWithOptions(options: FIRVisionFaceDetectorOptions): FIRVisionFaceDetector;
 
+	objectDetector(): FIRVisionObjectDetector;
+
+	objectDetectorWithOptions(options: FIRVisionObjectDetectorOptions): FIRVisionObjectDetector;
+
+	onDeviceAutoMLImageLabelerWithOptions(options: FIRVisionOnDeviceAutoMLImageLabelerOptions): FIRVisionImageLabeler;
+
 	onDeviceImageLabeler(): FIRVisionImageLabeler;
 
 	onDeviceImageLabelerWithOptions(options: FIRVisionOnDeviceImageLabelerOptions): FIRVisionImageLabeler;
@@ -117,6 +123,8 @@ declare class FIRVisionBarcode extends NSObject {
 	readonly geoPoint: FIRVisionBarcodeGeoPoint;
 
 	readonly phone: FIRVisionBarcodePhone;
+
+	readonly rawData: NSData;
 
 	readonly rawValue: string;
 
@@ -814,7 +822,9 @@ declare const enum FIRVisionImageLabelerType {
 
 	OnDevice = 0,
 
-	Cloud = 1
+	Cloud = 1,
+
+	OnDeviceAutoML = 2
 }
 
 declare class FIRVisionImageMetadata extends NSObject {

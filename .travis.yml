@@ -1,13 +1,9 @@
-branches:
-  only:
-    - master
-
 matrix:
   include:
     - stage: "Lint"
       language: node_js
       os: linux
-      node_js: "8"
+      node_js: "10"
       script: "npm run ci.tslint"
     - stage: "WebPack"
       language: android
@@ -15,28 +11,24 @@ matrix:
       env:
         - WebPack="Android"
       jdk: oraclejdk8
-      before_install: nvm install stable
+      before_install: nvm install 10
       script: travis_wait travis_retry tns build android --bundle
     - stage: "Build"
       env:
         - BuildAndroid="28"
       language: android
       os: linux
+      dist: trusty
       jdk: oraclejdk8
-      before_install: nvm install stable
+      before_install: nvm install 10
       script:
         - travis_wait travis_retry tns build android
     - os: osx
-      env:
-        - BuildiOS="12"
-        - Xcode="10.2"
-      osx_image: "xcode10.2"
+      osx_image: xcode10.2
       language: node_js
-      node_js: "8"
+      node_js: "10"
       jdk: oraclejdk8
-      before_install:
-        - gem install cocoapods
-        - pod repo update
+      before_script: pod repo update
       script:
         - travis_wait travis_retry tns build ios
 
@@ -50,8 +42,8 @@ android:
     - sys-img-armeabi-v7a-android-21
 
 before_install:
-#  - sudo pip install --upgrade pip
-#  - sudo pip install six
+  - sudo pip install --upgrade pip
+  - sudo pip install six
 
 install:
   - echo no | npm install -g nativescript

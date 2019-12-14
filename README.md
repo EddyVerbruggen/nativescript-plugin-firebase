@@ -17,6 +17,8 @@
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
+> Plugin version **10.0.0** works with NativeScript 5.2+, and 6.1+ is recommended. Using an older version? Stick to plugin version < 10.
+
 ## Features
 * [AdMob](docs/ADMOB.md)
 * [Analytics](docs/ANALYTICS.md)
@@ -24,9 +26,9 @@
 * [Cloud Firestore](docs/FIRESTORE.md)
 * [Cloud Functions](docs/FUNCTIONS.md)
 * [Cloud Messaging](docs/MESSAGING.md) / [Non-Firebase Push Messaging](docs/NON_FIREBASE_MESSAGING.md)
-* [Crash Reporting / Crashlytics](docs/CRASHREPORTING.md)
+* [Crashlytics](docs/CRASHLYTICS.md)
 * [In-App Messaging](docs/IN_APP_MESSAGING.md)
-* [Invites and Dynamic Links](docs/INVITES_DYNAMICLINKS.md)
+* [Dynamic Links](docs/DYNAMIC_LINKS.md)
 * [ML Kit](docs/ML_KIT.md)
 * [Performance Monitoring](docs/PERFORMANCE_MONITORING.md)
 * [Realtime Database](docs/DATABASE.md)
@@ -78,7 +80,7 @@ Please update your [NativeScript-Vue](https://github.com/nativescript-vue/vue-cl
 aligns perfectly with this plugin (because that template is now much more similar to a regular NativeScript project).
 
 If you want a demo using Vue and Firestore, then [check out this project](https://github.com/EddyVerbruggen/footplr),
-if you want one with Realtime DB, [check out this one](https://github.com/jlooper/elocute/tree/master/mobile-v2).
+if you want one with Realtime DB, [check out this one](https://github.com/jlooper/mixology-mobile).
 
 ### iOS (Cocoapods)
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.

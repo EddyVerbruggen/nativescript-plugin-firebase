@@ -2,18 +2,18 @@
   "nativescript": {
     "id": "org.nativescript.firebasedemo",
     "tns-ios": {
-      "version": "5.3.1"
+      "version": "6.1.1"
     },
     "tns-android": {
-      "version": "5.3.1"
+      "version": "6.1.2"
     }
   },
   "dependencies": {
     "firebase-functions": "^2.0.5",
-    "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-8.3.2.tgz",
+    "nativescript-plugin-firebase": "file:../publish/package/nativescript-plugin-firebase-10.3.2.tgz",
     "nativescript-theme-core": "^1.0.4",
-    "nativescript-unit-test-runner": "^0.3.4",
-    "tns-core-modules": "~5.3.0"
+    "nativescript-unit-test-runner": "0.7.0",
+    "tns-core-modules": "~6.1.1"
   },
   "devDependencies": {
     "@types/jasmine": "~2.8.0",
@@ -22,16 +22,16 @@
     "babylon": "6.8.4",
     "filewalker": "0.1.2",
     "jasmine-core": "~2.8.0",
-    "karma": "^1.7.1",
-    "karma-jasmine": "^1.1.0",
+    "karma": "4.1.0",
+    "karma-jasmine": "2.0.1",
     "karma-nativescript-launcher": "^0.4.0",
+    "karma-webpack": "3.0.5",
     "lazy": "1.0.11",
     "nativescript-css-loader": "~0.26.0",
-    "nativescript-dev-typescript": "~0.7.1",
-    "nativescript-dev-webpack": "^0.16.2",
-    "tns-platform-declarations": "~5.3.0",
+    "nativescript-dev-webpack": "1.0.1",
+    "tns-platform-declarations": "~6.0.6",
     "tslint": "~5.4.3",
-    "typescript": "~2.8.0"
+    "typescript": "3.4.5"
   },
   "scripts": {
     "build.plugin": "cd ../src && npm run build",

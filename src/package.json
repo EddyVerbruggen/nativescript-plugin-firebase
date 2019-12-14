@@ -1,13 +1,13 @@
 {
   "name": "nativescript-plugin-firebase",
-  "version": "8.3.2",
+  "version": "10.3.2",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
   "nativescript": {
     "platforms": {
-      "android": "3.0.0",
-      "ios": "3.0.0"
+      "android": "5.2.0",
+      "ios": "5.2.0"
     },
     "plugin": {
       "nan": "true",
@@ -46,19 +46,18 @@
     "demo-push.ios.release": "npm run preparedemo-push && cd ../demo-push && tns build ios --release --for-device",
     "demo-push.ios.eddy.iphoneX": "npm run preparedemo-push && cd ../demo-push && tns run ios --device a4cbb499e279054b55c206528f8510ff7fbf20c8",
     "demo.android": "npm run preparedemo && cd ../demo && rimraf platforms/android && tns run android",
-    "demo.android.linked": "npm run tsc && cd ../demo && tns run android --syncAllFiles",
     "demo-ng.android": "npm run preparedemo-ng && cd ../demo-ng && tns run android",
     "demo-ng.android.build": "npm run preparedemo-ng && cd ../demo-ng && tns build android",
     "demo-ng.android.bundled": "npm run preparedemo-ng && cd ../demo-ng && tns run android --bundle",
     "demo-push.android": "npm run preparedemo-push && cd ../demo-push && tns run android",
-    "demo-vue.ios": "npm run preparedemo-vue && cd ../demo-vue && tns run ios --bundle --syncAllFiles",
-    "demo-vue.android": "npm run preparedemo-vue && cd ../demo-vue && tns run android --bundle --syncAllFiles",
+    "demo-vue.ios": "npm run preparedemo-vue && cd ../demo-vue && tns run ios --bundle",
+    "demo-vue.android": "npm run preparedemo-vue && cd ../demo-vue && tns run android --bundle",
     "test": "npm run tslint && npm run tslint.demo && cd ../demo && tns build ios && tns build android",
     "test.ios": "cd ../demo && tns test ios --emulator",
     "test.ios.device": "cd ../demo && tns platform remove ios && tns test ios",
     "test.android": "cd ../demo && tns test android --justlaunch",
     "preparedemo": "npm run tsc && npm run package && cd ../demo && tns plugin add ../publish/package/*.tgz && tns install",
-    "preparedemo-ng": "npm run tsc && npm run package && cd ../demo-ng && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
+    "preparedemo-ng": "npm run tsc && npm run package && cd ../demo-ng && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz",
     "preparedemo-push": "npm run tsc && npm run package && cd ../demo-push && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
     "preparedemo-vue": "npm run tsc && npm run package && cd ../demo-vue && tns plugin remove nativescript-plugin-firebase && tns plugin add ../publish/package/*.tgz && tns install",
     "setupandinstall": "npm i && npm run tsc && npm run package && cd ../demo && npm i && cd ../demo-ng && npm i && cd ../demo-push && npm i && cd ../src && npm run tsc && cd ../demo && tns plugin add ../src && cd ../demo-ng && tns plugin add ../src  && cd ../demo-push && tns plugin add ../src && cd ../src",
@@ -70,23 +69,23 @@
     "development.setup": "npm run setup && npm link && cd ../demo && npm link nativescript-plugin-firebase && cd ../src",
     "android.list-devices": "tns device android --available-devices",
     "ios.list-devices": "tns device ios --available-devices",
-    "generate.typings.ios": "echo '##### Make sure to first run demo-ng.ios #####' && cd ../demo-ng && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo-ng/typings!'",
+    "generate.typings.ios": "echo '##### Make sure to first run demo-ng.ios.. if a build error occurs after metadata is generate but not typings, paste the typings command in the cmd line in the demo-ng folder. #####' && cd ../demo-ng && TNS_DEBUG_METADATA_PATH=\"$(pwd)/metadata\" tns build ios && TNS_TYPESCRIPT_DECLARATIONS_PATH=\"$(pwd)/typings\" tns build ios && echo 'Now look for your library typings in demo-ng/typings!'",
     "generate.typings.android": "echo '##### Download the latest relevant .aar file from https://mvnrepository.com/artifact/com.google.firebase, rename .aar to .zip and extract it. Then move classes.jar to the plugin /src folder' && java -jar ../../android-dts-generator/dts-generator/build/libs/dts-generator.jar -input ./classes.jar -output platforms/android/typings/$npm_package_config_typings && rimraf classes.jar && echo '##### Done! Deleted src/classes.jar, and generated typings in src/platforms/android/typings/'",
-    "generate.typings.android.admob": "npm run generate.typings.android --nativescript-plugin-firebase:typings=admob",
     "generate.typings.android.analytics": "npm run generate.typings.android --nativescript-plugin-firebase:typings=analytics-impl",
     "generate.typings.android.auth": "npm run generate.typings.android --nativescript-plugin-firebase:typings=auth",
-    "generate.typings.android.core": "npm run generate.typings.android --nativescript-plugin-firebase:typings=core",
     "generate.typings.android.database": "npm run generate.typings.android --nativescript-plugin-firebase:typings=database --nativescript-plugin-firebase:typingsproject=demo",
     "generate.typings.android.dynamiclinks": "npm run generate.typings.android --nativescript-plugin-firebase:typings=dynamiclinks --nativescript-plugin-firebase:typingsproject=demo",
     "generate.typings.android.firestore": "npm run generate.typings.android --nativescript-plugin-firebase:typings=firestore",
     "generate.typings.android.messaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=messaging",
-    "generate.typings.android.playservices": "npm run generate.typings.android --nativescript-plugin-firebase:typings=playservices",
+    "generate.typings.android.playservices.gms": "npm run generate.typings.android --nativescript-plugin-firebase:typings=playservices/gms",
     "generate.typings.android.remoteconfig": "npm run generate.typings.android --nativescript-plugin-firebase:typings=remoteconfig",
     "generate.typings.android.storage": "npm run generate.typings.android --nativescript-plugin-firebase:typings=storage",
     "generate.typings.android.functions": "npm run generate.typings.android --nativescript-plugin-firebase:typings=functions",
     "generate.typings.android.mlkit": "npm run generate.typings.android --nativescript-plugin-firebase:typings=mlkit",
     "generate.typings.android.crashlytics": "npm run generate.typings.android --nativescript-plugin-firebase:typings=crashlytics",
-    "generate.typings.android.inappmessaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=inappmessaging"
+    "generate.typings.android.inappmessaging": "npm run generate.typings.android --nativescript-plugin-firebase:typings=inappmessaging",
+    "generate.typings.android.performance": "npm run generate.typings.android --nativescript-plugin-firebase:typings=performance",
+    "generate.typings.android.nativescript-android-lib": "npm run generate.typings.android --nativescript-plugin-firebase:typings=nativescript-android-lib"
   },
   "repository": {
     "type": "git",
@@ -104,15 +103,24 @@
     "Messaging",
     "Remote Configuration",
     "Storage",
-    "Crash Reporting",
+    "Crashlytics",
     "Analytics",
     "Facebook",
     "Google",
     "AdMob",
-    "Invites",
+    "In-App Messaging",
+    "Performance Monitoring",
     "Dynamic Links",
     "ML Kit",
-    "Machine Learning"
+    "Machine Learning",
+    "Barcode Scanning",
+    "Face Detection",
+    "Image Labeling",
+    "Landmark Recognition",
+    "Smart Reply",
+    "Natural Language",
+    "Custom Model",
+    "Text Recognition"
   ],
   "author": {
     "name": "Eddy Verbruggen",
@@ -134,9 +142,9 @@
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
-    "tns-core-modules": "~5.1.1",
-    "tns-platform-declarations": "~5.1.1",
+    "tns-core-modules": "~6.1.1",
+    "tns-platform-declarations": "~6.1.1",
     "tslint": "^5.1.0",
-    "typescript": "~3.2.2"
+    "typescript": "~3.4.5"
   }
 }

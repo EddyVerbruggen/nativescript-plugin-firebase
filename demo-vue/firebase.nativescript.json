@@ -10,14 +10,11 @@
     "messaging": false,
     "in_app_messaging": true,
     "crashlytics": false,
-    "crash_reporting": false,
     "storage": false,
     "functions": false,
     "facebook_auth": false,
     "google_auth": false,
     "admob": false,
-    "invites": false,
     "dynamic_links": true,
-    "ml_kit": true,
-    "ml_kit_text_recognition": true
+    "ml_kit": false
 }

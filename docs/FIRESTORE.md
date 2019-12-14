@@ -31,13 +31,14 @@ A 'collection' is at the root of any Firestore interaction. Data is stored as a 
 const citiesCollection = firebase.firestore().collection("cities");
 ```
 
-### `collection.get()`
+### `collection.get(options?)`
 To get all documents inside a collection:
 
 ```typescript
 const citiesCollection = firebase.firestore().collection("cities");
 
-citiesCollection.get().then(querySnapshot => {
+// note that the options object is optional, but you can use it to specify the source of data ("server", "cache", "default").
+citiesCollection.get({ source: "server" }).then(querySnapshot => {
   querySnapshot.forEach(doc => {
     console.log(`${doc.id} => ${JSON.stringify(doc.data())}`);
   });
@@ -116,13 +117,14 @@ const citiesCollection = firebase.firestore().collection("cities");
 const sanFranciscoDocument = citiesCollection.doc("SF");
 ```
 
-### `collection.doc().get()`
+### `collection.doc().get(options?)`
 To get the data inside a document (and check whether or not the document actually exists):
 
 ```typescript
 const sanFranciscoDocument = firebase.firestore().collection("cities").doc("SF");
 
-sanFranciscoDocument.get().then(doc => {
+// note that the options object is optional, but you can use it to specify the source of data ("server", "cache", "default").
+sanFranciscoDocument.get({ source: "cache" }).then(doc => {
   if (doc.exists) {
     console.log(`Document data: ${JSON.stringify(doc.data())}`);
   } else {
@@ -234,7 +236,7 @@ sanFranciscoDocument.update({
 ### `collection.where()`
 Firestore supports advanced querying with the `where` function. Those `where` clauses can be chained to form logical 'AND' queries:
 
-You can use the operators defined in `firestore.WhereFilterOp`, which are: `'<' | '<=' | '==' | '>=' | '>' | 'array-contains'`.
+You can use the operators defined in `firestore.WhereFilterOp`, which are: `'<' | '<=' | '==' | '>=' | '>' | 'in' | 'array-contains' | 'array-contains-any'`.
 
 ```typescript
 const citiesCollection = firebase.firestore().collection("cities");
@@ -251,6 +253,23 @@ query
         console.log(`Relatively small Californian city: ${doc.id} => ${JSON.stringify(doc.data())}`);
       });
     });
+```
+
+### [Collection Group Queries](https://firebase.google.com/docs/firestore/query-data/queries#collection-group-query): `collectionGroup.where()`
+A collection group consists of all collections with the same ID. By default, queries retrieve results from a single collection in your database. Use a collection group query to retrieve documents from a collection group instead of from a single collection.
+
+Note that this will require an *index* in your db, so make sure to `catch` any errors when invoking this method
+and log out any error messages so you can easily copy-paste the required index into your browser URL bar.
+
+```typescript
+// "Gimme all cities with a population of at least a million"
+firebase.firestore().collectionGroup("cities").where("population", ">=", 1_000_000)
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        console.log(`City with >= 1M population: ${doc.id} => ${JSON.stringify(doc.data())}`);
+      });
+    })
+    .catch(err => console.log("Querying collection group failed, error: " + err));
 ```
 
 ### Delete an entire document: `collection.doc().delete()`
@@ -419,13 +438,23 @@ firebase.firestore().runTransaction(transaction => {
 ### Firestore configurations: `settings()`
 > You must set these before invoking any other methods!
 
-Setting cacheSizeBytes is Android only
-
-You can modify `host`, `ssl` and `cacheSizeBytes`.  (`timestampsInSnapshots` shouldn't be used as it will be deprecated)
+You can modify `host`, `ssl` and `cacheSizeBytes` (this one is Android only).  (`timestampsInSnapshots` shouldn't be used as it will be deprecated)
 See [docs](https://firebase.google.com/docs/reference/js/firebase.firestore.Settings) for more information.
 
 ```typescript
    firebase.firestore.settings({});
 
    firebaseWebApi.firestore().settings({"host" : "Example", "ssl" : false});
+```
+
+### Clearing persistence data: `clearPersistence()`
+> You should do this before any other interactions with the database.
+
+This clears the persistent storage including pending writes and cached documents.
+This is intended to help write reliable test, not so much for production usage.
+
+```typescript
+firebase.firestore.clearPersistence()
+   .then(() => console.log("Persistence data cleared"))
+   .catch(error => console.log(`Error clearing persistence data: ${error}`));
 ```

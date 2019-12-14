@@ -195,7 +195,7 @@ declare class Crashlytics extends NSObject {
 
 	logEventAttributes(eventName: string, attributes: NSDictionary<any, any>): void;
 
-	recordCustomExceptionNameReasonFrameArray(name: string, reason: string, frameArray: NSArray<CLSStackFrame>): void;
+	recordCustomExceptionNameReasonFrameArray(name: string, reason: string, frameArray: NSArray<CLSStackFrame> | CLSStackFrame[]): void;
 
 	recordError(error: NSError): void;
 

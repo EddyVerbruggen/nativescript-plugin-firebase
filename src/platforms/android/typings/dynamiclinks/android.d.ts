@@ -8,24 +8,6 @@ declare module com {
 					export module firebase_dynamic_links {
 						export class zza {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_dynamic_links.zza>;
-							public constructor(param0: globalAndroid.os.IBinder, param1: string);
-							public asBinder(): globalAndroid.os.IBinder;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_dynamic_links {
-						export class zzb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_dynamic_links.zzb>;
 							public asBinder(): globalAndroid.os.IBinder;
 							public constructor(param0: string);
 							public onTransact(param0: number, param1: globalAndroid.os.Parcel, param2: globalAndroid.os.Parcel, param3: number): boolean;
@@ -44,8 +26,32 @@ declare module com {
 			export module gms {
 				export module internal {
 					export module firebase_dynamic_links {
+						export class zzb {
+							public static class: java.lang.Class<com.google.android.gms.internal.firebase_dynamic_links.zzb>;
+							public constructor(param0: globalAndroid.os.IBinder, param1: string);
+							public asBinder(): globalAndroid.os.IBinder;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module android {
+			export module gms {
+				export module internal {
+					export module firebase_dynamic_links {
 						export class zzc {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_dynamic_links.zzc>;
+							/**
+							 * Constructs a new instance of the com.google.android.gms.internal.firebase_dynamic_links.zzc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+							});
+							public constructor();
 						}
 					}
 				}
@@ -62,12 +68,6 @@ declare module com {
 					export module firebase_dynamic_links {
 						export class zzd {
 							public static class: java.lang.Class<com.google.android.gms.internal.firebase_dynamic_links.zzd>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_dynamic_links.zzd interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-							});
-							public constructor();
 						}
 					}
 				}
@@ -101,7 +101,6 @@ declare module com {
 					export class Builder {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.DynamicLink.Builder>;
 						public setLongLink(param0: globalAndroid.net.Uri): com.google.firebase.dynamiclinks.DynamicLink.Builder;
-						public constructor(param0: any /* com.google.firebase.dynamiclinks.internal.zzg*/);
 						public setIosParameters(param0: com.google.firebase.dynamiclinks.DynamicLink.IosParameters): com.google.firebase.dynamiclinks.DynamicLink.Builder;
 						public setNavigationInfoParameters(param0: com.google.firebase.dynamiclinks.DynamicLink.NavigationInfoParameters): com.google.firebase.dynamiclinks.DynamicLink.Builder;
 						public buildShortDynamicLink(param0: number): com.google.android.gms.tasks.Task<com.google.firebase.dynamiclinks.ShortDynamicLink>;
@@ -113,6 +112,7 @@ declare module com {
 						public setGoogleAnalyticsParameters(param0: com.google.firebase.dynamiclinks.DynamicLink.GoogleAnalyticsParameters): com.google.firebase.dynamiclinks.DynamicLink.Builder;
 						public setDomainUriPrefix(param0: string): com.google.firebase.dynamiclinks.DynamicLink.Builder;
 						public setDynamicLinkDomain(param0: string): com.google.firebase.dynamiclinks.DynamicLink.Builder;
+						public constructor(param0: any /* com.google.firebase.dynamiclinks.internal.zze*/);
 						public buildDynamicLink(): com.google.firebase.dynamiclinks.DynamicLink;
 					}
 					export class GoogleAnalyticsParameters {
@@ -214,9 +214,10 @@ declare module com {
 				export class PendingDynamicLinkData {
 					public static class: java.lang.Class<com.google.firebase.dynamiclinks.PendingDynamicLinkData>;
 					public getMinimumAppVersion(): number;
-					public constructor(param0: any /* com.google.firebase.dynamiclinks.internal.zza*/);
 					public getClickTimestamp(): number;
 					public getUpdateAppIntent(param0: globalAndroid.content.Context): globalAndroid.content.Intent;
+					public getExtensions(): globalAndroid.os.Bundle;
+					public constructor(param0: com.google.firebase.dynamiclinks.internal.DynamicLinkData);
 					public getLink(): globalAndroid.net.Uri;
 					public constructor(param0: string, param1: number, param2: number, param3: globalAndroid.net.Uri);
 				}
@@ -280,6 +281,24 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
+					export class DynamicLinkData {
+						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.DynamicLinkData>;
+						public static CREATOR: globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.DynamicLinkData>;
+						public constructor(param0: string, param1: string, param2: number, param3: number, param4: globalAndroid.os.Bundle, param5: globalAndroid.net.Uri);
+						public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+						public getClickTimestamp(): number;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module dynamiclinks {
+				export module internal {
 					export class FirebaseDynamicLinkRegistrar {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.FirebaseDynamicLinkRegistrar>;
 						public constructor();
@@ -296,12 +315,9 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zza {
+					export class zza extends globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.DynamicLinkData> {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zza>;
-						public static CREATOR: any /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zza>*/;
-						public constructor(param0: string, param1: string, param2: number, param3: number, param4: globalAndroid.os.Bundle, param5: globalAndroid.net.Uri);
-						public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
-						public getClickTimestamp(): number;
+						public constructor();
 					}
 				}
 			}
@@ -314,9 +330,8 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzb extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zza>*/ {
+					export class zzb extends com.google.android.gms.common.api.Api.AbstractClientBuilder<com.google.firebase.dynamiclinks.internal.zzd,com.google.android.gms.common.api.Api.ApiOptions.NoOptions> {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzb>;
-						public constructor();
 					}
 				}
 			}
@@ -344,8 +359,12 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzd extends com.google.android.gms.common.api.Api.AbstractClientBuilder<com.google.firebase.dynamiclinks.internal.zze,com.google.android.gms.common.api.Api.ApiOptions.NoOptions> {
+					export class zzd extends java.lang.Object /* com.google.android.gms.common.internal.GmsClient<com.google.firebase.dynamiclinks.internal.zzm>*/ {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzd>;
+						public constructor(param0: globalAndroid.content.Context, param1: globalAndroid.os.Looper, param2: com.google.android.gms.common.internal.ClientSettings, param3: com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks, param4: com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener);
+						public getServiceDescriptor(): string;
+						public getStartServiceAction(): string;
+						public getMinApkVersion(): number;
 					}
 				}
 			}
@@ -358,12 +377,13 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zze extends java.lang.Object /* com.google.android.gms.common.internal.GmsClient<com.google.firebase.dynamiclinks.internal.zzo>*/ {
+					export class zze extends com.google.firebase.dynamiclinks.FirebaseDynamicLinks {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zze>;
-						public constructor(param0: globalAndroid.content.Context, param1: globalAndroid.os.Looper, param2: com.google.android.gms.common.internal.ClientSettings, param3: com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks, param4: com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener);
-						public getServiceDescriptor(): string;
-						public getStartServiceAction(): string;
-						public getMinApkVersion(): number;
+						public constructor();
+						public createDynamicLink(): com.google.firebase.dynamiclinks.DynamicLink.Builder;
+						public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.analytics.connector.AnalyticsConnector);
+						public getDynamicLink(param0: globalAndroid.content.Intent): com.google.android.gms.tasks.Task<com.google.firebase.dynamiclinks.PendingDynamicLinkData>;
+						public getDynamicLink(param0: globalAndroid.net.Uri): com.google.android.gms.tasks.Task<com.google.firebase.dynamiclinks.PendingDynamicLinkData>;
 					}
 				}
 			}
@@ -391,13 +411,8 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzg extends com.google.firebase.dynamiclinks.FirebaseDynamicLinks {
+					export class zzg extends com.google.firebase.dynamiclinks.internal.zzh {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzg>;
-						public constructor();
-						public createDynamicLink(): com.google.firebase.dynamiclinks.DynamicLink.Builder;
-						public constructor(param0: com.google.firebase.FirebaseApp, param1: com.google.firebase.analytics.connector.AnalyticsConnector);
-						public getDynamicLink(param0: globalAndroid.content.Intent): com.google.android.gms.tasks.Task<com.google.firebase.dynamiclinks.PendingDynamicLinkData>;
-						public getDynamicLink(param0: globalAndroid.net.Uri): com.google.android.gms.tasks.Task<com.google.firebase.dynamiclinks.PendingDynamicLinkData>;
 					}
 				}
 			}
@@ -426,34 +441,6 @@ declare module com {
 				export module internal {
 					export class zzi extends com.google.firebase.dynamiclinks.internal.zzh {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzi>;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module dynamiclinks {
-				export module internal {
-					export class zzj extends com.google.android.gms.common.api.internal.TaskApiCall<com.google.firebase.dynamiclinks.internal.zze,com.google.firebase.dynamiclinks.ShortDynamicLink> {
-						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzj>;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module dynamiclinks {
-				export module internal {
-					export class zzk extends com.google.firebase.dynamiclinks.internal.zzh {
-						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzk>;
 						public constructor();
 						public constructor(param0: com.google.firebase.analytics.connector.AnalyticsConnector, param1: com.google.android.gms.tasks.TaskCompletionSource<com.google.firebase.dynamiclinks.PendingDynamicLinkData>);
 						public constructor(param0: string);
@@ -469,7 +456,43 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzl extends com.google.android.gms.common.api.internal.TaskApiCall<com.google.firebase.dynamiclinks.internal.zze,com.google.firebase.dynamiclinks.PendingDynamicLinkData> {
+					export class zzj extends com.google.android.gms.common.api.internal.TaskApiCall<com.google.firebase.dynamiclinks.internal.zzd,com.google.firebase.dynamiclinks.ShortDynamicLink> {
+						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzj>;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module dynamiclinks {
+				export module internal {
+					export class zzk {
+						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzk>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.dynamiclinks.internal.zzk interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							zza(param0: com.google.android.gms.common.api.Status, param1: com.google.firebase.dynamiclinks.internal.DynamicLinkData): void;
+							zza(param0: com.google.android.gms.common.api.Status, param1: any /* com.google.firebase.dynamiclinks.internal.zzo*/): void;
+						});
+						public constructor();
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module dynamiclinks {
+				export module internal {
+					export class zzl extends com.google.android.gms.common.api.internal.TaskApiCall<com.google.firebase.dynamiclinks.internal.zzd,com.google.firebase.dynamiclinks.PendingDynamicLinkData> {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzl>;
 					}
 				}
@@ -489,8 +512,8 @@ declare module com {
 						 * Constructs a new instance of the com.google.firebase.dynamiclinks.internal.zzm interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 						 */
 						public constructor(implementation: {
-							zza(param0: com.google.android.gms.common.api.Status, param1: any /* com.google.firebase.dynamiclinks.internal.zza*/): void;
-							zza(param0: com.google.android.gms.common.api.Status, param1: any /* com.google.firebase.dynamiclinks.internal.zzq*/): void;
+							zza(param0: any /* com.google.firebase.dynamiclinks.internal.zzk*/, param1: string): void;
+							zza(param0: any /* com.google.firebase.dynamiclinks.internal.zzk*/, param1: globalAndroid.os.Bundle): void;
 						});
 						public constructor();
 					}
@@ -505,7 +528,7 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export abstract class zzn extends com.google.android.gms.internal.firebase_dynamic_links.zzb implements com.google.firebase.dynamiclinks.internal.zzm {
+					export abstract class zzn extends com.google.android.gms.internal.firebase_dynamic_links.zza implements com.google.firebase.dynamiclinks.internal.zzk {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzn>;
 						public constructor();
 						public dispatchTransaction(param0: number, param1: globalAndroid.os.Parcel, param2: globalAndroid.os.Parcel, param3: number): boolean;
@@ -522,16 +545,15 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzo {
+					export class zzo implements com.google.firebase.dynamiclinks.ShortDynamicLink {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzo>;
-						/**
-						 * Constructs a new instance of the com.google.firebase.dynamiclinks.internal.zzo interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-						 */
-						public constructor(implementation: {
-							zza(param0: any /* com.google.firebase.dynamiclinks.internal.zzm*/, param1: string): void;
-							zza(param0: any /* com.google.firebase.dynamiclinks.internal.zzm*/, param1: globalAndroid.os.Bundle): void;
-						});
-						public constructor();
+						public static CREATOR: any /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zzo>*/;
+						public getPreviewLink(): globalAndroid.net.Uri;
+						public constructor(param0: globalAndroid.net.Uri, param1: globalAndroid.net.Uri, param2: any /* java.util.List<com.google.firebase.dynamiclinks.internal.zzr>*/);
+						public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
+						public getShortLink(): globalAndroid.net.Uri;
+						public getWarnings(): any /* java.util.List<com.google.firebase.dynamiclinks.internal.zzr>*/;
+						public getWarnings(): java.util.List<any>;
 					}
 				}
 			}
@@ -544,7 +566,7 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzp extends com.google.android.gms.internal.firebase_dynamic_links.zza implements com.google.firebase.dynamiclinks.internal.zzo {
+					export class zzp extends com.google.android.gms.internal.firebase_dynamic_links.zzb implements com.google.firebase.dynamiclinks.internal.zzm {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzp>;
 					}
 				}
@@ -558,15 +580,9 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzq implements com.google.firebase.dynamiclinks.ShortDynamicLink {
+					export class zzq extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zzo>*/ {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzq>;
-						public static CREATOR: any /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zzq>*/;
-						public getPreviewLink(): globalAndroid.net.Uri;
-						public constructor(param0: globalAndroid.net.Uri, param1: globalAndroid.net.Uri, param2: any /* java.util.List<com.google.firebase.dynamiclinks.internal.zzr>*/);
-						public writeToParcel(param0: globalAndroid.os.Parcel, param1: number): void;
-						public getShortLink(): globalAndroid.net.Uri;
-						public getWarnings(): any /* java.util.List<com.google.firebase.dynamiclinks.internal.zzr>*/;
-						public getWarnings(): java.util.List<any>;
+						public constructor();
 					}
 				}
 			}
@@ -598,23 +614,8 @@ declare module com {
 		export module firebase {
 			export module dynamiclinks {
 				export module internal {
-					export class zzs extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zzq>*/ {
+					export class zzs extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zzr>*/ {
 						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzs>;
-						public constructor();
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module dynamiclinks {
-				export module internal {
-					export class zzt extends java.lang.Object /* globalAndroid.os.Parcelable.Creator<com.google.firebase.dynamiclinks.internal.zzr>*/ {
-						public static class: java.lang.Class<com.google.firebase.dynamiclinks.internal.zzt>;
 						public constructor();
 					}
 				}

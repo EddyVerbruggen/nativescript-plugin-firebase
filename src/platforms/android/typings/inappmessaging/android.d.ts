@@ -4835,6 +4835,7 @@ declare module com {
 					public static class: java.lang.Class<com.google.firebase.inappmessaging.FirebaseInAppMessaging>;
 					public setMessageDisplayComponent(param0: com.google.firebase.inappmessaging.FirebaseInAppMessagingDisplay): void;
 					public addDisplayErrorListener(param0: com.google.firebase.inappmessaging.FirebaseInAppMessagingDisplayErrorListener): void;
+					public triggerEvent(param0: string): void;
 					public removeClickListener(param0: com.google.firebase.inappmessaging.FirebaseInAppMessagingClickListener): void;
 					public removeImpressionListener(param0: com.google.firebase.inappmessaging.FirebaseInAppMessagingImpressionListener): void;
 					public areMessagesSuppressed(): boolean;
@@ -4882,6 +4883,20 @@ declare module com {
 					});
 					public constructor();
 					public messageClicked(param0: com.google.firebase.inappmessaging.model.InAppMessage, param1: com.google.firebase.inappmessaging.model.Action): void;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export class FirebaseInAppMessagingContextualTrigger {
+					public static class: java.lang.Class<com.google.firebase.inappmessaging.FirebaseInAppMessagingContextualTrigger>;
+					public constructor(param0: string);
+					public getTriggerName(): string;
 				}
 			}
 		}
@@ -5014,9 +5029,9 @@ declare module com {
 			export module inappmessaging {
 				export class FirebaseInAppMessaging_Factory extends dagger.internal.Factory<com.google.firebase.inappmessaging.FirebaseInAppMessaging> {
 					public static class: java.lang.Class<com.google.firebase.inappmessaging.FirebaseInAppMessaging_Factory>;
-					public constructor(param0: javax.inject.Provider<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager>, param1: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DataCollectionHelper>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>);
-					public static create(param0: javax.inject.Provider<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager>, param1: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DataCollectionHelper>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>): dagger.internal.Factory<com.google.firebase.inappmessaging.FirebaseInAppMessaging>;
-					public static newFirebaseInAppMessaging(param0: com.google.firebase.inappmessaging.internal.InAppMessageStreamManager, param1: com.google.firebase.inappmessaging.internal.DataCollectionHelper, param2: com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory, param3: com.google.firebase.inappmessaging.internal.DeveloperListenerManager): com.google.firebase.inappmessaging.FirebaseInAppMessaging;
+					public static newFirebaseInAppMessaging(param0: com.google.firebase.inappmessaging.internal.InAppMessageStreamManager, param1: com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers, param2: com.google.firebase.inappmessaging.internal.DataCollectionHelper, param3: com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory, param4: com.google.firebase.inappmessaging.internal.DeveloperListenerManager): com.google.firebase.inappmessaging.FirebaseInAppMessaging;
+					public static create(param0: javax.inject.Provider<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager>, param1: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DataCollectionHelper>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>): dagger.internal.Factory<com.google.firebase.inappmessaging.FirebaseInAppMessaging>;
+					public constructor(param0: javax.inject.Provider<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager>, param1: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DataCollectionHelper>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>);
 					public get(): com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 				}
 			}
@@ -6129,8 +6144,8 @@ declare module com {
 					export class InAppMessageStreamManager {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager>;
 						public static ON_FOREGROUND: string;
-						public constructor(param0: io.reactivex.flowables.ConnectableFlowable<string>, param1: com.google.firebase.inappmessaging.internal.CampaignCacheClient, param2: com.google.firebase.inappmessaging.internal.vendored.Clock, param3: com.google.firebase.inappmessaging.internal.ApiClient, param4: com.google.firebase.inappmessaging.internal.AnalyticsEventsManager, param5: com.google.firebase.inappmessaging.internal.Schedulers, param6: com.google.firebase.inappmessaging.internal.ImpressionStorageClient, param7: com.google.firebase.inappmessaging.internal.RateLimiterClient, param8: com.google.firebase.inappmessaging.model.RateLimit, param9: com.google.firebase.inappmessaging.internal.TestDeviceHelper);
 						public static isAppForegroundEvent(param0: string): boolean;
+						public constructor(param0: io.reactivex.flowables.ConnectableFlowable<string>, param1: io.reactivex.flowables.ConnectableFlowable<string>, param2: com.google.firebase.inappmessaging.internal.CampaignCacheClient, param3: com.google.firebase.inappmessaging.internal.vendored.Clock, param4: com.google.firebase.inappmessaging.internal.ApiClient, param5: com.google.firebase.inappmessaging.internal.AnalyticsEventsManager, param6: com.google.firebase.inappmessaging.internal.Schedulers, param7: com.google.firebase.inappmessaging.internal.ImpressionStorageClient, param8: com.google.firebase.inappmessaging.internal.RateLimiterClient, param9: com.google.firebase.inappmessaging.model.RateLimit, param10: com.google.firebase.inappmessaging.internal.TestDeviceHelper);
 						public static isAppForegroundEvent(param0: com.google.firebase.inappmessaging.CommonTypesProto.TriggeringCondition): boolean;
 						public createFirebaseInAppMessageStream(): io.reactivex.Flowable<com.google.firebase.inappmessaging.model.TriggeredInAppMessage>;
 					}
@@ -6147,9 +6162,9 @@ declare module com {
 				export module internal {
 					export class InAppMessageStreamManager_Factory extends dagger.internal.Factory<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager> {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager_Factory>;
+						public constructor(param0: javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>>, param1: javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.CampaignCacheClient>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ApiClient>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.AnalyticsEventsManager>, param6: javax.inject.Provider<com.google.firebase.inappmessaging.internal.Schedulers>, param7: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ImpressionStorageClient>, param8: javax.inject.Provider<com.google.firebase.inappmessaging.internal.RateLimiterClient>, param9: javax.inject.Provider<com.google.firebase.inappmessaging.model.RateLimit>, param10: javax.inject.Provider<com.google.firebase.inappmessaging.internal.TestDeviceHelper>);
+						public static create(param0: javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>>, param1: javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.CampaignCacheClient>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ApiClient>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.AnalyticsEventsManager>, param6: javax.inject.Provider<com.google.firebase.inappmessaging.internal.Schedulers>, param7: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ImpressionStorageClient>, param8: javax.inject.Provider<com.google.firebase.inappmessaging.internal.RateLimiterClient>, param9: javax.inject.Provider<com.google.firebase.inappmessaging.model.RateLimit>, param10: javax.inject.Provider<com.google.firebase.inappmessaging.internal.TestDeviceHelper>): dagger.internal.Factory<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager>;
 						public get(): com.google.firebase.inappmessaging.internal.InAppMessageStreamManager;
-						public constructor(param0: javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>>, param1: javax.inject.Provider<com.google.firebase.inappmessaging.internal.CampaignCacheClient>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ApiClient>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.AnalyticsEventsManager>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.Schedulers>, param6: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ImpressionStorageClient>, param7: javax.inject.Provider<com.google.firebase.inappmessaging.internal.RateLimiterClient>, param8: javax.inject.Provider<com.google.firebase.inappmessaging.model.RateLimit>, param9: javax.inject.Provider<com.google.firebase.inappmessaging.internal.TestDeviceHelper>);
-						public static create(param0: javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>>, param1: javax.inject.Provider<com.google.firebase.inappmessaging.internal.CampaignCacheClient>, param2: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param3: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ApiClient>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.AnalyticsEventsManager>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.Schedulers>, param6: javax.inject.Provider<com.google.firebase.inappmessaging.internal.ImpressionStorageClient>, param7: javax.inject.Provider<com.google.firebase.inappmessaging.internal.RateLimiterClient>, param8: javax.inject.Provider<com.google.firebase.inappmessaging.model.RateLimit>, param9: javax.inject.Provider<com.google.firebase.inappmessaging.internal.TestDeviceHelper>): dagger.internal.Factory<com.google.firebase.inappmessaging.internal.InAppMessageStreamManager>;
 					}
 				}
 			}
@@ -6201,6 +6216,37 @@ declare module com {
 							});
 							public constructor();
 							public logEvent(param0: native.Array<number>): void;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export module internal {
+					export class ProgramaticContextualTriggers {
+						public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers>;
+						public constructor();
+						public triggerEvent(param0: string): void;
+						public setListener(param0: com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers.Listener): void;
+						public removeListener(param0: com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers.Listener): void;
+					}
+					export module ProgramaticContextualTriggers {
+						export class Listener {
+							public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers.Listener>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers$Listener interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								onEventTrigger(param0: string): void;
+							});
+							public constructor();
+							public onEventTrigger(param0: string): void;
 						}
 					}
 				}
@@ -6552,6 +6598,27 @@ declare module com {
 								public providesFirebaseInAppMessaging(): com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 								public displayCallbacksFactory(): com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory;
 							}
+							export module AppComponent {
+								export class Builder {
+									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder>;
+									/**
+									 * Constructs a new instance of the com.google.firebase.inappmessaging.internal.injection.components.AppComponent$Builder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+									 */
+									public constructor(implementation: {
+										apiClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ApiClientModule): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+										grpcClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcClientModule): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+										universalComponent(param0: com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+										transportFactory(param0: com.google.android.datatransport.TransportFactory): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+										build(): com.google.firebase.inappmessaging.internal.injection.components.AppComponent;
+									});
+									public constructor();
+									public universalComponent(param0: com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+									public transportFactory(param0: com.google.android.datatransport.TransportFactory): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+									public build(): com.google.firebase.inappmessaging.internal.injection.components.AppComponent;
+									public apiClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ApiClientModule): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+									public grpcClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcClientModule): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+								}
+							}
 						}
 					}
 				}
@@ -6569,18 +6636,22 @@ declare module com {
 						export module components {
 							export class DaggerAppComponent extends com.google.firebase.inappmessaging.internal.injection.components.AppComponent {
 								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent>;
-								public static builder(): com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.Builder;
+								public static builder(): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
 								public providesFirebaseInAppMessaging(): com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 								public displayCallbacksFactory(): com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory;
 							}
 							export module DaggerAppComponent {
-								export class Builder {
+								export class Builder extends com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder {
 									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.Builder>;
 									public build(): com.google.firebase.inappmessaging.internal.injection.components.AppComponent;
+									public universalComponent(param0: com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+									public transportFactory(param0: com.google.android.datatransport.TransportFactory): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
 									public grpcClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcClientModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.Builder;
 									public universalComponent(param0: com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent): com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.Builder;
-									public clearcutLoggerClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.Builder;
+									public apiClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ApiClientModule): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
+									public grpcClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcClientModule): com.google.firebase.inappmessaging.internal.injection.components.AppComponent.Builder;
 									public apiClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ApiClientModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.Builder;
+									public transportFactory(param0: com.google.android.datatransport.TransportFactory): com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.Builder;
 								}
 								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_analyticsConnector extends javax.inject.Provider<com.google.firebase.analytics.connector.AnalyticsConnector> {
 									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_analyticsConnector>;
@@ -6630,103 +6701,20 @@ declare module com {
 									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_probiderInstaller>;
 									public get(): com.google.firebase.inappmessaging.internal.ProviderInstaller;
 								}
+								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_programmaticContextualTriggerFlowable extends javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>> {
+									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_programmaticContextualTriggerFlowable>;
+									public get(): io.reactivex.flowables.ConnectableFlowable<string>;
+								}
+								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_programmaticContextualTriggers extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers> {
+									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_programmaticContextualTriggers>;
+									public get(): com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers;
+								}
 								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_rateLimiterClient extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.RateLimiterClient> {
 									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_rateLimiterClient>;
 									public get(): com.google.firebase.inappmessaging.internal.RateLimiterClient;
 								}
 								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_schedulers extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.Schedulers> {
 									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerAppComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_schedulers>;
-									public get(): com.google.firebase.inappmessaging.internal.Schedulers;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module inappmessaging {
-				export module internal {
-					export module injection {
-						export module components {
-							export class DaggerFirebaseInAppMessagingComponent extends com.google.firebase.inappmessaging.internal.injection.components.FirebaseInAppMessagingComponent {
-								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent>;
-								public streamManager(): com.google.firebase.inappmessaging.internal.InAppMessageStreamManager;
-								public metricsLoggerClient(): com.google.firebase.inappmessaging.internal.MetricsLoggerClient;
-								public universalComponent(): com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent;
-								public displayCallbacksFactory(): com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory;
-								public testDeviceHelper(): com.google.firebase.inappmessaging.internal.TestDeviceHelper;
-								public static builder(): com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.Builder;
-								public dataCollectionHelper(): com.google.firebase.inappmessaging.internal.DataCollectionHelper;
-							}
-							export module DaggerFirebaseInAppMessagingComponent {
-								export class Builder {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.Builder>;
-									public universalComponent(param0: com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent): com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.Builder;
-									public build(): com.google.firebase.inappmessaging.internal.injection.components.FirebaseInAppMessagingComponent;
-									public grpcClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcClientModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.Builder;
-									public apiClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ApiClientModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.Builder;
-									public clearcutLoggerClientModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.Builder;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_analyticsConnector extends javax.inject.Provider<com.google.firebase.analytics.connector.AnalyticsConnector> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_analyticsConnector>;
-									public get(): com.google.firebase.analytics.connector.AnalyticsConnector;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_analyticsEventsManager extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.AnalyticsEventsManager> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_analyticsEventsManager>;
-									public get(): com.google.firebase.inappmessaging.internal.AnalyticsEventsManager;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_appForegroundEventFlowable extends javax.inject.Provider<io.reactivex.flowables.ConnectableFlowable<string>> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_appForegroundEventFlowable>;
-									public get(): io.reactivex.flowables.ConnectableFlowable<string>;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_appForegroundRateLimit extends javax.inject.Provider<com.google.firebase.inappmessaging.model.RateLimit> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_appForegroundRateLimit>;
-									public get(): com.google.firebase.inappmessaging.model.RateLimit;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_application extends javax.inject.Provider<globalAndroid.app.Application> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_application>;
-									public get(): globalAndroid.app.Application;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_campaignCacheClient extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.CampaignCacheClient> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_campaignCacheClient>;
-									public get(): com.google.firebase.inappmessaging.internal.CampaignCacheClient;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_clock extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_clock>;
-									public get(): com.google.firebase.inappmessaging.internal.vendored.Clock;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_developerListenerManager extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_developerListenerManager>;
-									public get(): com.google.firebase.inappmessaging.internal.DeveloperListenerManager;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_firebaseEventsSubscriber extends javax.inject.Provider<com.google.firebase.events.Subscriber> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_firebaseEventsSubscriber>;
-									public get(): com.google.firebase.events.Subscriber;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_gRPCChannel extends javax.inject.Provider<io.grpc.Channel> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_gRPCChannel>;
-									public get(): io.grpc.Channel;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_impressionStorageClient extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.ImpressionStorageClient> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_impressionStorageClient>;
-									public get(): com.google.firebase.inappmessaging.internal.ImpressionStorageClient;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_probiderInstaller extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.ProviderInstaller> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_probiderInstaller>;
-									public get(): com.google.firebase.inappmessaging.internal.ProviderInstaller;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_rateLimiterClient extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.RateLimiterClient> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_rateLimiterClient>;
-									public get(): com.google.firebase.inappmessaging.internal.RateLimiterClient;
-								}
-								export class com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_schedulers extends javax.inject.Provider<com.google.firebase.inappmessaging.internal.Schedulers> {
-									public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.DaggerFirebaseInAppMessagingComponent.com_google_firebase_inappmessaging_internal_injection_components_UniversalComponent_schedulers>;
 									public get(): com.google.firebase.inappmessaging.internal.Schedulers;
 								}
 							}
@@ -6754,6 +6742,7 @@ declare module com {
 								public analyticsConnectorHandleManager(): com.google.firebase.inappmessaging.internal.AnalyticsConnectorHandleManager;
 								public impressionStorageClient(): com.google.firebase.inappmessaging.internal.ImpressionStorageClient;
 								public application(): globalAndroid.app.Application;
+								public programmaticContextualTriggers(): com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers;
 								public analyticsConnector(): com.google.firebase.analytics.connector.AnalyticsConnector;
 								public clock(): com.google.firebase.inappmessaging.internal.vendored.Clock;
 								public rateLimiterClient(): com.google.firebase.inappmessaging.internal.RateLimiterClient;
@@ -6764,6 +6753,7 @@ declare module com {
 								public analyticsEventsFlowable(): io.reactivex.flowables.ConnectableFlowable<string>;
 								public protoMarshallerClient(): com.google.firebase.inappmessaging.model.ProtoMarshallerClient;
 								public gRPCChannel(): io.grpc.Channel;
+								public programmaticContextualTriggerFlowable(): io.reactivex.flowables.ConnectableFlowable<string>;
 								public firebaseEventsSubscriber(): com.google.firebase.events.Subscriber;
 							}
 							export module DaggerUniversalComponent {
@@ -6777,46 +6767,11 @@ declare module com {
 									public foregroundFlowableModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ForegroundFlowableModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerUniversalComponent.Builder;
 									public schedulerModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.SchedulerModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerUniversalComponent.Builder;
 									public applicationModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ApplicationModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerUniversalComponent.Builder;
+									public programmaticContextualTriggerFlowableModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerUniversalComponent.Builder;
 									public analyticsEventsModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.AnalyticsEventsModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerUniversalComponent.Builder;
 									public rateLimitModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.RateLimitModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerUniversalComponent.Builder;
 									public grpcChannelModule(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcChannelModule): com.google.firebase.inappmessaging.internal.injection.components.DaggerUniversalComponent.Builder;
 								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module inappmessaging {
-				export module internal {
-					export module injection {
-						export module components {
-							export class FirebaseInAppMessagingComponent {
-								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.components.FirebaseInAppMessagingComponent>;
-								/**
-								 * Constructs a new instance of the com.google.firebase.inappmessaging.internal.injection.components.FirebaseInAppMessagingComponent interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-								 */
-								public constructor(implementation: {
-									universalComponent(): com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent;
-									streamManager(): com.google.firebase.inappmessaging.internal.InAppMessageStreamManager;
-									metricsLoggerClient(): com.google.firebase.inappmessaging.internal.MetricsLoggerClient;
-									dataCollectionHelper(): com.google.firebase.inappmessaging.internal.DataCollectionHelper;
-									testDeviceHelper(): com.google.firebase.inappmessaging.internal.TestDeviceHelper;
-									displayCallbacksFactory(): com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory;
-								});
-								public constructor();
-								public streamManager(): com.google.firebase.inappmessaging.internal.InAppMessageStreamManager;
-								public metricsLoggerClient(): com.google.firebase.inappmessaging.internal.MetricsLoggerClient;
-								public universalComponent(): com.google.firebase.inappmessaging.internal.injection.components.UniversalComponent;
-								public displayCallbacksFactory(): com.google.firebase.inappmessaging.internal.DisplayCallbacksFactory;
-								public testDeviceHelper(): com.google.firebase.inappmessaging.internal.TestDeviceHelper;
-								public dataCollectionHelper(): com.google.firebase.inappmessaging.internal.DataCollectionHelper;
 							}
 						}
 					}
@@ -6843,6 +6798,8 @@ declare module com {
 									gRPCChannel(): io.grpc.Channel;
 									schedulers(): com.google.firebase.inappmessaging.internal.Schedulers;
 									appForegroundEventFlowable(): io.reactivex.flowables.ConnectableFlowable<string>;
+									programmaticContextualTriggerFlowable(): io.reactivex.flowables.ConnectableFlowable<string>;
+									programmaticContextualTriggers(): com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers;
 									analyticsEventsFlowable(): io.reactivex.flowables.ConnectableFlowable<string>;
 									analyticsEventsManager(): com.google.firebase.inappmessaging.internal.AnalyticsEventsManager;
 									analyticsConnector(): com.google.firebase.analytics.connector.AnalyticsConnector;
@@ -6864,6 +6821,7 @@ declare module com {
 								public analyticsConnectorHandleManager(): com.google.firebase.inappmessaging.internal.AnalyticsConnectorHandleManager;
 								public impressionStorageClient(): com.google.firebase.inappmessaging.internal.ImpressionStorageClient;
 								public application(): globalAndroid.app.Application;
+								public programmaticContextualTriggers(): com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers;
 								public analyticsConnector(): com.google.firebase.analytics.connector.AnalyticsConnector;
 								public clock(): com.google.firebase.inappmessaging.internal.vendored.Clock;
 								public rateLimiterClient(): com.google.firebase.inappmessaging.internal.RateLimiterClient;
@@ -6874,6 +6832,7 @@ declare module com {
 								public analyticsEventsFlowable(): io.reactivex.flowables.ConnectableFlowable<string>;
 								public protoMarshallerClient(): com.google.firebase.inappmessaging.model.ProtoMarshallerClient;
 								public gRPCChannel(): io.grpc.Channel;
+								public programmaticContextualTriggerFlowable(): io.reactivex.flowables.ConnectableFlowable<string>;
 								public firebaseEventsSubscriber(): com.google.firebase.events.Subscriber;
 							}
 						}
@@ -7253,69 +7212,6 @@ declare module com {
 				export module internal {
 					export module injection {
 						export module modules {
-							export class ClearcutLoggerClientModule {
-								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule>;
-								public providesApiClient(param0: com.google.android.gms.clearcut.ClearcutLogger, param1: com.google.firebase.analytics.connector.AnalyticsConnector, param2: com.google.firebase.iid.FirebaseInstanceId, param3: com.google.firebase.inappmessaging.internal.vendored.Clock, param4: com.google.firebase.inappmessaging.internal.DeveloperListenerManager): com.google.firebase.inappmessaging.internal.MetricsLoggerClient;
-								public constructor(param0: com.google.firebase.FirebaseApp);
-								public providesClearcutClient(param0: globalAndroid.app.Application): com.google.android.gms.clearcut.ClearcutLogger;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module inappmessaging {
-				export module internal {
-					export module injection {
-						export module modules {
-							export class ClearcutLoggerClientModule_ProvidesApiClientFactory extends dagger.internal.Factory<com.google.firebase.inappmessaging.internal.MetricsLoggerClient> {
-								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule_ProvidesApiClientFactory>;
-								public constructor(param0: com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule, param1: javax.inject.Provider<com.google.android.gms.clearcut.ClearcutLogger>, param2: javax.inject.Provider<com.google.firebase.analytics.connector.AnalyticsConnector>, param3: javax.inject.Provider<com.google.firebase.iid.FirebaseInstanceId>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>);
-								public static create(param0: com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule, param1: javax.inject.Provider<com.google.android.gms.clearcut.ClearcutLogger>, param2: javax.inject.Provider<com.google.firebase.analytics.connector.AnalyticsConnector>, param3: javax.inject.Provider<com.google.firebase.iid.FirebaseInstanceId>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>): dagger.internal.Factory<com.google.firebase.inappmessaging.internal.MetricsLoggerClient>;
-								public get(): com.google.firebase.inappmessaging.internal.MetricsLoggerClient;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module inappmessaging {
-				export module internal {
-					export module injection {
-						export module modules {
-							export class ClearcutLoggerClientModule_ProvidesClearcutClientFactory extends dagger.internal.Factory<com.google.android.gms.clearcut.ClearcutLogger> {
-								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule_ProvidesClearcutClientFactory>;
-								public static create(param0: com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule, param1: javax.inject.Provider<globalAndroid.app.Application>): dagger.internal.Factory<com.google.android.gms.clearcut.ClearcutLogger>;
-								public constructor(param0: com.google.firebase.inappmessaging.internal.injection.modules.ClearcutLoggerClientModule, param1: javax.inject.Provider<globalAndroid.app.Application>);
-								public get(): com.google.android.gms.clearcut.ClearcutLogger;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module inappmessaging {
-				export module internal {
-					export module injection {
-						export module modules {
 							export class ForegroundFlowableModule {
 								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.ForegroundFlowableModule>;
 								public providesAppForegroundEventStream(param0: globalAndroid.app.Application, param1: com.google.firebase.inappmessaging.internal.ForegroundNotifier): io.reactivex.flowables.ConnectableFlowable<string>;
@@ -7509,6 +7405,69 @@ declare module com {
 								public static create(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcClientModule, param1: javax.inject.Provider<io.grpc.Channel>, param2: javax.inject.Provider<io.grpc.Metadata>): dagger.internal.Factory<com.google.internal.firebase.inappmessaging.v1.sdkserving.InAppMessagingSdkServingGrpc.InAppMessagingSdkServingBlockingStub>;
 								public constructor(param0: com.google.firebase.inappmessaging.internal.injection.modules.GrpcClientModule, param1: javax.inject.Provider<io.grpc.Channel>, param2: javax.inject.Provider<io.grpc.Metadata>);
 								public get(): com.google.internal.firebase.inappmessaging.v1.sdkserving.InAppMessagingSdkServingGrpc.InAppMessagingSdkServingBlockingStub;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export module internal {
+					export module injection {
+						export module modules {
+							export class ProgrammaticContextualTriggerFlowableModule {
+								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule>;
+								public providesProgramaticContextualTriggerStream(): io.reactivex.flowables.ConnectableFlowable<string>;
+								public constructor(param0: com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers);
+								public providesProgramaticContextualTriggers(): com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export module internal {
+					export module injection {
+						export module modules {
+							export class ProgrammaticContextualTriggerFlowableModule_ProvidesProgramaticContextualTriggerStreamFactory extends dagger.internal.Factory<io.reactivex.flowables.ConnectableFlowable<string>> {
+								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule_ProvidesProgramaticContextualTriggerStreamFactory>;
+								public constructor(param0: com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule);
+								public get(): io.reactivex.flowables.ConnectableFlowable<string>;
+								public static create(param0: com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule): dagger.internal.Factory<io.reactivex.flowables.ConnectableFlowable<string>>;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export module internal {
+					export module injection {
+						export module modules {
+							export class ProgrammaticContextualTriggerFlowableModule_ProvidesProgramaticContextualTriggersFactory extends dagger.internal.Factory<com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers> {
+								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule_ProvidesProgramaticContextualTriggersFactory>;
+								public constructor(param0: com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule);
+								public static create(param0: com.google.firebase.inappmessaging.internal.injection.modules.ProgrammaticContextualTriggerFlowableModule): dagger.internal.Factory<com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers>;
+								public get(): com.google.firebase.inappmessaging.internal.ProgramaticContextualTriggers;
 							}
 						}
 					}
@@ -7779,6 +7738,47 @@ declare module com {
 			export module inappmessaging {
 				export module internal {
 					export module injection {
+						export module modules {
+							export class TransportClientModule {
+								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.TransportClientModule>;
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export module internal {
+					export module injection {
+						export module modules {
+							export class TransportClientModule_ProvidesApiClientFactory extends dagger.internal.Factory<com.google.firebase.inappmessaging.internal.MetricsLoggerClient> {
+								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.modules.TransportClientModule_ProvidesApiClientFactory>;
+								public static create(param0: javax.inject.Provider<com.google.firebase.FirebaseApp>, param1: javax.inject.Provider<com.google.android.datatransport.TransportFactory>, param2: javax.inject.Provider<com.google.firebase.analytics.connector.AnalyticsConnector>, param3: javax.inject.Provider<com.google.firebase.iid.FirebaseInstanceId>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>): dagger.internal.Factory<com.google.firebase.inappmessaging.internal.MetricsLoggerClient>;
+								public static proxyProvidesApiClient(param0: com.google.firebase.FirebaseApp, param1: com.google.android.datatransport.TransportFactory, param2: com.google.firebase.analytics.connector.AnalyticsConnector, param3: com.google.firebase.iid.FirebaseInstanceId, param4: com.google.firebase.inappmessaging.internal.vendored.Clock, param5: com.google.firebase.inappmessaging.internal.DeveloperListenerManager): com.google.firebase.inappmessaging.internal.MetricsLoggerClient;
+								public constructor(param0: javax.inject.Provider<com.google.firebase.FirebaseApp>, param1: javax.inject.Provider<com.google.android.datatransport.TransportFactory>, param2: javax.inject.Provider<com.google.firebase.analytics.connector.AnalyticsConnector>, param3: javax.inject.Provider<com.google.firebase.iid.FirebaseInstanceId>, param4: javax.inject.Provider<com.google.firebase.inappmessaging.internal.vendored.Clock>, param5: javax.inject.Provider<com.google.firebase.inappmessaging.internal.DeveloperListenerManager>);
+								public get(): com.google.firebase.inappmessaging.internal.MetricsLoggerClient;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export module internal {
+					export module injection {
 						export module qualifiers {
 							export class Analytics {
 								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.qualifiers.Analytics>;
@@ -7880,6 +7880,30 @@ declare module com {
 								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.qualifiers.ImpressionStore>;
 								/**
 								 * Constructs a new instance of the com.google.firebase.inappmessaging.internal.injection.qualifiers.ImpressionStore interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+								});
+								public constructor();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module inappmessaging {
+				export module internal {
+					export module injection {
+						export module qualifiers {
+							export class ProgrammaticTrigger {
+								public static class: java.lang.Class<com.google.firebase.inappmessaging.internal.injection.qualifiers.ProgrammaticTrigger>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.inappmessaging.internal.injection.qualifiers.ProgrammaticTrigger interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 								 */
 								public constructor(implementation: {
 								});
@@ -8011,12 +8035,18 @@ declare module com {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.Action>;
 						public getActionUrl(): string;
 						public getButton(): com.google.firebase.inappmessaging.model.Button;
-						public constructor(param0: string, param1: com.google.firebase.inappmessaging.model.Button);
+						public hashCode(): number;
+						public equals(param0: any): boolean;
 						public static builder(): com.google.firebase.inappmessaging.model.Action.Builder;
 					}
 					export module Action {
 						export class Builder {
 							public static class: java.lang.Class<com.google.firebase.inappmessaging.model.Action.Builder>;
+							public constructor();
+							public setActionUrl(param0: string): com.google.firebase.inappmessaging.model.Action.Builder;
+							public setButton(param0: com.google.firebase.inappmessaging.model.Button): com.google.firebase.inappmessaging.model.Action.Builder;
+							public build(): com.google.firebase.inappmessaging.model.Action;
+							public setButton(param0: com.google.firebase.inappmessaging.MessagesProto.Button): com.google.firebase.inappmessaging.model.Action.Builder;
 						}
 					}
 				}
@@ -8061,10 +8091,9 @@ declare module com {
 				export module model {
 					export class BannerMessage extends com.google.firebase.inappmessaging.model.InAppMessage {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.BannerMessage>;
-						public constructor(param0: com.google.firebase.inappmessaging.model.Text, param1: com.google.firebase.inappmessaging.model.Text, param2: com.google.firebase.inappmessaging.model.ImageData, param3: com.google.firebase.inappmessaging.model.Action, param4: string, param5: com.google.firebase.inappmessaging.model.CampaignMetadata);
 						public getBackgroundHexColor(): string;
-						public constructor(param0: com.google.firebase.inappmessaging.model.CampaignMetadata, param1: com.google.firebase.inappmessaging.model.MessageType);
-						public constructor(param0: com.google.firebase.inappmessaging.model.Text, param1: com.google.firebase.inappmessaging.model.Text, param2: string, param3: com.google.firebase.inappmessaging.model.ImageData, param4: com.google.firebase.inappmessaging.model.Button, param5: com.google.firebase.inappmessaging.model.Action, param6: string, param7: string, param8: string, param9: java.lang.Boolean, param10: com.google.firebase.inappmessaging.model.MessageType);
+						public hashCode(): number;
+						public equals(param0: any): boolean;
 						public getImageData(): com.google.firebase.inappmessaging.model.ImageData;
 						public getBody(): com.google.firebase.inappmessaging.model.Text;
 						public static builder(): com.google.firebase.inappmessaging.model.BannerMessage.Builder;
@@ -8096,14 +8125,20 @@ declare module com {
 				export module model {
 					export class Button {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.Button>;
-						public constructor(param0: com.google.firebase.inappmessaging.model.Text, param1: string);
 						public getButtonHexColor(): string;
+						public hashCode(): number;
+						public equals(param0: any): boolean;
 						public static builder(): com.google.firebase.inappmessaging.model.Button.Builder;
 						public getText(): com.google.firebase.inappmessaging.model.Text;
 					}
 					export module Button {
 						export class Builder {
 							public static class: java.lang.Class<com.google.firebase.inappmessaging.model.Button.Builder>;
+							public constructor();
+							public setText(param0: com.google.firebase.inappmessaging.MessagesProto.Text): com.google.firebase.inappmessaging.model.Button.Builder;
+							public setText(param0: com.google.firebase.inappmessaging.model.Text): com.google.firebase.inappmessaging.model.Button.Builder;
+							public setButtonHexColor(param0: string): com.google.firebase.inappmessaging.model.Button.Builder;
+							public build(): com.google.firebase.inappmessaging.model.Button;
 						}
 					}
 				}
@@ -8138,13 +8173,12 @@ declare module com {
 					export class CardMessage extends com.google.firebase.inappmessaging.model.InAppMessage {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.CardMessage>;
 						public getBackgroundHexColor(): string;
-						public constructor(param0: com.google.firebase.inappmessaging.model.CampaignMetadata, param1: com.google.firebase.inappmessaging.model.MessageType);
+						public static builder(): com.google.firebase.inappmessaging.model.CardMessage.Builder;
+						public hashCode(): number;
+						public equals(param0: any): boolean;
+						public getSecondaryAction(): com.google.firebase.inappmessaging.model.Action;
 						public getImageData(): com.google.firebase.inappmessaging.model.ImageData;
 						public getPortraitImageData(): com.google.firebase.inappmessaging.model.ImageData;
-						public constructor(param0: com.google.firebase.inappmessaging.model.CampaignMetadata, param1: com.google.firebase.inappmessaging.model.Text, param2: com.google.firebase.inappmessaging.model.Text, param3: com.google.firebase.inappmessaging.model.ImageData, param4: com.google.firebase.inappmessaging.model.ImageData, param5: string, param6: com.google.firebase.inappmessaging.model.Action, param7: com.google.firebase.inappmessaging.model.Action);
-						public static builder(): com.google.firebase.inappmessaging.model.CardMessage.Builder;
-						public constructor(param0: com.google.firebase.inappmessaging.model.Text, param1: com.google.firebase.inappmessaging.model.Text, param2: string, param3: com.google.firebase.inappmessaging.model.ImageData, param4: com.google.firebase.inappmessaging.model.Button, param5: com.google.firebase.inappmessaging.model.Action, param6: string, param7: string, param8: string, param9: java.lang.Boolean, param10: com.google.firebase.inappmessaging.model.MessageType);
-						public getSecondaryAction(): com.google.firebase.inappmessaging.model.Action;
 						public getPrimaryAction(): com.google.firebase.inappmessaging.model.Action;
 						public getBody(): com.google.firebase.inappmessaging.model.Text;
 						public getLandscapeImageData(): com.google.firebase.inappmessaging.model.ImageData;
@@ -8180,12 +8214,18 @@ declare module com {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.ImageData>;
 						public constructor(param0: string, param1: globalAndroid.graphics.Bitmap);
 						public getBitmapData(): globalAndroid.graphics.Bitmap;
-						public static builder(): com.google.firebase.inappmessaging.model.ImageData.Builder;
+						public hashCode(): number;
+						public equals(param0: any): boolean;
 						public getImageUrl(): string;
+						public static builder(): com.google.firebase.inappmessaging.model.ImageData.Builder;
 					}
 					export module ImageData {
 						export class Builder {
 							public static class: java.lang.Class<com.google.firebase.inappmessaging.model.ImageData.Builder>;
+							public constructor();
+							public setImageUrl(param0: string): com.google.firebase.inappmessaging.model.ImageData.Builder;
+							public setBitmapData(param0: globalAndroid.graphics.Bitmap): com.google.firebase.inappmessaging.model.ImageData.Builder;
+							public build(): com.google.firebase.inappmessaging.model.ImageData;
 						}
 					}
 				}
@@ -8202,10 +8242,9 @@ declare module com {
 					export class ImageOnlyMessage extends com.google.firebase.inappmessaging.model.InAppMessage {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.ImageOnlyMessage>;
 						public static builder(): com.google.firebase.inappmessaging.model.ImageOnlyMessage.Builder;
-						public constructor(param0: com.google.firebase.inappmessaging.model.CampaignMetadata, param1: com.google.firebase.inappmessaging.model.MessageType);
-						public constructor(param0: com.google.firebase.inappmessaging.model.Text, param1: com.google.firebase.inappmessaging.model.Text, param2: string, param3: com.google.firebase.inappmessaging.model.ImageData, param4: com.google.firebase.inappmessaging.model.Button, param5: com.google.firebase.inappmessaging.model.Action, param6: string, param7: string, param8: string, param9: java.lang.Boolean, param10: com.google.firebase.inappmessaging.model.MessageType);
+						public hashCode(): number;
+						public equals(param0: any): boolean;
 						public getImageData(): com.google.firebase.inappmessaging.model.ImageData;
-						public constructor(param0: com.google.firebase.inappmessaging.model.ImageData, param1: com.google.firebase.inappmessaging.model.Action, param2: com.google.firebase.inappmessaging.model.CampaignMetadata);
 						public getAction(): com.google.firebase.inappmessaging.model.Action;
 					}
 					export module ImageOnlyMessage {
@@ -8279,10 +8318,10 @@ declare module com {
 				export module model {
 					export class ModalMessage extends com.google.firebase.inappmessaging.model.InAppMessage {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.ModalMessage>;
-						public constructor(param0: com.google.firebase.inappmessaging.model.Text, param1: com.google.firebase.inappmessaging.model.Text, param2: com.google.firebase.inappmessaging.model.ImageData, param3: com.google.firebase.inappmessaging.model.Action, param4: string, param5: com.google.firebase.inappmessaging.model.CampaignMetadata);
-						public constructor(param0: com.google.firebase.inappmessaging.model.CampaignMetadata, param1: com.google.firebase.inappmessaging.model.MessageType);
+						public getBackgroundHexColor(): string;
 						public static builder(): com.google.firebase.inappmessaging.model.ModalMessage.Builder;
-						public constructor(param0: com.google.firebase.inappmessaging.model.Text, param1: com.google.firebase.inappmessaging.model.Text, param2: string, param3: com.google.firebase.inappmessaging.model.ImageData, param4: com.google.firebase.inappmessaging.model.Button, param5: com.google.firebase.inappmessaging.model.Action, param6: string, param7: string, param8: string, param9: java.lang.Boolean, param10: com.google.firebase.inappmessaging.model.MessageType);
+						public hashCode(): number;
+						public equals(param0: any): boolean;
 						public getImageData(): com.google.firebase.inappmessaging.model.ImageData;
 						public getBody(): com.google.firebase.inappmessaging.model.Text;
 						public getTitle(): com.google.firebase.inappmessaging.model.Text;
@@ -8375,14 +8414,20 @@ declare module com {
 				export module model {
 					export class Text {
 						public static class: java.lang.Class<com.google.firebase.inappmessaging.model.Text>;
-						public static builder(): com.google.firebase.inappmessaging.model.Text.Builder;
+						public hashCode(): number;
+						public equals(param0: any): boolean;
 						public getHexColor(): string;
-						public constructor(param0: string, param1: string);
+						public static builder(): com.google.firebase.inappmessaging.model.Text.Builder;
 						public getText(): string;
 					}
 					export module Text {
 						export class Builder {
 							public static class: java.lang.Class<com.google.firebase.inappmessaging.model.Text.Builder>;
+							public constructor();
+							public setHexColor(param0: string): com.google.firebase.inappmessaging.model.Text.Builder;
+							public build(): com.google.firebase.inappmessaging.model.Text;
+							public setText(param0: string): com.google.firebase.inappmessaging.model.Text.Builder;
+							public setText(param0: com.google.firebase.inappmessaging.MessagesProto.Text): com.google.firebase.inappmessaging.model.Text.Builder;
 						}
 					}
 				}

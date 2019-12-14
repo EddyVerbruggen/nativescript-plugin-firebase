@@ -36,7 +36,11 @@ export enum LoginType {
    * This requires you to pass in the 'emailLinkOptions' as well.
    * Note that 'Firebase Dynamic Links' must be enabled for this login type to work.
    */
-  EMAIL_LINK
+  EMAIL_LINK,
+  /**
+   * Apple
+   */
+  APPLE
 }
 
 export enum LogComplexEventTypeParameter {
@@ -233,6 +237,7 @@ export interface IdTokenResult {
 
 export interface Provider {
   id: string;
+  token?: string;
 }
 
 export interface FirebasePasswordLoginOptions {
@@ -263,6 +268,14 @@ export interface FirebasePhoneLoginOptions {
    * Default: "Verification code".
    */
   verificationPrompt?: string;
+  android?: {
+    /**
+     * The maximum amount of time you are willing to wait for SMS auto-retrieval to be completed by the library. Maximum allowed value is 2 minutes. Use 0 to disable SMS-auto-retrieval. If you specified a positive value less than 30 seconds, library will default to 30 seconds.
+     * Default: 60 (seconds)
+     * See: https://firebase.google.com/docs/reference/android/com/google/firebase/auth/PhoneAuthProvider
+     */
+    timeout: number;
+  };
 }
 
 export interface FirebaseGoogleLoginOptions {
@@ -280,6 +293,21 @@ export interface FirebaseFacebookLoginOptions {
    * Default: ["public_profile", "email"]
    */
   scopes?: Array<string>;
+}
+
+export type AppleLoginScope = "name" | "email";
+
+export interface AppleLoginOptions {
+  /**
+   * Default: ["name", "email"]
+   */
+  scopes?: Array<AppleLoginScope>;
+  /**
+   * Android only.
+   * Supported locales: https://developer.apple.com/documentation/signinwithapplejs/incorporating_sign_in_with_apple_into_other_platforms#3332112
+   * Default: "en".
+   */
+  locale?: string;
 }
 
 export interface FirebaseCustomLoginOptions {
@@ -311,6 +339,7 @@ export interface LoginOptions {
   phoneOptions?: FirebasePhoneLoginOptions;
   googleOptions?: FirebaseGoogleLoginOptions;
   facebookOptions?: FirebaseFacebookLoginOptions;
+  appleOptions?: AppleLoginOptions;
   customOptions?: FirebaseCustomLoginOptions;
   ios?: LoginIOSOptions;
 
@@ -547,18 +576,11 @@ export interface Message {
    * Any other data you may have added to the notification.
    */
   data: any;
-}
-
-export interface SendCrashLogOptions {
   /**
-   * Any custom logging you want to send to Firebase.
+   * Indicates whether or not the notification was tapped.
+   * iOS only.
    */
-  message: string;
-
-  /**
-   * Also log to the device console. Default false.
-   */
-  showInConsole: boolean;
+  notificationTapped?: boolean;
 }
 
 export function init(options?: InitOptions): Promise<any>;
@@ -639,67 +661,6 @@ export function enableLogging(logger?: boolean | ((a: string) => any), persisten
  */
 export function keepInSync(path: string, switchOn: boolean): Promise<any>;
 
-// Invites module
-export namespace invites {
-
-  export enum MATCH_TYPE {
-    WEAK,
-    STRONG
-  }
-
-  export interface SendInvitationOptions {
-    /**
-     * Invitation title you want to send.
-     */
-    title: string;
-
-    /**
-     * Sets the default message sent with invitations.
-     */
-    message: string;
-
-    /**
-     * Sets the link into your app that is sent with invitations.
-     */
-    deepLink?: string;
-
-    /**
-     * Sets the call-to-action text of the button rendered in email invitations. Cannot exceed 32 characters.
-     */
-    callToActionText?: string;
-
-    /**
-     * Sets the URL of a custom image to include in email invitations. The image must be square and around 600x600 pixels. The image can be no larger than 4000x4000 pixels.
-     */
-    customImage?: string;
-
-    /**
-     * If you have an Android version of your app and you want to send an invitation that can be opened on Android in addition to iOS.
-     */
-    androidClientID?: string;
-
-    /**
-     * You can find your iOS app's client ID in the GoogleService-Info.plist file you downloaded from the Firebase console.
-     */
-    iosClientID?: string;
-  }
-
-  export interface SendInvitationResult {
-    count: number;
-    invitationIds: any;
-  }
-
-  export interface GetInvitationResult {
-    deepLink: string;
-    matchType?: MATCH_TYPE;
-    invitationId: string;
-  }
-
-  function sendInvitation(options: SendInvitationOptions): Promise<SendInvitationResult>;
-
-  function getInvitation(): Promise<GetInvitationResult>;
-}
-
 export namespace dynamicLinks {
   export enum MATCH_CONFIDENCE {
     WEAK,
@@ -715,7 +676,7 @@ export namespace dynamicLinks {
 
 export namespace firestore {
   export type DocumentData = { [field: string]: any };
-  export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>' | 'array-contains';
+  export type WhereFilterOp = '<' | '<=' | '==' | '>=' | '>' | 'in' | 'array-contains' | 'array-contains-any';
   export type OrderByDirection = 'desc' | 'asc';
 
   export interface GeoPoint {
@@ -823,6 +784,30 @@ export namespace firestore {
     readonly includeMetadataChanges?: boolean;
   }
 
+  export interface GetOptions {
+    /**
+     * Describes whether we should get from server or cache.
+     *
+     * Setting to 'default' (or not setting at all), causes Firestore to try to
+     * retrieve an up-to-date (server-retrieved) snapshot, but fall back to
+     * returning cached data if the server can't be reached.
+     *
+     * Setting to 'server' causes Firestore to avoid the cache, generating an
+     * error if the server cannot be reached. Note that the cache will still be
+     * updated if the server request succeeds. Also note that latency-compensation
+     * still takes effect, so any pending write operations will be visible in the
+     * returned data (merged into the server-provided data).
+     *
+     * Setting to 'cache' causes Firestore to immediately return a value from the
+     * cache, ignoring the server completely (implying that the returned value
+     * may be stale with respect to the value on the server.) If there is no data
+     * in the cache to satisfy the `get()` call, `DocumentReference.get()` will
+     * return an error and `QuerySnapshot.get()` will return an empty
+     * `QuerySnapshot` with no documents.
+     */
+    source?: 'default' | 'server' | 'cache';
+  }
+
   export interface DocumentReference {
     readonly discriminator: "docRef";
 
@@ -835,11 +820,13 @@ export namespace firestore {
 
     readonly path: string;
 
+    readonly firestore: any;
+
     collection: (collectionPath: string) => CollectionReference;
 
     set: (document: any, options?: SetOptions) => Promise<void>;
 
-    get: () => Promise<DocumentSnapshot>;
+    get: (options?: GetOptions) => Promise<DocumentSnapshot>;
 
     update: (document: any) => Promise<void>;
 
@@ -853,7 +840,9 @@ export namespace firestore {
   }
 
   export interface Query {
-    get(): Promise<QuerySnapshot>;
+    readonly firestore: any;
+
+    get(options?: GetOptions): Promise<QuerySnapshot>;
 
     where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;
 
@@ -865,11 +854,23 @@ export namespace firestore {
 
     startAt(snapshot: DocumentSnapshot): Query;
 
+    startAt(...fieldValues: any[]): Query;
+
     startAfter(snapshot: DocumentSnapshot): Query;
+
+    startAfter(...fieldValues: any[]): Query;
 
     endAt(snapshot: DocumentSnapshot): Query;
 
+    endAt(...fieldValues: any[]): Query;
+
     endBefore(snapshot: DocumentSnapshot): Query;
+
+    endBefore(...fieldValues: any[]): Query;
+  }
+
+  export interface CollectionGroup {
+    where(fieldPath: string, opStr: WhereFilterOp, value: any): Query;
   }
 
   export interface CollectionReference extends Query {
@@ -1018,6 +1019,8 @@ export namespace firestore {
 
   function collection(collectionPath: string): CollectionReference;
 
+  function collectionGroup(id: string): CollectionGroup;
+
   function doc(collectionPath: string, documentPath?: string): DocumentReference;
 
   function docRef(documentPath: string): DocumentReference;
@@ -1026,21 +1029,27 @@ export namespace firestore {
 
   function set(collectionPath: string, documentPath: string, document: any, options?: any): Promise<void>;
 
-  function getCollection(collectionPath: string): Promise<QuerySnapshot>;
+  function getCollection(collectionPath: string, options?: GetOptions): Promise<QuerySnapshot>;
 
-  function getDocument(collectionPath: string, documentPath: string): Promise<DocumentSnapshot>;
+  function getDocument(collectionPath: string, documentPath: string, options?: GetOptions): Promise<DocumentSnapshot>;
 
   function update(collectionPath: string, documentPath: string, document: any): Promise<void>;
 
   function runTransaction(updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void>;
 
   function batch(): firestore.WriteBatch;
+
+  function clearPersistence(): Promise<void>;
 }
 
 export namespace functions {
+  export type SupportedRegions = "us-central1" | "us-east1" | "us-east4" | "europe-west1" | "europe-west2" | "asia-east2" | "asia-northeast1";
+
   export type HttpsCallable<I, O> = (callableData: I) => Promise<O>;
 
-  export function httpsCallable<I, O>(callableFunctionName: string): HttpsCallable<I, O>;
+  export function httpsCallable<I, O>(callableFunctionName: string, region?: SupportedRegions): HttpsCallable<I, O>;
+
+  export function useFunctionsEmulator(origin: string): void;
 }
 
 // Auth
@@ -1055,8 +1064,6 @@ export function getAuthToken(option: GetAuthTokenOptions): Promise<IdTokenResult
 export function logout(): Promise<any>;
 
 export function unlink(providerId: string): Promise<User>;
-
-export function fetchProvidersForEmail(email: string): Promise<Array<string>>;
 
 export function fetchSignInMethodsForEmail(email: string): Promise<Array<string>>;
 
@@ -1106,6 +1113,3 @@ export function addOnDynamicLinkReceivedCallback(onDynamicLinkReceived: (callBac
 
 // remote config
 export function getRemoteConfig(options: GetRemoteConfigOptions): Promise<GetRemoteConfigResult>;
-
-// crash logging
-export function sendCrashLog(options: SendCrashLogOptions): Promise<any>;

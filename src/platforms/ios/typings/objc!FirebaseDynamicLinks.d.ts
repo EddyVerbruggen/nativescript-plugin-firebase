@@ -46,7 +46,7 @@ declare class FIRDynamicLinkComponents extends NSObject {
 
 	static alloc(): FIRDynamicLinkComponents; // inherited from NSObject
 
-	static componentsWithLinkDomain(link: NSURL, domain: string): FIRDynamicLinkComponents;
+	static componentsWithLinkDomainURIPrefix(link: NSURL, domainURIPrefix: string): FIRDynamicLinkComponents;
 
 	static new(): FIRDynamicLinkComponents; // inherited from NSObject
 
@@ -74,9 +74,9 @@ declare class FIRDynamicLinkComponents extends NSObject {
 
 	readonly url: NSURL;
 
-	constructor(o: { link: NSURL; domain: string; });
+	constructor(o: { link: NSURL; domainURIPrefix: string; });
 
-	initWithLinkDomain(link: NSURL, domain: string): this;
+	initWithLinkDomainURIPrefix(link: NSURL, domainURIPrefix: string): this;
 
 	shortenWithCompletion(completion: (p1: NSURL, p2: NSArray<string>, p3: NSError) => void): void;
 }
@@ -227,3 +227,7 @@ declare const enum FIRShortDynamicLinkPathLength {
 
 	Unguessable = 2
 }
+
+declare var FirebaseDynamicLinksVersionNumber: number;
+
+declare var FirebaseDynamicLinksVersionString: interop.Reference<number>;

@@ -4,7 +4,7 @@ import * as application from "tns-core-modules/application/application";
 import { PushNotificationModel } from "./messaging.ios";
 import { MessagingOptions } from "../firebase";
 
-declare const android, com, org, global: any;
+declare const android, com, global: any;
 const NotificationManagerCompatClass = useAndroidX() ? global.androidx.core.app.NotificationManagerCompat : android.support.v4.app.NotificationManagerCompat;
 
 let _launchNotification = null;
@@ -119,7 +119,8 @@ export function addOnMessageReceivedCallback(callback) {
 
       org.nativescript.plugins.firebase.FirebasePlugin.setOnNotificationReceivedCallback(
           new org.nativescript.plugins.firebase.FirebasePluginListener({
-            success: notification => callback(JSON.parse(notification))
+            success: notification => callback(JSON.parse(notification)),
+            error: err => console.log("Error handling message: " + err)
           })
       );
 
@@ -140,12 +141,31 @@ export function addOnMessageReceivedCallback(callback) {
 export function addOnPushTokenReceivedCallback(callback) {
   return new Promise((resolve, reject) => {
     try {
+      let tokenReturned = false;
       org.nativescript.plugins.firebase.FirebasePlugin.setOnPushTokenReceivedCallback(
           new org.nativescript.plugins.firebase.FirebasePluginListener({
-            success: token => callback(token),
+            success: token => {
+              tokenReturned = true;
+              callback(token);
+            },
             error: err => console.log("addOnPushTokenReceivedCallback error: " + err)
           })
       );
+
+      // make sure we return a token if we already have it
+      setTimeout(() => {
+        if (!tokenReturned) {
+          getSenderId().then(senderId => {
+            org.nativescript.plugins.firebase.FirebasePlugin.getCurrentPushToken(
+                senderId,
+                new org.nativescript.plugins.firebase.FirebasePluginListener({
+                  success: token => callback(token),
+                  error: err => console.log(err)
+                })
+            );
+          });
+        }
+      }, 2000);
 
       resolve();
     } catch (ex) {

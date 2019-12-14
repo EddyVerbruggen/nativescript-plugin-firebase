@@ -5,13 +5,7 @@ declare class FIRLocalModel extends NSObject {
 
 	static new(): FIRLocalModel; // inherited from NSObject
 
-	readonly name: string;
-
 	readonly path: string;
-
-	constructor(o: { name: string; path: string; });
-
-	initWithNamePath(name: string, path: string): this;
 }
 
 declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
@@ -31,21 +25,31 @@ declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
 	initWithAllowsCellularAccessAllowsBackgroundDownloading(allowsCellularAccess: boolean, allowsBackgroundDownloading: boolean): this;
 }
 
+declare var FIRModelDownloadDidFailNotification: string;
+
+declare var FIRModelDownloadDidSucceedNotification: string;
+
+declare var FIRModelDownloadUserInfoKeyError: string;
+
+declare var FIRModelDownloadUserInfoKeyRemoteModel: string;
+
 declare class FIRModelManager extends NSObject {
 
 	static alloc(): FIRModelManager; // inherited from NSObject
 
 	static modelManager(): FIRModelManager;
 
+	static modelManagerForApp(app: FIRApp): FIRModelManager;
+
 	static new(): FIRModelManager; // inherited from NSObject
 
-	localModelWithName(name: string): FIRLocalModel;
+	readonly downloadedTranslateModels: NSSet<FIRTranslateRemoteModel>;
 
-	registerLocalModel(localModel: FIRLocalModel): boolean;
+	deleteDownloadedModelCompletion(remoteModel: FIRRemoteModel, completion: (p1: NSError) => void): void;
 
-	registerRemoteModel(remoteModel: FIRRemoteModel): boolean;
+	downloadModelConditions(remoteModel: FIRRemoteModel, conditions: FIRModelDownloadConditions): NSProgress;
 
-	remoteModelWithName(name: string): FIRRemoteModel;
+	isModelDownloaded(remoteModel: FIRRemoteModel): boolean;
 }
 
 declare class FIRRemoteModel extends NSObject {
@@ -54,15 +58,5 @@ declare class FIRRemoteModel extends NSObject {
 
 	static new(): FIRRemoteModel; // inherited from NSObject
 
-	readonly allowsModelUpdates: boolean;
-
-	readonly initialConditions: FIRModelDownloadConditions;
-
 	readonly name: string;
-
-	readonly updateConditions: FIRModelDownloadConditions;
-
-	constructor(o: { name: string; allowsModelUpdates: boolean; initialConditions: FIRModelDownloadConditions; updateConditions: FIRModelDownloadConditions; });
-
-	initWithNameAllowsModelUpdatesInitialConditionsUpdateConditions(name: string, allowsModelUpdates: boolean, initialConditions: FIRModelDownloadConditions, updateConditions: FIRModelDownloadConditions): this;
 }

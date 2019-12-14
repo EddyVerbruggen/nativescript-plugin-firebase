@@ -34,13 +34,20 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       const BannerAdListener = com.google.android.gms.ads.AdListener.extend({
         resolve: null,
         reject: null,
-        onAdLoaded: () => {
-          this.resolve();
-        },
-        onAdFailedToLoad: errorCode => {
-          this.reject(errorCode);
+        onAdLoaded: () => this.resolve(),
+        onAdFailedToLoad: errorCode => this.reject(errorCode),
+        onAdClicked: () => arg.onClicked && arg.onClicked(),
+        onAdOpened: () => arg.onOpened && arg.onOpened(),
+        onAdLeftApplication: () => arg.onLeftApplication && arg.onLeftApplication(),
+        onAdClosed: () => {
+          if (firebase.admob.adView) {
+            firebase.admob.adView.setAdListener(null);
+            firebase.admob.adView = null;
+          }
+          arg.onClosed && arg.onClosed();
         }
       });
+
       firebase.admob.adView.setAdListener(new BannerAdListener());
 
       const ad = _buildAdRequest(settings);
@@ -104,18 +111,18 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
 
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       const InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
-        onAdLoaded: () => {
-          this.resolve();
-        },
-        onAdFailedToLoad: errorCode => {
-          this.reject(errorCode);
-        },
+        onAdLoaded: () => this.resolve(),
+        onAdFailedToLoad: errorCode => this.reject(errorCode),
+        onAdClicked: () => arg.onClicked && arg.onClicked(),
+        onAdOpened: () => arg.onOpened && arg.onOpened(),
+        onAdLeftApplication: () => arg.onLeftApplication && arg.onLeftApplication(),
         onAdClosed: () => {
           if (firebase.admob.interstitialView) {
             firebase.admob.interstitialView.setAdListener(null);
             firebase.admob.interstitialView = null;
           }
-          arg.onAdClosed && arg.onAdClosed();
+          arg.onAdClosed && arg.onAdClosed(); // TODO remove one day
+          arg.onClosed && arg.onClosed();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
@@ -157,15 +164,17 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
           }
           resolve();
         },
-        onAdFailedToLoad: errorCode => {
-          reject(errorCode);
-        },
+        onAdFailedToLoad: errorCode => reject(errorCode),
+        onAdClicked: () => arg.onClicked && arg.onClicked(),
+        onAdOpened: () => arg.onOpened && arg.onOpened(),
+        onAdLeftApplication: () => arg.onLeftApplication && arg.onLeftApplication(),
         onAdClosed: () => {
           if (firebase.admob.interstitialView) {
             firebase.admob.interstitialView.setAdListener(null);
             firebase.admob.interstitialView = null;
           }
-          arg.onAdClosed && arg.onAdClosed();
+          arg.onAdClosed && arg.onAdClosed(); // TODO remove one day
+          arg.onClosed && arg.onClosed();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());

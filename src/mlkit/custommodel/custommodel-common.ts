@@ -48,7 +48,7 @@ export abstract class MLKitCustomModel extends MLKitCameraView {
 
   [labelsFileProperty.setNative](value: string) {
     this.labelsFile = value;
-    if (value.startsWith("~/")) {
+    if (value.indexOf("~/") === 0) {
       this.labels = getLabelsFromAppFolder(value);
     } else {
       // no dice loading from assets yet, let's advice users to use ~/ for now

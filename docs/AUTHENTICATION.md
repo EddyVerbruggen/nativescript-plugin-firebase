@@ -9,7 +9,8 @@ You can sign in a user either
 * by [phone verification](#phone-verification),
 * using a [custom token](#custom-login),
 * using [Facebook](#facebook-login),
-* using [Google](#google-sign-in).
+* using [Google](#google-sign-in),
+* using [Apple](#sign-in-with-apple).
 
 Each of these login mechanisms need to be enabled in your Firebase console at the 'Login & Auth' tab.
 
@@ -68,7 +69,7 @@ To listen to auth state changes you can register a listener during `init`:
 
 ```js
   firebase.init({
-    onAuthStateChanged: function(data) { // optional but useful to immediately re-logon the user when he re-visits your app
+    onAuthStateChanged: function(data) { // optional but useful to immediately re-logon the user when they re-visit your app
       console.log(data.loggedIn ? "Logged in to firebase" : "Logged out from firebase");
       if (data.loggedIn) {
         console.log("user's email address: " + (data.user.email ? data.user.email : "N/A"));
@@ -150,39 +151,8 @@ Once the user is logged in you can retrieve the currently logged in user:
 ```
 </details>
 
-### Fetch providers for email
-Want to know which auth providers are associated with an emailaddress?
-
-<details>
- <summary>Native API</summary>
-
-```typescript
-  const emailAddress = "someone@domain.com";
-  firebase.fetchProvidersForEmail(emailAddress).then((providers: Array<string>) => {
-    console.log(`Providers for ${emailAddress}: ${JSON.stringify(providers)}`);
-  });
-```
-</details>
-
-<details>
- <summary>Web API</summary>
-
-```js
-  const user = firebaseWebApi.auth().currentUser;
-  if (!user || !user.email) {
-    console.log("Can't fetch providers; no user with an emailaddress logged in.");
-    return;
-  }
-
-  firebaseWebApi.auth().fetchProvidersForEmail(user.email)
-      .then(result => console.log(`Providers for ${user.email}: ${JSON.stringify(result)}`))
-      .catch(error => console.log("Fetch Providers for Email error: " + error));
-```
-</details>
-
 ### Fetch sign-in methods for email
-Both email-password login and email-link login are `password` providers, so by just using `fetchProvidersForEmail`
-you won't be able to differentiate between those login methods. That's where `fetchSignInMethodsForEmail` comes in.
+Use this if you want to know which auth providers are associated with an emailaddress.
 
 <details>
  <summary>Native API</summary>
@@ -292,7 +262,7 @@ Enable email-password login in your firebase instance, and flip the "E-mail link
 This login type allows your users to login without providing a password. They can simply click a link
 and get redirected to the app. The app may even run on a different device.
 
-Enable dynamic links, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md), because the user
+Enable dynamic links, as described in the [Dynamic Links readme](./DYNAMIC_LINKS.md), because the user
 that receives the link will need to be redirected to your app.
 
 #### iOS configuration
@@ -300,7 +270,7 @@ that receives the link will need to be redirected to your app.
 
 #### Android configuration
 - Specify the package name of your app in the Firebase console.
-- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme](./INVITES_DYNAMICLINKS.md).
+- Upload the SHA-1 and SHA-256 of the (debug) signing certificates to the Firebase console, as described in the [Dynamic Links readme](./DYNAMIC_LINKS.md).
 - Also add an `android:host` for the `emailLinkOptions.url` to your `app/App_Resources/Android/AndroidManifest.xml` file as described in that readme.
 
 <details>
@@ -474,7 +444,11 @@ Note that changing a password may fail if your login for this `email` was too lo
     type: firebase.LoginType.PHONE,
     phoneOptions: {
       phoneNumber: '+12345678900',
-      verificationPrompt: "The received verification code" // default "Verification code"
+      verificationPrompt: "The received verification code", // default "Verification code"
+      // Optional
+      android: {
+          timeout: 30 // The maximum amount of time you are willing to wait for SMS auto-retrieval to be completed by the library
+      }
     }
   }).then(
       function (result) {
@@ -561,12 +535,11 @@ Upon successful authentication, Facebook creates an access token that can be obt
 ```
 
 #### iOS
- 1. If you didn't choose this feature during installation you can open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the Facebook line.
- 2. Add a bit of config to `app\App_Resources\iOS\Info.plist` as instructed in Step 4 [here](https://developers.facebook.com/docs/ios/getting-started). Facebook login works perfectly on the demo app, so if you can't get it working, make sure to check out the [demo app's config](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/ad85e187dbbb12ef0e705d1bfaed90c702846bc4/Firebase/app/App_Resources/iOS/Info.plist).
+1. If you didn't choose `Firebase Authentication` and `Firebase Facebook Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
+2. Add a bit of config to `app\App_Resources\iOS\Info.plist` as instructed in Step 4 [here](https://developers.facebook.com/docs/ios/getting-started). Facebook login works perfectly on the demo app, so if you can't get it working, make sure to check out the [demo app's config](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/ad85e187dbbb12ef0e705d1bfaed90c702846bc4/Firebase/app/App_Resources/iOS/Info.plist).
 
 #### Android
-
-1. If you didn't choose this feature during installation you can uncomment the facebook SDK in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
+1. If you didn't choose `Firebase Authentication` and `Firebase Facebook Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
 2. Add `<meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>` to the `manifest/application tag` in `app\App_Resources\Android\AndroidManifest.xml`, so it becomes similar to this:
 
    ```xml
@@ -639,7 +612,7 @@ Upon successful authentication, Google creates an access token that can be obtai
 ```
 
 #### iOS
-If you didn't choose this feature during installation you can open the `Podfile` in the plugin's `platforms/ios` folder and uncomment the `GoogleSignIn` line.
+If you didn't choose `Firebase Authentication` and `Firebase Google Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
  
 Make sure the URL Scheme for `REVERSED_CLIENT_ID` is in `app/App_Resources/iOS/Info.plist`.  The value of `REVERSED_CLIENT_ID` can be found in your `App_Resources/iOS/GoogleService-Info.plist` :
  
@@ -686,10 +659,51 @@ To solve, you will want to pass in the appropriate iOS controller of the active 
 ```
 
 #### Android
-
-1. If you didn't choose this feature during installation you can uncomment `google-services-auth` in `node_modules\nativescript-plugin-firebase\platforms\android\include.gradle`
+1. If you didn't choose `Firebase Authentication` and `Firebase Google Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
 2. Google Sign-In requires an SHA1 fingerprint: see [Authenticating Your Client for details](https://developers.google.com/android/guides/client-auth). If you don't do this you will see the account selection popup, but you won't be able to actually sign in.
 3. Those fingerprints need to be added to your Firebase console. Go to 'project overview', 'project settings', then scroll down a bit.
+
+### Sign in with Apple
+First, enable Apple login in your Firebase instance.
+
+Then add the following lines to your code and check for further setup instructions for your platform below.
+
+```js
+  firebase.login({
+    type: firebase.LoginType.APPLE,
+    // Optional
+    appleOptions: {
+      locale: "nl", // for Android
+      scopes: ["email"] // default ["email", "name"]
+    }
+  }).then(
+      function (result) {
+        JSON.stringify(result);
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
+#### iOS
+1. If you didn't choose `Firebase Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
+2. Follow [these instructions](https://firebase.google.com/docs/auth/ios/apple), including enabling Sign In for your App ID. You may need to recreate your provisioning profile as well.
+3. Add this to `app\App_Resources\iOS\*.entitlements`:
+
+```xml
+  <key>com.apple.developer.applesignin</key>
+  <array>
+    <string>Default</string>
+  </array>
+```
+
+[Here's a complete example.](https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/demo/app_resources/iOS/app.entitlements)
+
+#### Android
+1. If you didn't choose `Firebase Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
+2. In your Firebase console add the "Services ID". Make sure to follow all steps, including completing the "OAuth code flow configuration".
+3. Follow [these instructions](https://firebase.google.com/docs/auth/android/apple), including adding your `SHA-1` hash, website association, website ownership confirmation, creating an Apple private key. Just do everything except for adding Java code, because the plugin takes care of that.  
 
 ### getAuthToken / getIdToken
 If you want to authenticate your user from your backend server you can obtain a Firebase auth token for the currently logged in user.
@@ -777,6 +791,8 @@ Some security-sensitive actions (deleting an account, changing a password) requi
 If you perform one of these actions, and the user signed in too long ago, the action fails.
 When this happens (or to prevent it from happening), re-authenticate the user.
 
+> Since plugin version 9.0.0 the Promise will resolve the user in the result. Older version don't return anything.
+
 ```js
   firebase.reauthenticate({
     type: firebase.LoginType.PASSWORD, // or GOOGLE / FACEBOOK
@@ -786,10 +802,11 @@ When this happens (or to prevent it from happening), re-authenticate the user.
       password: 'thePassword'
     }
   }).then(
-      function () {
-        // you can now safely delete the account / change the password
+      function (result) {
+        // you can now safely delete the account / change the password, etc
         dialogs.alert({
           title: "Re-authenticated user",
+          message: JSON.stringify(result),
           okButtonText: "OK"
         });
       },

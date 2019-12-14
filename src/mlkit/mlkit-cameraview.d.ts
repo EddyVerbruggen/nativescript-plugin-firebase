@@ -1,7 +1,7 @@
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 
 export declare abstract class MLKitCameraView extends MLKitCameraViewBase {
-  protected lastVisionImage;
+  public lastVisionImage;
 
   protected abstract createDetector(): any;
 

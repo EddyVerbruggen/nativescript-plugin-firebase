@@ -4,5713 +4,1138 @@ declare module com {
 	export module google {
 		export module android {
 			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zza implements com.google.android.gms.internal.firebase_remote_config.zzad, com.google.android.gms.internal.firebase_remote_config.zzx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zza>;
-							public constructor();
+				export module config {
+					export module proto {
+						export class Config {
+							public static class: java.lang.Class<com.google.android.gms.config.proto.Config>;
+							public static registerAllExtensions(param0: com.google.protobuf.ExtensionRegistryLite): void;
 						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzaa {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzaa>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzab {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzab>;
-							public getRequestMethod(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzac {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzac>;
-							public getStatusCode(): number;
-							public getStatusMessage(): string;
-							public getContent(): java.io.InputStream;
-							public disconnect(): void;
-							public getContentType(): string;
-							public ignore(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzad {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzad>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzad interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzab*/): void;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzae {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzae>;
-							public constructor(param0: number, param1: string, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzw*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzac*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzaf {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzaf>;
-							public getStatusCode(): number;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzae*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzac*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzag {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzag>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzah {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzah>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzah interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzac*/): void;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzai {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzai>;
-							public constructor();
-							public getStatusCode(): number;
-							public getContent(): java.io.InputStream;
-							public disconnect(): void;
-							public getContentEncoding(): string;
-							public getContentType(): string;
-							public getReasonPhrase(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzaj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzaj>;
-							public constructor();
-							public setContentLength(param0: number): void;
-							public setContentEncoding(param0: string): void;
-							public addHeader(param0: string, param1: string): void;
-							public getContentEncoding(): string;
-							public setContentType(param0: string): void;
-							public getContentType(): string;
-							public getContentLength(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzak {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzak>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzak>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzal {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzal>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzam extends com.google.android.gms.internal.firebase_remote_config.zzci {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzam>;
-							public static MEDIA_TYPE: string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzan extends com.google.android.gms.internal.firebase_remote_config.zzp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzan>;
-							public getLength(): number;
-							public constructor(param0: string);
-							public writeTo(param0: java.io.OutputStream): void;
-							public constructor(param0: any);
-							public getType(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzao extends com.google.android.gms.internal.firebase_remote_config.zzap {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzao>;
-							public constructor();
-							public constructor(param0: java.net.Proxy);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzap {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzap>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzap interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zza(param0: java.net.URL): java.net.HttpURLConnection;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzaq extends com.google.android.gms.internal.firebase_remote_config.zzai {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzaq>;
-							public getStatusCode(): number;
-							public getContent(): java.io.InputStream;
-							public disconnect(): void;
-							public getContentEncoding(): string;
-							public getContentType(): string;
-							public getContentLength(): number;
-							public getReasonPhrase(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzar extends com.google.android.gms.internal.firebase_remote_config.zzaj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzar>;
-							public addHeader(param0: string, param1: string): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzas extends com.google.android.gms.internal.firebase_remote_config.zzag {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzas>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzat {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzat>;
-							public skip(param0: number): number;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzaq*/, param1: java.io.InputStream);
-							public read(): number;
-							public read(param0: native.Array<number>, param1: number, param2: number): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzau {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzau>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzav extends com.google.android.gms.internal.firebase_remote_config.zzp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzav>;
-							public getLength(): number;
-							public constructor(param0: string);
-							public writeTo(param0: java.io.OutputStream): void;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzaw*/, param1: any);
-							public getType(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzaw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzaw>;
-							public constructor();
-							public toString(param0: any): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzax extends com.google.android.gms.internal.firebase_remote_config.zzby {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzax>;
-							public constructor();
-							public toString(): string;
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzay extends com.google.android.gms.internal.firebase_remote_config.zzci {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzay>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzbb*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzaz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzaz>;
-							public constructor();
-							public writeBoolean(param0: boolean): void;
-							public flush(): void;
-							public writeString(param0: string): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzb>;
-							public static VERSION: string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzba {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzba>;
-							public constructor();
-							public close(): void;
-							public getText(): string;
-							public getIntValue(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbb>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzaw*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbc>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzbc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzbn(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzbc.zza>*/;
-							});
-							public constructor();
-						}
-						export module zzbc {
-							export class zza {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbc.zza>;
+						export module Config {
+							export class AppConfigTable extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.AppConfigTable,com.google.android.gms.config.proto.Config.AppConfigTable.Builder> implements com.google.android.gms.config.proto.Config.AppConfigTableOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.AppConfigTable>;
+								public static APP_NAME_FIELD_NUMBER: number;
+								public static NAMESPACE_CONFIG_FIELD_NUMBER: number;
+								public static EXPERIMENT_PAYLOAD_FIELD_NUMBER: number;
+								public getNamespaceConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable>;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+								public getExperimentPayloadCount(): number;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+								public getAppNameBytes(): com.google.protobuf.ByteString;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.AppConfigTable): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public hasAppName(): boolean;
+								public getExperimentPayload(param0: number): com.google.protobuf.ByteString;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public getAppName(): string;
+								public getNamespaceConfigOrBuilderList(): java.util.List<any>;
+								public getNamespaceConfigCount(): number;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public getNamespaceConfigOrBuilder(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTableOrBuilder;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.AppConfigTable>;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public getSerializedSize(): number;
+								public getNamespaceConfig(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppConfigTable;
+							}
+							export module AppConfigTable {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.AppConfigTable,com.google.android.gms.config.proto.Config.AppConfigTable.Builder> implements com.google.android.gms.config.proto.Config.AppConfigTableOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.AppConfigTable.Builder>;
+									public addAllExperimentPayload(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public getExperimentPayloadCount(): number;
+									public setExperimentPayload(param0: number, param1: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public getNamespaceConfigCount(): number;
+									public clearExperimentPayload(): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public getNamespaceConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable>;
+									public addExperimentPayload(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public setNamespaceConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public setAppNameBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public addNamespaceConfig(param0: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public hasAppName(): boolean;
+									public getAppNameBytes(): com.google.protobuf.ByteString;
+									public removeNamespaceConfig(param0: number): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public setNamespaceConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public addNamespaceConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public getNamespaceConfig(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+									public setAppName(param0: string): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public clearAppName(): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public getAppName(): string;
+									public addNamespaceConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public addNamespaceConfig(param0: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public getExperimentPayload(param0: number): com.google.protobuf.ByteString;
+									public clearNamespaceConfig(): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+									public getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+									public addAllNamespaceConfig(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.AppConfigTable.Builder;
+								}
+							}
+							export class AppConfigTableOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.AppConfigTableOrBuilder>;
 								/**
-								 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzbc$zza interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$AppConfigTableOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 								 */
 								public constructor(implementation: {
-									zzbo(): string;
-									zzbp(): java.lang.Class<any>;
+									hasAppName(): boolean;
+									getAppName(): string;
+									getAppNameBytes(): com.google.protobuf.ByteString;
+									getNamespaceConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable>;
+									getNamespaceConfig(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+									getNamespaceConfigCount(): number;
+									getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+									getExperimentPayloadCount(): number;
+									getExperimentPayload(param0: number): com.google.protobuf.ByteString;
 								});
 								public constructor();
+								public getNamespaceConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable>;
+								public getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+								public getExperimentPayloadCount(): number;
+								public hasAppName(): boolean;
+								public getNamespaceConfig(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public getExperimentPayload(param0: number): com.google.protobuf.ByteString;
+								public getAppName(): string;
+								public getNamespaceConfigCount(): number;
+								public getAppNameBytes(): com.google.protobuf.ByteString;
 							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbd>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbe {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbe>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzbe interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbf extends com.google.android.gms.internal.firebase_remote_config.zzaw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbf>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbg {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbg>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzbg>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbh extends com.google.android.gms.internal.firebase_remote_config.zzaz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbh>;
-							public writeBoolean(param0: boolean): void;
-							public flush(): void;
-							public writeString(param0: string): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbi {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbi>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbj>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbk extends com.google.android.gms.internal.firebase_remote_config.zzba {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbk>;
-							public close(): void;
-							public getText(): string;
-							public getIntValue(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbl<K, V>  extends java.util.AbstractMap<any,any> implements java.lang.Cloneable  {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbl<any,any>>;
-							public constructor();
-							public get(param0: any): any;
-							public entrySet(): java.util.Set<java.util.Map.Entry<any,any>>;
-							public set(param0: number, param1: any): any;
-							public remove(param0: number): any;
-							public size(): number;
-							public remove(param0: any): any;
-							public containsKey(param0: any): boolean;
-							public clear(): void;
-							public put(param0: any, param1: any): any;
-							public containsValue(param0: any): boolean;
-						}
-						export module zzbl {
-							export class zza extends java.util.Map.Entry<any,any> {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbl.zza>;
-								public setValue(param0: any): any;
-								public getValue(): any;
-								public equals(param0: any): boolean;
-								public hashCode(): number;
-								public getKey(): any;
-							}
-							export class zzb extends java.util.AbstractSet<java.util.Map.Entry<any,any>> {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbl.zzb>;
-								public size(): number;
-								public iterator(): java.util.Iterator<java.util.Map.Entry<any,any>>;
-							}
-							export class zzc extends java.util.Iterator<java.util.Map.Entry<any,any>> {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbl.zzc>;
-								public hasNext(): boolean;
-								public remove(): void;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbm>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbn {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbn>;
-							public constructor(param0: any);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbo {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbo>;
-							public static UTF_8: java.nio.charset.Charset;
-							public static ISO_8859_1: java.nio.charset.Charset;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbp>;
-							public write(param0: native.Array<number>, param1: number, param2: number): void;
-							public write(param0: number): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbq extends java.util.Comparator<string> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbq>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbr {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbr>;
-							public isEnum(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbs extends java.util.AbstractMap<string,any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbs>;
-							public get(param0: any): any;
-							public containsKey(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbt>;
-							public static clone(param0: any): any;
-							public static isNull(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbu extends java.util.Iterator<java.util.Map.Entry<string,any>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbu>;
-							public hasNext(): boolean;
-							public remove(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbv extends java.util.Map.Entry<string,any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbv>;
-							public getValue(): any;
-							public hashCode(): number;
-							public setValue(param0: any): any;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbw>;
-							public hashCode(): number;
-							public toString(): string;
-							public equals(param0: any): boolean;
-							public constructor(param0: number);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbx extends java.util.AbstractSet<java.util.Map.Entry<string,any>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbx>;
-							public size(): number;
-							public clear(): void;
-							public isEmpty(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzby extends java.util.AbstractMap<string,any> implements java.lang.Cloneable  {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzby>;
-							public constructor();
-							public get(param0: any): any;
-							public entrySet(): java.util.Set<java.util.Map.Entry<string,any>>;
-							public remove(param0: any): any;
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-							public putAll(param0: java.util.Map<any,any>): void;
-						}
-						export module zzby {
-							export class zza extends java.util.AbstractSet<java.util.Map.Entry<string,any>> {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzby.zza>;
-								public clear(): void;
-								public size(): number;
-								public iterator(): java.util.Iterator<java.util.Map.Entry<string,any>>;
-							}
-							export class zzb extends java.util.Iterator<java.util.Map.Entry<string,any>> {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzby.zzb>;
-								public hasNext(): boolean;
-								public remove(): void;
-							}
-							export class zzc {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>;
-								public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzbz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzbz>;
-							public isPrimitive(): boolean;
-							public getName(): string;
-							public getGenericType(): java.lang.reflect.Type;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzc extends com.google.android.gms.internal.firebase_remote_config.zzax {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzc>;
-							public constructor();
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-						export module zzc {
-							export class zza extends com.google.android.gms.internal.firebase_remote_config.zzax {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzc.zza>;
-								public constructor();
-								public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzca {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzca>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcb>;
-							public constructor(param0: java.util.logging.Logger, param1: java.util.logging.Level, param2: number);
-							public close(): void;
-							public write(param0: native.Array<number>, param1: number, param2: number): void;
-							public write(param0: number): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcc>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzcc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								value(): string;
-							});
-							public constructor();
-							public value(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcd>;
-							public close(): void;
-							public write(param0: native.Array<number>, param1: number, param2: number): void;
-							public write(param0: number): void;
-							public constructor(param0: java.io.OutputStream, param1: java.util.logging.Logger, param2: java.util.logging.Level, param3: number);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzce {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzce>;
-							public close(): void;
-							public constructor(param0: java.io.InputStream, param1: java.util.logging.Logger, param2: java.util.logging.Level, param3: number);
-							public read(): number;
-							public read(param0: native.Array<number>, param1: number, param2: number): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcf {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcf>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzcf interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcg extends com.google.android.gms.internal.firebase_remote_config.zzcm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcg>;
-							public writeTo(param0: java.io.OutputStream): void;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzcm*/, param1: java.util.logging.Logger, param2: java.util.logging.Level, param3: number);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzch {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzch>;
-							public static checkNotNull(param0: any, param1: any): any;
-							public static checkArgument(param0: boolean, param1: string, param2: native.Array<any>): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzci {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzci>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzci interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zza(param0: java.io.InputStream, param1: java.nio.charset.Charset, param2: java.lang.Class): any;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcj extends com.google.android.gms.internal.firebase_remote_config.zzck {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcj>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzck {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzck>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzck interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								<clinit>(): void;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcl>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcm>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzcm interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								writeTo(param0: java.io.OutputStream): void;
-							});
-							public constructor();
-							public writeTo(param0: java.io.OutputStream): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcn extends java.lang.Iterable<any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcn>;
-							public iterator(): java.util.Iterator<any>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzco {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzco>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcp>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzcp interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								value(): string;
-							});
-							public constructor();
-							public value(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcq extends java.util.Iterator<any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcq>;
-							public hasNext(): boolean;
-							public remove(): void;
-							public next(): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzcr {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcr>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcs {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcs>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzct {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzct>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcu extends com.google.android.gms.internal.firebase_remote_config.zzcv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcu>;
-							public constructor();
-							public constructor(param0: string, param1: boolean);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzcv extends com.google.android.gms.internal.firebase_remote_config.zzcr {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcv>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcw extends java.lang.ThreadLocal<native.Array<string>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcw>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcx extends com.google.android.gms.internal.firebase_remote_config.zzk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcx>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzag*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzci*/, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzad*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzag*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzaw*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzad*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzag*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzaw*/, param2: string, param3: string, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzad*/, param5: boolean);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcy extends com.google.android.gms.internal.firebase_remote_config.zzl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcy>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzcz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzcz>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzda*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzd>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzd.zza*/);
-						}
-						export module zzd {
-							export class zza {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzd.zza>;
-								public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzag*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzci*/, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzad*/);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzda {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzda>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzcy*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdb<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzn<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdb<any>>;
-							public constructor();
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzd*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzs*/, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzcy*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzl*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdc extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzdb<com.google.android.gms.internal.firebase_remote_config.zzdf>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdc>;
-							public constructor();
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzcy*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzd*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzs*/, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzl*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzcz*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzdg*/);
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdd extends com.google.android.gms.internal.firebase_remote_config.zzax {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdd>;
-							public constructor();
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzde extends com.google.android.gms.internal.firebase_remote_config.zzm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzde>;
-							public constructor();
-							public constructor(param0: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdf extends com.google.android.gms.internal.firebase_remote_config.zzax {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdf>;
-							public constructor();
-							public getEntries(): java.util.Map<string,string>;
-							public getState(): string;
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdg extends com.google.android.gms.internal.firebase_remote_config.zzax {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdg>;
-							public constructor();
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdh>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzdi<T>  extends java.util.Iterator<any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdi<any>>;
-							public constructor();
-							public hasNext(): boolean;
-							public remove(): void;
-							public next(): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzdj extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdj>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdk extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdk>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdl extends com.google.android.gms.internal.firebase_remote_config.zzdm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdl>;
-							public toString(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzdm extends com.google.android.gms.internal.firebase_remote_config.zzdj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdm>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdn extends com.google.android.gms.internal.firebase_remote_config.zzdo {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdn>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzdo extends com.google.android.gms.internal.firebase_remote_config.zzdm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdo>;
-							public toString(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdp>;
-						}
-						export module zzdp {
-							export class zza {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdp.zza>;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdq>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzdq interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdr {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdr>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzds {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzds>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdt>;
-							public static checkNotNull(param0: any): any;
-							public static checkState(param0: boolean): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdu extends com.google.android.gms.internal.firebase_remote_config.zzdx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdu>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdv extends com.google.android.gms.internal.firebase_remote_config.zzdw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdv>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdw>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzdw interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzds*/, param1: string): java.util.Iterator<string>;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzdx extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzdi<string>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdx>;
-							public constructor();
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzds*/, param1: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdy {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdy>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzdz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzdz>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzdz>*/;
-							public toString(): string;
-							public value(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zze extends com.google.android.gms.internal.firebase_remote_config.zzaf {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zze>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzea {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzea>;
-						}
-						export module zzea {
-							export class zza extends com.google.android.gms.internal.firebase_remote_config.zzed {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzea.zza>;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzeb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeb>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzec {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzec>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzed {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzed>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzee extends com.google.android.gms.internal.firebase_remote_config.zzed {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzee>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzef extends java.lang.ref.WeakReference<java.lang.Throwable> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzef>;
-							public hashCode(): number;
-							public equals(param0: any): boolean;
-							public constructor(param0: java.lang.Throwable, param1: java.lang.ref.ReferenceQueue<java.lang.Throwable>);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzeg extends com.google.android.gms.internal.firebase_remote_config.zzed {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeg>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzeh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeh>;
-							public clear(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzei {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzei>;
-							public then(param0: any): com.google.android.gms.tasks.Task;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzej {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzej>;
-							public call(): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzek {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzek>;
-							public execute(param0: java.lang.Runnable): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzel {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzel>;
-							public call(): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzem<TResult>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzem<any>>;
-							public onFailure(param0: java.lang.Exception): void;
-							public await(param0: number, param1: java.util.concurrent.TimeUnit): boolean;
-							public onSuccess(param0: TResult): void;
-							public onCanceled(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzen {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzen>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzeo {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeo>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzep {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzep>;
-							public hashCode(): number;
-							public toString(): string;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzeq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeq>;
-							public constructor(param0: globalAndroid.content.Context, param1: string, param2: com.google.firebase.iid.FirebaseInstanceId, param3: com.google.firebase.analytics.connector.AnalyticsConnector, param4: string, param5: java.util.concurrent.Executor, param6: com.google.android.gms.common.util.Clock, param7: java.util.Random, param8: any /* com.google.android.gms.internal.firebase_remote_config.zzeh*/, param9: any /* com.google.android.gms.internal.firebase_remote_config.zzcy*/, param10: any /* com.google.android.gms.internal.firebase_remote_config.zzev*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzer {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzer>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzes {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzes>;
-							public getLong(param0: string): number;
-							public getAll(): java.util.Map<string,com.google.firebase.remoteconfig.FirebaseRemoteConfigValue>;
-							public getString(param0: string): string;
-							public getByteArray(param0: string): native.Array<number>;
-							public getValue(param0: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
-							public getKeysByPrefix(param0: string): java.util.Set<string>;
-							public getDouble(param0: string): number;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzeh*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzeh*/);
-							public getBoolean(param0: string): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzet {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzet>;
-							public then(param0: com.google.android.gms.tasks.Task): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzeu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzeu>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzev {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzev>;
-							public getInfo(): com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
-							public isDeveloperModeEnabled(): boolean;
-							public clear(): void;
-							public getFetchTimeoutInSeconds(): number;
-							public getMinimumFetchIntervalInSeconds(): number;
-							public constructor(param0: globalAndroid.content.SharedPreferences);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzew {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzew>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzex {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzex>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzey {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzey>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzez extends com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzez>;
-							public getLastFetchStatus(): number;
-							public getConfigSettings(): com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
-							public getFetchTimeMillis(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzf<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzby*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzf<any>>;
-							public constructor();
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzd*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzs*/, param4: java.lang.Class<any>);
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfa extends com.google.firebase.remoteconfig.FirebaseRemoteConfigValue {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfa>;
-							public asLong(): number;
-							public asDouble(): number;
-							public asBoolean(): boolean;
-							public asString(): string;
-							public asByteArray(): native.Array<number>;
-							public getSource(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfb>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfc extends java.lang.ThreadLocal<java.text.DateFormat> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfc>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfd>;
-							public constructor(param0: globalAndroid.content.Context, param1: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfe {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe>;
-						}
-						export module zzfe {
-							export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zza,com.google.android.gms.internal.firebase_remote_config.zzfe.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zza>;
-								public isInitialized(): boolean;
-								public getTimestamp(): number;
-							}
-							export module zza {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zza,com.google.android.gms.internal.firebase_remote_config.zzfe.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zza.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzb extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb,com.google.android.gms.internal.firebase_remote_config.zzfe.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb>;
-								public isInitialized(): boolean;
-								public getKey(): string;
-							}
-							export module zzb {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb,com.google.android.gms.internal.firebase_remote_config.zzfe.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzb.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzc extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc,com.google.android.gms.internal.firebase_remote_config.zzfe.zzc.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc>;
-								public isInitialized(): boolean;
-							}
-							export module zzc {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc,com.google.android.gms.internal.firebase_remote_config.zzfe.zzc.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzc.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzd extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd,com.google.android.gms.internal.firebase_remote_config.zzfe.zzd.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd>;
+							export class AppNamespaceConfigTable extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable,com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder> implements com.google.android.gms.config.proto.Config.AppNamespaceConfigTableOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable>;
+								public static NAMESPACE_FIELD_NUMBER: number;
+								public static DIGEST_FIELD_NUMBER: number;
+								public static ENTRY_FIELD_NUMBER: number;
+								public static STATUS_FIELD_NUMBER: number;
+								public getNamespaceBytes(): com.google.protobuf.ByteString;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+								public getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
 								public getNamespace(): string;
-								public isInitialized(): boolean;
+								public getStatus(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+								public hasStatus(): boolean;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public getEntryOrBuilderList(): java.util.List<any>;
+								public getEntryCount(): number;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public getDigestBytes(): com.google.protobuf.ByteString;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+								public hasNamespace(): boolean;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public getDigest(): string;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+								public getSerializedSize(): number;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable>;
+								public hasDigest(): boolean;
+								public getEntryOrBuilder(param0: number): com.google.android.gms.config.proto.Config.KeyValueOrBuilder;
 							}
-							export module zzd {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd,com.google.android.gms.internal.firebase_remote_config.zzfe.zzd.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzd.zza>;
-									public isInitialized(): boolean;
+							export module AppNamespaceConfigTable {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable,com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder> implements com.google.android.gms.config.proto.Config.AppNamespaceConfigTableOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder>;
+									public getEntryCount(): number;
+									public setDigest(param0: string): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public getNamespace(): string;
+									public getDigestBytes(): com.google.protobuf.ByteString;
+									public addEntry(param0: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public clearDigest(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public setStatus(param0: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public setEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public getNamespaceBytes(): com.google.protobuf.ByteString;
+									public getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+									public getStatus(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public removeEntry(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public setNamespaceBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public hasStatus(): boolean;
+									public setEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public addEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public clearEntry(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+									public hasDigest(): boolean;
+									public hasNamespace(): boolean;
+									public addAllEntry(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public getDigest(): string;
+									public clearNamespace(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public addEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public clearStatus(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public setNamespace(param0: string): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public addEntry(param0: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+									public setDigestBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.Builder;
+								}
+								export class NamespaceStatus extends com.google.protobuf.Internal.EnumLite {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus>;
+									public static UPDATE: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public static NO_TEMPLATE: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public static NO_CHANGE: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public static EMPTY_CONFIG: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public static NOT_AUTHORIZED: com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public static UPDATE_VALUE: number;
+									public static NO_TEMPLATE_VALUE: number;
+									public static NO_CHANGE_VALUE: number;
+									public static EMPTY_CONFIG_VALUE: number;
+									public static NOT_AUTHORIZED_VALUE: number;
+									public static values(): native.Array<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus>;
+									public getNumber(): number;
+									public static valueOf(param0: string): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public static internalGetValueMap(): com.google.protobuf.Internal.EnumLiteMap<com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus>;
+									public static valueOf(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+									public static forNumber(param0: number): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
 								}
 							}
-							export class zze extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zze,com.google.android.gms.internal.firebase_remote_config.zzfe.zze.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zze>;
-								public isInitialized(): boolean;
-							}
-							export module zze {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zze,com.google.android.gms.internal.firebase_remote_config.zzfe.zze.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zze.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-							export class zzf extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf,com.google.android.gms.internal.firebase_remote_config.zzfe.zzf.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf>;
-								public isInitialized(): boolean;
-							}
-							export module zzf {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf,com.google.android.gms.internal.firebase_remote_config.zzfe.zzf.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfe.zzf.zza>;
-									public isInitialized(): boolean;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzff {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzff>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfg {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfg>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfh>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfi extends com.google.android.gms.internal.firebase_remote_config.zzfh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfi>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfj>;
-							public nextBoolean(): boolean;
-							public close(): void;
-							public endArray(): void;
-							public nextNull(): void;
-							public nextName(): string;
-							public nextString(): string;
-							public beginArray(): void;
-							public constructor(param0: java.io.Reader);
-							public toString(): string;
-							public beginObject(): void;
-							public endObject(): void;
-							public setLenient(param0: boolean): void;
-							public skipValue(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfk>;
-							public close(): void;
-							public setIndent(param0: string): void;
-							public constructor(param0: java.io.Writer);
-							public setLenient(param0: boolean): void;
-							public flush(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfl>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzfl>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzfm<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzim*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfm<any,any>>;
-							public constructor();
-							public isInitialized(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfn {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfn>;
-							public constructor(param0: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfo<MessageType>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfo<any>>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzfp<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzip*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfp<any,any>>;
-							public constructor();
-							public isInitialized(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfq>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzfr<E>  extends java.util.AbstractList<any> implements any /* com.google.android.gms.internal.firebase_remote_config.zzhn<any>*/  {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfr<any>>;
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public remove(param0: number): any;
-							public set(param0: number, param1: any): any;
-							public add(param0: any): boolean;
-							public hashCode(): number;
-							public remove(param0: any): boolean;
-							public removeAll(param0: java.util.Collection<any>): boolean;
-							public add(param0: number, param1: any): void;
-							public clear(): void;
-							public equals(param0: any): boolean;
-							public addAll(param0: java.util.Collection<any>): boolean;
-							public retainAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfs {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfs>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzft {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzft>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzfu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfu>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfv extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Boolean> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfv>;
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public remove(param0: number): any;
-							public size(): number;
-							public hashCode(): number;
-							public addBoolean(param0: boolean): void;
-							public remove(param0: any): boolean;
-							public equals(param0: any): boolean;
-							public removeRange(param0: number, param1: number): void;
-							public addAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfw extends com.google.android.gms.internal.firebase_remote_config.zzfy {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfw>;
-							public nextByte(): number;
-							public hasNext(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzfx extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfx>;
-							public size(): number;
-							public hashCode(): number;
-							public toString(): string;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzfy extends com.google.android.gms.internal.firebase_remote_config.zzgc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfy>;
-							public nextByte(): number;
-							public remove(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzfz extends java.lang.Object /* java.util.Comparator<com.google.android.gms.internal.firebase_remote_config.zzfx>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzfz>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzg {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzg>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzga extends com.google.android.gms.internal.firebase_remote_config.zzgh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzga>;
-							public size(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgb extends com.google.android.gms.internal.firebase_remote_config.zzgd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgb>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgc extends java.util.Iterator<java.lang.Byte> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgc>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzgc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								nextByte(): number;
-							});
-							public constructor();
-							public nextByte(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgd>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzgd interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzc(param0: native.Array<number>, param1: number, param2: number): native.Array<number>;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzge extends com.google.android.gms.internal.firebase_remote_config.zzfx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzge>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgf {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgf>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgg extends com.google.android.gms.internal.firebase_remote_config.zzgd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgg>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgh extends com.google.android.gms.internal.firebase_remote_config.zzge {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgh>;
-							public size(): number;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgi {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgi>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzgj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgj>;
-							public readFloat(): number;
-							public readDouble(): number;
-							public readString(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgk extends com.google.android.gms.internal.firebase_remote_config.zzgj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgk>;
-							public readFloat(): number;
-							public readDouble(): number;
-							public readString(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgl extends com.google.android.gms.internal.firebase_remote_config.zzgj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgl>;
-							public readFloat(): number;
-							public readDouble(): number;
-							public readString(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgm extends com.google.android.gms.internal.firebase_remote_config.zzjc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgm>;
-							public readFloat(): number;
-							public getTag(): number;
-							public readDouble(): number;
-							public readString(): string;
-							public readStringList(param0: java.util.List<string>): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgn {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgn>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzgn interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzgo extends com.google.android.gms.internal.firebase_remote_config.zzfu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgo>;
-						}
-						export module zzgo {
-							export class zza extends com.google.android.gms.internal.firebase_remote_config.zzgo {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgo.zza>;
-							}
-							export class zzb {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgo.zzb>;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgp {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgp>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgq>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgr extends com.google.android.gms.internal.firebase_remote_config.zzkq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgr>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgs<ContainingType, Type>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgs<any,any>>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgt extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Double> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgt>;
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public remove(param0: number): any;
-							public size(): number;
-							public hashCode(): number;
-							public remove(param0: any): boolean;
-							public equals(param0: any): boolean;
-							public removeRange(param0: number, param1: number): void;
-							public addAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgu>;
-						}
-						export module zzgu {
-							export class zza {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgu.zza>;
-								public equals(param0: any): boolean;
-								public hashCode(): number;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgv>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzgw<T>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgw<any>>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgx>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgy extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzgw<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgy>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzgz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzgz>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzh extends com.google.android.gms.internal.firebase_remote_config.zzah {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzh>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzha<FieldDescriptorType>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzha<any>>;
-							public iterator(): java.util.Iterator<java.util.Map.Entry<FieldDescriptorType,any>>;
-							public hashCode(): number;
-							public equals(param0: any): boolean;
-							public isInitialized(): boolean;
-							public isImmutable(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhb>;
-							public id(): number;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzhb>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhc<T>  extends java.lang.Comparable<any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhc<any>>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzhc<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzgn(): number;
-								zzgo(): any /* com.google.android.gms.internal.firebase_remote_config.zzkk*/;
-								zzgp(): any /* com.google.android.gms.internal.firebase_remote_config.zzkr*/;
-								zzgq(): boolean;
-								zzgr(): boolean;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzip*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzim*/): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zziv*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zziv*/): any /* com.google.android.gms.internal.firebase_remote_config.zziv*/;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhd>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzhd>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhe {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhe>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhf extends com.google.android.gms.internal.firebase_remote_config.zzin {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhf>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhg extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Float> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhg>;
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public remove(param0: number): any;
-							public size(): number;
-							public hashCode(): number;
-							public remove(param0: any): boolean;
-							public equals(param0: any): boolean;
-							public removeRange(param0: number, param1: number): void;
-							public addAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzhh<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfm<any,any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh<any,any>>;
-							public constructor();
-							public hashCode(): number;
-							public toString(): string;
-							public equals(param0: any): boolean;
-							public isInitialized(): boolean;
-						}
-						export module zzhh {
-							export class zza<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfp<any,any>*/ {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zza<any,any>>;
-								public constructor(param0: any);
-								public isInitialized(): boolean;
+							export class AppNamespaceConfigTableOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.AppNamespaceConfigTableOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$AppNamespaceConfigTableOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasNamespace(): boolean;
+									getNamespace(): string;
+									getNamespaceBytes(): com.google.protobuf.ByteString;
+									hasDigest(): boolean;
+									getDigest(): string;
+									getDigestBytes(): com.google.protobuf.ByteString;
+									getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+									getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+									getEntryCount(): number;
+									hasStatus(): boolean;
+									getStatus(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+								});
 								public constructor();
+								public getNamespace(): string;
+								public getDigestBytes(): com.google.protobuf.ByteString;
+								public getStatus(): com.google.android.gms.config.proto.Config.AppNamespaceConfigTable.NamespaceStatus;
+								public hasStatus(): boolean;
+								public getNamespaceBytes(): com.google.protobuf.ByteString;
+								public getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+								public getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+								public hasNamespace(): boolean;
+								public getEntryCount(): number;
+								public hasDigest(): boolean;
+								public getDigest(): string;
 							}
-							export abstract class zzb<MessageType, BuilderType>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<any,any>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zzb<any,any>>;
-								public isInitialized(): boolean;
-								public constructor();
+							export class ConfigFetchRequest extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.ConfigFetchRequest,com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder> implements com.google.android.gms.config.proto.Config.ConfigFetchRequestOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.ConfigFetchRequest>;
+								public static CONFIG_FIELD_NUMBER: number;
+								public static ANDROID_ID_FIELD_NUMBER: number;
+								public static PACKAGE_DATA_FIELD_NUMBER: number;
+								public static DEVICE_DATA_VERSION_INFO_FIELD_NUMBER: number;
+								public static SECURITY_TOKEN_FIELD_NUMBER: number;
+								public static CLIENT_VERSION_FIELD_NUMBER: number;
+								public static GMS_CORE_VERSION_FIELD_NUMBER: number;
+								public static API_LEVEL_FIELD_NUMBER: number;
+								public static DEVICE_COUNTRY_FIELD_NUMBER: number;
+								public static DEVICE_LOCALE_FIELD_NUMBER: number;
+								public static DEVICE_TYPE_FIELD_NUMBER: number;
+								public static DEVICE_SUBTYPE_FIELD_NUMBER: number;
+								public static OS_VERSION_FIELD_NUMBER: number;
+								public static DEVICE_TIMEZONE_ID_FIELD_NUMBER: number;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+								public getPackageDataCount(): number;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public getPackageData(param0: number): com.google.android.gms.config.proto.Config.PackageData;
+								public hasApiLevel(): boolean;
+								public getDeviceLocaleBytes(): com.google.protobuf.ByteString;
+								public getSecurityToken(): number;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public getPackageDataOrBuilderList(): java.util.List<any>;
+								public getDeviceCountry(): string;
+								public hasClientVersion(): boolean;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.ConfigFetchRequest>;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public getDeviceTimezoneId(): string;
+								public getDeviceDataVersionInfo(): string;
+								public getDeviceTimezoneIdBytes(): com.google.protobuf.ByteString;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public hasSecurityToken(): boolean;
+								public hasDeviceSubtype(): boolean;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public getSerializedSize(): number;
+								public getOsVersionBytes(): com.google.protobuf.ByteString;
+								public getConfig(): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public hasOsVersion(): boolean;
+								public getOsVersion(): string;
+								public getDeviceCountryBytes(): com.google.protobuf.ByteString;
+								public getDeviceType(): number;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public hasDeviceLocale(): boolean;
+								public getPackageDataList(): java.util.List<com.google.android.gms.config.proto.Config.PackageData>;
+								public hasDeviceCountry(): boolean;
+								public hasConfig(): boolean;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public getClientVersion(): number;
+								public hasDeviceType(): boolean;
+								public hasAndroidId(): boolean;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.ConfigFetchRequest): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+								public getAndroidId(): number;
+								public getPackageDataOrBuilder(param0: number): com.google.android.gms.config.proto.Config.PackageDataOrBuilder;
+								public hasDeviceTimezoneId(): boolean;
+								public getDeviceLocale(): string;
+								public getDeviceDataVersionInfoBytes(): com.google.protobuf.ByteString;
+								public hasGmsCoreVersion(): boolean;
+								public getGmsCoreVersion(): number;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public getDeviceSubtype(): number;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public getApiLevel(): number;
+								public hasDeviceDataVersionInfo(): boolean;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchRequest;
 							}
-							export class zzc<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfo<any>*/ {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zzc<any>>;
-								public constructor(param0: any);
-								public constructor();
-							}
-							export class zzd extends java.lang.Object {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zzd>;
-							}
-							export class zze<ContainingType, Type>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzgs<any,any>*/ {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhh.zze<any,any>>;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhi {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhi>;
-							public static hashCode(param0: native.Array<number>): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhj extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Integer> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhj>;
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public remove(param0: number): any;
-							public size(): number;
-							public hashCode(): number;
-							public remove(param0: any): boolean;
-							public equals(param0: any): boolean;
-							public removeRange(param0: number, param1: number): void;
-							public getInt(param0: number): number;
-							public addAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhk>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzhk interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzbc(param0: number): boolean;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhl>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzhl interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzgn(): number;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhm>;
-							public constructor(param0: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhn<E>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhn<any>>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzhn<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzeu(): void;
-								zzet(): boolean;
-								zzu(param0: number): any /* com.google.android.gms.internal.firebase_remote_config.zzhn<E>*/;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzho {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzho>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzho>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhp extends com.google.android.gms.internal.firebase_remote_config.zzhm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhp>;
-							public constructor(param0: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhq>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhr extends com.google.android.gms.internal.firebase_remote_config.zzhv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhr>;
-							public hashCode(): number;
-							public toString(): string;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhs<K>  extends java.util.Iterator<java.util.Map.Entry<any,any>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhs<any>>;
-							public constructor(param0: java.util.Iterator<java.util.Map.Entry<any,any>>);
-							public hasNext(): boolean;
-							public remove(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzht<K>  extends java.util.Map.Entry<any,any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzht<any>>;
-							public getValue(): any;
-							public getKey(): any;
-							public setValue(param0: any): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhu extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfr<string>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhu>;
-							public constructor();
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public size(): number;
-							public clear(): void;
-							public constructor(param0: number);
-							public addAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhv>;
-							public constructor();
-							public hashCode(): number;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzhw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhw>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhx>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzhx interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzbd(param0: number): any;
-								zzd(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/): void;
-								zzhq(): java.util.List<any>;
-								zzhr(): any /* com.google.android.gms.internal.firebase_remote_config.zzhx*/;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhy extends com.google.android.gms.internal.firebase_remote_config.zzhw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhy>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzhz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzhz>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzi {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzi>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzi interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzf<any>*/): void;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzia extends com.google.android.gms.internal.firebase_remote_config.zzfr<java.lang.Long> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzia>;
-							public addAll(param0: number, param1: java.util.Collection<any>): boolean;
-							public remove(param0: number): any;
-							public size(): number;
-							public hashCode(): number;
-							public remove(param0: any): boolean;
-							public equals(param0: any): boolean;
-							public removeRange(param0: number, param1: number): void;
-							public getLong(param0: number): number;
-							public addAll(param0: java.util.Collection<any>): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzib extends com.google.android.gms.internal.firebase_remote_config.zzhw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzib>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzic extends com.google.android.gms.internal.firebase_remote_config.zzin {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzic>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzid extends com.google.android.gms.internal.firebase_remote_config.zzje {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzid>;
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzie<K, V>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzie<any,any>>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzif extends com.google.android.gms.internal.firebase_remote_config.zzin {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzif>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzig<K, V>  extends java.util.LinkedHashMap<any,any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzig<any,any>>;
-							public entrySet(): java.util.Set<java.util.Map.Entry<any,any>>;
-							public hashCode(): number;
-							public remove(param0: any): any;
-							public clear(): void;
-							public isMutable(): boolean;
-							public put(param0: any, param1: any): any;
-							public equals(param0: any): boolean;
-							public putAll(param0: java.util.Map<any,any>): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzih<K, V>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzih<any,any>>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzii extends com.google.android.gms.internal.firebase_remote_config.zzij {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzii>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzij {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzij>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzij interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzq(param0: any): java.util.Map<any,any>;
-								zzs(param0: any): java.util.Map<any,any>;
-								zzt(param0: any): boolean;
-								zzu(param0: any): any;
-								zzv(param0: any): any;
-								zzr(param0: any): any /* com.google.android.gms.internal.firebase_remote_config.zzih<any,any>*/;
-								zzd(param0: any, param1: any): any;
-								zzc(param0: number, param1: any, param2: any): number;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzik {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzik>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzik interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzhy(): number;
-								zzhz(): boolean;
-								zzia(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzil {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzil>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzim extends com.google.android.gms.internal.firebase_remote_config.zzio {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzim>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzim interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzgo*/): void;
-								zzgy(): number;
-								zzeo(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
-								zzhb(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzha(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								isInitialized(): boolean;
-							});
-							public constructor();
-							public isInitialized(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzin {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzin>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzin interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzg(param0: java.lang.Class<any>): boolean;
-								zzh(param0: java.lang.Class<any>): any /* com.google.android.gms.internal.firebase_remote_config.zzik*/;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzio {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzio>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzio interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								isInitialized(): boolean;
-							});
-							public constructor();
-							public isInitialized(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzip extends com.google.android.gms.internal.firebase_remote_config.zzio {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzip>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzip interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzgw(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								zzgv(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzim*/): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								isInitialized(): boolean;
-							});
-							public constructor();
-							public isInitialized(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zziq<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziq<any>>;
-							public hashCode(param0: any): number;
-							public newInstance(): any;
-							public equals(param0: any, param1: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzir {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzir>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzis<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzis<any>>;
-							public hashCode(param0: any): number;
-							public newInstance(): any;
-							public equals(param0: any, param1: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzit {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzit>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zziu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziu>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziu interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								newInstance(param0: any): any;
-							});
-							public constructor();
-							public newInstance(param0: any): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zziv extends com.google.android.gms.internal.firebase_remote_config.zzim {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziv>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziv interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzie(): any /* com.google.android.gms.internal.firebase_remote_config.zziv*/;
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzgo*/): void;
-								zzgy(): number;
-								zzeo(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
-								zzhb(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzha(): any /* com.google.android.gms.internal.firebase_remote_config.zzip*/;
-								zzgx(): any /* com.google.android.gms.internal.firebase_remote_config.zzim*/;
-								isInitialized(): boolean;
-							});
-							public constructor();
-							public isInitialized(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zziw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziw>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzix extends com.google.android.gms.internal.firebase_remote_config.zziu {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzix>;
-							public newInstance(param0: any): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zziy {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziy>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziy interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zziz<MessageType>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zziz<any>>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zziz<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzj extends com.google.android.gms.internal.firebase_remote_config.zzi {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzj>;
-							public constructor();
-							public constructor(param0: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzja<E>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzfr<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzja<any>>;
-							public remove(param0: number): any;
-							public set(param0: number, param1: any): any;
-							public add(param0: any): boolean;
-							public size(): number;
-							public remove(param0: any): boolean;
-							public add(param0: number, param1: any): void;
-							public get(param0: number): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjb {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjb>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjc {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjc>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzjc interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzfz(): number;
-								getTag(): number;
-								zzga(): boolean;
-								readDouble(): number;
-								readFloat(): number;
-								zzfc(): number;
-								zzfd(): number;
-								zzfe(): number;
-								zzff(): number;
-								zzfg(): number;
-								zzfh(): boolean;
-								readString(): string;
-								zzfi(): string;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): any;
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): any;
-								zzfj(): any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/;
-								zzfk(): number;
-								zzfl(): number;
-								zzfm(): number;
-								zzfn(): number;
-								zzfo(): number;
-								zzfp(): number;
-								zzc(param0: java.util.List<java.lang.Double>): void;
-								zzd(param0: java.util.List<java.lang.Float>): void;
-								zze(param0: java.util.List<java.lang.Long>): void;
-								zzf(param0: java.util.List<java.lang.Long>): void;
-								zzg(param0: java.util.List<java.lang.Integer>): void;
-								zzh(param0: java.util.List<java.lang.Long>): void;
-								zzi(param0: java.util.List<java.lang.Integer>): void;
-								zzj(param0: java.util.List<java.lang.Boolean>): void;
-								readStringList(param0: java.util.List<string>): void;
-								zzk(param0: java.util.List<string>): void;
-								zza(param0: java.util.List, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
-								zzb(param0: java.util.List, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
-								zzl(param0: any /* java.util.List<com.google.android.gms.internal.firebase_remote_config.zzfx>*/): void;
-								zzm(param0: java.util.List<java.lang.Integer>): void;
-								zzn(param0: java.util.List<java.lang.Integer>): void;
-								zzo(param0: java.util.List<java.lang.Integer>): void;
-								zzp(param0: java.util.List<java.lang.Long>): void;
-								zzq(param0: java.util.List<java.lang.Integer>): void;
-								zzr(param0: java.util.List<java.lang.Long>): void;
-								zza(param0: java.util.Map, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzih<any,any>*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
-							});
-							public constructor();
-							public readFloat(): number;
-							public getTag(): number;
-							public readDouble(): number;
-							public readString(): string;
-							public readStringList(param0: java.util.List<string>): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjd extends com.google.android.gms.internal.firebase_remote_config.zzik {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjd>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzje {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzje>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzje interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzj(param0: java.lang.Class): any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjf<T>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjf<any>>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzjf<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zza(param0: T, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzkq*/): void;
-								zza(param0: T, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzjc*/, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzgu*/): void;
-								zza(param0: T, param1: native.Array<number>, param2: number, param3: number, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzfs*/): void;
-								zzm(param0: T): void;
-								zzy(param0: T): boolean;
-								newInstance(): T;
-								equals(param0: T, param1: T): boolean;
-								hashCode(param0: T): number;
-								zze(param0: T, param1: T): void;
-								zzw(param0: T): number;
-							});
-							public constructor();
-							public equals(param0: T, param1: T): boolean;
-							public newInstance(): T;
-							public hashCode(param0: T): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjg<K, V>  extends java.util.AbstractMap<any,any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjg<any,any>>;
-							public get(param0: any): any;
-							public entrySet(): java.util.Set<java.util.Map.Entry<any,any>>;
-							public size(): number;
-							public hashCode(): number;
-							public remove(param0: any): any;
-							public containsKey(param0: any): boolean;
-							public clear(): void;
-							public equals(param0: any): boolean;
-							public isImmutable(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjh>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzji extends java.util.Iterator<java.util.Map.Entry<any,any>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzji>;
-							public hasNext(): boolean;
-							public remove(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjj extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjg<any,any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjj>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjk>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjl extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjr*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjl>;
-							public iterator(): java.util.Iterator<java.util.Map.Entry<any,any>>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjm extends java.lang.Iterable<any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjm>;
-							public iterator(): java.util.Iterator<any>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjn extends java.util.Iterator<any> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjn>;
-							public hasNext(): boolean;
-							public remove(): void;
-							public next(): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjo extends java.util.Iterator<java.util.Map.Entry<any,any>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjo>;
-							public hasNext(): boolean;
-							public remove(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjp extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjp>;
-							public getValue(): any;
-							public hashCode(): number;
-							public toString(): string;
-							public setValue(param0: any): any;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjq extends com.google.android.gms.internal.firebase_remote_config.zzik {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjq>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjr extends java.util.AbstractSet<java.util.Map.Entry<any,any>> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjr>;
-							public contains(param0: any): boolean;
-							public size(): number;
-							public remove(param0: any): boolean;
-							public clear(): void;
-							public iterator(): java.util.Iterator<java.util.Map.Entry<any,any>>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjs extends com.google.android.gms.internal.firebase_remote_config.zzjv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjs>;
-							public size(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjt>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzju {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzju>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzim*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjv>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzjv interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								size(): number;
-								zzv(param0: number): number;
-							});
-							public constructor();
-							public size(): number;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjw {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjw>;
-							public hashCode(): number;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzjx<T, B>  extends java.lang.Object {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjx<any,any>>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjy extends java.util.AbstractList<string> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjy>;
-							public listIterator(param0: number): java.util.ListIterator<string>;
-							public iterator(): java.util.Iterator<string>;
-							public size(): number;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzhx*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzjz extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzjx<com.google.android.gms.internal.firebase_remote_config.zzjw,com.google.android.gms.internal.firebase_remote_config.zzjw>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzjz>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzk extends com.google.android.gms.internal.firebase_remote_config.zzd.zza {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzk>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzag*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzci*/, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzad*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzag*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzaw*/, param2: string, param3: string, param4: any /* com.google.android.gms.internal.firebase_remote_config.zzad*/, param5: boolean);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzka extends java.util.Iterator<string> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzka>;
-							public hasNext(): boolean;
-							public remove(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkb extends java.util.ListIterator<string> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkb>;
-							public previousIndex(): number;
-							public nextIndex(): number;
-							public hasNext(): boolean;
-							public remove(): void;
-							public hasPrevious(): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkc extends java.security.PrivilegedExceptionAction<sun.misc.Unsafe> {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkc>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd>;
-						}
-						export module zzkd {
-							export class zza extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzc {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zza>;
-							}
-							export class zzb extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzc {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zzb>;
-							}
-							export abstract class zzc {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zzc>;
-							}
-							export class zzd extends com.google.android.gms.internal.firebase_remote_config.zzkd.zzc {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkd.zzd>;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzke {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzke>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkf {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkf>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkg extends com.google.android.gms.internal.firebase_remote_config.zzkh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkg>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzkh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkh>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzki extends com.google.android.gms.internal.firebase_remote_config.zzkh {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzki>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkj>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkk>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzkk>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkl {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkl>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkm extends com.google.android.gms.internal.firebase_remote_config.zzkk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkm>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkn extends com.google.android.gms.internal.firebase_remote_config.zzkk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkn>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzko extends com.google.android.gms.internal.firebase_remote_config.zzkk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzko>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkp extends com.google.android.gms.internal.firebase_remote_config.zzkk {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkp>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkq>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzkq interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzgd(): number;
-								zzn(param0: number, param1: number): void;
-								zzi(param0: number, param1: number): void;
-								zzj(param0: number, param1: number): void;
-								zza(param0: number, param1: number): void;
-								zza(param0: number, param1: number): void;
-								zzo(param0: number, param1: number): void;
-								zza(param0: number, param1: number): void;
-								zzd(param0: number, param1: number): void;
-								zzc(param0: number, param1: number): void;
-								zzg(param0: number, param1: number): void;
-								zzc(param0: number, param1: boolean): void;
-								zzb(param0: number, param1: string): void;
-								zza(param0: number, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzfx*/): void;
-								zze(param0: number, param1: number): void;
-								zzf(param0: number, param1: number): void;
-								zzb(param0: number, param1: number): void;
-								zza(param0: number, param1: any, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/): void;
-								zzb(param0: number, param1: any, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/): void;
-								zzaz(param0: number): void;
-								zzba(param0: number): void;
-								zza(param0: number, param1: java.util.List<java.lang.Integer>, param2: boolean): void;
-								zzb(param0: number, param1: java.util.List<java.lang.Integer>, param2: boolean): void;
-								zzc(param0: number, param1: java.util.List<java.lang.Long>, param2: boolean): void;
-								zzd(param0: number, param1: java.util.List<java.lang.Long>, param2: boolean): void;
-								zze(param0: number, param1: java.util.List<java.lang.Long>, param2: boolean): void;
-								zzf(param0: number, param1: java.util.List<java.lang.Float>, param2: boolean): void;
-								zzg(param0: number, param1: java.util.List<java.lang.Double>, param2: boolean): void;
-								zzh(param0: number, param1: java.util.List<java.lang.Integer>, param2: boolean): void;
-								zzi(param0: number, param1: java.util.List<java.lang.Boolean>, param2: boolean): void;
-								zza(param0: number, param1: java.util.List<string>): void;
-								zzb(param0: number, param1: any /* java.util.List<com.google.android.gms.internal.firebase_remote_config.zzfx>*/): void;
-								zzj(param0: number, param1: java.util.List<java.lang.Integer>, param2: boolean): void;
-								zzk(param0: number, param1: java.util.List<java.lang.Integer>, param2: boolean): void;
-								zzl(param0: number, param1: java.util.List<java.lang.Long>, param2: boolean): void;
-								zzm(param0: number, param1: java.util.List<java.lang.Integer>, param2: boolean): void;
-								zzn(param0: number, param1: java.util.List<java.lang.Long>, param2: boolean): void;
-								zza(param0: number, param1: java.util.List<any>, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/): void;
-								zzb(param0: number, param1: java.util.List<any>, param2: any /* com.google.android.gms.internal.firebase_remote_config.zzjf<any>*/): void;
-								zza(param0: number, param1: any): void;
-								zza(param0: number, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzih<any,any>*/, param2: java.util.Map): void;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkr {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkr>;
-							public static values(): any /* native.Array<com.google.android.gms.internal.firebase_remote_config.zzkr>*/;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzks {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzks>;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzkt {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt>;
-						}
-						export module zzkt {
-							export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzkt.zza,com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zza>;
-								public isInitialized(): boolean;
-							}
-							export module zza {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzkt.zza,com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zza.zza>;
-									public isInitialized(): boolean;
+							export module ConfigFetchRequest {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.ConfigFetchRequest,com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder> implements com.google.android.gms.config.proto.Config.ConfigFetchRequestOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder>;
+									public hasClientVersion(): boolean;
+									public getOsVersion(): string;
+									public clearPackageData(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public hasDeviceSubtype(): boolean;
+									public setDeviceLocaleBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceLocale(param0: string): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setGmsCoreVersion(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setConfig(param0: com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getDeviceType(): number;
+									public getDeviceCountry(): string;
+									public getDeviceCountryBytes(): com.google.protobuf.ByteString;
+									public clearDeviceTimezoneId(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getGmsCoreVersion(): number;
+									public setOsVersion(param0: string): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public clearOsVersion(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public hasConfig(): boolean;
+									public setDeviceType(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getDeviceTimezoneId(): string;
+									public hasDeviceType(): boolean;
+									public setConfig(param0: com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getAndroidId(): number;
+									public getPackageDataCount(): number;
+									public getDeviceLocale(): string;
+									public clearDeviceType(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public clearDeviceDataVersionInfo(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceCountryBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public clearConfig(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceSubtype(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getSecurityToken(): number;
+									public addPackageData(param0: com.google.android.gms.config.proto.Config.PackageData): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getDeviceTimezoneIdBytes(): com.google.protobuf.ByteString;
+									public addPackageData(param0: number, param1: com.google.android.gms.config.proto.Config.PackageData.Builder): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceTimezoneIdBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public removePackageData(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setClientVersion(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceTimezoneId(param0: string): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public hasAndroidId(): boolean;
+									public clearDeviceSubtype(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public hasDeviceCountry(): boolean;
+									public hasApiLevel(): boolean;
+									public hasDeviceDataVersionInfo(): boolean;
+									public clearClientVersion(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public hasGmsCoreVersion(): boolean;
+									public hasSecurityToken(): boolean;
+									public getPackageDataList(): java.util.List<com.google.android.gms.config.proto.Config.PackageData>;
+									public addPackageData(param0: number, param1: com.google.android.gms.config.proto.Config.PackageData): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getDeviceLocaleBytes(): com.google.protobuf.ByteString;
+									public clearAndroidId(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public clearGmsCoreVersion(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public hasDeviceLocale(): boolean;
+									public clearDeviceCountry(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setAndroidId(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceDataVersionInfo(param0: string): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setOsVersionBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public mergeConfig(param0: com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceCountry(param0: string): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getConfig(): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+									public clearApiLevel(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public clearDeviceLocale(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setDeviceDataVersionInfoBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public setApiLevel(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public addAllPackageData(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public clearSecurityToken(): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getDeviceSubtype(): number;
+									public getOsVersionBytes(): com.google.protobuf.ByteString;
+									public getDeviceDataVersionInfoBytes(): com.google.protobuf.ByteString;
+									public setPackageData(param0: number, param1: com.google.android.gms.config.proto.Config.PackageData): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getClientVersion(): number;
+									public hasOsVersion(): boolean;
+									public addPackageData(param0: com.google.android.gms.config.proto.Config.PackageData.Builder): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getPackageData(param0: number): com.google.android.gms.config.proto.Config.PackageData;
+									public getApiLevel(): number;
+									public hasDeviceTimezoneId(): boolean;
+									public setPackageData(param0: number, param1: com.google.android.gms.config.proto.Config.PackageData.Builder): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
+									public getDeviceDataVersionInfo(): string;
+									public setSecurityToken(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchRequest.Builder;
 								}
 							}
-							export class zzb extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb,com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-								public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb>;
-								public isInitialized(): boolean;
+							export class ConfigFetchRequestOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.ConfigFetchRequestOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$ConfigFetchRequestOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasConfig(): boolean;
+									getConfig(): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+									hasAndroidId(): boolean;
+									getAndroidId(): number;
+									getPackageDataList(): java.util.List<com.google.android.gms.config.proto.Config.PackageData>;
+									getPackageData(param0: number): com.google.android.gms.config.proto.Config.PackageData;
+									getPackageDataCount(): number;
+									hasDeviceDataVersionInfo(): boolean;
+									getDeviceDataVersionInfo(): string;
+									getDeviceDataVersionInfoBytes(): com.google.protobuf.ByteString;
+									hasSecurityToken(): boolean;
+									getSecurityToken(): number;
+									hasClientVersion(): boolean;
+									getClientVersion(): number;
+									hasGmsCoreVersion(): boolean;
+									getGmsCoreVersion(): number;
+									hasApiLevel(): boolean;
+									getApiLevel(): number;
+									hasDeviceCountry(): boolean;
+									getDeviceCountry(): string;
+									getDeviceCountryBytes(): com.google.protobuf.ByteString;
+									hasDeviceLocale(): boolean;
+									getDeviceLocale(): string;
+									getDeviceLocaleBytes(): com.google.protobuf.ByteString;
+									hasDeviceType(): boolean;
+									getDeviceType(): number;
+									hasDeviceSubtype(): boolean;
+									getDeviceSubtype(): number;
+									hasOsVersion(): boolean;
+									getOsVersion(): string;
+									getOsVersionBytes(): com.google.protobuf.ByteString;
+									hasDeviceTimezoneId(): boolean;
+									getDeviceTimezoneId(): string;
+									getDeviceTimezoneIdBytes(): com.google.protobuf.ByteString;
+								});
+								public constructor();
+								public getConfig(): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public getPackageDataCount(): number;
+								public hasOsVersion(): boolean;
+								public getOsVersion(): string;
+								public getDeviceCountryBytes(): com.google.protobuf.ByteString;
+								public getPackageData(param0: number): com.google.android.gms.config.proto.Config.PackageData;
+								public hasApiLevel(): boolean;
+								public getDeviceLocaleBytes(): com.google.protobuf.ByteString;
+								public getDeviceType(): number;
+								public getSecurityToken(): number;
+								public hasDeviceLocale(): boolean;
+								public getPackageDataList(): java.util.List<com.google.android.gms.config.proto.Config.PackageData>;
+								public getDeviceCountry(): string;
+								public hasClientVersion(): boolean;
+								public hasDeviceCountry(): boolean;
+								public hasConfig(): boolean;
+								public getClientVersion(): number;
+								public hasDeviceType(): boolean;
+								public hasAndroidId(): boolean;
+								public getDeviceTimezoneId(): string;
+								public getAndroidId(): number;
+								public hasDeviceTimezoneId(): boolean;
+								public getDeviceDataVersionInfo(): string;
+								public getDeviceLocale(): string;
+								public getDeviceDataVersionInfoBytes(): com.google.protobuf.ByteString;
+								public getDeviceTimezoneIdBytes(): com.google.protobuf.ByteString;
+								public hasSecurityToken(): boolean;
+								public hasGmsCoreVersion(): boolean;
+								public hasDeviceSubtype(): boolean;
+								public getGmsCoreVersion(): number;
+								public getDeviceSubtype(): number;
+								public getOsVersionBytes(): com.google.protobuf.ByteString;
+								public getApiLevel(): number;
+								public hasDeviceDataVersionInfo(): boolean;
 							}
-							export module zzb {
-								export class zza extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzhh.zza<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb,com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>*/ implements any /* com.google.android.gms.internal.firebase_remote_config.zzio*/  {
-									public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzkt.zzb.zza>;
-									public isInitialized(): boolean;
+							export class ConfigFetchResponse extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.ConfigFetchResponse,com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder> implements com.google.android.gms.config.proto.Config.ConfigFetchResponseOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.ConfigFetchResponse>;
+								public static PACKAGE_TABLE_FIELD_NUMBER: number;
+								public static STATUS_FIELD_NUMBER: number;
+								public static INTERNAL_METADATA_FIELD_NUMBER: number;
+								public static APP_CONFIG_FIELD_NUMBER: number;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public getInternalMetadataList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+								public getInternalMetadataOrBuilder(param0: number): com.google.android.gms.config.proto.Config.KeyValueOrBuilder;
+								public getAppConfigCount(): number;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public getPackageTableList(): java.util.List<com.google.android.gms.config.proto.Config.PackageTable>;
+								public getAppConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppConfigTable>;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public getAppConfigOrBuilderList(): java.util.List<any>;
+								public hasStatus(): boolean;
+								public getPackageTable(param0: number): com.google.android.gms.config.proto.Config.PackageTable;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public getPackageTableCount(): number;
+								public getInternalMetadataCount(): number;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public getAppConfig(param0: number): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public getPackageTableOrBuilder(param0: number): com.google.android.gms.config.proto.Config.PackageTableOrBuilder;
+								public getStatus(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+								public getAppConfigOrBuilder(param0: number): com.google.android.gms.config.proto.Config.AppConfigTableOrBuilder;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.ConfigFetchResponse>;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public getInternalMetadata(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+								public getSerializedSize(): number;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+								public getPackageTableOrBuilderList(): java.util.List<any>;
+								public getInternalMetadataOrBuilderList(): java.util.List<any>;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.ConfigFetchResponse;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.ConfigFetchResponse): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+							}
+							export module ConfigFetchResponse {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.ConfigFetchResponse,com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder> implements com.google.android.gms.config.proto.Config.ConfigFetchResponseOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder>;
+									public getAppConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppConfigTable>;
+									public getAppConfigCount(): number;
+									public addAppConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppConfigTable.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addPackageTable(param0: com.google.android.gms.config.proto.Config.PackageTable): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addPackageTable(param0: com.google.android.gms.config.proto.Config.PackageTable.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public getInternalMetadataCount(): number;
+									public clearInternalMetadata(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public getPackageTableCount(): number;
+									public addAppConfig(param0: com.google.android.gms.config.proto.Config.AppConfigTable.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public clearPackageTable(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public getAppConfig(param0: number): com.google.android.gms.config.proto.Config.AppConfigTable;
+									public addAllAppConfig(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public setInternalMetadata(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addAllInternalMetadata(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addInternalMetadata(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public setStatus(param0: com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public hasStatus(): boolean;
+									public getPackageTableList(): java.util.List<com.google.android.gms.config.proto.Config.PackageTable>;
+									public setInternalMetadata(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addInternalMetadata(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public removePackageTable(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addInternalMetadata(param0: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public getInternalMetadataList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+									public removeInternalMetadata(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addAllPackageTable(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addPackageTable(param0: number, param1: com.google.android.gms.config.proto.Config.PackageTable): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public clearStatus(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public setPackageTable(param0: number, param1: com.google.android.gms.config.proto.Config.PackageTable): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public getInternalMetadata(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+									public setAppConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppConfigTable.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public clearAppConfig(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addAppConfig(param0: com.google.android.gms.config.proto.Config.AppConfigTable): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addAppConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppConfigTable): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public removeAppConfig(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public getPackageTable(param0: number): com.google.android.gms.config.proto.Config.PackageTable;
+									public setPackageTable(param0: number, param1: com.google.android.gms.config.proto.Config.PackageTable.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public addInternalMetadata(param0: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public setAppConfig(param0: number, param1: com.google.android.gms.config.proto.Config.AppConfigTable): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+									public getStatus(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+									public addPackageTable(param0: number, param1: com.google.android.gms.config.proto.Config.PackageTable.Builder): com.google.android.gms.config.proto.Config.ConfigFetchResponse.Builder;
+								}
+								export class ResponseStatus extends com.google.protobuf.Internal.EnumLite {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus>;
+									public static SUCCESS: com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+									public static NO_PACKAGES_IN_REQUEST: com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+									public static SUCCESS_VALUE: number;
+									public static NO_PACKAGES_IN_REQUEST_VALUE: number;
+									public getNumber(): number;
+									public static forNumber(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+									public static internalGetValueMap(): com.google.protobuf.Internal.EnumLiteMap<com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus>;
+									public static valueOf(param0: string): com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+									public static values(): native.Array<com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus>;
+									public static valueOf(param0: number): com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
 								}
 							}
+							export class ConfigFetchResponseOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.ConfigFetchResponseOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$ConfigFetchResponseOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									getPackageTableList(): java.util.List<com.google.android.gms.config.proto.Config.PackageTable>;
+									getPackageTable(param0: number): com.google.android.gms.config.proto.Config.PackageTable;
+									getPackageTableCount(): number;
+									hasStatus(): boolean;
+									getStatus(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+									getInternalMetadataList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+									getInternalMetadata(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+									getInternalMetadataCount(): number;
+									getAppConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppConfigTable>;
+									getAppConfig(param0: number): com.google.android.gms.config.proto.Config.AppConfigTable;
+									getAppConfigCount(): number;
+								});
+								public constructor();
+								public getAppConfig(param0: number): com.google.android.gms.config.proto.Config.AppConfigTable;
+								public hasStatus(): boolean;
+								public getInternalMetadata(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+								public getPackageTable(param0: number): com.google.android.gms.config.proto.Config.PackageTable;
+								public getInternalMetadataList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+								public getAppConfigCount(): number;
+								public getStatus(): com.google.android.gms.config.proto.Config.ConfigFetchResponse.ResponseStatus;
+								public getPackageTableCount(): number;
+								public getPackageTableList(): java.util.List<com.google.android.gms.config.proto.Config.PackageTable>;
+								public getInternalMetadataCount(): number;
+								public getAppConfigList(): java.util.List<com.google.android.gms.config.proto.Config.AppConfigTable>;
+							}
+							export class KeyValue extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.KeyValue,com.google.android.gms.config.proto.Config.KeyValue.Builder> implements com.google.android.gms.config.proto.Config.KeyValueOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.KeyValue>;
+								public static KEY_FIELD_NUMBER: number;
+								public static VALUE_FIELD_NUMBER: number;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.KeyValue.Builder;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.KeyValue;
+								public getValue(): com.google.protobuf.ByteString;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.KeyValue;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.KeyValue.Builder;
+								public hasKey(): boolean;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.KeyValue;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.KeyValue;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.KeyValue;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.KeyValue>;
+								public getKey(): string;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.KeyValue;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.KeyValue;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.KeyValue;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public getSerializedSize(): number;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.KeyValue;
+								public hasValue(): boolean;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.KeyValue;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.KeyValue;
+								public getKeyBytes(): com.google.protobuf.ByteString;
+							}
+							export module KeyValue {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.KeyValue,com.google.android.gms.config.proto.Config.KeyValue.Builder> implements com.google.android.gms.config.proto.Config.KeyValueOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.KeyValue.Builder>;
+									public getKeyBytes(): com.google.protobuf.ByteString;
+									public clearKey(): com.google.android.gms.config.proto.Config.KeyValue.Builder;
+									public hasKey(): boolean;
+									public setKeyBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.KeyValue.Builder;
+									public getValue(): com.google.protobuf.ByteString;
+									public setValue(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.KeyValue.Builder;
+									public getKey(): string;
+									public hasValue(): boolean;
+									public clearValue(): com.google.android.gms.config.proto.Config.KeyValue.Builder;
+									public setKey(param0: string): com.google.android.gms.config.proto.Config.KeyValue.Builder;
+								}
+							}
+							export class KeyValueOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.KeyValueOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$KeyValueOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasKey(): boolean;
+									getKey(): string;
+									getKeyBytes(): com.google.protobuf.ByteString;
+									hasValue(): boolean;
+									getValue(): com.google.protobuf.ByteString;
+								});
+								public constructor();
+								public getValue(): com.google.protobuf.ByteString;
+								public hasValue(): boolean;
+								public hasKey(): boolean;
+								public getKey(): string;
+								public getKeyBytes(): com.google.protobuf.ByteString;
+							}
+							export class NamedValue extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.NamedValue,com.google.android.gms.config.proto.Config.NamedValue.Builder> implements com.google.android.gms.config.proto.Config.NamedValueOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.NamedValue>;
+								public static NAME_FIELD_NUMBER: number;
+								public static VALUE_FIELD_NUMBER: number;
+								public getValueBytes(): com.google.protobuf.ByteString;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.NamedValue;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.NamedValue;
+								public getName(): string;
+								public getNameBytes(): com.google.protobuf.ByteString;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.NamedValue;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public hasName(): boolean;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public getSerializedSize(): number;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.NamedValue;
+								public hasValue(): boolean;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.NamedValue>;
+								public getValue(): string;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.NamedValue;
+							}
+							export module NamedValue {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.NamedValue,com.google.android.gms.config.proto.Config.NamedValue.Builder> implements com.google.android.gms.config.proto.Config.NamedValueOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.NamedValue.Builder>;
+									public clearName(): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+									public clearValue(): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+									public setName(param0: string): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+									public getValue(): string;
+									public setNameBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+									public hasName(): boolean;
+									public hasValue(): boolean;
+									public getName(): string;
+									public getNameBytes(): com.google.protobuf.ByteString;
+									public setValueBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+									public getValueBytes(): com.google.protobuf.ByteString;
+									public setValue(param0: string): com.google.android.gms.config.proto.Config.NamedValue.Builder;
+								}
+							}
+							export class NamedValueOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.NamedValueOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$NamedValueOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasName(): boolean;
+									getName(): string;
+									getNameBytes(): com.google.protobuf.ByteString;
+									hasValue(): boolean;
+									getValue(): string;
+									getValueBytes(): com.google.protobuf.ByteString;
+								});
+								public constructor();
+								public getValueBytes(): com.google.protobuf.ByteString;
+								public hasName(): boolean;
+								public getName(): string;
+								public hasValue(): boolean;
+								public getNameBytes(): com.google.protobuf.ByteString;
+								public getValue(): string;
+							}
+							export class PackageData extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.PackageData,com.google.android.gms.config.proto.Config.PackageData.Builder> implements com.google.android.gms.config.proto.Config.PackageDataOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.PackageData>;
+								public static VERSION_CODE_FIELD_NUMBER: number;
+								public static DIGEST_FIELD_NUMBER: number;
+								public static CERT_HASH_FIELD_NUMBER: number;
+								public static CONFIG_ID_FIELD_NUMBER: number;
+								public static PACKAGE_NAME_FIELD_NUMBER: number;
+								public static GMP_PROJECT_ID_FIELD_NUMBER: number;
+								public static GAMES_PROJECT_ID_FIELD_NUMBER: number;
+								public static NAMESPACE_DIGEST_FIELD_NUMBER: number;
+								public static CUSTOM_VARIABLE_FIELD_NUMBER: number;
+								public static APP_CERT_HASH_FIELD_NUMBER: number;
+								public static APP_VERSION_CODE_FIELD_NUMBER: number;
+								public static APP_VERSION_FIELD_NUMBER: number;
+								public static APP_INSTANCE_ID_FIELD_NUMBER: number;
+								public static APP_INSTANCE_ID_TOKEN_FIELD_NUMBER: number;
+								public static REQUESTED_HIDDEN_NAMESPACE_FIELD_NUMBER: number;
+								public static SDK_VERSION_FIELD_NUMBER: number;
+								public static ANALYTICS_USER_PROPERTY_FIELD_NUMBER: number;
+								public static REQUESTED_CACHE_EXPIRATION_SECONDS_FIELD_NUMBER: number;
+								public static FETCHED_CONFIG_AGE_SECONDS_FIELD_NUMBER: number;
+								public static ACTIVE_CONFIG_AGE_SECONDS_FIELD_NUMBER: number;
+								public getGamesProjectId(): string;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageData;
+								public getNamespaceDigestOrBuilder(param0: number): com.google.android.gms.config.proto.Config.NamedValueOrBuilder;
+								public getAppInstanceIdToken(): string;
+								public getPackageName(): string;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.PackageData;
+								public hasAppVersion(): boolean;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.PackageData): com.google.android.gms.config.proto.Config.PackageData.Builder;
+								public getAppInstanceIdTokenBytes(): com.google.protobuf.ByteString;
+								public hasGamesProjectId(): boolean;
+								public getAnalyticsUserPropertyList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData;
+								public getVersionCode(): number;
+								public getAnalyticsUserPropertyOrBuilder(param0: number): com.google.android.gms.config.proto.Config.NamedValueOrBuilder;
+								public getFetchedConfigAgeSeconds(): number;
+								public getRequestedHiddenNamespaceCount(): number;
+								public getRequestedHiddenNamespace(param0: number): string;
+								public getActiveConfigAgeSeconds(): number;
+								public getGmpProjectId(): string;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.PackageData>;
+								public getRequestedHiddenNamespaceBytes(param0: number): com.google.protobuf.ByteString;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageData;
+								public hasConfigId(): boolean;
+								public getAppInstanceId(): string;
+								public getCustomVariableOrBuilderList(): java.util.List<any>;
+								public getCustomVariable(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.PackageData;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public getCustomVariableList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+								public hasAppCertHash(): boolean;
+								public hasFetchedConfigAgeSeconds(): boolean;
+								public getCertHash(): com.google.protobuf.ByteString;
+								public getSerializedSize(): number;
+								public hasSdkVersion(): boolean;
+								public getNamespaceDigestOrBuilderList(): java.util.List<any>;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+								public hasDigest(): boolean;
+								public hasRequestedCacheExpirationSeconds(): boolean;
+								public getRequestedCacheExpirationSeconds(): number;
+								public getCustomVariableOrBuilder(param0: number): com.google.android.gms.config.proto.Config.NamedValueOrBuilder;
+								public getSdkVersion(): number;
+								public getAppVersion(): string;
+								public getCustomVariableCount(): number;
+								public hasAppInstanceIdToken(): boolean;
+								public getAppCertHash(): com.google.protobuf.ByteString;
+								public getGamesProjectIdBytes(): com.google.protobuf.ByteString;
+								public getAppVersionCode(): number;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.PackageData;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.PackageData;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public getConfigIdBytes(): com.google.protobuf.ByteString;
+								public getGmpProjectIdBytes(): com.google.protobuf.ByteString;
+								public getAppInstanceIdBytes(): com.google.protobuf.ByteString;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageData;
+								public getConfigId(): string;
+								public getAppVersionBytes(): com.google.protobuf.ByteString;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.PackageData;
+								public getPackageNameBytes(): com.google.protobuf.ByteString;
+								public getAnalyticsUserPropertyOrBuilderList(): java.util.List<any>;
+								public getAnalyticsUserProperty(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageData;
+								public getDigest(): com.google.protobuf.ByteString;
+								public hasGmpProjectId(): boolean;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageData;
+								public getNamespaceDigestCount(): number;
+								public hasVersionCode(): boolean;
+								public hasAppInstanceId(): boolean;
+								public hasCertHash(): boolean;
+								public getNamespaceDigestList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+								public hasAppVersionCode(): boolean;
+								public getAnalyticsUserPropertyCount(): number;
+								public hasPackageName(): boolean;
+								public hasActiveConfigAgeSeconds(): boolean;
+								public getNamespaceDigest(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+								public getRequestedHiddenNamespaceList(): java.util.List<string>;
+							}
+							export module PackageData {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.PackageData,com.google.android.gms.config.proto.Config.PackageData.Builder> implements com.google.android.gms.config.proto.Config.PackageDataOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.PackageData.Builder>;
+									public addAnalyticsUserProperty(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addCustomVariable(param0: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setGamesProjectIdBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getAnalyticsUserPropertyCount(): number;
+									public removeCustomVariable(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addAllRequestedHiddenNamespace(param0: java.lang.Iterable<string>): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public removeAnalyticsUserProperty(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setAppInstanceIdBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getRequestedHiddenNamespaceBytes(param0: number): com.google.protobuf.ByteString;
+									public setPackageNameBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setGamesProjectId(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasAppVersionCode(): boolean;
+									public getNamespaceDigest(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+									public setAppVersion(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setGmpProjectId(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearAppVersion(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasAppInstanceIdToken(): boolean;
+									public clearAnalyticsUserProperty(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getCustomVariableList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+									public clearGamesProjectId(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addNamespaceDigest(param0: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasConfigId(): boolean;
+									public getAppVersionBytes(): com.google.protobuf.ByteString;
+									public setCustomVariable(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setRequestedHiddenNamespace(param0: number, param1: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addAllAnalyticsUserProperty(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setRequestedCacheExpirationSeconds(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasDigest(): boolean;
+									public clearCertHash(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setNamespaceDigest(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getAppInstanceIdTokenBytes(): com.google.protobuf.ByteString;
+									public removeNamespaceDigest(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setConfigId(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setAnalyticsUserProperty(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setGmpProjectIdBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearPackageName(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setAppInstanceIdTokenBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addAllCustomVariable(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearAppInstanceId(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getVersionCode(): number;
+									public clearAppVersionCode(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addNamespaceDigest(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearFetchedConfigAgeSeconds(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getConfigIdBytes(): com.google.protobuf.ByteString;
+									public getAppVersionCode(): number;
+									public hasAppInstanceId(): boolean;
+									public getConfigId(): string;
+									public getAnalyticsUserProperty(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+									public clearRequestedCacheExpirationSeconds(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearNamespaceDigest(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getAppInstanceIdBytes(): com.google.protobuf.ByteString;
+									public setActiveConfigAgeSeconds(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getDigest(): com.google.protobuf.ByteString;
+									public getGamesProjectIdBytes(): com.google.protobuf.ByteString;
+									public hasGmpProjectId(): boolean;
+									public setAppVersionBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasSdkVersion(): boolean;
+									public getRequestedHiddenNamespaceList(): java.util.List<string>;
+									public setSdkVersion(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearAppInstanceIdToken(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getGmpProjectIdBytes(): com.google.protobuf.ByteString;
+									public setAppCertHash(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasRequestedCacheExpirationSeconds(): boolean;
+									public clearDigest(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getGmpProjectId(): string;
+									public addAnalyticsUserProperty(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setAppInstanceIdToken(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setVersionCode(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearSdkVersion(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearVersionCode(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setDigest(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasActiveConfigAgeSeconds(): boolean;
+									public getGamesProjectId(): string;
+									public setAppInstanceId(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addRequestedHiddenNamespaceBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearActiveConfigAgeSeconds(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getRequestedHiddenNamespace(param0: number): string;
+									public hasVersionCode(): boolean;
+									public getRequestedHiddenNamespaceCount(): number;
+									public addAllNamespaceDigest(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasPackageName(): boolean;
+									public setNamespaceDigest(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getAppCertHash(): com.google.protobuf.ByteString;
+									public setCertHash(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getSdkVersion(): number;
+									public addCustomVariable(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setCustomVariable(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearAppCertHash(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addNamespaceDigest(param0: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addCustomVariable(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getActiveConfigAgeSeconds(): number;
+									public getNamespaceDigestList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+									public hasGamesProjectId(): boolean;
+									public hasFetchedConfigAgeSeconds(): boolean;
+									public getCustomVariableCount(): number;
+									public clearGmpProjectId(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setFetchedConfigAgeSeconds(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearCustomVariable(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getAppVersion(): string;
+									public getFetchedConfigAgeSeconds(): number;
+									public addNamespaceDigest(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getRequestedCacheExpirationSeconds(): number;
+									public getAppInstanceIdToken(): string;
+									public getCertHash(): com.google.protobuf.ByteString;
+									public setConfigIdBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getNamespaceDigestCount(): number;
+									public addCustomVariable(param0: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public hasCertHash(): boolean;
+									public addAnalyticsUserProperty(param0: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public addRequestedHiddenNamespace(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getAppInstanceId(): string;
+									public getPackageName(): string;
+									public hasAppVersion(): boolean;
+									public addAnalyticsUserProperty(param0: com.google.android.gms.config.proto.Config.NamedValue.Builder): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getPackageNameBytes(): com.google.protobuf.ByteString;
+									public hasAppCertHash(): boolean;
+									public setAppVersionCode(param0: number): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearRequestedHiddenNamespace(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public clearConfigId(): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public setPackageName(param0: string): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getAnalyticsUserPropertyList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+									public setAnalyticsUserProperty(param0: number, param1: com.google.android.gms.config.proto.Config.NamedValue): com.google.android.gms.config.proto.Config.PackageData.Builder;
+									public getCustomVariable(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+								}
+							}
+							export class PackageDataOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.PackageDataOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$PackageDataOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasVersionCode(): boolean;
+									getVersionCode(): number;
+									hasDigest(): boolean;
+									getDigest(): com.google.protobuf.ByteString;
+									hasCertHash(): boolean;
+									getCertHash(): com.google.protobuf.ByteString;
+									hasConfigId(): boolean;
+									getConfigId(): string;
+									getConfigIdBytes(): com.google.protobuf.ByteString;
+									hasPackageName(): boolean;
+									getPackageName(): string;
+									getPackageNameBytes(): com.google.protobuf.ByteString;
+									hasGmpProjectId(): boolean;
+									getGmpProjectId(): string;
+									getGmpProjectIdBytes(): com.google.protobuf.ByteString;
+									hasGamesProjectId(): boolean;
+									getGamesProjectId(): string;
+									getGamesProjectIdBytes(): com.google.protobuf.ByteString;
+									getNamespaceDigestList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+									getNamespaceDigest(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+									getNamespaceDigestCount(): number;
+									getCustomVariableList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+									getCustomVariable(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+									getCustomVariableCount(): number;
+									hasAppCertHash(): boolean;
+									getAppCertHash(): com.google.protobuf.ByteString;
+									hasAppVersionCode(): boolean;
+									getAppVersionCode(): number;
+									hasAppVersion(): boolean;
+									getAppVersion(): string;
+									getAppVersionBytes(): com.google.protobuf.ByteString;
+									hasAppInstanceId(): boolean;
+									getAppInstanceId(): string;
+									getAppInstanceIdBytes(): com.google.protobuf.ByteString;
+									hasAppInstanceIdToken(): boolean;
+									getAppInstanceIdToken(): string;
+									getAppInstanceIdTokenBytes(): com.google.protobuf.ByteString;
+									getRequestedHiddenNamespaceList(): java.util.List<string>;
+									getRequestedHiddenNamespaceCount(): number;
+									getRequestedHiddenNamespace(param0: number): string;
+									getRequestedHiddenNamespaceBytes(param0: number): com.google.protobuf.ByteString;
+									hasSdkVersion(): boolean;
+									getSdkVersion(): number;
+									getAnalyticsUserPropertyList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+									getAnalyticsUserProperty(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+									getAnalyticsUserPropertyCount(): number;
+									hasRequestedCacheExpirationSeconds(): boolean;
+									getRequestedCacheExpirationSeconds(): number;
+									hasFetchedConfigAgeSeconds(): boolean;
+									getFetchedConfigAgeSeconds(): number;
+									hasActiveConfigAgeSeconds(): boolean;
+									getActiveConfigAgeSeconds(): number;
+								});
+								public constructor();
+								public getGamesProjectId(): string;
+								public getAppInstanceIdToken(): string;
+								public getPackageName(): string;
+								public hasAppVersion(): boolean;
+								public getAppInstanceIdTokenBytes(): com.google.protobuf.ByteString;
+								public hasGamesProjectId(): boolean;
+								public getAnalyticsUserPropertyList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+								public getVersionCode(): number;
+								public getFetchedConfigAgeSeconds(): number;
+								public getRequestedHiddenNamespaceCount(): number;
+								public getRequestedHiddenNamespace(param0: number): string;
+								public getActiveConfigAgeSeconds(): number;
+								public getGmpProjectId(): string;
+								public getRequestedHiddenNamespaceBytes(param0: number): com.google.protobuf.ByteString;
+								public hasConfigId(): boolean;
+								public getAppInstanceId(): string;
+								public getCustomVariable(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+								public getCustomVariableList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+								public hasAppCertHash(): boolean;
+								public hasFetchedConfigAgeSeconds(): boolean;
+								public getCertHash(): com.google.protobuf.ByteString;
+								public hasSdkVersion(): boolean;
+								public hasDigest(): boolean;
+								public hasRequestedCacheExpirationSeconds(): boolean;
+								public getRequestedCacheExpirationSeconds(): number;
+								public getSdkVersion(): number;
+								public getAppVersion(): string;
+								public getCustomVariableCount(): number;
+								public hasAppInstanceIdToken(): boolean;
+								public getAppCertHash(): com.google.protobuf.ByteString;
+								public getGamesProjectIdBytes(): com.google.protobuf.ByteString;
+								public getAppVersionCode(): number;
+								public getConfigIdBytes(): com.google.protobuf.ByteString;
+								public getGmpProjectIdBytes(): com.google.protobuf.ByteString;
+								public getAppInstanceIdBytes(): com.google.protobuf.ByteString;
+								public getConfigId(): string;
+								public getAppVersionBytes(): com.google.protobuf.ByteString;
+								public getPackageNameBytes(): com.google.protobuf.ByteString;
+								public getAnalyticsUserProperty(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+								public getDigest(): com.google.protobuf.ByteString;
+								public hasGmpProjectId(): boolean;
+								public getNamespaceDigestCount(): number;
+								public hasVersionCode(): boolean;
+								public hasAppInstanceId(): boolean;
+								public hasCertHash(): boolean;
+								public getNamespaceDigestList(): java.util.List<com.google.android.gms.config.proto.Config.NamedValue>;
+								public hasAppVersionCode(): boolean;
+								public getAnalyticsUserPropertyCount(): number;
+								public hasPackageName(): boolean;
+								public hasActiveConfigAgeSeconds(): boolean;
+								public getNamespaceDigest(param0: number): com.google.android.gms.config.proto.Config.NamedValue;
+								public getRequestedHiddenNamespaceList(): java.util.List<string>;
+							}
+							export class PackageTable extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Config.PackageTable,com.google.android.gms.config.proto.Config.PackageTable.Builder> implements com.google.android.gms.config.proto.Config.PackageTableOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.PackageTable>;
+								public static PACKAGE_NAME_FIELD_NUMBER: number;
+								public static ENTRY_FIELD_NUMBER: number;
+								public static CONFIG_ID_FIELD_NUMBER: number;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageTable;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageTable;
+								public getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+								public getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Config.PackageTable;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.PackageTable;
+								public getPackageName(): string;
+								public static newBuilder(): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Config.PackageTable;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Config.PackageTable;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public getConfigIdBytes(): com.google.protobuf.ByteString;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Config.PackageTable;
+								public getEntryOrBuilderList(): java.util.List<any>;
+								public getConfigId(): string;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Config.PackageTable): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageTable;
+								public getEntryCount(): number;
+								public getPackageNameBytes(): com.google.protobuf.ByteString;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageTable;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Config.PackageTable>;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Config.PackageTable;
+								public hasConfigId(): boolean;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageTable;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public getSerializedSize(): number;
+								public hasPackageName(): boolean;
+								public getEntryOrBuilder(param0: number): com.google.android.gms.config.proto.Config.KeyValueOrBuilder;
+							}
+							export module PackageTable {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Config.PackageTable,com.google.android.gms.config.proto.Config.PackageTable.Builder> implements com.google.android.gms.config.proto.Config.PackageTableOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Config.PackageTable.Builder>;
+									public addEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public getPackageName(): string;
+									public clearConfigId(): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public clearEntry(): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public setEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public addEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public getPackageNameBytes(): com.google.protobuf.ByteString;
+									public getEntryCount(): number;
+									public getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+									public clearPackageName(): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public setConfigIdBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public addEntry(param0: com.google.android.gms.config.proto.Config.KeyValue.Builder): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public getConfigIdBytes(): com.google.protobuf.ByteString;
+									public setEntry(param0: number, param1: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public addEntry(param0: com.google.android.gms.config.proto.Config.KeyValue): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public hasPackageName(): boolean;
+									public setPackageName(param0: string): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public setPackageNameBytes(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public getConfigId(): string;
+									public getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+									public setConfigId(param0: string): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public addAllEntry(param0: java.lang.Iterable<any>): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public removeEntry(param0: number): com.google.android.gms.config.proto.Config.PackageTable.Builder;
+									public hasConfigId(): boolean;
+								}
+							}
+							export class PackageTableOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Config.PackageTableOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Config$PackageTableOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasPackageName(): boolean;
+									getPackageName(): string;
+									getPackageNameBytes(): com.google.protobuf.ByteString;
+									getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+									getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+									getEntryCount(): number;
+									hasConfigId(): boolean;
+									getConfigId(): string;
+									getConfigIdBytes(): com.google.protobuf.ByteString;
+								});
+								public constructor();
+								public getEntryList(): java.util.List<com.google.android.gms.config.proto.Config.KeyValue>;
+								public getEntry(param0: number): com.google.android.gms.config.proto.Config.KeyValue;
+								public getConfigIdBytes(): com.google.protobuf.ByteString;
+								public hasPackageName(): boolean;
+								public hasConfigId(): boolean;
+								public getConfigId(): string;
+								public getPackageName(): string;
+								public getEntryCount(): number;
+								public getPackageNameBytes(): com.google.protobuf.ByteString;
+							}
 						}
 					}
 				}
@@ -5723,301 +1148,128 @@ declare module com {
 	export module google {
 		export module android {
 			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzl extends com.google.android.gms.internal.firebase_remote_config.zzd {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzl>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzd.zza*/);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzk*/);
+				export module config {
+					export module proto {
+						export class Logs {
+							public static class: java.lang.Class<com.google.android.gms.config.proto.Logs>;
+							public static registerAllExtensions(param0: com.google.protobuf.ExtensionRegistryLite): void;
 						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzm extends com.google.android.gms.internal.firebase_remote_config.zzj {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzm>;
-							public constructor();
-							public constructor(param0: string);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzn<T>  extends java.lang.Object /* com.google.android.gms.internal.firebase_remote_config.zzf<any>*/ {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzn<any>>;
-							public constructor();
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzd*/, param1: string, param2: string, param3: any /* com.google.android.gms.internal.firebase_remote_config.zzs*/, param4: java.lang.Class<any>);
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzl*/, param1: string, param2: string, param3: any, param4: java.lang.Class<any>);
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzo extends com.google.android.gms.internal.firebase_remote_config.zzs {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzo>;
-							public constructor();
-							public getLength(): number;
-							public writeTo(param0: java.io.OutputStream): void;
-							public getType(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export abstract class zzp extends com.google.android.gms.internal.firebase_remote_config.zzs {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzp>;
-							public getLength(): number;
-							public constructor(param0: string);
-							public writeTo(param0: java.io.OutputStream): void;
-							public getType(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzq {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzq>;
-							public close(): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzr extends com.google.android.gms.internal.firebase_remote_config.zzv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzr>;
-							public constructor();
-							public getName(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzs extends com.google.android.gms.internal.firebase_remote_config.zzcm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzs>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzs interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								getLength(): number;
-								getType(): string;
-								zzn(): boolean;
-								writeTo(param0: java.io.OutputStream): void;
-							});
-							public constructor();
-							public getLength(): number;
-							public writeTo(param0: java.io.OutputStream): void;
-							public getType(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzt extends com.google.android.gms.internal.firebase_remote_config.zzby {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzt>;
-							public constructor();
-							public hashCode(): number;
-							public constructor(param0: string);
-							public constructor(param0: java.net.URL);
-							public toString(): string;
-							public equals(param0: any): boolean;
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzu extends com.google.android.gms.internal.firebase_remote_config.zzcm {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzu>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzcm*/, param1: any /* com.google.android.gms.internal.firebase_remote_config.zzv*/);
-							public writeTo(param0: java.io.OutputStream): void;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzv {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzv>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzv interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								getName(): string;
-								zza(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzcm*/, param1: java.io.OutputStream): void;
-							});
-							public constructor();
-							public getName(): string;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzw extends com.google.android.gms.internal.firebase_remote_config.zzby {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzw>;
-							public constructor();
-							public getUserAgent(): string;
-							public getContentType(): string;
-							public getLocation(): string;
-							public constructor(param0: any /* java.util.EnumSet<com.google.android.gms.internal.firebase_remote_config.zzby.zzc>*/);
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzx {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzx>;
-							/**
-							 * Constructs a new instance of the com.google.android.gms.internal.firebase_remote_config.zzx interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-							 */
-							public constructor(implementation: {
-								zzb(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzab*/): void;
-							});
-							public constructor();
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzy {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzy>;
-							public hashCode(): number;
-							public constructor(param0: string);
-							public toString(): string;
-							public equals(param0: any): boolean;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module android {
-			export module gms {
-				export module internal {
-					export module firebase_remote_config {
-						export class zzz {
-							public static class: java.lang.Class<com.google.android.gms.internal.firebase_remote_config.zzz>;
-							public constructor(param0: any /* com.google.android.gms.internal.firebase_remote_config.zzw*/, param1: java.lang.StringBuilder);
+						export module Logs {
+							export class AndroidConfigFetchProto extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto,com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder> implements com.google.android.gms.config.proto.Logs.AndroidConfigFetchProtoOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto>;
+								public static REASON_FIELD_NUMBER: number;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto>;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder;
+								public static newBuilder(): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public getSerializedSize(): number;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public hasReason(): boolean;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+								public getReason(): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto;
+							}
+							export module AndroidConfigFetchProto {
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto,com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder> implements com.google.android.gms.config.proto.Logs.AndroidConfigFetchProtoOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder>;
+									public setReason(param0: com.google.android.gms.config.proto.Logs.ConfigFetchReason): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder;
+									public clearReason(): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder;
+									public mergeReason(param0: com.google.android.gms.config.proto.Logs.ConfigFetchReason): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder;
+									public hasReason(): boolean;
+									public getReason(): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+									public setReason(param0: com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder): com.google.android.gms.config.proto.Logs.AndroidConfigFetchProto.Builder;
+								}
+							}
+							export class AndroidConfigFetchProtoOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Logs.AndroidConfigFetchProtoOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Logs$AndroidConfigFetchProtoOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasReason(): boolean;
+									getReason(): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								});
+								public constructor();
+								public hasReason(): boolean;
+								public getReason(): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+							}
+							export class ConfigFetchReason extends com.google.protobuf.GeneratedMessageLite<com.google.android.gms.config.proto.Logs.ConfigFetchReason,com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder> implements com.google.android.gms.config.proto.Logs.ConfigFetchReasonOrBuilder  {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Logs.ConfigFetchReason>;
+								public static TYPE_FIELD_NUMBER: number;
+								public static parseFrom(param0: native.Array<number>): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static parseDelimitedFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+								public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+								public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public getSerializedSize(): number;
+								public static getDefaultInstance(): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static parseFrom(param0: java.io.InputStream): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static newBuilder(param0: com.google.android.gms.config.proto.Logs.ConfigFetchReason): com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder;
+								public getType(): com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+								public hasType(): boolean;
+								public static parseFrom(param0: com.google.protobuf.ByteString): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static newBuilder(): com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder;
+								public static parser(): com.google.protobuf.Parser<com.google.android.gms.config.proto.Logs.ConfigFetchReason>;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+								public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.android.gms.config.proto.Logs.ConfigFetchReason;
+							}
+							export module ConfigFetchReason {
+								export class AndroidConfigFetchType extends com.google.protobuf.Internal.EnumLite {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType>;
+									public static UNKNOWN: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static SCHEDULED: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static BOOT_COMPLETED: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static PACKAGE_ADDED: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static PACKAGE_REMOVED: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static GMS_CORE_UPDATED: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static SECRET_CODE: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static UNKNOWN_VALUE: number;
+									public static SCHEDULED_VALUE: number;
+									public static BOOT_COMPLETED_VALUE: number;
+									public static PACKAGE_ADDED_VALUE: number;
+									public static PACKAGE_REMOVED_VALUE: number;
+									public static GMS_CORE_UPDATED_VALUE: number;
+									public static SECRET_CODE_VALUE: number;
+									public static values(): native.Array<com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType>;
+									public getNumber(): number;
+									public static valueOf(param0: number): com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static forNumber(param0: number): com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static valueOf(param0: string): com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+									public static internalGetValueMap(): com.google.protobuf.Internal.EnumLiteMap<com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType>;
+								}
+								export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.android.gms.config.proto.Logs.ConfigFetchReason,com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder> implements com.google.android.gms.config.proto.Logs.ConfigFetchReasonOrBuilder  {
+									public static class: java.lang.Class<com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder>;
+									public setType(param0: com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType): com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder;
+									public clearType(): com.google.android.gms.config.proto.Logs.ConfigFetchReason.Builder;
+									public hasType(): boolean;
+									public getType(): com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+								}
+							}
+							export class ConfigFetchReasonOrBuilder {
+								public static class: java.lang.Class<com.google.android.gms.config.proto.Logs.ConfigFetchReasonOrBuilder>;
+								/**
+								 * Constructs a new instance of the com.google.android.gms.config.proto.Logs$ConfigFetchReasonOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+									hasType(): boolean;
+									getType(): com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+								});
+								public constructor();
+								public getType(): com.google.android.gms.config.proto.Logs.ConfigFetchReason.AndroidConfigFetchType;
+								public hasType(): boolean;
+							}
 						}
 					}
 				}
@@ -6032,6 +1284,11 @@ declare module com {
 			export module remoteconfig {
 				export class BuildConfig {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.BuildConfig>;
+					public static DEBUG: boolean;
+					public static APPLICATION_ID: string;
+					public static BUILD_TYPE: string;
+					public static FLAVOR: string;
+					public static VERSION_CODE: number;
 					public static VERSION_NAME: string;
 					public constructor();
 				}
@@ -6058,37 +1315,29 @@ declare module com {
 					public static LAST_FETCH_STATUS_NO_FETCH_YET: number;
 					public static LAST_FETCH_STATUS_FAILURE: number;
 					public static LAST_FETCH_STATUS_THROTTLED: number;
+					public static TAG: string;
 					public setDefaults(param0: java.util.Map<string,any>): void;
-					public setDefaults(param0: java.util.Map<string,any>, param1: string): void;
-					public getKeysByPrefix(param0: string, param1: string): java.util.Set<string>;
 					public getInfo(): com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
 					public static getInstance(): com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 					public ensureInitialized(): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo>;
-					public getString(param0: string, param1: string): string;
+					public getString(param0: string): string;
+					public fetchAndActivate(): com.google.android.gms.tasks.Task<java.lang.Boolean>;
 					public activate(): com.google.android.gms.tasks.Task<java.lang.Boolean>;
+					public getKeysByPrefix(param0: string): java.util.Set<string>;
 					public setConfigSettings(param0: com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings): void;
+					public setConfigSettingsAsync(param0: com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public getBoolean(param0: string): boolean;
+					public fetch(param0: number): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public setDefaultsAsync(param0: java.util.Map<string,any>): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public fetch(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public getValue(param0: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
-					public getBoolean(param0: string, param1: string): boolean;
 					public setDefaultsAsync(param0: number): com.google.android.gms.tasks.Task<java.lang.Void>;
-					public activateFetched(): boolean;
-					public getLong(param0: string): number;
-					public activateFetched(param0: string): boolean;
-					public getLong(param0: string, param1: string): number;
-					public getString(param0: string): string;
-					public getByteArray(param0: string, param1: string): native.Array<number>;
-					public fetchAndActivate(): com.google.android.gms.tasks.Task<java.lang.Boolean>;
-					public getKeysByPrefix(param0: string): java.util.Set<string>;
-					public getDouble(param0: string, param1: string): number;
-					public fetch(param0: number): com.google.android.gms.tasks.Task<java.lang.Void>;
-					public setDefaults(param0: number, param1: string): void;
 					public getByteArray(param0: string): native.Array<number>;
+					public activateFetched(): boolean;
 					public getDouble(param0: string): number;
 					public reset(): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public getLong(param0: string): number;
 					public setDefaults(param0: number): void;
-					public getValue(param0: string, param1: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 					public getAll(): java.util.Map<string,com.google.firebase.remoteconfig.FirebaseRemoteConfigValue>;
 					public static getInstance(param0: com.google.firebase.FirebaseApp): com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 				}
@@ -6103,6 +1352,8 @@ declare module com {
 			export module remoteconfig {
 				export class FirebaseRemoteConfigClientException extends com.google.firebase.remoteconfig.FirebaseRemoteConfigException {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigClientException>;
+					public constructor(param0: string, param1: java.lang.Throwable);
+					public constructor(param0: string);
 				}
 			}
 		}
@@ -6117,7 +1368,6 @@ declare module com {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigException>;
 					public constructor(param0: string, param1: java.lang.Throwable);
 					public constructor(param0: string);
-					public constructor();
 				}
 			}
 		}
@@ -6132,7 +1382,6 @@ declare module com {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchException>;
 					public constructor(param0: string, param1: java.lang.Throwable);
 					public constructor(param0: string);
-					public constructor();
 				}
 			}
 		}
@@ -6148,7 +1397,6 @@ declare module com {
 					public getThrottleEndTimeMillis(): number;
 					public constructor(param0: string, param1: java.lang.Throwable);
 					public constructor(param0: string);
-					public constructor();
 					public constructor(param0: string, param1: number);
 					public constructor(param0: number);
 				}
@@ -6175,6 +1423,23 @@ declare module com {
 					public getFetchTimeMillis(): number;
 					public getConfigSettings(): com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 					public getLastFetchStatus(): number;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module remoteconfig {
+				export class FirebaseRemoteConfigServerException extends com.google.firebase.remoteconfig.FirebaseRemoteConfigException {
+					public static class: java.lang.Class<com.google.firebase.remoteconfig.FirebaseRemoteConfigServerException>;
+					public getHttpStatusCode(): number;
+					public constructor(param0: string, param1: java.lang.Throwable);
+					public constructor(param0: string);
+					public constructor(param0: number, param1: string, param2: java.lang.Throwable);
+					public constructor(param0: number, param1: string);
 				}
 			}
 		}
@@ -6243,7 +1508,73 @@ declare module com {
 			export module remoteconfig {
 				export class RemoteConfigComponent {
 					public static class: java.lang.Class<com.google.firebase.remoteconfig.RemoteConfigComponent>;
+					public static ACTIVATE_FILE_NAME: string;
+					public static FETCH_FILE_NAME: string;
+					public static DEFAULTS_FILE_NAME: string;
+					public static NETWORK_CONNECTION_TIMEOUT_IN_SECONDS: number;
+					public static DEFAULT_NAMESPACE: string;
+					public constructor(param0: globalAndroid.content.Context, param1: java.util.concurrent.ExecutorService, param2: com.google.firebase.FirebaseApp, param3: com.google.firebase.iid.FirebaseInstanceId, param4: com.google.firebase.abt.FirebaseABTesting, param5: com.google.firebase.analytics.connector.AnalyticsConnector, param6: com.google.firebase.remoteconfig.internal.LegacyConfigsHandler, param7: boolean);
+					public setCustomHeaders(param0: java.util.Map<string,string>): void;
+					public static getCacheClient(param0: globalAndroid.content.Context, param1: string, param2: string, param3: string): com.google.firebase.remoteconfig.internal.ConfigCacheClient;
 					public get(param0: string): com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module remoteconfig {
+				export class RemoteConfigConstants {
+					public static class: java.lang.Class<com.google.firebase.remoteconfig.RemoteConfigConstants>;
+					public static FETCH_REGEX_URL: string;
+				}
+				export module RemoteConfigConstants {
+					export class ExperimentDescriptionFieldKey {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.RemoteConfigConstants.ExperimentDescriptionFieldKey>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.remoteconfig.RemoteConfigConstants$ExperimentDescriptionFieldKey interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+						});
+						public constructor();
+						public static VARIANT_ID: string;
+						public static EXPERIMENT_ID: string;
+					}
+					export class RequestFieldKey {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.RemoteConfigConstants.RequestFieldKey>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.remoteconfig.RemoteConfigConstants$RequestFieldKey interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+						});
+						public constructor();
+						public static APP_ID: string;
+						public static TIME_ZONE: string;
+						public static LANGUAGE_CODE: string;
+						public static INSTANCE_ID_TOKEN: string;
+						public static PLATFORM_VERSION: string;
+						public static SDK_VERSION: string;
+						public static ANALYTICS_USER_PROPERTIES: string;
+						public static PACKAGE_NAME: string;
+						public static APP_VERSION: string;
+						public static INSTANCE_ID: string;
+						public static COUNTRY_CODE: string;
+					}
+					export class ResponseFieldKey {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.RemoteConfigConstants.ResponseFieldKey>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.remoteconfig.RemoteConfigConstants$ResponseFieldKey interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+						});
+						public constructor();
+						public static STATE: string;
+						public static EXPERIMENT_DESCRIPTIONS: string;
+						public static ENTRIES: string;
+					}
 				}
 			}
 		}
@@ -6268,9 +1599,33 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zza {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zza>;
-					public then(param0: com.google.android.gms.tasks.Task): any;
+				export module internal {
+					export class Code {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.Code>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.remoteconfig.internal.Code interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+						});
+						public constructor();
+						public static DEADLINE_EXCEEDED: number;
+						public static OUT_OF_RANGE: number;
+						public static NOT_FOUND: number;
+						public static UNAUTHENTICATED: number;
+						public static RESOURCE_EXHAUSTED: number;
+						public static FAILED_PRECONDITION: number;
+						public static ALREADY_EXISTS: number;
+						public static UNIMPLEMENTED: number;
+						public static UNAVAILABLE: number;
+						public static INTERNAL: number;
+						public static UNKNOWN: number;
+						public static ABORTED: number;
+						public static OK: number;
+						public static INVALID_ARGUMENT: number;
+						public static PERMISSION_DENIED: number;
+						public static CANCELLED: number;
+						public static DATA_LOSS: number;
+					}
 				}
 			}
 		}
@@ -6281,9 +1636,28 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzb {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzb>;
-					public call(): any;
+				export module internal {
+					export class ConfigCacheClient {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigCacheClient>;
+						public putWithoutWaitingForDiskWrite(param0: com.google.firebase.remoteconfig.internal.ConfigContainer): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.internal.ConfigContainer>;
+						public getBlocking(): com.google.firebase.remoteconfig.internal.ConfigContainer;
+						public static getInstance(param0: java.util.concurrent.ExecutorService, param1: com.google.firebase.remoteconfig.internal.ConfigStorageClient): com.google.firebase.remoteconfig.internal.ConfigCacheClient;
+						public put(param0: com.google.firebase.remoteconfig.internal.ConfigContainer, param1: boolean): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.internal.ConfigContainer>;
+						public get(): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.internal.ConfigContainer>;
+						public clear(): void;
+						public put(param0: com.google.firebase.remoteconfig.internal.ConfigContainer): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.internal.ConfigContainer>;
+						public static clearInstancesForTest(): void;
+					}
+					export module ConfigCacheClient {
+						export class AwaitListener<TResult>  extends java.lang.Object {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigCacheClient.AwaitListener<any>>;
+							public onFailure(param0: java.lang.Exception): void;
+							public await(param0: number, param1: java.util.concurrent.TimeUnit): boolean;
+							public await(): void;
+							public onSuccess(param0: TResult): void;
+							public onCanceled(): void;
+						}
+					}
 				}
 			}
 		}
@@ -6294,9 +1668,29 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzc {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzc>;
-					public then(param0: com.google.android.gms.tasks.Task): any;
+				export module internal {
+					export class ConfigContainer {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigContainer>;
+						public getFetchTime(): java.util.Date;
+						public static newBuilder(param0: com.google.firebase.remoteconfig.internal.ConfigContainer): com.google.firebase.remoteconfig.internal.ConfigContainer.Builder;
+						public getAbtExperiments(): org.json.JSONArray;
+						public getConfigs(): org.json.JSONObject;
+						public static newBuilder(): com.google.firebase.remoteconfig.internal.ConfigContainer.Builder;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public toString(): string;
+					}
+					export module ConfigContainer {
+						export class Builder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigContainer.Builder>;
+							public constructor(param0: com.google.firebase.remoteconfig.internal.ConfigContainer);
+							public withFetchTime(param0: java.util.Date): com.google.firebase.remoteconfig.internal.ConfigContainer.Builder;
+							public build(): com.google.firebase.remoteconfig.internal.ConfigContainer;
+							public replaceConfigsWith(param0: org.json.JSONObject): com.google.firebase.remoteconfig.internal.ConfigContainer.Builder;
+							public withAbtExperiments(param0: org.json.JSONArray): com.google.firebase.remoteconfig.internal.ConfigContainer.Builder;
+							public replaceConfigsWith(param0: java.util.Map<string,string>): com.google.firebase.remoteconfig.internal.ConfigContainer.Builder;
+						}
+					}
 				}
 			}
 		}
@@ -6307,9 +1701,38 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzd {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzd>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+				export module internal {
+					export class ConfigFetchHandler {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigFetchHandler>;
+						public static DEFAULT_MINIMUM_FETCH_INTERVAL_IN_SECONDS: number;
+						public constructor(param0: com.google.firebase.iid.FirebaseInstanceId, param1: com.google.firebase.analytics.connector.AnalyticsConnector, param2: java.util.concurrent.Executor, param3: com.google.android.gms.common.util.Clock, param4: java.util.Random, param5: com.google.firebase.remoteconfig.internal.ConfigCacheClient, param6: com.google.firebase.remoteconfig.internal.ConfigFetchHttpClient, param7: com.google.firebase.remoteconfig.internal.ConfigMetadataClient, param8: java.util.Map<string,string>);
+						public getAnalyticsConnector(): com.google.firebase.analytics.connector.AnalyticsConnector;
+						public fetch(): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.internal.ConfigFetchHandler.FetchResponse>;
+						public fetch(param0: number): com.google.android.gms.tasks.Task<com.google.firebase.remoteconfig.internal.ConfigFetchHandler.FetchResponse>;
+					}
+					export module ConfigFetchHandler {
+						export class FetchResponse {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigFetchHandler.FetchResponse>;
+							public static forBackendUpdatesFetched(param0: com.google.firebase.remoteconfig.internal.ConfigContainer, param1: string): com.google.firebase.remoteconfig.internal.ConfigFetchHandler.FetchResponse;
+							public static forBackendHasNoUpdates(param0: java.util.Date): com.google.firebase.remoteconfig.internal.ConfigFetchHandler.FetchResponse;
+							public static forLocalStorageUsed(param0: java.util.Date): com.google.firebase.remoteconfig.internal.ConfigFetchHandler.FetchResponse;
+							public getFetchedConfigs(): com.google.firebase.remoteconfig.internal.ConfigContainer;
+						}
+						export module FetchResponse {
+							export class Status {
+								public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigFetchHandler.FetchResponse.Status>;
+								/**
+								 * Constructs a new instance of the com.google.firebase.remoteconfig.internal.ConfigFetchHandler$FetchResponse$Status interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+								 */
+								public constructor(implementation: {
+								});
+								public constructor();
+								public static BACKEND_HAS_NO_UPDATES: number;
+								public static BACKEND_UPDATES_FETCHED: number;
+								public static LOCAL_STORAGE_USED: number;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -6320,9 +1743,13 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zze {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zze>;
-					public onSuccess(param0: any): void;
+				export module internal {
+					export class ConfigFetchHttpClient {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigFetchHttpClient>;
+						public getReadTimeoutInSeconds(): number;
+						public getConnectTimeoutInSeconds(): number;
+						public constructor(param0: globalAndroid.content.Context, param1: string, param2: string, param3: string, param4: number, param5: number);
+					}
 				}
 			}
 		}
@@ -6333,9 +1760,20 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzf {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzf>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+				export module internal {
+					export class ConfigGetParameterHandler {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigGetParameterHandler>;
+						public static FRC_BYTE_ARRAY_ENCODING: java.nio.charset.Charset;
+						public getKeysByPrefix(param0: string): java.util.Set<string>;
+						public getDouble(param0: string): number;
+						public getValue(param0: string): com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
+						public getByteArray(param0: string): native.Array<number>;
+						public getLong(param0: string): number;
+						public getAll(): java.util.Map<string,com.google.firebase.remoteconfig.FirebaseRemoteConfigValue>;
+						public constructor(param0: com.google.firebase.remoteconfig.internal.ConfigCacheClient, param1: com.google.firebase.remoteconfig.internal.ConfigCacheClient);
+						public getString(param0: string): string;
+						public getBoolean(param0: string): boolean;
+					}
 				}
 			}
 		}
@@ -6346,9 +1784,24 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzg {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzg>;
-					public onComplete(param0: com.google.android.gms.tasks.Task): void;
+				export module internal {
+					export class ConfigMetadataClient {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigMetadataClient>;
+						public static LAST_FETCH_TIME_IN_MILLIS_NO_FETCH_YET: number;
+						public getInfo(): com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo;
+						public getFetchTimeoutInSeconds(): number;
+						public getMinimumFetchIntervalInSeconds(): number;
+						public setConfigSettingsWithoutWaitingOnDiskWrite(param0: com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings): void;
+						public constructor(param0: globalAndroid.content.SharedPreferences);
+						public clear(): void;
+						public setConfigSettings(param0: com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings): void;
+						public isDeveloperModeEnabled(): boolean;
+					}
+					export module ConfigMetadataClient {
+						export class BackoffMetadata {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigMetadataClient.BackoffMetadata>;
+						}
+					}
 				}
 			}
 		}
@@ -6359,9 +1812,15 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzh {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzh>;
-					public then(param0: com.google.android.gms.tasks.Task): any;
+				export module internal {
+					export class ConfigStorageClient {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.ConfigStorageClient>;
+						public clear(): java.lang.Void;
+						public read(): com.google.firebase.remoteconfig.internal.ConfigContainer;
+						public write(param0: com.google.firebase.remoteconfig.internal.ConfigContainer): java.lang.Void;
+						public static getInstance(param0: globalAndroid.content.Context, param1: string): com.google.firebase.remoteconfig.internal.ConfigStorageClient;
+						public static clearInstancesForTest(): void;
+					}
 				}
 			}
 		}
@@ -6372,9 +1831,12 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzi {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzi>;
-					public onComplete(param0: com.google.android.gms.tasks.Task): void;
+				export module internal {
+					export class DefaultsXmlParser {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.DefaultsXmlParser>;
+						public constructor();
+						public static getDefaultsFromXml(param0: globalAndroid.content.Context, param1: number): java.util.Map<string,string>;
+					}
 				}
 			}
 		}
@@ -6385,9 +1847,20 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzj {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzj>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+				export module internal {
+					export class FirebaseRemoteConfigInfoImpl extends com.google.firebase.remoteconfig.FirebaseRemoteConfigInfo {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.FirebaseRemoteConfigInfoImpl>;
+						public getConfigSettings(): com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+						public getLastFetchStatus(): number;
+						public getFetchTimeMillis(): number;
+					}
+					export module FirebaseRemoteConfigInfoImpl {
+						export class Builder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.FirebaseRemoteConfigInfoImpl.Builder>;
+							public withLastSuccessfulFetchTimeInMillis(param0: number): com.google.firebase.remoteconfig.internal.FirebaseRemoteConfigInfoImpl.Builder;
+							public build(): com.google.firebase.remoteconfig.internal.FirebaseRemoteConfigInfoImpl;
+						}
+					}
 				}
 			}
 		}
@@ -6398,9 +1871,16 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzk {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzk>;
-					public call(): any;
+				export module internal {
+					export class FirebaseRemoteConfigValueImpl extends com.google.firebase.remoteconfig.FirebaseRemoteConfigValue {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.FirebaseRemoteConfigValueImpl>;
+						public asDouble(): number;
+						public getSource(): number;
+						public asLong(): number;
+						public asByteArray(): native.Array<number>;
+						public asString(): string;
+						public asBoolean(): boolean;
+					}
 				}
 			}
 		}
@@ -6411,9 +1891,23 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzl {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzl>;
-					public then(param0: any): com.google.android.gms.tasks.Task;
+				export module internal {
+					export class LegacyConfigsHandler {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.LegacyConfigsHandler>;
+						public static EXPERIMENT_ID_KEY: string;
+						public static EXPERIMENT_VARIANT_ID_KEY: string;
+						public static EXPERIMENT_START_TIME_KEY: string;
+						public static EXPERIMENT_TRIGGER_EVENT_KEY: string;
+						public static EXPERIMENT_TRIGGER_TIMEOUT_KEY: string;
+						public static EXPERIMENT_TIME_TO_LIVE_KEY: string;
+						public saveLegacyConfigsIfNecessary(): boolean;
+						public constructor(param0: globalAndroid.content.Context, param1: string);
+					}
+					export module LegacyConfigsHandler {
+						export class NamespaceLegacyConfigs {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.internal.LegacyConfigsHandler.NamespaceLegacyConfigs>;
+						}
+					}
 				}
 			}
 		}
@@ -6424,59 +1918,483 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module remoteconfig {
-				export class zzm {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzm>;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module remoteconfig {
-				export class zzn {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzn>;
-					public call(): any;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module remoteconfig {
-				export class zzo {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzo>;
-					public call(): any;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module remoteconfig {
-				export class zzp extends com.google.android.gms.internal.firebase_remote_config.zzad {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzp>;
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module remoteconfig {
-				export class zzq {
-					public static class: java.lang.Class<com.google.firebase.remoteconfig.zzq>;
-					public create(param0: com.google.firebase.components.ComponentContainer): any;
+				export module proto {
+					export class ConfigPersistence {
+						public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence>;
+						public static registerAllExtensions(param0: com.google.protobuf.ExtensionRegistryLite): void;
+					}
+					export module ConfigPersistence {
+						export class ConfigHolder extends com.google.protobuf.GeneratedMessageLite<com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder,com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolderOrBuilder  {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder>;
+							public static NAMESPACE_KEY_VALUE_FIELD_NUMBER: number;
+							public static TIMESTAMP_FIELD_NUMBER: number;
+							public static EXPERIMENT_PAYLOAD_FIELD_NUMBER: number;
+							public static parseDelimitedFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static parseFrom(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static parseFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public getNamespaceKeyValueCount(): number;
+							public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+							public getNamespaceKeyValueOrBuilderList(): java.util.List<any>;
+							public static parser(): com.google.protobuf.Parser<com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder>;
+							public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public getSerializedSize(): number;
+							public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static newBuilder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+							public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public hasTimestamp(): boolean;
+							public getExperimentPayloadCount(): number;
+							public getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+							public getNamespaceKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static parseFrom(param0: native.Array<number>): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static getDefaultInstance(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public getNamespaceKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue>;
+							public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+							public static newBuilder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+							public getExperimentPayload(param0: number): com.google.protobuf.ByteString;
+							public getTimestamp(): number;
+							public getNamespaceKeyValueOrBuilder(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValueOrBuilder;
+						}
+						export module ConfigHolder {
+							export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder,com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolderOrBuilder  {
+								public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder>;
+								public hasTimestamp(): boolean;
+								public removeNamespaceKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public addAllExperimentPayload(param0: java.lang.Iterable<any>): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+								public addExperimentPayload(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public getExperimentPayloadCount(): number;
+								public getNamespaceKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue>;
+								public addAllNamespaceKeyValue(param0: java.lang.Iterable<any>): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public getNamespaceKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+								public clearTimestamp(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public setExperimentPayload(param0: number, param1: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public setTimestamp(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public addNamespaceKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public setNamespaceKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public addNamespaceKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public setNamespaceKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public clearNamespaceKeyValue(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public addNamespaceKeyValue(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public getExperimentPayload(param0: number): com.google.protobuf.ByteString;
+								public getNamespaceKeyValueCount(): number;
+								public getTimestamp(): number;
+								public addNamespaceKeyValue(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+								public clearExperimentPayload(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder;
+							}
+						}
+						export class ConfigHolderOrBuilder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolderOrBuilder>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.remoteconfig.proto.ConfigPersistence$ConfigHolderOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								getNamespaceKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue>;
+								getNamespaceKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+								getNamespaceKeyValueCount(): number;
+								hasTimestamp(): boolean;
+								getTimestamp(): number;
+								getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+								getExperimentPayloadCount(): number;
+								getExperimentPayload(param0: number): com.google.protobuf.ByteString;
+							});
+							public constructor();
+							public hasTimestamp(): boolean;
+							public getExperimentPayloadCount(): number;
+							public getNamespaceKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue>;
+							public getExperimentPayloadList(): java.util.List<com.google.protobuf.ByteString>;
+							public getExperimentPayload(param0: number): com.google.protobuf.ByteString;
+							public getNamespaceKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public getTimestamp(): number;
+							public getNamespaceKeyValueCount(): number;
+						}
+						export class KeyValue extends com.google.protobuf.GeneratedMessageLite<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue,com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValueOrBuilder  {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue>;
+							public static KEY_FIELD_NUMBER: number;
+							public static VALUE_FIELD_NUMBER: number;
+							public getValue(): com.google.protobuf.ByteString;
+							public hasValue(): boolean;
+							public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static parseFrom(param0: native.Array<number>): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static parseFrom(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static parseFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public getKeyBytes(): com.google.protobuf.ByteString;
+							public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static getDefaultInstance(): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+							public static newBuilder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder;
+							public getKey(): string;
+							public static parser(): com.google.protobuf.Parser<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue>;
+							public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+							public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public hasKey(): boolean;
+							public getSerializedSize(): number;
+							public static parseDelimitedFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public static newBuilder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder;
+						}
+						export module KeyValue {
+							export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue,com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValueOrBuilder  {
+								public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder>;
+								public getValue(): com.google.protobuf.ByteString;
+								public hasValue(): boolean;
+								public hasKey(): boolean;
+								public setValue(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder;
+								public getKey(): string;
+								public setKeyBytes(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder;
+								public clearValue(): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder;
+								public setKey(param0: string): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder;
+								public getKeyBytes(): com.google.protobuf.ByteString;
+								public clearKey(): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder;
+							}
+						}
+						export class KeyValueOrBuilder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValueOrBuilder>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.remoteconfig.proto.ConfigPersistence$KeyValueOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								hasKey(): boolean;
+								getKey(): string;
+								getKeyBytes(): com.google.protobuf.ByteString;
+								hasValue(): boolean;
+								getValue(): com.google.protobuf.ByteString;
+							});
+							public constructor();
+							public getValue(): com.google.protobuf.ByteString;
+							public getKey(): string;
+							public hasValue(): boolean;
+							public hasKey(): boolean;
+							public getKeyBytes(): com.google.protobuf.ByteString;
+						}
+						export class Metadata extends com.google.protobuf.GeneratedMessageLite<com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata,com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.MetadataOrBuilder  {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata>;
+							public static LAST_FETCH_STATUS_FIELD_NUMBER: number;
+							public static DEVELOPER_MODE_ENABLED_FIELD_NUMBER: number;
+							public static LAST_KNOWN_EXPERIMENT_START_TIME_FIELD_NUMBER: number;
+							public hasLastKnownExperimentStartTime(): boolean;
+							public getLastKnownExperimentStartTime(): number;
+							public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public hasLastFetchStatus(): boolean;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static parseFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static getDefaultInstance(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static parseDelimitedFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+							public static newBuilder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+							public static parseFrom(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static parser(): com.google.protobuf.Parser<com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata>;
+							public static parseFrom(param0: native.Array<number>): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public getLastFetchStatus(): number;
+							public getDeveloperModeEnabled(): boolean;
+							public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+							public getSerializedSize(): number;
+							public hasDeveloperModeEnabled(): boolean;
+							public static newBuilder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+						}
+						export module Metadata {
+							export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata,com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.MetadataOrBuilder  {
+								public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder>;
+								public clearLastKnownExperimentStartTime(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+								public hasLastKnownExperimentStartTime(): boolean;
+								public setLastFetchStatus(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+								public getLastKnownExperimentStartTime(): number;
+								public getDeveloperModeEnabled(): boolean;
+								public clearLastFetchStatus(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+								public clearDeveloperModeEnabled(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+								public hasLastFetchStatus(): boolean;
+								public getLastFetchStatus(): number;
+								public setDeveloperModeEnabled(param0: boolean): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+								public hasDeveloperModeEnabled(): boolean;
+								public setLastKnownExperimentStartTime(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder;
+							}
+						}
+						export class MetadataOrBuilder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.MetadataOrBuilder>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.remoteconfig.proto.ConfigPersistence$MetadataOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								hasLastFetchStatus(): boolean;
+								getLastFetchStatus(): number;
+								hasDeveloperModeEnabled(): boolean;
+								getDeveloperModeEnabled(): boolean;
+								hasLastKnownExperimentStartTime(): boolean;
+								getLastKnownExperimentStartTime(): number;
+							});
+							public constructor();
+							public hasLastKnownExperimentStartTime(): boolean;
+							public getLastKnownExperimentStartTime(): number;
+							public getLastFetchStatus(): number;
+							public getDeveloperModeEnabled(): boolean;
+							public hasLastFetchStatus(): boolean;
+							public hasDeveloperModeEnabled(): boolean;
+						}
+						export class NamespaceKeyValue extends com.google.protobuf.GeneratedMessageLite<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue,com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValueOrBuilder  {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue>;
+							public static NAMESPACE_FIELD_NUMBER: number;
+							public static KEY_VALUE_FIELD_NUMBER: number;
+							public getKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue>;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static parser(): com.google.protobuf.Parser<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue>;
+							public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+							public getNamespaceBytes(): com.google.protobuf.ByteString;
+							public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static getDefaultInstance(): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static newBuilder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+							public static parseDelimitedFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public getSerializedSize(): number;
+							public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static parseFrom(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public getNamespace(): string;
+							public getKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public hasNamespace(): boolean;
+							public getKeyValueOrBuilder(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValueOrBuilder;
+							public static parseFrom(param0: native.Array<number>): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+							public getKeyValueOrBuilderList(): java.util.List<any>;
+							public getKeyValueCount(): number;
+							public static parseFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue;
+							public static newBuilder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+						}
+						export module NamespaceKeyValue {
+							export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue,com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValueOrBuilder  {
+								public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder>;
+								public addKeyValue(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public removeKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public getNamespaceBytes(): com.google.protobuf.ByteString;
+								public addKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public setKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public clearKeyValue(): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public setNamespaceBytes(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public hasNamespace(): boolean;
+								public addKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public setKeyValue(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public getNamespace(): string;
+								public getKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue>;
+								public clearNamespace(): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public addAllKeyValue(param0: java.lang.Iterable<any>): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public addKeyValue(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public setNamespace(param0: string): com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValue.Builder;
+								public getKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+								public getKeyValueCount(): number;
+							}
+						}
+						export class NamespaceKeyValueOrBuilder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.NamespaceKeyValueOrBuilder>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.remoteconfig.proto.ConfigPersistence$NamespaceKeyValueOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								hasNamespace(): boolean;
+								getNamespace(): string;
+								getNamespaceBytes(): com.google.protobuf.ByteString;
+								getKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue>;
+								getKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+								getKeyValueCount(): number;
+							});
+							public constructor();
+							public getKeyValueList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue>;
+							public getKeyValue(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.KeyValue;
+							public hasNamespace(): boolean;
+							public getKeyValueCount(): number;
+							public getNamespaceBytes(): com.google.protobuf.ByteString;
+							public getNamespace(): string;
+						}
+						export class PersistedConfig extends com.google.protobuf.GeneratedMessageLite<com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig,com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfigOrBuilder  {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig>;
+							public static FETCHED_CONFIG_HOLDER_FIELD_NUMBER: number;
+							public static ACTIVE_CONFIG_HOLDER_FIELD_NUMBER: number;
+							public static DEFAULTS_CONFIG_HOLDER_FIELD_NUMBER: number;
+							public static METADATA_FIELD_NUMBER: number;
+							public static APPLIED_RESOURCE_FIELD_NUMBER: number;
+							public static parseDelimitedFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public getActiveConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+							public getAppliedResourceOrBuilderList(): java.util.List<any>;
+							public static parser(): com.google.protobuf.Parser<com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig>;
+							public static parseFrom(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public getSerializedSize(): number;
+							public static parseFrom(param0: native.Array<number>): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public getFetchedConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public hasActiveConfigHolder(): boolean;
+							public static newBuilder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+							public static parseFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public getDefaultsConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public getMetadata(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public getAppliedResourceCount(): number;
+							public getAppliedResourceOrBuilder(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.ResourceOrBuilder;
+							public static newBuilder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+							public hasFetchedConfigHolder(): boolean;
+							public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+							public hasDefaultsConfigHolder(): boolean;
+							public getAppliedResource(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public static getDefaultInstance(): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public getAppliedResourceList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource>;
+							public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig;
+							public hasMetadata(): boolean;
+						}
+						export module PersistedConfig {
+							export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig,com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfigOrBuilder  {
+								public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder>;
+								public getAppliedResource(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+								public addAllAppliedResource(param0: java.lang.Iterable<any>): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public getActiveConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+								public getAppliedResourceList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource>;
+								public setActiveConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public mergeMetadata(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public getFetchedConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+								public clearFetchedConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public addAppliedResource(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public setDefaultsConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public getMetadata(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+								public setMetadata(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public getDefaultsConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+								public setAppliedResource(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public clearActiveConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public hasFetchedConfigHolder(): boolean;
+								public addAppliedResource(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public setFetchedConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public setActiveConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public mergeActiveConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public setDefaultsConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public setFetchedConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public hasActiveConfigHolder(): boolean;
+								public setMetadata(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public getAppliedResourceCount(): number;
+								public addAppliedResource(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public clearMetadata(): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public removeAppliedResource(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public hasDefaultsConfigHolder(): boolean;
+								public mergeFetchedConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public mergeDefaultsConfigHolder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public clearDefaultsConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public addAppliedResource(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public clearAppliedResource(): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public setAppliedResource(param0: number, param1: com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource): com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfig.Builder;
+								public hasMetadata(): boolean;
+							}
+						}
+						export class PersistedConfigOrBuilder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.PersistedConfigOrBuilder>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.remoteconfig.proto.ConfigPersistence$PersistedConfigOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								hasFetchedConfigHolder(): boolean;
+								getFetchedConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+								hasActiveConfigHolder(): boolean;
+								getActiveConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+								hasDefaultsConfigHolder(): boolean;
+								getDefaultsConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+								hasMetadata(): boolean;
+								getMetadata(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+								getAppliedResourceList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource>;
+								getAppliedResource(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+								getAppliedResourceCount(): number;
+							});
+							public constructor();
+							public hasFetchedConfigHolder(): boolean;
+							public getFetchedConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public hasActiveConfigHolder(): boolean;
+							public hasDefaultsConfigHolder(): boolean;
+							public getActiveConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public getAppliedResource(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public getDefaultsConfigHolder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.ConfigHolder;
+							public getAppliedResourceList(): java.util.List<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource>;
+							public getMetadata(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Metadata;
+							public hasMetadata(): boolean;
+							public getAppliedResourceCount(): number;
+						}
+						export class Resource extends com.google.protobuf.GeneratedMessageLite<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource,com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.ResourceOrBuilder  {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource>;
+							public static RESOURCE_ID_FIELD_NUMBER: number;
+							public static APP_UPDATE_TIME_FIELD_NUMBER: number;
+							public static NAMESPACE_FIELD_NUMBER: number;
+							public hasResourceId(): boolean;
+							public static parseFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public hasNamespace(): boolean;
+							public static parseFrom(param0: com.google.protobuf.ByteString, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static getDefaultInstance(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static parseFrom(param0: native.Array<number>): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static parseFrom(param0: native.Array<number>, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static parseFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public getResourceId(): number;
+							public static newBuilder(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+							public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
+							public getNamespaceBytes(): com.google.protobuf.ByteString;
+							public hasAppUpdateTime(): boolean;
+							public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
+							public getAppUpdateTime(): number;
+							public static newBuilder(param0: com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+							public getSerializedSize(): number;
+							public static parseFrom(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+							public static parser(): com.google.protobuf.Parser<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource>;
+							public getNamespace(): string;
+							public static parseDelimitedFrom(param0: java.io.InputStream): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource;
+						}
+						export module Resource {
+							export class Builder extends com.google.protobuf.GeneratedMessageLite.Builder<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource,com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder> implements com.google.firebase.remoteconfig.proto.ConfigPersistence.ResourceOrBuilder  {
+								public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder>;
+								public setAppUpdateTime(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+								public getNamespaceBytes(): com.google.protobuf.ByteString;
+								public hasNamespace(): boolean;
+								public setNamespace(param0: string): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+								public getAppUpdateTime(): number;
+								public hasAppUpdateTime(): boolean;
+								public clearResourceId(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+								public getNamespace(): string;
+								public clearNamespace(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+								public clearAppUpdateTime(): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+								public getResourceId(): number;
+								public hasResourceId(): boolean;
+								public setResourceId(param0: number): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+								public setNamespaceBytes(param0: com.google.protobuf.ByteString): com.google.firebase.remoteconfig.proto.ConfigPersistence.Resource.Builder;
+							}
+						}
+						export class ResourceOrBuilder {
+							public static class: java.lang.Class<com.google.firebase.remoteconfig.proto.ConfigPersistence.ResourceOrBuilder>;
+							/**
+							 * Constructs a new instance of the com.google.firebase.remoteconfig.proto.ConfigPersistence$ResourceOrBuilder interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+							 */
+							public constructor(implementation: {
+								hasResourceId(): boolean;
+								getResourceId(): number;
+								hasAppUpdateTime(): boolean;
+								getAppUpdateTime(): number;
+								hasNamespace(): boolean;
+								getNamespace(): string;
+								getNamespaceBytes(): com.google.protobuf.ByteString;
+							});
+							public constructor();
+							public hasAppUpdateTime(): boolean;
+							public hasResourceId(): boolean;
+							public hasNamespace(): boolean;
+							public getAppUpdateTime(): number;
+							public getResourceId(): number;
+							public getNamespaceBytes(): com.google.protobuf.ByteString;
+							public getNamespace(): string;
+						}
+					}
 				}
 			}
 		}
@@ -6484,36 +2402,5 @@ declare module com {
 }
 
 //Generics information:
-//com.google.android.gms.internal.firebase_remote_config.zzbl:2
-//com.google.android.gms.internal.firebase_remote_config.zzdb:1
-//com.google.android.gms.internal.firebase_remote_config.zzdi:1
-//com.google.android.gms.internal.firebase_remote_config.zzem:1
-//com.google.android.gms.internal.firebase_remote_config.zzf:1
-//com.google.android.gms.internal.firebase_remote_config.zzfm:2
-//com.google.android.gms.internal.firebase_remote_config.zzfo:1
-//com.google.android.gms.internal.firebase_remote_config.zzfp:2
-//com.google.android.gms.internal.firebase_remote_config.zzfr:1
-//com.google.android.gms.internal.firebase_remote_config.zzgs:2
-//com.google.android.gms.internal.firebase_remote_config.zzgw:1
-//com.google.android.gms.internal.firebase_remote_config.zzha:1
-//com.google.android.gms.internal.firebase_remote_config.zzhc:1
-//com.google.android.gms.internal.firebase_remote_config.zzhh:2
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zza:2
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zzb:2
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zzc:1
-//com.google.android.gms.internal.firebase_remote_config.zzhh.zze:2
-//com.google.android.gms.internal.firebase_remote_config.zzhn:1
-//com.google.android.gms.internal.firebase_remote_config.zzhs:1
-//com.google.android.gms.internal.firebase_remote_config.zzht:1
-//com.google.android.gms.internal.firebase_remote_config.zzie:2
-//com.google.android.gms.internal.firebase_remote_config.zzig:2
-//com.google.android.gms.internal.firebase_remote_config.zzih:2
-//com.google.android.gms.internal.firebase_remote_config.zziq:1
-//com.google.android.gms.internal.firebase_remote_config.zzis:1
-//com.google.android.gms.internal.firebase_remote_config.zziz:1
-//com.google.android.gms.internal.firebase_remote_config.zzja:1
-//com.google.android.gms.internal.firebase_remote_config.zzjf:1
-//com.google.android.gms.internal.firebase_remote_config.zzjg:2
-//com.google.android.gms.internal.firebase_remote_config.zzjx:2
-//com.google.android.gms.internal.firebase_remote_config.zzn:1
+//com.google.firebase.remoteconfig.internal.ConfigCacheClient.AwaitListener:1
 

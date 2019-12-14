@@ -372,11 +372,34 @@ declare var GMVDetectorImageOrientation: string;
 
 declare var GMVDetectorLabelScoreThreshold: string;
 
+declare var GMVDetectorObjectCategories: string;
+
+declare const enum GMVDetectorObjectCategory {
+
+	HomeGood = 1,
+
+	FashionGood = 2,
+
+	Food = 4,
+
+	Places = 8,
+
+	Plants = 16
+}
+
+declare var GMVDetectorObjectClassifierEnabled: string;
+
+declare var GMVDetectorObjectProminentObject: string;
+
+declare var GMVDetectorObjectTrackingEnabled: string;
+
 declare var GMVDetectorTypeBarcode: string;
 
 declare var GMVDetectorTypeFace: string;
 
 declare var GMVDetectorTypeLabel: string;
+
+declare var GMVDetectorTypeObject: string;
 
 declare var GMVDetectorTypeText: string;
 
@@ -513,6 +536,8 @@ declare var GMVFeatureTypeFace: string;
 
 declare var GMVFeatureTypeLabel: string;
 
+declare var GMVFeatureTypeObject: string;
+
 declare var GMVFeatureTypeTextBlock: string;
 
 declare var GMVFeatureTypeTextElement: string;
@@ -545,6 +570,21 @@ declare class GMVLabelFeature extends GMVFeature {
 	static new(): GMVLabelFeature; // inherited from NSObject
 
 	readonly MID: string;
+
+	readonly labelDescription: string;
+
+	readonly score: number;
+}
+
+declare class GMVObjectFeature extends GMVFeature {
+
+	static alloc(): GMVObjectFeature; // inherited from NSObject
+
+	static new(): GMVObjectFeature; // inherited from NSObject
+
+	readonly MID: string;
+
+	readonly hasScore: boolean;
 
 	readonly labelDescription: string;
 

@@ -101,10 +101,27 @@ declare const enum FIRStorageErrorCode {
 
 	DownloadSizeExceeded = -13032,
 
-	Cancelled = -13040
+	Cancelled = -13040,
+
+	InvalidArgument = -13050
 }
 
 declare var FIRStorageErrorDomain: string;
+
+declare class FIRStorageListResult extends NSObject implements NSCopying {
+
+	static alloc(): FIRStorageListResult; // inherited from NSObject
+
+	static new(): FIRStorageListResult; // inherited from NSObject
+
+	readonly items: NSArray<FIRStorageReference>;
+
+	readonly pageToken: string;
+
+	readonly prefixes: NSArray<FIRStorageReference>;
+
+	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
+}
 
 declare class FIRStorageMetadata extends NSObject implements NSCopying {
 
@@ -193,6 +210,12 @@ declare class FIRStorageReference extends NSObject {
 	deleteWithCompletion(completion: (p1: NSError) => void): void;
 
 	downloadURLWithCompletion(completion: (p1: NSURL, p2: NSError) => void): void;
+
+	listAllWithCompletion(completion: (p1: FIRStorageListResult, p2: NSError) => void): void;
+
+	listWithMaxResultsCompletion(maxResults: number, completion: (p1: FIRStorageListResult, p2: NSError) => void): void;
+
+	listWithMaxResultsPageTokenCompletion(maxResults: number, pageToken: string, completion: (p1: FIRStorageListResult, p2: NSError) => void): void;
 
 	metadataWithCompletion(completion: (p1: FIRStorageMetadata, p2: NSError) => void): void;
 

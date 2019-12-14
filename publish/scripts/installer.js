@@ -2,25 +2,8 @@ var fs = require('fs');
 var path = require('path');
 var prompt = require('prompt-lite');
 
-const { execSync } = require('child_process');
-const semver = require('semver');
-const tnsVersionFull = execSync('tns --version', { encoding: 'ascii'});
-
-// iOS modern build system is supported from version NativeScript-CLI version 5.2.0
-const supportsIOSModernBuildSystem = tnsVersionFull.indexOf("5.2.0-") > -1 || semver.gte(tnsVersionFull, "5.2.0");
-
-// Custom gradle buildscripts are supported from NativeScript-Android version 5.3.0 (TODO this actually checks the CLI version)
-const supportsGradleBuildscripts = tnsVersionFull.indexOf("5.3.0-") > -1 || semver.gte(tnsVersionFull, "5.3.0");
-
-// TODO use this when writing stuff like 'com.android.support' below, because {N} 6 will have to use AndroidX
-const supportsAndroidX = semver.gte(tnsVersionFull, "6.0.0");
-
-if (!supportsIOSModernBuildSystem) {
-  console.log(`You're using NativeScript ${tnsVersionFull}.. which doesn't support the latest Firestore and in-app-messaging SDKs. Upgrade NativeScript to at least 5.2.0 if you need those!\n\n`);
-}
-
 // Default settings for a few prompts
-var usingiOS = false, usingAndroid = false, externalPushClientOnly = false;
+var usingiOS = false, usingAndroid = false, externalPushClient = false;
 
 // The directories where the Podfile and include.gradle are stored
 var directories = {
@@ -39,6 +22,8 @@ function mergeConfig(result) {
   for (var key in result) {
     config[key] = isSelected(result[key]);
   }
+  // note that the semantics of "external_push_client_only" changed to "external push client" with plugin version 10.1.0
+  externalPushClient = isSelected(config["external_push_client_only"]);
 }
 
 function saveConfig() {
@@ -48,6 +33,7 @@ function saveConfig() {
 function readConfig() {
   try {
     config = JSON.parse(fs.readFileSync(pluginConfigPath));
+    externalPushClient = isSelected(config["external_push_client_only"]);
   } catch (e) {
     console.log("Failed reading " + pluginConfigFile);
     console.log(e);
@@ -65,32 +51,13 @@ if (process.argv.indexOf("config") === -1 && fs.existsSync(pluginConfigPath)) {
   console.log("Config file exists (" + pluginConfigFile + ")");
   askiOSPromptResult(config);
   askAndroidPromptResult(config);
-  askExternalPushMessagingOnlyPromptResult(config);
   promptQuestionsResult(config);
 } else if (!isInteractive()) {
   console.log("No existing " + pluginConfigFile + " config file found and terminal is not interactive! Default configuration will be used.");
 } else {
   console.log("No existing " + pluginConfigFile + " config file found, so let's configure the Firebase plugin!");
   prompt.start();
-  askExternalPushMessagingOnlyPrompt();
-}
-
-/**
- * Prompt the user if they are integrating Firebase with iOS
- */
-function askExternalPushMessagingOnlyPrompt() {
-  prompt.get({
-    name: 'external_push_client_only',
-    description: 'Are you using this plugin ONLY as a Push Notification client for an external (non-Firebase) Push service? (y/n)',
-    default: 'n'
-  }, function (err, result) {
-    if (err) {
-      return console.log(err);
-    }
-    mergeConfig(result);
-    askExternalPushMessagingOnlyPromptResult(result);
-    askiOSPrompt();
-  });
+  askiOSPrompt();
 }
 
 /**
@@ -109,12 +76,6 @@ function askiOSPrompt() {
     askiOSPromptResult(result);
     askAndroidPrompt();
   });
-}
-
-function askExternalPushMessagingOnlyPromptResult(result) {
-  if (isSelected(result.external_push_client_only)) {
-    externalPushClientOnly = true;
-  }
 }
 
 function askiOSPromptResult(result) {
@@ -137,11 +98,8 @@ function askAndroidPrompt() {
     }
     mergeConfig(result);
     askAndroidPromptResult(result);
-    if ((usingiOS || usingAndroid) && !externalPushClientOnly) {
+    if (usingiOS || usingAndroid) {
       promptQuestions();
-    } else if (externalPushClientOnly) {
-      promptQuestionsResult(result);
-      askSaveConfigPrompt();
     } else {
       askSaveConfigPrompt();
     }
@@ -159,6 +117,10 @@ function askAndroidPromptResult(result) {
  */
 function promptQuestions() {
   prompt.get([{
+    name: 'analytics',
+    description: 'Do you want to enable Firebase Analytics? (y/n)',
+    default: 'y'
+  }, {
     name: 'firestore',
     description: 'Are you using Firestore? (y/n)',
     default: 'n'
@@ -179,6 +141,10 @@ function promptQuestions() {
     description: 'Are you using Performance Monitoring? (y/n)',
     default: 'n'
   }, {
+    name: 'external_push_client_only',
+    description: 'Are you using this plugin as a Push Notification client for an external (NOT Firebase Cloud Messaging) Push service? (y/n)',
+    default: 'n'
+  }, {
     name: 'messaging',
     description: 'Are you using Firebase Cloud Messaging? (y/n)',
     default: 'n'
@@ -189,10 +155,6 @@ function promptQuestions() {
   }, {
     name: 'crashlytics',
     description: 'Are you using Firebase Crashlytics? (y/n)',
-    default: 'n'
-  }, {
-    name: 'crash_reporting',
-    description: 'Are you using Firebase Crash Reporting? (answer "n" if you want to use Crashlytics instead) (y/n)',
     default: 'n'
   }, {
     name: 'storage',
@@ -215,10 +177,6 @@ function promptQuestions() {
     description: 'Are you using AdMob? (y/n)',
     default: 'n'
   }, {
-    name: 'invites',
-    description: 'Are you using Firebase Invites? (y/n)',
-    default: 'n'
-  }, {
     name: 'dynamic_links',
     description: 'Are you using Firebase Dynamic Links? (y/n)',
     default: 'n'
@@ -237,31 +195,43 @@ function promptQuestions() {
     } else {
       prompt.get([{
         name: 'ml_kit_text_recognition',
-        description: 'With Ml Kit, do you want to recognize text? (y/n)',
+        description: 'With ML Kit, do you want to recognize text? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_barcode_scanning',
-        description: 'With Ml Kit, do you want to scan barcodes? (y/n)',
+        description: 'With ML Kit, do you want to scan barcodes? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_face_detection',
-        description: 'With Ml Kit, do you want to detect faces? (y/n)',
+        description: 'With ML Kit, do you want to detect faces? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_image_labeling',
-        description: 'With Ml Kit, do you want to label images? (y/n)',
+        description: 'With ML Kit, do you want to label images? (y/n)',
+        default: 'n'
+      }, {
+        name: 'ml_kit_object_detection',
+        description: 'With ML Kit, do you want to use Object Detection and Tracking? (y/n)',
+        default: 'n'
+      }, {
+        name: 'ml_kit_automl',
+        description: 'With ML Kit, do you want to use AutoML Vision Edge to label images with your own models? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_custom_model',
-        description: 'With Ml Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
+        description: 'With ML Kit, do you want to use a custom TensorFlow Lite model? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_natural_language_identification',
-        description: 'With Ml Kit, do you want to recognize natural languages? (y/n)',
+        description: 'With ML Kit, do you want to recognize natural languages? (y/n)',
+        default: 'n'
+      }, {
+        name: 'ml_kit_natural_language_translation',
+        description: 'With ML Kit, do you want to translate text? (y/n)',
         default: 'n'
       }, {
         name: 'ml_kit_natural_language_smartreply',
-        description: 'With Ml Kit, do you want to use smart reply? (y/n)',
+        description: 'With ML Kit, do you want to use smart reply? (y/n)',
         default: 'n'
       }], function (mlkitErr, mlkitResult) {
         if (mlkitErr) {
@@ -280,12 +250,12 @@ function promptQuestions() {
 
 function promptQuestionsResult(result) {
   if (usingiOS) {
-    if (!externalPushClientOnly) {
-      writePodFile(result);
-    }
+    writePodFile(result);
     writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
-    writeBuildscriptHookForFirestore(isSelected(result.firestore) && !supportsIOSModernBuildSystem);
+    writeBuildscriptHookForFirestore(isSelected(result.firestore));
+    activateIOSCrashlyticsFramework(isSelected(result.crashlytics));
+    activateIOSMLKitCameraFramework(isSelected(result.ml_kit));
   }
 
   if (usingAndroid) {
@@ -293,7 +263,7 @@ function promptQuestionsResult(result) {
     writeGoogleServiceCopyHook();
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
-    activateAndroidPushNotificationsLib(isSelected(result.messaging) || externalPushClientOnly);
+    activateAndroidPushNotificationsLib(isSelected(result.messaging) || isSelected(result.external_push_client_only));
     activateAndroidMLKitCustomModelLib(isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model));
   }
 
@@ -342,6 +312,22 @@ function activateAndroidMLKitCustomModelLib(enable) {
   }
 }
 
+function activateIOSMLKitCameraFramework(enable) {
+  if (enable && fs.existsSync(path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'), path.join(directories.ios, 'TNSMLKitCamera.framework'));
+  } else if (!enable && fs.existsSync(path.join(directories.ios, 'TNSMLKitCamera.framework'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSMLKitCamera.framework'), path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'));
+  }
+}
+
+function activateIOSCrashlyticsFramework(enable) {
+  if (enable && fs.existsSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'), path.join(directories.ios, 'TNSCrashlyticsLogger.framework'));
+  } else if (!enable && fs.existsSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework'))) {
+    fs.renameSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework'), path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'));
+  }
+}
+
 function askSaveConfigPrompt() {
   prompt.get({
     name: 'save_config',
@@ -371,28 +357,25 @@ function writePodFile(result) {
 // The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
-# With NativeScript < 5.2 we can't bump Firebase/Core beyond 5.15.0, but with 5.2+ we can
-pod 'Firebase/Core', '~> ` + (supportsIOSModernBuildSystem ? '5.20.1' : '5.15.0') + `'
+` + (!isSelected(result.external_push_client_only) ? `` : `#`) + `pod 'Firebase/Core', '~>6.13.0'
+
+# Analytics
+` + (isSelected(result.analytics) || (!isSelected(result.external_push_client_only) && !isPresent(result.analytics)) ? `` : `#`) + `pod 'Firebase/Analytics'
 
 # Authentication
-` + (!isPresent(result.authentication) || isSelected(result.authentication) ? `` : `#`) + `pod 'Firebase/Auth'
+` + (isSelected(result.authentication) || (!isSelected(result.external_push_client_only) && !isPresent(result.external_push_client_only)) ? `` : `#`) + `pod 'Firebase/Auth'
 
 # Realtime DB
-` + (!isPresent(result.realtimedb) || isSelected(result.realtimedb) ? `` : `#`) + `pod 'Firebase/Database'
+` + (isSelected(result.realtimedb) || (!isSelected(result.external_push_client_only) && !isPresent(result.realtimedb)) ? `` : `#`) + `pod 'Firebase/Database'
 
-# Cloud Firestore (sticking to 0.14 for now because of build error - see https://github.com/firebase/firebase-ios-sdk/issues/2177)
-` + (isSelected(result.firestore) && !supportsIOSModernBuildSystem ? `` : `#`) + `pod 'FirebaseFirestore', '~> 0.14.0'
-# .. unless the modern build system is supported, then we can use the latest version (NativeScript 5.2+)
-` + (isSelected(result.firestore) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/Firestore'
+# Cloud Firestore
+` + (isSelected(result.firestore) ? `` : `#`) + `pod 'Firebase/Firestore'
 
 # Remote Config
 ` + (isSelected(result.remote_config) ? `` : `#`) + `pod 'Firebase/RemoteConfig'
 
 # Performance Monitoring
 ` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'Firebase/Performance'
-
-# Crash Reporting
-` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crash'
 
 # Crashlytics
 ` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
@@ -409,10 +392,10 @@ post_install do |installer|
 end`) + `
 
 # Firebase Cloud Messaging (FCM)
-` + (isSelected(result.messaging) && !isSelected(result.external_messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
+` + (isSelected(result.messaging) ? `` : `#`) + `pod 'Firebase/Messaging'
 
-# Firebase In-App Messaging (supported on NativeScript 5.2+)
-` + (isSelected(result.in_app_messaging) && supportsIOSModernBuildSystem ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
+# Firebase In-App Messaging
+` + (isSelected(result.in_app_messaging) ? `` : `#`) + `pod 'Firebase/InAppMessagingDisplay'
 
 # Firebase Cloud Storage
 ` + (isSelected(result.storage) ? `` : `#`) + `pod 'Firebase/Storage'
@@ -423,9 +406,6 @@ end`) + `
 # AdMob
 ` + (isSelected(result.admob) ? `` : `#`) + `pod 'Firebase/AdMob'
 
-# Invites
-` + (isSelected(result.invites) ? `` : `#`) + `pod 'Firebase/Invites'
-
 # Dynamic Links
 ` + (isSelected(result.dynamic_links) ? `` : `#`) + `pod 'Firebase/DynamicLinks'
 
@@ -435,18 +415,21 @@ end`) + `
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_barcode_scanning) ? `` : `#`) + `pod 'Firebase/MLVisionBarcodeModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_face_detection) ? `` : `#`) + `pod 'Firebase/MLVisionFaceModel'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_image_labeling) ? `` : `#`) + `pod 'Firebase/MLVisionLabelModel'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_object_detection) ? `` : `#`) + `pod 'Firebase/MLVisionObjectDetection'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model) ? `` : `#`) + `pod 'Firebase/MLModelInterpreter'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_automl) ? `` : `#`) + `pod 'Firebase/MLVisionAutoML'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNaturalLanguage'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_identification) ? `` : `#`) + `pod 'Firebase/MLNLLanguageID'
-` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_smartreply) ? `` : `#`) + `pod 'Firebase/MLCommon'
+` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_translation) ? `` : `#`) + `pod 'Firebase/MLNLTranslate'
+` + (isSelected(result.ml_kit) && (isSelected(result.ml_kit_natural_language_smartreply) || isSelected(result.ml_kit_natural_language_translation)) ? `` : `#`) + `pod 'Firebase/MLCommon'
 ` + (isSelected(result.ml_kit) && isSelected(result.ml_kit_natural_language_smartreply) ? `` : `#`) + `pod 'Firebase/MLNLSmartReply'
 
 # Facebook Authentication
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit', '~> 4.38.0'
-` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit', '~> 4.38.0'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKCoreKit'
+` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
 
 # Google Authentication
-` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn'`);
+` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn', '~> 5.0'`);
     console.log('Successfully created iOS (Pod) file.');
   } catch (e) {
     console.log('Failed to create iOS (Pod) file.');
@@ -527,9 +510,10 @@ const string3 = \`
 \`;
 
 module.exports = function($logger, $projectData, hookArgs) {
-  const platform = hookArgs.platform.toLowerCase();
+  const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+  const platform = (platformFromHookArgs  || '').toLowerCase();
   return new Promise(function(resolve, reject) {
-    const isNativeProjectPrepared = !hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare;
+    const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
     if (isNativeProjectPrepared) {
       try {
         if (platform === 'ios') {
@@ -541,7 +525,13 @@ module.exports = function($logger, $projectData, hookArgs) {
           if (fs.existsSync(xcodeProjectPath)) {
             var xcodeProject = xcode.project(xcodeProjectPath);
             xcodeProject.parseSync();
-            var options = { shellPath: '/bin/sh', shellScript: '\"\${PODS_ROOT}/Fabric/run\"' };
+
+            // Xcode 10 requires 'inputPaths' set, see https://firebase.google.com/docs/crashlytics/get-started
+            var options = {
+              shellPath: '/bin/sh', shellScript: '\"\${PODS_ROOT}/Fabric/run\"',
+              inputPaths: ['"\$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\"']
+            };
+
             xcodeProject.addBuildPhase(
               [], 'PBXShellScriptBuildPhase', 'Configure Crashlytics', undefined, options
             ).buildPhase;
@@ -629,9 +619,10 @@ function writeBuildscriptHookForFirestore(enable) {
 const path = require('path');
 
 module.exports = function($logger, $projectData, hookArgs) {
-  const platform = hookArgs.platform.toLowerCase();
+  const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+  const platform = (platformFromHookArgs  || '').toLowerCase();
   return new Promise(function(resolve, reject) {
-    const isNativeProjectPrepared = !hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare;
+    const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
     if (isNativeProjectPrepared) {
       try {
         if (platform !== 'ios') {
@@ -740,69 +731,68 @@ dependencies {
     implementation "com.android.support:support-compat:$supportVersion"
 
     // make sure you have these versions by updating your local Android SDK's (Android Support repo and Google repo)
-    implementation "com.google.firebase:firebase-core:16.0.8"
+
+    ` + (isSelected(result.analytics) || (!isSelected(result.external_push_client_only) && !isPresent(result.analytics)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.1"
 
     // for reading google-services.json and configuration
     implementation "com.google.android.gms:play-services-base:$googlePlayServicesVersion"
 
     // Authentication
-    ` + (!externalPushClientOnly && (!isPresent(result.authentication) || isSelected(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:16.2.1"
+    ` + (isSelected(result.authentication) || (!isSelected(result.external_push_client_only) && !isPresent(result.authentication)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-auth:19.1.0"
 
     // Realtime DB
-    ` + (!externalPushClientOnly && (!isPresent(result.realtimedb) || isSelected(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:16.1.0"
+    ` + (isSelected(result.realtimedb) || (!isSelected(result.external_push_client_only) && !isPresent(result.realtimedb)) ? `` : `//`) + ` implementation "com.google.firebase:firebase-database:19.2.0"
 
     // Cloud Firestore
-    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:18.2.0"
+    ` + (isSelected(result.firestore) ? `` : `//`) + ` implementation "com.google.firebase:firebase-firestore:21.3.0"
 
     // Remote Config
-    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:16.5.0"
+    ` + (isSelected(result.remote_config) ? `` : `//`) + ` implementation "com.google.firebase:firebase-config:19.0.3"
 
     // Performance Monitoring
-    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:16.2.5"
-
-    // Crash Reporting
-    ` + (isSelected(result.crash_reporting) && !isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-crash:16.2.1"
+    ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:19.0.2"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.9.9"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
 
     // Cloud Messaging (FCM)
-    ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:17.6.0"
-    // ` + (isSelected(result.messaging) || externalPushClientOnly ? `` : `//`) + ` implementation "me.leolin:ShortcutBadger:1.1.22@aar"
+    ` + (isSelected(result.messaging) || isSelected(result.external_push_client_only) ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:20.0.1"
+    // ` + (isSelected(result.messaging) || isSelected(result.external_push_client_only) ? `` : `//`) + ` implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 
     // In-App Messaging
-    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:17.1.1"
-    // not entirely sure this is needed, but doesn't hurt.. make sure to check the compatible version when bumping firebase-inappmessaging-display
-    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.squareup.picasso:picasso:2.5.2"
+    ` + (isSelected(result.in_app_messaging) ? `` : `//`) + ` implementation "com.google.firebase:firebase-inappmessaging-display:19.0.2"
+    // Analytics seems to be required for In-App Messaging
+    ` + (isSelected(result.in_app_messaging) && !isSelected(result.analytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-analytics:17.2.1"
 
     // Cloud Storage
-    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:16.1.0"
+    ` + (isSelected(result.storage) ? `` : `//`) + ` implementation "com.google.firebase:firebase-storage:19.1.0"
 
     // Cloud Functions
-    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:16.3.0"
+    ` + (isSelected(result.functions) ? `` : `//`) + ` implementation "com.google.firebase:firebase-functions:19.0.1"
 
     // AdMob / Ads
-    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:17.2.0"
+    ` + (isSelected(result.admob) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ads:18.3.0"
 
     // ML Kit
-    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:19.0.3"
-    ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:17.0.2"
-    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:18.0.0"
-    ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:18.2.0"
-    ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:18.0.3"
-    ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:18.0.0"
+    ` + (isSelected(result.ml_kit) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision:24.0.1"
+    ` + (isSelected(result.ml_kit_image_labeling) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-image-label-model:19.0.0"
+    ` + (isSelected(result.ml_kit_object_detection) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-object-detection-model:19.0.3"
+    ` + (isSelected(result.ml_kit_custom_model) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-model-interpreter:22.0.1"
+    ` + (isSelected(result.ml_kit_automl) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-vision-automl:18.0.3"
+    ` + (isSelected(result.ml_kit_natural_language_identification) || isSelected(result.ml_kit_natural_language_smartreply) || isSelected(result.ml_kit_natural_language_translation) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language:22.0.0"
+    ` + (isSelected(result.ml_kit_natural_language_identification) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.7"
+    ` + (isSelected(result.ml_kit_natural_language_translation) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-translate-model:20.0.7"
+    ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.7"
 
     // Facebook Authentication
-    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation ("com.facebook.android:facebook-android-sdk:4.35.0"){ exclude group: 'com.google.zxing' }
+    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-core:5.4.0"
+    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-login:5.4.0"
 
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
 
-    // Invites
-    ` + (isSelected(result.invites) ? `` : `//`) + ` implementation "com.google.firebase:firebase-invites:16.1.1"
-
     // Dynamic Links
-    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:16.1.8"
+    ` + (isSelected(result.dynamic_links) ? `` : `//`) + ` implementation "com.google.firebase:firebase-dynamic-links:19.0.0"
 }
 
 apply plugin: "com.google.gms.google-services"
@@ -835,22 +825,24 @@ module.exports = function($logger, $projectData, hookArgs) {
 return new Promise(function(resolve, reject) {
 
         /* Decide whether to prepare for dev or prod environment */
-
-        var isReleaseBuild = (hookArgs.appFilesUpdaterOptions && hookArgs.appFilesUpdaterOptions.release) ? true : false;
+        var isReleaseBuild = (hookArgs.appFilesUpdaterOptions || hookArgs.prepareData).release;
         var validProdEnvs = ['prod','production'];
         var isProdEnv = false; // building with --env.prod or --env.production flag
+        var env = (hookArgs.platformSpecificData || hookArgs.prepareData).env;
 
-        if (hookArgs.platformSpecificData.env) {
-            Object.keys(hookArgs.platformSpecificData.env).forEach((key) => {
+        if (env) {
+            Object.keys(env).forEach((key) => {
                 if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
             });
         }
 
         var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+        const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
+        const platform = (platformFromHookArgs  || '').toLowerCase();
 
         /* Create info file in platforms dir so we can detect changes in environment and force prepare if needed */
 
-        var npfInfoPath = path.join($projectData.platformsDir, hookArgs.platform.toLowerCase(), ".pluginfirebaseinfo");
+        var npfInfoPath = path.join($projectData.platformsDir, platform, ".pluginfirebaseinfo");
         var npfInfo = {
             buildType: buildType,
         };
@@ -863,7 +855,7 @@ return new Promise(function(resolve, reject) {
 
         /* Handle preparing of Google Services files */
 
-        if (hookArgs.platform.toLowerCase() === 'android') {
+        if (platform === 'android') {
             var destinationGoogleJson = path.join($projectData.platformsDir, "android", "app", "google-services.json");
             var destinationGoogleJsonAlt = path.join($projectData.platformsDir, "android", "google-services.json");
             var sourceGoogleJson = path.join($projectData.appResourcesDirectoryPath, "Android", "google-services.json");
@@ -887,10 +879,10 @@ return new Promise(function(resolve, reject) {
                 fs.writeFileSync(destinationGoogleJsonAlt, fs.readFileSync(sourceGoogleJson));
                 resolve();
             } else {
-                $logger.warn("Unable to copy google-services.json.");
+                $logger.warn("Unable to copy google-services.json. You need this file, because the Google Services Plugin cannot function without it..");
                 reject();
             }
-        } else if (hookArgs.platform.toLowerCase() === 'ios') {
+        } else if (platform === 'ios') {
             // we have copied our GoogleService-Info.plist during before-checkForChanges hook, here we delete it to avoid changes in git
             var destinationGooglePlist = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist");
             var sourceGooglePlistProd = path.join($projectData.appResourcesDirectoryPath, "iOS", "GoogleService-Info.plist.prod");
@@ -935,16 +927,16 @@ return new Promise(function(resolve, reject) {
 var path = require("path");
 var fs = require("fs");
 
-module.exports = function($logger, $projectData, hookArgs) {
+module.exports = function($logger, hookArgs) {
     return new Promise(function(resolve, reject) {
 
         /* Decide whether to prepare for dev or prod environment */
 
-        var isReleaseBuild = hookArgs['checkForChangesOpts']['projectData']['$options']['argv']['release'] || false;
+        var isReleaseBuild = !!((hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectChangesOptions) || hookArgs.prepareData).release;
         var validProdEnvs = ['prod','production'];
         var isProdEnv = false; // building with --env.prod or --env.production flag
 
-        var env = hookArgs['checkForChangesOpts']['projectData']['$options']['argv']['env'];
+        var env = ((hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData && hookArgs.checkForChangesOpts.projectData.$options && hookArgs.checkForChangesOpts.projectData.$options.argv) || hookArgs.prepareData).env;
         if (env) {
             Object.keys(env).forEach((key) => {
                 if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
@@ -958,9 +950,10 @@ module.exports = function($logger, $projectData, hookArgs) {
             for which environment {development|prod} the project was prepared. If needed, we delete the NS .nsprepareinfo
             file so we force a new prepare
         */
-        var platform = hookArgs['checkForChangesOpts']['platform'].toLowerCase(); // ios | android
-        var platformsDir = hookArgs['checkForChangesOpts']['projectData']['platformsDir'];
-        var appResourcesDirectoryPath = hookArgs['checkForChangesOpts']['projectData']['appResourcesDirectoryPath'];
+        var platform = (hookArgs.checkForChangesOpts || hookArgs.prepareData).platform.toLowerCase();
+        var projectData = (hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData) || hookArgs.projectData;
+        var platformsDir = projectData.platformsDir;
+        var appResourcesDirectoryPath = projectData.appResourcesDirectoryPath;
         var forcePrepare = true; // whether to force NS to run prepare, defaults to true
         var npfInfoPath = path.join(platformsDir, platform, ".pluginfirebaseinfo");
         var nsPrepareInfoPath = path.join(platformsDir, platform, ".nsprepareinfo");
@@ -1010,9 +1003,9 @@ var copyPlist = function(copyPlistOpts) {
                 return true;
             }
         } else if (!fs.existsSync(destinationGooglePlist)) { // single GoogleService-Info.plist modus but missing`;
-    if (externalPushClientOnly) {
+    if (externalPushClient) {
       beforeCheckForChangesContent += `
-            return true; // this is a push-only project, so this is allowed`;
+            return true; // this may be a push-only project, so this is allowed`;
     } else {
       beforeCheckForChangesContent += `
             copyPlistOpts.$logger.warn("nativescript-plugin-firebase: " + destinationGooglePlist + " does not exist. Please follow the installation instructions from the documentation");
@@ -1079,7 +1072,7 @@ module.exports = function($logger, $projectData) {
 
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
-            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.2.0"';
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.3.0"';
             if (googleServicesPattern.test(buildGradleContent)) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {

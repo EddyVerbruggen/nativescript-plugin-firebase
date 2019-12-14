@@ -221,7 +221,6 @@ declare namespace firebase.auth {
         password: string
     ): Promise<firebase.auth.UserCredential>;
     currentUser: firebase.User | null;
-    fetchProvidersForEmail(email: string): Promise<Array<string>>;
     fetchSignInMethodsForEmail(email: string): Promise<Array<string>>;
     isSignInWithEmailLink(emailLink: string): boolean;
     getRedirectResult(): Promise<firebase.auth.UserCredential>;

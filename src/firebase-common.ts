@@ -45,12 +45,6 @@ export const firebase: any = {
     FieldValue,
     GeoPoint: (latitude: number, longitude: number) => new GeoPoint(latitude, longitude)
   },
-  invites: {
-    MATCH_TYPE: {
-      WEAK: 0,
-      STRONG: 1
-    }
-  },
   dynamicLinks: {
     MATCH_CONFIDENCE: {
       WEAK: 0,
@@ -64,6 +58,7 @@ export const firebase: any = {
     CUSTOM: "custom",
     FACEBOOK: "facebook",
     GOOGLE: "google",
+    APPLE: "apple",
     EMAIL_LINK: "emailLink"
   },
   LogComplexEventTypeParameter: {

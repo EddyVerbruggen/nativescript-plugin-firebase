@@ -9,13 +9,11 @@
     "performance_monitoring": true,
     "messaging": true,
     "crashlytics": true,
-    "crash_reporting": true,
     "storage": true,
     "functions": true,
     "facebook_auth": true,
     "google_auth": true,
     "admob": true,
-    "invites": true,
     "dynamic_links": true,
     "ml_kit": false
 }

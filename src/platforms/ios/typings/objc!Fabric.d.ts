@@ -7,7 +7,7 @@ declare class Fabric extends NSObject {
 
 	static sharedSDK(): Fabric;
 
-	static with(kitClasses: NSArray<any>): Fabric;
+	static with(kitClasses: NSArray<any> | any[]): Fabric;
 
 	debug: boolean;
 }

@@ -18,7 +18,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
             <Button row="0" colSpan="2" text="init firebase - do this first" tap="{{ doWebInit }}" class="button button-positive"/>
@@ -28,8 +28,7 @@
             <Button row="2" col="0" text="anonymous login" tap="{{ doWebLoginAnonymously }}" class="button"/>
             <Button row="2" col="1" text="passwd login" tap="{{ doWebLoginByPassword }}" class="button"/>
 
-            <Button row="3" col="0" text="providers for email" tap="{{ doWebFetchProvidersForEmail }}" class="button"/>
-            <Button row="3" col="1" text="email sign-in methods" tap="{{ doWebFetchSignInMethodsForEmail }}" class="button"/>
+            <Button row="3" col="0" colSpan="2" text="email sign-in methods" tap="{{ doWebFetchSignInMethodsForEmail }}" class="button"/>
 
             <Button row="4" col="0" text="create pwd user" tap="{{ doWebCreateUser }}" class="button"/>
             <Button row="4" col="1" text="get current user" tap="{{ doWebGetCurrentUser }}" class="button"/>
@@ -74,11 +73,13 @@
             <Button row="18" col="0" text="get download url" tap="{{ doWebGetDownloadUrl }}" class="button button-storage"/>
             <Button row="18" col="1" text="delete remote file" tap="{{ doWebDeleteFile }}" class="button button-storage"/>
 
-            <Label row="19" colSpan="2" text="{{ storageFeedback }}" class="message" textWrap="true"/>
+            <Button row="19" colSpan="2" text="list all" tap="{{ doWebListAll }}" class="button button-storage"/>
 
-            <Label row="20" colSpan="2" text="Callable Functions" class="subtitle" />
+            <Label row="20" colSpan="2" text="{{ storageFeedback }}" class="message" textWrap="true"/>
 
-            <Button row="21" col="0" text="callable 1" tap="{{ doWebCallableFunction }}"  class="button button-functions" />
+            <Label row="21" colSpan="2" text="Callable Functions" class="subtitle" />
+
+            <Button row="22" col="0" text="callable 1" tap="{{ doWebCallableFunction }}"  class="button button-functions" />
 
           </GridLayout>
         </ScrollView>
@@ -89,7 +90,7 @@
       <TabViewItem.view>
         <ScrollView>
           <GridLayout columns="*, *"
-                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
+                      rows="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto"
                       horizontalAlignment="stretch"
                       class="tab-content">
 
@@ -116,8 +117,8 @@
             <Button row="8" col="0" text="phone login" tap="{{ doLoginByPhone }}" class="button"/>
             <Button row="8" col="1" text="update profile" tap="{{ doUpdateProfile }}" class="button"/>
 
-            <Button row="9" col="0" text="providers for email" tap="{{ doFetchProvidersForEmail }}" class="button"/>
-            <Button row="9" col="1" text="email sign-in methods" tap="{{ doFetchSignInMethodsForEmail }}" class="button"/>
+            <Button row="9" col="0" text="Apple login" tap="{{ doSignInWithApple }}" class="button"/>
+            <Button row="9" col="1" text="sign-in methods" tap="{{ doFetchSignInMethodsForEmail }}" class="button"/>
 
             <Button row="10" col="0" text="re-auth passwd" tap="{{ doReauthenticatePwdUser }}" class="button"/>
             <Button row="10" col="1" text="re-auth Facebook" tap="{{ doReauthenticateFacebookUser }}" class="button"/>
@@ -172,73 +173,70 @@
 
             <Label row="28" colSpan="2" text="Google Cloud Storage" class="subtitle"/>
 
-            <Button row="29" col="0" text="upload file" tap="{{ doUploadFile }}" class="button button-storage"/>
-            <Button row="29" col="1" text="download file" tap="{{ doDownloadFile }}" class="button button-storage"/>
+            <Button row="29" colSpan="2" text="list all files" tap="{{ doListAll }}" class="button button-storage"/>
 
-            <Button row="30" col="0" text="get download url" tap="{{ doGetDownloadUrl }}" class="button button-storage"/>
-            <Button row="30" col="1" text="delete remote file" tap="{{ doDeleteFile }}" class="button button-storage"/>
+            <Button row="30" col="0" text="upload file" tap="{{ doUploadFile }}" class="button button-storage"/>
+            <Button row="30" col="1" text="download file" tap="{{ doDownloadFile }}" class="button button-storage"/>
 
-            <Label row="31" colSpan="2" text="Analytics" class="subtitle"/>
+            <Button row="31" col="0" text="get download url" tap="{{ doGetDownloadUrl }}" class="button button-storage"/>
+            <Button row="31" col="1" text="delete remote file" tap="{{ doDeleteFile }}" class="button button-storage"/>
 
-            <Button row="32" col="0" text="collection on" tap="{{ doEnableAnalytics }}" class="button button-analytics"/>
-            <Button row="32" col="1" text="collection off" tap="{{ doDisableAnalytics }}" class="button button-analytics"/>
+            <Label row="32" colSpan="2" text="Analytics" class="subtitle"/>
 
-            <Button row="33" col="0" text="log events" tap="{{ doLogAnalyticsEvents }}" class="button button-analytics"/>
-            <Button row="33" col="1" text="set user property" tap="{{ doSetAnalyticsUserProperty }}" class="button button-analytics"/>
+            <Button row="33" col="0" text="collection on" tap="{{ doEnableAnalytics }}" class="button button-analytics"/>
+            <Button row="33" col="1" text="collection off" tap="{{ doDisableAnalytics }}" class="button button-analytics"/>
 
-            <Button row="34" col="0" text="set Screen A" tap="{{ doSetScreenNameA }}" class="button button-analytics"/>
-            <Button row="34" col="1" text="set Screen B" tap="{{ doSetScreenNameB }}" class="button button-analytics"/>
+            <Button row="34" col="0" text="log events" tap="{{ doLogAnalyticsEvents }}" class="button button-analytics"/>
+            <Button row="34" col="1" text="set user property" tap="{{ doSetAnalyticsUserProperty }}" class="button button-analytics"/>
 
-            <Label row="35" colSpan="2" text="AdMob" class="subtitle"/>
+            <Button row="35" col="0" text="set Screen A" tap="{{ doSetScreenNameA }}" class="button button-analytics"/>
+            <Button row="35" col="1" text="set Screen B" tap="{{ doSetScreenNameB }}" class="button button-analytics"/>
 
-            <Button row="36" col="0" text="show banner" tap="{{ doShowAdMobBanner }}" class="button button-admob"/>
-            <Button row="36" col="1" text="show interstitial" tap="{{ doShowAdMobInterstitial }}" class="button button-admob"/>
+            <Label row="36" colSpan="2" text="AdMob" class="subtitle"/>
 
-            <Button row="37" col="0" text="preload interstitial" tap="{{ doPreloadAdMobInterstitial }}" class="button button-admob"/>
-            <Button row="37" col="1" text="show preloaded" tap="{{ doShowPreloadedAdMobInterstitial }}" class="button button-admob"/>
+            <Button row="37" col="0" text="show banner" tap="{{ doShowAdMobBanner }}" class="button button-admob"/>
+            <Button row="37" col="1" text="show interstitial" tap="{{ doShowAdMobInterstitial }}" class="button button-admob"/>
 
-            <Button row="38" col="0" text="preload rewarded ad" tap="{{ doPreloadRewardedVideoAd }}" class="button button-admob"/>
-            <Button row="38" col="1" text="show rewarded ad" tap="{{ doShowPreloadedRewardedVideoAd }}" class="button button-admob"/>
+            <Button row="38" col="0" text="preload interstitial" tap="{{ doPreloadAdMobInterstitial }}" class="button button-admob"/>
+            <Button row="38" col="1" text="show preloaded" tap="{{ doShowPreloadedAdMobInterstitial }}" class="button button-admob"/>
 
-            <Button row="39" colSpan="2" text="hide banner" tap="{{ doHideAdMobBanner }}" class="button button-admob"/>
+            <Button row="39" col="0" text="preload rewarded ad" tap="{{ doPreloadRewardedVideoAd }}" class="button button-admob"/>
+            <Button row="39" col="1" text="show rewarded ad" tap="{{ doShowPreloadedRewardedVideoAd }}" class="button button-admob"/>
 
-            <Label row="40" colSpan="2" text="Firebase Cloud Messaging" class="subtitle"/>
+            <Button row="40" colSpan="2" text="hide banner" tap="{{ doHideAdMobBanner }}" class="button button-admob"/>
 
-            <Button row="41" col="0" text="add push handlers" tap="{{ messaging.doRegisterPushHandlers }}" class="button button-messaging"/>
-            <Button row="41" col="1" text="get current token" tap="{{ messaging.doGetCurrentPushToken }}" class="button button-messaging"/>
+            <Label row="41" colSpan="2" text="Firebase Cloud Messaging" class="subtitle"/>
 
-            <Button row="42" col="0" text="topic subscribe" tap="{{ messaging.doSubscribeToTopic }}" class="button button-messaging"/>
-            <Button row="42" col="1" text="topic unsubscribe" tap="{{ messaging.doUnsubscribeFromTopic }}" class="button button-messaging"/>
+            <Button row="42" col="0" text="add push handlers" tap="{{ messaging.doRegisterPushHandlers }}" class="button button-messaging"/>
+            <Button row="42" col="1" text="get current token" tap="{{ messaging.doGetCurrentPushToken }}" class="button button-messaging"/>
+
+            <Button row="43" col="0" text="topic subscribe" tap="{{ messaging.doSubscribeToTopic }}" class="button button-messaging"/>
+            <Button row="43" col="1" text="topic unsubscribe" tap="{{ messaging.doUnsubscribeFromTopic }}" class="button button-messaging"/>
             <iOS>
-              <Button row="43" colSpan="2" text="register interactive push" tap="{{ messaging.doRegisterForInteractivePush }}" class="button button-messaging"/>
+              <Button row="44" colSpan="2" text="register interactive push" tap="{{ messaging.doRegisterForInteractivePush }}" class="button button-messaging"/>
             </iOS>
-            <Button row="44" colSpan="2" text="are notifications enabled" tap="{{ messaging.doGetAreNotificationsEnabled }}" class="button button-messaging"/>
-            <!-- <Button row="44" col="1" text="topic unsubscribe" tap="{{ doUnsubscribeFromTopic }}" class="button button-messaging"/> -->
+            <Button row="45" colSpan="2" text="are notifications enabled" tap="{{ messaging.doGetAreNotificationsEnabled }}" class="button button-messaging"/>
+            <!-- <Button row="45" col="1" text="topic unsubscribe" tap="{{ doUnsubscribeFromTopic }}" class="button button-messaging"/> -->
 
-            <Label row="45" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
+            <Label row="46" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
 
-            <Button row="46" col="0" text="log message" tap="{{ doLogMessage }}" class="button button-crash"/>
-            <Button row="46" col="1" text="force crash :)" tap="{{ doCrash }}" class="button button-crash"/>
-            <Button row="47" col="0" text="log message crashlytics" tap="{{ doLogMessageCrashlytics }}" class="button button-crash"/>
-            <Button row="47" col="1" text="set string crashlytics" tap="{{ doSetCrashlyticString }}" class="button button-crash"/>
-            <Button row="48" col="0" text="set bool crashlytics" tap="{{ doSetCrashlyticBool }}" class="button button-crash"/>
-            <Button row="48" col="1" text="set float crashlytics" tap="{{ doSetCrashlyticFloat }}" class="button button-crash"/>
-            <Button row="49" col="0" text="set double crashlytics" tap="{{ doSetCrashlyticDouble }}" class="button button-crash"/>
-            <Button row="49" col="1" text="set int crashlytics" tap="{{ doSetCrashlyticInt }}" class="button button-crash"/>
-            <Button row="50" colSpan="2" text="SetUserId" tap="{{ doSetUserId }}" class="button button-crash"/>
+            <Button row="47" col="0" colSpan="2" text="force crash :)" tap="{{ doCrash }}" class="button button-crash"/>
+            <Button row="48" col="0" text="log message crashlytics" tap="{{ doLogMessageCrashlytics }}" class="button button-crash"/>
+            <Button row="48" col="1" text="set string crashlytics" tap="{{ doSetCrashlyticString }}" class="button button-crash"/>
+            <Button row="49" col="0" text="set bool crashlytics" tap="{{ doSetCrashlyticBool }}" class="button button-crash"/>
+            <Button row="49" col="1" text="set float crashlytics" tap="{{ doSetCrashlyticFloat }}" class="button button-crash"/>
+            <Button row="50" col="0" text="set double crashlytics" tap="{{ doSetCrashlyticDouble }}" class="button button-crash"/>
+            <Button row="50" col="1" text="set int crashlytics" tap="{{ doSetCrashlyticInt }}" class="button button-crash"/>
+            <Button row="51" colSpan="2" text="SetUserId" tap="{{ doSetUserId }}" class="button button-crash"/>
 
-            <Label row="51" colSpan="2" text="Firebase Invites" class="subtitle"/>
-            <Button row="52" col="0" text="send invitation" tap="{{ sendInvitation }}" class="button button-invites"/>
-            <Button row="52" col="1" text="get invitation" tap="{{ getInvitation }}" class="button button-invites"/>
-
-            <Label row="53" colSpan="2" text="Performance Monitoring" class="subtitle"/>
-            <Button row="54" col="0" text="start trace" tap="{{ startPerformanceMonitoringTrace }}" class="button button-performance"/>
-            <Button row="54" col="1" text="stop trace" tap="{{ stopPerformanceMonitoringTrace }}" class="button button-performance"/>
-            <Button row="55" col="0" text="set value trace" tap="{{ setValuePerformanceMonitoring }}" class="button button-performance"/>
-            <Button row="55" col="1" text="get value" tap="{{ getValuePerformanceMonitoring }}" class="button button-performance"/>
-            <Button row="56" col="0" text="get attributes" tap="{{ getAttributesPerformanceMonitoring }}" class="button button-performance"/>
-            <Button row="56" col="1" text="removeAttribute" tap="{{ removeAttributePerformanceMonitoring }}" class="button button-performance"/>
-            <Button row="57" colSpan="2" text="increment metric" tap="{{ incrementMetricPerformanceMonitoring }}" class="button button-performance"/>
+            <Label row="52" colSpan="2" text="Perf. Monitoring (see the console log)" class="subtitle"/>
+            <Button row="53" col="0" text="start trace" tap="{{ startPerformanceMonitoringTrace }}" class="button button-performance"/>
+            <Button row="53" col="1" text="stop trace" tap="{{ stopPerformanceMonitoringTrace }}" class="button button-performance"/>
+            <Button row="54" col="0" text="set value trace" tap="{{ setValuePerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="54" col="1" text="get value" tap="{{ getValuePerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="55" col="0" text="get attributes" tap="{{ getAttributesPerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="55" col="1" text="removeAttribute" tap="{{ removeAttributePerformanceMonitoring }}" class="button button-performance"/>
+            <Button row="56" colSpan="2" text="increment metric" tap="{{ incrementMetricPerformanceMonitoring }}" class="button button-performance"/>
           </GridLayout>
 
         </ScrollView>

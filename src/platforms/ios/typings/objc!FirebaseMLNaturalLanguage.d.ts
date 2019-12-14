@@ -16,4 +16,6 @@ declare class FIRNaturalLanguage extends NSObject {
 	languageIdentificationWithOptions(options: FIRLanguageIdentificationOptions): FIRLanguageIdentification;
 
 	smartReply(): FIRSmartReply;
+
+	translatorWithOptions(options: FIRTranslatorOptions): FIRTranslator;
 }
