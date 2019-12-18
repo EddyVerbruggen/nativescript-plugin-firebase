@@ -8,7 +8,7 @@ function getReference(nativeReference: FIRStorageReference, listOptions: ListOpt
     bucket: nativeReference.bucket,
     name: nativeReference.name,
     fullPath: nativeReference.fullPath,
-    listAll: (): Promise<ListResult> => listAll({remoteFullPath: nativeReference.fullPath, bucket: listOptions.bucket})
+    listAll: (): Promise<ListResult> => listAll({ remoteFullPath: nativeReference.fullPath, bucket: listOptions.bucket })
   };
 }
 
@@ -53,12 +53,12 @@ function getStorageRef(reject, arg): FIRStorageReference {
   }
 }
 
-export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
+export function uploadFile(arg: UploadFileOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
       const onCompletion = (metadata: FIRStorageMetadata, error: NSError) => {
         if (error) {
-          reject(error.localizedDescription);
+          reject(error);
         } else {
           resolve({
             name: metadata.name,
@@ -117,12 +117,12 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
   });
 }
 
-export function downloadFile(arg: DownloadFileOptions): Promise<string> {
+export function downloadFile(arg: DownloadFileOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
       const onCompletion = (url, error) => {
         if (error) {
-          reject(error.localizedDescription);
+          reject(error);
         } else {
           resolve(url.absoluteString);
         }
@@ -164,12 +164,12 @@ export function downloadFile(arg: DownloadFileOptions): Promise<string> {
   });
 }
 
-export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
+export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
       const onCompletion = (url, error) => {
         if (error) {
-          reject(error.localizedDescription);
+          reject(error);
         } else {
           resolve(url.absoluteString);
         }
@@ -191,12 +191,12 @@ export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
   });
 }
 
-export function deleteFile(arg: DeleteFileOptions): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
+export function deleteFile(arg: DeleteFileOptions): Promise<any> {
+  return new Promise<any>((resolve, reject) => {
     try {
       const onCompletion = error => {
         if (error) {
-          reject(error.localizedDescription);
+          reject(error);
         } else {
           resolve();
         }
@@ -232,7 +232,7 @@ export function listAll(listOptions: ListOptions): Promise<ListResult> {
 
       fIRStorageReference.listAllWithCompletion((result: FIRStorageListResult, error: NSError) => {
         if (error) {
-          reject(error.localizedDescription);
+          reject(error);
         } else {
           resolve(new ListResult(result, listOptions));
         }
