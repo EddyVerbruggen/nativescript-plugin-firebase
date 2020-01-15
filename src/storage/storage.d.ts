@@ -3,6 +3,19 @@ export interface ProgressStatus {
   percentageCompleted: Number;
 }
 
+interface SettableMetadata {
+  cacheControl?: string | null;
+  contentDisposition?: string | null;
+  contentEncoding?: string | null;
+  contentLanguage?: string | null;
+  contentType?: string | null;
+  customMetadata?: { [key: string]: string; };
+}
+
+interface UploadMetadata extends SettableMetadata {
+  // md5Hash?: string | null;
+}
+
 /**
  * Use either the 'localFile' or 'localFullPath' param to upload a file.
  */
@@ -37,7 +50,12 @@ export interface UploadFileOptions {
    *   console.log("Percentage complete: " + status.percentageCompleted);
    * }
    */
-  onProgress: (data: ProgressStatus) => void;
+  onProgress?: (data: ProgressStatus) => void;
+
+  /**
+   *
+   */
+  metadata?: UploadMetadata;
 }
 
 export interface UploadFileResult {

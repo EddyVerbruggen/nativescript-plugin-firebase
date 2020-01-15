@@ -59,6 +59,15 @@ You can either pass in a full local path to a file, or (as a convenience) use th
   // determine the path to a file in the app/res folder
   var logoPath = appPath + "/res/telerik-logo.png";
 
+  var metadata = {
+    contentType: "demo/test",
+    contentLanguage: "fr",
+    customMetadata: {
+      "foo": "bar",
+       "foo2": "bar2"
+    }
+  };
+
   // now upload the file with either of the options below:
   firebase.storage.uploadFile({
     // optional, can be omitted since 6.5.0, and also be passed during init() as 'storageBucket' param so we can cache it (find it in the Firebase console)
@@ -73,7 +82,8 @@ You can either pass in a full local path to a file, or (as a convenience) use th
     onProgress: function(status) {
       console.log("Uploaded fraction: " + status.fractionCompleted);
       console.log("Percentage complete: " + status.percentageCompleted);
-    }
+    },
+    metadata
   }).then(
       function (uploadedFile) {
         console.log("File uploaded: " + JSON.stringify(uploadedFile));
@@ -100,7 +110,15 @@ You can either pass in a full local path to a file, or (as a convenience) use th
   const storageRef = firebaseWebApi.storage().ref();
   const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
-  childRef.put(fs.File.fromPath(logoPath)).then(
+  const metadata = {
+    contentType: "demo/test",
+    contentLanguage: "fr",
+    customMetadata: {
+      "foo": "bar",
+       "foo2": "bar2"
+    }
+  };
+  childRef.put(fs.File.fromPath(logoPath), metadata).then(
       uploadedFile => console.log("Uploaded! " + JSON.stringify(uploadedFile)),
       error => console.log("firebase.doWebUploadFile error: " + error)
   );

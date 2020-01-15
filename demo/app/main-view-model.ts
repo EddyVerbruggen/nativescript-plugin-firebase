@@ -6,6 +6,7 @@ import { Observable } from "tns-core-modules/data/observable";
 import * as fs from "tns-core-modules/file-system";
 import { isAndroid, isIOS } from "tns-core-modules/platform";
 import { alert, prompt } from "tns-core-modules/ui/dialogs";
+import { UploadMetadata } from "../../src/storage/storage";
 import { MessagingViewModel } from "./messaging-view-model";
 
 const firebaseWebApi = require("nativescript-plugin-firebase/app");
@@ -314,7 +315,16 @@ export class HelloWorldModel extends Observable {
     const storageRef = firebaseWebApi.storage().ref();
     const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
-    childRef.put(fs.File.fromPath(logoPath)).then(
+    const metadata: UploadMetadata = {
+      contentType: "demo/test",
+      contentLanguage: "fr",
+      customMetadata: {
+        "foo": "bar",
+        "foo2": "bar2"
+      }
+    };
+
+    childRef.put(fs.File.fromPath(logoPath), metadata).then(
         uploadedFile => {
           console.log("Uploaded! " + JSON.stringify(uploadedFile));
           this.set("storageFeedback", "Uploaded!");
@@ -1639,13 +1649,23 @@ export class HelloWorldModel extends Observable {
     const appPath = fs.knownFolders.currentApp().path;
     const logoPath = appPath + "/images/telerik-logo.png";
 
+    const metadata: UploadMetadata = {
+      contentType: "demo/test2",
+      contentLanguage: "de",
+      customMetadata: {
+        "first": "first!",
+        "second": "second!"
+      }
+    };
+
     firebaseStorage.uploadFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png',
       localFile: fs.File.fromPath(logoPath), // use this (a file-system module File object)
       // localFullPath: logoPath, // or this, a full file path
       onProgress: status => {
         console.log("Uploaded fraction: " + status.fractionCompleted + " (" + status.percentageCompleted + "%)");
-      }
+      },
+      metadata
     }).then(
         uploadedFile => {
           alert({

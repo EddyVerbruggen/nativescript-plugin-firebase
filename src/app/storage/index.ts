@@ -1,12 +1,16 @@
 import { File } from "tns-core-modules/file-system"
 import * as firebaseStorage from "../../storage/storage";
-import { ListResult, UploadFileResult } from "../../storage/storage";
+import { ListResult, UploadFileResult, UploadMetadata } from "../../storage/storage";
 
 export module storage {
 
   export interface UploadTaskSnapshot {
     downloadURL: string | null;
     totalBytes: number;
+  }
+
+  export interface Metadata {
+    string: string;
   }
 
   export class Reference {
@@ -43,19 +47,26 @@ export module storage {
       });
     }
 
+    getMetadata(): Promise<string> {
+      return firebaseStorage.getDownloadUrl({
+        remoteFullPath: this.path
+      });
+    }
+
     listAll(): Promise<ListResult> {
       return firebaseStorage.listAll({
         remoteFullPath: this.path
       });
     }
 
-    public put(data: File | string /* path */, metadata?: any /* ignored */): Promise<UploadTaskSnapshot> {
+    public put(data: File | string /* path */, metadata?: UploadMetadata): Promise<UploadTaskSnapshot> {
       return new Promise((resolve, reject) => {
         firebaseStorage.uploadFile({
           localFile: data instanceof File ? data : undefined,
           localFullPath: !(data instanceof File) ? data : undefined,
           remoteFullPath: this.path,
-          onProgress: progress => console.log(`Upload progress: ${progress.percentageCompleted}% completed`)
+          onProgress: progress => console.log(`Upload progress: ${progress.percentageCompleted}% completed`),
+          metadata
         }).then((result: UploadFileResult) => {
           this.getDownloadURL()
               .then(url => {

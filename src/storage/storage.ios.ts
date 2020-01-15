@@ -81,6 +81,23 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
       const fIRStorageReference = storageRef.child(arg.remoteFullPath);
       let fIRStorageUploadTask = null;
 
+      let metadata: FIRStorageMetadata = null;
+      if (arg.metadata) {
+        metadata = FIRStorageMetadata.new();
+        metadata.cacheControl = arg.metadata.cacheControl;
+        metadata.contentDisposition = arg.metadata.contentDisposition;
+        metadata.contentEncoding = arg.metadata.contentEncoding;
+        metadata.contentLanguage = arg.metadata.contentLanguage;
+        metadata.contentType = arg.metadata.contentType;
+        if (arg.metadata.customMetadata) {
+          const customMetadata = NSMutableDictionary.new();
+          for (let p in arg.metadata.customMetadata) {
+            customMetadata.setObjectForKey(arg.metadata.customMetadata[p], p);
+          }
+          metadata.customMetadata = <any>customMetadata;
+        }
+      }
+
       if (arg.localFile) {
         if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
@@ -88,10 +105,10 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
         }
 
         // using 'putFile' (not 'putData') so Firebase can infer the mime-type
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFile.path), null, onCompletion);
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFile.path), metadata, onCompletion);
 
       } else if (arg.localFullPath) {
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFullPath), null, onCompletion);
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFullPath), metadata, onCompletion);
 
       } else {
         reject("One of localFile or localFullPath is required");

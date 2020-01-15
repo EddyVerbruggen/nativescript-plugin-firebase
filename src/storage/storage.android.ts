@@ -101,6 +101,32 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
         }
       });
 
+      let metadata: com.google.firebase.storage.StorageMetadata = null;
+      if (arg.metadata) {
+        const metadataBuilder = new com.google.firebase.storage.StorageMetadata.Builder();
+        if (arg.metadata.cacheControl) {
+          metadataBuilder.setCacheControl(arg.metadata.cacheControl);
+        }
+        if (arg.metadata.contentDisposition) {
+          metadataBuilder.setContentDisposition(arg.metadata.contentDisposition);
+        }
+        if (arg.metadata.contentEncoding) {
+          metadataBuilder.setContentEncoding(arg.metadata.contentEncoding);
+        }
+        if (arg.metadata.contentLanguage) {
+          metadataBuilder.setContentLanguage(arg.metadata.contentLanguage);
+        }
+        if (arg.metadata.contentType) {
+          metadataBuilder.setContentType(arg.metadata.contentType);
+        }
+        if (arg.metadata.customMetadata) {
+          for (let p in arg.metadata.customMetadata) {
+            metadataBuilder.setCustomMetadata(p, arg.metadata.customMetadata[p]);
+          }
+        }
+        metadata = metadataBuilder.build();
+      }
+
       if (arg.localFile) {
         if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
@@ -109,7 +135,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
 
         // using 'putFile' (not 'putBytes') so Firebase can infer the mimetype
         const localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFile.path));
-        storageReference.putFile(localFileUrl)
+        storageReference.putFile(localFileUrl, metadata)
             .addOnFailureListener(onFailureListener)
             .addOnSuccessListener(onSuccessListener)
             .addOnProgressListener(onProgressListener);
@@ -137,7 +163,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
         }
 
         const localFileUrl = android.net.Uri.fromFile(new java.io.File(arg.localFullPath));
-        storageReference.putFile(localFileUrl)
+        storageReference.putFile(localFileUrl, metadata)
             .addOnFailureListener(onFailureListener)
             .addOnSuccessListener(onSuccessListener)
             .addOnProgressListener(onProgressListener);
