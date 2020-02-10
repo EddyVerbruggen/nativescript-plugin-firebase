@@ -24,7 +24,10 @@ matrix:
       script:
         - travis_wait travis_retry tns build android
     - os: osx
-      osx_image: xcode10.2
+      env:
+        - BuildiOS="12.0"
+        - Type="TypeScript"
+      osx_image: xcode11.2
       language: node_js
       node_js: "10"
       jdk: oraclejdk8
