@@ -17,7 +17,7 @@
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
-> Plugin version **10.0.0** works with NativeScript 5.2+, and 6.1+ is recommended. Using an older version? Stick to plugin version < 10.
+> Plugin version **10.0.0** works with NativeScript 6.1 and up. Using an older version? Stick to plugin version < 10.
 
 ## Features
 * [AdMob](docs/ADMOB.md)
