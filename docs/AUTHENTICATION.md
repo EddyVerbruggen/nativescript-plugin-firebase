@@ -199,6 +199,20 @@ The logged in user will be updated, but for `getCurrentUser` to reflect the chan
   );
 ```
 
+### Reloading a user
+The currently logged in user will be reloaded (the one returned by `getCurrentUser`).
+
+```js
+  firebase.reloadUser().then(
+      function () {
+        // now call 'getCurrentUser' to get the reloaded user data
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
 ### Deleting a user
 The currently logged in user will be deleted (the one returned by `getCurrentUser`).
 
