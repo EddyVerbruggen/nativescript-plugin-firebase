@@ -529,7 +529,7 @@ class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
   public userNotificationCenterWillPresentNotificationWithCompletionHandler(center: UNUserNotificationCenter, notification: UNNotification, completionHandler: (p1: UNNotificationPresentationOptions) => void, next: () => void): void {
     const userInfo = notification.request.content.userInfo;
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
-    if (!userInfoJSON["gcm.message_id"]) { // not a firebase message!
+    if (!(notification.request.trigger instanceof UNPushNotificationTrigger)) { // not a firebase message!
       next();
       return;
     }
@@ -548,9 +548,7 @@ class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
   }
 
   public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void, next: () => void): void {
-    const userInfo = response.notification.request.content.userInfo;
-    const userInfoJSON = firebaseUtils.toJsObject(userInfo);
-    if (!userInfoJSON["gcm.message_id"]) { // not a firebase message!
+    if (!(response.notification.request.trigger instanceof UNPushNotificationTrigger)) { // not a firebase message!
       next();
       return;
     }
