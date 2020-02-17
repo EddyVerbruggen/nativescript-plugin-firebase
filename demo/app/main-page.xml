@@ -130,7 +130,8 @@
             <Label row="12" col="1" text="{{ userEmailOrPhone }}" class="message" textWrap="true"/>
 
             <Button row="13" col="0" text="email login link" tap="{{ doLoginByEmailLink }}" class="button"/>
-            <Button row="13" col="1" text="send email conf" tap="{{ doSendEmailVerification }}" class="button"/>
+<!--            <Button row="13" col="1" text="send email conf" tap="{{ doSendEmailVerification }}" class="button"/>-->
+            <Button row="13" col="1" text="reload user" tap="{{ doReloadUser }}" class="button"/>
 
             <Button row="14" col="0" text="get current user" tap="{{ doGetCurrentUser }}" class="button"/>
             <Button row="14" col="1" text="logout" tap="{{ doLogout }}" class="button button-user"/>

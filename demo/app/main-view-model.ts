@@ -1144,7 +1144,8 @@ export class HelloWorldModel extends Observable {
       }
     }).then(
         result => {
-          console.log("Google login OK: " + JSON.stringify(result));
+          console.log("Google login OK: " + JSON.stringify(result.additionalUserInfo));
+          console.log("Google login OK, photoURL: " + result.photoURL);
           alert({
             title: "Login OK",
             message: JSON.stringify(result),
@@ -1156,6 +1157,25 @@ export class HelloWorldModel extends Observable {
             title: "Login error",
             message: errorMessage,
             okButtonText: "OK, pity"
+          });
+        }
+    );
+  }
+
+  public doReloadUser(): void {
+    firebase.reloadUser().then(
+        () => {
+          alert({
+            title: "User reloaded",
+            message: "You can use 'get current user' to inspect the reloaded data",
+            okButtonText: "OK"
+          });
+        },
+        errorMessage => {
+          alert({
+            title: "Reload error",
+            message: errorMessage,
+            okButtonText: "OK, shame"
           });
         }
     );
