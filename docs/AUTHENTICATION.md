@@ -1,7 +1,7 @@
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/features/auth.png" height="85px" alt="Authentication"/>
 
 ## Enabling Authentication
-You can sign in a user either
+You can sign in a user, using either
 
 * [anonymously](#anonymous-login),
 * by [email and password](#email-password-login),
@@ -192,6 +192,34 @@ The logged in user will be updated, but for `getCurrentUser` to reflect the chan
   }).then(
       function () {
         // called when update profile was successful
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
+### Reloading a user
+The currently logged in user will be reloaded (the one returned by `getCurrentUser`).
+
+```js
+  firebase.reloadUser().then(
+      function () {
+        // now call 'getCurrentUser' to get the reloaded user data
+      },
+      function (errorMessage) {
+        console.log(errorMessage);
+      }
+  );
+```
+
+### Deleting a user
+The currently logged in user will be deleted (the one returned by `getCurrentUser`).
+
+```js
+  firebase.deleteUser().then(
+      function () {
+        // called when the user was successfully deleted
       },
       function (errorMessage) {
         console.log(errorMessage);

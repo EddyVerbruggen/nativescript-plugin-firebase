@@ -310,6 +310,8 @@ declare class FIRQuery extends NSObject {
 
 	queryLimitedTo(limit: number): FIRQuery;
 
+	queryLimitedToLast(limit: number): FIRQuery;
+
 	queryOrderedByField(field: string): FIRQuery;
 
 	queryOrderedByFieldDescending(field: string, descending: boolean): FIRQuery;
