@@ -1055,7 +1055,7 @@ export namespace functions {
 // Auth
 export function login(options: LoginOptions): Promise<User>;
 
-export function reauthenticate(options: ReauthenticateOptions): Promise<any>;
+export function reauthenticate(options: ReauthenticateOptions): Promise<User>;
 
 export function reloadUser(): Promise<void>;
 
