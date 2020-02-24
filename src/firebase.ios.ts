@@ -2,7 +2,7 @@ import * as application from "tns-core-modules/application/application";
 import { device } from "tns-core-modules/platform";
 import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
 import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
-import * as firebaseFunctions from './functions/functions';
+import * as firebaseFunctions from "./functions/functions";
 import * as firebaseMessaging from "./messaging/messaging";
 import { firebaseUtils } from "./utils";
 import { getNonce, Sha256 } from "./utils/nonce-util-ios";

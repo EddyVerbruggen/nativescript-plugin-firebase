@@ -1,8 +1,8 @@
+import { DelegateObserver, SharedNotificationDelegate } from "nativescript-shared-notification-delegate";
 import * as applicationSettings from "tns-core-modules/application-settings";
 import * as application from "tns-core-modules/application/application";
 import { device } from "tns-core-modules/platform/platform";
 import { MessagingOptions } from "../firebase";
-import { DelegateObserver, SharedNotificationDelegate } from "nativescript-shared-notification-delegate";
 import { firebase } from "../firebase-common";
 import { firebaseUtils } from "../utils";
 import { IosInteractiveNotificationAction, IosInteractiveNotificationCategory, IosInteractiveNotificationType } from "./messaging";

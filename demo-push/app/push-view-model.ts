@@ -187,8 +187,7 @@ export class PushViewModel extends Observable {
         }, 500);
       },
 
-      // Whether you want this plugin to automatically display the notifications or just notify the callback. Currently used on iOS only. Default true.
-      showNotifications: false,
+      showNotifications: true,
 
       // Whether you want this plugin to always handle the notifications when the app is in foreground.
       // Currently used on iOS only. Default false.
