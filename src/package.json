@@ -135,6 +135,7 @@
   "dependencies": {
     "fs-extra": "~2.1.0",
     "nativescript-hook": "~0.2.5",
+    "nativescript-shared-notification-delegate": "1.0.0",
     "prompt-lite": "~0.1.1",
     "xcode": "~0.9.3",
     "semver": "~5.7.1"

@@ -2,6 +2,7 @@ import * as applicationSettings from "tns-core-modules/application-settings";
 import * as application from "tns-core-modules/application/application";
 import { device } from "tns-core-modules/platform/platform";
 import { MessagingOptions } from "../firebase";
+import { DelegateObserver, SharedNotificationDelegate } from "nativescript-shared-notification-delegate";
 import { firebase } from "../firebase-common";
 import { firebaseUtils } from "../utils";
 import { IosInteractiveNotificationAction, IosInteractiveNotificationCategory, IosInteractiveNotificationType } from "./messaging";
@@ -13,7 +14,7 @@ let _pushToken: any;
 let _receivedPushTokenCallback: Function;
 let _receivedNotificationCallback: Function;
 let _registerForRemoteNotificationsRanThisSession = false;
-let _userNotificationCenterDelegate: UNUserNotificationCenterDelegateImpl;
+let _userNotificationCenterDelegateObserver: FirebaseNotificationDelegateObserverImpl;
 let _firebaseRemoteMessageDelegate: FIRMessagingDelegateImpl;
 let _showNotifications: boolean = true;
 let _showNotificationsWhenInForeground: boolean = false;
@@ -393,7 +394,7 @@ function _registerForRemoteNotifications(resolve?, reject?) {
     });
 
     if (_showNotifications) {
-      _userNotificationCenterDelegate = UNUserNotificationCenterDelegateImpl.new().initWithCallback((unnotification, actionIdentifier?, inputText?) => {
+      _userNotificationCenterDelegateObserver = new FirebaseNotificationDelegateObserverImpl((unnotification, actionIdentifier?, inputText?) => {
         // if the app is in the foreground then this method will receive the notification
         // if the app is in the background, and user has responded to interactive notification, then this method will receive the notification
         // if the app is in the background, and user views a notification, applicationDidReceiveRemoteNotificationFetchCompletionHandler will receive it
@@ -425,7 +426,7 @@ function _registerForRemoteNotifications(resolve?, reject?) {
         }
       });
 
-      UNUserNotificationCenter.currentNotificationCenter().delegate = _userNotificationCenterDelegate;
+      SharedNotificationDelegate.addObserver(_userNotificationCenterDelegateObserver);
     }
 
     if (typeof (FIRMessaging) !== "undefined") {
@@ -516,27 +517,22 @@ function _addObserver(eventName, callback) {
   return NSNotificationCenter.defaultCenter.addObserverForNameObjectQueueUsingBlock(eventName, null, NSOperationQueue.mainQueue, callback);
 }
 
-// see https://developer.apple.com/reference/usernotifications/unusernotificationcenterdelegate?language=objc
-class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNotificationCenterDelegate {
-  public static ObjCProtocols = [];
-
-  static new(): UNUserNotificationCenterDelegateImpl {
-    if (UNUserNotificationCenterDelegateImpl.ObjCProtocols.length === 0 && typeof (UNUserNotificationCenterDelegate) !== "undefined") {
-      UNUserNotificationCenterDelegateImpl.ObjCProtocols.push(UNUserNotificationCenterDelegate);
-    }
-    return <UNUserNotificationCenterDelegateImpl>super.new();
-  }
+class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
+  observerUniqueKey = "firebase-messaging";
 
   private callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void;
 
-  public initWithCallback(callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void): UNUserNotificationCenterDelegateImpl {
+  constructor(callback: (unnotification: UNNotification, actionIdentifier?: string, inputText?: string) => void) {
     this.callback = callback;
-    return this;
   }
 
-  public userNotificationCenterWillPresentNotificationWithCompletionHandler(center: UNUserNotificationCenter, notification: UNNotification, completionHandler: (p1: UNNotificationPresentationOptions) => void): void {
+  public userNotificationCenterWillPresentNotificationWithCompletionHandler(center: UNUserNotificationCenter, notification: UNNotification, completionHandler: (p1: UNNotificationPresentationOptions) => void, next: () => void): void {
     const userInfo = notification.request.content.userInfo;
     const userInfoJSON = firebaseUtils.toJsObject(userInfo);
+    if (!(notification.request.trigger instanceof UNPushNotificationTrigger)) { // not a firebase message!
+      next();
+      return;
+    }
 
     if (_showNotificationsWhenInForeground || // Default value, in case we always want to show when in foreground.
         userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
@@ -551,7 +547,11 @@ class UNUserNotificationCenterDelegateImpl extends NSObject implements UNUserNot
     this.callback(notification);
   }
 
-  public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void): void {
+  public userNotificationCenterDidReceiveNotificationResponseWithCompletionHandler(center: UNUserNotificationCenter, response: UNNotificationResponse, completionHandler: () => void, next: () => void): void {
+    if (!(response.notification.request.trigger instanceof UNPushNotificationTrigger)) { // not a firebase message!
+      next();
+      return;
+    }
     // let's ignore "dismiss" actions
     if (response && response.actionIdentifier === UNNotificationDismissActionIdentifier) {
       completionHandler();
