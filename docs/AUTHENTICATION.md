@@ -564,7 +564,7 @@ Upon successful authentication, Facebook creates an access token that can be obt
 
 #### iOS
 1. If you didn't choose `Firebase Authentication` and `Firebase Facebook Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
-2. Add a bit of config to `app\App_Resources\iOS\Info.plist` as instructed in Step 4 [here](https://developers.facebook.com/docs/ios/getting-started). Facebook login works perfectly on the demo app, so if you can't get it working, make sure to check out the [demo app's config](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/ad85e187dbbb12ef0e705d1bfaed90c702846bc4/Firebase/app/App_Resources/iOS/Info.plist).
+2. Add a bit of config to `app\App_Resources\iOS\Info.plist` as instructed in Step 4 of the iOS Quickstart in the Facebook Developer console of your app. Facebook login works perfectly on the demo app, so if you can't get it working, make sure to check out the [demo app's config](https://github.com/EddyVerbruggen/nativescript-plugin-firebase-demo/blob/ad85e187dbbb12ef0e705d1bfaed90c702846bc4/Firebase/app/App_Resources/iOS/Info.plist).
 
 #### Android
 1. If you didn't choose `Firebase Authentication` and `Firebase Facebook Authentication` during installation you can remove the `platforms` and `node_modules` folders and the `firebase.nativescript.json` file, then run `npm i`. This will prompt your which Firebase features you'd like to enable.
