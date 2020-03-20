@@ -97,6 +97,12 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       // this orientation is how the captured image is rotated (and shown)
       if (this.rotateRecording()) {
         this.cameraView.imageOrientation = UIImageOrientation.Right;
+      } else {
+        if (UIDevice.currentDevice.orientation === UIDeviceOrientation.LandscapeLeft) {
+          this.cameraView.imageOrientation = UIImageOrientation.Up;
+        } else {
+          this.cameraView.imageOrientation = UIImageOrientation.Down;
+        }
       }
 
       this.cameraView.delegate = TNSMLKitCameraViewDelegateImpl.createWithOwnerResultCallbackAndOptions(
@@ -114,6 +120,17 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         this.previewLayer.connection.videoOrientation = deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
       } else if (args.newValue === "portrait") {
         this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+      }
+    }
+
+    // this orientation is how the captured image is rotated (and shown)
+    if (this.rotateRecording()) {
+      this.cameraView.imageOrientation = UIImageOrientation.Right;
+    } else {
+      if (UIDevice.currentDevice.orientation === UIDeviceOrientation.LandscapeLeft) {
+        this.cameraView.imageOrientation = UIImageOrientation.Up;
+      } else {
+        this.cameraView.imageOrientation = UIImageOrientation.Down;
       }
     }
   }
