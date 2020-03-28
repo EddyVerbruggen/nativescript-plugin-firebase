@@ -825,18 +825,24 @@ module.exports = function($logger, $projectData, hookArgs) {
 return new Promise(function(resolve, reject) {
 
         /* Decide whether to prepare for dev or prod environment */
-        var isReleaseBuild = (hookArgs.appFilesUpdaterOptions || hookArgs.prepareData).release;
+        var validStagingEnvs = ["dev", "development", "staging"];
         var validProdEnvs = ['prod','production'];
         var isProdEnv = false; // building with --env.prod or --env.production flag
+        var isStagingEnv = false;
         var env = (hookArgs.platformSpecificData || hookArgs.prepareData).env;
 
         if (env) {
             Object.keys(env).forEach((key) => {
-                if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
+                if (validProdEnvs.indexOf(key)>-1) { 
+			isProdEnv = true;
+		}
+		if (validStagingEnvs.indexOf(key) > -1) {
+			isStagingEnv = true;
+		}
             });
         }
 
-        var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+        var buildType = isProdEnv && !isStagingEnv ? "production" : "development";
         const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
         const platform = (platformFromHookArgs  || '').toLowerCase();
 
