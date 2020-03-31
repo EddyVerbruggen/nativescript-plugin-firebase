@@ -522,78 +522,76 @@ firebase.getRemoteConfig = arg => {
         remoteConfigSettingsBuilder.setFetchTimeoutInSeconds(0);
       }
 
-      const addOnSetDefaultsCompleteListener = new gmsTasks.OnCompleteListener({
-        onComplete: task => {
-          if (!task.isSuccessful()) {
-            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-          } else {
-            const returnMethod = throttled => {
-              const addOnCompleteActivateListener = new gmsTasks.OnCompleteListener({
-                onComplete: task => {
-                  if (!task.isSuccessful()) {
-                    reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
-                  } else {
-                    const lastFetchTime = firebaseRemoteConfig.getInfo().getFetchTimeMillis();
-                    const lastFetch = new Date(lastFetchTime);
-
-                    const result = {
-                      lastFetch,
-                      throttled,
-                      properties: {}
-                    };
-
-                    for (const p in arg.properties) {
-                      const prop = arg.properties[p];
-                      const key = prop.key;
-                      const value = firebaseRemoteConfig.getString(key);
-                      // we could have the user pass in the type but this seems easier to use
-                      result.properties[key] = firebase.strongTypeify(value);
-                    }
-                    resolve(result);
-                  }
-                }
-              });
-              firebaseRemoteConfig.activate().addOnCompleteListener(addOnCompleteActivateListener);
-            };
-
-            const onSuccessListener = new gmsTasks.OnSuccessListener({
-              onSuccess: () => returnMethod(false)
-            });
-
-            const onFailureListener = new gmsTasks.OnFailureListener({
-              onFailure: exception => {
-                if (exception.getMessage() === "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
-                  returnMethod(true);
-                } else {
-                  reject("Retrieving remote config data failed. " + exception);
-                }
-              }
-            });
-
-            // default 12 hours, just like the SDK does
-            const expirationDuration = arg.cacheExpirationSeconds || 43200;
-
-            firebaseRemoteConfig.fetch(expirationDuration)
-              .addOnSuccessListener(onSuccessListener)
-              .addOnFailureListener(onFailureListener);
-          }
-        }
-      });
-
-      const addOnSetConfigSettingsCompleteListener = new gmsTasks.OnCompleteListener({
+      const onSetConfigSettingsCompleteListener = new gmsTasks.OnCompleteListener({
         onComplete: task => {
           if (!task.isSuccessful()) {
             reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
           } else {
             const defaults = firebase.getRemoteConfigDefaults(arg.properties);
             firebaseRemoteConfig.setDefaultsAsync(firebase.toHashMap(defaults))
-              .addOnCompleteListener(addOnSetDefaultsCompleteListener);
+              .addOnCompleteListener(new gmsTasks.OnCompleteListener({
+                onComplete: task => {
+                  if (!task.isSuccessful()) {
+                    reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+                  } else {
+                    const returnMethod = throttled => {
+                      const addOnCompleteActivateListener = new gmsTasks.OnCompleteListener({
+                        onComplete: task => {
+                          if (!task.isSuccessful()) {
+                            reject((task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+                          } else {
+                            const lastFetchTime = firebaseRemoteConfig.getInfo().getFetchTimeMillis();
+                            const lastFetch = new Date(lastFetchTime);
+
+                            const result = {
+                              lastFetch,
+                              throttled,
+                              properties: {}
+                            };
+
+                            for (const p in arg.properties) {
+                              const prop = arg.properties[p];
+                              const key = prop.key;
+                              const value = firebaseRemoteConfig.getString(key);
+                              // we could have the user pass in the type but this seems easier to use
+                              result.properties[key] = firebase.strongTypeify(value);
+                            }
+                            resolve(result);
+                          }
+                        }
+                      });
+                      firebaseRemoteConfig.activate().addOnCompleteListener(addOnCompleteActivateListener);
+                    };
+
+                    const onSuccessListener = new gmsTasks.OnSuccessListener({
+                      onSuccess: () => returnMethod(false)
+                    });
+
+                    const onFailureListener = new gmsTasks.OnFailureListener({
+                      onFailure: exception => {
+                        if (exception.getMessage() === "com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException") {
+                          returnMethod(true);
+                        } else {
+                          reject("Retrieving remote config data failed. " + exception);
+                        }
+                      }
+                    });
+
+                    // default 12 hours, just like the SDK does
+                    const expirationDuration = arg.cacheExpirationSeconds || 43200;
+
+                    firebaseRemoteConfig.fetch(expirationDuration)
+                      .addOnSuccessListener(onSuccessListener)
+                      .addOnFailureListener(onFailureListener);
+                  }
+                }
+              }));
           }
         }
       });
 
       firebaseRemoteConfig.setConfigSettingsAsync(remoteConfigSettingsBuilder.build())
-        .addOnCompleteListener(addOnSetConfigSettingsCompleteListener);
+        .addOnCompleteListener(onSetConfigSettingsCompleteListener);
 
     };
 
