@@ -3626,13 +3626,13 @@ return new Promise(function(resolve, reject) {
         var validStagingEnvs = ["dev", "development", "staging"];
         var validProdEnvs = ['prod','production'];
         var isProdEnv = false; // building with --env.prod or --env.production flag
-	var isStagingEnv = false;
+        var isStagingEnv = false;
         var env = (hookArgs.platformSpecificData || hookArgs.prepareData).env;
 
         if (env) {
             Object.keys(env).forEach((key) => {
-                if (validProdEnvs.indexOf(key)>-1) {
-			isProdEnv=true;
+                if (validProdEnvs.indexOf(key)>-1) { 
+			isProdEnv = true;
 		}
 		if (validStagingEnvs.indexOf(key) > -1) {
 			isStagingEnv = true;
