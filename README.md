@@ -306,7 +306,9 @@ Note: if you currently have the `storageBucket` property in the `firebase.init()
 ### Build
 The build hooks of this plugin will now choose either the `dev` or the `prod` version of your google services `plist` and `json` files depending on how you run your build:
 
-* `prod` will be selected if you run with either the `--release`, `--env.prod` or `--env.production` flags
-* `dev` will be selected if you do not run with any of the above flags
+* `dev` will be selected if you run with either `--env.dev`, `--env.development` or `--env.staging` flags.
+* `prod` will be selected if you run with either `--env.prod` or `--env.production`.
+
+Note: Using the `--release` flag without any of the above flags will set the default environment to production. If you need to create a release with dev environment you'll need to set it explicitly.
 
 Note: if you do not have both `dev` and `prod` files in place, the regular `GoogleService-Info.plist` and `google-services.json` files will be used.
