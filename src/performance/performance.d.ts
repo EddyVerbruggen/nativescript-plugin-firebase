@@ -8,3 +8,11 @@ export declare class FirebaseTrace {
 }
 
 export declare function startTrace(name: string): FirebaseTrace;
+
+export declare class FirebaseHttpMetric {
+  setRequestPayloadSize(size: number): void;
+  setHttpResponseCode(responseCode: number): void;
+  stop(): void;
+}
+
+export declare function startHttpMetric(url: string, method: string): FirebaseHttpMetric;
