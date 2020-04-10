@@ -47,7 +47,8 @@ export class FirebaseTrace {
 }
 
 export class FirebaseHttpMetric {
-  constructor(private nativeHttpMetric: com.google.firebase.perf.metrics.HttpMetric) {}
+  constructor(private nativeHttpMetric: com.google.firebase.perf.metrics.HttpMetric) {
+  }
 
   setRequestPayloadSize(size: number) {
     this.nativeHttpMetric.setRequestPayloadSize(size);
