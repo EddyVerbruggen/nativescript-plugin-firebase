@@ -43,7 +43,7 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 
 > Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` is the iOS folder name, see the path above.
 
-> Note that when shipping to the iOS App Store or Google Play, the entitlements file needs to be updated to reflect production:
+> Note that when shipping to the iOS App Store, the entitlements file needs to be updated to reflect production:
 
 ```xml
 	<key>aps-environment</key>
