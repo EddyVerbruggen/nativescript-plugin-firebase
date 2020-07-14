@@ -253,7 +253,6 @@ function promptQuestionsResult(result) {
     writePodFile(result);
     writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
-    writeBuildscriptHookForFirestore(isSelected(result.firestore));
     activateIOSCrashlyticsFramework(isSelected(result.crashlytics));
     activateIOSMLKitCameraFramework(isSelected(result.ml_kit));
   }
@@ -593,98 +592,6 @@ module.exports = function($logger, $projectData, hookArgs) {
     fs.writeFileSync(scriptPath, scriptContent);
   } catch (e) {
     console.log("Failed to install Crashlytics buildscript hook.");
-    console.log(e);
-  }
-}
-
-/**
- * Create the iOS build script for setting the workspace to the legacy build system (for now).
- *
- * @param {any} enable is Firestore enabled
- */
-function writeBuildscriptHookForFirestore(enable) {
-  var scriptPath = path.join(appRoot, "hooks", "after-prepare", "firebase-firestore-buildscript.js");
-
-  if (!enable) {
-    if (fs.existsSync(scriptPath)) {
-      fs.unlinkSync(scriptPath);
-    }
-    return
-  }
-
-  console.log("Install Firestore buildscript hook.");
-  try {
-    var scriptContent =
-        `const fs = require('fs-extra');
-const path = require('path');
-
-module.exports = function($logger, $projectData, hookArgs) {
-  const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
-  const platform = (platformFromHookArgs  || '').toLowerCase();
-  return new Promise(function(resolve, reject) {
-    const isNativeProjectPrepared = hookArgs.prepareData ? (!hookArgs.prepareData.nativePrepare || !hookArgs.prepareData.nativePrepare.skipNativePrepare) : (!hookArgs.nativePrepare || !hookArgs.nativePrepare.skipNativePrepare);
-    if (isNativeProjectPrepared) {
-      try {
-        if (platform !== 'ios') {
-          resolve();
-          return;
-        }
-
-        const sanitizedAppName = path.basename($projectData.projectDir).split('').filter((c) => /[a-zA-Z0-9]/.test(c)).join('');
-
-        const xcodeWorkspacePath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcworkspace');
-        if (!fs.existsSync(xcodeWorkspacePath)) {
-          $logger.error(xcodeWorkspacePath + ' is missing.');
-          reject();
-          return;
-        }
-
-        const xcodeWorkspaceShareddataPath = path.join($projectData.platformsDir, 'ios', sanitizedAppName + '.xcworkspace', 'xcshareddata');
-        $logger.trace('Using Xcode workspace settings path', xcodeWorkspaceShareddataPath);
-        console.log('Using Xcode workspace settings path: ' + xcodeWorkspaceShareddataPath);
-
-        if (!fs.existsSync(xcodeWorkspaceShareddataPath)) {
-          fs.mkdirSync(xcodeWorkspaceShareddataPath);
-        }
-
-        const xcodeWorkspaceSettingsFile = path.join(xcodeWorkspaceShareddataPath, 'WorkspaceSettings.xcsettings');
-        // for this temp fix we assume that if the file is there, it contains the correct config
-        if (!fs.existsSync(xcodeWorkspaceSettingsFile)) {
-          fs.writeFileSync(xcodeWorkspaceSettingsFile, \`<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>BuildSystemType</key>
-	<string>Original</string>
-</dict>
-</plist>
-\`);
-          $logger.trace('Xcode workspace file written');
-        }
-        resolve();
-
-      } catch (e) {
-        $logger.error('Unknown error during prepare Firestore', e);
-        reject();
-      }
-    } else {
-      $logger.trace("Native project not prepared.");
-      resolve();
-    }
-  });
-};
-`;
-    var afterPrepareDirPath = path.dirname(scriptPath);
-    var hooksDirPath = path.dirname(afterPrepareDirPath);
-    if (!fs.existsSync(afterPrepareDirPath)) {
-      if (!fs.existsSync(hooksDirPath)) {
-        fs.mkdirSync(hooksDirPath);
-      }
-      fs.mkdirSync(afterPrepareDirPath);
-    }
-    fs.writeFileSync(scriptPath, scriptContent);
-  } catch (e) {
-    console.log("Failed to install Firestore buildscript hook.");
     console.log(e);
   }
 }
