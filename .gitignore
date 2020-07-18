@@ -5,8 +5,10 @@ package-lock.json
 *.js
 !src/*-hooks.js
 build/
+*.tgz
 *.log.*
 src/**/*.d.ts
+src/**/*.map
 src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/project.xcworkspace
 src/platforms/ios_lib/TNSMLKitCamera/TNSMLKitCamera.xcodeproj/xcuserdata
 src/platforms/ios/Podfile
