@@ -1,1 +1,1 @@
-require('nativescript-hook')(__dirname).postinstall();
+require('@nativescript/hook')(__dirname).postinstall();

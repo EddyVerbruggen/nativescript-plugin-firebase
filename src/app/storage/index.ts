@@ -1,4 +1,4 @@
-import { File } from "tns-core-modules/file-system"
+import { File } from "@nativescript/core";
 import * as firebaseStorage from "../../storage/storage";
 import { ListResult, UploadFileResult, UploadMetadata } from "../../storage/storage";
 

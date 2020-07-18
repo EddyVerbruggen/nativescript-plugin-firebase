@@ -1,5 +1,4 @@
-import { booleanConverter, makeParser, makeValidator } from "tns-core-modules/ui/core/view-base";
-import { Property } from "tns-core-modules/ui/core/properties";
+import { Property, booleanConverter, makeParser, makeValidator } from "@nativescript/core";
 import { MLKitCameraView } from "../mlkit-cameraview";
 import { MLKitFaceDetectionMode } from "./";
 

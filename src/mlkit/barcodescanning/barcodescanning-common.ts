@@ -1,5 +1,4 @@
-import { booleanConverter } from "tns-core-modules/ui/core/view-base";
-import { Property } from "tns-core-modules/ui/core/properties";
+import { booleanConverter, Property } from "@nativescript/core";
 import { MLKitCameraView } from "../mlkit-cameraview";
 
 export enum BarcodeFormat {

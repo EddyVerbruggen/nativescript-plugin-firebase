@@ -1,5 +1,5 @@
 import { ENABLE_CRASHLYTICS_HINT } from "./crashlytics-common";
-import * as appModule from 'tns-core-modules/application';
+import { Application } from '@nativescript/core';
 
 declare const com: any;
 
@@ -64,7 +64,7 @@ export function crash(): void {
 export function setCrashlyticsCollectionEnabled(enabled: boolean): void {
   if (isCrashlyticsAvailable()) {
     io.fabric.sdk.android.Fabric.with(
-        appModule.getNativeApplication(),
+        Application.getNativeApplication(),
         [new com.crashlytics.android.Crashlytics()]);
   }
 }

@@ -1,5 +1,4 @@
-import { device } from "tns-core-modules/platform/platform";
-import { DeviceType } from "tns-core-modules/ui/enums/enums";
+import { Device, Enums } from "@nativescript/core";
 import { firebase } from "../firebase-common";
 import { BannerOptions, InterstitialOptions, PreloadRewardedVideoAdOptions, ShowRewardedVideoAdOptions } from "./admob";
 import { AD_SIZE, BANNER_DEFAULTS, rewardedVideoCallbacks } from "./admob-common";
@@ -330,7 +329,7 @@ function _getBannerType(size): any {
     return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size === AD_SIZE.SMART_BANNER || size === AD_SIZE.FLUID) {
     const orientation = UIDevice.currentDevice.orientation;
-    const isIPad = device.deviceType === DeviceType.Tablet;
+    const isIPad = Device.deviceType === Enums.DeviceType.Tablet;
     if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};

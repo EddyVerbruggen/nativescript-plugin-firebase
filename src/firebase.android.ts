@@ -1,7 +1,5 @@
-import * as appModule from "tns-core-modules/application";
-import { AndroidActivityResultEventData } from "tns-core-modules/application";
-import lazy from "tns-core-modules/utils/lazy";
-import { ad as AndroidUtils } from "tns-core-modules/utils/utils";
+import { Application, AndroidActivityResultEventData, Utils, AndroidApplication } from "@nativescript/core";
+import lazy from "@nativescript/core/utils/lazy";
 import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, FBErrorData, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
 import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
@@ -44,7 +42,7 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
 
 (() => {
   // note that this means we need to 'require()' the plugin before the app is loaded
-  appModule.on(appModule.launchEvent, args => {
+  Application.on(Application.launchEvent, args => {
     if (messagingEnabled()) {
       firebaseMessaging.onAppModuleLaunchEvent(args);
     }
@@ -104,7 +102,7 @@ const dynamicLinksEnabled = lazy(() => typeof (com.google.firebase.dynamiclinks)
     }
   });
 
-  appModule.on(appModule.resumeEvent, args => {
+  Application.on(Application.resumeEvent, args => {
     if (messagingEnabled()) {
       firebaseMessaging.onAppModuleResumeEvent(args);
     }
@@ -302,14 +300,14 @@ firebase.init = arg => {
 
       if (typeof (com.google.firebase.analytics) !== "undefined" && typeof (com.google.firebase.analytics.FirebaseAnalytics) !== "undefined") {
         com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-            appModule.android.context || appModule.getNativeApplication()
+            Application.android.context || Application.getNativeApplication()
         ).setAnalyticsCollectionEnabled(arg.analyticsCollectionEnabled !== false);
       }
 
       // note that this only makes sense if crash reporting was disabled in AndroidManifest.xml
       if (arg.crashlyticsCollectionEnabled && typeof (com.crashlytics) !== "undefined" && typeof (com.crashlytics.android.Crashlytics) !== "undefined") {
         io.fabric.sdk.android.Fabric.with(
-            appModule.android.context || appModule.getNativeApplication(),
+            Application.android.context || Application.getNativeApplication(),
             [new com.crashlytics.android.Crashlytics()]);
       }
 
@@ -384,18 +382,18 @@ firebase.init = arg => {
       // Firebase AdMob
       if (typeof (gmsAds) !== "undefined" && typeof (gmsAds.MobileAds) !== "undefined") {
         // init admob
-        gmsAds.MobileAds.initialize(appModule.android.context);
+        gmsAds.MobileAds.initialize(Application.android.context);
       }
 
       resolve(firebase.instance);
     };
 
     try {
-      if (appModule.android.startActivity) {
+      if (Application.android.startActivity) {
         runInit();
       } else {
         // if this is called before application.start() wait for the event to fire
-        appModule.on(appModule.launchEvent, runInit);
+        Application.on(Application.launchEvent, runInit);
       }
     } catch (ex) {
       console.log("Error in firebase.init: " + ex);
@@ -478,7 +476,7 @@ firebase.getRemoteConfigDefaults = properties => {
 };
 
 firebase._isGooglePlayServicesAvailable = () => {
-  const ctx = appModule.android.foregroundActivity || appModule.android.startActivity || appModule.getNativeApplication();
+  const ctx = Application.android.foregroundActivity || Application.android.startActivity || Application.getNativeApplication();
   const googleApiAvailability = com.google.android.gms.common.GoogleApiAvailability.getInstance();
   const playServiceStatusSuccess = 0; // com.google.android.gms.common.ConnectionResult.SUCCESS;
   const playServicesStatus = googleApiAvailability.isGooglePlayServicesAvailable(ctx);
@@ -596,15 +594,15 @@ firebase.getRemoteConfig = arg => {
     };
 
     try {
-      if (appModule.android.foregroundActivity) {
+      if (Application.android.foregroundActivity) {
         runGetRemoteConfig();
       } else {
         // if this is called before application.start(), wait for the event to fire
         const callback = () => {
           runGetRemoteConfig();
-          appModule.off(appModule.resumeEvent, callback);
+          Application.off(Application.resumeEvent, callback);
         };
-        appModule.on(appModule.resumeEvent, callback);
+        Application.on(Application.resumeEvent, callback);
       }
     } catch (ex) {
       console.log("Error in firebase.getRemoteConfig: " + ex);
@@ -898,9 +896,9 @@ firebase.login = arg => {
             // URL you want to redirect back to. The domain must be whitelisted in the Firebase Console.
             .setUrl(arg.emailLinkOptions.url)
             .setHandleCodeInApp(true)
-            .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : appModule.android.context.getPackageName())
+            .setIOSBundleId(arg.emailLinkOptions.iOS ? arg.emailLinkOptions.iOS.bundleId : Application.android.context.getPackageName())
             .setAndroidPackageName(
-                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : appModule.android.context.getPackageName(),
+                arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : Application.android.context.getPackageName(),
                 arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
                 arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1")
             .build();
@@ -988,7 +986,7 @@ firebase.login = arg => {
             arg.phoneOptions.phoneNumber,
             timeout, // timeout (in seconds, because of the next argument)
             java.util.concurrent.TimeUnit.SECONDS,
-            appModule.android.foregroundActivity,
+            Application.android.foregroundActivity,
             new OnVerificationStateChangedCallbacks());
 
       } else if (arg.type === firebase.LoginType.CUSTOM) {
@@ -1019,15 +1017,15 @@ firebase.login = arg => {
 
         // Lazy loading the Facebook callback manager
         if (!fbCallbackManager) {
-          com.facebook.FacebookSdk.sdkInitialize(appModule.getNativeApplication());
+          com.facebook.FacebookSdk.sdkInitialize(Application.getNativeApplication());
           fbCallbackManager = com.facebook.CallbackManager.Factory.create();
         }
 
         const callback = (eventData: AndroidActivityResultEventData) => {
-          appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
+          Application.android.off(AndroidApplication.activityResultEvent, callback);
           fbCallbackManager.onActivityResult(eventData.requestCode, eventData.resultCode, eventData.intent);
         };
-        appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
+        Application.android.on(AndroidApplication.activityResultEvent, callback);
 
         const fbLoginManager = com.facebook.login.LoginManager.getInstance();
         fbLoginManager.registerCallback(
@@ -1057,9 +1055,9 @@ firebase.login = arg => {
         if (arg.facebookOptions && arg.facebookOptions.scopes) {
           scopes = arg.facebookOptions.scopes;
         }
-        const permissions = AndroidUtils.collections.stringArrayToStringSet(scopes);
+        const permissions = Utils.android.collections.stringArrayToStringSet(scopes);
 
-        const activity = appModule.android.foregroundActivity;
+        const activity = Application.android.foregroundActivity;
         fbLoginManager.logInWithReadPermissions(activity, permissions);
 
       } else if (arg.type === firebase.LoginType.APPLE) {
@@ -1104,7 +1102,7 @@ firebase.login = arg => {
 
           const provider = oAuthProviderBuilder.build();
 
-          firebaseAuth.startActivityForSignInWithProvider(appModule.android.foregroundActivity || appModule.android.startActivity, provider)
+          firebaseAuth.startActivityForSignInWithProvider(Application.android.foregroundActivity || Application.android.startActivity, provider)
               .addOnSuccessListener(onSuccessListener)
               .addOnFailureListener(onFailureListener);
         }
@@ -1115,8 +1113,8 @@ firebase.login = arg => {
           return;
         }
 
-        const clientStringId = AndroidUtils.resources.getStringId("default_web_client_id");
-        const clientId = AndroidUtils.getApplicationContext().getResources().getString(clientStringId);
+        const clientStringId = Utils.android.resources.getStringId("default_web_client_id");
+        const clientId = Utils.android.getApplicationContext().getResources().getString(clientStringId);
 
         // Configure Google Sign In
         const googleSignInOptionsBuilder = new com.google.android.gms.auth.api.signin.GoogleSignInOptions.Builder(com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -1143,17 +1141,17 @@ firebase.login = arg => {
           }
         });
 
-        firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(appModule.getNativeApplication())
+        firebase._mGoogleApiClient = new com.google.android.gms.common.api.GoogleApiClient.Builder(Application.getNativeApplication())
             .addOnConnectionFailedListener(onConnectionFailedListener)
             .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
             .build();
 
         const signInIntent = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInIntent(firebase._mGoogleApiClient);
-        (appModule.android.foregroundActivity || appModule.android.startActivity).startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
+        (Application.android.foregroundActivity || Application.android.startActivity).startActivityForResult(signInIntent, GOOGLE_SIGNIN_INTENT_ID);
 
         const callback = (eventData: AndroidActivityResultEventData) => {
           if (eventData.requestCode === GOOGLE_SIGNIN_INTENT_ID) {
-            appModule.android.off(appModule.AndroidApplication.activityResultEvent, callback);
+            Application.android.off(AndroidApplication.activityResultEvent, callback);
             const googleSignInResult = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(eventData.intent);
             if (googleSignInResult === null) {
               reject("No googleSignInResult, eventData.intent seems to be invalid");
@@ -1185,7 +1183,7 @@ firebase.login = arg => {
             }
           }
         };
-        appModule.android.on(appModule.AndroidApplication.activityResultEvent, callback);
+        Application.android.on(AndroidApplication.activityResultEvent, callback);
 
       } else {
         reject("Unsupported auth type: " + arg.type);

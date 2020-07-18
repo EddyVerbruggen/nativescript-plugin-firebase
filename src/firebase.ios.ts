@@ -1,5 +1,4 @@
-import * as application from "tns-core-modules/application/application";
-import { device } from "tns-core-modules/platform";
+import { Application, Device } from "@nativescript/core";
 import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
 import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
@@ -284,15 +283,15 @@ if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
 // This breaks in-app-messaging :(
 function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
-  if (application.ios.delegate === undefined) {
+  if (Application.ios.delegate === undefined) {
 
     @ObjCClass(UIApplicationDelegate)
     class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
     }
 
-    application.ios.delegate = UIApplicationDelegateImpl;
+    Application.ios.delegate = UIApplicationDelegateImpl;
   }
-  return application.ios.delegate;
+  return Application.ios.delegate;
 }
 
 firebase.addAppDelegateMethods(getAppDelegate());
@@ -807,7 +806,7 @@ firebase.login = arg => {
                 return;
               }
               // The link was successfully sent.
-              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same Device.
               firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
               resolve();
             }
@@ -918,8 +917,8 @@ firebase.login = arg => {
             onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.APPLE) {
-        if (parseInt(device.osVersion) < 13) {
-          reject("Sign in with Apple requires iOS 13 or higher. You're running iOS " + device.osVersion);
+        if (parseInt(Device.osVersion) < 13) {
+          reject("Sign in with Apple requires iOS 13 or higher. You're running iOS " + Device.osVersion);
           return;
         }
 
@@ -963,7 +962,7 @@ firebase.login = arg => {
         }
 
         const sIn = GIDSignIn.sharedInstance();
-        sIn.presentingViewController = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
+        sIn.presentingViewController = arg.ios && arg.ios.controller ? arg.ios.controller : Application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {
@@ -2429,7 +2428,7 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
 
   public static createWithOwnerAndResolveReject(owner: WeakRef<any>, resolve, reject): ASAuthorizationControllerDelegateImpl {
     // defer initialisation because this is only available since iOS 13
-    if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(device.osVersion) >= 13) {
+    if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerDelegateImpl.ObjCProtocols.push(ASAuthorizationControllerDelegate);
     }
     let delegate = <ASAuthorizationControllerDelegateImpl>ASAuthorizationControllerDelegateImpl.new();
@@ -2492,7 +2491,7 @@ class ASAuthorizationControllerPresentationContextProvidingImpl extends NSObject
 
   public static createWithOwnerAndCallback(owner: WeakRef<any>): ASAuthorizationControllerPresentationContextProvidingImpl {
     // defer initialisation because this is only available since iOS 13
-    if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(device.osVersion) >= 13) {
+    if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.push(ASAuthorizationControllerPresentationContextProviding);
     }
     let delegate = <ASAuthorizationControllerPresentationContextProvidingImpl>ASAuthorizationControllerPresentationContextProvidingImpl.new();

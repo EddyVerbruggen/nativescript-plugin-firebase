@@ -1,6 +1,6 @@
 {
-  "name": "nativescript-plugin-firebase",
-  "version": "10.5.2",
+  "name": "@nativescript/firebase",
+  "version": "11.0.0-rc.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
@@ -32,6 +32,7 @@
     "typingsproject": "demo-ng"
   },
   "scripts": {
+    "clean": "npx rimraf node_modules package-lock.json && npm i --ignore-scripts",
     "postinstall": "node postinstall-hooks.js && node scripts/postinstall.js",
     "preuninstall": "node preuninstall-hooks.js",
     "setup": "node scripts/postinstall.js setup",
@@ -134,7 +135,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "fs-extra": "~2.1.0",
-    "nativescript-hook": "~0.2.5",
+    "@nativescript/hook": "~1.0.0",
     "nativescript-shared-notification-delegate": "~1.0.0",
     "prompt-lite": "~0.1.1",
     "xcode": "~0.9.3",
@@ -142,9 +143,9 @@
   },
   "devDependencies": {
     "rimraf": "~2.7.1",
-    "tns-core-modules": "~6.3.2",
-    "tns-platform-declarations": "~6.3.2",
+    "@nativescript/core": "rc",
+    "@nativescript/types": "rc",
     "tslint": "~5.20.1",
-    "typescript": "~3.4.5"
+    "typescript": "~3.9.0"
   }
 }

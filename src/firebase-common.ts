@@ -1,5 +1,4 @@
-import { prompt } from "tns-core-modules/ui/dialogs";
-import { getString, setString } from "tns-core-modules/application-settings";
+import { prompt, ApplicationSettings } from "@nativescript/core";
 import { firestore } from "./firebase";
 import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
@@ -119,10 +118,10 @@ export const firebase: any = {
     });
   },
   rememberEmailForEmailLinkLogin: (email: string) => {
-    setString("FirebasePlugin.EmailLinkLogin", email);
+    ApplicationSettings.setString("FirebasePlugin.EmailLinkLogin", email);
   },
   getRememberedEmailForEmailLinkLogin: () => {
-    return getString("FirebasePlugin.EmailLinkLogin");
+    return ApplicationSettings.getString("FirebasePlugin.EmailLinkLogin");
   },
   strongTypeify: value => {
     if (value === "true") {

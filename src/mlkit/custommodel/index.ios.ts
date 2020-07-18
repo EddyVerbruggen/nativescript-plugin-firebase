@@ -1,5 +1,4 @@
-import * as fs from "tns-core-modules/file-system";
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource, knownFolders } from "@nativescript/core";
 import { MLKitCustomModelOptions, MLKitCustomModelResult, MLKitCustomModelResultValue } from "./";
 import {
   getLabelsFromAppFolder,
@@ -105,7 +104,7 @@ function getInterpreter(localModelFile: string): FIRModelInterpreter {
     let localModelFilePath: string;
 
     if (localModelFile.indexOf("~/") === 0) {
-      localModelFilePath = fs.knownFolders.currentApp().path + localModelFile.substring(1);
+      localModelFilePath = knownFolders.currentApp().path + localModelFile.substring(1);
     } else {
       localModelFilePath = NSBundle.mainBundle.pathForResourceOfType(
           localModelFile.substring(0, localModelFile.lastIndexOf(".")),
