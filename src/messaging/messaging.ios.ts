@@ -253,7 +253,7 @@ export function prepAppDelegate() {
     _processPendingNotifications();
 
     if (typeof (FIRMessaging) !== "undefined") {
-      FIRMessaging.messaging().shouldEstablishDirectChannel = true;
+      FIRMessaging.messaging().shouldEstablishDirectChannel = false;
     }
   });
 }
