@@ -251,10 +251,6 @@ export function prepAppDelegate() {
 
   _addObserver(UIApplicationDidBecomeActiveNotification, appNotification => {
     _processPendingNotifications();
-
-    if (typeof (FIRMessaging) !== "undefined") {
-      FIRMessaging.messaging().shouldEstablishDirectChannel = false;
-    }
   });
 }
 
