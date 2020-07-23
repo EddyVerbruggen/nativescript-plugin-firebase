@@ -196,36 +196,38 @@ export function addBackgroundRemoteNotificationHandler(appDelegate) {
 }
 
 export function registerForInteractivePush(model?: PushNotificationModel): void {
-  let nativeActions: Array<UNNotificationAction> = [];
+  let nativeCategories: Array<UNNotificationCategory> = [];
 
-  model.iosSettings.interactiveSettings.actions.forEach(((action: IosInteractiveNotificationAction) => {
-    let notificationActionOptions: UNNotificationActionOptions = action.options ? <UNNotificationActionOptions>action.options.valueOf() : UNNotificationActionOptionNone;
-    let actionType: IosInteractiveNotificationType = action.type || "button";
-    let nativeAction: UNNotificationAction;
+  model.iosSettings.interactiveSettings.categories.forEach(category => {
+    let nativeActions: Array<UNNotificationAction> = [];
 
-    if (actionType === "input") {
-      nativeAction = UNTextInputNotificationAction.actionWithIdentifierTitleOptionsTextInputButtonTitleTextInputPlaceholder(
+    model.iosSettings.interactiveSettings.actions.forEach(((action: IosInteractiveNotificationAction) => {
+      let notificationActionOptions: UNNotificationActionOptions = action.options ? <UNNotificationActionOptions>action.options.valueOf() : UNNotificationActionOptionNone;
+      let actionType: IosInteractiveNotificationType = action.type || "button";
+      let nativeAction: UNNotificationAction;
+
+      if (actionType === "input") {
+        nativeAction = UNTextInputNotificationAction.actionWithIdentifierTitleOptionsTextInputButtonTitleTextInputPlaceholder(
           action.identifier,
           action.title,
           notificationActionOptions,
           action.submitLabel || "Submit",
           action.placeholder);
-    } else if (actionType === "button") {
-      nativeAction = UNNotificationAction.actionWithIdentifierTitleOptions(
+      } else if (actionType === "button") {
+        nativeAction = UNNotificationAction.actionWithIdentifierTitleOptions(
           action.identifier,
           action.title,
           notificationActionOptions);
-    } else {
-      console.log("Unsupported action type: " + action.type);
-    }
+      } else {
+        console.log("Unsupported action type: " + action.type);
+      }
 
-    nativeActions.push(nativeAction);
-  }));
+      if (action.category && action.category === category.identifier || !action.category) {
+        nativeActions.push(nativeAction);
+      }
+    }));
 
-  let actions: NSArray<UNNotificationAction> = <NSArray<UNNotificationAction>>NSArray.arrayWithArray(<any>nativeActions);
-  let nativeCategories: Array<UNNotificationCategory> = [];
-
-  model.iosSettings.interactiveSettings.categories.forEach(category => {
+    let actions: NSArray<UNNotificationAction> = <NSArray<UNNotificationAction>>NSArray.arrayWithArray(<any>nativeActions);
     let nativeCategory = UNNotificationCategory.categoryWithIdentifierActionsIntentIdentifiersOptions(category.identifier, actions, null, null);
 
     nativeCategories.push(nativeCategory);
@@ -531,9 +533,9 @@ class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
     }
 
     if (_showNotificationsWhenInForeground || // Default value, in case we always want to show when in foreground.
-        userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
-        userInfoJSON["showWhenInForeground"] === true || // ...this is for non-FCM...
-        (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // ...and this as well (so users can choose where to put it).
+      userInfoJSON["gcm.notification.showWhenInForeground"] === "true" || // This is for FCM, ...
+      userInfoJSON["showWhenInForeground"] === true || // ...this is for non-FCM...
+      (userInfoJSON.aps && userInfoJSON.aps.showWhenInForeground === true) // ...and this as well (so users can choose where to put it).
     ) {
       completionHandler(UNNotificationPresentationOptions.Alert | UNNotificationPresentationOptions.Sound | UNNotificationPresentationOptions.Badge);
     } else {
