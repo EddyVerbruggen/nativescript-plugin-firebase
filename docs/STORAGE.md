@@ -59,6 +59,7 @@ You can either pass in a full local path to a file, or (as a convenience) use th
   // determine the path to a file in the app/res folder
   var logoPath = appPath + "/res/telerik-logo.png";
 
+  // if you don't want/need to include metadata, pass in an empty object ({}) to avoid errors
   var metadata = {
     contentType: "demo/test",
     contentLanguage: "fr",
@@ -110,6 +111,7 @@ You can either pass in a full local path to a file, or (as a convenience) use th
   const storageRef = firebaseWebApi.storage().ref();
   const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
+  // if you don't want/need to include metadata, pass in an empty object ({}) to avoid errors
   const metadata = {
     contentType: "demo/test",
     contentLanguage: "fr",
