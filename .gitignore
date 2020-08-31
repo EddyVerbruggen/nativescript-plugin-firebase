@@ -28,7 +28,7 @@ src/platforms/android/mlkithelpersrc/**/*.class
 !src/platforms/ios/typings/*.d.ts
 !src/platforms/android/typings/**/*.d.ts
 !src/functions/functions.d.ts
-!src/scripts/*.js
+!src/scripts/entitlements*.js
 !demo/karma.conf.js
 demo/*.d.ts
 demo/firebasefunctions/functions/lib
