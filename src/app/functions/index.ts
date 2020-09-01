@@ -1,4 +1,4 @@
-import * as firebase from "../../firebase";
+import { firebase } from "../../firebase";
 
 export namespace functions {
   // tslint:disable-next-line:class-name

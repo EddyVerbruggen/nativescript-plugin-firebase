@@ -1,7 +1,7 @@
 import { firebase } from "../firebase-common";
 import { Application } from "@nativescript/core";
 import { PushNotificationModel } from "./messaging.ios";
-import { MessagingOptions } from "../firebase";
+import { firebase as fbNamespace } from "../firebase";
 
 declare const android, com, global: any;
 const NotificationManagerCompatClass = useAndroidX() ? global.androidx.core.app.NotificationManagerCompat : android.support.v4.app.NotificationManagerCompat;
@@ -33,7 +33,7 @@ function getSenderId(): Promise<string> {
   });
 }
 
-export function initFirebaseMessaging(options?: MessagingOptions) {
+export function initFirebaseMessaging(options?: fbNamespace.MessagingOptions) {
   if (!options) {
     return;
   }
@@ -174,7 +174,7 @@ export function addOnPushTokenReceivedCallback(callback) {
   });
 }
 
-export function registerForPushNotifications(options?: MessagingOptions): Promise<void> {
+export function registerForPushNotifications(options?: fbNamespace.MessagingOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (typeof (com.google.firebase.messaging) === "undefined") {

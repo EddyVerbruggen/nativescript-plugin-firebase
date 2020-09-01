@@ -343,6 +343,7 @@ function _getBannerType(size): any {
   }
 }
 
+@NativeClass()
 class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDelegate {
   public static ObjCProtocols = [];
   private options: InterstitialOptions;
@@ -381,6 +382,7 @@ class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDel
   }
 }
 
+@NativeClass()
 class GADBannerViewDelegateImpl extends NSObject implements GADBannerViewDelegate {
   public static ObjCProtocols = [];
   private onAdCloseCallback: () => void;
@@ -419,6 +421,7 @@ class GADBannerViewDelegateImpl extends NSObject implements GADBannerViewDelegat
   }
 }
 
+@NativeClass()
 class GADRewardBasedVideoAdDelegateImpl extends NSObject implements GADRewardBasedVideoAdDelegate {
   public static ObjCProtocols = [];
   _loaded: () => void;

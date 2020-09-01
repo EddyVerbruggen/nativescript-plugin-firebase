@@ -1,6 +1,6 @@
-import { DelegateObserver, SharedNotificationDelegate } from "nativescript-shared-notification-delegate";
+import { DelegateObserver, SharedNotificationDelegate } from "@nativescript/shared-notification-delegate";
 import { Application, ApplicationSettings, Device } from "@nativescript/core";
-import { MessagingOptions } from "../firebase";
+import { firebase as fbNamespace } from "../firebase";
 import { firebase } from "../firebase-common";
 import { firebaseUtils } from "../utils";
 import { IosInteractiveNotificationAction, IosInteractiveNotificationCategory, IosInteractiveNotificationType } from "./messaging";
@@ -74,7 +74,7 @@ export function getCurrentPushToken(): Promise<string> {
   });
 }
 
-export function registerForPushNotifications(options?: MessagingOptions): Promise<void> {
+export function registerForPushNotifications(options?: fbNamespace.MessagingOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       initFirebaseMessaging(options);
@@ -557,6 +557,7 @@ class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
   }
 }
 
+@NativeClass()
 class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate {
   public static ObjCProtocols = [];
 

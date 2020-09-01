@@ -1,5 +1,5 @@
-/// <reference path="./node_modules/@nativescript/types/ios.d.ts" />
-/// <reference path="./node_modules/@nativescript/types/android.d.ts" />
+/// <reference path="./node_modules/@nativescript/core/global-types.d.ts" />
+/// <reference path="./node_modules/@nativescript/types/index.d.ts" />
 
 /// <reference path="./platforms/ios/typings/objc!FBSDKCoreKit.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FBSDKLoginKit.d.ts" />

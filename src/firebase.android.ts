@@ -1,10 +1,205 @@
 import { Application, AndroidActivityResultEventData, Utils, AndroidApplication } from "@nativescript/core";
 import lazy from "@nativescript/core/utils/lazy";
-import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, FBErrorData, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
 import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
 import * as firebaseMessaging from "./messaging/messaging";
+import { firestore } from "./platforms/web/typings/firebase-webapi";
 
+export enum QueryOrderByType {
+  KEY,
+  VALUE,
+  CHILD,
+  PRIORITY
+}
+
+/**
+ * The allowed values for QueryOptions.range.type.
+ */
+export enum QueryRangeType {
+  START_AT,
+  END_AT,
+  EQUAL_TO
+}
+
+/**
+ * The allowed values for QueryOptions.limit.type.
+ */
+export enum QueryLimitType {
+  FIRST,
+  LAST
+}
+type ActionCodeSettings = {
+  url: string;
+  handleCodeInApp?: boolean;
+  android?: {
+    installApp?: boolean;
+    minimumVersion?: string;
+    packageName: string;
+  };
+  iOS?: {
+    bundleId: string;
+    dynamicLinkDomain?: string;
+  };
+};
+export interface OnDisconnectBase {
+  cancel(): Promise<any>;
+
+  remove(): Promise<any>;
+
+  set(value: any): Promise<any>;
+
+  setWithPriority(
+      value: any,
+      priority: number | string
+  ): Promise<any>;
+
+  update(values: Object): Promise<any>;
+}
+
+
+export interface DataSnapshot {
+  key: string;
+  ref: any; // TODO: Type it so that it returns a databaseReference.
+  child(path: string): DataSnapshot;
+
+  exists(): boolean;
+
+  forEach(action: (snapshot: DataSnapshot) => any): boolean;
+
+  getPriority(): string | number | null;
+
+  hasChild(path: string): boolean;
+
+  hasChildren(): boolean;
+
+  numChildren(): number;
+
+  toJSON(): Object;
+
+  val(): any;
+}
+
+export interface FBData {
+  type: string;
+  key: string;
+  value: any;
+}
+
+export interface FBDataSingleEvent extends FBData {
+  children?: Array<any>;
+}
+
+export interface FBErrorData {
+  error: string;
+}
+
+export interface GetAuthTokenOptions {
+  /**
+   * Default false.
+   */
+  forceRefresh?: boolean;
+}
+export interface IdTokenResult {
+  token: string;
+  claims: { [key: string]: any; };
+  signInProvider: string;
+  expirationTime: number;
+  issuedAtTime: number;
+  authTime: number;
+}
+export interface QueryRangeOption {
+  type: QueryRangeType;
+  value: any;
+}
+
+/**
+ * The options object passed into the query function.
+ */
+export interface QueryOptions {
+  /**
+   * How you'd like to sort the query result.
+   */
+  orderBy: {
+    type: QueryOrderByType;
+    /**
+     * mandatory when type is QueryOrderByType.CHILD
+     */
+    value?: string;
+  };
+
+  /**
+   * You can further restrict the returned results by specifying restrictions.
+   * Need more than one range restriction? Use 'ranges' instead.
+   */
+  range?: QueryRangeOption;
+
+  /**
+   * Same as 'range', but for a 'chain of ranges'.
+   * You can further restrict the returned results by specifying restrictions.
+   */
+  ranges?: QueryRangeOption[];
+
+  /**
+   * You can limit the number of returned rows if you want to.
+   */
+  limit?: {
+    type: QueryLimitType;
+    value: number;
+  };
+
+  /**
+   * Set this to true if you don't want to listen for any future updates,
+   * but just want to retrieve the current value.
+   * You can also use this to check if certain data is in the database.
+   * Default false.
+   */
+  singleEvent?: boolean;
+}
+export interface Provider {
+  id: string;
+  token?: string;
+}
+
+export interface User {
+  uid: string;
+  email?: string;
+  emailVerified: boolean;
+  displayName?: string;
+  phoneNumber?: string;
+  anonymous: boolean;
+  isAnonymous: boolean; // This is used by the web API
+  providers: Array<Provider>;
+  photoURL?: string;
+  metadata: UserMetadata;
+  additionalUserInfo?: AdditionalUserInfo;
+
+  /** iOS only */
+  refreshToken?: string;
+
+  getIdToken(forceRefresh?: boolean): Promise<string>;
+
+  getIdTokenResult(forceRefresh?: boolean): Promise<IdTokenResult>;
+
+  sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<void>;
+}
+
+/**
+ * The metadata of the user
+ */
+export interface UserMetadata {
+  creationTimestamp: Date;
+  lastSignInTimestamp: Date;
+}
+
+/**
+ * Contains additional user information
+ */
+export interface AdditionalUserInfo {
+  profile: Map<string, any>;
+  providerId: string;
+  username: string;
+  isNewUser: boolean;
+}
 declare const com: any;
 const gmsAds = (<any>com.google.android.gms).ads;
 const gmsTasks = (<any>com.google.android.gms).tasks;
@@ -189,7 +384,7 @@ firebase.toValue = val => {
     } else if (val instanceof GeoPoint) {
       returnVal = new com.google.firebase.firestore.GeoPoint(val.latitude, val.longitude);
     } else if (isDocumentReference(val)) {
-      returnVal = val.android;
+      returnVal = (<any>val).android;
     } else {
       switch (typeof val) {
         case 'object':
@@ -2035,22 +2230,22 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
 
   public nativeWriteBatch: com.google.firebase.firestore.WriteBatch;
 
-  public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.WriteBatch => {
+  public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): any => {
     if (options && options.merge) {
-      this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data), com.google.firebase.firestore.SetOptions.merge());
+      this.nativeWriteBatch.set((<any>documentRef).android, firebase.toValue(data), com.google.firebase.firestore.SetOptions.merge());
     } else {
-      this.nativeWriteBatch.set(documentRef.android, firebase.toValue(data));
+      this.nativeWriteBatch.set((<any>documentRef).android, firebase.toValue(data));
     }
     return this;
   }
 
-  public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
-    this.nativeWriteBatch.update(documentRef.android, firebase.toValue(data));
+  public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): any => {
+    this.nativeWriteBatch.update((<any>documentRef).android, firebase.toValue(data));
     return this;
   }
 
-  public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
-    this.nativeWriteBatch.delete(documentRef.android);
+  public delete = (documentRef: firestore.DocumentReference): any => {
+    this.nativeWriteBatch.delete((<any>documentRef).android);
     return this;
   }
 
@@ -2071,7 +2266,7 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
   }
 }
 
-firebase.firestore.batch = (): firestore.WriteBatch => {
+firebase.firestore.batch = (): any => {
   const batch = new FirestoreWriteBatch();
   batch.nativeWriteBatch = com.google.firebase.firestore.FirebaseFirestore.getInstance().batch();
   return batch;
@@ -2095,26 +2290,26 @@ class FirestoreTransaction implements firestore.Transaction {
   public nativeTransaction: com.google.firebase.firestore.Transaction;
 
   public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
-    const docSnapshot: com.google.firebase.firestore.DocumentSnapshot = this.nativeTransaction.get(documentRef.android);
+    const docSnapshot: com.google.firebase.firestore.DocumentSnapshot = this.nativeTransaction.get((<any>documentRef).android);
     return new DocumentSnapshot(docSnapshot ? docSnapshot.getId() : null, docSnapshot.exists(), firebase.toJsObject(docSnapshot.getData()));
   };
 
   public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
     if (options && options.merge) {
-      this.nativeTransaction.set(documentRef.android, firebase.toValue(data), com.google.firebase.firestore.SetOptions.merge());
+      this.nativeTransaction.set((<any>documentRef).android, firebase.toValue(data), com.google.firebase.firestore.SetOptions.merge());
     } else {
-      this.nativeTransaction.set(documentRef.android, firebase.toValue(data));
+      this.nativeTransaction.set((<any>documentRef).android, firebase.toValue(data));
     }
     return this;
   };
 
   public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
-    this.nativeTransaction.update(documentRef.android, firebase.toValue(data));
+    this.nativeTransaction.update((<any>documentRef).android, firebase.toValue(data));
     return this;
   };
 
   public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
-    this.nativeTransaction.delete(documentRef.android);
+    this.nativeTransaction.delete((<any>documentRef).android);
     return this;
   }
 };
@@ -2162,7 +2357,7 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
   if (typeof (com.google.firebase.firestore) !== "undefined") {
     try {
       const builder = new com.google.firebase.firestore.FirebaseFirestoreSettings.Builder();
-      (settings.cacheSizeBytes !== undefined) && builder.setCacheSizeBytes(long(settings.cacheSizeBytes));
+      ((<any>settings).cacheSizeBytes !== undefined) && builder.setCacheSizeBytes(long((<any>settings).cacheSizeBytes));
       (settings.ssl !== undefined) && builder.setSslEnabled(settings.ssl);
       (settings.host !== undefined) && builder.setHost(settings.host);
       (initializeArguments.persist !== undefined) && builder.setPersistenceEnabled(initializeArguments.persist);
@@ -2208,7 +2403,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.collectionGroup = (id: string): firestore.CollectionGroup => {
+firebase.firestore.collectionGroup = (id: string): any => {
   ensureFirestore();
   try {
     const db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
@@ -2738,4 +2933,4 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
   }
 }
 
-module.exports = firebase;
+export * from './firebase-common';
