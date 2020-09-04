@@ -972,7 +972,7 @@ module.exports = function($logger, $projectData) {
                 if (dependenciesNode > -1) {
                     dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
                     // see https://docs.fabric.io/android/changelog.html
-                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.26.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.28.0"\\n' + buildGradleContent.substr(dependenciesNode - 1);
                 }
 
             } else if (buildGradleContent.indexOf("https://dl.bintray.com/android/android-tools") === -1) {
