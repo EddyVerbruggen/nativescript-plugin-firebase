@@ -4,7 +4,7 @@ import * as firebaseFunctions from "./functions/functions";
 import * as firebaseMessaging from "./messaging/messaging";
 import { firebaseUtils } from "./utils";
 import { getNonce, Sha256 } from "./utils/nonce-util-ios";
-import { firestore } from "./platforms/web/typings/firebase-webapi";
+import { firestore } from "./firebase";
 
 declare const ASAuthorizationAppleIDProvider, ASAuthorizationScopeFullName, ASAuthorizationScopeEmail, ASAuthorizationController, ASAuthorizationControllerDelegate, ASAuthorizationAppleIDCredential, ASAuthorizationControllerPresentationContextProviding: any;
 export enum QueryOrderByType {
@@ -1959,12 +1959,12 @@ firebase.firestore.batch = (): firestore.WriteBatch => {
   return new firebase.firestore.WriteBatch(FIRFirestore.firestore().batch());
 };
 
-firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.Transaction => {
+firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): any => { //firestore.Transaction
   class FirestoreTransaction implements firestore.Transaction {
     constructor() {
     }
 
-    public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
+    public get: any = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
       const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError((<any>documentRef).ios);
       return new DocumentSnapshot(docSnapshot);
     }
@@ -1972,18 +1972,18 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.setDataForDocumentMerge(<any>data, (<any>documentRef).ios, options && options.merge);
-      return this;
+      return <any>this;
     }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
       fixSpecialFields(data);
       nativeTransaction.updateDataForDocument(<any>data, (<any>documentRef).ios);
-      return this;
+      return <any>this;
     }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
       nativeTransaction.deleteDocument((<any>documentRef).ios);
-      return this;
+      return <any>this;
     }
   }
 
@@ -2176,7 +2176,7 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
     get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.documentID, options),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.documentID, data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.documentID),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: firestore.DocumentSnapshot) => void), callbackOrOnError?: (docOrError: firestore.DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     ios: docRef
   };
 };
@@ -2297,7 +2297,7 @@ function fixSpecialField(item): any {
       longitude: geo.longitude
     });
   } else if (isDocumentReference(item)) {
-    return item.ios;
+    return (<any>item).ios;
   } else if (typeof item === "object" && item.constructor === Object) {
     return fixSpecialFields(item);
   } else {
@@ -2407,7 +2407,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve(new DocumentSnapshot(snapshot));
+              resolve(new firebase.firestore.DocumentSnapshot(snapshot));
             }
           });
 
@@ -2555,7 +2555,7 @@ function convertDocChangeType(type: FIRDocumentChangeType) {
 }
 
 function convertDocument(qDoc: FIRQueryDocumentSnapshot): firestore.QueryDocumentSnapshot {
-  return new DocumentSnapshot(qDoc);
+  return new firebase.firestore.DocumentSnapshot(qDoc);
 }
 
 export class QuerySnapshot implements firestore.QuerySnapshot {
@@ -2574,7 +2574,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
       const docSnapshots: firestore.QueryDocumentSnapshot[] = [];
       for (let i = 0, l = this.snapshot.documents.count; i < l; i++) {
         const document = this.snapshot.documents.objectAtIndex(i);
-        docSnapshots.push(new DocumentSnapshot(document));
+        docSnapshots.push(new firebase.firestore.DocumentSnapshot(document));
       }
       this._docSnapshots = docSnapshots;
 

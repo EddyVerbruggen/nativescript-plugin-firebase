@@ -1,5 +1,5 @@
 import { prompt, ApplicationSettings } from "@nativescript/core";
-import { firebase as fbNamespace } from "./firebase";
+import { firestore as fsNamespace } from "./firebase";
 import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
 import * as crashlytics from "./crashlytics/crashlytics";
@@ -9,7 +9,7 @@ import * as mlkit from "./mlkit";
 
 // note that this implementation is overridden for iOS
 export class FieldValue {
-  constructor(public type: fbNamespace.firestore.FieldValueType,
+  constructor(public type: fsNamespace.FieldValueType,
               public value: any) {
   }
 
@@ -17,7 +17,7 @@ export class FieldValue {
   static delete = () => "DELETE_FIELD";
   static arrayUnion = (...elements: any[]) => new FieldValue("ARRAY_UNION", elements);
   static arrayRemove = (...elements: any[]) => new FieldValue("ARRAY_REMOVE", elements);
-  static increment = (n: number) => new fbNamespace.firestore.FieldValue("INCREMENT", n);
+  static increment = (n: number) => new FieldValue("INCREMENT", n);
 }
 
 export class GeoPoint {

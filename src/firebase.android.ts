@@ -3,7 +3,7 @@ import lazy from "@nativescript/core/utils/lazy";
 import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
 import * as firebaseMessaging from "./messaging/messaging";
-import { firestore } from "./platforms/web/typings/firebase-webapi";
+import { firestore } from "./firebase";
 
 export enum QueryOrderByType {
   KEY,
@@ -2226,7 +2226,7 @@ const ensureFirestore = (): void => {
   }
 };
 
-class FirestoreWriteBatch implements firestore.WriteBatch {
+class FirestoreWriteBatch {
 
   public nativeWriteBatch: com.google.firebase.firestore.WriteBatch;
 
@@ -2239,7 +2239,7 @@ class FirestoreWriteBatch implements firestore.WriteBatch {
     return this;
   }
 
-  public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): any => {
+  public update(documentRef: firestore.DocumentReference, data: firestore.UpdateData): any {
     this.nativeWriteBatch.update((<any>documentRef).android, firebase.toValue(data));
     return this;
   }
@@ -2494,7 +2494,7 @@ firebase.firestore._getDocumentReference = (docRef?: JDocumentReference): firest
     get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.getId(), options),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: firestore.DocumentSnapshot) => void), callbackOrOnError?: (docOrError: firestore.DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     android: docRef
   };
 };
@@ -2729,7 +2729,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
             reject(ex && ex.getReason ? ex.getReason() : ex);
           } else {
             const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
-            resolve(new DocumentSnapshot(result));
+            resolve(new firebase.DocumentSnapshot(result));
           }
         }
       });
@@ -2759,7 +2759,7 @@ firebase.firestore._getQuery = (collectionPath: string, query: com.google.fireba
   return {
     get: () => new Promise((resolve, reject) => {
       const onCompleteListener = new gmsTasks.OnCompleteListener({
-        onComplete: task => {
+        onComplete: (task: any) => {
           if (!task.isSuccessful()) {
             const ex = task.getException();
             reject(ex && ex.getReason ? ex.getReason() : ex);
@@ -2874,7 +2874,7 @@ function convertDocChangeType(type: com.google.firebase.firestore.DocumentChange
 }
 
 function convertDocument(qDoc: com.google.firebase.firestore.QueryDocumentSnapshot): firestore.QueryDocumentSnapshot {
-  return new DocumentSnapshot(qDoc);
+  return new firebase.DocumentSnapshot(qDoc);
 }
 
 export class QuerySnapshot implements firestore.QuerySnapshot {
@@ -2893,7 +2893,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
       const docSnapshots: firestore.QueryDocumentSnapshot[] = [];
       for (let i = 0; i < this.snapshot.size(); i++) {
         const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = this.snapshot.getDocuments().get(i);
-        docSnapshots.push(new DocumentSnapshot(documentSnapshot));
+        docSnapshots.push(new firebase.DocumentSnapshot(documentSnapshot));
       }
       this._docSnapshots = docSnapshots;
 
