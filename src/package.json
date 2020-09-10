@@ -37,7 +37,7 @@
     "preuninstall": "node preuninstall-hooks.js",
     "setup": "node scripts/postinstall.js setup",
     "config": "node scripts/postinstall.js config",
-    "tsc": "tsc -skipLibCheck",
+    "tsc": "ts-patch install && tsc -skipLibCheck",
     "plugin.tscwatch": "npm run tsc -- -w",
     "package": "cd ../publish && ./pack.sh",
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios",
