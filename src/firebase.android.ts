@@ -2729,7 +2729,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
             reject(ex && ex.getReason ? ex.getReason() : ex);
           } else {
             const result: com.google.firebase.firestore.DocumentSnapshot = task.getResult();
-            resolve(new firebase.DocumentSnapshot(result));
+            resolve(<any>new DocumentSnapshot(result));
           }
         }
       });
@@ -2874,7 +2874,7 @@ function convertDocChangeType(type: com.google.firebase.firestore.DocumentChange
 }
 
 function convertDocument(qDoc: com.google.firebase.firestore.QueryDocumentSnapshot): firestore.QueryDocumentSnapshot {
-  return new firebase.DocumentSnapshot(qDoc);
+  return <any>new DocumentSnapshot(qDoc);
 }
 
 export class QuerySnapshot implements firestore.QuerySnapshot {
@@ -2893,7 +2893,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
       const docSnapshots: firestore.QueryDocumentSnapshot[] = [];
       for (let i = 0; i < this.snapshot.size(); i++) {
         const documentSnapshot: com.google.firebase.firestore.DocumentSnapshot = this.snapshot.getDocuments().get(i);
-        docSnapshots.push(new firebase.DocumentSnapshot(documentSnapshot));
+        docSnapshots.push(<any>new DocumentSnapshot(documentSnapshot));
       }
       this._docSnapshots = docSnapshots;
 

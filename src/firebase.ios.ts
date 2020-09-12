@@ -2387,7 +2387,7 @@ firebase.firestore.get = (collectionPath: string, options?: firestore.GetOptions
   return firebase.firestore.getCollection(collectionPath, options);
 };
 
-firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<firestore.DocumentSnapshot> => {
+firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<DocumentSnapshot> => {
   ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
@@ -2407,7 +2407,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve(new firebase.firestore.DocumentSnapshot(snapshot));
+              resolve(new DocumentSnapshot(<any>snapshot));
             }
           });
 
@@ -2555,7 +2555,7 @@ function convertDocChangeType(type: FIRDocumentChangeType) {
 }
 
 function convertDocument(qDoc: FIRQueryDocumentSnapshot): firestore.QueryDocumentSnapshot {
-  return new firebase.firestore.DocumentSnapshot(qDoc);
+  return <any>new DocumentSnapshot(<any>qDoc);
 }
 
 export class QuerySnapshot implements firestore.QuerySnapshot {
@@ -2574,7 +2574,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
       const docSnapshots: firestore.QueryDocumentSnapshot[] = [];
       for (let i = 0, l = this.snapshot.documents.count; i < l; i++) {
         const document = this.snapshot.documents.objectAtIndex(i);
-        docSnapshots.push(new firebase.firestore.DocumentSnapshot(document));
+        docSnapshots.push(<any>new DocumentSnapshot(<any>document));
       }
       this._docSnapshots = docSnapshots;
 
