@@ -1027,8 +1027,8 @@ firebase.login = arg => {
   return new Promise((resolve, reject) => {
     try {
       // need these to support using phone auth more than once
-      this.resolve = resolve;
-      this.reject = reject;
+      firebase.resolve = resolve;
+      firebase.reject = reject;
 
       if (!firebase._isGooglePlayServicesAvailable()) {
         reject("Google Play services is required for this feature, but not available on this device");
@@ -1046,11 +1046,15 @@ firebase.login = arg => {
             if (firebase._mGoogleApiClient) {
               com.google.android.gms.auth.api.Auth.GoogleSignInApi.revokeAccess(firebase._mGoogleApiClient);
             }
-            this.reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            if (firebase.reject) {
+              firebase.reject("Logging in the user failed. " + (task.getException() && task.getException().getReason ? task.getException().getReason() : task.getException()));
+            }
           } else {
             const user = task.getResult().getUser();
             let additionalUserInfo = task.getResult().getAdditionalUserInfo();
-            this.resolve(toLoginResult(user, additionalUserInfo));
+            if (firebase.resolve) {
+              firebase.resolve(toLoginResult(user, additionalUserInfo));
+            }
           }
         }
       });
@@ -1144,9 +1148,13 @@ firebase.login = arg => {
             firebase._verifyPhoneNumberInProgress = false;
             const errorMessage = firebaseException.getMessage();
             if (errorMessage.includes("INVALID_APP_CREDENTIAL")) {
-              this.reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
+              if (firebase.reject) {
+                firebase.reject("Please upload the SHA1 fingerprint of your debug and release keystores to the Firebase console, see https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/master/docs/AUTHENTICATION.md#phone-verification");
+              }
             } else {
-              this.reject(errorMessage);
+              if (firebase.reject) {
+                firebase.reject(errorMessage);
+              }
             }
           },
           onCodeSent: (verificationId, forceResendingToken) => {
@@ -1156,8 +1164,8 @@ firebase.login = arg => {
               if (firebase._verifyPhoneNumberInProgress) {
                 firebase._verifyPhoneNumberInProgress = false;
                 firebase.requestPhoneAuthVerificationCode(userResponse => {
-                  if (userResponse === undefined && this.reject) {
-                    this.reject("Prompt was canceled");
+                  if (userResponse === undefined && firebase.reject) {
+                    firebase.reject("Prompt was canceled");
                     return;
                   }
                   const authCredential = com.google.firebase.auth.PhoneAuthProvider.getCredential(verificationId, userResponse);
