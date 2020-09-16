@@ -2502,7 +2502,7 @@ firebase.firestore._getDocumentReference = (docRef?: JDocumentReference): firest
     get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.getId(), options),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.getId(), data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.getId()),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: firestore.DocumentSnapshot) => void), callbackOrOnError?: (docOrError: firestore.DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: firestore.DocumentSnapshot) => void), callbackOrOnError?: (docOrError: firestore.DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     android: docRef
   };
 };
