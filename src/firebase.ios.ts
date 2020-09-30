@@ -947,12 +947,11 @@ firebase.login = arg => {
         appleIDRequest.nonce = sha256Nonce;
 
         const authorizationController = ASAuthorizationController.alloc().initWithAuthorizationRequests([appleIDRequest]);
-        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(new WeakRef(this), resolve, reject);
+        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(this, resolve, reject);
         CFRetain(delegate);
         authorizationController.delegate = delegate;
 
-        authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(
-            new WeakRef(this));
+        authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(this);
 
         authorizationController.performRequests();
 
