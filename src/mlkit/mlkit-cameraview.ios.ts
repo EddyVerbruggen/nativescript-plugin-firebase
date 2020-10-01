@@ -71,11 +71,22 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.previewLayer = AVCaptureVideoPreviewLayer.layerWithSession(this.captureSession);
     this.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 
-    if (iosUtils.isLandscape()) {
-      const deviceOrientation = UIDevice.currentDevice.orientation;
-      this.previewLayer.connection.videoOrientation = deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
-    } else {
-      this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+    switch (UIDevice.currentDevice.orientation) {
+      case UIDeviceOrientation.LandscapeLeft:
+        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeRight;
+        break;
+      case UIDeviceOrientation.LandscapeRight:
+        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeLeft;
+        break;
+      case UIDeviceOrientation.Portrait:
+        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+        break;
+      case UIDeviceOrientation.PortraitUpsideDown:
+        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.PortraitUpsideDown;
+        break;
+      default:
+        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+        break;
     }
 
     // note that when rotating back to portrait, this event fires very late.. not much we can do I think
@@ -95,8 +106,22 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       this.cameraView.processEveryXFrames = this.processEveryNthFrame;
 
       // this orientation is how the captured image is rotated (and shown)
-      if (this.rotateRecording()) {
-        this.cameraView.imageOrientation = UIImageOrientation.Right;
+      switch (UIDevice.currentDevice.orientation) {
+        case UIDeviceOrientation.Portrait:
+          this.cameraView.imageOrientation = UIImageOrientation.Right;
+          break;
+        case UIDeviceOrientation.PortraitUpsideDown:
+          this.cameraView.imageOrientation = UIImageOrientation.Left;
+          break;
+        case UIDeviceOrientation.LandscapeLeft:
+          this.cameraView.imageOrientation = UIImageOrientation.Up;
+          break;
+        case UIDeviceOrientation.LandscapeRight:
+          this.cameraView.imageOrientation = UIImageOrientation.Down;
+          break;
+        default:
+          this.cameraView.imageOrientation = UIImageOrientation.Right;
+          break;
       }
 
       this.cameraView.delegate = TNSMLKitCameraViewDelegateImpl.createWithOwnerResultCallbackAndOptions(
@@ -109,12 +134,42 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   private rotateOnOrientationChange(args: OrientationChangedEventData): void {
     if (this.previewLayer) {
-      if (args.newValue === "landscape") {
-        const deviceOrientation = UIDevice.currentDevice.orientation;
-        this.previewLayer.connection.videoOrientation = deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
-      } else if (args.newValue === "portrait") {
-        this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+      switch (UIDevice.currentDevice.orientation) {
+        case UIDeviceOrientation.LandscapeLeft:
+          this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeRight;
+          break;
+        case UIDeviceOrientation.LandscapeRight:
+          this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeLeft;
+          break;
+        case UIDeviceOrientation.Portrait:
+          this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+          break;
+        case UIDeviceOrientation.PortraitUpsideDown:
+          this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.PortraitUpsideDown;
+          break;
+        default:
+          this.previewLayer.connection.videoOrientation = AVCaptureVideoOrientation.Portrait;
+          break;
       }
+    }
+
+    // this orientation is how the captured image is rotated (and shown)
+    switch (UIDevice.currentDevice.orientation) {
+      case UIDeviceOrientation.Portrait:
+        this.cameraView.imageOrientation = UIImageOrientation.Right;
+        break;
+      case UIDeviceOrientation.PortraitUpsideDown:
+        this.cameraView.imageOrientation = UIImageOrientation.Left;
+        break;
+      case UIDeviceOrientation.LandscapeLeft:
+        this.cameraView.imageOrientation = UIImageOrientation.Up;
+        break;
+      case UIDeviceOrientation.LandscapeRight:
+        this.cameraView.imageOrientation = UIImageOrientation.Down;
+        break;
+      default:
+        this.cameraView.imageOrientation = UIImageOrientation.Right;
+        break;
     }
   }
 

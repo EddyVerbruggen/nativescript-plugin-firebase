@@ -1,3 +1,4 @@
+import { ios as iosUtils } from "tns-core-modules/utils/utils";
 import { ImageSource } from "tns-core-modules/image-source";
 import { MLKitVisionOptions } from "../";
 import { MLKitRecognizeTextCloudOptions, MLKitRecognizeTextOnDeviceOptions, MLKitRecognizeTextResult } from "./";
@@ -25,6 +26,9 @@ export class MLKitTextRecognition extends MLKitTextRecognitionBase {
   }
 
   protected rotateRecording(): boolean {
+    if (iosUtils.isLandscape()) {
+      return false;
+    }
     return true;
   }
 }
