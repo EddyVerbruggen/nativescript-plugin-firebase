@@ -36,9 +36,15 @@ export function showBanner(arg: BannerOptions): Promise<any> {
 
       const originX = (view.frame.size.width - adWidth) / 2;
       const originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - adHeight - settings.margins.bottom : 0.0);
-      const origin = CGPointMake(originX, originY);
-      firebase.admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
 
+        //Fix for the smart banner size on NS7.0+, due to issue with initWithAdSizeOrigin response "Invalid ad width or height: (0, 0)"
+        if (settings.size === AD_SIZE.SMART_BANNER) {
+            const adFrameRec = CGRectMake(originX, originY, adWidth, Math.min(adHeight, 50)); // minimum height should be 50 for a ad banner
+            firebase.admob.adView = GADBannerView.alloc().initWithFrame(adFrameRec)
+        } else {
+            const origin = CGPointMake(originX, originY);
+            firebase.admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
+        }
       firebase.admob.adView.adUnitID = settings.iosBannerId;
 
       const adRequest = GADRequest.request();
