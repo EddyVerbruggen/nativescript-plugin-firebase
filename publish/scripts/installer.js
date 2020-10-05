@@ -660,7 +660,7 @@ dependencies {
     ` + (isSelected(result.performance_monitoring) ? `` : `//`) + ` implementation "com.google.firebase:firebase-perf:19.0.5"
 
     // Crashlytics
-    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
+    ` + (isSelected(result.crashlytics) ? `` : `//`) + ` implementation "com.google.firebase:firebase-crashlytics:17.2.2"
 
     // Cloud Messaging (FCM)
     ` + (isSelected(result.messaging) || isSelected(result.external_push_client_only) ? `` : `//`) + ` implementation "com.google.firebase:firebase-messaging:20.1.0"
@@ -705,7 +705,7 @@ dependencies {
 apply plugin: "com.google.gms.google-services"
 
 // Crashlytics
-` + (isSelected(result.crashlytics) ? `` : `//`) + `apply plugin: "io.fabric"
+` + (isSelected(result.crashlytics) ? `` : `//`) + `apply plugin: "com.google.firebase.crashlytics"
 `);
     console.log('Successfully created Android (include.gradle) file.');
   } catch (e) {
@@ -956,23 +956,18 @@ var fs = require("fs");
 module.exports = function($logger, $projectData) {
 
     return new Promise(function(resolve, reject) {
-        $logger.info("Configure firebase");
+        $logger.info("Configure firebase xxx");
         let projectBuildGradlePath = path.join($projectData.platformsDir, "android", "build.gradle");
         if (fs.existsSync(projectBuildGradlePath)) {
             let buildGradleContent = fs.readFileSync(projectBuildGradlePath).toString();
 
-            if (buildGradleContent.indexOf("fabric.io") === -1) {
+            if (buildGradleContent.indexOf(" google()\\n") === -1) {
+              $logger.info("got no google");
                 let repositoriesNode = buildGradleContent.indexOf("repositories", 0);
                 if (repositoriesNode > -1) {
+                  $logger.info("adding google");
                     repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
-                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '\\t\\tmaven { url "https://maven.fabric.io/public" }\\n\\t\\tmaven { url "https://dl.bintray.com/android/android-tools" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
-                }
-
-                let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
-                if (dependenciesNode > -1) {
-                    dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
-                    // see https://docs.fabric.io/android/changelog.html
-                    buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "io.fabric.tools:gradle:1.26.1"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+                    buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '\\t\\tgoogle()\\n\\t\\tmaven { url "https://dl.bintray.com/android/android-tools" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
                 }
 
             } else if (buildGradleContent.indexOf("https://dl.bintray.com/android/android-tools") === -1) {
@@ -981,6 +976,15 @@ module.exports = function($logger, $projectData) {
                     repositoriesNode = buildGradleContent.indexOf("}", repositoriesNode);
                     buildGradleContent = buildGradleContent.substr(0, repositoriesNode - 1) + '\\t\\tmaven { url "https://dl.bintray.com/android/android-tools" }\\n' + buildGradleContent.substr(repositoriesNode - 1);
                 }
+            }
+            
+            if (buildGradleContent.indexOf("com.google.firebase:firebase-crashlytics-gradle") === -1) {
+              let dependenciesNode = buildGradleContent.indexOf("dependencies", 0);
+              if (dependenciesNode > -1) {
+                  dependenciesNode = buildGradleContent.indexOf("}", dependenciesNode);
+                  // see https://docs.fabric.io/android/changelog.html
+                  buildGradleContent = buildGradleContent.substr(0, dependenciesNode - 1) + '	    classpath "com.google.firebase:firebase-crashlytics-gradle:2.3.0"\\n' + buildGradleContent.substr(dependenciesNode - 1);
+              }
             }
 
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;

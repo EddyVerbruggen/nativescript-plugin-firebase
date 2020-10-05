@@ -344,9 +344,9 @@ firebase.init = arg => {
         }
       }
 
-      if (arg.crashlyticsCollectionEnabled && typeof (Crashlytics) !== "undefined") {
-        Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
-      }
+      // if (arg.crashlyticsCollectionEnabled && typeof (Crashlytics) !== "undefined") {
+      //   Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
+      // }
 
       if (typeof (FIRDatabase) !== "undefined") {
         if (arg.persist) {
@@ -947,11 +947,11 @@ firebase.login = arg => {
         appleIDRequest.nonce = sha256Nonce;
 
         const authorizationController = ASAuthorizationController.alloc().initWithAuthorizationRequests([appleIDRequest]);
-        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(this, resolve, reject);
+        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(this as any, resolve, reject);
         CFRetain(delegate);
         authorizationController.delegate = delegate;
 
-        authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(this);
+        authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(this as any);
 
         authorizationController.performRequests();
 

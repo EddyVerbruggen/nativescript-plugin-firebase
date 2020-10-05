@@ -53,16 +53,16 @@ export function setUserId(id: string): void {
 }
 
 export function crash(): void {
-  if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().crash();
-  }
-  Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
+  // if (isCrashlyticsAvailable()) {
+  //   Crashlytics.sharedInstance().crash();
+  // }
+  // Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
 }
 
 export function setCrashlyticsCollectionEnabled(enabled: boolean): void {
-  if (isCrashlyticsAvailable()) {
-    Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
-  }
+  // if (isCrashlyticsAvailable()) {
+  //   Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
+  // }
 }
 
 function isCrashlyticsAvailable(): boolean {
