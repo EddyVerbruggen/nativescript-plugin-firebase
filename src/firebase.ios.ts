@@ -13,6 +13,7 @@ firebase._gIDAuthentication = null;
 firebase._cachedDynamicLink = null;
 firebase._configured = false;
 firebase._currentNonce = null;
+firebase._ASFullName = null;
 
 const useExternalPushProvider = NSBundle.mainBundle.infoDictionary.objectForKey("UseExternalPushProvider") === true;
 
@@ -640,6 +641,7 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
         providers.push({id: pid, token: gidCurrentIdToken});
       } else if (pid === "apple.com") {
         // TODO
+        providers.push({id: pid, fullName: firebase._ASFullName });
       } else {
         providers.push({id: pid});
       }
@@ -2458,6 +2460,8 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
       if (!idToken) {
         throw new Error("Unable to serialize id token from data: " + appleIDCredential.identityToken);
       }
+
+      firebase._ASFullName = appleIDCredential.fullName;
 
       // Initialize a Firebase credential.
       const fIROAuthCredential = FIROAuthProvider.credentialWithProviderIDIDTokenRawNonce(
