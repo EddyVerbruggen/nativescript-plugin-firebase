@@ -1,10 +1,10 @@
 #import "TNSCrashlyticsLoggerWrapper.h"
-#import <Crashlytics/Crashlytics.h>
+@import FirebaseCrashlytics;
 
 @implementation TNSCrashlyticsLoggerWrapper
 
 + (void)log:(NSString *)string {
-    CLSLog(@"%@", string);
+    [[FIRCrashlytics crashlytics] logWithFormat:@"%@", string];
 }
 
 @end

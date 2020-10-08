@@ -6,6 +6,6 @@ target 'TNSCrashlyticsLogger' do
   use_frameworks!
 
   # Pods for TNSCrashlyticsLogger
-  pod 'Crashlytics'
+  pod 'Firebase/Crashlytics'
 
 end

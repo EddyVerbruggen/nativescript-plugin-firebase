@@ -377,8 +377,7 @@ function writePodFile(result) {
 ` + (isSelected(result.performance_monitoring) ? `` : `#`) + `pod 'Firebase/Performance'
 
 # Crashlytics
-` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Fabric'
-` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Crashlytics'
+` + (isSelected(result.crashlytics) ? `` : `#`) + `pod 'Firebase/Crashlytics'
 ` + (!isSelected(result.crashlytics) ? `` : `
 # Crashlytics works best without bitcode
 post_install do |installer|
@@ -527,7 +526,7 @@ module.exports = function($logger, $projectData, hookArgs) {
 
             // Xcode 10 requires 'inputPaths' set, see https://firebase.google.com/docs/crashlytics/get-started
             var options = {
-              shellPath: '/bin/sh', shellScript: '\"\${PODS_ROOT}/Fabric/run\"',
+              shellPath: '/bin/sh', shellScript: '\"\${PODS_ROOT}/FirebaseCrashlytics/run\"',
               inputPaths: ['"\$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\"']
             };
 
