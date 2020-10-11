@@ -253,7 +253,6 @@ function promptQuestionsResult(result) {
     writePodFile(result);
     writeGoogleServiceCopyHook();
     writeBuildscriptHookForCrashlytics(isSelected(result.crashlytics));
-    activateIOSCrashlyticsFramework(isSelected(result.crashlytics));
     activateIOSMLKitCameraFramework(isSelected(result.ml_kit));
   }
 
@@ -316,14 +315,6 @@ function activateIOSMLKitCameraFramework(enable) {
     fs.renameSync(path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'), path.join(directories.ios, 'TNSMLKitCamera.framework'));
   } else if (!enable && fs.existsSync(path.join(directories.ios, 'TNSMLKitCamera.framework'))) {
     fs.renameSync(path.join(directories.ios, 'TNSMLKitCamera.framework'), path.join(directories.ios, 'TNSMLKitCamera.framework-disabled'));
-  }
-}
-
-function activateIOSCrashlyticsFramework(enable) {
-  if (enable && fs.existsSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'))) {
-    fs.renameSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'), path.join(directories.ios, 'TNSCrashlyticsLogger.framework'));
-  } else if (!enable && fs.existsSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework'))) {
-    fs.renameSync(path.join(directories.ios, 'TNSCrashlyticsLogger.framework'), path.join(directories.ios, 'TNSCrashlyticsLogger.framework-disabled'));
   }
 }
 

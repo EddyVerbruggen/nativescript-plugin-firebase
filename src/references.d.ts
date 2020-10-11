@@ -7,6 +7,7 @@
 /// <reference path="./platforms/ios/typings/objc!FirebaseAnalytics.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseAuth.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseCore.d.ts" />
+/// <reference path="./platforms/ios/typings/objc!FirebaseCrashlytics.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseDatabase.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseDynamicLinks.d.ts" />
 /// <reference path="./platforms/ios/typings/objc!FirebaseFirestore.d.ts" />
@@ -30,7 +31,6 @@
 /// <reference path="./platforms/ios/typings/objc!FirebaseMLNLTranslate.d.ts" />
 
 /// <reference path="./platforms/ios/typings/objc!TNSMLKitCamera.d.ts" />
-/// <reference path="./platforms/ios/typings/objc!TNSCrashlyticsLogger.d.ts" />
 
 /// <reference path="./platforms/android/typings/nativescript-android-lib/android.d.ts" />
 //
