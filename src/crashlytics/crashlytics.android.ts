@@ -1,7 +1,6 @@
 import { ENABLE_CRASHLYTICS_HINT } from "./crashlytics-common";
 import * as appModule from 'tns-core-modules/application';
 
-
 declare const com: any;
 
 export function sendCrashLog(exception: any /* java.lang.Exception */): void {
@@ -64,11 +63,7 @@ export function crash(): void {
 }
 
 export function setCrashlyticsCollectionEnabled(enabled: boolean): void {
-  // if (isCrashlyticsAvailable()) {
-  //   io.fabric.sdk.android.Fabric.with(
-  //       appModule.getNativeApplication(),
-  //       [new com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance()()]);
-  // }
+  com.google.firebase.crashlytics.FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(new java.lang.Boolean(enabled));
 }
 
 function isCrashlyticsAvailable(): boolean {
