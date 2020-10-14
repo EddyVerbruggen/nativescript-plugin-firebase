@@ -455,7 +455,7 @@ const pattern3 = /\\n\\s*\\/\\/Crashlytics 3 BEGIN[\\s\\S]*\\/\\/Crashlytics 3 E
 const string1 = \`
 //Crashlytics 1 BEGIN
 #else
-#import <Crashlytics/CLSLogging.h>
+@import FirebaseCrashlytics;
 #endif
 //Crashlytics 1 END
 \`;
@@ -465,7 +465,7 @@ const string2 = \`
 #if DEBUG
 #else
 static int redirect_cls(const char *prefix, const char *buffer, int size) {
-  CLSLog(@"%s: %.*s", prefix, size, buffer);
+  [[FIRCrashlytics crashlytics] logWithFormat:@"%s line %d $ " __FORMAT__, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__];
   return size;
 }
 
