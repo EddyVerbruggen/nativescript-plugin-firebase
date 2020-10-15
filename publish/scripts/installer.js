@@ -465,7 +465,7 @@ const string2 = \`
 #if DEBUG
 #else
 static int redirect_cls(const char *prefix, const char *buffer, int size) {
-  [[FIRCrashlytics crashlytics] logWithFormat:@"%s line %d $ " __FORMAT__, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__];
+  [[FIRCrashlytics crashlytics] logWithFormat:@"%s: %.*s", prefix, size, buffer];
   return size;
 }
 
