@@ -344,10 +344,6 @@ firebase.init = arg => {
         }
       }
 
-      // if (arg.crashlyticsCollectionEnabled && typeof (Crashlytics) !== "undefined") {
-      //   Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
-      // }
-
       if (typeof (FIRDatabase) !== "undefined") {
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
