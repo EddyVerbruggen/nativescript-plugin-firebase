@@ -2418,11 +2418,11 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
 
 class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
   public static ObjCProtocols = [];
-  private owner: WeakRef<any>;
+  private owner: any;
   private resolve;
   private reject;
 
-  public static createWithOwnerAndResolveReject(owner: WeakRef<any>, resolve, reject): ASAuthorizationControllerDelegateImpl {
+  public static createWithOwnerAndResolveReject(owner: any, resolve, reject): ASAuthorizationControllerDelegateImpl {
     // defer initialisation because this is only available since iOS 13
     if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(device.osVersion) >= 13) {
       ASAuthorizationControllerDelegateImpl.ObjCProtocols.push(ASAuthorizationControllerDelegate);
@@ -2483,9 +2483,9 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
 
 class ASAuthorizationControllerPresentationContextProvidingImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
   public static ObjCProtocols = [];
-  private owner: WeakRef<any>;
+  private owner: any;
 
-  public static createWithOwnerAndCallback(owner: WeakRef<any>): ASAuthorizationControllerPresentationContextProvidingImpl {
+  public static createWithOwnerAndCallback(owner: any): ASAuthorizationControllerPresentationContextProvidingImpl {
     // defer initialisation because this is only available since iOS 13
     if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(device.osVersion) >= 13) {
       ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.push(ASAuthorizationControllerPresentationContextProviding);

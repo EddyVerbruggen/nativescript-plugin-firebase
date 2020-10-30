@@ -344,6 +344,10 @@ declare class FIRQuery extends NSObject {
 
 	queryWhereFieldIsLessThanOrEqualTo(field: string, value: any): FIRQuery;
 
+	queryWhereFieldIsNotEqualTo(field: string, value: any): FIRQuery;
+
+	queryWhereFieldNotIn(field: string, values: NSArray<any> | any[]): FIRQuery;
+
 	queryWhereFieldPathArrayContains(path: FIRFieldPath, value: any): FIRQuery;
 
 	queryWhereFieldPathArrayContainsAny(path: FIRFieldPath, values: NSArray<any> | any[]): FIRQuery;
@@ -359,6 +363,10 @@ declare class FIRQuery extends NSObject {
 	queryWhereFieldPathIsLessThan(path: FIRFieldPath, value: any): FIRQuery;
 
 	queryWhereFieldPathIsLessThanOrEqualTo(path: FIRFieldPath, value: any): FIRQuery;
+
+	queryWhereFieldPathIsNotEqualTo(path: FIRFieldPath, value: any): FIRQuery;
+
+	queryWhereFieldPathNotIn(path: FIRFieldPath, values: NSArray<any> | any[]): FIRQuery;
 }
 
 declare class FIRQueryDocumentSnapshot extends FIRDocumentSnapshot {

@@ -1,7 +1,6 @@
 import { ENABLE_CRASHLYTICS_HINT } from "./crashlytics-common";
-import * as appModule from 'tns-core-modules/application';
 
-declare const com: any;
+declare const com, java: any;
 
 export function sendCrashLog(exception: any /* java.lang.Exception */): void {
   if (isCrashlyticsAvailable()) {

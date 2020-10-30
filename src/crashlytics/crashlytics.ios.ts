@@ -54,8 +54,7 @@ export function setUserId(id: string): void {
 
 export function crash(): void {
   if (isCrashlyticsAvailable()) {
-    // TODO: manually force crash - https://firebase.google.com/docs/crashlytics/test-implementation?authuser=0&platform=ios#force_a_crash_to_test_your_implementation
-    console.log('currently manual crashing not implemented');
+    console.log('currently manual crashing not implemented on iOS');
   }
 }
 

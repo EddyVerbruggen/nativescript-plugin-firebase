@@ -347,10 +347,10 @@ function writePodFile(result) {
 // The MLVision pod requires a minimum of iOS 9, otherwise the build will fail
 (isPresent(result.ml_kit) ? `` : `#`) + `platform :ios, '9.0'
 
-` + (!isSelected(result.external_push_client_only) ? `` : `#`) + `pod 'Firebase/Core', '~>6.16.0'
+` + (!isSelected(result.external_push_client_only) ? `` : `#`) + `pod 'Firebase/Core', '~>6.34.0'
 
 # Analytics
-` + (isSelected(result.analytics) || (!isSelected(result.external_push_client_only) && !isPresent(result.analytics)) ? `` : `#`) + `pod 'Firebase/Analytics'
+` + (isSelected(result.analytics) || isSelected(result.crashlytics) || (!isSelected(result.external_push_client_only) && !isPresent(result.analytics)) ? `` : `#`) + `pod 'Firebase/Analytics'
 
 # Authentication
 ` + (isSelected(result.authentication) || (!isSelected(result.external_push_client_only) && !isPresent(result.external_push_client_only)) ? `` : `#`) + `pod 'Firebase/Auth'
@@ -418,7 +418,7 @@ end`) + `
 ` + (isSelected(result.facebook_auth) ? `` : `#`) + `pod 'FBSDKLoginKit'
 
 # Google Authentication
-` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn', '~> 5.0'`);
+` + (isSelected(result.google_auth) ? `` : `#`) + `pod 'GoogleSignIn', '~> 5.0.2'`);
     console.log('Successfully created iOS (Pod) file.');
   } catch (e) {
     console.log('Failed to create iOS (Pod) file.');
