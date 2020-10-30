@@ -17,7 +17,9 @@
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
-> Plugin version **10.0.0** works with NativeScript 6.1 and up. Using an older version? Stick to plugin version < 10.
+> Plugin version **10.0.0** works with NativeScript 6.1+. Using an older version? Stick to plugin version < 10.
+
+> For NativeScript 7 compatibiliy, install `@nativescript/firebase` version 11+.
 
 ## Features
 * [AdMob](docs/ADMOB.md)
@@ -56,6 +58,12 @@ From the command prompt go to your app's root folder and execute:
 
 ```bash
 tns plugin add nativescript-plugin-firebase
+```
+
+or for NativeScript 7+:
+
+```bash
+tns plugin add @nativescript/firebase
 ```
 
 This will launch an install script which will guide you through installing additional components.
