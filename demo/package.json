@@ -1,15 +1,15 @@
 {
   "dependencies": {
     "firebase-functions": "^2.0.5",
-    "@nativescript/firebase": "file:../publish/package/nativescript-firebase-11.0.0-rc.6.tgz",
+    "@nativescript/firebase": "file:../src",
     "nativescript-theme-core": "^1.0.4",
-    "nativescript-unit-test-runner": "0.7.0",
+    "@nativescript/unit-test-runner": "~1.0.2",
     "@nativescript/core": "7.0.0",
-    "@nativescript/webpack": "3.0.0"
+    "@nativescript/webpack": "~3.0.0"
   },
   "devDependencies": {
-    "@nativescript/ios": "7.0.0",
-    "@nativescript/types": "7.0.0",
+    "@nativescript/ios": "7.0.4",
+    "@nativescript/types": "~7.0.0",
     "@types/jasmine": "~2.8.0",
     "babel-traverse": "6.12.0",
     "babel-types": "6.11.1",
@@ -23,7 +23,7 @@
     "lazy": "1.0.11",
     "nativescript-css-loader": "~0.26.0",
     "tslint": "~5.4.3",
-    "typescript": "~3.9.7"
+    "typescript": "~4.0.0"
   },
   "scripts": {
     "build.plugin": "cd ../src && npm run build",

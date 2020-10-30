@@ -539,10 +539,6 @@ firebase.init = arg => {
         }
       }
 
-      if (arg.crashlyticsCollectionEnabled && typeof (Crashlytics) !== "undefined") {
-        Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
-      }
-
       if (typeof (FIRDatabase) !== "undefined") {
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
@@ -1142,12 +1138,11 @@ firebase.login = arg => {
         appleIDRequest.nonce = sha256Nonce;
 
         const authorizationController = ASAuthorizationController.alloc().initWithAuthorizationRequests([appleIDRequest]);
-        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(new WeakRef(this), resolve, reject);
+        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(this as any, resolve, reject);
         CFRetain(delegate);
         authorizationController.delegate = delegate;
 
-        authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(
-            new WeakRef(this));
+        authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(this as any);
 
         authorizationController.performRequests();
 
@@ -2620,11 +2615,11 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
 @NativeClass()
 class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
   public static ObjCProtocols = [];
-  private owner: WeakRef<any>;
+  private owner: any;
   private resolve;
   private reject;
 
-  public static createWithOwnerAndResolveReject(owner: WeakRef<any>, resolve, reject): ASAuthorizationControllerDelegateImpl {
+  public static createWithOwnerAndResolveReject(owner: any, resolve, reject): ASAuthorizationControllerDelegateImpl {
     // defer initialisation because this is only available since iOS 13
     if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerDelegateImpl.ObjCProtocols.push(ASAuthorizationControllerDelegate);
@@ -2686,9 +2681,9 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
 @NativeClass()
 class ASAuthorizationControllerPresentationContextProvidingImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
   public static ObjCProtocols = [];
-  private owner: WeakRef<any>;
+  private owner: any;
 
-  public static createWithOwnerAndCallback(owner: WeakRef<any>): ASAuthorizationControllerPresentationContextProvidingImpl {
+  public static createWithOwnerAndCallback(owner: any): ASAuthorizationControllerPresentationContextProvidingImpl {
     // defer initialisation because this is only available since iOS 13
     if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.push(ASAuthorizationControllerPresentationContextProviding);

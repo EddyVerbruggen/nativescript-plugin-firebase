@@ -41,6 +41,7 @@
     "plugin.tscwatch": "npm run tsc -- -w",
     "package": "cd ../publish && ./pack.sh",
     "demo.ios": "npm run preparedemo && cd ../demo && tns run ios",
+    "demo.ios.eddy.iPad": "npm run preparedemo && cd ../demo && tns run ios --device fee4cf319a242eab4701543e4c16db89c722731f",
     "demo-ng.ios": "npm run preparedemo-ng && cd ../demo-ng && tns run ios",
     "demo-ng.ios.bundled": "npm run preparedemo-ng && cd ../demo-ng && tns run ios --bundle",
     "demo-push.ios": "npm run preparedemo-push && cd ../demo-push && tns run ios",
