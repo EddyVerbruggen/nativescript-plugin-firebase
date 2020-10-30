@@ -221,7 +221,7 @@
 
             <Label row="46" colSpan="2" text="Firebase Crash Reporing / Crashlytics" class="subtitle"/>
 
-            <Button row="47" col="0" colSpan="2" text="force crash (Android only)" tap="{{ doCrash }}" class="button button-crash"/>
+            <Button row="47" col="0" colSpan="2" text="force crash :)" tap="{{ doCrash }}" class="button button-crash"/>
             <Button row="48" col="0" text="log message crashlytics" tap="{{ doLogMessageCrashlytics }}" class="button button-crash"/>
             <Button row="48" col="1" text="set string crashlytics" tap="{{ doSetCrashlyticString }}" class="button button-crash"/>
             <Button row="49" col="0" text="set bool crashlytics" tap="{{ doSetCrashlyticBool }}" class="button button-crash"/>
