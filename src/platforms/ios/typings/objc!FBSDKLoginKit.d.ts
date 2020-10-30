@@ -135,11 +135,6 @@ declare var FBSDKLoginAuthTypeReauthorize: string;
 
 declare var FBSDKLoginAuthTypeRerequest: string;
 
-declare const enum FBSDKLoginBehavior {
-
-	Browser = 0
-}
-
 declare class FBSDKLoginButton extends FBSDKButton {
 
 	static alloc(): FBSDKLoginButton; // inherited from NSObject
@@ -165,8 +160,6 @@ declare class FBSDKLoginButton extends FBSDKButton {
 	defaultAudience: FBSDKDefaultAudience;
 
 	delegate: FBSDKLoginButtonDelegate;
-
-	loginBehavior: FBSDKLoginBehavior;
 
 	permissions: NSArray<string>;
 
@@ -234,9 +227,9 @@ declare class FBSDKLoginManager extends NSObject {
 
 	defaultAudience: FBSDKDefaultAudience;
 
-	loginBehavior: FBSDKLoginBehavior;
-
 	logInWithPermissionsFromViewControllerHandler(permissions: NSArray<string> | string[], fromViewController: UIViewController, handler: (p1: FBSDKLoginManagerLoginResult, p2: NSError) => void): void;
+
+	logInWithURLHandler(url: NSURL, handler: (p1: FBSDKLoginManagerLoginResult, p2: NSError) => void): void;
 
 	logOut(): void;
 
@@ -297,6 +290,45 @@ declare var FBSDKLoginTooltipViewDelegate: {
 
 	prototype: FBSDKLoginTooltipViewDelegate;
 };
+
+declare class FBSDKReferralCode extends NSObject {
+
+	static alloc(): FBSDKReferralCode; // inherited from NSObject
+
+	static initWithString(string: string): FBSDKReferralCode;
+
+	static new(): FBSDKReferralCode; // inherited from NSObject
+
+	value: string;
+}
+
+declare class FBSDKReferralManager extends NSObject {
+
+	static alloc(): FBSDKReferralManager; // inherited from NSObject
+
+	static new(): FBSDKReferralManager; // inherited from NSObject
+
+	constructor(o: { viewController: UIViewController; });
+
+	initWithViewController(viewController: UIViewController): this;
+
+	startReferralWithCompletionHandler(handler: (p1: FBSDKReferralManagerResult, p2: NSError) => void): void;
+}
+
+declare class FBSDKReferralManagerResult extends NSObject {
+
+	static alloc(): FBSDKReferralManagerResult; // inherited from NSObject
+
+	static new(): FBSDKReferralManagerResult; // inherited from NSObject
+
+	readonly isCancelled: boolean;
+
+	referralCodes: NSArray<FBSDKReferralCode>;
+
+	constructor(o: { referralCodes: NSArray<FBSDKReferralCode> | FBSDKReferralCode[]; isCancelled: boolean; });
+
+	initWithReferralCodesIsCancelled(referralCodes: NSArray<FBSDKReferralCode> | FBSDKReferralCode[], isCancelled: boolean): this;
+}
 
 declare const enum FBSDKTooltipColorStyle {
 
