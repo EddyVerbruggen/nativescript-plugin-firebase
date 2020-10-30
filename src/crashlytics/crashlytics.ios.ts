@@ -54,7 +54,11 @@ export function setUserId(id: string): void {
 
 export function crash(): void {
   if (isCrashlyticsAvailable()) {
-    console.log('currently manual crashing not implemented on iOS');
+    NSException.exceptionWithNameReasonUserInfo(
+        "FIRCrashlytics",
+        "test crash",
+        null
+    ).raise();
   }
 }
 
