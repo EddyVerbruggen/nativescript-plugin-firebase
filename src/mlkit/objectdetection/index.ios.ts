@@ -1,5 +1,4 @@
-import { ImageSource } from "tns-core-modules/image-source";
-import { ios as iosUtils } from "tns-core-modules/utils/utils";
+import { ImageSource, Utils } from "@nativescript/core";
 import { MLKitVisionOptions } from "../";
 import { MLKitObjectDetectionOptions, MLKitObjectDetectionResult, MLKitObjectDetectionResultItem } from "./";
 import { MLKitObjectDetection as MLKitObjectDetectionBase, ObjectDetectionCategory } from "./objectdetection-common";
@@ -94,7 +93,7 @@ function getMLKitObjectDetectionResultItem(obj: FIRVisionObject, image: UIImage)
     const origWidth = width;
     const origImageWidth = imageWidth;
 
-    if (iosUtils.isLandscape()) {
+    if (Utils.ios.isLandscape()) {
       if (UIDevice.currentDevice.orientation === UIDeviceOrientation.LandscapeRight) {
         // the image is rotated 180 degrees
         x = image.size.width - (width + x);

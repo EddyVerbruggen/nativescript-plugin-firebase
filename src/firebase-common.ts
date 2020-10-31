@@ -1,6 +1,5 @@
-import { prompt } from "tns-core-modules/ui/dialogs";
-import { getString, setString } from "tns-core-modules/application-settings";
-import { firestore } from "./firebase";
+import { prompt, ApplicationSettings } from "@nativescript/core";
+import { firestore as fsNamespace } from "./firebase";
 import * as admob from "./admob/admob";
 import * as analytics from "./analytics/analytics";
 import * as crashlytics from "./crashlytics/crashlytics";
@@ -10,7 +9,7 @@ import * as mlkit from "./mlkit";
 
 // note that this implementation is overridden for iOS
 export class FieldValue {
-  constructor(public type: firestore.FieldValueType,
+  constructor(public type: fsNamespace.FieldValueType,
               public value: any) {
   }
 
@@ -18,7 +17,7 @@ export class FieldValue {
   static delete = () => "DELETE_FIELD";
   static arrayUnion = (...elements: any[]) => new FieldValue("ARRAY_UNION", elements);
   static arrayRemove = (...elements: any[]) => new FieldValue("ARRAY_REMOVE", elements);
-  static increment = (n: number) => new firebase.firestore.FieldValue("INCREMENT", n);
+  static increment = (n: number) => new FieldValue("INCREMENT", n);
 }
 
 export class GeoPoint {
@@ -119,10 +118,10 @@ export const firebase: any = {
     });
   },
   rememberEmailForEmailLinkLogin: (email: string) => {
-    setString("FirebasePlugin.EmailLinkLogin", email);
+    ApplicationSettings.setString("FirebasePlugin.EmailLinkLogin", email);
   },
   getRememberedEmailForEmailLinkLogin: () => {
-    return getString("FirebasePlugin.EmailLinkLogin");
+    return ApplicationSettings.getString("FirebasePlugin.EmailLinkLogin");
   },
   strongTypeify: value => {
     if (value === "true") {
@@ -215,18 +214,19 @@ export const firebase: any = {
     return result;
   }
 };
+export const firestore = firebase.firestore;
 
-export abstract class DocumentSnapshot implements firestore.DocumentSnapshot {
-  public data: () => firestore.DocumentData;
+export abstract class DocumentSnapshot {
+  public data: () => firebase.firestore.DocumentData;
 
   constructor(public id: string,
               public exists: boolean,
-              documentData: firestore.DocumentData,
-              public ref: firestore.DocumentReference) {
+              documentData: firebase.firestore.DocumentData,
+              public ref: firebase.firestore.DocumentReference) {
     this.data = () => exists ? documentData : undefined;
   }
 }
 
-export function isDocumentReference(object: any): object is firestore.DocumentReference {
+export function isDocumentReference(object: any): object is firebase.firestore.DocumentReference {
   return object && object.discriminator === "docRef";
 }

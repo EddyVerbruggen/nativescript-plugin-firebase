@@ -1,13 +1,207 @@
-import * as application from "tns-core-modules/application/application";
-import { device } from "tns-core-modules/platform";
-import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
+import { Application, Device } from "@nativescript/core";
 import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
 import * as firebaseFunctions from "./functions/functions";
 import * as firebaseMessaging from "./messaging/messaging";
 import { firebaseUtils } from "./utils";
 import { getNonce, Sha256 } from "./utils/nonce-util-ios";
+import { firestore } from "./firebase";
 
 declare const ASAuthorizationAppleIDProvider, ASAuthorizationScopeFullName, ASAuthorizationScopeEmail, ASAuthorizationController, ASAuthorizationControllerDelegate, ASAuthorizationAppleIDCredential, ASAuthorizationControllerPresentationContextProviding: any;
+export enum QueryOrderByType {
+  KEY,
+  VALUE,
+  CHILD,
+  PRIORITY
+}
+
+/**
+ * The allowed values for QueryOptions.range.type.
+ */
+export enum QueryRangeType {
+  START_AT,
+  END_AT,
+  EQUAL_TO
+}
+
+/**
+ * The allowed values for QueryOptions.limit.type.
+ */
+export enum QueryLimitType {
+  FIRST,
+  LAST
+}
+type ActionCodeSettings = {
+  url: string;
+  handleCodeInApp?: boolean;
+  android?: {
+    installApp?: boolean;
+    minimumVersion?: string;
+    packageName: string;
+  };
+  iOS?: {
+    bundleId: string;
+    dynamicLinkDomain?: string;
+  };
+};
+export interface OnDisconnectBase {
+  cancel(): Promise<any>;
+
+  remove(): Promise<any>;
+
+  set(value: any): Promise<any>;
+
+  setWithPriority(
+      value: any,
+      priority: number | string
+  ): Promise<any>;
+
+  update(values: Object): Promise<any>;
+}
+
+
+export interface DataSnapshot {
+  key: string;
+  ref: any; // TODO: Type it so that it returns a databaseReference.
+  child(path: string): DataSnapshot;
+
+  exists(): boolean;
+
+  forEach(action: (snapshot: DataSnapshot) => any): boolean;
+
+  getPriority(): string | number | null;
+
+  hasChild(path: string): boolean;
+
+  hasChildren(): boolean;
+
+  numChildren(): number;
+
+  toJSON(): Object;
+
+  val(): any;
+}
+
+export interface FBData {
+  type: string;
+  key: string;
+  value: any;
+}
+
+export interface FBDataSingleEvent extends FBData {
+  children?: Array<any>;
+}
+
+export interface FBErrorData {
+  error: string;
+}
+
+export interface GetAuthTokenOptions {
+  /**
+   * Default false.
+   */
+  forceRefresh?: boolean;
+}
+export interface IdTokenResult {
+  token: string;
+  claims: { [key: string]: any; };
+  signInProvider: string;
+  expirationTime: number;
+  issuedAtTime: number;
+  authTime: number;
+}
+export interface QueryRangeOption {
+  type: QueryRangeType;
+  value: any;
+}
+
+/**
+ * The options object passed into the query function.
+ */
+export interface QueryOptions {
+  /**
+   * How you'd like to sort the query result.
+   */
+  orderBy: {
+    type: QueryOrderByType;
+    /**
+     * mandatory when type is QueryOrderByType.CHILD
+     */
+    value?: string;
+  };
+
+  /**
+   * You can further restrict the returned results by specifying restrictions.
+   * Need more than one range restriction? Use 'ranges' instead.
+   */
+  range?: QueryRangeOption;
+
+  /**
+   * Same as 'range', but for a 'chain of ranges'.
+   * You can further restrict the returned results by specifying restrictions.
+   */
+  ranges?: QueryRangeOption[];
+
+  /**
+   * You can limit the number of returned rows if you want to.
+   */
+  limit?: {
+    type: QueryLimitType;
+    value: number;
+  };
+
+  /**
+   * Set this to true if you don't want to listen for any future updates,
+   * but just want to retrieve the current value.
+   * You can also use this to check if certain data is in the database.
+   * Default false.
+   */
+  singleEvent?: boolean;
+}
+export interface Provider {
+  id: string;
+  token?: string;
+}
+
+export interface User {
+  uid: string;
+  email?: string;
+  emailVerified: boolean;
+  displayName?: string;
+  phoneNumber?: string;
+  anonymous: boolean;
+  isAnonymous: boolean; // This is used by the web API
+  providers: Array<Provider>;
+  photoURL?: string;
+  metadata: UserMetadata;
+  additionalUserInfo?: AdditionalUserInfo;
+
+  /** iOS only */
+  refreshToken?: string;
+
+  getIdToken(forceRefresh?: boolean): Promise<string>;
+
+  getIdTokenResult(forceRefresh?: boolean): Promise<IdTokenResult>;
+
+  sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<void>;
+}
+
+/**
+ * The metadata of the user
+ */
+export interface UserMetadata {
+  creationTimestamp: Date;
+  lastSignInTimestamp: Date;
+}
+
+/**
+ * Contains additional user information
+ */
+export interface AdditionalUserInfo {
+  profile: Map<string, any>;
+  providerId: string;
+  username: string;
+  isNewUser: boolean;
+}
 
 firebase._gIDAuthentication = null;
 firebase._cachedDynamicLink = null;
@@ -284,15 +478,16 @@ if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
 // This breaks in-app-messaging :(
 function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
-  if (application.ios.delegate === undefined) {
+  if (Application.ios.delegate === undefined) {
 
     @ObjCClass(UIApplicationDelegate)
+    @NativeClass()
     class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
     }
 
-    application.ios.delegate = UIApplicationDelegateImpl;
+    Application.ios.delegate = UIApplicationDelegateImpl;
   }
-  return application.ios.delegate;
+  return Application.ios.delegate;
 }
 
 firebase.addAppDelegateMethods(getAppDelegate());
@@ -803,7 +998,7 @@ firebase.login = arg => {
                 return;
               }
               // The link was successfully sent.
-              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same Device.
               firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
               resolve();
             }
@@ -914,8 +1109,8 @@ firebase.login = arg => {
             onFacebookCompletion);
 
       } else if (arg.type === firebase.LoginType.APPLE) {
-        if (parseInt(device.osVersion) < 13) {
-          reject("Sign in with Apple requires iOS 13 or higher. You're running iOS " + device.osVersion);
+        if (parseInt(Device.osVersion) < 13) {
+          reject("Sign in with Apple requires iOS 13 or higher. You're running iOS " + Device.osVersion);
           return;
         }
 
@@ -958,7 +1153,7 @@ firebase.login = arg => {
         }
 
         const sIn = GIDSignIn.sharedInstance();
-        sIn.presentingViewController = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
+        sIn.presentingViewController = arg.ios && arg.ios.controller ? arg.ios.controller : Application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {
@@ -1727,18 +1922,18 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.WriteBatch => {
       fixSpecialFields(data);
-      nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
+      nativeWriteBatch.setDataForDocumentMerge(<any>data, (<any>documentRef).ios, options && options.merge);
       return this;
     }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
       fixSpecialFields(data);
-      nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
+      nativeWriteBatch.updateDataForDocument(<any>data, (<any>documentRef).ios);
       return this;
     }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
-      nativeWriteBatch.deleteDocument(documentRef.ios);
+      nativeWriteBatch.deleteDocument((<any>documentRef).ios);
       return this;
     }
 
@@ -1759,31 +1954,31 @@ firebase.firestore.batch = (): firestore.WriteBatch => {
   return new firebase.firestore.WriteBatch(FIRFirestore.firestore().batch());
 };
 
-firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.Transaction => {
+firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): any => { //firestore.Transaction
   class FirestoreTransaction implements firestore.Transaction {
     constructor() {
     }
 
-    public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
-      const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError(documentRef.ios);
+    public get: any = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
+      const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError((<any>documentRef).ios);
       return new DocumentSnapshot(docSnapshot);
     }
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
       fixSpecialFields(data);
-      nativeTransaction.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
-      return this;
+      nativeTransaction.setDataForDocumentMerge(<any>data, (<any>documentRef).ios, options && options.merge);
+      return <any>this;
     }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
       fixSpecialFields(data);
-      nativeTransaction.updateDataForDocument(<any>data, documentRef.ios);
-      return this;
+      nativeTransaction.updateDataForDocument(<any>data, (<any>documentRef).ios);
+      return <any>this;
     }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
-      nativeTransaction.deleteDocument(documentRef.ios);
-      return this;
+      nativeTransaction.deleteDocument((<any>documentRef).ios);
+      return <any>this;
     }
   }
 
@@ -1810,7 +2005,7 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
       if (settings.ssl !== undefined) fIRFirestoreSettings.sslEnabled = settings.ssl;
       if (settings.host !== undefined) fIRFirestoreSettings.host = settings.host;
       // Cannot do this because of nativescript cannot convert Number to int64_t
-      // fIRFirestoreSettings.cacheSizeBytes = settings.cacheSizeBytes;
+      // fIRFirestore(<any>settings).cacheSizeBytes = (<any>settings).cacheSizeBytes;
       FIRFirestore.firestore().settings = fIRFirestoreSettings;
     } catch (err) {
       console.log("Error in firebase.firestore.settings: " + err);
@@ -1837,7 +2032,7 @@ firebase.firestore.collection = (collectionPath: string): firestore.CollectionRe
   }
 };
 
-firebase.firestore.collectionGroup = (id: string): firestore.CollectionGroup => {
+firebase.firestore.collectionGroup = (id: string): any => {
   ensureFirestore();
   try {
     return firebase.firestore._getCollectionGroupQuery(FIRFirestore.firestore().collectionGroupWithID(id));
@@ -1948,7 +2143,7 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
   };
 };
 
-firebase.firestore._getCollectionGroupQuery = (query?: FIRQuery): firestore.CollectionGroup => {
+firebase.firestore._getCollectionGroupQuery = (query?: FIRQuery): any => {
   if (!query) {
     return null;
   }
@@ -1976,7 +2171,7 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
     get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.documentID, options),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.documentID, data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.documentID),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: firestore.DocumentSnapshot) => void), callbackOrOnError?: (docOrError: firestore.DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     ios: docRef
   };
 };
@@ -2097,7 +2292,7 @@ function fixSpecialField(item): any {
       longitude: geo.longitude
     });
   } else if (isDocumentReference(item)) {
-    return item.ios;
+    return (<any>item).ios;
   } else if (typeof item === "object" && item.constructor === Object) {
     return fixSpecialFields(item);
   } else {
@@ -2187,7 +2382,7 @@ firebase.firestore.get = (collectionPath: string, options?: firestore.GetOptions
   return firebase.firestore.getCollection(collectionPath, options);
 };
 
-firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<firestore.DocumentSnapshot> => {
+firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<DocumentSnapshot> => {
   ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
@@ -2207,7 +2402,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve(new DocumentSnapshot(snapshot));
+              resolve(new DocumentSnapshot(<any>snapshot));
             }
           });
 
@@ -2318,6 +2513,7 @@ firebase.firestore.endBefore = (collectionPath: string, snapshotOrFieldValue: Do
   }
 };
 
+@NativeClass()
 class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {
   public static ObjCProtocols = [];
 
@@ -2354,7 +2550,7 @@ function convertDocChangeType(type: FIRDocumentChangeType) {
 }
 
 function convertDocument(qDoc: FIRQueryDocumentSnapshot): firestore.QueryDocumentSnapshot {
-  return new DocumentSnapshot(qDoc);
+  return <any>new DocumentSnapshot(<any>qDoc);
 }
 
 export class QuerySnapshot implements firestore.QuerySnapshot {
@@ -2373,7 +2569,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
       const docSnapshots: firestore.QueryDocumentSnapshot[] = [];
       for (let i = 0, l = this.snapshot.documents.count; i < l; i++) {
         const document = this.snapshot.documents.objectAtIndex(i);
-        docSnapshots.push(new DocumentSnapshot(document));
+        docSnapshots.push(<any>new DocumentSnapshot(<any>document));
       }
       this._docSnapshots = docSnapshots;
 
@@ -2416,6 +2612,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
   }
 }
 
+@NativeClass()
 class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
   public static ObjCProtocols = [];
   private owner: any;
@@ -2424,7 +2621,7 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
 
   public static createWithOwnerAndResolveReject(owner: any, resolve, reject): ASAuthorizationControllerDelegateImpl {
     // defer initialisation because this is only available since iOS 13
-    if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(device.osVersion) >= 13) {
+    if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerDelegateImpl.ObjCProtocols.push(ASAuthorizationControllerDelegate);
     }
     let delegate = <ASAuthorizationControllerDelegateImpl>ASAuthorizationControllerDelegateImpl.new();
@@ -2481,13 +2678,14 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
   }
 }
 
+@NativeClass()
 class ASAuthorizationControllerPresentationContextProvidingImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
   public static ObjCProtocols = [];
   private owner: any;
 
   public static createWithOwnerAndCallback(owner: any): ASAuthorizationControllerPresentationContextProvidingImpl {
     // defer initialisation because this is only available since iOS 13
-    if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(device.osVersion) >= 13) {
+    if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.push(ASAuthorizationControllerPresentationContextProviding);
     }
     let delegate = <ASAuthorizationControllerPresentationContextProvidingImpl>ASAuthorizationControllerPresentationContextProvidingImpl.new();
@@ -2500,4 +2698,4 @@ class ASAuthorizationControllerPresentationContextProvidingImpl extends NSObject
   }
 }
 
-module.exports = firebase;
+export * from './firebase-common';

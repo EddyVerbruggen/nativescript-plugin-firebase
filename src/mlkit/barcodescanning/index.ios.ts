@@ -1,5 +1,4 @@
-import { ImageSource } from "tns-core-modules/image-source";
-import { ios as iosUtils } from "tns-core-modules/utils/utils";
+import { ImageSource, Utils } from "@nativescript/core";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult } from "./index";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
 
@@ -58,7 +57,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
             const origWidth = width;
             const origImageWidth = imageWidth;
 
-            if (iosUtils.isLandscape()) {
+            if (Utils.ios.isLandscape()) {
               if (UIDevice.currentDevice.orientation === UIDeviceOrientation.LandscapeRight) {
                 // the image is rotated 180 degrees
                 x = image.size.width - (width + x);

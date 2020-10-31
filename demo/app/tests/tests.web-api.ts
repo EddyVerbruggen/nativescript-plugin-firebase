@@ -1,4 +1,4 @@
-const firebaseWebApi = require("nativescript-plugin-firebase/app");
+const firebaseWebApi = require("@nativescript/firebase/app");
 
 // TODO make this slightly more useful :P
 

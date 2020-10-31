@@ -1,6 +1,7 @@
 *.map
 *.ts
 !*.d.ts
+ns-transform-native-classes.*
 tsconfig.json
 references.d.ts
 platforms/android/libraryproject/
@@ -11,3 +12,4 @@ platforms/android/typings/
 platforms/web
 platforms/ios/Podfile
 platforms/android/include.gradle
+*.tgz

@@ -1,8 +1,6 @@
-import { DelegateObserver, SharedNotificationDelegate } from "nativescript-shared-notification-delegate";
-import * as applicationSettings from "tns-core-modules/application-settings";
-import * as application from "tns-core-modules/application/application";
-import { device } from "tns-core-modules/platform/platform";
-import { MessagingOptions } from "../firebase";
+import { DelegateObserver, SharedNotificationDelegate } from "@nativescript/shared-notification-delegate";
+import { Application, ApplicationSettings, Device } from "@nativescript/core";
+import { firebase as fbNamespace } from "../firebase";
 import { firebase } from "../firebase-common";
 import { firebaseUtils } from "../utils";
 import { IosInteractiveNotificationAction, IosInteractiveNotificationCategory, IosInteractiveNotificationType } from "./messaging";
@@ -47,7 +45,7 @@ export function initFirebaseMessaging(options) {
 export function addOnMessageReceivedCallback(callback: Function) {
   return new Promise((resolve, reject) => {
     try {
-      applicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
+      ApplicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
 
       _receivedNotificationCallback = callback;
       _registerForRemoteNotifications(resolve, reject);
@@ -76,7 +74,7 @@ export function getCurrentPushToken(): Promise<string> {
   });
 }
 
-export function registerForPushNotifications(options?: MessagingOptions): Promise<void> {
+export function registerForPushNotifications(options?: fbNamespace.MessagingOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       initFirebaseMessaging(options);
@@ -94,11 +92,11 @@ export function unregisterForPushNotifications(): Promise<void> {
     try {
       UIApplication.sharedApplication.unregisterForRemoteNotifications();
 
-      // Note that we're not removing this key, because upon restart it would re-register the device.
+      // Note that we're not removing this key, because upon restart it would re-register the Device.
       // I mean, if the dev uses 'unregisterForPushNotifications', he will likely also want to explicitly use 'registerForPushNotifications'.
 
       // TODO toch de key maar verwijderen?
-      // applicationSettings.remove(NOTIFICATIONS_REGISTRATION_KEY);
+      // ApplicationSettings.remove(NOTIFICATIONS_REGISTRATION_KEY);
 
       resolve();
     } catch (ex) {
@@ -138,7 +136,7 @@ export function addOnPushTokenReceivedCallback(callback) {
         callback(_pushToken);
       }
 
-      applicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
+      ApplicationSettings.setBoolean(NOTIFICATIONS_REGISTRATION_KEY, true);
       _registerForRemoteNotifications();
       _processPendingNotifications();
 
@@ -244,7 +242,7 @@ export function prepAppDelegate() {
   _addObserver("com.firebase.iid.notif.refresh-token", notification => onTokenRefreshNotification(notification.object));
 
   _addObserver(UIApplicationDidFinishLaunchingNotification, appNotification => {
-    if (applicationSettings.getBoolean(NOTIFICATIONS_REGISTRATION_KEY, false)) {
+    if (ApplicationSettings.getBoolean(NOTIFICATIONS_REGISTRATION_KEY, false)) {
       _registerForRemoteNotifications();
     }
   });
@@ -358,7 +356,7 @@ const updateUserInfo = userInfoJSON => {
 function _registerForRemoteNotifications(resolve?, reject?) {
   let app = UIApplication.sharedApplication;
   if (!app) {
-    application.on("launch", () => _registerForRemoteNotifications(resolve, reject));
+    Application.on(Application.launchEvent, () => _registerForRemoteNotifications(resolve, reject));
     return;
   }
 
@@ -372,7 +370,7 @@ function _registerForRemoteNotifications(resolve?, reject?) {
   _resolveWhenDidRegisterForNotifications = resolve;
   _rejectWhenDidFailToRegisterForNotifications = reject;
 
-  if (parseInt(device.osVersion) >= 10) {
+  if (parseInt(Device.osVersion) >= 10) {
     const authorizationOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge;
     UNUserNotificationCenter.currentNotificationCenter().requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, (granted, error) => {
       if (!error) {
@@ -476,7 +474,7 @@ function _addOnNotificationActionTakenCallback(callback: Function) {
 function _processPendingNotifications() {
   const app = UIApplication.sharedApplication;
   if (!app) {
-    application.on("launch", () => _processPendingNotifications());
+    Application.on("launch", () => _processPendingNotifications());
     return;
   }
   if (_receivedNotificationCallback) {
@@ -494,7 +492,7 @@ function _processPendingNotifications() {
 function _processPendingActionTakenNotifications() {
   const app = UIApplication.sharedApplication;
   if (!app) {
-    application.on("launch", () => _processPendingNotifications());
+    Application.on("launch", () => _processPendingNotifications());
     return;
   }
   if (_notificationActionTakenCallback) {
@@ -559,6 +557,7 @@ class FirebaseNotificationDelegateObserverImpl implements DelegateObserver {
   }
 }
 
+@NativeClass()
 class FIRMessagingDelegateImpl extends NSObject implements FIRMessagingDelegate {
   public static ObjCProtocols = [];
 

@@ -1,7 +1,6 @@
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource, Application } from "@nativescript/core";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult, MLKitScanBarcodesResultBounds } from "./";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
-import * as application from "tns-core-modules/application";
 
 export { BarcodeFormat };
 
@@ -29,15 +28,15 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
     }
 
     if (this.beepOnScan) {
-      const activity = (application.android.foregroundActivity || application.android.startActivity);
+      const activity = (Application.android.foregroundActivity || Application.android.startActivity);
       activity.setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
       try {
-        const file = application.android.context.getResources().getIdentifier("beep", "raw", application.android.context.getPackageName());
+        const file = Application.android.context.getResources().getIdentifier("beep", "raw", Application.android.context.getPackageName());
         if (file === 0) {
           console.log("No 'beep.*' soundfile found in the resources /raw folder. There will be no audible feedback upon scanning a barcode.");
         } else {
           this.player = new android.media.MediaPlayer();
-          const fileDescriptor: android.content.res.AssetFileDescriptor = application.android.context.getResources().openRawResourceFd(file);
+          const fileDescriptor: android.content.res.AssetFileDescriptor = Application.android.context.getResources().openRawResourceFd(file);
           try {
             this.player.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(), fileDescriptor.getLength());
           } finally {

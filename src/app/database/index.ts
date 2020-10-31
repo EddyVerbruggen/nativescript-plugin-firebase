@@ -1,5 +1,4 @@
-import * as firebase from "../../firebase";
-import { AddEventListenerResult, FBData } from "../../firebase";
+import { firebase } from "../../firebase";
 import { nextPushId } from "./util/NextPushId";
 
 export module database {
@@ -42,7 +41,7 @@ export module database {
       };
 
       firebase.addValueEventListener(onValueEvent, this.path).then(
-          (result: AddEventListenerResult) => {
+          (result: firebase.AddEventListenerResult) => {
             if (!Query.registeredListeners.has(this.path)) {
               Query.registeredListeners.set(this.path, []);
             }
@@ -85,7 +84,7 @@ export module database {
       });
     }
 
-    private getOnValueEventHandler(): (data: FBData) => void {
+    private getOnValueEventHandler(): (data: firebase.FBData) => void {
       return result => {
         const callbacks = Query.registeredCallbacks.get(this.path);
         callbacks && callbacks.map(callback => {

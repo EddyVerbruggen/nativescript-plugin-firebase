@@ -1,5 +1,4 @@
-import { Property } from "tns-core-modules/ui/core/properties";
-import { booleanConverter } from "tns-core-modules/ui/core/view-base";
+import { Property, booleanConverter } from "@nativescript/core";
 import { MLKitCameraView } from "../mlkit-cameraview";
 
 export enum ObjectDetectionCategory {

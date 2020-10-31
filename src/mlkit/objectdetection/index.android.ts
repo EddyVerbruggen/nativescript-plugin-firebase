@@ -1,4 +1,4 @@
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource } from "@nativescript/core";
 import { MLKitVisionOptions, } from "../";
 import { MLKitScanBarcodesResultBounds } from "../barcodescanning";
 import { MLKitObjectDetectionOptions, MLKitObjectDetectionResult, MLKitObjectDetectionResultItem } from "./";

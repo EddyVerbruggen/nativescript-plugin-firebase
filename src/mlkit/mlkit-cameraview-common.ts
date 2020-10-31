@@ -1,6 +1,4 @@
-import { ContentView } from "tns-core-modules/ui/content-view";
-import { Property } from "tns-core-modules/ui/core/properties";
-import { booleanConverter } from "tns-core-modules/ui/core/view-base";
+import { ContentView, Property, booleanConverter } from "@nativescript/core";
 
 export const processEveryNthFrameProperty = new Property<MLKitCameraView, number>({
   name: "processEveryNthFrame",

@@ -13,7 +13,7 @@ var directories = {
 
 console.log('NativeScript Firebase Plugin Installation');
 
-var appRoot = "../../";
+var appRoot = "../../../";
 var pluginConfigFile = "firebase.nativescript.json";
 var pluginConfigPath = path.join(appRoot, pluginConfigFile);
 var config = {};

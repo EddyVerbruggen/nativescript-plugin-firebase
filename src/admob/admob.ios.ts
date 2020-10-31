@@ -1,5 +1,4 @@
-import { device } from "tns-core-modules/platform/platform";
-import { DeviceType } from "tns-core-modules/ui/enums/enums";
+import { Device, Enums } from "@nativescript/core";
 import { firebase } from "../firebase-common";
 import { BannerOptions, InterstitialOptions, PreloadRewardedVideoAdOptions, ShowRewardedVideoAdOptions } from "./admob";
 import { AD_SIZE, BANNER_DEFAULTS, rewardedVideoCallbacks } from "./admob-common";
@@ -330,7 +329,7 @@ function _getBannerType(size): any {
     return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size === AD_SIZE.SMART_BANNER || size === AD_SIZE.FLUID) {
     const orientation = UIDevice.currentDevice.orientation;
-    const isIPad = device.deviceType === DeviceType.Tablet;
+    const isIPad = Device.deviceType === Enums.DeviceType.Tablet;
     if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
@@ -344,6 +343,7 @@ function _getBannerType(size): any {
   }
 }
 
+@NativeClass()
 class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDelegate {
   public static ObjCProtocols = [];
   private options: InterstitialOptions;
@@ -382,6 +382,7 @@ class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDel
   }
 }
 
+@NativeClass()
 class GADBannerViewDelegateImpl extends NSObject implements GADBannerViewDelegate {
   public static ObjCProtocols = [];
   private onAdCloseCallback: () => void;
@@ -420,6 +421,7 @@ class GADBannerViewDelegateImpl extends NSObject implements GADBannerViewDelegat
   }
 }
 
+@NativeClass()
 class GADRewardBasedVideoAdDelegateImpl extends NSObject implements GADRewardBasedVideoAdDelegate {
   public static ObjCProtocols = [];
   _loaded: () => void;

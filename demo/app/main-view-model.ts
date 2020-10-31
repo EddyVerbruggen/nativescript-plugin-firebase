@@ -1,15 +1,11 @@
-import * as firebase from "nativescript-plugin-firebase";
-import { AddEventListenerResult, admob as firebaseAdMob, crashlytics as firebaseCrashlytics, GetRemoteConfigResult, IdTokenResult, LogComplexEventTypeParameter, performance as firebasePerformance, storage as firebaseStorage, User } from "nativescript-plugin-firebase";
-import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
-import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performance";
-import { Observable } from "tns-core-modules/data/observable";
-import * as fs from "tns-core-modules/file-system";
-import { isAndroid, isIOS } from "tns-core-modules/platform";
-import { alert, prompt } from "tns-core-modules/ui/dialogs";
+import { firebase, AddEventListenerResult, admob as firebaseAdMob, crashlytics as firebaseCrashlytics, GetRemoteConfigResult, IdTokenResult, LogComplexEventTypeParameter, performance as firebasePerformance, storage as firebaseStorage, User } from "@nativescript/firebase";
+import { RewardedVideoAdReward } from "@nativescript/firebase/admob/admob";
+import { FirebaseTrace } from "@nativescript/firebase/performance/performance";
+import { Observable, isAndroid, isIOS, Dialogs, knownFolders, File } from "@nativescript/core";
 import { UploadMetadata } from "../../src/storage/storage";
 import { MessagingViewModel } from "./messaging-view-model";
 
-const firebaseWebApi = require("nativescript-plugin-firebase/app");
+const firebaseWebApi = require("@nativescript/firebase/app");
 
 declare const Crashlytics: any;
 
@@ -309,7 +305,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebUploadFile(): void {
     // let's first create a File object using the tns file module
-    const appPath = fs.knownFolders.currentApp().path;
+    const appPath = knownFolders.currentApp().path;
     const logoPath = appPath + "/images/telerik-logo.png";
 
     const storageRef = firebaseWebApi.storage().ref();
@@ -324,7 +320,7 @@ export class HelloWorldModel extends Observable {
       }
     };
 
-    childRef.put(fs.File.fromPath(logoPath), metadata).then(
+    childRef.put(File.fromPath(logoPath), metadata).then(
         uploadedFile => {
           console.log("Uploaded! " + JSON.stringify(uploadedFile));
           this.set("storageFeedback", "Uploaded!");
@@ -341,7 +337,7 @@ export class HelloWorldModel extends Observable {
     const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
     // let's first determine where we'll create the file using the 'file-system' module
-    const documents = fs.knownFolders.documents();
+    const documents = knownFolders.documents();
     const logoPath = documents.path + "/telerik-logo-downloaded.png";
 
     childRef.download(logoPath)
@@ -1666,7 +1662,7 @@ export class HelloWorldModel extends Observable {
 
   public doUploadFile(): void {
     // let's first create a File object using the tns file module
-    const appPath = fs.knownFolders.currentApp().path;
+    const appPath = knownFolders.currentApp().path;
     const logoPath = appPath + "/images/telerik-logo.png";
 
     const metadata: UploadMetadata = {
@@ -1680,7 +1676,7 @@ export class HelloWorldModel extends Observable {
 
     firebaseStorage.uploadFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png',
-      localFile: fs.File.fromPath(logoPath), // use this (a file-system module File object)
+      localFile: File.fromPath(logoPath), // use this (a file-system module File object)
       // localFullPath: logoPath, // or this, a full file path
       onProgress: status => {
         console.log("Uploaded fraction: " + status.fractionCompleted + " (" + status.percentageCompleted + "%)");
@@ -1702,7 +1698,7 @@ export class HelloWorldModel extends Observable {
 
   public doDownloadFile(): void {
     // let's first determine where we'll create the file using the 'file-system' module
-    const documents = fs.knownFolders.documents();
+    const documents = knownFolders.documents();
     const logoPath = documents.path + "/telerik-logo-downloaded.png";
 
     // this will create or overwrite a local file in the app's documents folder

@@ -22,6 +22,7 @@ function ensureDelegate(): void {
   }
 }
 
+@NativeClass()
 class FIRInAppMessagingDisplayDelegateImpl extends NSObject implements FIRInAppMessagingDisplayDelegate {
   public static ObjCProtocols = [];
 

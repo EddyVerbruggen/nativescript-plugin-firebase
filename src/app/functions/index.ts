@@ -1,10 +1,10 @@
-import * as firebase from "../../firebase";
+import { functions as fNamepspace } from "../../firebase";
 
 export namespace functions {
   // tslint:disable-next-line:class-name
   export class Functions {
-    httpsCallable<I, O>(functionName: string, region?: firebase.functions.SupportedRegions) {
-      return firebase.functions.httpsCallable<I, O>(functionName, region);
+    httpsCallable<I, O>(functionName: string, region?: fNamepspace.SupportedRegions) {
+      return fNamepspace.httpsCallable<I, O>(functionName, region);
     }
   }
 }
