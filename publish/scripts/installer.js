@@ -455,7 +455,7 @@ const pattern3 = /\\n\\s*\\/\\/Crashlytics 3 BEGIN[\\s\\S]*\\/\\/Crashlytics 3 E
 const string1 = \`
 //Crashlytics 1 BEGIN
 #else
-@import FirebaseCrashlytics;
+#import <FirebaseCrashlytics/FirebaseCrashlytics.h>;
 #endif
 //Crashlytics 1 END
 \`;
