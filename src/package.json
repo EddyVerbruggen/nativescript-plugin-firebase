@@ -1,6 +1,6 @@
 {
   "name": "@nativescript/firebase",
-  "version": "11.1.0",
+  "version": "11.1.1-rc.0",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
