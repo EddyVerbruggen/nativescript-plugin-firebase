@@ -51,6 +51,8 @@ declare class FIRStackFrame extends NSObject {
 
 	static new(): FIRStackFrame; // inherited from NSObject
 
+	static stackFrameWithAddress(address: number): FIRStackFrame;
+
 	static stackFrameWithSymbolFileLine(symbol: string, file: string, line: number): FIRStackFrame;
 
 	constructor(o: { symbol: string; file: string; line: number; });
