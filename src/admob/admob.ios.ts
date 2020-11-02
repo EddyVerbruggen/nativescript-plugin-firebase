@@ -176,8 +176,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
         }
         CFRelease(delegate);
         delegate = undefined;
-      });
-      // we're leaving the app to switch to Google's OAuth screen, so making sure this is retained
+      }, () => console.log("Ad closed"));
       CFRetain(delegate);
       firebase.admob.interstitialView.delegate = delegate;
 
