@@ -1,27 +1,29 @@
 # NativeScript Firebase plugin
 
-[![Build Status][build-status]][build-url]
-[![NPM version][npm-image]][npm-url]
-[![Downloads][downloads-image]][npm-url]
-[![TotalDownloads][total-downloads-image]][npm-url]
-[![Twitter Follow][twitter-image]][twitter-url]
-
-[build-status]:https://travis-ci.org/EddyVerbruggen/nativescript-plugin-firebase.svg?branch=master
-[build-url]:https://travis-ci.org/EddyVerbruggen/nativescript-plugin-firebase
-[npm-image]:http://img.shields.io/npm/v/nativescript-plugin-firebase.svg
-[npm-url]:https://npmjs.org/package/nativescript-plugin-firebase
-[downloads-image]:http://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
-[total-downloads-image]:http://img.shields.io/npm/dt/nativescript-plugin-firebase.svg?label=total%20downloads
-[twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
-[twitter-url]:https://twitter.com/eddyverbruggen
-
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
 > For NativeScript 7 compatibility, run `tns plugin add @nativescript/firebase`.
 
+[![NPM version][npm-image]][npm-url]
+[![Downloads][downloads-image]][npm-url]
+[![TotalDownloads][total-downloads-image]][npm-url]
+[npm-image]:https://img.shields.io/npm/v/@nativescript/firebase.svg
+[npm-url]:https://npmjs.org/package/@nativescript/firebase
+[downloads-image]:https://img.shields.io/npm/dm/@nativescript/firebase.svg
+[total-downloads-image]:https://img.shields.io/npm/dt/@nativescript/firebase.svg?label=total%20downloads
+
 > For NativeScript 6.1+ compatibility, install polugin version 10: `tns plugin add nativescript-plugin-firebase@10`.
 
 > For NativeScript 6.0 and lower, stick to plugin version < 10.
+
+[![NPM version][npm-image-legacy]][npm-url-legacy]
+[![Downloads][downloads-image-legacy]][npm-url-legacy]
+[![TotalDownloads][total-downloads-image-legacy]][npm-url-legacy]
+
+[npm-image-legacy]:https://img.shields.io/npm/v/nativescript-plugin-firebase.svg
+[npm-url-legacy]:https://npmjs.org/package/nativescript-plugin-firebase
+[downloads-image-legacy]:https://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
+[total-downloads-image-legacy]:https://img.shields.io/npm/dt/nativescript-plugin-firebase.svg?label=total%20downloads
 
 ## Features
 * [AdMob](docs/ADMOB.md)
@@ -118,6 +120,10 @@ We need to do some wiring when your app starts, so open `app.js` and add this be
 
 ##### JavaScript
 ```js
+// NativeScript 7+
+var firebase = require("@nativescript/firebase");
+
+// NativeScript 6-
 var firebase = require("nativescript-plugin-firebase");
 
 firebase.init({
@@ -135,6 +141,10 @@ firebase.init({
 
 #### TypeScript
 ```js
+// NativeScript 7+
+import { firebase } from "@nativescript/firebase";
+
+// NativeScript 6-
 const firebase = require("nativescript-plugin-firebase");
 
 firebase.init({
@@ -153,6 +163,10 @@ firebase.init({
 #### Angular
 Because of the specifics of the angular bootstrap it is best to initalize firebase once the angular application is running. For example your main compoment's `ngOnInit` method:
 ```js
+// NativeScript 7+
+import { firebase } from "@nativescript/firebase";
+
+// NativeScript 6-
 const firebase = require("nativescript-plugin-firebase");
 
 @Component({
