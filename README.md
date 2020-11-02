@@ -7,6 +7,7 @@
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![TotalDownloads][total-downloads-image]][npm-url]
+
 [npm-image]:https://img.shields.io/npm/v/@nativescript/firebase.svg
 [npm-url]:https://npmjs.org/package/@nativescript/firebase
 [downloads-image]:https://img.shields.io/npm/dm/@nativescript/firebase.svg
