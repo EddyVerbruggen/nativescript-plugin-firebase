@@ -17,9 +17,11 @@
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
-> Plugin version **10.0.0** works with NativeScript 6.1+. Using an older version? Stick to plugin version < 10.
+> For NativeScript 7 compatibility, run `tns plugin add @nativescript/firebase`.
 
-> For NativeScript 7 compatibiliy, install `@nativescript/firebase` version 11+.
+> For NativeScript 6.1+ compatibility, install polugin version 10: `tns plugin add nativescript-plugin-firebase@10`.
+
+> For NativeScript 6.0 and lower, stick to plugin version < 10.
 
 ## Features
 * [AdMob](docs/ADMOB.md)
@@ -54,16 +56,16 @@ If you rather watch a (slightly outdated) video explaining the steps then check 
 add iOS and Android support to the Firebase console and how to integrate anonymous authentication:
 [![YouTube demo](docs/images/yt-thumb-setup.png)](https://youtu.be/IextEpoIzwE "YouTube demo")
 
-From the command prompt go to your app's root folder and execute:
-
-```bash
-tns plugin add nativescript-plugin-firebase
-```
-
-or for NativeScript 7+:
+From the command prompt go to your app's root folder and execute this for NativeScript 7+:
 
 ```bash
 tns plugin add @nativescript/firebase
+```
+
+or for NativeScript 6:
+
+```bash
+tns plugin add nativescript-plugin-firebase
 ```
 
 This will launch an install script which will guide you through installing additional components.

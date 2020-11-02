@@ -1,20 +1,23 @@
-import { firebase, AddEventListenerResult, admob as firebaseAdMob, crashlytics as firebaseCrashlytics, GetRemoteConfigResult, IdTokenResult, LogComplexEventTypeParameter, performance as firebasePerformance, storage as firebaseStorage, User } from "@nativescript/firebase";
+import { alert, File, isAndroid, isIOS, knownFolders, Observable, prompt } from "@nativescript/core";
+import { firebase } from "@nativescript/firebase";
+import { admob as firebaseAdmob } from "@nativescript/firebase/admob";
 import { RewardedVideoAdReward } from "@nativescript/firebase/admob/admob";
+import { analytics as firebaseAnalytics } from "@nativescript/firebase/analytics";
+import { crashlytics as firebaseCrashlytics } from "@nativescript/firebase/crashlytics";
+import { firebaseFunctions } from "@nativescript/firebase/functions";
+import { performance as firebasePerformance } from "@nativescript/firebase/performance";
 import { FirebaseTrace } from "@nativescript/firebase/performance/performance";
-import { Observable, isAndroid, isIOS, Dialogs, knownFolders, File } from "@nativescript/core";
-import { UploadMetadata } from "../../src/storage/storage";
+import { storage as firebaseStorage } from "@nativescript/firebase/storage";
+import { UploadMetadata } from "@nativescript/firebase/storage/storage";
 import { MessagingViewModel } from "./messaging-view-model";
 
 const firebaseWebApi = require("@nativescript/firebase/app");
 
-declare const Crashlytics: any;
-
 export class HelloWorldModel extends Observable {
-
   public messaging = new MessagingViewModel();
   public userEmailOrPhone: string;
-  private userListenerWrapper: AddEventListenerResult;
-  private companiesListenerWrapper: AddEventListenerResult;
+  private userListenerWrapper: firebase.AddEventListenerResult;
+  private companiesListenerWrapper: firebase.AddEventListenerResult;
   private onAuthStateChangedHandlerSet = false;
   private firebaseTrace: FirebaseTrace;
 
@@ -25,7 +28,7 @@ export class HelloWorldModel extends Observable {
   private ensureWebOnAuthChangedHandler(): void {
     if (!this.onAuthStateChangedHandlerSet) {
       this.onAuthStateChangedHandlerSet = true;
-      firebaseWebApi.auth().onAuthStateChanged((user?: User) => {
+      firebaseWebApi.auth().onAuthStateChanged((user?: firebase.User) => {
         console.log(">> auth state changed: " + user);
         if (user) {
           this.set("userEmailOrPhone", user.email ? user.email : (user.phoneNumber ? user.phoneNumber : "N/A"));
@@ -133,7 +136,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebCreateUser(): void {
     firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen+firebasewebapi@gmail.com', 'firebase')
-        .then((user: User) => {
+        .then((user: firebase.User) => {
           console.log("User created: " + JSON.stringify(user));
           this.set("userEmailOrPhone", user.email);
           alert({
@@ -175,7 +178,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebCallableFunction(): void {
     // see the implementation of this function @ https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/ff95c77c7b09acf66654f53c52e8ae0c8d7b1c78/demo/firebasefunctions/functions/src/index.ts#L15-L19
-    const fn = firebase.functions.httpsCallable("helloName");
+    const fn = firebaseFunctions.httpsCallable("helloName");
 
     fn("Nativescript-Plugin-Firebase!")
         .then((dataCue: any) => {
@@ -288,7 +291,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebStoreCompanyByFirstCreatingKey(): void {
     const path = "companies",
-        companyRef = firebaseWebApi.database().ref().child(path),
+        companyRef = firebaseWebApi.database().ref(path),
         newCompanyKey = companyRef.push().key,
         storeAtPath = `/${path}/${newCompanyKey}`,
         value = {
@@ -464,7 +467,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doEnableAnalytics(): void {
-    firebase.analytics.setAnalyticsCollectionEnabled(true);
+    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
     alert({
       title: "Analytics collection",
       message: "ENABLED",
@@ -473,7 +476,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doDisableAnalytics(): void {
-    firebase.analytics.setAnalyticsCollectionEnabled(false);
+    firebaseAnalytics.setAnalyticsCollectionEnabled(false);
     alert({
       title: "Analytics collection",
       message: "DISABLED",
@@ -482,7 +485,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doLogAnalyticsEvents(): void {
-    firebase.analytics.logEvent({
+    firebaseAnalytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
       parameters: [
@@ -514,7 +517,7 @@ export class HelloWorldModel extends Observable {
      * Same thing as logEvent but can add an array or specific types not just string (LogComplexEventTypeParameter.BOOLEAN, LogComplexEventTypeParameter.STRING,
      * LogComplexEventTypeParameter.DOUBLE, LogComplexEventTypeParameter.FLOAT, LogComplexEventTypeParameter.INT, LogComplexEventTypeParameter.ARRAY)
      */
-    firebase.analytics.logComplexEvent({
+    firebaseAnalytics.logComplexEvent({
       key: "view_item_list",
       parameters: [{
         key: "item1",
@@ -522,26 +525,26 @@ export class HelloWorldModel extends Observable {
         value: [
           {
             parameters: [
-              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
-              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
-              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
-              {key: "index", value: 1, type: LogComplexEventTypeParameter.INT}
+              {key: "item_id", value: "id of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1, type: firebase.LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 1, type: firebase.LogComplexEventTypeParameter.INT}
             ]
           },
           {
             parameters: [
-              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
-              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
-              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
-              {key: "index", value: 2, type: LogComplexEventTypeParameter.INT}
+              {key: "item_id", value: "id of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1, type: firebase.LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 2, type: firebase.LogComplexEventTypeParameter.INT}
             ]
           }
         ]
@@ -551,7 +554,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetAnalyticsUserProperty(): void {
-    firebase.analytics.setUserProperty({
+    firebaseAnalytics.setUserProperty({
       key: "origin", // note that this needs to be preregistered, see https://support.google.com/firebase/answer/6317519?hl=en&ref_topic=6317489#create-property
       value: "demoapp"
     }).then(
@@ -580,7 +583,7 @@ export class HelloWorldModel extends Observable {
   }
 
   private setScreenName(screenName): void {
-    firebase.analytics.setScreenName({
+    firebaseAnalytics.setScreenName({
       screenName
     }).then(
         () => {
@@ -600,8 +603,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowAdMobBanner(): void {
-    firebaseAdMob.showBanner({
-      size: firebaseAdMob.AD_SIZE.SMART_BANNER,
+    firebaseAdmob.showBanner({
+      size: firebaseAdmob.AD_SIZE.SMART_BANNER,
       margins: {
         bottom: isIOS ? 50 : 0
       },
@@ -637,7 +640,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowAdMobInterstitial(): void {
-    firebase.admob.showInterstitial({
+    firebaseAdmob.showInterstitial({
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
       androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
       testing: true,
@@ -661,7 +664,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doPreloadAdMobInterstitial(): void {
-    firebaseAdMob.preloadInterstitial({
+    firebaseAdmob.preloadInterstitial({
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
       androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
       testing: true,
@@ -687,7 +690,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowPreloadedAdMobInterstitial(): void {
-    firebaseAdMob.showInterstitial().then(
+    firebaseAdmob.showInterstitial().then(
         () => console.log("AdMob interstitial showing"),
         errorMessage => {
           alert({
@@ -700,7 +703,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doPreloadRewardedVideoAd(): void {
-    firebaseAdMob.preloadRewardedVideoAd({
+    firebaseAdmob.preloadRewardedVideoAd({
       iosAdPlacementId: "ca-app-pub-9517346003011652/8586553377",
       androidAdPlacementId: "ca-app-pub-9517346003011652/2819097664",
       testing: true,
@@ -727,7 +730,7 @@ export class HelloWorldModel extends Observable {
 
   public doShowPreloadedRewardedVideoAd(): void {
     let reward: RewardedVideoAdReward;
-    firebaseAdMob.showRewardedVideoAd({
+    firebaseAdmob.showRewardedVideoAd({
       onRewarded: receivedReward => {
         reward = receivedReward;
         console.log("Rewarded video ad: rewarded. Details: " + JSON.stringify(reward));
@@ -767,7 +770,7 @@ export class HelloWorldModel extends Observable {
    * so there's no function to do it programmatically.
    */
   public doHideAdMobBanner(): void {
-    firebase.admob.hideBanner().then(
+    firebaseAdmob.hideBanner().then(
         () => {
           console.log("AdMob banner hidden");
         },
@@ -814,7 +817,7 @@ export class HelloWorldModel extends Observable {
           "default": 11
         }]
     }).then(
-        (result: GetRemoteConfigResult) => {
+        (result: firebase.GetRemoteConfigResult) => {
           console.log("remote config fetched: " + JSON.stringify(result.properties));
           alert({
             title: `Fetched at ${result.lastFetch} ${result.throttled ? '(throttled)' : ''}`,
@@ -931,7 +934,7 @@ export class HelloWorldModel extends Observable {
       email: 'eddyverbruggen+firebasetest@gmail.com',
       password: 'firebase'
     }).then(
-        (user: User) => {
+        (user: firebase.User) => {
           console.log("User created: " + JSON.stringify(user));
           this.set("userEmailOrPhone", user.email);
           alert({
@@ -992,7 +995,7 @@ export class HelloWorldModel extends Observable {
               {
                 forceRefresh: false
               })
-              .then((result: IdTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
+              .then((result: firebase.IdTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
               .catch(errorMessage => console.log("Auth token retrieval error: " + errorMessage));
         },
         errorMessage => {
@@ -1959,7 +1962,7 @@ export class HelloWorldModel extends Observable {
 
   public doSetUserId(): void {
     // just for fun: showing usage of 'firebase.crashlytics' instead of 'firebaseCrashlytics'
-    firebase.crashlytics.setUserId("user#42");
+    firebaseCrashlytics.setUserId("user#42");
 
     alert({
       title: "User id changed",

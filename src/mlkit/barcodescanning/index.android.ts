@@ -4,8 +4,6 @@ import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from ".
 
 export { BarcodeFormat };
 
-const gmsTasks = (<any>com.google.android.gms).tasks;
-
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
   private player: android.media.MediaPlayer;
@@ -59,7 +57,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
   }
 
   protected createSuccessListener(): any {
-    return new gmsTasks.OnSuccessListener({
+    return new (<any>com.google.android.gms).tasks.OnSuccessListener({
       onSuccess: barcodes => {
 
         const result = <MLKitScanBarcodesOnDeviceResult>{
@@ -142,7 +140,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
       const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
       const firImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 
-      const onSuccessListener = new gmsTasks.OnSuccessListener({
+      const onSuccessListener = new (<any>com.google.android.gms).tasks.OnSuccessListener({
         onSuccess: barcodes => {
           const result = <MLKitScanBarcodesOnDeviceResult>{
             barcodes: []
@@ -171,7 +169,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
         }
       });
 
-      const onFailureListener = new gmsTasks.OnFailureListener({
+      const onFailureListener = new (<any>com.google.android.gms).tasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 

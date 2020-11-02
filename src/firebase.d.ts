@@ -782,8 +782,6 @@ export namespace firebase {
    * Tells the client to keep its local cache in sync with the server automatically.
    */
   export function keepInSync(path: string, switchOn: boolean): Promise<any>;
-
-  
 }
 
 export namespace firestore {
@@ -1222,7 +1220,7 @@ export namespace firestore {
   function clearPersistence(): Promise<void>;
 }
 
-export namespace functions {
+export namespace firebaseFunctions {
   export type SupportedRegions =
     | "us-central1"
     | "us-east1"

@@ -26,7 +26,10 @@ Then produce a crash, and it can easily take a day before that screen changes (l
 Send a native iOS or Android exception to Crashlytics.
 
 ```typescript
-// either import like this:
+// for NativeScript 7, import like this:
+import { crashlytics } from "@nativescript/firebase/crashlytics";
+
+// for older versions of NativeScript, either import like this:
 import { crashlytics } from "nativescript-plugin-firebase"; // and do: crashlytics.sendCrashLog
 // or this:
 import { crashlytics as firebaseCrashlytics } from "nativescript-plugin-firebase"; // and do: firebaseCrashlytics.sendCrashLog
