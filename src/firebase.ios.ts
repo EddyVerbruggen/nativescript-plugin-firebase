@@ -352,22 +352,23 @@ firebase.addAppDelegateMethods = appDelegate => {
       if (userActivity.webpageURL) {
         // check for an email-link-login flow
 
-        const fAuth = (typeof (FIRAuth) !== "undefined") ? FIRAuth.auth() : undefined;
-        if (fAuth && fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
+        firebase.fAuth = (typeof (FIRAuth) !== "undefined") ? FIRAuth.auth() : undefined;
+        if (firebase.fAuth && firebase.fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
           const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
           if (rememberedEmail !== undefined) {
 
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               const onCompletionLink = (result: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, and complete the email link sign in flow
-                  fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+                  firebase.fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
                     if (!error) {
                       firebase.notifyAuthStateListeners({
                         loggedIn: true,
                         user: toLoginResult(authData.user)
                       });
                     }
+                    firebase.fAuth = null;
                   });
                 } else {
                   // linking successful, so the user can now log in with either their email address, or however he logged in previously
@@ -375,13 +376,14 @@ firebase.addAppDelegateMethods = appDelegate => {
                     loggedIn: true,
                     user: toLoginResult(result.user)
                   });
+                  firebase.fAuth = null;
                 }
               };
               const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailLink(rememberedEmail, userActivity.webpageURL.absoluteString);
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+              firebase.fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   console.log(error.localizedDescription);
                 } else {
@@ -390,6 +392,7 @@ firebase.addAppDelegateMethods = appDelegate => {
                     user: toLoginResult(authData.user)
                   });
                 }
+                firebase.fAuth = null;
               });
             }
           }
@@ -931,10 +934,11 @@ firebase.login = arg => {
             user: toLoginResult(authResult.user)
           });
         }
+        firebase.fAuth = null;
       };
 
-      const fAuth = FIRAuth.auth();
-      if (fAuth === null) {
+      firebase.fAuth = FIRAuth.auth();
+      if (firebase.fAuth === null) {
         reject("Run init() first!");
         return;
       }
@@ -942,7 +946,7 @@ firebase.login = arg => {
       firebase.moveLoginOptionsToObjects(arg);
 
       if (arg.type === firebase.LoginType.ANONYMOUS) {
-        fAuth.signInAnonymouslyWithCompletion(onCompletionWithAuthResult);
+        firebase.fAuth.signInAnonymouslyWithCompletion(onCompletionWithAuthResult);
 
       } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
@@ -951,21 +955,22 @@ firebase.login = arg => {
         }
 
         const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailPassword(arg.passwordOptions.email, arg.passwordOptions.password);
-        if (fAuth.currentUser) {
+        if (firebase.fAuth.currentUser) {
           // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
           const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
             if (error) {
               // ignore, as this one was probably already linked, so just return the user
               log("--- linking error: " + error.localizedDescription);
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             } else {
               onCompletionWithAuthResult(authData, error);
             }
+            firebase.fAuth = null;
           };
-          fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+          firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
         } else {
-          fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletionWithAuthResult);
+          firebase.fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletionWithAuthResult);
         }
 
       } else if (arg.type === firebase.LoginType.EMAIL_LINK) {
@@ -989,7 +994,7 @@ firebase.login = arg => {
             arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
             arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
             arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
-        fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
+        firebase.fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
             arg.emailLinkOptions.email,
             firActionCodeSettings,
             (error: NSError) => {
@@ -1023,18 +1028,19 @@ firebase.login = arg => {
               return;
             }
             const fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(authData, error);
                 }
+                firebase.fAuth = null;
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }, arg.phoneOptions.verificationPrompt);
         });
@@ -1046,12 +1052,12 @@ firebase.login = arg => {
         }
 
         if (arg.customOptions.token) {
-          fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
+          firebase.fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
               .then(
                   token => {
-                    fAuth.signInWithCustomTokenCompletion(token, onCompletionWithAuthResult);
+                    firebase.fAuth.signInWithCustomTokenCompletion(token, onCompletionWithAuthResult);
                   },
                   error => {
                     reject(error);
@@ -1075,21 +1081,22 @@ firebase.login = arg => {
             // headless facebook auth
             // var fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(fbSDKLoginManagerLoginResult.token.tokenString);
             const fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken.tokenString);
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   log("--- linking error: " + error.localizedDescription);
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(authData);
                 }
+                firebase.fAuth = null;
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }
         };
@@ -1138,9 +1145,8 @@ firebase.login = arg => {
         appleIDRequest.nonce = sha256Nonce;
 
         const authorizationController = ASAuthorizationController.alloc().initWithAuthorizationRequests([appleIDRequest]);
-        const delegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(this as any, resolve, reject);
-        CFRetain(delegate);
-        authorizationController.delegate = delegate;
+        firebase.appleAuthDelegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(this as any, resolve, reject);
+        authorizationController.delegate = firebase.appleAuthDelegate;
 
         authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(this as any);
 
@@ -1164,38 +1170,37 @@ firebase.login = arg => {
           sIn.scopes = arg.googleOptions.scopes;
         }
 
-        let delegate = GIDSignInDelegateImpl.new().initWithCallback((user: GIDGoogleUser, error: NSError) => {
+        firebase.googleSignInDelegate = GIDSignInDelegateImpl.new().initWithCallback((user: GIDGoogleUser, error: NSError) => {
           if (error === null) {
             // Get a Google ID token and Google access token from the GIDAuthentication object and exchange them for a Firebase credential
             firebase._gIDAuthentication = user.authentication;
             const fIRAuthCredential = FIRGoogleAuthProvider.credentialWithIDTokenAccessToken(firebase._gIDAuthentication.idToken, firebase._gIDAuthentication.accessToken);
 
             // Finally, authenticate with Firebase using the credential
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use Google as an auth provider
               const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(user);
                 }
+                firebase.fAuth = null;
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
 
           } else {
             reject(error.localizedDescription);
           }
-          CFRelease(delegate);
-          delegate = undefined;
+          firebase.googleSignInDelegate = null;
         });
 
-        CFRetain(delegate);
-        sIn.delegate = delegate;
+        sIn.delegate = firebase.googleSignInDelegate;
         sIn.signIn();
       } else {
         reject("Unsupported auth type: " + arg.type);
@@ -2624,7 +2629,7 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
     if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerDelegateImpl.ObjCProtocols.push(ASAuthorizationControllerDelegate);
     }
-    let delegate = <ASAuthorizationControllerDelegateImpl>ASAuthorizationControllerDelegateImpl.new();
+    const delegate = <ASAuthorizationControllerDelegateImpl>ASAuthorizationControllerDelegateImpl.new();
     delegate.owner = owner;
     delegate.resolve = resolve;
     delegate.reject = reject;
@@ -2667,7 +2672,7 @@ class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAut
                 user: toLoginResult(authResult.user)
               });
               this.resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
-              CFRelease(this);
+              firebase.appleAuthDelegate = null;
             }
           });
     }
@@ -2688,7 +2693,7 @@ class ASAuthorizationControllerPresentationContextProvidingImpl extends NSObject
     if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
       ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.push(ASAuthorizationControllerPresentationContextProviding);
     }
-    let delegate = <ASAuthorizationControllerPresentationContextProvidingImpl>ASAuthorizationControllerPresentationContextProvidingImpl.new();
+    const delegate = <ASAuthorizationControllerPresentationContextProvidingImpl>ASAuthorizationControllerPresentationContextProvidingImpl.new();
     delegate.owner = owner;
     return delegate;
   }
