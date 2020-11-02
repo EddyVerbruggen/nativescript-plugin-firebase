@@ -2,71 +2,74 @@ import { ENABLE_CRASHLYTICS_HINT } from "./crashlytics-common";
 
 export function sendCrashLog(exception: any /* NSError */): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().recordError(exception);
+    FIRCrashlytics.crashlytics().recordError(exception);
   }
 }
 
 export function log(msg: string, tag?: string, priority?: number): void {
   if (isCrashlyticsAvailable()) {
     if (tag) {
-      TNSCrashlyticsLoggerWrapper.log(tag + " - " + msg);
+      FIRCrashlytics.crashlytics().log(tag + " - " + msg);
     } else {
-      TNSCrashlyticsLoggerWrapper.log(msg);
+      FIRCrashlytics.crashlytics().log(msg);
     }
   }
 }
 
 export function setString(key: string, value: string): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().setObjectValueForKey(value, key);
+    FIRCrashlytics.crashlytics().setCustomValueForKey(value, key);
   }
 }
 
 export function setBool(key: string, value: boolean): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().setBoolValueForKey(value, key);
+    FIRCrashlytics.crashlytics().setCustomValueForKey(value, key);
   }
 }
 
 export function setFloat(key: string, value: number): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().setFloatValueForKey(value, key);
+    FIRCrashlytics.crashlytics().setCustomValueForKey(value, key);
   }
 }
 
 export function setInt(key: string, value: number): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().setIntValueForKey(value, key);
+    FIRCrashlytics.crashlytics().setCustomValueForKey(value, key);
   }
 }
 
 export function setDouble(key: string, value: number): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().setFloatValueForKey(value, key);
+    FIRCrashlytics.crashlytics().setCustomValueForKey(value, key);
   }
 }
 
 export function setUserId(id: string): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().setUserIdentifier(id);
+    FIRCrashlytics.crashlytics().setUserID(id);
   }
 }
 
 export function crash(): void {
   if (isCrashlyticsAvailable()) {
-    Crashlytics.sharedInstance().crash();
+    NSException.exceptionWithNameReasonUserInfo(
+        "FIRCrashlytics",
+        "test crash",
+        null
+    ).raise();
   }
-  Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
 }
 
 export function setCrashlyticsCollectionEnabled(enabled: boolean): void {
   if (isCrashlyticsAvailable()) {
-    Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
+    FIRCrashlytics.crashlytics().setCrashlyticsCollectionEnabled(enabled);
   }
 }
 
 function isCrashlyticsAvailable(): boolean {
-  if (typeof (Crashlytics) === "undefined") {
+  if (typeof (FIRCrashlytics) === "undefined") {
     console.log(ENABLE_CRASHLYTICS_HINT);
     return false;
   }

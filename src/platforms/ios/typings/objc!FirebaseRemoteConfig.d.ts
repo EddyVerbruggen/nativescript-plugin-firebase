@@ -20,6 +20,8 @@ declare class FIRRemoteConfig extends NSObject implements NSFastEnumeration {
 
 	activateFetched(): boolean;
 
+	activateWithCompletion(completion: (p1: boolean, p2: NSError) => void): void;
+
 	activateWithCompletionHandler(completionHandler: (p1: NSError) => void): void;
 
 	allKeysFromSource(source: FIRRemoteConfigSource): NSArray<string>;
