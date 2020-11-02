@@ -455,7 +455,7 @@ const pattern3 = /\\n\\s*\\/\\/Crashlytics 3 BEGIN[\\s\\S]*\\/\\/Crashlytics 3 E
 const string1 = \`
 //Crashlytics 1 BEGIN
 #else
-#import <FirebaseCrashlytics/FirebaseCrashlytics.h>;
+#import <FirebaseCrashlytics/FirebaseCrashlytics.h>
 #endif
 //Crashlytics 1 END
 \`;
@@ -978,7 +978,7 @@ module.exports = function($logger, $projectData) {
 
             let gradlePattern = /classpath ('|")com\\.android\\.tools\\.build:gradle:\\d+\\.\\d+\\.\\d+('|")/;
             let googleServicesPattern = /classpath ('|")com\\.google\\.gms:google-services:\\d+\\.\\d+\\.\\d+('|")/;
-            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.3.0"';
+            let latestGoogleServicesPlugin = 'classpath "com.google.gms:google-services:4.3.4"';
             if (googleServicesPattern.test(buildGradleContent)) {
                 buildGradleContent = buildGradleContent.replace(googleServicesPattern, latestGoogleServicesPlugin);
             } else {
