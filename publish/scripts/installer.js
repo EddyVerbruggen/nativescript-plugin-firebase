@@ -846,7 +846,7 @@ module.exports = function($logger, hookArgs) {
             });
         }
 
-        var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+        var buildType = (isReleaseBuild && isProdEnv) || (!isReleaseBuild && isProdEnv) ? 'production' : 'development';
 
         /*
             Detect if we have nativescript-plugin-firebase temp file created during after-prepare hook, so we know
