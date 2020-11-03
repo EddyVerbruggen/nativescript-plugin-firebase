@@ -1,4 +1,4 @@
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource } from "@nativescript/core";
 import { MLKitAutoMLResult, MLKitAutoMLOptions } from "./index";
 import { MLKitVisionOptions } from "../index";
 import { MLKitAutoML as MLKitAutoMLBase } from "./automl-common";

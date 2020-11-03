@@ -1,4 +1,4 @@
-import { File } from "tns-core-modules/file-system";
+import { File } from "@nativescript/core";
 import { firebase } from "../firebase-common";
 import { DeleteFileOptions, DownloadFileOptions, GetDownloadUrlOptions, ListOptions, Reference, UploadFileOptions, UploadFileResult } from "./storage";
 import { ListResult as ListResultBase } from "./storage-common";

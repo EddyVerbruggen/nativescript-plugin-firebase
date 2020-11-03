@@ -1,8 +1,7 @@
 import { firebase } from "../firebase-common";
-import * as appModule from "tns-core-modules/application";
-import * as application from "tns-core-modules/application/application";
+import { Application } from "@nativescript/core";
 import { PushNotificationModel } from "./messaging.ios";
-import { MessagingOptions } from "../firebase";
+import { firebase as fbNamespace } from "../firebase";
 
 declare const android, com, global: any;
 const NotificationManagerCompatClass = useAndroidX() ? global.androidx.core.app.NotificationManagerCompat : android.support.v4.app.NotificationManagerCompat;
@@ -17,24 +16,24 @@ function getSenderId(): Promise<string> {
     }
 
     const setSenderIdAndResolve = () => {
-      const senderIdResourceId = application.android.context.getResources().getIdentifier("gcm_defaultSenderId", "string", application.android.context.getPackageName());
+      const senderIdResourceId = Application.android.context.getResources().getIdentifier("gcm_defaultSenderId", "string", Application.android.context.getPackageName());
       if (senderIdResourceId === 0) {
         throw new Error("####################### Seems like you did not include 'google-services.json' in your project! Firebase Messaging will not work properly. #######################");
       }
-      _senderId = application.android.context.getString(senderIdResourceId);
+      _senderId = Application.android.context.getString(senderIdResourceId);
       resolve(_senderId);
     };
 
-    if (!application.android.context) {
+    if (!Application.android.context) {
       // throw new Error("Don't call this function before your app has started.");
-      appModule.on(appModule.launchEvent, () => setSenderIdAndResolve())
+      Application.on(Application.launchEvent, () => setSenderIdAndResolve())
     } else {
       setSenderIdAndResolve();
     }
   });
 }
 
-export function initFirebaseMessaging(options?: MessagingOptions) {
+export function initFirebaseMessaging(options?: fbNamespace.MessagingOptions) {
   if (!options) {
     return;
   }
@@ -47,7 +46,7 @@ export function initFirebaseMessaging(options?: MessagingOptions) {
 }
 
 export function onAppModuleLaunchEvent(args: any) {
-  org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(appModule.android.nativeApp);
+  org.nativescript.plugins.firebase.FirebasePluginLifecycleCallbacks.registerCallbacks(Application.android.nativeApp);
 }
 
 export function onAppModuleResumeEvent(args: any) {
@@ -175,7 +174,7 @@ export function addOnPushTokenReceivedCallback(callback) {
   });
 }
 
-export function registerForPushNotifications(options?: MessagingOptions): Promise<void> {
+export function registerForPushNotifications(options?: fbNamespace.MessagingOptions): Promise<void> {
   return new Promise((resolve, reject) => {
     try {
       if (typeof (com.google.firebase.messaging) === "undefined") {
@@ -270,7 +269,7 @@ export function areNotificationsEnabled() {
   const androidSdkVersion = android.os.Build.VERSION.SDK_INT;
 
   if (androidSdkVersion >= 24) { // android.os.Build.VERSION_CODES.N
-    return NotificationManagerCompatClass.from(application.android.context).areNotificationsEnabled();
+    return NotificationManagerCompatClass.from(Application.android.context).areNotificationsEnabled();
   } else {
     console.log("NotificationManagerCompat.areNotificationsEnabled() is not supported in Android SDK VERSION " + androidSdkVersion);
     return true;

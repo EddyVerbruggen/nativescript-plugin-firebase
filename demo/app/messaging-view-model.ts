@@ -1,7 +1,6 @@
-import { alert } from "tns-core-modules/ui/dialogs";
-import * as platform from "tns-core-modules/platform";
-import * as firebase from "nativescript-plugin-firebase";
-import { messaging } from "nativescript-plugin-firebase/messaging";
+import { Dialogs } from "@nativescript/core";
+import { firebase } from "@nativescript/firebase";
+import { messaging } from "@nativescript/firebase/messaging";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet;
@@ -21,7 +20,7 @@ export class MessagingViewModel {
     firebase.getCurrentPushToken().then(token => {
       // may be null if not known yet
       console.log("Current push token: " + token);
-      alert({
+      Dialogs.alert({
         title: "Current Push Token",
         message: (token === null ? "Not received yet" : token + ("\n\nSee the console log if you want to copy-paste it.")),
         okButtonText: "OK, thx"
@@ -30,7 +29,7 @@ export class MessagingViewModel {
   }
 
   public doRegisterForInteractivePush(): void {
-    if (platform.isIOS) {
+    if (global.isIOS) {
       const model = new messaging.PushNotificationModel();
       model.iosSettings = new messaging.IosPushSettings();
       model.iosSettings.badge = false;

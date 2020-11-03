@@ -1,4 +1,4 @@
-import { Property } from "tns-core-modules/ui/core/properties";
+import { Property } from "@nativescript/core";
 import { MLKitCameraView } from "../mlkit-cameraview";
 
 export const localModelResourceFolderProperty = new Property<MLKitAutoML, string>({

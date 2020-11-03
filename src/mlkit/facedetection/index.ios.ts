@@ -1,5 +1,4 @@
-import { ImageSource } from "tns-core-modules/image-source";
-import { ios as iosUtils } from "tns-core-modules/utils/utils";
+import { ImageSource, Utils } from "@nativescript/core";
 import { MLKitVisionOptions } from "../";
 import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult } from "./";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
@@ -51,7 +50,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
   }
 
   getVisionOrientation(imageOrientation: UIImageOrientation): FIRVisionDetectorImageOrientation {
-    if (imageOrientation === UIImageOrientation.Up && !iosUtils.isLandscape()) {
+    if (imageOrientation === UIImageOrientation.Up && !Utils.ios.isLandscape()) {
       return FIRVisionDetectorImageOrientation.RightTop;
     } else {
       return super.getVisionOrientation(imageOrientation);

@@ -4,14 +4,14 @@ import { HttpsCallable } from './functions';
 
 let functions: FIRFunctions;
 
-function getFunctions(region?: firebase.functions.SupportedRegions): FIRFunctions {
+function getFunctions(region?: firebase.firebaseFunctions.SupportedRegions): FIRFunctions {
   if (!functions) {
     functions = region ? FIRFunctions.functionsForRegion(region) : FIRFunctions.functions();
   }
   return functions;
 }
 
-export function httpsCallable<I = {}, O = {}>(functionName: string, region?: firebase.functions.SupportedRegions): HttpsCallable<I, O> {
+export function httpsCallable<I = {}, O = {}>(functionName: string, region?: firebase.firebaseFunctions.SupportedRegions): HttpsCallable<I, O> {
   const functions = getFunctions(region);
 
   return (data: I) => new Promise((resolve, reject) => {

@@ -1,5 +1,4 @@
-import * as application from "tns-core-modules/application";
-import * as utils from "tns-core-modules/utils/utils";
+import { Application, AndroidActivityRequestPermissionsEventData, AndroidApplication, Utils } from "@nativescript/core";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
 
 declare const android, global: any;
@@ -38,7 +37,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.surfaceView = null;
 
     if (this.camera != null) {
-      application.off("orientationChanged");
+      Application.off("orientationChanged");
 
       this.camera.stopPreview();
       this.camera.setPreviewCallbackWithBuffer(null);
@@ -67,9 +66,9 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
       if (this.wasCameraPermissionGranted()) {
         this.initView(nativeView);
       } else {
-        const permissionCb = (args: application.AndroidActivityRequestPermissionsEventData) => {
+        const permissionCb = (args: AndroidActivityRequestPermissionsEventData) => {
           if (args.requestCode === CAMERA_PERMISSION_REQUEST_CODE) {
-            application.android.off(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
+            Application.android.off(AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
             for (let i = 0; i < args.permissions.length; i++) {
               if (args.grantResults[i] === android.content.pm.PackageManager.PERMISSION_DENIED) {
@@ -83,11 +82,11 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         };
 
         // grab the permission dialog result
-        application.android.on(application.AndroidApplication.activityRequestPermissionsEvent, permissionCb);
+        Application.android.on(AndroidApplication.activityRequestPermissionsEvent, permissionCb);
 
         // invoke the permission dialog
         ActivityCompatClass.requestPermissions(
-            application.android.foregroundActivity || application.android.startActivity,
+            Application.android.foregroundActivity || Application.android.startActivity,
             [android.Manifest.permission.CAMERA],
             CAMERA_PERMISSION_REQUEST_CODE);
       }
@@ -99,11 +98,11 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
 
   initNativeView(): void {
     super.initNativeView();
-    application.on("resume", arg => this.runCamera());
+    Application.on("resume", arg => this.runCamera());
   }
 
   private hasCamera(): boolean {
-    return !!utils.ad
+    return !!Utils.android
         .getApplicationContext()
         .getPackageManager()
         .hasSystemFeature("android.hardware.camera");
@@ -113,13 +112,13 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     let hasPermission = android.os.Build.VERSION.SDK_INT < 23; // Android M. (6.0)
     if (!hasPermission) {
       hasPermission = android.content.pm.PackageManager.PERMISSION_GRANTED ===
-          ContentPackageName.ContextCompat.checkSelfPermission(utils.ad.getApplicationContext(), android.Manifest.permission.CAMERA);
+          ContentPackageName.ContextCompat.checkSelfPermission(Utils.android.getApplicationContext(), android.Manifest.permission.CAMERA);
     }
     return hasPermission;
   }
 
   private initView(nativeView): void {
-    this.surfaceView = new android.view.SurfaceView(utils.ad.getApplicationContext());
+    this.surfaceView = new android.view.SurfaceView(Utils.android.getApplicationContext());
     nativeView.addView(this.surfaceView);
     this.runCamera();
   }
@@ -164,8 +163,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
         parameters.setPreviewSize(previewSize.width, previewSize.height);
         parameters.setPreviewFormat(android.graphics.ImageFormat.NV21);
 
-        application.off("orientationChanged");
-        application.on("orientationChanged", () => {
+        Application.off("orientationChanged");
+        Application.on("orientationChanged", () => {
           this.setRotation(this.camera, parameters, requestedCameraId);
           setTimeout(() => {
             this.fixStretch(previewSize);
@@ -399,7 +398,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 
   private setRotation(camera, parameters, cameraId): void {
-    let windowManager = (application.android.foregroundActivity || application.android.startActivity).getSystemService(android.content.Context.WINDOW_SERVICE);
+    let windowManager = (Application.android.foregroundActivity || Application.android.startActivity).getSystemService(android.content.Context.WINDOW_SERVICE);
     let degrees = 0;
     const deviceRotation = windowManager.getDefaultDisplay().getRotation();
     switch (deviceRotation) {

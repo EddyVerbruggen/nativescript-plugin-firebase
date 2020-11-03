@@ -1,5 +1,4 @@
-import * as fs from "tns-core-modules/file-system";
-import { Property } from "tns-core-modules/ui/core/properties";
+import { knownFolders, File, Property } from "@nativescript/core";
 import { MLKitCameraView } from "../mlkit-cameraview";
 import { MLKitCustomModelType } from "./index";
 
@@ -79,12 +78,12 @@ modelInputShapeProperty.register(MLKitCustomModel);
 modelInputTypeProperty.register(MLKitCustomModel);
 
 export function getLabelsFromAppFolder(labelsFile: string): Array<string> {
-  const labelsPath = fs.knownFolders.currentApp().path + labelsFile.substring(1);
+  const labelsPath = knownFolders.currentApp().path + labelsFile.substring(1);
   return getLabelsFromFile(labelsPath);
 }
 
 export function getLabelsFromFile(labelsFile: string): Array<string> {
-  const fileContents = fs.File.fromPath(labelsFile).readTextSync();
+  const fileContents = File.fromPath(labelsFile).readTextSync();
   const lines: Array<string> = fileContents.split("\n");
   // remove possibly empty trailing lines
   while (lines[lines.length - 1].trim() === "") {

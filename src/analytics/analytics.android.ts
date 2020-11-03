@@ -1,4 +1,4 @@
-import * as appModule from "tns-core-modules/application";
+import { Application } from "@nativescript/core";
 import { LogComplexEventOptions, LogComplexEventParameter, LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from "./analytics";
 import { ENABLE_ANALYTICS_HINT, validateAnalyticsKey, validateAnalyticsParam } from "./analytics-common";
 
@@ -35,7 +35,7 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || appModule.getNativeApplication()
+          Application.android.context || Application.getNativeApplication()
       ).logEvent(options.key, bundle);
 
       resolve();
@@ -65,7 +65,7 @@ export function logComplexEvent(options: LogComplexEventOptions): Promise<void> 
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || appModule.getNativeApplication()
+          Application.android.context || Application.getNativeApplication()
       ).logEvent(options.key, bundle);
 
       resolve();
@@ -90,7 +90,7 @@ export function setUserId(arg): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || appModule.getNativeApplication()).setUserId(arg.userId);
+          Application.android.context || Application.getNativeApplication()).setUserId(arg.userId);
 
       resolve();
     } catch (ex) {
@@ -118,7 +118,7 @@ export function setUserProperty(options: SetUserPropertyOptions): Promise<void> 
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || appModule.getNativeApplication()
+          Application.android.context || Application.getNativeApplication()
       ).setUserProperty(options.key, options.value);
 
       resolve();
@@ -143,8 +143,8 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || appModule.getNativeApplication()
-      ).setCurrentScreen(appModule.android.foregroundActivity, options.screenName, null);
+          Application.android.context || Application.getNativeApplication()
+      ).setCurrentScreen(Application.android.foregroundActivity, options.screenName, null);
 
       resolve();
     } catch (ex) {
@@ -157,7 +157,7 @@ export function setScreenName(options: SetScreenNameOptions): Promise<void> {
 export function setAnalyticsCollectionEnabled(enabled: boolean): void {
   if (isAnalyticsAvailable()) {
     com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-        appModule.android.context || appModule.getNativeApplication()
+        Application.android.context || Application.getNativeApplication()
     ).setAnalyticsCollectionEnabled(enabled);
   }
 }
@@ -165,7 +165,7 @@ export function setAnalyticsCollectionEnabled(enabled: boolean): void {
 export function setSessionTimeoutDuration(seconds: number): void {
   if (isAnalyticsAvailable()) {
     com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-        appModule.android.context || appModule.getNativeApplication()
+        Application.android.context || Application.getNativeApplication()
     ).setSessionTimeoutDuration(seconds * 1000); // Android expects ms
   }
 }

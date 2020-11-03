@@ -1,18 +1,18 @@
-import * as firebase from "../../firebase";
+import { firestore as fStore } from "../../firebase";
 // import * as firebaseSdk from 'firebase/app';
 
 export namespace firestore {
   export class Firestore /*implements firebaseSdk.firestore.Firestore*/ {
-    collection(collectionPath: string): firebase.firestore.CollectionReference {
-      return firebase.firestore.collection(collectionPath);
+    collection(collectionPath: string): fStore.CollectionReference {
+      return fStore.collection(collectionPath);
     }
 
-    collectionGroup(id: string): firebase.firestore.CollectionGroup {
-      return firebase.firestore.collectionGroup(id);
+    collectionGroup(id: string): fStore.CollectionGroup {
+      return fStore.collectionGroup(id);
     }
 
-    doc(path: string): firebase.firestore.DocumentReference {
-      return firebase.firestore.docRef(path);
+    doc(path: string): fStore.DocumentReference {
+      return fStore.docRef(path);
     }
 
     FieldValue(): firebase.firestore.FieldValue {
@@ -21,30 +21,30 @@ export namespace firestore {
         value: undefined,
         serverTimestamp: () => "SERVER_TIMESTAMP",
         delete: () => "DELETE_FIELD",
-        arrayUnion: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_UNION", elements),
-        arrayRemove: (...elements: any[]) => new firebase.firestore.FieldValue("ARRAY_REMOVE", elements),
-        increment: (n: number) => new firebase.firestore.FieldValue("INCREMENT", n)
+        arrayUnion: (...elements: any[]) => new fStore.FieldValue("ARRAY_UNION", elements),
+        arrayRemove: (...elements: any[]) => new fStore.FieldValue("ARRAY_REMOVE", elements),
+        increment: (n: number) => new fStore.FieldValue("INCREMENT", n)
       };
     }
 
-    GeoPoint(latitude: number, longitude: number): firebase.firestore.GeoPoint {
-      return firebase.firestore.GeoPoint(latitude, longitude);
+    GeoPoint(latitude: number, longitude: number): fStore.GeoPoint {
+      return fStore.GeoPoint(latitude, longitude);
     }
 
-    runTransaction<T>(updateFunction: (transaction: firebase.firestore.Transaction) => Promise<any>): Promise<void> {
-      return firebase.firestore.runTransaction(updateFunction);
+    runTransaction<T>(updateFunction: (transaction: fStore.Transaction) => Promise<any>): Promise<void> {
+      return fStore.runTransaction(updateFunction);
     }
 
-    batch(): firebase.firestore.WriteBatch {
-      return firebase.firestore.batch();
+    batch(): fStore.WriteBatch {
+      return fStore.batch();
     }
 
-    settings(settings: firebase.firestore.Settings): void {
-      firebase.firestore.settings(settings);
+    settings(settings: fStore.Settings): void {
+      fStore.settings(settings);
     }
 
     clearPersistence(): Promise<void> {
-      return firebase.firestore.clearPersistence();
+      return fStore.clearPersistence();
     }
   }
 }

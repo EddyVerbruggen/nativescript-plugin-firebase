@@ -3,7 +3,7 @@
  * Use 'const firebase = require("nativescript-plugin-firebase/app")'
  */
 
-import * as firebase from "../firebase";
+import { firebase } from "../firebase";
 import { auth as firebaseAuthModule } from "./auth";
 import { database as firebaseDatabaseModule } from "./database";
 import { firestore as firebaseFirestoreModule } from "./firestore";

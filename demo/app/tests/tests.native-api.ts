@@ -1,4 +1,4 @@
-const firebase = require("nativescript-plugin-firebase");
+const firebase = require("@nativescript/firebase");
 
 // TODO make this slightly more useful :P
 

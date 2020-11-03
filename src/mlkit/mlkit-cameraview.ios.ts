@@ -1,7 +1,5 @@
-import { ios as iosUtils } from "tns-core-modules/utils/utils";
-import * as application from "tns-core-modules/application";
+import { Utils, Application, OrientationChangedEventData } from "@nativescript/core";
 import { MLKitCameraView as MLKitCameraViewBase } from "./mlkit-cameraview-common";
-import { OrientationChangedEventData } from "tns-core-modules/application";
 
 export abstract class MLKitCameraView extends MLKitCameraViewBase {
   private captureSession: AVCaptureSession;
@@ -20,7 +18,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.captureDevice = undefined;
     this.previewLayer = undefined;
     this.cameraView = undefined;
-    application.off("orientationChanged");
+    Application.off("orientationChanged");
   }
 
   createNativeView(): Object {
@@ -71,7 +69,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     this.previewLayer = AVCaptureVideoPreviewLayer.layerWithSession(this.captureSession);
     this.previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
 
-    if (iosUtils.isLandscape()) {
+    if (Utils.ios.isLandscape()) {
       const deviceOrientation = UIDevice.currentDevice.orientation;
       this.previewLayer.connection.videoOrientation = deviceOrientation === UIDeviceOrientation.LandscapeLeft ? AVCaptureVideoOrientation.LandscapeRight : AVCaptureVideoOrientation.LandscapeLeft;
     } else {
@@ -79,8 +77,8 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
     }
 
     // note that when rotating back to portrait, this event fires very late.. not much we can do I think
-    application.off("orientationChanged"); // just making sure it was off
-    application.on("orientationChanged", this.rotateOnOrientationChange.bind(this));
+    Application.off(Application.orientationChangedEvent); // just making sure it was off
+    Application.on(Application.orientationChangedEvent, this.rotateOnOrientationChange.bind(this));
 
     setTimeout(() => {
       if (this.ios) {
@@ -184,6 +182,7 @@ export abstract class MLKitCameraView extends MLKitCameraViewBase {
   }
 }
 
+@NativeClass()
 class TNSMLKitCameraViewDelegateImpl extends NSObject implements TNSMLKitCameraViewDelegate {
   public static ObjCProtocols = [];
   private owner: WeakRef<MLKitCameraView>;

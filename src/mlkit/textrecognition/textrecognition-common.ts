@@ -1,5 +1,4 @@
-import { booleanConverter } from "tns-core-modules/ui/core/view-base";
-import { Property } from "tns-core-modules/ui/core/properties";
+import { Property, booleanConverter } from "@nativescript/core";
 import { MLKitCameraView } from "../mlkit-cameraview";
 
 export const reportDuplicatesProperty = new Property<MLKitTextRecognition, boolean>({

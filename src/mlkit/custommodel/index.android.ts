@@ -1,9 +1,6 @@
-import * as fs from "tns-core-modules/file-system";
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource, knownFolders } from "@nativescript/core";
 import { MLKitCustomModelOptions, MLKitCustomModelResult, MLKitCustomModelResultValue } from "./";
 import { getLabelsFromAppFolder, MLKitCustomModel as MLKitCustomModelBase } from "./custommodel-common";
-
-const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitCustomModel extends MLKitCustomModelBase {
   private detector;
@@ -23,7 +20,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
     this.detectorBusy = true;
 
     if (!this.onFailureListener) {
-      this.onFailureListener = new gmsTasks.OnFailureListener({
+      this.onFailureListener = new (<any>com.google.android.gms).tasks.OnFailureListener({
         onFailure: exception => {
           console.log(exception.getMessage());
           this.detectorBusy = false;
@@ -66,7 +63,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
   }
 
   protected createSuccessListener(): any {
-    this.onSuccessListener = new gmsTasks.OnSuccessListener({
+    this.onSuccessListener = new (<any>com.google.android.gms).tasks.OnSuccessListener({
       onSuccess: output => {
         const probabilities: Array<number> = output.getOutput(0)[0];
 
@@ -111,7 +108,7 @@ function getInterpreter(localModelFile?: string): any {
     //   const firModelLocalBuilder = new com.google.firebase.ml.common.modeldownload.FirebaseLocalModel.Builder(localModelName);
 
       if (localModelFile.indexOf("~/") === 0) {
-        localModelBuilder.setFilePath(fs.knownFolders.currentApp().path + localModelFile.substring(1));
+        localModelBuilder.setFilePath(knownFolders.currentApp().path + localModelFile.substring(1));
       } else {
         // note that this doesn't seem to work, let's advice users to use ~/ for now (TODO check if this is still te case)
         localModelBuilder.setAssetFilePath(localModelFile);
@@ -137,7 +134,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
         return;
       }
 
-      const onSuccessListener = new gmsTasks.OnSuccessListener({
+      const onSuccessListener = new (<any>com.google.android.gms).tasks.OnSuccessListener({
         onSuccess: output => {
           const probabilities: Array<number> = output.getOutput(0)[0];
 
@@ -155,7 +152,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
         }
       });
 
-      const onFailureListener = new gmsTasks.OnFailureListener({
+      const onFailureListener = new (<any>com.google.android.gms).tasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 

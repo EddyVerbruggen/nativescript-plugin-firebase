@@ -3,7 +3,7 @@
  */
 
 import { firebase } from "./firebase-common";
-import { getClass } from "tns-core-modules/utils/types";
+import { Utils as coreUtils } from "@nativescript/core";
 
 export class Utils {
   public invokeOnRunLoop = (() => {
@@ -52,7 +52,7 @@ export class Utils {
   }
 
   private getValueForClass(val) {
-    switch (getClass(val)) {
+    switch (coreUtils.getClass(val)) {
       case 'NSArray':
       case 'NSMutableArray':
         return this.toJsObject(val);
@@ -80,7 +80,7 @@ export class Utils {
             (<FIRGeoPoint>val).longitude
         );
       default:
-        console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + getClass(val) + "'. Casting to String as a fallback.");
+        console.log("Please report this at https://github.com/EddyVerbruggen/nativescript-plugin-firebase/issues: iOS toJsObject is missing a converter for class '" + coreUtils.getClass(val) + "'. Casting to String as a fallback.");
         return String(val);
     }
   }

@@ -1,4 +1,4 @@
-import { File } from "tns-core-modules/file-system"
+import { File } from "@nativescript/core";
 import * as firebaseStorage from "../../storage/storage";
 import { ListResult, UploadFileResult, UploadMetadata } from "../../storage/storage";
 
@@ -19,10 +19,11 @@ export module storage {
 
     parent: Reference | null; // TODO set this every time we navigate..
     root: Reference;
-    fullPath = this.path;
+    fullPath: string;
 
     constructor(path?: string) {
       this.path = path;
+      this.fullPath = this.path;
       if (path && path.length > 0) {
         this.root = new Reference();
       } else {
