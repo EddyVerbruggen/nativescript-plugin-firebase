@@ -1,10 +1,14 @@
 {
   "name": "@nativescript/firebase",
-  "version": "11.1.1",
+  "version": "11.1.2",
   "description": "Fire. Base. Firebase!",
   "main": "firebase",
   "typings": "index.d.ts",
   "nativescript": {
+    "platforms": {
+      "android": "7",
+      "ios": "7"
+    },
     "hooks": [
       {
         "type": "before-prepare",
