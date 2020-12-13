@@ -122,7 +122,7 @@ We need to do some wiring when your app starts, so open `app.js` and add this be
 ##### JavaScript
 ```js
 // NativeScript 7+
-var firebase = require("@nativescript/firebase");
+var firebase = require("@nativescript/firebase").firebase;
 
 // NativeScript 6-
 var firebase = require("nativescript-plugin-firebase");
