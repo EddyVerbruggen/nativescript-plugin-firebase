@@ -727,6 +727,7 @@ return new Promise(function(resolve, reject) {
         var isProdEnv = false; // building with --env.prod or --env.production flag
         var isStagingEnv = false;
         var env = (hookArgs.platformSpecificData || hookArgs.prepareData).env;
+        var isReleaseBuild = !!(hookArgs.prepareData).release;
 
         if (env) {
             Object.keys(env).forEach((key) => {
@@ -739,10 +740,10 @@ return new Promise(function(resolve, reject) {
             });
         }
 
-        var buildType = isProdEnv && !isStagingEnv ? "production" : "development";
         const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
         const platform = (platformFromHookArgs  || '').toLowerCase();
 
+        var buildType = (isReleaseBuild && !isStagingEnv) || isProdEnv ? 'production' : 'development';
         /* Create info file in platforms dir so we can detect changes in environment and force prepare if needed */
 
         var npfInfoPath = path.join($projectData.platformsDir, platform, ".pluginfirebaseinfo");
