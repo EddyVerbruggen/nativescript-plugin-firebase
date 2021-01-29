@@ -881,6 +881,20 @@ module.exports = function($logger, hookArgs) {
         if (forcePrepare) {
             $logger.info('nativescript-plugin-firebase: running release build or change in environment detected, forcing prepare!');
 
+            const googleServicesValuesXmlPath = path.join(platformsDir, platform, "app", "build", "generated", "res", "google-services", isReleaseBuild ? "release" : "debug", "values")
+            const mergeDebugResourcesPath = path.join(platformsDir, platform, "app", "build", "intermediates", "incremental", isReleaseBuild ? "mergeReleaseResources" : "mergeDebugResources")
+
+            // The following files must be deleted for the google-services.json change to actually be reflected in the app
+            if (fs.existsSync(path.join(googleServicesValuesXmlPath, "values.xml"))) {
+                fs.unlinkSync(path.join(googleServicesValuesXmlPath, "values.xml"))
+            }
+            if (fs.existsSync(path.join(mergeDebugResourcesPath, "merger.xml"))) {
+                fs.unlinkSync(path.join(mergeDebugResourcesPath, "merger.xml"))
+            }
+            if (fs.existsSync(path.join(mergeDebugResourcesPath, "merged.dir", "values", "values.xml"))) {
+                fs.unlinkSync(path.join(mergeDebugResourcesPath, "merged.dir", "values", "values.xml"))
+            }
+            
             if (fs.existsSync(npfInfoPath)) { fs.unlinkSync(npfInfoPath); }
             if (fs.existsSync(nsPrepareInfoPath)) { fs.unlinkSync(nsPrepareInfoPath); }
 
