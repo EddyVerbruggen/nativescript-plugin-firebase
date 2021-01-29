@@ -722,27 +722,14 @@ module.exports = function($logger, $projectData, hookArgs) {
 return new Promise(function(resolve, reject) {
 
         /* Decide whether to prepare for dev or prod environment */
-        var validStagingEnvs = ["dev", "development", "staging"];
-        var validProdEnvs = ['prod','production'];
-        var isProdEnv = false; // building with --env.prod or --env.production flag
-        var isStagingEnv = false;
         var env = (hookArgs.platformSpecificData || hookArgs.prepareData).env;
+        const platformFromHookArgs = hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform);
+        const platform = (platformFromHookArgs || '').toLowerCase();
         var isReleaseBuild = !!(hookArgs.prepareData).release;
 
-        if (env) {
-            Object.keys(env).forEach((key) => {
-                if (validProdEnvs.indexOf(key)>-1) { 
-			isProdEnv = true;
-		}
-		if (validStagingEnvs.indexOf(key) > -1) {
-			isStagingEnv = true;
-		}
-            });
-        }
-
-        const platformFromHookArgs = hookArgs && (hookArgs.platform || (hookArgs.prepareData && hookArgs.prepareData.platform));
-        const platform = (platformFromHookArgs  || '').toLowerCase();
-
+        /* Decide whether to prepare for dev or prod environment */
+        var isStagingEnv = ["dev", "development", "staging"].some(k => k in env);
+        var isProdEnv = ["prod", "production"].some(k => k in env); // building with --env.prod or --env.production flag
         var buildType = (isReleaseBuild && !isStagingEnv) || isProdEnv ? 'production' : 'development';
         
         /* Create info file in platforms dir so we can detect changes in environment and force prepare if needed */
@@ -833,22 +820,12 @@ module.exports = function($logger, hookArgs) {
     return new Promise(function(resolve, reject) {
 
         /* Decide whether to prepare for dev or prod environment */
+        var env = ((hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData && hookArgs.checkForChangesOpts.projectData.$options && hookArgs.checkForChangesOpts.projectData.$options.argv) || hookArgs.prepareData).env || {};
+        const platform = (hookArgs.checkForChangesOpts || hookArgs.prepareData).platform.toLowerCase();
         var isReleaseBuild = !!((hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectChangesOptions) || hookArgs.prepareData).release;
-        var validProdEnvs = ['prod','production'];
-        var validStagingEnvs = ["dev", "development", "staging"];
-        var isStagingEnv = false;
-        var isProdEnv = false; // building with --env.prod or --env.production flag
 
-        var env = ((hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData && hookArgs.checkForChangesOpts.projectData.$options && hookArgs.checkForChangesOpts.projectData.$options.argv) || hookArgs.prepareData).env;
-        if (env) {
-            Object.keys(env).forEach((key) => {
-                if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
-                if (validStagingEnvs.indexOf(key) > -1) { isStagingEnv = true; }
-            });
-            
-            
-        }
-
+        var isStagingEnv = ["dev", "development", "staging"].some(k => k in env);
+        var isProdEnv = ["prod", "production"].some(k => k in env); // building with --env.prod or --env.production flag
         var buildType = (isReleaseBuild && !isStagingEnv) || isProdEnv ? 'production' : 'development';
 
         /*
@@ -856,7 +833,6 @@ module.exports = function($logger, hookArgs) {
             for which environment {development|prod} the project was prepared. If needed, we delete the NS .nsprepareinfo
             file so we force a new prepare
         */
-        var platform = (hookArgs.checkForChangesOpts || hookArgs.prepareData).platform.toLowerCase();
         var projectData = (hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData) || hookArgs.projectData;
         var platformsDir = projectData.platformsDir;
         var appResourcesDirectoryPath = projectData.appResourcesDirectoryPath;
