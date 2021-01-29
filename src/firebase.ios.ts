@@ -2519,6 +2519,11 @@ firebase.firestore.endBefore = (collectionPath: string, snapshotOrFieldValue: Do
     return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeValues([snapshotOrFieldValue, ...fieldValues]));
   }
 };
+firebase.firestore.FieldPath = class {
+  static documentId() {
+    return FIRFieldPath.documentID();
+  }
+}
 
 @NativeClass()
 class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {
