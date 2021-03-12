@@ -1513,7 +1513,7 @@ firebase.reauthenticate = arg => {
       }
 
       if (authCredential === null) {
-        reject("arg.type should be one of LoginType.PASSWORD | firebase.LoginType.PHONE | LoginType.GOOGLE | LoginType.FACEBOOK");
+        reject("arg.type should be one of LoginType.PASSWORD | LoginType.PHONE | LoginType.GOOGLE | LoginType.FACEBOOK");
         return;
       }
 
