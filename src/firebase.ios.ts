@@ -1274,6 +1274,8 @@ firebase.reauthenticate = arg => {
             user.reauthenticateWithCredentialCompletion(fIRAuthCredential, onCompletion);
           }, arg.phoneOptions.verificationPrompt);
         });
+
+        return;
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (!firebase._gIDAuthentication) {
           reject("Not currently logged in with Google");
