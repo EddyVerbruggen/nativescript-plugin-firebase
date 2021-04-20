@@ -140,6 +140,7 @@ declare module com {
 			export module functions {
 				export class HttpsCallOptions {
 					public static class: java.lang.Class<com.google.firebase.functions.HttpsCallOptions>;
+					public getTimeout(): number;
 				}
 			}
 		}
@@ -166,6 +167,7 @@ declare module com {
 			export module functions {
 				export class HttpsCallableReference {
 					public static class: java.lang.Class<com.google.firebase.functions.HttpsCallableReference>;
+					public getTimeout(): number;
 					public call(): com.google.android.gms.tasks.Task<com.google.firebase.functions.HttpsCallableResult>;
 					public withTimeout(param0: number, param1: java.util.concurrent.TimeUnit): com.google.firebase.functions.HttpsCallableReference;
 					public call(param0: any): com.google.android.gms.tasks.Task<com.google.firebase.functions.HttpsCallableResult>;

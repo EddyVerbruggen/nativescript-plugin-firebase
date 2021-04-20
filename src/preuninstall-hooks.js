@@ -1,1 +1,1 @@
-require('nativescript-hook')(__dirname).preuninstall();
+require('@nativescript/hook')(__dirname).preuninstall();

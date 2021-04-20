@@ -1,5 +1,4 @@
-import * as fs from "tns-core-modules/file-system";
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource, knownFolders } from "@nativescript/core";
 import { MLKitCustomModelOptions, MLKitCustomModelResult, MLKitCustomModelResultValue } from "./";
 import {
   getLabelsFromAppFolder,
@@ -101,27 +100,23 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
 }
 
 function getInterpreter(localModelFile: string): FIRModelInterpreter {
-  let localModelRegistrationSuccess = false;
-  let cloudModelRegistrationSuccess = false;
-  let localModelName;
-
   if (localModelFile) {
-    localModelName = localModelFile.lastIndexOf("/") === -1 ? localModelFile : localModelFile.substring(localModelFile.lastIndexOf("/") + 1);
+    let localModelFilePath: string;
 
-    // make sure we load the model (with the same name) only once
-    if (FIRModelManager.modelManager().localModelWithName(localModelName)) {
-      localModelRegistrationSuccess = true;
+    if (localModelFile.indexOf("~/") === 0) {
+      localModelFilePath = knownFolders.currentApp().path + localModelFile.substring(1);
     } else {
-      let localModelFilePath: string;
-      if (localModelFile.startsWith("~/")) {
-        localModelFilePath = fs.knownFolders.currentApp().path + localModelFile.substring(1);
-      } else {
-        localModelFilePath = NSBundle.mainBundle.pathForResourceOfType(
-            localModelFile.substring(0, localModelFile.lastIndexOf(".")),
-            localModelFile.substring(localModelFile.lastIndexOf(".") + 1));
-      }
-      const localModelSource = FIRLocalModel.alloc().initWithNamePath(localModelName, localModelFilePath);
-      localModelRegistrationSuccess = FIRModelManager.modelManager().registerLocalModel(localModelSource);
+      localModelFilePath = NSBundle.mainBundle.pathForResourceOfType(
+          localModelFile.substring(0, localModelFile.lastIndexOf(".")),
+          localModelFile.substring(localModelFile.lastIndexOf(".") + 1));
+    }
+
+    const localModel: FIRCustomLocalModel = FIRCustomLocalModel.alloc().initWithModelPath(localModelFilePath);
+
+    if (localModel) {
+      return FIRModelInterpreter.modelInterpreterForLocalModel(localModel);
+    } else {
+      console.log("No (cloud or local) model was successfully loaded.");
     }
   }
 
@@ -137,20 +132,14 @@ function getInterpreter(localModelFile: string): FIRModelInterpreter {
 
     cloudModelRegistrationSuccess = FIRModelManager.modelManager().registerRemoteModel(fIRCloudModelSource);
     console.log("cloudModelRegistrationSuccess: " + cloudModelRegistrationSuccess);
+
+    const fIRModelOptions = FIRModelOptions.alloc().initWithRemoteModelNameLocalModelName(
+        null, // cloudModelRegistrationSuccess ? cloudModelName : null,
+        localModelRegistrationSuccess ? localModelName : null);
   }
   */
 
-  if (!localModelRegistrationSuccess && !cloudModelRegistrationSuccess) {
-    // TODO handle this case upstream
-    console.log("No (cloud or local) model was successfully loaded.");
-    return null;
-  }
-
-  const fIRModelOptions = FIRModelOptions.alloc().initWithRemoteModelNameLocalModelName(
-      null, // cloudModelRegistrationSuccess ? cloudModelName : null,
-      localModelRegistrationSuccess ? localModelName : null);
-
-  return FIRModelInterpreter.modelInterpreterWithOptions(fIRModelOptions);
+  return null;
 }
 
 export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitCustomModelResult> {
@@ -184,7 +173,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
       });
 
       let labels: Array<string>;
-      if (options.labelsFile.startsWith("~/")) {
+      if (options.labelsFile.indexOf("~/") === 0) {
         labels = getLabelsFromAppFolder(options.labelsFile);
       } else {
         const labelsFile = NSBundle.mainBundle.pathForResourceOfType(

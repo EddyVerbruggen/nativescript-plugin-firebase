@@ -7,6 +7,11 @@ import {
 export function identifyNaturalLanguage(options: MLKitNaturalLanguageIdentificationOptions): Promise<MLKitNaturalLanguageIdentificationResult> {
   return new Promise((resolve, reject) => {
     try {
+      if (!options.text) {
+        reject("'text' property not set to a valid value");
+        return;
+      }
+
       const naturalLanguage = FIRNaturalLanguage.naturalLanguage();
       const languageId = naturalLanguage.languageIdentificationWithOptions(
           FIRLanguageIdentificationOptions.alloc().initWithConfidenceThreshold(options.confidenceThreshold || 0.5));

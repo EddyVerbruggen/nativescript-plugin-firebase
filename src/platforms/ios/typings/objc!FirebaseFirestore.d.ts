@@ -164,7 +164,11 @@ declare class FIRFirestore extends NSObject {
 
 	settings: FIRFirestoreSettings;
 
+	addSnapshotsInSyncListener(listener: () => void): FIRListenerRegistration;
+
 	batch(): FIRWriteBatch;
+
+	clearPersistenceWithCompletion(completion: (p1: NSError) => void): void;
 
 	collectionGroupWithID(collectionID: string): FIRQuery;
 
@@ -177,6 +181,10 @@ declare class FIRFirestore extends NSObject {
 	enableNetworkWithCompletion(completion: (p1: NSError) => void): void;
 
 	runTransactionWithBlockCompletion(updateBlock: (p1: FIRTransaction, p2: interop.Pointer | interop.Reference<NSError>) => any, completion: (p1: any, p2: NSError) => void): void;
+
+	terminateWithCompletion(completion: (p1: NSError) => void): void;
+
+	waitForPendingWritesWithCompletion(completion: (p1: NSError) => void): void;
 }
 
 declare const enum FIRFirestoreErrorCode {
@@ -302,6 +310,8 @@ declare class FIRQuery extends NSObject {
 
 	queryLimitedTo(limit: number): FIRQuery;
 
+	queryLimitedToLast(limit: number): FIRQuery;
+
 	queryOrderedByField(field: string): FIRQuery;
 
 	queryOrderedByFieldDescending(field: string, descending: boolean): FIRQuery;
@@ -320,6 +330,10 @@ declare class FIRQuery extends NSObject {
 
 	queryWhereFieldArrayContains(field: string, value: any): FIRQuery;
 
+	queryWhereFieldArrayContainsAny(field: string, values: NSArray<any> | any[]): FIRQuery;
+
+	queryWhereFieldIn(field: string, values: NSArray<any> | any[]): FIRQuery;
+
 	queryWhereFieldIsEqualTo(field: string, value: any): FIRQuery;
 
 	queryWhereFieldIsGreaterThan(field: string, value: any): FIRQuery;
@@ -330,7 +344,15 @@ declare class FIRQuery extends NSObject {
 
 	queryWhereFieldIsLessThanOrEqualTo(field: string, value: any): FIRQuery;
 
+	queryWhereFieldIsNotEqualTo(field: string, value: any): FIRQuery;
+
+	queryWhereFieldNotIn(field: string, values: NSArray<any> | any[]): FIRQuery;
+
 	queryWhereFieldPathArrayContains(path: FIRFieldPath, value: any): FIRQuery;
+
+	queryWhereFieldPathArrayContainsAny(path: FIRFieldPath, values: NSArray<any> | any[]): FIRQuery;
+
+	queryWhereFieldPathIn(path: FIRFieldPath, values: NSArray<any> | any[]): FIRQuery;
 
 	queryWhereFieldPathIsEqualTo(path: FIRFieldPath, value: any): FIRQuery;
 
@@ -341,6 +363,10 @@ declare class FIRQuery extends NSObject {
 	queryWhereFieldPathIsLessThan(path: FIRFieldPath, value: any): FIRQuery;
 
 	queryWhereFieldPathIsLessThanOrEqualTo(path: FIRFieldPath, value: any): FIRQuery;
+
+	queryWhereFieldPathIsNotEqualTo(path: FIRFieldPath, value: any): FIRQuery;
+
+	queryWhereFieldPathNotIn(path: FIRFieldPath, values: NSArray<any> | any[]): FIRQuery;
 }
 
 declare class FIRQueryDocumentSnapshot extends FIRDocumentSnapshot {

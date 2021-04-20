@@ -7,21 +7,22 @@ export interface MLKitScanBarcodesResultBounds {
   origin: {
     x: number;
     y: number;
-  },
+  };
   size: {
     width: number;
     height: number;
-  }
+  };
 }
 
 export interface MLKitScanBarcodesResultBarcode {
   value: string;
+  displayValue: string;
   format: string;
   bounds: MLKitScanBarcodesResultBounds;
   image: {
     width: number;
     height: number;
-  }
+  };
   ios?: any;
   android?: any;
 }
@@ -39,7 +40,7 @@ export interface MLKitScanBarcodesOnDeviceOptions extends MLKitVisionOptions {
 
   /**
    * Play a sound when a code was scanned.
-   * Default: true
+   * Default true
    */
   beepOnScan?: boolean;
 
@@ -48,6 +49,12 @@ export interface MLKitScanBarcodesOnDeviceOptions extends MLKitVisionOptions {
    * Default false.
    */
   reportDuplicates?: boolean;
+
+  /**
+   * Support for scanning inverse barcodes.
+   * Default false.
+   */
+  supportInverseBarcodes?: boolean;
 }
 
 export declare function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions): Promise<MLKitScanBarcodesOnDeviceResult>;

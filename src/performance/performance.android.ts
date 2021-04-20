@@ -4,6 +4,12 @@ export function startTrace(name: string): FirebaseTrace {
   return new FirebaseTrace(trace);
 }
 
+export function startHttpMetric(url: string, method: string) {
+  const httpMetric = com.google.firebase.perf.FirebasePerformance.getInstance().newHttpMetric(url, method);
+  httpMetric.start();
+  return new FirebaseHttpMetric(httpMetric);
+}
+
 export class FirebaseTrace {
   constructor(private nativeTrace: com.google.firebase.perf.metrics.Trace) {
   }
@@ -37,5 +43,22 @@ export class FirebaseTrace {
 
   stop(): void {
     this.nativeTrace.stop();
+  }
+}
+
+export class FirebaseHttpMetric {
+  constructor(private nativeHttpMetric: com.google.firebase.perf.metrics.HttpMetric) {
+  }
+
+  setRequestPayloadSize(size: number) {
+    this.nativeHttpMetric.setRequestPayloadSize(size);
+  }
+
+  setHttpResponseCode(responseCode: number) {
+    this.nativeHttpMetric.setHttpResponseCode(responseCode);
+  }
+
+  stop(): void {
+    this.nativeHttpMetric.stop();
   }
 }

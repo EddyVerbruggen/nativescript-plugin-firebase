@@ -1,4 +1,4 @@
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource } from "@nativescript/core";
 import { MLKitVisionOptions } from "../";
 import { MLKitImageLabelingCloudResult, MLKitImageLabelingOnDeviceResult, MLKitImageLabelingOptions } from "./";
 import { MLKitImageLabeling as MLKitImageLabelingBase } from "./imagelabeling-common";

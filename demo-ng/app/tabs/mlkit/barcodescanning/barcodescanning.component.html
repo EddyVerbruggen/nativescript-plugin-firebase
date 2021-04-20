@@ -7,9 +7,9 @@
       width="100%"
       height="100%"
       formats="QR_CODE, UPC_A, EAN_13"
-      beepOnScan="true"
-      android:processEveryNthFrame="5"
-      ios:processEveryNthFrame="10"
+      beepOnScan="false"
+      supportInverseBarcodes="false"
+      processEveryNthFrame="10"
       [torchOn]="torchOn"
       [pause]="pause"
       (scanResult)="onBarcodeScanResult($event)">
@@ -43,7 +43,7 @@
       <ng-template let-item="item">
         <GridLayout columns="2*, 3*">
           <Label col="0" class="mlkit-result" textWrap="true" [text]="item.format"></Label>
-          <Label col="1" class="mlkit-result" textWrap="true" [text]="item.value"></Label>
+          <Label col="1" class="mlkit-result" textWrap="true" [text]="item.displayValue"></Label>
         </GridLayout>
       </ng-template>
     </ListView>

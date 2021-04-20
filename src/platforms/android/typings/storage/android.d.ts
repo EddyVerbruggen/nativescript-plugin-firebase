@@ -35,7 +35,7 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module storage {
-				export abstract class CancellableTask<TState>  extends com.google.android.gms.tasks.Task<any> {
+				export abstract class CancellableTask<StateT>  extends com.google.android.gms.tasks.Task<any> {
 					public static class: java.lang.Class<com.google.firebase.storage.CancellableTask<any>>;
 					public cancel(): boolean;
 					public addOnProgressListener(param0: com.google.firebase.storage.OnProgressListener<any>): com.google.firebase.storage.CancellableTask<any>;
@@ -54,7 +54,7 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module storage {
-				export abstract class ControllableTask<TState>  extends com.google.firebase.storage.CancellableTask<any> {
+				export abstract class ControllableTask<StateT>  extends com.google.firebase.storage.CancellableTask<any> {
 					public static class: java.lang.Class<com.google.firebase.storage.ControllableTask<any>>;
 					public pause(): boolean;
 					public addOnPausedListener(param0: com.google.firebase.storage.OnPausedListener<any>): com.google.firebase.storage.ControllableTask<any>;
@@ -173,16 +173,11 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module storage {
-				export class OnPausedListener<TProgress>  extends java.lang.Object {
-					public static class: java.lang.Class<com.google.firebase.storage.OnPausedListener<any>>;
-					/**
-					 * Constructs a new instance of the com.google.firebase.storage.OnPausedListener<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-					 */
-					public constructor(implementation: {
-						onPaused(param0: TProgress): void;
-					});
-					public constructor();
-					public onPaused(param0: TProgress): void;
+				export class ListResult {
+					public static class: java.lang.Class<com.google.firebase.storage.ListResult>;
+					public getPrefixes(): java.util.List<com.google.firebase.storage.StorageReference>;
+					public getPageToken(): string;
+					public getItems(): java.util.List<com.google.firebase.storage.StorageReference>;
 				}
 			}
 		}
@@ -193,16 +188,49 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module storage {
-				export class OnProgressListener<TProgress>  extends java.lang.Object {
+				export class ListTask {
+					public static class: java.lang.Class<com.google.firebase.storage.ListTask>;
+					public run(): void;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module storage {
+				export class OnPausedListener<ProgressT>  extends java.lang.Object {
+					public static class: java.lang.Class<com.google.firebase.storage.OnPausedListener<any>>;
+					/**
+					 * Constructs a new instance of the com.google.firebase.storage.OnPausedListener<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+						onPaused(param0: ProgressT): void;
+					});
+					public constructor();
+					public onPaused(param0: ProgressT): void;
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module storage {
+				export class OnProgressListener<ProgressT>  extends java.lang.Object {
 					public static class: java.lang.Class<com.google.firebase.storage.OnProgressListener<any>>;
 					/**
 					 * Constructs a new instance of the com.google.firebase.storage.OnProgressListener<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 					 */
 					public constructor(implementation: {
-						onProgress(param0: TProgress): void;
+						onProgress(param0: ProgressT): void;
 					});
 					public constructor();
-					public onProgress(param0: TProgress): void;
+					public onProgress(param0: ProgressT): void;
 				}
 			}
 		}
@@ -301,7 +329,7 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module storage {
-				export class StorageReference {
+				export class StorageReference extends java.lang.Comparable<com.google.firebase.storage.StorageReference> {
 					public static class: java.lang.Class<com.google.firebase.storage.StorageReference>;
 					public getActiveUploadTasks(): java.util.List<com.google.firebase.storage.UploadTask>;
 					public getActiveDownloadTasks(): java.util.List<com.google.firebase.storage.FileDownloadTask>;
@@ -316,11 +344,15 @@ declare module com {
 					public putBytes(param0: native.Array<number>, param1: com.google.firebase.storage.StorageMetadata): com.google.firebase.storage.UploadTask;
 					public updateMetadata(param0: com.google.firebase.storage.StorageMetadata): com.google.android.gms.tasks.Task<com.google.firebase.storage.StorageMetadata>;
 					public putStream(param0: java.io.InputStream, param1: com.google.firebase.storage.StorageMetadata): com.google.firebase.storage.UploadTask;
+					public list(param0: number): com.google.android.gms.tasks.Task<com.google.firebase.storage.ListResult>;
+					public list(param0: number, param1: string): com.google.android.gms.tasks.Task<com.google.firebase.storage.ListResult>;
+					public listAll(): com.google.android.gms.tasks.Task<com.google.firebase.storage.ListResult>;
 					public putFile(param0: globalAndroid.net.Uri): com.google.firebase.storage.UploadTask;
 					public hashCode(): number;
 					public putFile(param0: globalAndroid.net.Uri, param1: com.google.firebase.storage.StorageMetadata, param2: globalAndroid.net.Uri): com.google.firebase.storage.UploadTask;
 					public putStream(param0: java.io.InputStream): com.google.firebase.storage.UploadTask;
 					public getRoot(): com.google.firebase.storage.StorageReference;
+					public compareTo(param0: com.google.firebase.storage.StorageReference): number;
 					public child(param0: string): com.google.firebase.storage.StorageReference;
 					public getDownloadUrl(): com.google.android.gms.tasks.Task<globalAndroid.net.Uri>;
 					public putFile(param0: globalAndroid.net.Uri, param1: com.google.firebase.storage.StorageMetadata): com.google.firebase.storage.UploadTask;
@@ -355,9 +387,9 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module storage {
-				export abstract class StorageTask<TResult>  extends com.google.firebase.storage.ControllableTask<any> {
+				export abstract class StorageTask<ResultT>  extends com.google.firebase.storage.ControllableTask<any> {
 					public static class: java.lang.Class<com.google.firebase.storage.StorageTask<any>>;
-					public mSyncObject: any;
+					public syncObject: any;
 					public addOnProgressListener(param0: com.google.firebase.storage.OnProgressListener<any>): com.google.firebase.storage.CancellableTask<any>;
 					public pause(): boolean;
 					public continueWith(param0: java.util.concurrent.Executor, param1: com.google.android.gms.tasks.Continuation): com.google.android.gms.tasks.Task;
@@ -445,10 +477,10 @@ declare module com {
 			export module storage {
 				export class StorageTaskManager {
 					public static class: java.lang.Class<com.google.firebase.storage.StorageTaskManager>;
-					public ensureRegistered(param0: com.google.firebase.storage.StorageTask<any>): void;
 					public unRegister(param0: com.google.firebase.storage.StorageTask<any>): void;
 					public getDownloadTasksUnder(param0: com.google.firebase.storage.StorageReference): java.util.List<com.google.firebase.storage.FileDownloadTask>;
 					public getUploadTasksUnder(param0: com.google.firebase.storage.StorageReference): java.util.List<com.google.firebase.storage.UploadTask>;
+					public ensureRegistered(param0: com.google.firebase.storage.StorageTask<any>): void;
 				}
 			}
 		}
@@ -462,6 +494,7 @@ declare module com {
 				export class StorageTaskScheduler {
 					public static class: java.lang.Class<com.google.firebase.storage.StorageTaskScheduler>;
 					public static sInstance: com.google.firebase.storage.StorageTaskScheduler;
+					public getCommandPoolExecutor(): java.util.concurrent.Executor;
 					public scheduleCommand(param0: java.lang.Runnable): void;
 					public constructor();
 					public scheduleUpload(param0: java.lang.Runnable): void;
@@ -531,25 +564,25 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module storage {
-				export class TaskListenerImpl<TListenerType, TResult>  extends java.lang.Object {
+				export class TaskListenerImpl<ListenerTypeT, ResultT>  extends java.lang.Object {
 					public static class: java.lang.Class<com.google.firebase.storage.TaskListenerImpl<any,any>>;
-					public constructor(param0: com.google.firebase.storage.StorageTask<TResult>, param1: number, param2: com.google.firebase.storage.TaskListenerImpl.OnRaise<TListenerType,TResult>);
 					public onInternalStateChanged(): void;
-					public addListener(param0: globalAndroid.app.Activity, param1: java.util.concurrent.Executor, param2: TListenerType): void;
-					public removeListener(param0: TListenerType): void;
+					public constructor(param0: com.google.firebase.storage.StorageTask<ResultT>, param1: number, param2: com.google.firebase.storage.TaskListenerImpl.OnRaise<ListenerTypeT,ResultT>);
+					public removeListener(param0: ListenerTypeT): void;
 					public getListenerCount(): number;
+					public addListener(param0: globalAndroid.app.Activity, param1: java.util.concurrent.Executor, param2: ListenerTypeT): void;
 				}
 				export module TaskListenerImpl {
-					export class OnRaise<TListenerType, TResult>  extends java.lang.Object {
+					export class OnRaise<ListenerTypeT, ResultT>  extends java.lang.Object {
 						public static class: java.lang.Class<com.google.firebase.storage.TaskListenerImpl.OnRaise<any,any>>;
 						/**
 						 * Constructs a new instance of the com.google.firebase.storage.TaskListenerImpl$OnRaise interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 						 */
 						public constructor(implementation: {
-							raise(param0: TListenerType, param1: TResult): void;
+							raise(param0: ListenerTypeT, param1: ResultT): void;
 						});
 						public constructor();
-						public raise(param0: TListenerType, param1: TResult): void;
+						public raise(param0: ListenerTypeT, param1: ResultT): void;
 					}
 				}
 			}
@@ -678,8 +711,8 @@ declare module com {
 		export module firebase {
 			export module storage {
 				export module internal {
-					export class SlashUtil {
-						public static class: java.lang.Class<com.google.firebase.storage.internal.SlashUtil>;
+					export class Slashes {
+						public static class: java.lang.Class<com.google.firebase.storage.internal.Slashes>;
 						public constructor();
 						public static normalizeSlashes(param0: string): string;
 						public static unSlashize(param0: string): string;
@@ -823,6 +856,25 @@ declare module com {
 		export module firebase {
 			export module storage {
 				export module network {
+					export class ListNetworkRequest extends com.google.firebase.storage.network.NetworkRequest {
+						public static class: java.lang.Class<com.google.firebase.storage.network.ListNetworkRequest>;
+						public getAction(): string;
+						public getURL(): string;
+						public getQueryParameters(): string;
+						public constructor(param0: globalAndroid.net.Uri, param1: com.google.firebase.FirebaseApp);
+						public constructor(param0: globalAndroid.net.Uri, param1: com.google.firebase.FirebaseApp, param2: java.lang.Integer, param3: string);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module storage {
+				export module network {
 					export abstract class NetworkRequest {
 						public static class: java.lang.Class<com.google.firebase.storage.network.NetworkRequest>;
 						public static INITIALIZATION_EXCEPTION: number;
@@ -848,12 +900,12 @@ declare module com {
 						public getResultHeaders(): java.util.Map<string,string>;
 						public getResultHeadersImpl(): java.util.Map<string,java.util.List<string>>;
 						public performRequestStart(param0: string): void;
+						public static getDefaultURL(param0: globalAndroid.net.Uri): string;
 						public getStream(): java.io.InputStream;
 						public completeTask(param0: com.google.android.gms.tasks.TaskCompletionSource, param1: any): void;
 						public static getAuthority(): string;
 						public getResultingContentLength(): number;
 						public getOutputRawSize(): number;
-						public static getdefaultURL(param0: globalAndroid.net.Uri): string;
 						public getURL(): string;
 						public getPathWithoutBucket(): string;
 						public getQueryParameters(): string;
@@ -908,7 +960,7 @@ declare module com {
 				export module network {
 					export class ResumableUploadCancelRequest extends com.google.firebase.storage.network.ResumableNetworkRequest {
 						public static class: java.lang.Class<com.google.firebase.storage.network.ResumableUploadCancelRequest>;
-						public static CANCEL_CALLED: boolean;
+						public static cancelCalled: boolean;
 						public getAction(): string;
 						public constructor(param0: globalAndroid.net.Uri, param1: com.google.firebase.FirebaseApp, param2: string);
 						public getURL(): string;

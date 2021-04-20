@@ -17,7 +17,7 @@ If you want to use a specific icon for the push notification, it has to be confi
       android:resource="@drawable/your_drawable_name" />
     <meta-data android:name="com.google.firebase.messaging.default_notification_color"
       android:resource="@color/ns_primary" />
-      
+
 #### Background notification quirks
 
 There is a little quirk: you will currently not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
@@ -32,7 +32,7 @@ Open /platforms/ios/yourproject.__xcworkspace__ (!) and go to your project's tar
 > Without this enabled you will receive push messages in the foreground, but **NOT in the background** / when the app is killed.
 
 #### Copy the entitlements file
-The previous step created a the file`platforms/ios/YourAppName/(Resources/)YourAppName.entitlements`.
+The previous step created the file`platforms/ios/YourAppName/(Resources/)YourAppName.entitlements`.
 Copy that file to `app/App_Resources/iOS/` (if it doesn't exist yet, otherwise merge its contents),
 so it's not removed when you remove and re-add the iOS platform. The relevant content for background push in that file is:
 
@@ -41,7 +41,14 @@ so it's not removed when you remove and re-add the iOS platform. The relevant co
 	<string>development</string>
 ```
 
-> Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` is the iOS foldername, see the path above.
+> Note that since plugin version 5.1.8 the name of the file can either be `<YourAppName>.entitlements` or `app.entitlements`. `YourAppName` is the iOS folder name, see the path above.
+
+> Note that when shipping to the iOS App Store, the entitlements file needs to be updated to reflect production:
+
+```xml
+	<key>aps-environment</key>
+	<string>production</string>
+```
 
 #### Allow processing when a background push is received
 Open `app/App_Resources/iOS/Info.plist` and add this to the bottom:
@@ -60,6 +67,7 @@ Follow [this guide](https://firebase.google.com/docs/cloud-messaging/ios/certs) 
 To listen to received notifications while in the foreground or when your app moves from the background to the foreground, add a handler to `init`.
 
 Any pending notifications (while your app was not in the foreground) will trigger the `onMessageReceivedCallback` handler.
+`onMessageReceivedCallback` is *required* for push notifications to be enabled (even if the function is empty).  Users will not be prompted to allow to push notifications without it.
 
 ##### JavaScript
 ```js
@@ -128,6 +136,7 @@ behaviour and handle the notifications yourself on the `onMessageReceivedCallbac
 
 ```js
 firebase.init({
+  // ..
   showNotifications: false,
 });
 ```
@@ -139,11 +148,12 @@ This might be helpful too if you or some other plugin you use is already setting
 
 ### Always show notifications when the application is in foreground
 
-If you always want to display notifications while the application is in foreground withouth sending additional
+If you always want to display notifications while the application is in the foreground without sending additional
 parameters/data when sending the push notification, you need to set the `showNotificationsWhenInForeground` option to `true`:
 
 ```js
 firebase.init({
+  // ..
   showNotificationsWhenInForeground: true,
 });
 ```
@@ -185,7 +195,7 @@ curl -X POST --header "Authorization: key=SERVER_KEY" --Header "Content-Type: ap
 
 <img src="images/push-server-key.png" width="459px" height="220px" alt="Push server key"/>
 
-> Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0. 
+> Note that if you don't want a badge on the app icon, remove the `badge` property or set it to 0.
 
 ### Notfication-popup example
 
@@ -197,6 +207,8 @@ This results in a payload of:
 
 - App in the foreground: `{"foo":"bar", "gcm.message_id":"0:1522952720644653%3194ccac3194ccac", "foreground":true, "title":"My title", "body":"My text"}`
 - App in the background: `{"foo":"bar", "gcm.message_id":"0:1522952737879515%3194ccac3194ccac", "title":"My title", "body":"My text", "foreground":false}`
+
+Note that on iOS, when the notification was tapped, the payload will contain `notificationTapped: true`. That may help you with some logic in your app.
 
 ### (iOS) background notification example
 
@@ -214,13 +226,13 @@ This results in a payload of:
 To register the app to receive interactive pushes you need to call `firebase.registerForInteractivePush(model)`.
 And you may hook to the `model.onNotificationActionTakenCallback` callback to know what action the user took interacting with the notification.
 
-Each action has either type `button` or `input`, and you can set `options` to do any or all of:
+Each action has a type of either `button` or `input`, and you can set `options` to do any or all of:
 - Launch the app: `foreground`.
 - Only allow the action when the device is unlocked: `authenticationRequired`.
 - Make the text red to indicate something will be removed/deleted/killed: `destructive`.
 
 Consider this example, where an interactive push notification is received which the user expands and picks the fourth option.
-He then types his reply, and (because of how the action was configured) the app launches and captures the reply.
+They then type their reply, and (because of how the action was configured) the app launches and captures the reply.
 
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive01.png" height="270px" alt="Interactive Notification, part 1"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive02.png" height="270px" alt="Interactive Notification, part 2"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive03.png" height="270px" alt="Interactive Notification, part 3"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive04.png" height="270px" alt="Interactive Notification, part 4"/>
 
@@ -300,7 +312,7 @@ The payload to trigger the notification in the screenshots above is:
 }
 ```
 
-> *IMPORTANT* Use the `click_action` only for push notifications on iOS. When such a message is tapped in the Android notification center the app WON'T be opened. This will probably be fixed in the future.
+> *IMPORTANT* Use `click_action` only for push notifications on iOS. When such a message is tapped in the Android notification center the app WON'T be opened. This will probably be fixed in the future.
 
 ### (iOS) showing a notification while the app is in the foreground
 Add the `showWhenInForeground` flag to your payload:

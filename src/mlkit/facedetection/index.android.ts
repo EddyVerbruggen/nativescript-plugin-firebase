@@ -1,9 +1,7 @@
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource } from "@nativescript/core";
 import { MLKitDetectFacesOnDeviceOptions, MLKitDetectFacesOnDeviceResult, MLKitDetectFacesResultBounds } from "./";
 import { MLKitVisionOptions } from "../";
 import { MLKitFaceDetection as MLKitFaceDetectionBase } from "./facedetection-common";
-
-const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitFaceDetection extends MLKitFaceDetectionBase {
 
@@ -16,7 +14,7 @@ export class MLKitFaceDetection extends MLKitFaceDetectionBase {
   }
 
   protected createSuccessListener(): any {
-    return new gmsTasks.OnSuccessListener({
+    return new (<any>com.google.android.gms).tasks.OnSuccessListener({
       onSuccess: faces => {
 
         if (!faces || faces.size() === 0) return;
@@ -85,7 +83,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
     try {
       const firebaseVisionFaceDetector = getFaceDetector(options);
 
-      const onSuccessListener = new gmsTasks.OnSuccessListener({
+      const onSuccessListener = new (<any>com.google.android.gms).tasks.OnSuccessListener({
         onSuccess: faces => {
 
           const result = <MLKitDetectFacesOnDeviceResult>{
@@ -113,7 +111,7 @@ export function detectFacesOnDevice(options: MLKitDetectFacesOnDeviceOptions): P
         }
       });
 
-      const onFailureListener = new gmsTasks.OnFailureListener({
+      const onFailureListener = new (<any>com.google.android.gms).tasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 

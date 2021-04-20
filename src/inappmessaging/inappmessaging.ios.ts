@@ -12,12 +12,17 @@ export function onMessageImpression(callback: (data: OnMessageImpressionCallback
   _firInAppMessagingDisplayDelegate.setOnMessageImpressionCallback(callback);
 }
 
+export function triggerEvent(eventName: string): void {
+  FIRInAppMessaging.inAppMessaging().triggerEvent(eventName);
+}
+
 function ensureDelegate(): void {
   if (!_firInAppMessagingDisplayDelegate) {
     FIRInAppMessaging.inAppMessaging().delegate = _firInAppMessagingDisplayDelegate = FIRInAppMessagingDisplayDelegateImpl.new();
   }
 }
 
+@NativeClass()
 class FIRInAppMessagingDisplayDelegateImpl extends NSObject implements FIRInAppMessagingDisplayDelegate {
   public static ObjCProtocols = [];
 

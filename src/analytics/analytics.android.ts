@@ -1,11 +1,16 @@
-import * as appModule from "tns-core-modules/application";
+import { Application } from "@nativescript/core";
 import { LogComplexEventOptions, LogComplexEventParameter, LogEventOptions, SetScreenNameOptions, SetUserPropertyOptions } from "./analytics";
-import { validateAnalyticsKey, validateAnalyticsParam } from "./analytics-common";
+import { ENABLE_ANALYTICS_HINT, validateAnalyticsKey, validateAnalyticsParam } from "./analytics-common";
 
 declare const com: any;
 
 export function logEvent(options: LogEventOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
     try {
       const validationError = validateAnalyticsKey(options.key);
       if (validationError !== undefined) {
@@ -30,7 +35,7 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       }
 
       com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
+          Application.android.context || Application.getNativeApplication()
       ).logEvent(options.key, bundle);
 
       resolve();
@@ -39,6 +44,130 @@ export function logEvent(options: LogEventOptions): Promise<void> {
       reject(ex);
     }
   });
+}
+
+export function logComplexEvent(options: LogComplexEventOptions): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
+    try {
+      if (options.key === undefined) {
+        reject("Argument 'key' is missing");
+        return;
+      }
+
+      let bundle = new android.os.Bundle();
+      if (options.parameters !== undefined) {
+        bundle = buildBundle(options.parameters);
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+          Application.android.context || Application.getNativeApplication()
+      ).logEvent(options.key, bundle);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.logEvent: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function setUserId(arg): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
+    try {
+      if (arg.userId === undefined) {
+        reject("Argument 'userId' is missing");
+        return;
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+          Application.android.context || Application.getNativeApplication()).setUserId(arg.userId);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setUserId: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function setUserProperty(options: SetUserPropertyOptions): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
+    try {
+      if (options.key === undefined) {
+        reject("Argument 'key' is missing");
+        return;
+      }
+      if (options.value === undefined) {
+        reject("Argument 'value' is missing");
+        return;
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+          Application.android.context || Application.getNativeApplication()
+      ).setUserProperty(options.key, options.value);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setUserProperty: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function setScreenName(options: SetScreenNameOptions): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    if (!isAnalyticsAvailable()) {
+      reject(ENABLE_ANALYTICS_HINT);
+      return;
+    }
+
+    try {
+      if (options.screenName === undefined) {
+        reject("Argument 'screenName' is missing");
+        return;
+      }
+
+      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+          Application.android.context || Application.getNativeApplication()
+      ).setCurrentScreen(Application.android.foregroundActivity, options.screenName, null);
+
+      resolve();
+    } catch (ex) {
+      console.log("Error in firebase.analytics.setScreenName: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function setAnalyticsCollectionEnabled(enabled: boolean): void {
+  if (isAnalyticsAvailable()) {
+    com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+        Application.android.context || Application.getNativeApplication()
+    ).setAnalyticsCollectionEnabled(enabled);
+  }
+}
+
+export function setSessionTimeoutDuration(seconds: number): void {
+  if (isAnalyticsAvailable()) {
+    com.google.firebase.analytics.FirebaseAnalytics.getInstance(
+        Application.android.context || Application.getNativeApplication()
+    ).setSessionTimeoutDuration(seconds * 1000); // Android expects ms
+  }
 }
 
 function getArrayList(array: Array<LogComplexEventOptions>): java.util.ArrayList<android.os.Bundle> {
@@ -81,102 +210,10 @@ function buildBundle(params: Array<LogComplexEventParameter>): android.os.Bundle
   return bundle;
 }
 
-export function logComplexEvent(options: LogComplexEventOptions): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    try {
-      if (options.key === undefined) {
-        reject("Argument 'key' is missing");
-        return;
-      }
-
-      let bundle = new android.os.Bundle();
-      if (options.parameters !== undefined) {
-        bundle = buildBundle(options.parameters);
-      }
-
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
-      ).logEvent(options.key, bundle);
-
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.analytics.logEvent: " + ex);
-      reject(ex);
-    }
-  });
-}
-
-export function setUserId(arg): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    try {
-      if (arg.userId === undefined) {
-        reject("Argument 'userId' is missing");
-        return;
-      }
-
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()).setUserId(arg.userId);
-
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.analytics.setUserId: " + ex);
-      reject(ex);
-    }
-  });
-}
-
-export function setUserProperty(options: SetUserPropertyOptions): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    try {
-      if (options.key === undefined) {
-        reject("Argument 'key' is missing");
-        return;
-      }
-      if (options.value === undefined) {
-        reject("Argument 'value' is missing");
-        return;
-      }
-
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
-      ).setUserProperty(options.key, options.value);
-
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.analytics.setUserProperty: " + ex);
-      reject(ex);
-    }
-  });
-}
-
-export function setScreenName(options: SetScreenNameOptions): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    try {
-      if (options.screenName === undefined) {
-        reject("Argument 'screenName' is missing");
-        return;
-      }
-
-      com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-          appModule.android.context || com.tns.NativeScriptApplication.getInstance()
-      ).setCurrentScreen(appModule.android.foregroundActivity, options.screenName, null);
-
-      resolve();
-    } catch (ex) {
-      console.log("Error in firebase.analytics.setScreenName: " + ex);
-      reject(ex);
-    }
-  });
-}
-
-export function setAnalyticsCollectionEnabled(enabled: boolean): void {
-  com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-      appModule.android.context || com.tns.NativeScriptApplication.getInstance()
-  ).setAnalyticsCollectionEnabled(enabled);
-}
-
-export function setSessionTimeoutDuration(seconds: number): void {
-  com.google.firebase.analytics.FirebaseAnalytics.getInstance(
-      appModule.android.context || com.tns.NativeScriptApplication.getInstance()
-  ).setSessionTimeoutDuration(seconds * 1000); // Android expects ms
+function isAnalyticsAvailable(): boolean {
+  if (typeof (com.google.firebase.analytics) === "undefined" || typeof (com.google.firebase.analytics.FirebaseAnalytics) === "undefined") {
+    console.log(ENABLE_ANALYTICS_HINT);
+    return false;
+  }
+  return true;
 }

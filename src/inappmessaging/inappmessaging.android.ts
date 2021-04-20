@@ -23,3 +23,7 @@ export function onMessageImpression(callback: (data: OnMessageImpressionCallback
 
   com.google.firebase.inappmessaging.FirebaseInAppMessaging.getInstance().addImpressionListener(listener)
 }
+
+export function triggerEvent(eventName: string): void {
+  com.google.firebase.inappmessaging.FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
+}

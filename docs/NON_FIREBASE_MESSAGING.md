@@ -1,13 +1,10 @@
 If you read this, chances are you want Push Notifications, but want to use a third-party push service instead of interfacing with Firebase Cloud Messaging directly.
 
-You'll be 😃 to learn this plugin has a *lite* mode that won't add any native Firebase dependencies (or *Pod* libraries) on iOS, and only the bare necessities on Android (on Android, Push Messaging will always use FCM, regardless the push service).
+You'll be 😃 to learn this plugin has a *lite* mode that won't add any native Firebase dependencies (or *Pod* libraries) on iOS, and only the bare necessities on Android (on Android, Push Messaging will always use FCM, regardless the push service) in case you only want to use an external push client.
 
-Go to you app's root folder and remove `firebase.nativescript.json`, then run `npm i`. You will be prompted `"Are you using this plugin ONLY as a Push Notification client for an external (non-Firebase) Push service? (y/n)"`. Answer:
-- `y` if you don't want to use any of the Firebase features (Firestore, Realtime DB, Storage, etc), or
-- `n` in case you do want to use some of the features (you will be asked which features later).
-- _If you want to use an external messaging provider, but ALSO want to use other Firebase features, then answer `n` as well and after finishing all questions, open `firebase.nativescript.json` and add `"external_messaging": true`. On Android that won't do anything special, but on iOS it will avoid loading the Firebase Messaging Pod._
+Go to you app's root folder and remove `firebase.nativescript.json`, then run `npm i`. At one point you will be prompted `"Are you using this plugin as a Push Notification client for an external (NOT Firebase Cloud Messaging) Push service? (y/n)"` and answer `y`.
 
-> The remainder of this document applies to both situations, so please continue reading.
+> ⚠️ Plugin version 10.1.0 removed support for the `external_messaging` property in `firebase.nativescript.json`. Please remove that file and re-run `npm i` if you had that hacky solution. 
 
 ## Demo app
 I've tried applying best practices to a [dedicated push-only demo app](/demo-push).
@@ -22,7 +19,8 @@ Two important things to keep in mind are:
 > Do not run the plugin's `.init` function!
 
 ### Android
-No additional setup required.
+Open your Firebase project at the Google console and click 'Add app' to add an Android app. Follow the steps (make sure the bundle id is the same as your `nativescript.id` in `package.json` and you'll be able to download
+`google-services.json` which you'll add to your NativeScript project at `app/App_Resources/Android/google-services.json`
 
 There is a little quirk: you will currently not get the title and body if the notification was received while the application was in the background, but you will get the *data* payload.
 
@@ -128,7 +126,7 @@ Each action has either type `button` or `input`, and you can set `options` to do
 - Make the text red to indicate something will be removed/deleted/killed: `destructive`.
 
 Consider this example, where an interactive push notification is received which the user expands and picks the fourth option.
-He then types his reply, and (because of how the action was configured) the app launches and captures the reply.
+They then type their reply, and (because of how the action was configured) the app launches and captures the reply.
 
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive01.png" height="270px" alt="Interactive Notification, part 1"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive02.png" height="270px" alt="Interactive Notification, part 2"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive03.png" height="270px" alt="Interactive Notification, part 3"/> <img src="https://raw.githubusercontent.com/EddyVerbruggen/nativescript-plugin-firebase/master/docs/images/messaging/interactive04.png" height="270px" alt="Interactive Notification, part 4"/>
 

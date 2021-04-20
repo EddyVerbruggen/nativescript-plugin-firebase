@@ -1,8 +1,9 @@
-import { Observable } from "tns-core-modules/data/observable";
-import { messaging, Message } from "nativescript-plugin-firebase/messaging";
-import { alert, confirm } from "tns-core-modules/ui/dialogs";
-import * as platform from "tns-core-modules/platform";
+import * as firebase from "nativescript-plugin-firebase";
+import { Message, messaging } from "nativescript-plugin-firebase/messaging";
 import * as applicationSettings from "tns-core-modules/application-settings";
+import { Observable } from "tns-core-modules/data/observable";
+import * as platform from "tns-core-modules/platform";
+import { alert, confirm } from "tns-core-modules/ui/dialogs";
 
 const getCircularReplacer = () => {
   const seen = new WeakSet;
@@ -26,6 +27,7 @@ export class PushViewModel extends Observable {
     if (applicationSettings.getBoolean(PushViewModel.APP_REGISTERED_FOR_NOTIFICATIONS, false)) {
       this.doRegisterPushHandlers();
     }
+    // this.setScreenName("push-demo-view");
   }
 
   public doRequestConsent(): void {
@@ -46,6 +48,7 @@ export class PushViewModel extends Observable {
     messaging.getCurrentPushToken()
         .then(token => {
           // may be null/undefined if not known yet
+          console.log(token);
           alert({
             title: "Current Push Token",
             message: (!token ? "Not received yet (note that on iOS this does not work on a simulator)" : token + ("\n\nSee the console log if you want to copy-paste it.")),
@@ -184,7 +187,6 @@ export class PushViewModel extends Observable {
         }, 500);
       },
 
-      // Whether you want this plugin to automatically display the notifications or just notify the callback. Currently used on iOS only. Default true.
       showNotifications: true,
 
       // Whether you want this plugin to always handle the notifications when the app is in foreground.
@@ -240,5 +242,14 @@ export class PushViewModel extends Observable {
       message: "" + messaging.areNotificationsEnabled(),
       okButtonText: "Okay, very interesting"
     });
+  }
+
+  private setScreenName(screenName): void {
+    firebase.analytics.setScreenName(
+        {
+          screenName
+        })
+        .then(() => console.log("Analytics screen name set to: " + screenName))
+        .catch(err => console.log("Analytics error: " + err));
   }
 }

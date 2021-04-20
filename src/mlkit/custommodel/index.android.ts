@@ -1,9 +1,6 @@
-import * as fs from "tns-core-modules/file-system";
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource, knownFolders } from "@nativescript/core";
 import { MLKitCustomModelOptions, MLKitCustomModelResult, MLKitCustomModelResultValue } from "./";
 import { getLabelsFromAppFolder, MLKitCustomModel as MLKitCustomModelBase } from "./custommodel-common";
-
-const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitCustomModel extends MLKitCustomModelBase {
   private detector;
@@ -23,7 +20,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
     this.detectorBusy = true;
 
     if (!this.onFailureListener) {
-      this.onFailureListener = new gmsTasks.OnFailureListener({
+      this.onFailureListener = new (<any>com.google.android.gms).tasks.OnFailureListener({
         onFailure: exception => {
           console.log(exception.getMessage());
           this.detectorBusy = false;
@@ -66,7 +63,7 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
   }
 
   protected createSuccessListener(): any {
-    this.onSuccessListener = new gmsTasks.OnSuccessListener({
+    this.onSuccessListener = new (<any>com.google.android.gms).tasks.OnSuccessListener({
       onSuccess: output => {
         const probabilities: Array<number> = output.getOutput(0)[0];
 
@@ -96,45 +93,31 @@ export class MLKitCustomModel extends MLKitCustomModelBase {
 const registeredModels = [];
 
 function getInterpreter(localModelFile?: string): any {
-  const firModelOptionsBuilder = new com.google.firebase.ml.custom.FirebaseModelOptions.Builder();
-
   const localModelName = localModelFile.lastIndexOf("/") === -1 ? localModelFile : localModelFile.substring(localModelFile.lastIndexOf("/") + 1);
   let localModelRegistrationSuccess = false;
 
   if (localModelFile) {
-    if (registeredModels.indexOf(localModelName) > -1) {
-      localModelRegistrationSuccess = true;
-      firModelOptionsBuilder.setLocalModelName(localModelName)
-    } else {
-      const firModelLocalBuilder = new com.google.firebase.ml.common.modeldownload.FirebaseLocalModel.Builder(localModelName);
+    const localModelBuilder = new com.google.firebase.ml.custom.FirebaseCustomLocalModel.Builder();
 
-      if (localModelFile.startsWith("~/")) {
-        firModelLocalBuilder.setFilePath(fs.knownFolders.currentApp().path + localModelFile.substring(1));
+    // TODO use same for iOS, or is this not even required?
+    // if (registeredModels.indexOf(localModelName) > -1) {
+    //   localModelRegistrationSuccess = true;
+    //   localModelBuilder.setFilePath(localModelFile);
+
+    // } else {
+    //   const firModelLocalBuilder = new com.google.firebase.ml.common.modeldownload.FirebaseLocalModel.Builder(localModelName);
+
+      if (localModelFile.indexOf("~/") === 0) {
+        localModelBuilder.setFilePath(knownFolders.currentApp().path + localModelFile.substring(1));
       } else {
-        // note that this doesn't seem to work, let's advice users to use ~/ for now
-        firModelLocalBuilder.setAssetFilePath(localModelFile);
+        // note that this doesn't seem to work, let's advice users to use ~/ for now (TODO check if this is still te case)
+        localModelBuilder.setAssetFilePath(localModelFile);
       }
 
-      localModelRegistrationSuccess = com.google.firebase.ml.common.modeldownload.FirebaseModelManager.getInstance().registerLocalModel(firModelLocalBuilder.build());
-
-      if (localModelRegistrationSuccess) {
-        registeredModels.push(localModelName);
-        firModelOptionsBuilder.setLocalModelName(localModelName)
-      }
-    }
+    const firModelOptions = new com.google.firebase.ml.custom.FirebaseModelInterpreterOptions.Builder(localModelBuilder.build()).build();
+    return com.google.firebase.ml.custom.FirebaseModelInterpreter.getInstance(firModelOptions);
   }
-
-  // if (options.cloudModelName) {
-  //   firModelOptionsBuilder.setRemoteModelName(options.cloudModelName)
-  // }
-
-  if (!localModelRegistrationSuccess) {
-    // TODO handle this case upstream
-    console.log("No (cloud or local) model was successfully loaded.");
-    return null;
-  }
-
-  return com.google.firebase.ml.custom.FirebaseModelInterpreter.getInstance(firModelOptionsBuilder.build());
+  return null;
 }
 
 export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitCustomModelResult> {
@@ -143,7 +126,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
       const interpreter = getInterpreter(options.localModelFile);
 
       let labels: Array<string>;
-      if (options.labelsFile.startsWith("~/")) {
+      if (options.labelsFile.indexOf("~/") === 0) {
         labels = getLabelsFromAppFolder(options.labelsFile);
       } else {
         // no dice loading from assets yet, let's advice users to use ~/ for now
@@ -151,7 +134,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
         return;
       }
 
-      const onSuccessListener = new gmsTasks.OnSuccessListener({
+      const onSuccessListener = new (<any>com.google.android.gms).tasks.OnSuccessListener({
         onSuccess: output => {
           const probabilities: Array<number> = output.getOutput(0)[0];
 
@@ -169,7 +152,7 @@ export function useCustomModel(options: MLKitCustomModelOptions): Promise<MLKitC
         }
       });
 
-      const onFailureListener = new gmsTasks.OnFailureListener({
+      const onFailureListener = new (<any>com.google.android.gms).tasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 

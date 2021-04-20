@@ -1,5 +1,21 @@
 {
-  "external_push_client_only": true,
-  "using_ios": true,
-  "using_android": true
+    "using_ios": true,
+    "using_android": true,
+    "analytics": false,
+    "firestore": false,
+    "realtimedb": false,
+    "authentication": false,
+    "remote_config": false,
+    "performance_monitoring": false,
+    "external_push_client_only": true,
+    "messaging": false,
+    "in_app_messaging": false,
+    "crashlytics": false,
+    "storage": false,
+    "functions": false,
+    "facebook_auth": false,
+    "google_auth": false,
+    "admob": false,
+    "dynamic_links": false,
+    "ml_kit": false
 }

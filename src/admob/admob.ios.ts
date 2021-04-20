@@ -1,5 +1,4 @@
-import { device } from "tns-core-modules/platform/platform";
-import { DeviceType } from "tns-core-modules/ui/enums/enums";
+import { Device, Enums } from "@nativescript/core";
 import { firebase } from "../firebase-common";
 import { BannerOptions, InterstitialOptions, PreloadRewardedVideoAdOptions, ShowRewardedVideoAdOptions } from "./admob";
 import { AD_SIZE, BANNER_DEFAULTS, rewardedVideoCallbacks } from "./admob-common";
@@ -65,12 +64,25 @@ export function showBanner(arg: BannerOptions): Promise<any> {
 
       firebase.admob.adView.loadRequest(adRequest);
 
-      // TODO consider listening to delegate features like 'ad loaded' (Android resolves when the banner is actually showing)
-      // adView.delegate = self;
+      // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
+      let delegate = GADBannerViewDelegateImpl.new().initWithOptionsAndCallback(
+          arg,
+          (ad: GADBannerView, error: GADRequestError) => {
+            if (error) {
+              reject(error.localizedDescription);
+            } else {
+              resolve();
+            }
+          }, () => {
+            arg.onClosed && arg.onClosed();
+            CFRelease(delegate);
+            delegate = undefined;
+          });
+
+      CFRetain(delegate);
+      firebase.admob.adView.delegate = delegate;
 
       view.addSubview(firebase.admob.adView);
-
-      resolve();
     } catch (ex) {
       console.log("Error in firebase.admob.showBanner: " + ex);
       reject(ex);
@@ -90,7 +102,8 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
       firebase.admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
 
       // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
-      let delegate = GADInterstitialDelegateImpl.new().initWithCallback(
+      let delegate = GADInterstitialDelegateImpl.new().initWithOptionsAndCallback(
+          arg,
           (ad: GADInterstitial, error: GADRequestError) => {
             if (error) {
               reject(error.localizedDescription);
@@ -98,7 +111,8 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
               resolve();
             }
           }, () => {
-            arg.onAdClosed && arg.onAdClosed();
+            arg.onAdClosed && arg.onAdClosed(); // TODO remove one day
+            arg.onClosed && arg.onClosed();
             CFRelease(delegate);
             delegate = undefined;
           });
@@ -152,7 +166,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
       firebase.admob.interstitialView = GADInterstitial.alloc().initWithAdUnitID(settings.iosInterstitialId);
 
       // with interstitials you MUST wait for the ad to load before showing it, so requiring this delegate
-      let delegate = GADInterstitialDelegateImpl.new().initWithCallback((ad: GADInterstitial, error: GADRequestError) => {
+      let delegate = GADInterstitialDelegateImpl.new().initWithOptionsAndCallback(arg, (ad: GADInterstitial, error: GADRequestError) => {
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -162,8 +176,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
         }
         CFRelease(delegate);
         delegate = undefined;
-      });
-      // we're leaving the app to switch to Google's OAuth screen, so making sure this is retained
+      }, () => console.log("Ad closed"));
       CFRetain(delegate);
       firebase.admob.interstitialView.delegate = delegate;
 
@@ -315,7 +328,7 @@ function _getBannerType(size): any {
     return {"size": {"width": 120, "height": 600}, "flags": 0};
   } else if (size === AD_SIZE.SMART_BANNER || size === AD_SIZE.FLUID) {
     const orientation = UIDevice.currentDevice.orientation;
-    const isIPad = device.deviceType === DeviceType.Tablet;
+    const isIPad = Device.deviceType === Enums.DeviceType.Tablet;
     if (orientation === UIDeviceOrientation.Portrait || orientation === UIDeviceOrientation.PortraitUpsideDown) {
       // return kGADAdSizeSmartBannerPortrait;
       return {"size": {"width": 0, "height": 0, "smartHeight": isIPad ? 90 : 50}, "flags": 18};
@@ -329,9 +342,11 @@ function _getBannerType(size): any {
   }
 }
 
+@NativeClass()
 class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDelegate {
   public static ObjCProtocols = [];
-  onAdCloseCallback: () => void;
+  private options: InterstitialOptions;
+  private onAdCloseCallback: () => void;
 
   static new(): GADInterstitialDelegateImpl {
     if (GADInterstitialDelegateImpl.ObjCProtocols.length === 0 && typeof (GADInterstitialDelegate) !== "undefined") {
@@ -342,7 +357,8 @@ class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDel
 
   private callback: (ad: GADInterstitial, error?: GADRequestError) => void;
 
-  public initWithCallback(callback: (ad: GADInterstitial, error?: GADRequestError) => void, onAdCloseCallback: () => void = null): GADInterstitialDelegateImpl {
+  public initWithOptionsAndCallback(options: InterstitialOptions, callback: (ad: GADInterstitial, error?: GADRequestError) => void, onAdCloseCallback: () => void = null): GADInterstitialDelegateImpl {
+    this.options = options;
     this.callback = callback;
     this.onAdCloseCallback = onAdCloseCallback;
     return this;
@@ -359,8 +375,52 @@ class GADInterstitialDelegateImpl extends NSObject implements GADInterstitialDel
   public interstitialDidFailToReceiveAdWithError(ad: GADInterstitial, error: GADRequestError): void {
     this.callback(ad, error);
   }
+
+  public interstitialWillLeaveApplication(ad: GADInterstitial): void {
+    this.options.onLeftApplication && this.options.onLeftApplication();
+  }
 }
 
+@NativeClass()
+class GADBannerViewDelegateImpl extends NSObject implements GADBannerViewDelegate {
+  public static ObjCProtocols = [];
+  private onAdCloseCallback: () => void;
+  private options: BannerOptions;
+
+  static new(): GADBannerViewDelegateImpl {
+    if (GADBannerViewDelegateImpl.ObjCProtocols.length === 0 && typeof (GADBannerViewDelegate) !== "undefined") {
+      GADBannerViewDelegateImpl.ObjCProtocols.push(GADBannerViewDelegate);
+    }
+    return <GADBannerViewDelegateImpl>super.new();
+  }
+
+  private callback: (ad: GADBannerView, error: GADRequestError) => void;
+
+  public initWithOptionsAndCallback(options: BannerOptions, callback: (ad: GADBannerView, error: GADRequestError) => void, onAdCloseCallback: () => void = null): GADBannerViewDelegateImpl {
+    this.options = options;
+    this.callback = callback;
+    this.onAdCloseCallback = onAdCloseCallback;
+    return this;
+  }
+
+  public adViewDidReceiveAd(bannerView: GADBannerView): void {
+    this.callback(bannerView, null);
+  }
+
+  public adViewDidFailToReceiveAdWithError(bannerView: GADBannerView, error: GADRequestError): void {
+    this.callback(bannerView, error);
+  }
+
+  public adViewDidDismissScreen(bannerView: GADBannerView): void {
+    this.onAdCloseCallback();
+  }
+
+  public adViewWillLeaveApplication(bannerView: GADBannerView): void {
+    this.options.onLeftApplication && this.options.onLeftApplication();
+  }
+}
+
+@NativeClass()
 class GADRewardBasedVideoAdDelegateImpl extends NSObject implements GADRewardBasedVideoAdDelegate {
   public static ObjCProtocols = [];
   _loaded: () => void;

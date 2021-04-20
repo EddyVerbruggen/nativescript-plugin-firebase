@@ -1,0 +1,24 @@
+<ActionBar class="action-bar">
+  <Label class="action-bar-title" text="AutoML"></Label>
+</ActionBar>
+
+<GridLayout>
+
+  <MLKitAutoML
+      width="100%"
+      height="100%"
+      opacity="0.8"
+      localModelResourceFolder="leftright"
+      processEveryNthFrame="60"
+      confidenceThreshold="0.4"
+      (scanResult)="onAutoMLResult($event)">
+  </MLKitAutoML>
+
+  <Label
+      [text]="leftOrRight"
+      style="font-size: 160; color: white"
+      horizontalAlignment="center"
+      verticalAlignment="center">
+  </Label>
+
+</GridLayout>

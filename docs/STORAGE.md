@@ -59,6 +59,16 @@ You can either pass in a full local path to a file, or (as a convenience) use th
   // determine the path to a file in the app/res folder
   var logoPath = appPath + "/res/telerik-logo.png";
 
+  // if you don't want/need to include metadata, pass in an empty object ({}) to avoid errors
+  var metadata = {
+    contentType: "demo/test",
+    contentLanguage: "fr",
+    customMetadata: {
+      "foo": "bar",
+       "foo2": "bar2"
+    }
+  };
+
   // now upload the file with either of the options below:
   firebase.storage.uploadFile({
     // optional, can be omitted since 6.5.0, and also be passed during init() as 'storageBucket' param so we can cache it (find it in the Firebase console)
@@ -73,7 +83,8 @@ You can either pass in a full local path to a file, or (as a convenience) use th
     onProgress: function(status) {
       console.log("Uploaded fraction: " + status.fractionCompleted);
       console.log("Percentage complete: " + status.percentageCompleted);
-    }
+    },
+    metadata
   }).then(
       function (uploadedFile) {
         console.log("File uploaded: " + JSON.stringify(uploadedFile));
@@ -100,7 +111,16 @@ You can either pass in a full local path to a file, or (as a convenience) use th
   const storageRef = firebaseWebApi.storage().ref();
   const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
-  childRef.put(fs.File.fromPath(logoPath)).then(
+  // if you don't want/need to include metadata, pass in an empty object ({}) to avoid errors
+  const metadata = {
+    contentType: "demo/test",
+    contentLanguage: "fr",
+    customMetadata: {
+      "foo": "bar",
+       "foo2": "bar2"
+    }
+  };
+  childRef.put(fs.File.fromPath(logoPath), metadata).then(
       uploadedFile => console.log("Uploaded! " + JSON.stringify(uploadedFile)),
       error => console.log("firebase.doWebUploadFile error: " + error)
   );
@@ -205,6 +225,61 @@ In this example we'll determine the remote URL of the previously uploaded file.
   childRef.getDownloadURL()
       .then(theUrl => console.log("Download url: " + theUrl))
       .catch(error => console.log("Download error: " + error));
+```
+</details>
+
+### listAll
+Note that your security rules must be version "2" for this to work,
+so if it fails try adding this at the top of your rules defined for your storage bucket: `rules_version = '2';`
+
+<details>
+ <summary>Native API</summary>
+
+```js
+  firebase.storage.listAll({
+    // optional, can also be passed during init() as 'storageBucket' param so we can cache it
+    bucket: 'gs://n-plugin-test.appspot.com',
+    // the full path of an existing file in your Firebase storage
+    remoteFullPath: 'uploads/images'
+  }).then(
+      function (result) {
+          console.log(JSON.stringify(result));
+          // see the Web API example below for an advanced example
+      },
+      function (error) {
+          console.log(error);
+      }
+  );
+```
+</details>
+
+<details>
+ <summary>Web API</summary>
+
+#### TypeScript
+
+```typescript
+firebaseWebApi.storage().ref()
+    .child("uploads/images")
+    .listAll()
+    .then(result => {
+      console.log(JSON.stringify(result));
+
+      // dump all items
+      result.items.forEach(item => {
+        item.listAll()
+            .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+            .catch(err => console.log(err))
+      });
+
+      // dump all prefixes
+      result.prefixes.forEach(prefix => {
+        prefix.listAll()
+            .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+            .catch(err => console.log(err))
+      })
+    })
+    .catch(err => console.log(err));
 ```
 </details>
 

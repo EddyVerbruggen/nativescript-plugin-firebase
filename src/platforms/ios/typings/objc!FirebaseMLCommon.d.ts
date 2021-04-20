@@ -5,13 +5,7 @@ declare class FIRLocalModel extends NSObject {
 
 	static new(): FIRLocalModel; // inherited from NSObject
 
-	readonly name: string;
-
 	readonly path: string;
-
-	constructor(o: { name: string; path: string; });
-
-	initWithNamePath(name: string, path: string): this;
 }
 
 declare class FIRModelDownloadConditions extends NSObject implements NSCopying {
@@ -45,19 +39,17 @@ declare class FIRModelManager extends NSObject {
 
 	static modelManager(): FIRModelManager;
 
+	static modelManagerForApp(app: FIRApp): FIRModelManager;
+
 	static new(): FIRModelManager; // inherited from NSObject
 
-	downloadRemoteModel(remoteModel: FIRRemoteModel): NSProgress;
+	readonly downloadedTranslateModels: NSSet<FIRTranslateRemoteModel>;
 
-	isRemoteModelDownloaded(remoteModel: FIRRemoteModel): boolean;
+	deleteDownloadedModelCompletion(remoteModel: FIRRemoteModel, completion: (p1: NSError) => void): void;
 
-	localModelWithName(name: string): FIRLocalModel;
+	downloadModelConditions(remoteModel: FIRRemoteModel, conditions: FIRModelDownloadConditions): NSProgress;
 
-	registerLocalModel(localModel: FIRLocalModel): boolean;
-
-	registerRemoteModel(remoteModel: FIRRemoteModel): boolean;
-
-	remoteModelWithName(name: string): FIRRemoteModel;
+	isModelDownloaded(remoteModel: FIRRemoteModel): boolean;
 }
 
 declare class FIRRemoteModel extends NSObject {
@@ -66,15 +58,5 @@ declare class FIRRemoteModel extends NSObject {
 
 	static new(): FIRRemoteModel; // inherited from NSObject
 
-	readonly allowsModelUpdates: boolean;
-
-	readonly initialConditions: FIRModelDownloadConditions;
-
 	readonly name: string;
-
-	readonly updateConditions: FIRModelDownloadConditions;
-
-	constructor(o: { name: string; allowsModelUpdates: boolean; initialConditions: FIRModelDownloadConditions; updateConditions: FIRModelDownloadConditions; });
-
-	initWithNameAllowsModelUpdatesInitialConditionsUpdateConditions(name: string, allowsModelUpdates: boolean, initialConditions: FIRModelDownloadConditions, updateConditions: FIRModelDownloadConditions): this;
 }

@@ -84,3 +84,41 @@ if (firebaseTrace) {
   firebaseTrace = undefined;
 }
 ```
+
+### `startHttpMetric`
+To be able to interact with a started HTTP metric, you can remember it in a property (in this case `firebaseHttpMetric`):
+
+```typescript
+import { performance as firebasePerformance } from "nativescript-plugin-firebase";
+import { FirebaseHttpMetric } from "nativescript-plugin-firebase/performance/performance";
+
+const firebaseHttpMetric: FirebaseHttpMetric = firebasePerformance.startHttpMetric("https://postman-echo.com/get", "GET");
+```
+
+Now you can call several functions on the remembered metric object, read on below. And don't forget to use `metric.stop` afterwards.
+
+### `metric.setRequestPayloadSize`
+
+```typescript
+if (firebaseHttpMetric) {
+  firebaseHttpMetric.setRequestPayloadSize(42);
+}
+```
+
+### `metric.setHttpResponseCode`
+
+```typescript
+if (firebaseHttpMetric) {
+  firebaseHttpMetric.setHttpResponseCode(200);
+}
+```
+
+### `metric.stop`
+To stop the metric, call `stop` on the remembered metric object:
+
+```typescript
+if (firebaseHttpMetric) {
+  firebaseHttpMetric.stop();
+  firebaseHttpMetric = undefined;
+}
+```

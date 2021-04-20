@@ -183,6 +183,7 @@ declare module com {
 					public static FLAVOR: string;
 					public static VERSION_CODE: number;
 					public static VERSION_NAME: string;
+					public static USE_EMULATOR_FOR_TESTS: boolean;
 					public constructor();
 				}
 			}
@@ -230,6 +231,24 @@ declare module com {
 						public static valueOf(param0: string): com.google.firebase.firestore.DocumentChange.Type;
 						public static values(): native.Array<com.google.firebase.firestore.DocumentChange.Type>;
 					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export class DocumentId {
+					public static class: java.lang.Class<com.google.firebase.firestore.DocumentId>;
+					/**
+					 * Constructs a new instance of the com.google.firebase.firestore.DocumentId interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+					 */
+					public constructor(implementation: {
+					});
+					public constructor();
 				}
 			}
 		}
@@ -309,6 +328,9 @@ declare module com {
 					public getMetadata(): com.google.firebase.firestore.SnapshotMetadata;
 				}
 				export module DocumentSnapshot {
+					export class FieldValueOptions {
+						public static class: java.lang.Class<com.google.firebase.firestore.DocumentSnapshot.FieldValueOptions>;
+					}
 					export class ServerTimestampBehavior {
 						public static class: java.lang.Class<com.google.firebase.firestore.DocumentSnapshot.ServerTimestampBehavior>;
 						public static NONE: com.google.firebase.firestore.DocumentSnapshot.ServerTimestampBehavior;
@@ -423,15 +445,34 @@ declare module com {
 					public static getInstance(param0: com.google.firebase.FirebaseApp): com.google.firebase.firestore.FirebaseFirestore;
 					public collection(param0: string): com.google.firebase.firestore.CollectionReference;
 					public collectionGroup(param0: string): com.google.firebase.firestore.Query;
+					public waitForPendingWrites(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public getApp(): com.google.firebase.FirebaseApp;
 					public disableNetwork(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public static setLoggingEnabled(param0: boolean): void;
 					public enableNetwork(): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public addSnapshotsInSyncListener(param0: java.util.concurrent.Executor, param1: java.lang.Runnable): com.google.firebase.firestore.ListenerRegistration;
 					public runTransaction(param0: com.google.firebase.firestore.Transaction.Function<any>): com.google.android.gms.tasks.Task;
 					public batch(): com.google.firebase.firestore.WriteBatch;
 					public runBatch(param0: com.google.firebase.firestore.WriteBatch.Function): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public addSnapshotsInSyncListener(param0: java.lang.Runnable): com.google.firebase.firestore.ListenerRegistration;
 					public setFirestoreSettings(param0: com.google.firebase.firestore.FirebaseFirestoreSettings): void;
+					public clearPersistence(): com.google.android.gms.tasks.Task<java.lang.Void>;
+					public addSnapshotsInSyncListener(param0: globalAndroid.app.Activity, param1: java.lang.Runnable): com.google.firebase.firestore.ListenerRegistration;
+					public terminate(): com.google.android.gms.tasks.Task<java.lang.Void>;
 					public getFirestoreSettings(): com.google.firebase.firestore.FirebaseFirestoreSettings;
+				}
+				export module FirebaseFirestore {
+					export class InstanceRegistry {
+						public static class: java.lang.Class<com.google.firebase.firestore.FirebaseFirestore.InstanceRegistry>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.firestore.FirebaseFirestore$InstanceRegistry interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							remove(param0: string): void;
+						});
+						public constructor();
+						public remove(param0: string): void;
+					}
 				}
 			}
 		}
@@ -500,10 +541,14 @@ declare module com {
 						public static class: java.lang.Class<com.google.firebase.firestore.FirebaseFirestoreSettings.Builder>;
 						public setCacheSizeBytes(param0: number): com.google.firebase.firestore.FirebaseFirestoreSettings.Builder;
 						public constructor();
+						public isPersistenceEnabled(): boolean;
+						public getCacheSizeBytes(): number;
 						public setPersistenceEnabled(param0: boolean): com.google.firebase.firestore.FirebaseFirestoreSettings.Builder;
 						public build(): com.google.firebase.firestore.FirebaseFirestoreSettings;
 						public setHost(param0: string): com.google.firebase.firestore.FirebaseFirestoreSettings.Builder;
+						public getHost(): string;
 						public setTimestampsInSnapshotsEnabled(param0: boolean): com.google.firebase.firestore.FirebaseFirestoreSettings.Builder;
+						public isSslEnabled(): boolean;
 						public setSslEnabled(param0: boolean): com.google.firebase.firestore.FirebaseFirestoreSettings.Builder;
 						public constructor(param0: com.google.firebase.firestore.FirebaseFirestoreSettings);
 					}
@@ -517,8 +562,10 @@ declare module com {
 	export module google {
 		export module firebase {
 			export module firestore {
-				export class FirestoreMultiDbComponent {
+				export class FirestoreMultiDbComponent extends com.google.firebase.firestore.FirebaseFirestore.InstanceRegistry {
 					public static class: java.lang.Class<com.google.firebase.firestore.FirestoreMultiDbComponent>;
+					public remove(param0: string): void;
+					public onDeleted(param0: string, param1: com.google.firebase.FirebaseOptions): void;
 				}
 			}
 		}
@@ -641,6 +688,7 @@ declare module com {
 					public get(param0: com.google.firebase.firestore.Source): com.google.android.gms.tasks.Task<com.google.firebase.firestore.QuerySnapshot>;
 					public whereEqualTo(param0: string, param1: any): com.google.firebase.firestore.Query;
 					public orderBy(param0: com.google.firebase.firestore.FieldPath, param1: com.google.firebase.firestore.Query.Direction): com.google.firebase.firestore.Query;
+					public whereArrayContainsAny(param0: string, param1: java.util.List<any>): com.google.firebase.firestore.Query;
 					public endBefore(param0: com.google.firebase.firestore.DocumentSnapshot): com.google.firebase.firestore.Query;
 					public endAt(param0: native.Array<any>): com.google.firebase.firestore.Query;
 					public addSnapshotListener(param0: com.google.firebase.firestore.MetadataChanges, param1: com.google.firebase.firestore.EventListener<com.google.firebase.firestore.QuerySnapshot>): com.google.firebase.firestore.ListenerRegistration;
@@ -650,6 +698,7 @@ declare module com {
 					public whereLessThanOrEqualTo(param0: string, param1: any): com.google.firebase.firestore.Query;
 					public whereArrayContains(param0: string, param1: any): com.google.firebase.firestore.Query;
 					public whereEqualTo(param0: com.google.firebase.firestore.FieldPath, param1: any): com.google.firebase.firestore.Query;
+					public whereIn(param0: string, param1: java.util.List<any>): com.google.firebase.firestore.Query;
 					public whereLessThan(param0: com.google.firebase.firestore.FieldPath, param1: any): com.google.firebase.firestore.Query;
 					public whereGreaterThanOrEqualTo(param0: com.google.firebase.firestore.FieldPath, param1: any): com.google.firebase.firestore.Query;
 					public getFirestore(): com.google.firebase.firestore.FirebaseFirestore;
@@ -663,10 +712,12 @@ declare module com {
 					public whereGreaterThan(param0: com.google.firebase.firestore.FieldPath, param1: any): com.google.firebase.firestore.Query;
 					public addSnapshotListener(param0: com.google.firebase.firestore.EventListener<com.google.firebase.firestore.QuerySnapshot>): com.google.firebase.firestore.ListenerRegistration;
 					public whereLessThan(param0: string, param1: any): com.google.firebase.firestore.Query;
+					public whereArrayContainsAny(param0: com.google.firebase.firestore.FieldPath, param1: java.util.List<any>): com.google.firebase.firestore.Query;
 					public addSnapshotListener(param0: java.util.concurrent.Executor, param1: com.google.firebase.firestore.MetadataChanges, param2: com.google.firebase.firestore.EventListener<com.google.firebase.firestore.QuerySnapshot>): com.google.firebase.firestore.ListenerRegistration;
 					public endBefore(param0: native.Array<any>): com.google.firebase.firestore.Query;
 					public startAt(param0: com.google.firebase.firestore.DocumentSnapshot): com.google.firebase.firestore.Query;
 					public startAfter(param0: com.google.firebase.firestore.DocumentSnapshot): com.google.firebase.firestore.Query;
+					public whereIn(param0: com.google.firebase.firestore.FieldPath, param1: java.util.List<any>): com.google.firebase.firestore.Query;
 					public endAt(param0: com.google.firebase.firestore.DocumentSnapshot): com.google.firebase.firestore.Query;
 					public equals(param0: any): boolean;
 					public orderBy(param0: string, param1: com.google.firebase.firestore.Query.Direction): com.google.firebase.firestore.Query;
@@ -1041,6 +1092,36 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module core {
+					export class ArrayContainsAnyFilter extends com.google.firebase.firestore.core.FieldFilter {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.ArrayContainsAnyFilter>;
+						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
+					export class ArrayContainsFilter extends com.google.firebase.firestore.core.FieldFilter {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.ArrayContainsFilter>;
+						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
 					export class AsyncEventListener<T>  extends com.google.firebase.firestore.EventListener<any> {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.AsyncEventListener<any>>;
 						public constructor(param0: java.util.concurrent.Executor, param1: com.google.firebase.firestore.EventListener<any>);
@@ -1150,10 +1231,12 @@ declare module com {
 					export class EventManager extends com.google.firebase.firestore.core.SyncEngine.SyncEngineCallback {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.EventManager>;
 						public onError(param0: com.google.firebase.firestore.core.Query, param1: io.grpc.Status): void;
+						public removeQueryListener(param0: com.google.firebase.firestore.core.QueryListener): void;
+						public removeSnapshotsInSyncListener(param0: com.google.firebase.firestore.EventListener<java.lang.Void>): void;
 						public handleOnlineStateChange(param0: com.google.firebase.firestore.core.OnlineState): void;
 						public constructor(param0: com.google.firebase.firestore.core.SyncEngine);
 						public addQueryListener(param0: com.google.firebase.firestore.core.QueryListener): number;
-						public removeQueryListener(param0: com.google.firebase.firestore.core.QueryListener): boolean;
+						public addSnapshotsInSyncListener(param0: com.google.firebase.firestore.EventListener<java.lang.Void>): void;
 						public onViewSnapshots(param0: java.util.List<com.google.firebase.firestore.core.ViewSnapshot>): void;
 					}
 					export module EventManager {
@@ -1179,12 +1262,38 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module core {
+					export class FieldFilter extends com.google.firebase.firestore.core.Filter {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.FieldFilter>;
+						public isInequality(): boolean;
+						public constructor();
+						public getValue(): com.google.firebase.firestore.model.value.FieldValue;
+						public equals(param0: any): boolean;
+						public hashCode(): number;
+						public constructor(param0: com.google.firebase.firestore.model.FieldPath, param1: com.google.firebase.firestore.core.Filter.Operator, param2: com.google.firebase.firestore.model.value.FieldValue);
+						public static create(param0: com.google.firebase.firestore.model.FieldPath, param1: com.google.firebase.firestore.core.Filter.Operator, param2: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.core.FieldFilter;
+						public toString(): string;
+						public getField(): com.google.firebase.firestore.model.FieldPath;
+						public getCanonicalId(): string;
+						public getOperator(): com.google.firebase.firestore.core.Filter.Operator;
+						public matchesComparison(param0: number): boolean;
+						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
 					export abstract class Filter {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.Filter>;
 						public getField(): com.google.firebase.firestore.model.FieldPath;
 						public getCanonicalId(): string;
 						public constructor();
-						public static create(param0: com.google.firebase.firestore.model.FieldPath, param1: com.google.firebase.firestore.core.Filter.Operator, param2: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.core.Filter;
 						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
 					}
 					export module Filter {
@@ -1196,6 +1305,8 @@ declare module com {
 							public static GREATER_THAN: com.google.firebase.firestore.core.Filter.Operator;
 							public static GREATER_THAN_OR_EQUAL: com.google.firebase.firestore.core.Filter.Operator;
 							public static ARRAY_CONTAINS: com.google.firebase.firestore.core.Filter.Operator;
+							public static ARRAY_CONTAINS_ANY: com.google.firebase.firestore.core.Filter.Operator;
+							public static IN: com.google.firebase.firestore.core.Filter.Operator;
 							public static valueOf(param0: string): com.google.firebase.firestore.core.Filter.Operator;
 							public toString(): string;
 							public static values(): native.Array<com.google.firebase.firestore.core.Filter.Operator>;
@@ -1214,10 +1325,11 @@ declare module com {
 				export module core {
 					export class FirestoreClient extends com.google.firebase.firestore.remote.RemoteStore.RemoteStoreCallback {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.FirestoreClient>;
-						public transaction(param0: com.google.common.base.Function, param1: number): com.google.android.gms.tasks.Task;
+						public terminate(): com.google.android.gms.tasks.Task<java.lang.Void>;
+						public isTerminated(): boolean;
+						public removeSnapshotsInSyncListener(param0: com.google.firebase.firestore.EventListener<java.lang.Void>): void;
 						public disableNetwork(): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public handleRejectedListen(param0: number, param1: io.grpc.Status): void;
-						public constructor(param0: globalAndroid.content.Context, param1: com.google.firebase.firestore.core.DatabaseInfo, param2: com.google.firebase.firestore.FirebaseFirestoreSettings, param3: com.google.firebase.firestore.auth.CredentialsProvider, param4: com.google.firebase.firestore.util.AsyncQueue);
 						public getDocumentFromLocalCache(param0: com.google.firebase.firestore.model.DocumentKey): com.google.android.gms.tasks.Task<com.google.firebase.firestore.model.Document>;
 						public handleRejectedWrite(param0: number, param1: io.grpc.Status): void;
 						public stopListening(param0: com.google.firebase.firestore.core.QueryListener): void;
@@ -1225,12 +1337,29 @@ declare module com {
 						public enableNetwork(): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public write(param0: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public handleRemoteEvent(param0: com.google.firebase.firestore.remote.RemoteEvent): void;
-						public isShutdown(): boolean;
 						public handleOnlineStateChange(param0: com.google.firebase.firestore.core.OnlineState): void;
 						public handleSuccessfulWrite(param0: com.google.firebase.firestore.model.mutation.MutationBatchResult): void;
+						public constructor(param0: globalAndroid.content.Context, param1: com.google.firebase.firestore.core.DatabaseInfo, param2: com.google.firebase.firestore.FirebaseFirestoreSettings, param3: com.google.firebase.firestore.auth.CredentialsProvider, param4: com.google.firebase.firestore.util.AsyncQueue, param5: com.google.firebase.firestore.remote.GrpcMetadataProvider);
 						public getDocumentsFromLocalCache(param0: com.google.firebase.firestore.core.Query): com.google.android.gms.tasks.Task<com.google.firebase.firestore.core.ViewSnapshot>;
+						public waitForPendingWrites(): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public getRemoteKeysForTarget(param0: number): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
-						public shutdown(): com.google.android.gms.tasks.Task<java.lang.Void>;
+						public addSnapshotsInSyncListener(param0: com.google.firebase.firestore.EventListener<java.lang.Void>): void;
+						public transaction(param0: com.google.common.base.Function): com.google.android.gms.tasks.Task;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
+					export class InFilter extends com.google.firebase.firestore.core.FieldFilter {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.InFilter>;
+						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
 					}
 				}
 			}
@@ -1259,6 +1388,36 @@ declare module com {
 							public setFieldPath(param0: com.google.firebase.firestore.model.FieldPath): com.google.firebase.firestore.core.IndexRange.Builder;
 							public setEnd(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.core.IndexRange.Builder;
 						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
+					export class KeyFieldFilter extends com.google.firebase.firestore.core.FieldFilter {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.KeyFieldFilter>;
+						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
+					export class KeyFieldInFilter extends com.google.firebase.firestore.core.FieldFilter {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.KeyFieldInFilter>;
+						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
 					}
 				}
 			}
@@ -1320,50 +1479,6 @@ declare module com {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.ListenerRegistrationImpl>;
 						public constructor(param0: com.google.firebase.firestore.core.FirestoreClient, param1: com.google.firebase.firestore.core.QueryListener, param2: com.google.firebase.firestore.core.AsyncEventListener<com.google.firebase.firestore.core.ViewSnapshot>);
 						public remove(): void;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module core {
-					export class NaNFilter extends com.google.firebase.firestore.core.Filter {
-						public static class: java.lang.Class<com.google.firebase.firestore.core.NaNFilter>;
-						public getField(): com.google.firebase.firestore.model.FieldPath;
-						public getCanonicalId(): string;
-						public constructor();
-						public constructor(param0: com.google.firebase.firestore.model.FieldPath);
-						public equals(param0: any): boolean;
-						public hashCode(): number;
-						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module core {
-					export class NullFilter extends com.google.firebase.firestore.core.Filter {
-						public static class: java.lang.Class<com.google.firebase.firestore.core.NullFilter>;
-						public getField(): com.google.firebase.firestore.model.FieldPath;
-						public getCanonicalId(): string;
-						public constructor();
-						public constructor(param0: com.google.firebase.firestore.model.FieldPath);
-						public equals(param0: any): boolean;
-						public hashCode(): number;
-						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
-						public toString(): string;
 					}
 				}
 			}
@@ -1444,10 +1559,11 @@ declare module com {
 						public filter(param0: com.google.firebase.firestore.core.Filter): com.google.firebase.firestore.core.Query;
 						public endAt(param0: com.google.firebase.firestore.core.Bound): com.google.firebase.firestore.core.Query;
 						public getLimit(): number;
+						public matchesAllDocuments(): boolean;
 						public getExplicitOrderBy(): java.util.List<com.google.firebase.firestore.core.OrderBy>;
 						public hasLimit(): boolean;
 						public limit(param0: number): com.google.firebase.firestore.core.Query;
-						public hasArrayContainsFilter(): boolean;
+						public findFilterOperator(param0: java.util.List<com.google.firebase.firestore.core.Filter.Operator>): com.google.firebase.firestore.core.Filter.Operator;
 						public getCollectionGroup(): string;
 						public toString(): string;
 						public orderBy(param0: com.google.firebase.firestore.core.OrderBy): com.google.firebase.firestore.core.Query;
@@ -1478,8 +1594,8 @@ declare module com {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.QueryListener>;
 						public constructor(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.core.EventManager.ListenOptions, param2: com.google.firebase.firestore.EventListener<com.google.firebase.firestore.core.ViewSnapshot>);
 						public getQuery(): com.google.firebase.firestore.core.Query;
-						public onOnlineStateChanged(param0: com.google.firebase.firestore.core.OnlineState): void;
-						public onViewSnapshot(param0: com.google.firebase.firestore.core.ViewSnapshot): void;
+						public onViewSnapshot(param0: com.google.firebase.firestore.core.ViewSnapshot): boolean;
+						public onOnlineStateChanged(param0: com.google.firebase.firestore.core.OnlineState): boolean;
 						public onError(param0: com.google.firebase.firestore.FirebaseFirestoreException): void;
 					}
 				}
@@ -1510,40 +1626,18 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module core {
-					export class RelationFilter extends com.google.firebase.firestore.core.Filter {
-						public static class: java.lang.Class<com.google.firebase.firestore.core.RelationFilter>;
-						public isInequality(): boolean;
-						public getField(): com.google.firebase.firestore.model.FieldPath;
-						public getCanonicalId(): string;
-						public getOperator(): com.google.firebase.firestore.core.Filter.Operator;
-						public getValue(): com.google.firebase.firestore.model.value.FieldValue;
-						public equals(param0: any): boolean;
-						public hashCode(): number;
-						public matches(param0: com.google.firebase.firestore.model.Document): boolean;
-						public toString(): string;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module core {
 					export class SyncEngine extends com.google.firebase.firestore.remote.RemoteStore.RemoteStoreCallback {
 						public static class: java.lang.Class<com.google.firebase.firestore.core.SyncEngine>;
+						public registerPendingWritesTask(param0: com.google.android.gms.tasks.TaskCompletionSource<java.lang.Void>): void;
 						public writeMutations(param0: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>, param1: com.google.android.gms.tasks.TaskCompletionSource<java.lang.Void>): void;
 						public getCurrentLimboDocuments(): java.util.Map<com.google.firebase.firestore.model.DocumentKey,java.lang.Integer>;
 						public constructor(param0: com.google.firebase.firestore.local.LocalStore, param1: com.google.firebase.firestore.remote.RemoteStore, param2: com.google.firebase.firestore.auth.User);
 						public handleRejectedListen(param0: number, param1: io.grpc.Status): void;
+						public transaction(param0: com.google.firebase.firestore.util.AsyncQueue, param1: com.google.common.base.Function): com.google.android.gms.tasks.Task;
 						public handleRejectedWrite(param0: number, param1: io.grpc.Status): void;
 						public handleCredentialChange(param0: com.google.firebase.firestore.auth.User): void;
 						public handleRemoteEvent(param0: com.google.firebase.firestore.remote.RemoteEvent): void;
 						public setCallback(param0: com.google.firebase.firestore.core.SyncEngine.SyncEngineCallback): void;
-						public transaction(param0: com.google.firebase.firestore.util.AsyncQueue, param1: com.google.common.base.Function, param2: number): com.google.android.gms.tasks.Task;
 						public handleOnlineStateChange(param0: com.google.firebase.firestore.core.OnlineState): void;
 						public handleSuccessfulWrite(param0: com.google.firebase.firestore.model.mutation.MutationBatchResult): void;
 						public getRemoteKeysForTarget(param0: number): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
@@ -1606,6 +1700,22 @@ declare module com {
 						public lookup(param0: java.util.List<com.google.firebase.firestore.model.DocumentKey>): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.firestore.model.MaybeDocument>>;
 						public commit(): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public constructor(param0: com.google.firebase.firestore.remote.Datastore);
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module core {
+					export class TransactionRunner<TResult>  extends java.lang.Object {
+						public static class: java.lang.Class<com.google.firebase.firestore.core.TransactionRunner<any>>;
+						public constructor(param0: com.google.firebase.firestore.util.AsyncQueue, param1: com.google.firebase.firestore.remote.RemoteStore, param2: com.google.common.base.Function<com.google.firebase.firestore.core.Transaction,com.google.android.gms.tasks.Task<TResult>>);
+						public run(): com.google.android.gms.tasks.Task<TResult>;
 					}
 				}
 			}
@@ -1806,6 +1916,24 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module local {
+					export class IndexFreeQueryEngine extends com.google.firebase.firestore.local.QueryEngine {
+						public static class: java.lang.Class<com.google.firebase.firestore.local.IndexFreeQueryEngine>;
+						public constructor();
+						public handleDocumentChange(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument): void;
+						public getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public setLocalDocumentsView(param0: com.google.firebase.firestore.local.LocalDocumentsView): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module local {
 					export class IndexManager {
 						public static class: java.lang.Class<com.google.firebase.firestore.local.IndexManager>;
 						/**
@@ -1832,9 +1960,10 @@ declare module com {
 				export module local {
 					export class IndexedQueryEngine extends com.google.firebase.firestore.local.QueryEngine {
 						public static class: java.lang.Class<com.google.firebase.firestore.local.IndexedQueryEngine>;
-						public constructor(param0: com.google.firebase.firestore.local.LocalDocumentsView, param1: com.google.firebase.firestore.local.SQLiteCollectionIndex);
-						public getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
 						public handleDocumentChange(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument): void;
+						public getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public setLocalDocumentsView(param0: com.google.firebase.firestore.local.LocalDocumentsView): void;
+						public constructor(param0: com.google.firebase.firestore.local.SQLiteCollectionIndex);
 					}
 				}
 			}
@@ -1878,14 +2007,14 @@ declare module com {
 				export module local {
 					export class LocalStore {
 						public static class: java.lang.Class<com.google.firebase.firestore.local.LocalStore>;
+						public getHighestUnacknowledgedBatchId(): number;
 						public getLastStreamToken(): com.google.protobuf.ByteString;
+						public constructor(param0: com.google.firebase.firestore.local.Persistence, param1: com.google.firebase.firestore.local.QueryEngine, param2: com.google.firebase.firestore.auth.User);
 						public applyRemoteEvent(param0: com.google.firebase.firestore.remote.RemoteEvent): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
 						public handleUserChange(param0: com.google.firebase.firestore.auth.User): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
 						public getNextMutationBatch(param0: number): com.google.firebase.firestore.model.mutation.MutationBatch;
-						public executeQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
 						public acknowledgeBatch(param0: com.google.firebase.firestore.model.mutation.MutationBatchResult): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
 						public getRemoteDocumentKeys(param0: number): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
-						public constructor(param0: com.google.firebase.firestore.local.Persistence, param1: com.google.firebase.firestore.auth.User);
 						public notifyLocalViewChanges(param0: java.util.List<com.google.firebase.firestore.local.LocalViewChanges>): void;
 						public getLastRemoteSnapshotVersion(): com.google.firebase.firestore.model.SnapshotVersion;
 						public allocateQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.firestore.local.QueryData;
@@ -1895,6 +2024,7 @@ declare module com {
 						public writeLocally(param0: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.firebase.firestore.local.LocalWriteResult;
 						public rejectBatch(param0: number): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
 						public readDocument(param0: com.google.firebase.firestore.model.DocumentKey): com.google.firebase.firestore.model.MaybeDocument;
+						public executeQuery(param0: com.google.firebase.firestore.core.Query, param1: boolean): com.google.firebase.firestore.local.QueryResult;
 						public setLastStreamToken(param0: com.google.protobuf.ByteString): void;
 					}
 					export module LocalStore {
@@ -1918,8 +2048,9 @@ declare module com {
 						public getTargetId(): number;
 						public static fromViewSnapshot(param0: number, param1: com.google.firebase.firestore.core.ViewSnapshot): com.google.firebase.firestore.local.LocalViewChanges;
 						public getAdded(): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
-						public constructor(param0: number, param1: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>, param2: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>);
 						public getRemoved(): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
+						public isFromCache(): boolean;
+						public constructor(param0: number, param1: boolean, param2: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>, param3: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>);
 					}
 				}
 			}
@@ -2100,6 +2231,7 @@ declare module com {
 						public getAllMutationBatchesAffectingDocumentKey(param0: com.google.firebase.firestore.model.DocumentKey): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 						public getAllMutationBatchesAffectingDocumentKeys(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 						public getLastStreamToken(): com.google.protobuf.ByteString;
+						public getHighestUnacknowledgedBatchId(): number;
 						public lookupMutationBatch(param0: number): com.google.firebase.firestore.model.mutation.MutationBatch;
 						public addMutationBatch(param0: com.google.firebase.Timestamp, param1: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>, param2: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.firebase.firestore.model.mutation.MutationBatch;
 						public acknowledgeBatch(param0: com.google.firebase.firestore.model.mutation.MutationBatch, param1: com.google.protobuf.ByteString): void;
@@ -2173,10 +2305,16 @@ declare module com {
 					export class MemoryRemoteDocumentCache extends com.google.firebase.firestore.local.RemoteDocumentCache {
 						public static class: java.lang.Class<com.google.firebase.firestore.local.MemoryRemoteDocumentCache>;
 						public getAll(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.Map<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
-						public getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
-						public add(param0: com.google.firebase.firestore.model.MaybeDocument): void;
+						public getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public add(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.SnapshotVersion): void;
 						public remove(param0: com.google.firebase.firestore.model.DocumentKey): void;
 						public get(param0: com.google.firebase.firestore.model.DocumentKey): com.google.firebase.firestore.model.MaybeDocument;
+					}
+					export module MemoryRemoteDocumentCache {
+						export class DocumentIterable extends java.lang.Iterable<com.google.firebase.firestore.model.MaybeDocument> {
+							public static class: java.lang.Class<com.google.firebase.firestore.local.MemoryRemoteDocumentCache.DocumentIterable>;
+							public iterator(): java.util.Iterator<com.google.firebase.firestore.model.MaybeDocument>;
+						}
 					}
 				}
 			}
@@ -2203,6 +2341,7 @@ declare module com {
 							addMutationBatch(param0: com.google.firebase.Timestamp, param1: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>, param2: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.firebase.firestore.model.mutation.MutationBatch;
 							lookupMutationBatch(param0: number): com.google.firebase.firestore.model.mutation.MutationBatch;
 							getNextMutationBatchAfterBatchId(param0: number): com.google.firebase.firestore.model.mutation.MutationBatch;
+							getHighestUnacknowledgedBatchId(): number;
 							getAllMutationBatches(): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 							getAllMutationBatchesAffectingDocumentKey(param0: com.google.firebase.firestore.model.DocumentKey): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 							getAllMutationBatchesAffectingDocumentKeys(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
@@ -2214,6 +2353,7 @@ declare module com {
 						public getAllMutationBatchesAffectingDocumentKey(param0: com.google.firebase.firestore.model.DocumentKey): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 						public getAllMutationBatchesAffectingDocumentKeys(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 						public getLastStreamToken(): com.google.protobuf.ByteString;
+						public getHighestUnacknowledgedBatchId(): number;
 						public lookupMutationBatch(param0: number): com.google.firebase.firestore.model.mutation.MutationBatch;
 						public addMutationBatch(param0: com.google.firebase.Timestamp, param1: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>, param2: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.firebase.firestore.model.mutation.MutationBatch;
 						public acknowledgeBatch(param0: com.google.firebase.firestore.model.mutation.MutationBatch, param1: com.google.protobuf.ByteString): void;
@@ -2305,18 +2445,20 @@ declare module com {
 				export module local {
 					export class QueryData {
 						public static class: java.lang.Class<com.google.firebase.firestore.local.QueryData>;
-						public getQuery(): com.google.firebase.firestore.core.Query;
-						public getTargetId(): number;
+						public withLastLimboFreeSnapshotVersion(param0: com.google.firebase.firestore.model.SnapshotVersion): com.google.firebase.firestore.local.QueryData;
 						public getPurpose(): com.google.firebase.firestore.local.QueryPurpose;
-						public getResumeToken(): com.google.protobuf.ByteString;
+						public getLastLimboFreeSnapshotVersion(): com.google.firebase.firestore.model.SnapshotVersion;
 						public getSequenceNumber(): number;
-						public getSnapshotVersion(): com.google.firebase.firestore.model.SnapshotVersion;
-						public constructor(param0: com.google.firebase.firestore.core.Query, param1: number, param2: number, param3: com.google.firebase.firestore.local.QueryPurpose);
 						public equals(param0: any): boolean;
 						public hashCode(): number;
-						public copy(param0: com.google.firebase.firestore.model.SnapshotVersion, param1: com.google.protobuf.ByteString, param2: number): com.google.firebase.firestore.local.QueryData;
-						public constructor(param0: com.google.firebase.firestore.core.Query, param1: number, param2: number, param3: com.google.firebase.firestore.local.QueryPurpose, param4: com.google.firebase.firestore.model.SnapshotVersion, param5: com.google.protobuf.ByteString);
+						public withResumeToken(param0: com.google.protobuf.ByteString, param1: com.google.firebase.firestore.model.SnapshotVersion): com.google.firebase.firestore.local.QueryData;
 						public toString(): string;
+						public withSequenceNumber(param0: number): com.google.firebase.firestore.local.QueryData;
+						public getQuery(): com.google.firebase.firestore.core.Query;
+						public getTargetId(): number;
+						public getResumeToken(): com.google.protobuf.ByteString;
+						public getSnapshotVersion(): com.google.firebase.firestore.model.SnapshotVersion;
+						public constructor(param0: com.google.firebase.firestore.core.Query, param1: number, param2: number, param3: com.google.firebase.firestore.local.QueryPurpose);
 					}
 				}
 			}
@@ -2335,12 +2477,14 @@ declare module com {
 						 * Constructs a new instance of the com.google.firebase.firestore.local.QueryEngine interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 						 */
 						public constructor(implementation: {
-							getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+							setLocalDocumentsView(param0: com.google.firebase.firestore.local.LocalDocumentsView): void;
+							getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
 							handleDocumentChange(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument): void;
 						});
 						public constructor();
-						public getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
 						public handleDocumentChange(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument): void;
+						public getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public setLocalDocumentsView(param0: com.google.firebase.firestore.local.LocalDocumentsView): void;
 					}
 				}
 			}
@@ -2360,6 +2504,23 @@ declare module com {
 						public static LIMBO_RESOLUTION: com.google.firebase.firestore.local.QueryPurpose;
 						public static values(): native.Array<com.google.firebase.firestore.local.QueryPurpose>;
 						public static valueOf(param0: string): com.google.firebase.firestore.local.QueryPurpose;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module local {
+					export class QueryResult {
+						public static class: java.lang.Class<com.google.firebase.firestore.local.QueryResult>;
+						public getRemoteKeys(): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
+						public getDocuments(): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public constructor(param0: com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>, param1: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>);
 					}
 				}
 			}
@@ -2440,16 +2601,16 @@ declare module com {
 						 * Constructs a new instance of the com.google.firebase.firestore.local.RemoteDocumentCache interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
 						 */
 						public constructor(implementation: {
-							add(param0: com.google.firebase.firestore.model.MaybeDocument): void;
+							add(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.SnapshotVersion): void;
 							remove(param0: com.google.firebase.firestore.model.DocumentKey): void;
 							get(param0: com.google.firebase.firestore.model.DocumentKey): com.google.firebase.firestore.model.MaybeDocument;
 							getAll(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.Map<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
-							getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+							getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
 						});
 						public constructor();
 						public getAll(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.Map<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
-						public getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
-						public add(param0: com.google.firebase.firestore.model.MaybeDocument): void;
+						public getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public add(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.SnapshotVersion): void;
 						public remove(param0: com.google.firebase.firestore.model.DocumentKey): void;
 						public get(param0: com.google.firebase.firestore.model.DocumentKey): com.google.firebase.firestore.model.MaybeDocument;
 					}
@@ -2532,6 +2693,7 @@ declare module com {
 						public getAllMutationBatchesAffectingDocumentKey(param0: com.google.firebase.firestore.model.DocumentKey): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 						public getAllMutationBatchesAffectingDocumentKeys(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.List<com.google.firebase.firestore.model.mutation.MutationBatch>;
 						public getLastStreamToken(): com.google.protobuf.ByteString;
+						public getHighestUnacknowledgedBatchId(): number;
 						public lookupMutationBatch(param0: number): com.google.firebase.firestore.model.mutation.MutationBatch;
 						public addMutationBatch(param0: com.google.firebase.Timestamp, param1: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>, param2: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.firebase.firestore.model.mutation.MutationBatch;
 						public acknowledgeBatch(param0: com.google.firebase.firestore.model.mutation.MutationBatch, param1: com.google.protobuf.ByteString): void;
@@ -2567,6 +2729,7 @@ declare module com {
 						public getReferenceDelegate(): com.google.firebase.firestore.local.SQLiteLruReferenceDelegate;
 						public shutdown(): void;
 						public constructor(param0: globalAndroid.content.Context, param1: string, param2: com.google.firebase.firestore.model.DatabaseId, param3: com.google.firebase.firestore.local.LocalSerializer, param4: com.google.firebase.firestore.local.LruGarbageCollector.Params);
+						public constructor(param0: com.google.firebase.firestore.local.LocalSerializer, param1: com.google.firebase.firestore.local.LruGarbageCollector.Params, param2: globalAndroid.database.sqlite.SQLiteOpenHelper);
 						public start(): void;
 						public isStarted(): boolean;
 						public static databaseName(param0: string, param1: com.google.firebase.firestore.model.DatabaseId): string;
@@ -2638,8 +2801,8 @@ declare module com {
 					export class SQLiteRemoteDocumentCache extends com.google.firebase.firestore.local.RemoteDocumentCache {
 						public static class: java.lang.Class<com.google.firebase.firestore.local.SQLiteRemoteDocumentCache>;
 						public getAll(param0: java.lang.Iterable<com.google.firebase.firestore.model.DocumentKey>): java.util.Map<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.MaybeDocument>;
-						public getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
-						public add(param0: com.google.firebase.firestore.model.MaybeDocument): void;
+						public getAllDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public add(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.SnapshotVersion): void;
 						public remove(param0: com.google.firebase.firestore.model.DocumentKey): void;
 						public get(param0: com.google.firebase.firestore.model.DocumentKey): com.google.firebase.firestore.model.MaybeDocument;
 					}
@@ -2670,9 +2833,10 @@ declare module com {
 				export module local {
 					export class SimpleQueryEngine extends com.google.firebase.firestore.local.QueryEngine {
 						public static class: java.lang.Class<com.google.firebase.firestore.local.SimpleQueryEngine>;
-						public constructor(param0: com.google.firebase.firestore.local.LocalDocumentsView);
-						public getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public constructor();
 						public handleDocumentChange(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument): void;
+						public getDocumentsMatchingQuery(param0: com.google.firebase.firestore.core.Query, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>): com.google.firebase.database.collection.ImmutableSortedMap<com.google.firebase.firestore.model.DocumentKey,com.google.firebase.firestore.model.Document>;
+						public setLocalDocumentsView(param0: com.google.firebase.firestore.local.LocalDocumentsView): void;
 					}
 				}
 			}
@@ -2746,16 +2910,16 @@ declare module com {
 						public getProto(): com.google.firestore.v1.Document;
 						public getField(param0: com.google.firebase.firestore.model.FieldPath): com.google.firebase.firestore.model.value.FieldValue;
 						public hasCommittedMutations(): boolean;
-						public constructor(param0: com.google.firebase.firestore.model.DocumentKey, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.firestore.model.value.ObjectValue, param3: com.google.firebase.firestore.model.Document.DocumentState, param4: com.google.firestore.v1.Document);
+						public constructor(param0: com.google.firebase.firestore.model.DocumentKey, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.firestore.model.Document.DocumentState, param3: com.google.firestore.v1.Document, param4: com.google.common.base.Function<com.google.firestore.v1.Value,com.google.firebase.firestore.model.value.FieldValue>);
 						public equals(param0: any): boolean;
 						public hashCode(): number;
 						public toString(): string;
+						public constructor(param0: com.google.firebase.firestore.model.DocumentKey, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.firestore.model.Document.DocumentState, param3: com.google.firebase.firestore.model.value.ObjectValue);
 						public hasLocalMutations(): boolean;
 						public static keyComparator(): java.util.Comparator<com.google.firebase.firestore.model.Document>;
 						public getData(): com.google.firebase.firestore.model.value.ObjectValue;
 						public getFieldValue(param0: com.google.firebase.firestore.model.FieldPath): any;
 						public hasPendingWrites(): boolean;
-						public constructor(param0: com.google.firebase.firestore.model.DocumentKey, param1: com.google.firebase.firestore.model.SnapshotVersion, param2: com.google.firebase.firestore.model.value.ObjectValue, param3: com.google.firebase.firestore.model.Document.DocumentState);
 					}
 					export module Document {
 						export class DocumentState {
@@ -2974,10 +3138,10 @@ declare module com {
 						export abstract class ArrayTransformOperation extends com.google.firebase.firestore.model.mutation.TransformOperation {
 							public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.ArrayTransformOperation>;
 							public getElements(): java.util.List<com.google.firebase.firestore.model.value.FieldValue>;
+							public computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							public hashCode(): number;
 							public apply(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.ArrayValue;
-							public isIdempotent(): boolean;
 							public applyToLocalView(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.FieldValue;
 							public equals(param0: any): boolean;
 						}
@@ -2986,7 +3150,7 @@ declare module com {
 								public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.ArrayTransformOperation.Remove>;
 								public constructor(param0: java.util.List<com.google.firebase.firestore.model.value.FieldValue>);
 								public apply(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.ArrayValue;
-								public isIdempotent(): boolean;
+								public computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 								public applyToLocalView(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.FieldValue;
 								public applyToRemoteDocument(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							}
@@ -2994,7 +3158,7 @@ declare module com {
 								public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.ArrayTransformOperation.Union>;
 								public constructor(param0: java.util.List<com.google.firebase.firestore.model.value.FieldValue>);
 								public apply(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.ArrayValue;
-								public isIdempotent(): boolean;
+								public computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 								public applyToLocalView(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.FieldValue;
 								public applyToRemoteDocument(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							}
@@ -3018,8 +3182,7 @@ declare module com {
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.mutation.MutationResult): com.google.firebase.firestore.model.MaybeDocument;
 							public hashCode(): number;
 							public constructor(param0: com.google.firebase.firestore.model.DocumentKey, param1: com.google.firebase.firestore.model.mutation.Precondition);
-							public isIdempotent(): boolean;
-							public getFieldMask(): com.google.firebase.firestore.model.mutation.FieldMask;
+							public extractBaseValue(param0: com.google.firebase.firestore.model.MaybeDocument): com.google.firebase.firestore.model.value.ObjectValue;
 							public toString(): string;
 							public equals(param0: any): boolean;
 						}
@@ -3038,7 +3201,6 @@ declare module com {
 					export module mutation {
 						export class FieldMask {
 							public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.FieldMask>;
-							public applyTo(param0: com.google.firebase.firestore.model.value.ObjectValue): com.google.firebase.firestore.model.value.ObjectValue;
 							public hashCode(): number;
 							public static fromSet(param0: java.util.Set<com.google.firebase.firestore.model.FieldPath>): com.google.firebase.firestore.model.mutation.FieldMask;
 							public getMask(): java.util.Set<com.google.firebase.firestore.model.FieldPath>;
@@ -3063,7 +3225,6 @@ declare module com {
 							public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.FieldTransform>;
 							public getOperation(): com.google.firebase.firestore.model.mutation.TransformOperation;
 							public hashCode(): number;
-							public isIdempotent(): boolean;
 							public getFieldPath(): com.google.firebase.firestore.model.FieldPath;
 							public equals(param0: any): boolean;
 							public constructor(param0: com.google.firebase.firestore.model.FieldPath, param1: com.google.firebase.firestore.model.mutation.TransformOperation);
@@ -3085,9 +3246,8 @@ declare module com {
 							public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.Mutation>;
 							public applyToLocalView(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument, param2: com.google.firebase.Timestamp): com.google.firebase.firestore.model.MaybeDocument;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.mutation.MutationResult): com.google.firebase.firestore.model.MaybeDocument;
-							public isIdempotent(): boolean;
+							public extractBaseValue(param0: com.google.firebase.firestore.model.MaybeDocument): com.google.firebase.firestore.model.value.ObjectValue;
 							public getKey(): com.google.firebase.firestore.model.DocumentKey;
-							public getFieldMask(): com.google.firebase.firestore.model.mutation.FieldMask;
 							public getPrecondition(): com.google.firebase.firestore.model.mutation.Precondition;
 						}
 					}
@@ -3175,10 +3335,11 @@ declare module com {
 					export module mutation {
 						export class NumericIncrementTransformOperation extends com.google.firebase.firestore.model.mutation.TransformOperation {
 							public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.NumericIncrementTransformOperation>;
+							public computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
-							public isIdempotent(): boolean;
 							public constructor(param0: com.google.firebase.firestore.model.value.NumberValue);
 							public applyToLocalView(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.FieldValue;
+							public computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.NumberValue;
 							public getOperand(): com.google.firebase.firestore.model.value.FieldValue;
 						}
 					}
@@ -3199,8 +3360,7 @@ declare module com {
 							public applyToLocalView(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument, param2: com.google.firebase.Timestamp): com.google.firebase.firestore.model.MaybeDocument;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.mutation.MutationResult): com.google.firebase.firestore.model.MaybeDocument;
 							public hashCode(): number;
-							public isIdempotent(): boolean;
-							public getFieldMask(): com.google.firebase.firestore.model.mutation.FieldMask;
+							public extractBaseValue(param0: com.google.firebase.firestore.model.MaybeDocument): com.google.firebase.firestore.model.value.ObjectValue;
 							public getValue(): com.google.firebase.firestore.model.value.ObjectValue;
 							public toString(): string;
 							public getMask(): com.google.firebase.firestore.model.mutation.FieldMask;
@@ -3248,8 +3408,8 @@ declare module com {
 					export module mutation {
 						export class ServerTimestampOperation extends com.google.firebase.firestore.model.mutation.TransformOperation {
 							public static class: java.lang.Class<com.google.firebase.firestore.model.mutation.ServerTimestampOperation>;
+							public computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
-							public isIdempotent(): boolean;
 							public applyToLocalView(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.FieldValue;
 							public static getInstance(): com.google.firebase.firestore.model.mutation.ServerTimestampOperation;
 						}
@@ -3271,8 +3431,7 @@ declare module com {
 							public applyToLocalView(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument, param2: com.google.firebase.Timestamp): com.google.firebase.firestore.model.MaybeDocument;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.mutation.MutationResult): com.google.firebase.firestore.model.MaybeDocument;
 							public hashCode(): number;
-							public isIdempotent(): boolean;
-							public getFieldMask(): com.google.firebase.firestore.model.mutation.FieldMask;
+							public extractBaseValue(param0: com.google.firebase.firestore.model.MaybeDocument): com.google.firebase.firestore.model.value.ObjectValue;
 							public getValue(): com.google.firebase.firestore.model.value.ObjectValue;
 							public toString(): string;
 							public constructor(param0: com.google.firebase.firestore.model.DocumentKey, param1: com.google.firebase.firestore.model.value.ObjectValue, param2: com.google.firebase.firestore.model.mutation.Precondition);
@@ -3296,9 +3455,8 @@ declare module com {
 							public applyToLocalView(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.MaybeDocument, param2: com.google.firebase.Timestamp): com.google.firebase.firestore.model.MaybeDocument;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.MaybeDocument, param1: com.google.firebase.firestore.model.mutation.MutationResult): com.google.firebase.firestore.model.MaybeDocument;
 							public hashCode(): number;
-							public isIdempotent(): boolean;
+							public extractBaseValue(param0: com.google.firebase.firestore.model.MaybeDocument): com.google.firebase.firestore.model.value.ObjectValue;
 							public getFieldTransforms(): java.util.List<com.google.firebase.firestore.model.mutation.FieldTransform>;
-							public getFieldMask(): com.google.firebase.firestore.model.mutation.FieldMask;
 							public constructor(param0: com.google.firebase.firestore.model.DocumentKey, param1: java.util.List<com.google.firebase.firestore.model.mutation.FieldTransform>);
 							public toString(): string;
 							public equals(param0: any): boolean;
@@ -3324,11 +3482,11 @@ declare module com {
 							public constructor(implementation: {
 								applyToLocalView(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.FieldValue;
 								applyToRemoteDocument(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
-								isIdempotent(): boolean;
+								computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							});
 							public constructor();
+							public computeBaseValue(param0: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
 							public applyToRemoteDocument(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.FieldValue;
-							public isIdempotent(): boolean;
 							public applyToLocalView(param0: com.google.firebase.firestore.model.value.FieldValue, param1: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.FieldValue;
 						}
 					}
@@ -3352,12 +3510,10 @@ declare module com {
 							public compareTo(param0: com.google.firebase.firestore.model.value.FieldValue): number;
 							public value(): any;
 							public typeOrder(): number;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): java.util.List<any>;
 							public getInternalValue(): java.util.List<com.google.firebase.firestore.model.value.FieldValue>;
 							public equals(param0: any): boolean;
 							public value(): java.util.List<any>;
 							public static fromList(param0: java.util.List<com.google.firebase.firestore.model.value.FieldValue>): com.google.firebase.firestore.model.value.ArrayValue;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -3380,7 +3536,6 @@ declare module com {
 							public typeOrder(): number;
 							public value(): com.google.firebase.firestore.Blob;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 							public static valueOf(param0: com.google.firebase.firestore.Blob): com.google.firebase.firestore.model.value.BlobValue;
 						}
 					}
@@ -3405,7 +3560,6 @@ declare module com {
 							public static valueOf(param0: java.lang.Boolean): com.google.firebase.firestore.model.value.BooleanValue;
 							public value(): java.lang.Boolean;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -3428,7 +3582,6 @@ declare module com {
 							public hashCode(): number;
 							public value(): any;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 							public getInternalValue(): number;
 						}
 					}
@@ -3454,34 +3607,6 @@ declare module com {
 							public typeOrder(): number;
 							public toString(): string;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module model {
-					export module value {
-						export class FieldValueOptions {
-							public static class: java.lang.Class<com.google.firebase.firestore.model.value.FieldValueOptions>;
-							public static create(param0: com.google.firebase.firestore.DocumentSnapshot.ServerTimestampBehavior, param1: boolean): com.google.firebase.firestore.model.value.FieldValueOptions;
-						}
-						export module FieldValueOptions {
-							export class ServerTimestampBehavior {
-								public static class: java.lang.Class<com.google.firebase.firestore.model.value.FieldValueOptions.ServerTimestampBehavior>;
-								public static NONE: com.google.firebase.firestore.model.value.FieldValueOptions.ServerTimestampBehavior;
-								public static PREVIOUS: com.google.firebase.firestore.model.value.FieldValueOptions.ServerTimestampBehavior;
-								public static ESTIMATE: com.google.firebase.firestore.model.value.FieldValueOptions.ServerTimestampBehavior;
-								public static values(): native.Array<com.google.firebase.firestore.model.value.FieldValueOptions.ServerTimestampBehavior>;
-								public static valueOf(param0: string): com.google.firebase.firestore.model.value.FieldValueOptions.ServerTimestampBehavior;
-							}
 						}
 					}
 				}
@@ -3505,7 +3630,6 @@ declare module com {
 							public static valueOf(param0: com.google.firebase.firestore.GeoPoint): com.google.firebase.firestore.model.value.GeoPointValue;
 							public value(): com.google.firebase.firestore.GeoPoint;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -3527,7 +3651,6 @@ declare module com {
 							public value(): any;
 							public value(): java.lang.Long;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 							public getInternalValue(): number;
 						}
 					}
@@ -3551,7 +3674,6 @@ declare module com {
 							public typeOrder(): number;
 							public equals(param0: any): boolean;
 							public static nullValue(): com.google.firebase.firestore.model.value.NullValue;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -3594,15 +3716,14 @@ declare module com {
 							public getInternalValue(): com.google.firebase.database.collection.ImmutableSortedMap<string,com.google.firebase.firestore.model.value.FieldValue>;
 							public get(param0: com.google.firebase.firestore.model.FieldPath): com.google.firebase.firestore.model.value.FieldValue;
 							public static fromImmutableMap(param0: com.google.firebase.database.collection.ImmutableSortedMap<string,com.google.firebase.firestore.model.value.FieldValue>): com.google.firebase.firestore.model.value.ObjectValue;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): java.util.Map<string,any>;
 							public delete(param0: com.google.firebase.firestore.model.FieldPath): com.google.firebase.firestore.model.value.ObjectValue;
 							public compareTo(param0: com.google.firebase.firestore.model.value.FieldValue): number;
 							public typeOrder(): number;
+							public getFieldMask(): com.google.firebase.firestore.model.mutation.FieldMask;
 							public equals(param0: any): boolean;
 							public static fromMap(param0: java.util.Map<string,com.google.firebase.firestore.model.value.FieldValue>): com.google.firebase.firestore.model.value.ObjectValue;
 							public static emptyObject(): com.google.firebase.firestore.model.value.ObjectValue;
 							public set(param0: com.google.firebase.firestore.model.FieldPath, param1: com.google.firebase.firestore.model.value.FieldValue): com.google.firebase.firestore.model.value.ObjectValue;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -3627,7 +3748,6 @@ declare module com {
 							public typeOrder(): number;
 							public static valueOf(param0: com.google.firebase.firestore.model.DatabaseId, param1: com.google.firebase.firestore.model.DocumentKey): com.google.firebase.firestore.model.value.ReferenceValue;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -3650,9 +3770,10 @@ declare module com {
 							public value(): any;
 							public constructor(param0: com.google.firebase.Timestamp, param1: com.google.firebase.firestore.model.value.FieldValue);
 							public typeOrder(): number;
+							public getPreviousValue(): any;
 							public toString(): string;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
+							public getLocalWriteTime(): com.google.firebase.Timestamp;
 						}
 					}
 				}
@@ -3676,7 +3797,6 @@ declare module com {
 							public static valueOf(param0: string): com.google.firebase.firestore.model.value.StringValue;
 							public value(): string;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -3693,6 +3813,7 @@ declare module com {
 					export module value {
 						export class TimestampValue extends com.google.firebase.firestore.model.value.FieldValue {
 							public static class: java.lang.Class<com.google.firebase.firestore.model.value.TimestampValue>;
+							public value(): com.google.firebase.Timestamp;
 							public static valueOf(param0: com.google.firebase.Timestamp): com.google.firebase.firestore.model.value.TimestampValue;
 							public hashCode(): number;
 							public compareTo(param0: com.google.firebase.firestore.model.value.FieldValue): number;
@@ -3701,7 +3822,6 @@ declare module com {
 							public toString(): string;
 							public getInternalValue(): com.google.firebase.Timestamp;
 							public equals(param0: any): boolean;
-							public value(param0: com.google.firebase.firestore.model.value.FieldValueOptions): any;
 						}
 					}
 				}
@@ -4012,9 +4132,11 @@ declare module com {
 						public static LAST_LISTEN_SEQUENCE_NUMBER_FIELD_NUMBER: number;
 						public static QUERY_FIELD_NUMBER: number;
 						public static DOCUMENTS_FIELD_NUMBER: number;
+						public static LAST_LIMBO_FREE_SNAPSHOT_VERSION_FIELD_NUMBER: number;
 						public writeTo(param0: com.google.protobuf.CodedOutputStream): void;
 						public static parseFrom(param0: native.Array<number>): com.google.firebase.firestore.proto.Target;
 						public getDocuments(): com.google.firestore.v1.Target.DocumentsTarget;
+						public getLastLimboFreeSnapshotVersion(): com.google.protobuf.Timestamp;
 						public dynamicMethod(param0: com.google.protobuf.GeneratedMessageLite.MethodToInvoke, param1: any, param2: any): any;
 						public static parseDelimitedFrom(param0: java.io.InputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.firestore.proto.Target;
 						public static parseDelimitedFrom(param0: java.io.InputStream): com.google.firebase.firestore.proto.Target;
@@ -4034,6 +4156,7 @@ declare module com {
 						public getResumeToken(): com.google.protobuf.ByteString;
 						public getLastListenSequenceNumber(): number;
 						public static parseFrom(param0: java.io.InputStream): com.google.firebase.firestore.proto.Target;
+						public hasLastLimboFreeSnapshotVersion(): boolean;
 						public static parseFrom(param0: com.google.protobuf.CodedInputStream, param1: com.google.protobuf.ExtensionRegistryLite): com.google.firebase.firestore.proto.Target;
 						public static getDefaultInstance(): com.google.firebase.firestore.proto.Target;
 						public getSnapshotVersion(): com.google.protobuf.Timestamp;
@@ -4045,6 +4168,8 @@ declare module com {
 							public hasSnapshotVersion(): boolean;
 							public mergeQuery(param0: com.google.firestore.v1.Target.QueryTarget): com.google.firebase.firestore.proto.Target.Builder;
 							public clearSnapshotVersion(): com.google.firebase.firestore.proto.Target.Builder;
+							public mergeLastLimboFreeSnapshotVersion(param0: com.google.protobuf.Timestamp): com.google.firebase.firestore.proto.Target.Builder;
+							public clearLastLimboFreeSnapshotVersion(): com.google.firebase.firestore.proto.Target.Builder;
 							public clearDocuments(): com.google.firebase.firestore.proto.Target.Builder;
 							public getLastListenSequenceNumber(): number;
 							public setSnapshotVersion(param0: com.google.protobuf.Timestamp): com.google.firebase.firestore.proto.Target.Builder;
@@ -4060,13 +4185,17 @@ declare module com {
 							public setQuery(param0: com.google.firestore.v1.Target.QueryTarget): com.google.firebase.firestore.proto.Target.Builder;
 							public clearTargetId(): com.google.firebase.firestore.proto.Target.Builder;
 							public clearTargetType(): com.google.firebase.firestore.proto.Target.Builder;
+							public getLastLimboFreeSnapshotVersion(): com.google.protobuf.Timestamp;
 							public clearQuery(): com.google.firebase.firestore.proto.Target.Builder;
 							public setDocuments(param0: com.google.firestore.v1.Target.DocumentsTarget): com.google.firebase.firestore.proto.Target.Builder;
+							public hasLastLimboFreeSnapshotVersion(): boolean;
 							public getResumeToken(): com.google.protobuf.ByteString;
 							public setSnapshotVersion(param0: com.google.protobuf.Timestamp.Builder): com.google.firebase.firestore.proto.Target.Builder;
 							public setQuery(param0: com.google.firestore.v1.Target.QueryTarget.Builder): com.google.firebase.firestore.proto.Target.Builder;
 							public clearLastListenSequenceNumber(): com.google.firebase.firestore.proto.Target.Builder;
+							public setLastLimboFreeSnapshotVersion(param0: com.google.protobuf.Timestamp): com.google.firebase.firestore.proto.Target.Builder;
 							public getSnapshotVersion(): com.google.protobuf.Timestamp;
+							public setLastLimboFreeSnapshotVersion(param0: com.google.protobuf.Timestamp.Builder): com.google.firebase.firestore.proto.Target.Builder;
 							public getTargetTypeCase(): com.google.firebase.firestore.proto.Target.TargetTypeCase;
 						}
 						export class TargetTypeCase extends com.google.protobuf.Internal.EnumLite {
@@ -4195,6 +4324,8 @@ declare module com {
 							getLastListenSequenceNumber(): number;
 							getQuery(): com.google.firestore.v1.Target.QueryTarget;
 							getDocuments(): com.google.firestore.v1.Target.DocumentsTarget;
+							hasLastLimboFreeSnapshotVersion(): boolean;
+							getLastLimboFreeSnapshotVersion(): com.google.protobuf.Timestamp;
 							getTargetTypeCase(): com.google.firebase.firestore.proto.Target.TargetTypeCase;
 						});
 						public constructor();
@@ -4204,7 +4335,9 @@ declare module com {
 						public getLastListenSequenceNumber(): number;
 						public getDocuments(): com.google.firestore.v1.Target.DocumentsTarget;
 						public getTargetTypeCase(): com.google.firebase.firestore.proto.Target.TargetTypeCase;
+						public getLastLimboFreeSnapshotVersion(): com.google.protobuf.Timestamp;
 						public hasSnapshotVersion(): boolean;
+						public hasLastLimboFreeSnapshotVersion(): boolean;
 						public getSnapshotVersion(): com.google.protobuf.Timestamp;
 					}
 				}
@@ -4457,11 +4590,11 @@ declare module com {
 							public static class: java.lang.Class<com.google.firebase.firestore.remote.AbstractStream.IdleTimeoutRunnable>;
 							public run(): void;
 						}
-						export class StreamObserver extends com.google.firebase.firestore.util.IncomingStreamObserver<any> {
+						export class StreamObserver extends com.google.firebase.firestore.remote.IncomingStreamObserver<any> {
 							public static class: java.lang.Class<com.google.firebase.firestore.remote.AbstractStream.StreamObserver>;
 							public onNext(param0: any): void;
-							public onReady(): void;
 							public onHeaders(param0: io.grpc.Metadata): void;
+							public onOpen(): void;
 							public onClose(param0: io.grpc.Status): void;
 						}
 					}
@@ -4539,13 +4672,13 @@ declare module com {
 				export module remote {
 					export class Datastore {
 						public static class: java.lang.Class<com.google.firebase.firestore.remote.Datastore>;
-						public static WHITE_LISTED_HEADERS: java.util.Set<string>;
 						public commit(param0: java.util.List<com.google.firebase.firestore.model.mutation.Mutation>): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.firestore.model.mutation.MutationResult>>;
-						public static overrideChannelBuilder(param0: com.google.firebase.firestore.util.Supplier<io.grpc.ManagedChannelBuilder<any>>): void;
-						public constructor(param0: com.google.firebase.firestore.core.DatabaseInfo, param1: com.google.firebase.firestore.util.AsyncQueue, param2: com.google.firebase.firestore.auth.CredentialsProvider, param3: globalAndroid.content.Context);
+						public constructor(param0: com.google.firebase.firestore.core.DatabaseInfo, param1: com.google.firebase.firestore.util.AsyncQueue, param2: com.google.firebase.firestore.auth.CredentialsProvider, param3: globalAndroid.content.Context, param4: com.google.firebase.firestore.remote.GrpcMetadataProvider);
+						public static isPermanentError(param0: com.google.firebase.firestore.FirebaseFirestoreException.Code): boolean;
 						public lookup(param0: java.util.List<com.google.firebase.firestore.model.DocumentKey>): com.google.android.gms.tasks.Task<java.util.List<com.google.firebase.firestore.model.MaybeDocument>>;
 						public static isPermanentWriteError(param0: io.grpc.Status): boolean;
 						public static isPermanentError(param0: io.grpc.Status): boolean;
+						public static isMissingSslCiphers(param0: io.grpc.Status): boolean;
 					}
 				}
 			}
@@ -4575,11 +4708,107 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module remote {
+					export class FirebaseClientGrpcMetadataProvider extends com.google.firebase.firestore.remote.GrpcMetadataProvider {
+						public static class: java.lang.Class<com.google.firebase.firestore.remote.FirebaseClientGrpcMetadataProvider>;
+						public constructor(param0: com.google.firebase.inject.Provider<com.google.firebase.platforminfo.UserAgentPublisher>, param1: com.google.firebase.inject.Provider<com.google.firebase.heartbeatinfo.HeartBeatInfo>);
+						public updateMetadata(param0: io.grpc.Metadata): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module remote {
 					export class FirestoreCallCredentials {
 						public static class: java.lang.Class<com.google.firebase.firestore.remote.FirestoreCallCredentials>;
-						public constructor(param0: com.google.firebase.firestore.auth.CredentialsProvider);
-						public applyRequestMetadata(param0: io.grpc.CallCredentials.RequestInfo, param1: java.util.concurrent.Executor, param2: io.grpc.CallCredentials2.MetadataApplier): void;
+						public applyRequestMetadata(param0: io.grpc.CallCredentials.RequestInfo, param1: java.util.concurrent.Executor, param2: io.grpc.CallCredentials.MetadataApplier): void;
 						public thisUsesUnstableApi(): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module remote {
+					export class FirestoreChannel {
+						public static class: java.lang.Class<com.google.firebase.firestore.remote.FirestoreChannel>;
+						public shutdown(): void;
+						public invalidateToken(): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module remote {
+					export class GrpcCallProvider {
+						public static class: java.lang.Class<com.google.firebase.firestore.remote.GrpcCallProvider>;
+						public static overrideChannelBuilder(param0: com.google.firebase.firestore.util.Supplier<io.grpc.ManagedChannelBuilder<any>>): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module remote {
+					export class GrpcMetadataProvider {
+						public static class: java.lang.Class<com.google.firebase.firestore.remote.GrpcMetadataProvider>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.firestore.remote.GrpcMetadataProvider interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							updateMetadata(param0: io.grpc.Metadata): void;
+						});
+						public constructor();
+						public updateMetadata(param0: io.grpc.Metadata): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module remote {
+					export class IncomingStreamObserver<RespT>  extends java.lang.Object {
+						public static class: java.lang.Class<com.google.firebase.firestore.remote.IncomingStreamObserver<any>>;
+						/**
+						 * Constructs a new instance of the com.google.firebase.firestore.remote.IncomingStreamObserver<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
+						 */
+						public constructor(implementation: {
+							onHeaders(param0: io.grpc.Metadata): void;
+							onNext(param0: RespT): void;
+							onOpen(): void;
+							onClose(param0: io.grpc.Status): void;
+						});
+						public constructor();
+						public onNext(param0: RespT): void;
+						public onOpen(): void;
+						public onClose(param0: io.grpc.Status): void;
+						public onHeaders(param0: io.grpc.Metadata): void;
 					}
 				}
 			}
@@ -4680,18 +4909,19 @@ declare module com {
 				export module remote {
 					export class RemoteStore extends com.google.firebase.firestore.remote.WatchChangeAggregator.TargetMetadataProvider {
 						public static class: java.lang.Class<com.google.firebase.firestore.remote.RemoteStore>;
-						public shutdown(): void;
-						public constructor(param0: com.google.firebase.firestore.remote.RemoteStore.RemoteStoreCallback, param1: com.google.firebase.firestore.local.LocalStore, param2: com.google.firebase.firestore.remote.Datastore, param3: com.google.firebase.firestore.util.AsyncQueue, param4: com.google.firebase.firestore.remote.ConnectivityMonitor);
-						public start(): void;
 						public getQueryDataForTarget(param0: number): com.google.firebase.firestore.local.QueryData;
 						public fillWritePipeline(): void;
-						public disableNetwork(): void;
 						public stopListening(param0: number): void;
-						public getRemoteKeysForTarget(param0: number): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
 						public handleCredentialChange(): void;
 						public enableNetwork(): void;
 						public createTransaction(): com.google.firebase.firestore.core.Transaction;
 						public listen(param0: com.google.firebase.firestore.local.QueryData): void;
+						public shutdown(): void;
+						public constructor(param0: com.google.firebase.firestore.remote.RemoteStore.RemoteStoreCallback, param1: com.google.firebase.firestore.local.LocalStore, param2: com.google.firebase.firestore.remote.Datastore, param3: com.google.firebase.firestore.util.AsyncQueue, param4: com.google.firebase.firestore.remote.ConnectivityMonitor);
+						public start(): void;
+						public disableNetwork(): void;
+						public canUseNetwork(): boolean;
+						public getRemoteKeysForTarget(param0: number): com.google.firebase.database.collection.ImmutableSortedSet<com.google.firebase.firestore.model.DocumentKey>;
 					}
 					export module RemoteStore {
 						export class RemoteStoreCallback {
@@ -5030,6 +5260,7 @@ declare module com {
 				export module util {
 					export class AsyncQueue {
 						public static class: java.lang.Class<com.google.firebase.firestore.util.AsyncQueue>;
+						public enqueueAndForgetEvenAfterShutdown(param0: java.lang.Runnable): void;
 						public verifyIsCurrentThread(): void;
 						public constructor();
 						public static callTask(param0: java.util.concurrent.Executor, param1: java.util.concurrent.Callable): com.google.android.gms.tasks.Task;
@@ -5039,20 +5270,30 @@ declare module com {
 						public containsDelayedTask(param0: com.google.firebase.firestore.util.AsyncQueue.TimerId): boolean;
 						public runDelayedTasksUntil(param0: com.google.firebase.firestore.util.AsyncQueue.TimerId): void;
 						public panic(param0: java.lang.Throwable): void;
+						public skipDelaysForTimerId(param0: com.google.firebase.firestore.util.AsyncQueue.TimerId): void;
 						public shutdown(): void;
 						public enqueueAfterDelay(param0: com.google.firebase.firestore.util.AsyncQueue.TimerId, param1: number, param2: java.lang.Runnable): com.google.firebase.firestore.util.AsyncQueue.DelayedTask;
+						public enqueueAndInitiateShutdown(param0: java.lang.Runnable): com.google.android.gms.tasks.Task<java.lang.Void>;
 						public enqueue(param0: java.util.concurrent.Callable): com.google.android.gms.tasks.Task;
+						public isShuttingDown(): boolean;
 						public runSync(param0: java.lang.Runnable): void;
 					}
 					export module AsyncQueue {
-						export class DelayedStartFactory {
-							public static class: java.lang.Class<com.google.firebase.firestore.util.AsyncQueue.DelayedStartFactory>;
-							public newThread(param0: java.lang.Runnable): java.lang.Thread;
-							public run(): void;
-						}
 						export class DelayedTask {
 							public static class: java.lang.Class<com.google.firebase.firestore.util.AsyncQueue.DelayedTask>;
 							public cancel(): void;
+						}
+						export class SynchronizedShutdownAwareExecutor {
+							public static class: java.lang.Class<com.google.firebase.firestore.util.AsyncQueue.SynchronizedShutdownAwareExecutor>;
+							public execute(param0: java.lang.Runnable): void;
+							public executeEvenAfterShutdown(param0: java.lang.Runnable): void;
+						}
+						export module SynchronizedShutdownAwareExecutor {
+							export class DelayedStartFactory {
+								public static class: java.lang.Class<com.google.firebase.firestore.util.AsyncQueue.SynchronizedShutdownAwareExecutor.DelayedStartFactory>;
+								public run(): void;
+								public newThread(param0: java.lang.Runnable): java.lang.Thread;
+							}
 						}
 						export class TimerId {
 							public static class: java.lang.Class<com.google.firebase.firestore.util.AsyncQueue.TimerId>;
@@ -5063,9 +5304,27 @@ declare module com {
 							public static WRITE_STREAM_CONNECTION_BACKOFF: com.google.firebase.firestore.util.AsyncQueue.TimerId;
 							public static ONLINE_STATE_TIMEOUT: com.google.firebase.firestore.util.AsyncQueue.TimerId;
 							public static GARBAGE_COLLECTION: com.google.firebase.firestore.util.AsyncQueue.TimerId;
+							public static RETRY_TRANSACTION: com.google.firebase.firestore.util.AsyncQueue.TimerId;
 							public static values(): native.Array<com.google.firebase.firestore.util.AsyncQueue.TimerId>;
 							public static valueOf(param0: string): com.google.firebase.firestore.util.AsyncQueue.TimerId;
 						}
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module util {
+					export class BackgroundQueue {
+						public static class: java.lang.Class<com.google.firebase.firestore.util.BackgroundQueue>;
+						public constructor();
+						public execute(param0: java.lang.Runnable): void;
+						public drain(): void;
 					}
 				}
 			}
@@ -5111,6 +5370,9 @@ declare module com {
 						export class BeanMapper<T>  extends java.lang.Object {
 							public static class: java.lang.Class<com.google.firebase.firestore.util.CustomClassMapper.BeanMapper<any>>;
 						}
+						export class DeserializeContext {
+							public static class: java.lang.Class<com.google.firebase.firestore.util.CustomClassMapper.DeserializeContext>;
+						}
 						export class ErrorPath {
 							public static class: java.lang.Class<com.google.firebase.firestore.util.CustomClassMapper.ErrorPath>;
 							public toString(): string;
@@ -5127,30 +5389,11 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module util {
-					export class DocumentId {
-						public static class: java.lang.Class<com.google.firebase.firestore.util.DocumentId>;
-						/**
-						 * Constructs a new instance of the com.google.firebase.firestore.util.DocumentId interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-						 */
-						public constructor(implementation: {
-						});
-						public constructor();
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module util {
 					export class Executors {
 						public static class: java.lang.Class<com.google.firebase.firestore.util.Executors>;
 						public static DEFAULT_CALLBACK_EXECUTOR: java.util.concurrent.Executor;
 						public static DIRECT_EXECUTOR: java.util.concurrent.Executor;
+						public static BACKGROUND_EXECUTOR: java.util.concurrent.Executor;
 					}
 				}
 			}
@@ -5165,7 +5408,11 @@ declare module com {
 				export module util {
 					export class ExponentialBackoff {
 						public static class: java.lang.Class<com.google.firebase.firestore.util.ExponentialBackoff>;
+						public static DEFAULT_BACKOFF_INITIAL_DELAY_MS: number;
+						public static DEFAULT_BACKOFF_FACTOR: number;
+						public static DEFAULT_BACKOFF_MAX_DELAY_MS: number;
 						public cancel(): void;
+						public constructor(param0: com.google.firebase.firestore.util.AsyncQueue, param1: com.google.firebase.firestore.util.AsyncQueue.TimerId);
 						public constructor(param0: com.google.firebase.firestore.util.AsyncQueue, param1: com.google.firebase.firestore.util.AsyncQueue.TimerId, param2: number, param3: number, param4: number);
 						public resetToMax(): void;
 						public backoffAndRun(param0: java.lang.Runnable): void;
@@ -5196,54 +5443,6 @@ declare module com {
 							public static class: java.lang.Class<com.google.firebase.firestore.util.FileUtil.LegacyFileDeleter>;
 							public static delete(param0: java.io.File): void;
 						}
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module util {
-					export class FirestoreChannel {
-						public static class: java.lang.Class<com.google.firebase.firestore.util.FirestoreChannel>;
-						public shutdown(): void;
-						public runRpc(param0: io.grpc.MethodDescriptor, param1: any): com.google.android.gms.tasks.Task;
-						public runBidiStreamingRpc(param0: io.grpc.MethodDescriptor, param1: com.google.firebase.firestore.util.IncomingStreamObserver<any>): io.grpc.ClientCall;
-						public constructor(param0: com.google.firebase.firestore.util.AsyncQueue, param1: com.google.firebase.firestore.auth.CredentialsProvider, param2: io.grpc.ManagedChannel, param3: com.google.firebase.firestore.model.DatabaseId);
-						public invalidateToken(): void;
-						public runStreamingResponseRpc(param0: io.grpc.MethodDescriptor, param1: any): com.google.android.gms.tasks.Task;
-					}
-				}
-			}
-		}
-	}
-}
-
-declare module com {
-	export module google {
-		export module firebase {
-			export module firestore {
-				export module util {
-					export class IncomingStreamObserver<RespT>  extends java.lang.Object {
-						public static class: java.lang.Class<com.google.firebase.firestore.util.IncomingStreamObserver<any>>;
-						/**
-						 * Constructs a new instance of the com.google.firebase.firestore.util.IncomingStreamObserver<any> interface with the provided implementation. An empty constructor exists calling super() when extending the interface class.
-						 */
-						public constructor(implementation: {
-							onHeaders(param0: io.grpc.Metadata): void;
-							onNext(param0: RespT): void;
-							onReady(): void;
-							onClose(param0: io.grpc.Status): void;
-						});
-						public constructor();
-						public onNext(param0: RespT): void;
-						public onClose(param0: io.grpc.Status): void;
-						public onHeaders(param0: io.grpc.Metadata): void;
-						public onReady(): void;
 					}
 				}
 			}
@@ -5329,11 +5528,27 @@ declare module com {
 		export module firebase {
 			export module firestore {
 				export module util {
+					export class ThrottledForwardingExecutor {
+						public static class: java.lang.Class<com.google.firebase.firestore.util.ThrottledForwardingExecutor>;
+						public execute(param0: java.lang.Runnable): void;
+					}
+				}
+			}
+		}
+	}
+}
+
+declare module com {
+	export module google {
+		export module firebase {
+			export module firestore {
+				export module util {
 					export class Util {
 						public static class: java.lang.Class<com.google.firebase.firestore.util.Util>;
 						public static collectUpdateArguments(param0: number, param1: any, param2: any, param3: native.Array<any>): java.util.List<any>;
 						public static compareIntegers(param0: number, param1: number): number;
 						public constructor();
+						public static crashMainThread(param0: java.lang.RuntimeException): void;
 						public static compareInts(param0: number, param1: number): number;
 						public static convertThrowableToException(param0: java.lang.Throwable): java.lang.Exception;
 						public static voidErrorTransformer(): com.google.android.gms.tasks.Continuation<java.lang.Void,java.lang.Void>;
@@ -8756,6 +8971,8 @@ declare module com {
 							public static GREATER_THAN_OR_EQUAL: com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
 							public static EQUAL: com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
 							public static ARRAY_CONTAINS: com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
+							public static IN: com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
+							public static ARRAY_CONTAINS_ANY: com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
 							public static UNRECOGNIZED: com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
 							public static OPERATOR_UNSPECIFIED_VALUE: number;
 							public static LESS_THAN_VALUE: number;
@@ -8764,6 +8981,8 @@ declare module com {
 							public static GREATER_THAN_OR_EQUAL_VALUE: number;
 							public static EQUAL_VALUE: number;
 							public static ARRAY_CONTAINS_VALUE: number;
+							public static IN_VALUE: number;
+							public static ARRAY_CONTAINS_ANY_VALUE: number;
 							public static valueOf(param0: number): com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
 							public getNumber(): number;
 							public static forNumber(param0: number): com.google.firestore.v1.StructuredQuery.FieldFilter.Operator;
@@ -10514,12 +10733,13 @@ declare module com {
 //com.google.firebase.firestore.EventListener:1
 //com.google.firebase.firestore.Transaction.Function:1
 //com.google.firebase.firestore.core.AsyncEventListener:1
+//com.google.firebase.firestore.core.TransactionRunner:1
 //com.google.firebase.firestore.model.BasePath:1
 //com.google.firebase.firestore.remote.AbstractStream:3
+//com.google.firebase.firestore.remote.IncomingStreamObserver:1
 //com.google.firebase.firestore.remote.Stream:1
 //com.google.firebase.firestore.util.Consumer:1
 //com.google.firebase.firestore.util.CustomClassMapper.BeanMapper:1
-//com.google.firebase.firestore.util.IncomingStreamObserver:1
 //com.google.firebase.firestore.util.Listener:1
 //com.google.firebase.firestore.util.Supplier:1
 //com.google.firestore.v1.FirestoreGrpc.MethodHandlers:2

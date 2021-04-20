@@ -1,14 +1,40 @@
 import { firebase } from "../firebase-common";
-import {
-  DeleteFileOptions,
-  DownloadFileOptions,
-  GetDownloadUrlOptions,
-  UploadFileOptions,
-  UploadFileResult
-} from "./storage";
+import { DeleteFileOptions, DownloadFileOptions, GetDownloadUrlOptions, ListOptions, Reference, UploadFileOptions, UploadFileResult } from "./storage";
+import { ListResult as ListResultBase } from "./storage-common";
+
+function getReference(nativeReference: FIRStorageReference, listOptions: ListOptions): Reference {
+  return {
+    ios: nativeReference,
+    bucket: nativeReference.bucket,
+    name: nativeReference.name,
+    fullPath: nativeReference.fullPath,
+    listAll: (): Promise<ListResult> => listAll({remoteFullPath: nativeReference.fullPath, bucket: listOptions.bucket})
+  };
+}
+
+function getReferences(nativeReferences: NSArray<FIRStorageReference>, listOptions: ListOptions): Array<Reference> {
+  const references: Array<Reference> = [];
+  for (let i = 0, l = nativeReferences.count; i < l; i++) {
+    const ref = nativeReferences.objectAtIndex(i);
+    references.push(getReference(ref, listOptions));
+  }
+  return references;
+}
+
+class ListResult extends ListResultBase {
+  ios: FIRStorageListResult;
+
+  constructor(private listResult: FIRStorageListResult, private listOptions: ListOptions) {
+    super(getReferences(listResult.items, listOptions), getReferences(listResult.prefixes, listOptions), listResult.pageToken);
+    this.ios = listResult;
+    // don't expose these
+    delete this.listResult;
+    delete this.listOptions;
+  }
+}
 
 function getStorageRef(reject, arg): FIRStorageReference {
-  if (typeof(FIRStorage) === "undefined") {
+  if (typeof (FIRStorage) === "undefined") {
     reject("Uncomment Storage in the plugin's Podfile first");
     return undefined;
   }
@@ -30,7 +56,6 @@ function getStorageRef(reject, arg): FIRStorageReference {
 export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
   return new Promise((resolve, reject) => {
     try {
-
       const onCompletion = (metadata: FIRStorageMetadata, error: NSError) => {
         if (error) {
           reject(error.localizedDescription);
@@ -56,17 +81,34 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
       const fIRStorageReference = storageRef.child(arg.remoteFullPath);
       let fIRStorageUploadTask = null;
 
+      let metadata: FIRStorageMetadata = null;
+      if (arg.metadata) {
+        metadata = FIRStorageMetadata.new();
+        metadata.cacheControl = arg.metadata.cacheControl;
+        metadata.contentDisposition = arg.metadata.contentDisposition;
+        metadata.contentEncoding = arg.metadata.contentEncoding;
+        metadata.contentLanguage = arg.metadata.contentLanguage;
+        metadata.contentType = arg.metadata.contentType;
+        if (arg.metadata.customMetadata) {
+          const customMetadata = NSMutableDictionary.new();
+          for (let p in arg.metadata.customMetadata) {
+            customMetadata.setObjectForKey(arg.metadata.customMetadata[p], p);
+          }
+          metadata.customMetadata = <any>customMetadata;
+        }
+      }
+
       if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
+        if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
 
         // using 'putFile' (not 'putData') so Firebase can infer the mime-type
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFile.path), null, onCompletion);
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFile.path), metadata, onCompletion);
 
       } else if (arg.localFullPath) {
-        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFullPath), null, onCompletion);
+        fIRStorageUploadTask = fIRStorageReference.putFileMetadataCompletion(NSURL.fileURLWithPath(arg.localFullPath), metadata, onCompletion);
 
       } else {
         reject("One of localFile or localFullPath is required");
@@ -76,7 +118,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
       if (fIRStorageUploadTask !== null) {
         // Add a progress observer to an upload task
         fIRStorageUploadTask.observeStatusHandler(FIRStorageTaskStatus.Progress, snapshot => {
-          if (!snapshot.error && typeof(arg.onProgress) === "function") {
+          if (!snapshot.error && typeof (arg.onProgress) === "function") {
             arg.onProgress({
               fractionCompleted: snapshot.progress.fractionCompleted,
               percentageCompleted: Math.round(snapshot.progress.fractionCompleted * 100)
@@ -95,9 +137,7 @@ export function uploadFile(arg: UploadFileOptions): Promise<UploadFileResult> {
 export function downloadFile(arg: DownloadFileOptions): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
-
       const onCompletion = (url, error) => {
-        console.log(">>> download complete, error: " + error);
         if (error) {
           reject(error.localizedDescription);
         } else {
@@ -116,7 +156,7 @@ export function downloadFile(arg: DownloadFileOptions): Promise<string> {
       let localFilePath;
 
       if (arg.localFile) {
-        if (typeof(arg.localFile) !== "object") {
+        if (typeof (arg.localFile) !== "object") {
           reject("localFile argument must be a File object; use file-system module to create one");
           return;
         }
@@ -171,7 +211,6 @@ export function getDownloadUrl(arg: GetDownloadUrlOptions): Promise<string> {
 export function deleteFile(arg: DeleteFileOptions): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-
       const onCompletion = error => {
         if (error) {
           reject(error.localizedDescription);
@@ -192,6 +231,32 @@ export function deleteFile(arg: DeleteFileOptions): Promise<void> {
 
     } catch (ex) {
       console.log("Error in firebase.deleteFile: " + ex);
+      reject(ex);
+    }
+  });
+}
+
+export function listAll(listOptions: ListOptions): Promise<ListResult> {
+  return new Promise<ListResult>((resolve, reject) => {
+    try {
+      const storageRef = getStorageRef(reject, listOptions);
+
+      if (!storageRef) {
+        return;
+      }
+
+      const fIRStorageReference = storageRef.child(listOptions.remoteFullPath);
+
+      fIRStorageReference.listAllWithCompletion((result: FIRStorageListResult, error: NSError) => {
+        if (error) {
+          reject(error.localizedDescription);
+        } else {
+          resolve(new ListResult(result, listOptions));
+        }
+      });
+
+    } catch (ex) {
+      console.log("Error in firebase.listAll: " + ex);
       reject(ex);
     }
   });

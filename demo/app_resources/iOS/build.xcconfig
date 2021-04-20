@@ -5,6 +5,8 @@ ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 CODE_SIGN_ENTITLEMENTS = demo/demo.entitlements
 
+IPHONEOS_DEPLOYMENT_TARGET = 10.0
+
 // DEVELOPMENT_TEAM = "Don't set this here, but store in the platforms folder when prompted (to support CI and cross-team development)"
 
 // DEVELOPMENT_TEAM = 8Q5F6M3TNS

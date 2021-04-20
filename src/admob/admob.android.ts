@@ -1,9 +1,7 @@
 import { firebase } from "../firebase-common";
 import { BannerOptions, InterstitialOptions, PreloadRewardedVideoAdOptions, ShowRewardedVideoAdOptions } from "./admob";
 import { AD_SIZE, BANNER_DEFAULTS, rewardedVideoCallbacks } from "./admob-common";
-import * as appModule from "tns-core-modules/application";
-import { topmost } from "tns-core-modules/ui/frame";
-import { layout } from "tns-core-modules/utils/utils";
+import { Application, Frame, Utils } from "@nativescript/core";
 
 declare const com: any;
 
@@ -22,7 +20,7 @@ export function showBanner(arg: BannerOptions): Promise<any> {
         }
       }
 
-      firebase.admob.adView = new com.google.android.gms.ads.AdView(appModule.android.foregroundActivity);
+      firebase.admob.adView = new com.google.android.gms.ads.AdView(Application.android.foregroundActivity);
       firebase.admob.adView.setAdUnitId(settings.androidBannerId);
       const bannerType = _getBannerType(settings.size);
       firebase.admob.adView.setAdSize(bannerType);
@@ -34,19 +32,26 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       const BannerAdListener = com.google.android.gms.ads.AdListener.extend({
         resolve: null,
         reject: null,
-        onAdLoaded: () => {
-          this.resolve();
-        },
-        onAdFailedToLoad: errorCode => {
-          this.reject(errorCode);
+        onAdLoaded: () => this.resolve(),
+        onAdFailedToLoad: errorCode => this.reject(errorCode),
+        onAdClicked: () => arg.onClicked && arg.onClicked(),
+        onAdOpened: () => arg.onOpened && arg.onOpened(),
+        onAdLeftApplication: () => arg.onLeftApplication && arg.onLeftApplication(),
+        onAdClosed: () => {
+          if (firebase.admob.adView) {
+            firebase.admob.adView.setAdListener(null);
+            firebase.admob.adView = null;
+          }
+          arg.onClosed && arg.onClosed();
         }
       });
+
       firebase.admob.adView.setAdListener(new BannerAdListener());
 
       const ad = _buildAdRequest(settings);
       firebase.admob.adView.loadAd(ad);
 
-      const density = layout.getDisplayDensity(),
+      const density = Utils.layout.getDisplayDensity(),
           top = settings.margins.top * density,
           bottom = settings.margins.bottom * density;
 
@@ -64,21 +69,21 @@ export function showBanner(arg: BannerOptions): Promise<any> {
         relativeLayoutParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
       }
 
-      const adViewLayout = new android.widget.RelativeLayout(appModule.android.foregroundActivity);
+      const adViewLayout = new android.widget.RelativeLayout(Application.android.foregroundActivity);
       adViewLayout.addView(firebase.admob.adView, relativeLayoutParams);
 
       const relativeLayoutParamsOuter = new android.widget.RelativeLayout.LayoutParams(
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
           android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
-      // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.topmost()' doesn't resolve to 'undefined'.
+      // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.Frame.topmost()' doesn't resolve to 'undefined'.
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
       setTimeout(() => {
-        const top = topmost();
+        const top = Frame.topmost();
         if (top !== undefined && top.currentPage && top.currentPage.android && top.currentPage.android.getParent()) {
           top.currentPage.android.getParent().addView(adViewLayout, relativeLayoutParamsOuter);
-        } else if (appModule.android && appModule.android.foregroundActivity) {
-          appModule.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
+        } else if (Application.android && Application.android.foregroundActivity) {
+          Application.android.foregroundActivity.getWindow().getDecorView().addView(adViewLayout, relativeLayoutParamsOuter);
         } else {
           console.log("Could not find a view to add the banner to");
         }
@@ -94,7 +99,7 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
   return new Promise((resolve, reject) => {
     try {
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
-      const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+      const activity = Application.android.foregroundActivity || Application.android.startActivity;
       firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(activity);
       firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
 
@@ -104,18 +109,18 @@ export function preloadInterstitial(arg: InterstitialOptions): Promise<any> {
 
       // Interstitial ads must be loaded before they can be shown, so adding a listener
       const InterstitialAdListener = com.google.android.gms.ads.AdListener.extend({
-        onAdLoaded: () => {
-          this.resolve();
-        },
-        onAdFailedToLoad: errorCode => {
-          this.reject(errorCode);
-        },
+        onAdLoaded: () => this.resolve(),
+        onAdFailedToLoad: errorCode => this.reject(errorCode),
+        onAdClicked: () => arg.onClicked && arg.onClicked(),
+        onAdOpened: () => arg.onOpened && arg.onOpened(),
+        onAdLeftApplication: () => arg.onLeftApplication && arg.onLeftApplication(),
         onAdClosed: () => {
           if (firebase.admob.interstitialView) {
             firebase.admob.interstitialView.setAdListener(null);
             firebase.admob.interstitialView = null;
           }
-          arg.onAdClosed && arg.onAdClosed();
+          arg.onAdClosed && arg.onAdClosed(); // TODO remove one day
+          arg.onClosed && arg.onClosed();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
@@ -145,7 +150,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
       }
 
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
-      const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+      const activity = Application.android.foregroundActivity || Application.android.startActivity;
       firebase.admob.interstitialView = new com.google.android.gms.ads.InterstitialAd(activity);
       firebase.admob.interstitialView.setAdUnitId(settings.androidInterstitialId);
 
@@ -157,15 +162,17 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
           }
           resolve();
         },
-        onAdFailedToLoad: errorCode => {
-          reject(errorCode);
-        },
+        onAdFailedToLoad: errorCode => reject(errorCode),
+        onAdClicked: () => arg.onClicked && arg.onClicked(),
+        onAdOpened: () => arg.onOpened && arg.onOpened(),
+        onAdLeftApplication: () => arg.onLeftApplication && arg.onLeftApplication(),
         onAdClosed: () => {
           if (firebase.admob.interstitialView) {
             firebase.admob.interstitialView.setAdListener(null);
             firebase.admob.interstitialView = null;
           }
-          arg.onAdClosed && arg.onAdClosed();
+          arg.onAdClosed && arg.onAdClosed(); // TODO remove one day
+          arg.onClosed && arg.onClosed();
         }
       });
       firebase.admob.interstitialView.setAdListener(new InterstitialAdListener());
@@ -183,7 +190,7 @@ export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Prom
   return new Promise((resolve, reject) => {
     try {
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
-      const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+      const activity = Application.android.foregroundActivity || Application.android.startActivity;
       firebase.admob.rewardedAdVideoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(activity);
 
       rewardedVideoCallbacks.onLoaded = resolve;
@@ -317,7 +324,7 @@ function _buildAdRequest(settings): any {
   if (settings.testing) {
     builder.addTestDevice(com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
     // This will request test ads on the emulator and device by passing this hashed device ID.
-    const activity = appModule.android.foregroundActivity || appModule.android.startActivity;
+    const activity = Application.android.foregroundActivity || Application.android.startActivity;
     const ANDROID_ID = android.provider.Settings.Secure.getString(activity.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
     let deviceId = _md5(ANDROID_ID);
     if (deviceId !== null) {

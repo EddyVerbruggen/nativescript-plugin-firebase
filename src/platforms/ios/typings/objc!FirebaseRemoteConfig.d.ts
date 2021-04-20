@@ -9,14 +9,22 @@ declare class FIRRemoteConfig extends NSObject implements NSFastEnumeration {
 
 	static remoteConfig(): FIRRemoteConfig;
 
+	static remoteConfigWithApp(app: FIRApp): FIRRemoteConfig;
+
 	configSettings: FIRRemoteConfigSettings;
 
 	readonly lastFetchStatus: FIRRemoteConfigFetchStatus;
 
-	readonly lastFetchTime: Date;
+	lastFetchTime: Date;
 	[Symbol.iterator](): Iterator<any>;
 
 	activateFetched(): boolean;
+
+	activateWithCompletion(completion: (p1: boolean, p2: NSError) => void): void;
+
+	activateWithCompletionHandler(completionHandler: (p1: NSError) => void): void;
+
+	allKeysFromSource(source: FIRRemoteConfigSource): NSArray<string>;
 
 	allKeysFromSourceNamespace(source: FIRRemoteConfigSource, aNamespace: string): NSArray<string>;
 
@@ -26,7 +34,15 @@ declare class FIRRemoteConfig extends NSObject implements NSFastEnumeration {
 
 	configValueForKeyNamespaceSource(key: string, aNamespace: string, source: FIRRemoteConfigSource): FIRRemoteConfigValue;
 
+	configValueForKeySource(key: string, source: FIRRemoteConfigSource): FIRRemoteConfigValue;
+
+	defaultValueForKey(key: string): FIRRemoteConfigValue;
+
 	defaultValueForKeyNamespace(key: string, aNamespace: string): FIRRemoteConfigValue;
+
+	ensureInitializedWithCompletionHandler(completionHandler: (p1: NSError) => void): void;
+
+	fetchAndActivateWithCompletionHandler(completionHandler: (p1: FIRRemoteConfigFetchAndActivateStatus, p2: NSError) => void): void;
 
 	fetchWithCompletionHandler(completionHandler: (p1: FIRRemoteConfigFetchStatus, p2: NSError) => void): void;
 
@@ -58,6 +74,15 @@ declare const enum FIRRemoteConfigError {
 
 declare var FIRRemoteConfigErrorDomain: string;
 
+declare const enum FIRRemoteConfigFetchAndActivateStatus {
+
+	SuccessFetchedFromRemote = 0,
+
+	SuccessUsingPreFetchedData = 1,
+
+	Error = 2
+}
+
 declare const enum FIRRemoteConfigFetchStatus {
 
 	NoFetchYet = 0,
@@ -75,7 +100,11 @@ declare class FIRRemoteConfigSettings extends NSObject {
 
 	static new(): FIRRemoteConfigSettings; // inherited from NSObject
 
+	fetchTimeout: number;
+
 	readonly isDeveloperModeEnabled: boolean;
+
+	minimumFetchInterval: number;
 
 	constructor(o: { developerModeEnabled: boolean; });
 
@@ -99,6 +128,8 @@ declare class FIRRemoteConfigValue extends NSObject implements NSCopying {
 
 	static new(): FIRRemoteConfigValue; // inherited from NSObject
 
+	readonly JSONValue: any;
+
 	readonly boolValue: boolean;
 
 	readonly dataValue: NSData;
@@ -111,3 +142,7 @@ declare class FIRRemoteConfigValue extends NSObject implements NSCopying {
 
 	copyWithZone(zone: interop.Pointer | interop.Reference<any>): any;
 }
+
+declare var FirebaseRemoteConfigVersionNumber: number;
+
+declare var FirebaseRemoteConfigVersionString: interop.Reference<number>;

@@ -1,7 +1,9 @@
 import { LogEventParameter } from "./analytics";
 
+export const ENABLE_ANALYTICS_HINT = "⚠️ You're calling an Analytics function but have not enabled it. Please add 'analytics: true' to 'firebase.nativescript.json' and remove the 'node_modules' and 'platforms' folders.";
+
 export function validateAnalyticsKey(key: string): string | undefined {
-  if (key === undefined) {
+  if (key === undefined || key === null) {
     return "Argument 'key' is missing";
   }
 
@@ -9,19 +11,19 @@ export function validateAnalyticsKey(key: string): string | undefined {
     return "Argument 'key' must be 40 characters or fewer";
   }
 
-  if (!key.match(/^[a-zA-Z][a-zA-Z_]+$/)) {
+  if (!key.match(/^[a-zA-Z0-9][a-zA-Z0-9_]+$/)) {
     return "Argument 'key' can only contain alphanumeric characters and underscores and must start with an alphanumeric character";
   }
 
-  if (key.startsWith("firebase_")) {
+  if (key.indexOf("firebase_") === 0) {
     return "Argument 'key' must not start with 'firebase_'";
   }
 
-  if (key.startsWith("google_")) {
+  if (key.indexOf("google_") === 0) {
     return "Argument 'key' must not start with 'google_'";
   }
 
-  if (key.startsWith("ga_")) {
+  if (key.indexOf("ga_") === 0) {
     return "Argument 'key' must not start with 'ga_'";
   }
 
@@ -67,7 +69,7 @@ function validateAnalyticsParamKey(key: string): string | undefined {
     return "Param 'key' must be 40 characters or fewer";
   }
 
-  if (!key.match(/^[a-zA-Z][a-zA-Z_]+$/)) {
+  if (!key.match(/^[a-zA-Z0-9][a-zA-Z0-9_]+$/)) {
     return "Param 'key' can only contain alphanumeric characters and underscores and must start with an alphanumeric character";
   }
 
@@ -75,7 +77,7 @@ function validateAnalyticsParamKey(key: string): string | undefined {
 }
 
 function validateAnalyticsParamValue(value: string): string | undefined {
-  if (value === undefined) {
+  if (value === undefined || value === null) {
     return "Param 'value' is missing";
   }
 
@@ -83,15 +85,15 @@ function validateAnalyticsParamValue(value: string): string | undefined {
     return "Param 'value' must be 100 characters or fewer";
   }
 
-  if (value.startsWith("firebase_")) {
+  if (value.indexOf("firebase_") === 0) {
     return "Param 'value' must not start with 'firebase_'";
   }
 
-  if (value.startsWith("google_")) {
+  if (value.indexOf("google_") === 0) {
     return "Param 'value' must not start with 'google_'";
   }
 
-  if (value.startsWith("ga_")) {
+  if (value.indexOf("ga_") === 0) {
     return "Param 'value' must not start with 'ga_'";
   }
 

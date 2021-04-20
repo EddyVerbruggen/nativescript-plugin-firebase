@@ -1,15 +1,13 @@
-import { ImageSource } from "tns-core-modules/image-source";
+import { ImageSource, Application } from "@nativescript/core";
 import { MLKitScanBarcodesOnDeviceOptions, MLKitScanBarcodesOnDeviceResult, MLKitScanBarcodesResultBounds } from "./";
 import { BarcodeFormat, MLKitBarcodeScanner as MLKitBarcodeScannerBase } from "./barcodescanning-common";
-import * as application from "tns-core-modules/application";
 
 export { BarcodeFormat };
-
-const gmsTasks = (<any>com.google.android.gms).tasks;
 
 export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
 
   private player: android.media.MediaPlayer;
+  private inverseThrottle = 0;
 
   disposeNativeView(): void {
     super.disposeNativeView();
@@ -24,19 +22,19 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
     if (this.formats) {
       formats = [];
       const requestedFormats = this.formats.split(",");
-      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]))
+      requestedFormats.forEach(format => formats.push(BarcodeFormat[format.trim().toUpperCase()]));
     }
 
     if (this.beepOnScan) {
-      const activity = (application.android.foregroundActivity || application.android.startActivity);
+      const activity = (Application.android.foregroundActivity || Application.android.startActivity);
       activity.setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
       try {
-        const file = application.android.context.getResources().getIdentifier("beep", "raw", application.android.context.getPackageName());
+        const file = Application.android.context.getResources().getIdentifier("beep", "raw", Application.android.context.getPackageName());
         if (file === 0) {
           console.log("No 'beep.*' soundfile found in the resources /raw folder. There will be no audible feedback upon scanning a barcode.");
         } else {
           this.player = new android.media.MediaPlayer();
-          const fileDescriptor: android.content.res.AssetFileDescriptor = application.android.context.getResources().openRawResourceFd(file);
+          const fileDescriptor: android.content.res.AssetFileDescriptor = Application.android.context.getResources().openRawResourceFd(file);
           try {
             this.player.setDataSource(fileDescriptor.getFileDescriptor(), fileDescriptor.getStartOffset(), fileDescriptor.getLength());
           } finally {
@@ -59,7 +57,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
   }
 
   protected createSuccessListener(): any {
-    return new gmsTasks.OnSuccessListener({
+    return new (<any>com.google.android.gms).tasks.OnSuccessListener({
       onSuccess: barcodes => {
 
         const result = <MLKitScanBarcodesOnDeviceResult>{
@@ -75,6 +73,7 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
             const barcode = barcodes.get(i);
             result.barcodes.push({
               value: barcode.getRawValue(),
+              displayValue: barcode.getDisplayValue(),
               format: BarcodeFormat[barcode.getFormat()],
               android: barcode,
               bounds: boundingBoxToBounds(barcode.getBoundingBox()),
@@ -98,7 +97,15 @@ export class MLKitBarcodeScanner extends MLKitBarcodeScannerBase {
       }
     });
   }
+
+  protected preProcessImage(byteArray: any) {
+    if (this.supportInverseBarcodes && this.inverseThrottle++ % 2 === 0) {
+      return byteArray = org.nativescript.plugins.firebase.mlkit.BitmapUtil.byteArrayBitwiseNotHelper(byteArray);
+    }
+    return byteArray;
+  }
 }
+
 
 function boundingBoxToBounds(rect: any): MLKitScanBarcodesResultBounds {
   return {
@@ -110,7 +117,7 @@ function boundingBoxToBounds(rect: any): MLKitScanBarcodesResultBounds {
       width: rect.width(),
       height: rect.height()
     }
-  }
+  };
 }
 
 function getBarcodeDetector(formats?: Array<BarcodeFormat>): any {
@@ -133,7 +140,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
       const image: android.graphics.Bitmap = options.image instanceof ImageSource ? options.image.android : options.image.imageSource.android;
       const firImage = com.google.firebase.ml.vision.common.FirebaseVisionImage.fromBitmap(image);
 
-      const onSuccessListener = new gmsTasks.OnSuccessListener({
+      const onSuccessListener = new (<any>com.google.android.gms).tasks.OnSuccessListener({
         onSuccess: barcodes => {
           const result = <MLKitScanBarcodesOnDeviceResult>{
             barcodes: []
@@ -145,6 +152,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
               const barcode = barcodes.get(i);
               result.barcodes.push({
                 value: barcode.getRawValue(),
+                displayValue: barcode.getDisplayValue(),
                 format: BarcodeFormat[barcode.getFormat()],
                 android: barcode,
                 bounds: boundingBoxToBounds(barcode.getBoundingBox()),
@@ -161,7 +169,7 @@ export function scanBarcodesOnDevice(options: MLKitScanBarcodesOnDeviceOptions):
         }
       });
 
-      const onFailureListener = new gmsTasks.OnFailureListener({
+      const onFailureListener = new (<any>com.google.android.gms).tasks.OnFailureListener({
         onFailure: exception => reject(exception.getMessage())
       });
 

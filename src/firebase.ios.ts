@@ -1,13 +1,212 @@
-import * as application from "tns-core-modules/application/application";
-import { ActionCodeSettings, DataSnapshot, FBDataSingleEvent, firestore, GetAuthTokenOptions, IdTokenResult, OnDisconnect as OnDisconnectBase, QueryOptions, User } from "./firebase";
+import { Application, Device } from "@nativescript/core";
 import { DocumentSnapshot as DocumentSnapshotBase, FieldValue, firebase, GeoPoint, isDocumentReference } from "./firebase-common";
-import * as firebaseFunctions from './functions/functions';
+import * as firebaseFunctions from "./functions/functions";
 import * as firebaseMessaging from "./messaging/messaging";
 import { firebaseUtils } from "./utils";
+import { getNonce, Sha256 } from "./utils/nonce-util-ios";
+import { firestore } from "./firebase";
+
+declare const ASAuthorizationAppleIDProvider, ASAuthorizationScopeFullName, ASAuthorizationScopeEmail, ASAuthorizationController, ASAuthorizationControllerDelegate, ASAuthorizationAppleIDCredential, ASAuthorizationControllerPresentationContextProviding: any;
+export enum QueryOrderByType {
+  KEY,
+  VALUE,
+  CHILD,
+  PRIORITY
+}
+
+/**
+ * The allowed values for QueryOptions.range.type.
+ */
+export enum QueryRangeType {
+  START_AT,
+  END_AT,
+  EQUAL_TO
+}
+
+/**
+ * The allowed values for QueryOptions.limit.type.
+ */
+export enum QueryLimitType {
+  FIRST,
+  LAST
+}
+type ActionCodeSettings = {
+  url: string;
+  handleCodeInApp?: boolean;
+  android?: {
+    installApp?: boolean;
+    minimumVersion?: string;
+    packageName: string;
+  };
+  iOS?: {
+    bundleId: string;
+    dynamicLinkDomain?: string;
+  };
+};
+export interface OnDisconnectBase {
+  cancel(): Promise<any>;
+
+  remove(): Promise<any>;
+
+  set(value: any): Promise<any>;
+
+  setWithPriority(
+      value: any,
+      priority: number | string
+  ): Promise<any>;
+
+  update(values: Object): Promise<any>;
+}
+
+
+export interface DataSnapshot {
+  key: string;
+  ref: any; // TODO: Type it so that it returns a databaseReference.
+  child(path: string): DataSnapshot;
+
+  exists(): boolean;
+
+  forEach(action: (snapshot: DataSnapshot) => any): boolean;
+
+  getPriority(): string | number | null;
+
+  hasChild(path: string): boolean;
+
+  hasChildren(): boolean;
+
+  numChildren(): number;
+
+  toJSON(): Object;
+
+  val(): any;
+}
+
+export interface FBData {
+  type: string;
+  key: string;
+  value: any;
+}
+
+export interface FBDataSingleEvent extends FBData {
+  children?: Array<any>;
+}
+
+export interface FBErrorData {
+  error: string;
+}
+
+export interface GetAuthTokenOptions {
+  /**
+   * Default false.
+   */
+  forceRefresh?: boolean;
+}
+export interface IdTokenResult {
+  token: string;
+  claims: { [key: string]: any; };
+  signInProvider: string;
+  expirationTime: number;
+  issuedAtTime: number;
+  authTime: number;
+}
+export interface QueryRangeOption {
+  type: QueryRangeType;
+  value: any;
+}
+
+/**
+ * The options object passed into the query function.
+ */
+export interface QueryOptions {
+  /**
+   * How you'd like to sort the query result.
+   */
+  orderBy: {
+    type: QueryOrderByType;
+    /**
+     * mandatory when type is QueryOrderByType.CHILD
+     */
+    value?: string;
+  };
+
+  /**
+   * You can further restrict the returned results by specifying restrictions.
+   * Need more than one range restriction? Use 'ranges' instead.
+   */
+  range?: QueryRangeOption;
+
+  /**
+   * Same as 'range', but for a 'chain of ranges'.
+   * You can further restrict the returned results by specifying restrictions.
+   */
+  ranges?: QueryRangeOption[];
+
+  /**
+   * You can limit the number of returned rows if you want to.
+   */
+  limit?: {
+    type: QueryLimitType;
+    value: number;
+  };
+
+  /**
+   * Set this to true if you don't want to listen for any future updates,
+   * but just want to retrieve the current value.
+   * You can also use this to check if certain data is in the database.
+   * Default false.
+   */
+  singleEvent?: boolean;
+}
+export interface Provider {
+  id: string;
+  token?: string;
+}
+
+export interface User {
+  uid: string;
+  email?: string;
+  emailVerified: boolean;
+  displayName?: string;
+  phoneNumber?: string;
+  anonymous: boolean;
+  isAnonymous: boolean; // This is used by the web API
+  providers: Array<Provider>;
+  photoURL?: string;
+  metadata: UserMetadata;
+  additionalUserInfo?: AdditionalUserInfo;
+
+  /** iOS only */
+  refreshToken?: string;
+
+  getIdToken(forceRefresh?: boolean): Promise<string>;
+
+  getIdTokenResult(forceRefresh?: boolean): Promise<IdTokenResult>;
+
+  sendEmailVerification(actionCodeSettings?: ActionCodeSettings): Promise<void>;
+}
+
+/**
+ * The metadata of the user
+ */
+export interface UserMetadata {
+  creationTimestamp: Date;
+  lastSignInTimestamp: Date;
+}
+
+/**
+ * Contains additional user information
+ */
+export interface AdditionalUserInfo {
+  profile: Map<string, any>;
+  providerId: string;
+  username: string;
+  isNewUser: boolean;
+}
 
 firebase._gIDAuthentication = null;
 firebase._cachedDynamicLink = null;
 firebase._configured = false;
+firebase._currentNonce = null;
 
 const useExternalPushProvider = NSBundle.mainBundle.infoDictionary.objectForKey("UseExternalPushProvider") === true;
 
@@ -86,7 +285,7 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
-        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation);
+        result = result || GIDSignIn.sharedInstance().handleURL(url);
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -119,10 +318,7 @@ firebase.addAppDelegateMethods = appDelegate => {
       }
 
       if (typeof (GIDSignIn) !== "undefined") {
-        result = result || GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(
-            url,
-            options.valueForKey(UIApplicationOpenURLOptionsSourceApplicationKey),
-            options.valueForKey(UIApplicationOpenURLOptionsAnnotationKey));
+        result = result || GIDSignIn.sharedInstance().handleURL(url);
       }
 
       if (typeof (FIRDynamicLink) !== "undefined") {
@@ -156,22 +352,23 @@ firebase.addAppDelegateMethods = appDelegate => {
       if (userActivity.webpageURL) {
         // check for an email-link-login flow
 
-        const fAuth = (typeof (FIRAuth) !== "undefined") ? FIRAuth.auth() : undefined;
-        if (fAuth && fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
+        firebase.fAuth = (typeof (FIRAuth) !== "undefined") ? FIRAuth.auth() : undefined;
+        if (firebase.fAuth && firebase.fAuth.isSignInWithEmailLink(userActivity.webpageURL.absoluteString)) {
           const rememberedEmail = firebase.getRememberedEmailForEmailLinkLogin();
           if (rememberedEmail !== undefined) {
 
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               const onCompletionLink = (result: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, and complete the email link sign in flow
-                  fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+                  firebase.fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
                     if (!error) {
                       firebase.notifyAuthStateListeners({
                         loggedIn: true,
                         user: toLoginResult(authData.user)
                       });
                     }
+                    firebase.fAuth = null;
                   });
                 } else {
                   // linking successful, so the user can now log in with either their email address, or however he logged in previously
@@ -179,13 +376,14 @@ firebase.addAppDelegateMethods = appDelegate => {
                     loggedIn: true,
                     user: toLoginResult(result.user)
                   });
+                  firebase.fAuth = null;
                 }
               };
               const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailLink(rememberedEmail, userActivity.webpageURL.absoluteString);
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
+              firebase.fAuth.signInWithEmailLinkCompletion(rememberedEmail, userActivity.webpageURL.absoluteString, (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   console.log(error.localizedDescription);
                 } else {
@@ -194,6 +392,7 @@ firebase.addAppDelegateMethods = appDelegate => {
                     user: toLoginResult(authData.user)
                   });
                 }
+                firebase.fAuth = null;
               });
             }
           }
@@ -201,7 +400,7 @@ firebase.addAppDelegateMethods = appDelegate => {
 
         } else {
           result = FIRDynamicLinks.dynamicLinks().handleUniversalLinkCompletion(userActivity.webpageURL, (dynamicLink, error) => {
-            if (dynamicLink.url !== null) {
+            if (dynamicLink !== null && dynamicLink.url !== null) {
               if (firebase._dynamicLinkCallback) {
                 firebase._dynamicLinkCallback({
                   url: dynamicLink.url.absoluteString,
@@ -282,15 +481,16 @@ if (typeof (FIRMessaging) !== "undefined" || useExternalPushProvider) {
 // This breaks in-app-messaging :(
 function getAppDelegate() {
   // Play nice with other plugins by not completely ignoring anything already added to the appdelegate
-  if (application.ios.delegate === undefined) {
+  if (Application.ios.delegate === undefined) {
 
     @ObjCClass(UIApplicationDelegate)
+    @NativeClass()
     class UIApplicationDelegateImpl extends UIResponder implements UIApplicationDelegate {
     }
 
-    application.ios.delegate = UIApplicationDelegateImpl;
+    Application.ios.delegate = UIApplicationDelegateImpl;
   }
-  return application.ios.delegate;
+  return Application.ios.delegate;
 }
 
 firebase.addAppDelegateMethods(getAppDelegate());
@@ -342,10 +542,6 @@ firebase.init = arg => {
         }
       }
 
-      if (arg.crashlyticsCollectionEnabled && typeof (Crashlytics) !== "undefined") {
-        Fabric.with(NSArray.arrayWithObject(Crashlytics.class()));
-      }
-
       if (typeof (FIRDatabase) !== "undefined") {
         if (arg.persist) {
           FIRDatabase.database().persistenceEnabled = true;
@@ -369,7 +565,7 @@ firebase.init = arg => {
             // "[FirebaseDatabase] Authentication failed: invalid_token ..."
             FIRAuth.auth().signOut();
           } catch (signOutErr) {
-            console.log('Sign out of Firebase error: ' + signOutErr);
+            console.log("Sign out of Firebase error: " + signOutErr);
           }
         }
 
@@ -444,6 +640,7 @@ firebase.getRemoteConfig = arg => {
       const firebaseRemoteConfig = FIRRemoteConfig.remoteConfig();
 
       // Enable developer mode to allow for frequent refreshes of the cache
+      // TODO this is deprecated (but not removed yet), see https://firebase.google.com/support/release-notes/ios#remote-config_2
       firebaseRemoteConfig.configSettings = new FIRRemoteConfigSettings({developerModeEnabled: arg.developerMode || false});
 
       const dic: any = NSMutableDictionary.new();
@@ -629,12 +826,14 @@ function toLoginResult(user, additionalUserInfo?: FIRAdditionalUserInfo): User {
       const firUserInfo = user.providerData.objectAtIndex(i);
       const pid = firUserInfo.valueForKey("providerID");
       // the app may have dropped Facebook support, so check if the native class is still there
-      if (pid === 'facebook.com' && typeof (FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
+      if (pid === "facebook.com" && typeof (FBSDKAccessToken) !== "undefined") { // FIRFacebookAuthProviderID
         providers.push({id: pid, token: FBSDKAccessToken.currentAccessToken ? FBSDKAccessToken.currentAccessToken.tokenString : null});
-      } else if (pid === 'google.com' && typeof (GIDSignIn) !== "undefined" && GIDSignIn.sharedInstance() && GIDSignIn.sharedInstance().currentUser) {
+      } else if (pid === "google.com" && typeof (GIDSignIn) !== "undefined" && GIDSignIn.sharedInstance() && GIDSignIn.sharedInstance().currentUser) {
         // include web compatible oauth2 token
-        const gidCurrentAccessToken = GIDSignIn.sharedInstance().currentUser.authentication.accessToken;
-        providers.push({id: pid, token: gidCurrentAccessToken });
+        const gidCurrentIdToken = GIDSignIn.sharedInstance().currentUser.authentication.idToken;
+        providers.push({id: pid, token: gidCurrentIdToken});
+      } else if (pid === "apple.com") {
+        // TODO
       } else {
         providers.push({id: pid});
       }
@@ -735,10 +934,11 @@ firebase.login = arg => {
             user: toLoginResult(authResult.user)
           });
         }
+        firebase.fAuth = null;
       };
 
-      const fAuth = FIRAuth.auth();
-      if (fAuth === null) {
+      firebase.fAuth = FIRAuth.auth();
+      if (firebase.fAuth === null) {
         reject("Run init() first!");
         return;
       }
@@ -746,7 +946,7 @@ firebase.login = arg => {
       firebase.moveLoginOptionsToObjects(arg);
 
       if (arg.type === firebase.LoginType.ANONYMOUS) {
-        fAuth.signInAnonymouslyWithCompletion(onCompletionWithAuthResult);
+        firebase.fAuth.signInAnonymouslyWithCompletion(onCompletionWithAuthResult);
 
       } else if (arg.type === firebase.LoginType.PASSWORD) {
         if (!arg.passwordOptions || !arg.passwordOptions.email || !arg.passwordOptions.password) {
@@ -755,21 +955,22 @@ firebase.login = arg => {
         }
 
         const fIRAuthCredential = FIREmailAuthProvider.credentialWithEmailPassword(arg.passwordOptions.email, arg.passwordOptions.password);
-        if (fAuth.currentUser) {
+        if (firebase.fAuth.currentUser) {
           // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
           const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
             if (error) {
               // ignore, as this one was probably already linked, so just return the user
               log("--- linking error: " + error.localizedDescription);
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             } else {
               onCompletionWithAuthResult(authData, error);
             }
+            firebase.fAuth = null;
           };
-          fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+          firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
         } else {
-          fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletionWithAuthResult);
+          firebase.fAuth.signInWithEmailPasswordCompletion(arg.passwordOptions.email, arg.passwordOptions.password, onCompletionWithAuthResult);
         }
 
       } else if (arg.type === firebase.LoginType.EMAIL_LINK) {
@@ -793,7 +994,7 @@ firebase.login = arg => {
             arg.emailLinkOptions.android ? arg.emailLinkOptions.android.packageName : NSBundle.mainBundle.bundleIdentifier,
             arg.emailLinkOptions.android ? arg.emailLinkOptions.android.installApp || false : false,
             arg.emailLinkOptions.android ? arg.emailLinkOptions.android.minimumVersion || "1" : "1");
-        fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
+        firebase.fAuth.sendSignInLinkToEmailActionCodeSettingsCompletion(
             arg.emailLinkOptions.email,
             firActionCodeSettings,
             (error: NSError) => {
@@ -802,7 +1003,7 @@ firebase.login = arg => {
                 return;
               }
               // The link was successfully sent.
-              // Save the email locally so you don't need to ask the user for it again if they open the link on the same device.
+              // Save the email locally so you don't need to ask the user for it again if they open the link on the same Device.
               firebase.rememberEmailForEmailLinkLogin(arg.emailLinkOptions.email);
               resolve();
             }
@@ -827,18 +1028,19 @@ firebase.login = arg => {
               return;
             }
             const fIRAuthCredential = FIRPhoneAuthProvider.provider().credentialWithVerificationIDVerificationCode(verificationID, userResponse);
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(authData, error);
                 }
+                firebase.fAuth = null;
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }, arg.phoneOptions.verificationPrompt);
         });
@@ -850,12 +1052,12 @@ firebase.login = arg => {
         }
 
         if (arg.customOptions.token) {
-          fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
+          firebase.fAuth.signInWithCustomTokenCompletion(arg.customOptions.token, onCompletionWithAuthResult);
         } else if (arg.customOptions.tokenProviderFn) {
           arg.customOptions.tokenProviderFn()
               .then(
                   token => {
-                    fAuth.signInWithCustomTokenCompletion(token, onCompletionWithAuthResult);
+                    firebase.fAuth.signInWithCustomTokenCompletion(token, onCompletionWithAuthResult);
                   },
                   error => {
                     reject(error);
@@ -879,21 +1081,22 @@ firebase.login = arg => {
             // headless facebook auth
             // var fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(fbSDKLoginManagerLoginResult.token.tokenString);
             const fIRAuthCredential = FIRFacebookAuthProvider.credentialWithAccessToken(FBSDKAccessToken.currentAccessToken.tokenString);
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use fb as an auth provider
               const onCompletionLink = (authData: FIRAuthDataResult, error: NSError) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
                   log("--- linking error: " + error.localizedDescription);
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(authData);
                 }
+                firebase.fAuth = null;
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
           }
         };
@@ -912,6 +1115,43 @@ firebase.login = arg => {
             null, // the viewcontroller param can be null since by default topmost is taken
             onFacebookCompletion);
 
+      } else if (arg.type === firebase.LoginType.APPLE) {
+        if (parseInt(Device.osVersion) < 13) {
+          reject("Sign in with Apple requires iOS 13 or higher. You're running iOS " + Device.osVersion);
+          return;
+        }
+
+        firebase._currentNonce = getNonce(32);
+        const sha256Nonce = Sha256(firebase._currentNonce);
+        const appleIDProvider = ASAuthorizationAppleIDProvider.new();
+        const appleIDRequest = appleIDProvider.createRequest();
+
+        let scopes = [ASAuthorizationScopeFullName, ASAuthorizationScopeEmail];
+
+        if (arg.appleOptions && arg.appleOptions.scopes) {
+          scopes = [];
+          arg.appleOptions.scopes.forEach(scope => {
+            if (scope === "name") {
+              scopes.push(ASAuthorizationScopeFullName);
+            } else if (scope === "email") {
+              scopes.push(ASAuthorizationScopeEmail);
+            } else {
+              console.log("Unknown scope: " + scope);
+            }
+          });
+        }
+
+        appleIDRequest.requestedScopes = scopes;
+        appleIDRequest.nonce = sha256Nonce;
+
+        const authorizationController = ASAuthorizationController.alloc().initWithAuthorizationRequests([appleIDRequest]);
+        firebase.appleAuthDelegate = ASAuthorizationControllerDelegateImpl.createWithOwnerAndResolveReject(this as any, resolve, reject);
+        authorizationController.delegate = firebase.appleAuthDelegate;
+
+        authorizationController.presentationContextProvider = ASAuthorizationControllerPresentationContextProvidingImpl.createWithOwnerAndCallback(this as any);
+
+        authorizationController.performRequests();
+
       } else if (arg.type === firebase.LoginType.GOOGLE) {
         if (typeof (GIDSignIn) === "undefined") {
           reject("Google Sign In not installed - see Podfile");
@@ -919,8 +1159,7 @@ firebase.login = arg => {
         }
 
         const sIn = GIDSignIn.sharedInstance();
-        // allow custom controller for variety of use cases
-        sIn.uiDelegate = arg.ios && arg.ios.controller ? arg.ios.controller : application.ios.rootController;
+        sIn.presentingViewController = arg.ios && arg.ios.controller ? arg.ios.controller : Application.ios.rootController;
         sIn.clientID = FIRApp.defaultApp().options.clientID;
 
         if (arg.googleOptions && arg.googleOptions.hostedDomain) {
@@ -931,38 +1170,37 @@ firebase.login = arg => {
           sIn.scopes = arg.googleOptions.scopes;
         }
 
-        let delegate = GIDSignInDelegateImpl.new().initWithCallback((user: GIDGoogleUser, error: NSError) => {
+        firebase.googleSignInDelegate = GIDSignInDelegateImpl.new().initWithCallback((user: GIDGoogleUser, error: NSError) => {
           if (error === null) {
             // Get a Google ID token and Google access token from the GIDAuthentication object and exchange them for a Firebase credential
             firebase._gIDAuthentication = user.authentication;
             const fIRAuthCredential = FIRGoogleAuthProvider.credentialWithIDTokenAccessToken(firebase._gIDAuthentication.idToken, firebase._gIDAuthentication.accessToken);
 
             // Finally, authenticate with Firebase using the credential
-            if (fAuth.currentUser) {
+            if (firebase.fAuth.currentUser) {
               // link credential, note that you only want to do this if this user doesn't already use Google as an auth provider
               const onCompletionLink = (user, error) => {
                 if (error) {
                   // ignore, as this one was probably already linked, so just return the user
-                  fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+                  firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
                 } else {
                   onCompletionWithAuthResult(user);
                 }
+                firebase.fAuth = null;
               };
-              fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
+              firebase.fAuth.currentUser.linkWithCredentialCompletion(fIRAuthCredential, onCompletionLink);
 
             } else {
-              fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
+              firebase.fAuth.signInWithCredentialCompletion(fIRAuthCredential, onCompletionWithAuthResult);
             }
 
           } else {
             reject(error.localizedDescription);
           }
-          CFRelease(delegate);
-          delegate = undefined;
+          firebase.googleSignInDelegate = null;
         });
 
-        CFRetain(delegate);
-        sIn.delegate = delegate;
+        sIn.delegate = firebase.googleSignInDelegate;
         sIn.signIn();
       } else {
         reject("Unsupported auth type: " + arg.type);
@@ -1672,6 +1910,16 @@ firebase.enableLogging = (logging: boolean, persistent?: boolean) => {
  * END Realtime Database Functions
  ***********************************************/
 
+const ensureFirestore = (): void => {
+  if (typeof (FIRFirestore) === "undefined") {
+    throw new Error("Make sure 'firestore' is enabled in 'firebase.nativescript.json', then clean the node_modules and platforms folders");
+  }
+
+  if (!firebase.initialized) {
+    throw new Error("Please run firebase.init() before using Firestore");
+  }
+};
+
 firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.WriteBatch => {
   class FirestoreWriteBatch implements firestore.WriteBatch {
     constructor() {
@@ -1679,18 +1927,18 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.WriteBatch => {
       fixSpecialFields(data);
-      nativeWriteBatch.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
+      nativeWriteBatch.setDataForDocumentMerge(<any>data, (<any>documentRef).ios, options && options.merge);
       return this;
     }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.WriteBatch => {
       fixSpecialFields(data);
-      nativeWriteBatch.updateDataForDocument(<any>data, documentRef.ios);
+      nativeWriteBatch.updateDataForDocument(<any>data, (<any>documentRef).ios);
       return this;
     }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.WriteBatch => {
-      nativeWriteBatch.deleteDocument(documentRef.ios);
+      nativeWriteBatch.deleteDocument((<any>documentRef).ios);
       return this;
     }
 
@@ -1707,34 +1955,35 @@ firebase.firestore.WriteBatch = (nativeWriteBatch: FIRWriteBatch): firestore.Wri
 };
 
 firebase.firestore.batch = (): firestore.WriteBatch => {
+  ensureFirestore();
   return new firebase.firestore.WriteBatch(FIRFirestore.firestore().batch());
 };
 
-firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.Transaction => {
+firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): any => { //firestore.Transaction
   class FirestoreTransaction implements firestore.Transaction {
     constructor() {
     }
 
-    public get = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
-      const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError(documentRef.ios);
+    public get: any = (documentRef: firestore.DocumentReference): DocumentSnapshot => {
+      const docSnapshot: FIRDocumentSnapshot = nativeTransaction.getDocumentError((<any>documentRef).ios);
       return new DocumentSnapshot(docSnapshot);
     }
 
     public set = (documentRef: firestore.DocumentReference, data: firestore.DocumentData, options?: firestore.SetOptions): firestore.Transaction => {
       fixSpecialFields(data);
-      nativeTransaction.setDataForDocumentMerge(<any>data, documentRef.ios, options && options.merge);
-      return this;
+      nativeTransaction.setDataForDocumentMerge(<any>data, (<any>documentRef).ios, options && options.merge);
+      return <any>this;
     }
 
     public update = (documentRef: firestore.DocumentReference, data: firestore.UpdateData): firestore.Transaction => {
       fixSpecialFields(data);
-      nativeTransaction.updateDataForDocument(<any>data, documentRef.ios);
-      return this;
+      nativeTransaction.updateDataForDocument(<any>data, (<any>documentRef).ios);
+      return <any>this;
     }
 
     public delete = (documentRef: firestore.DocumentReference): firestore.Transaction => {
-      nativeTransaction.deleteDocument(documentRef.ios);
-      return this;
+      nativeTransaction.deleteDocument((<any>documentRef).ios);
+      return <any>this;
     }
   }
 
@@ -1742,6 +1991,7 @@ firebase.firestore.Transaction = (nativeTransaction: FIRTransaction): firestore.
 };
 
 firebase.firestore.runTransaction = (updateFunction: (transaction: firestore.Transaction) => Promise<any>): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     FIRFirestore.firestore().runTransactionWithBlockCompletion(
         (nativeTransaction: FIRTransaction, err: any) => {
@@ -1760,7 +2010,7 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
       if (settings.ssl !== undefined) fIRFirestoreSettings.sslEnabled = settings.ssl;
       if (settings.host !== undefined) fIRFirestoreSettings.host = settings.host;
       // Cannot do this because of nativescript cannot convert Number to int64_t
-      // fIRFirestoreSettings.cacheSizeBytes = settings.cacheSizeBytes;
+      // fIRFirestore(<any>settings).cacheSizeBytes = (<any>settings).cacheSizeBytes;
       FIRFirestore.firestore().settings = fIRFirestoreSettings;
     } catch (err) {
       console.log("Error in firebase.firestore.settings: " + err);
@@ -1768,21 +2018,31 @@ firebase.firestore.settings = (settings: firestore.Settings) => {
   }
 };
 
+firebase.firestore.clearPersistence = (): Promise<void> => {
+  ensureFirestore();
+  return new Promise<void>((resolve, reject) => {
+    FIRFirestore.firestore().clearPersistenceWithCompletion((error: NSError) => {
+      error ? reject(error.localizedDescription) : resolve();
+    });
+  });
+};
+
 firebase.firestore.collection = (collectionPath: string): firestore.CollectionReference => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
-    if (!firebase.initialized) {
-      console.log("Please run firebase.init() before firebase.firestore.collection()");
-      return null;
-    }
-
     return firebase.firestore._getCollectionReference(FIRFirestore.firestore().collectionWithPath(collectionPath));
   } catch (ex) {
     console.log("Error in firebase.firestore.collection: " + ex);
+    return null;
+  }
+};
+
+firebase.firestore.collectionGroup = (id: string): any => {
+  ensureFirestore();
+  try {
+    return firebase.firestore._getCollectionGroupQuery(FIRFirestore.firestore().collectionGroupWithID(id));
+  } catch (ex) {
+    console.log("Error in firebase.firestore.collectionGroup: " + ex);
     return null;
   }
 };
@@ -1873,6 +2133,7 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
   return {
     id: colRef.collectionID,
     parent: firebase.firestore._getDocumentReference(colRef.parent),
+    firestore: firebase.firestore,
     doc: (documentPath?: string) => firebase.firestore.doc(collectionPath, documentPath),
     add: document => firebase.firestore.add(collectionPath, document),
     get: (options?: firestore.GetOptions) => firebase.firestore.get(collectionPath, options),
@@ -1880,10 +2141,20 @@ firebase.firestore._getCollectionReference = (colRef?: FIRCollectionReference): 
     orderBy: (fieldPath: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fieldPath, directionStr, colRef),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, colRef),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(colRef, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, colRef),
-    startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, colRef),
-    endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, colRef),
-    endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, colRef),
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue, fieldValues, colRef),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue, fieldValues, colRef)
+  };
+};
+
+firebase.firestore._getCollectionGroupQuery = (query?: FIRQuery): any => {
+  if (!query) {
+    return null;
+  }
+
+  return {
+    where: (property: string, opStr: firestore.WhereFilterOp, value: any) => firebase.firestore.where(undefined, property, opStr, value, query)
   };
 };
 
@@ -1899,28 +2170,20 @@ firebase.firestore._getDocumentReference = (docRef?: FIRDocumentReference): fire
     id: docRef.documentID,
     parent: firebase.firestore._getCollectionReference(docRef.parent),
     path: docRef.path,
+    firestore: firebase.firestore,
     collection: cp => firebase.firestore.collection(`${collectionPath}/${docRef.documentID}/${cp}`),
     set: (data: any, options?: firestore.SetOptions) => firebase.firestore.set(collectionPath, docRef.documentID, data, options),
     get: (options?: firestore.GetOptions) => firebase.firestore.getDocument(collectionPath, docRef.documentID, options),
     update: (data: any) => firebase.firestore.update(collectionPath, docRef.documentID, data),
     delete: () => firebase.firestore.delete(collectionPath, docRef.documentID),
-    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: DocumentSnapshot) => void), callbackOrOnError?: (docOrError: DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
+    onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: firestore.DocumentSnapshot) => void), callbackOrOnError?: (docOrError: firestore.DocumentSnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onDocumentSnapshot(docRef, optionsOrCallback, callbackOrOnError, onError),
     ios: docRef
   };
 };
 
 firebase.firestore.doc = (collectionPath: string, documentPath?: string): firestore.DocumentReference => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
-    if (!firebase.initialized) {
-      console.log("Please run firebase.init() before firebase.firestore.doc()");
-      return null;
-    }
-
     const fIRCollectionReference = FIRFirestore.firestore().collectionWithPath(collectionPath);
     const fIRDocumentReference = documentPath ? fIRCollectionReference.documentWithPath(documentPath) : fIRCollectionReference.documentWithAutoID();
     return firebase.firestore._getDocumentReference(fIRDocumentReference);
@@ -1931,21 +2194,14 @@ firebase.firestore.doc = (collectionPath: string, documentPath?: string): firest
 };
 
 firebase.firestore.docRef = (documentPath: string): firestore.DocumentReference => {
-  if (typeof (FIRFirestore) === "undefined") {
-    console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-    return null;
-  }
-
+  ensureFirestore();
   return firebase.firestore._getDocumentReference(FIRFirestore.firestore().documentWithPath(documentPath));
 };
 
 firebase.firestore.add = (collectionPath: string, document: any): Promise<firestore.DocumentReference> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
       fixSpecialFields(document);
       const defaultFirestore = FIRFirestore.firestore();
       const fIRDocumentReference = defaultFirestore
@@ -1966,13 +2222,9 @@ firebase.firestore.add = (collectionPath: string, document: any): Promise<firest
 };
 
 firebase.firestore.set = (collectionPath: string, documentPath: string, document: any, options?: firestore.SetOptions): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
@@ -2045,7 +2297,7 @@ function fixSpecialField(item): any {
       longitude: geo.longitude
     });
   } else if (isDocumentReference(item)) {
-    return item.ios;
+    return (<any>item).ios;
   } else if (typeof item === "object" && item.constructor === Object) {
     return fixSpecialFields(item);
   } else {
@@ -2054,13 +2306,9 @@ function fixSpecialField(item): any {
 }
 
 firebase.firestore.update = (collectionPath: string, documentPath: string, document: any): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       fixSpecialFields(document);
 
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
@@ -2082,13 +2330,9 @@ firebase.firestore.update = (collectionPath: string, documentPath: string, docum
 };
 
 firebase.firestore.delete = (collectionPath: string, documentPath: string): Promise<void> => {
+  ensureFirestore();
   return new Promise<void>((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       const docRef: FIRDocumentReference = FIRFirestore.firestore()
           .collectionWithPath(collectionPath)
           .documentWithPath(documentPath);
@@ -2109,13 +2353,9 @@ firebase.firestore.delete = (collectionPath: string, documentPath: string): Prom
 };
 
 firebase.firestore.getCollection = (collectionPath: string, options?: firestore.GetOptions): Promise<firestore.QuerySnapshot> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
@@ -2147,14 +2387,10 @@ firebase.firestore.get = (collectionPath: string, options?: firestore.GetOptions
   return firebase.firestore.getCollection(collectionPath, options);
 };
 
-firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<firestore.DocumentSnapshot> => {
+firebase.firestore.getDocument = (collectionPath: string, documentPath: string, options?: firestore.GetOptions): Promise<DocumentSnapshot> => {
+  ensureFirestore();
   return new Promise((resolve, reject) => {
     try {
-      if (typeof (FIRFirestore) === "undefined") {
-        reject("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-        return;
-      }
-
       let source = FIRFirestoreSource.Default;
       if (options && options.source) {
         if (options.source === "cache") {
@@ -2171,7 +2407,7 @@ firebase.firestore.getDocument = (collectionPath: string, documentPath: string, 
             if (error) {
               reject(error.localizedDescription);
             } else {
-              resolve(new DocumentSnapshot(snapshot));
+              resolve(new DocumentSnapshot(<any>snapshot));
             }
           });
 
@@ -2197,20 +2433,17 @@ firebase.firestore._getQuery = (collectionPath: string, query: FIRQuery): firest
     orderBy: (fp: string, directionStr: firestore.OrderByDirection): firestore.Query => firebase.firestore.orderBy(collectionPath, fp, directionStr, query),
     limit: (limit: number): firestore.Query => firebase.firestore.limit(collectionPath, limit, query),
     onSnapshot: (optionsOrCallback: firestore.SnapshotListenOptions | ((snapshot: QuerySnapshot) => void), callbackOrOnError?: (snapshotOrError: QuerySnapshot | Error) => void, onError?: (error: Error) => void) => firebase.firestore.onCollectionSnapshot(query, optionsOrCallback, callbackOrOnError, onError),
-    startAfter: (document: DocumentSnapshot) => firebase.firestore.startAfter(collectionPath, document, query),
-    startAt: (document: DocumentSnapshot) => firebase.firestore.startAt(collectionPath, document, query),
-    endAt: (document: DocumentSnapshot) => firebase.firestore.endAt(collectionPath, document, query),
-    endBefore: (document: DocumentSnapshot) => firebase.firestore.endBefore(collectionPath, document, query),
+    startAfter: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAfter(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    startAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.startAt(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    endAt: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endAt(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    endBefore: (snapshotOrFieldValue: DocumentSnapshot | any, ...fieldValues: any[]): firestore.Query => firebase.firestore.endBefore(collectionPath, snapshotOrFieldValue, fieldValues, query),
+    firestore: firebase.firestore
   };
 };
 
 firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: firestore.WhereFilterOp, value: any, query?: FIRQuery): firestore.Query => {
+  ensureFirestore();
   try {
-    if (typeof (FIRFirestore) === "undefined") {
-      console.log("Make sure 'Firebase/Firestore' is in the plugin's Podfile");
-      return null;
-    }
-
     query = query || FIRFirestore.firestore().collectionWithPath(collectionPath);
     value = fixSpecialField(value);
 
@@ -2226,6 +2459,10 @@ firebase.firestore.where = (collectionPath: string, fieldPath: string, opStr: fi
       query = query.queryWhereFieldIsGreaterThan(fieldPath, value);
     } else if (opStr === "array-contains") {
       query = query.queryWhereFieldArrayContains(fieldPath, value);
+    } else if (opStr === "array-contains-any") {
+      query = query.queryWhereFieldArrayContainsAny(fieldPath, value);
+    } else if (opStr === "in") {
+      query = query.queryWhereFieldIn(fieldPath, value);
     } else {
       console.log("Illegal argument for opStr: " + opStr);
       return null;
@@ -2249,22 +2486,39 @@ firebase.firestore.limit = (collectionPath: string, limit: number, query: FIRQue
   return firebase.firestore._getQuery(collectionPath, query);
 };
 
-firebase.firestore.startAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryStartingAtDocument(document.ios));
+firebase.firestore.startAfter = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterDocument(snapshotOrFieldValue.ios));
+  } else {
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterValues([snapshotOrFieldValue, ...fieldValues]));
+  }
 };
 
-firebase.firestore.startAfter = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryStartingAfterDocument(document.ios));
+firebase.firestore.startAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAtDocument(snapshotOrFieldValue.ios));
+  } else {
+    return firebase.firestore._getQuery(collectionPath, query.queryStartingAtValues([snapshotOrFieldValue, ...fieldValues]));
+  }
 };
 
-firebase.firestore.endAt = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryEndingAtDocument(document.ios));
+firebase.firestore.endAt = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingAtDocument(snapshotOrFieldValue.ios));
+  } else {
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingAtValues([snapshotOrFieldValue, ...fieldValues]));
+  }
 };
 
-firebase.firestore.endBefore = (collectionPath: string, document: DocumentSnapshot, query: FIRQuery) => {
-  return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeDocument(document.ios));
+firebase.firestore.endBefore = (collectionPath: string, snapshotOrFieldValue: DocumentSnapshot | any, fieldValues: any[], query: FIRQuery): firestore.Query => {
+  if (snapshotOrFieldValue && snapshotOrFieldValue.ios) {
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeDocument(snapshotOrFieldValue.ios));
+  } else {
+    return firebase.firestore._getQuery(collectionPath, query.queryEndingBeforeValues([snapshotOrFieldValue, ...fieldValues]));
+  }
 };
 
+@NativeClass()
 class GIDSignInDelegateImpl extends NSObject implements GIDSignInDelegate {
   public static ObjCProtocols = [];
 
@@ -2301,7 +2555,7 @@ function convertDocChangeType(type: FIRDocumentChangeType) {
 }
 
 function convertDocument(qDoc: FIRQueryDocumentSnapshot): firestore.QueryDocumentSnapshot {
-  return new DocumentSnapshot(qDoc);
+  return <any>new DocumentSnapshot(<any>qDoc);
 }
 
 export class QuerySnapshot implements firestore.QuerySnapshot {
@@ -2320,7 +2574,7 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
       const docSnapshots: firestore.QueryDocumentSnapshot[] = [];
       for (let i = 0, l = this.snapshot.documents.count; i < l; i++) {
         const document = this.snapshot.documents.objectAtIndex(i);
-        docSnapshots.push(new DocumentSnapshot(document));
+        docSnapshots.push(<any>new DocumentSnapshot(<any>document));
       }
       this._docSnapshots = docSnapshots;
 
@@ -2363,4 +2617,90 @@ export class QuerySnapshot implements firestore.QuerySnapshot {
   }
 }
 
-module.exports = firebase;
+@NativeClass()
+class ASAuthorizationControllerDelegateImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
+  public static ObjCProtocols = [];
+  private owner: any;
+  private resolve;
+  private reject;
+
+  public static createWithOwnerAndResolveReject(owner: any, resolve, reject): ASAuthorizationControllerDelegateImpl {
+    // defer initialisation because this is only available since iOS 13
+    if (ASAuthorizationControllerDelegateImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
+      ASAuthorizationControllerDelegateImpl.ObjCProtocols.push(ASAuthorizationControllerDelegate);
+    }
+    const delegate = <ASAuthorizationControllerDelegateImpl>ASAuthorizationControllerDelegateImpl.new();
+    delegate.owner = owner;
+    delegate.resolve = resolve;
+    delegate.reject = reject;
+    return delegate;
+  }
+
+  public authorizationControllerDidCompleteWithAuthorization(controller, authorization): void {
+    if (authorization.credential instanceof ASAuthorizationAppleIDCredential) {
+      const appleIDCredential = authorization.credential;
+      const rawNonce = firebase._currentNonce;
+
+      if (!rawNonce) {
+        throw new Error("Invalid state: A login callback was received, but no login request was sent.");
+      }
+
+      if (!appleIDCredential.identityToken) {
+        console.log("Invalid state: A login callback was received, but no login request was sent.");
+        return;
+      }
+
+      const idToken = <string><unknown>NSString.alloc().initWithDataEncoding(appleIDCredential.identityToken, NSUTF8StringEncoding);
+
+      if (!idToken) {
+        throw new Error("Unable to serialize id token from data: " + appleIDCredential.identityToken);
+      }
+
+      // Initialize a Firebase credential.
+      const fIROAuthCredential = FIROAuthProvider.credentialWithProviderIDIDTokenRawNonce(
+          "apple.com", idToken, rawNonce);
+
+      // Sign in with Firebase.
+      FIRAuth.auth().signInWithCredentialCompletion(
+          fIROAuthCredential,
+          (authResult: FIRAuthDataResult, error: NSError) => {
+            if (error) {
+              this.reject(error.localizedDescription);
+            } else {
+              firebase.notifyAuthStateListeners({
+                loggedIn: true,
+                user: toLoginResult(authResult.user)
+              });
+              this.resolve(toLoginResult(authResult && authResult.user, authResult && authResult.additionalUserInfo));
+              firebase.appleAuthDelegate = null;
+            }
+          });
+    }
+  }
+
+  public authorizationControllerDidCompleteWithError(controller, error): void {
+    this.reject(error.localizedDescription);
+  }
+}
+
+@NativeClass()
+class ASAuthorizationControllerPresentationContextProvidingImpl extends NSObject /* implements ASAuthorizationControllerDelegate */ {
+  public static ObjCProtocols = [];
+  private owner: any;
+
+  public static createWithOwnerAndCallback(owner: any): ASAuthorizationControllerPresentationContextProvidingImpl {
+    // defer initialisation because this is only available since iOS 13
+    if (ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.length === 0 && parseInt(Device.osVersion) >= 13) {
+      ASAuthorizationControllerPresentationContextProvidingImpl.ObjCProtocols.push(ASAuthorizationControllerPresentationContextProviding);
+    }
+    const delegate = <ASAuthorizationControllerPresentationContextProvidingImpl>ASAuthorizationControllerPresentationContextProvidingImpl.new();
+    delegate.owner = owner;
+    return delegate;
+  }
+
+  public presentationAnchorForAuthorizationController(controller): void {
+    // nothing to do really
+  }
+}
+
+export * from './firebase-common';

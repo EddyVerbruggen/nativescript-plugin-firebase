@@ -1,6 +1,6 @@
-import { File } from "tns-core-modules/file-system"
+import { File } from "@nativescript/core";
 import * as firebaseStorage from "../../storage/storage";
-import { UploadFileResult } from "../../storage/storage";
+import { ListResult, UploadFileResult, UploadMetadata } from "../../storage/storage";
 
 export module storage {
 
@@ -9,16 +9,21 @@ export module storage {
     totalBytes: number;
   }
 
+  export interface Metadata {
+    string: string;
+  }
+
   export class Reference {
 
     private path: string;
 
     parent: Reference | null; // TODO set this every time we navigate..
     root: Reference;
-    fullPath = this.path;
+    fullPath: string;
 
     constructor(path?: string) {
       this.path = path;
+      this.fullPath = this.path;
       if (path && path.length > 0) {
         this.root = new Reference();
       } else {
@@ -43,13 +48,26 @@ export module storage {
       });
     }
 
-    public put(data: File | string /* path */, metadata?: any /* ignored */): Promise<UploadTaskSnapshot> {
+    getMetadata(): Promise<string> {
+      return firebaseStorage.getDownloadUrl({
+        remoteFullPath: this.path
+      });
+    }
+
+    listAll(): Promise<ListResult> {
+      return firebaseStorage.listAll({
+        remoteFullPath: this.path
+      });
+    }
+
+    public put(data: File | string /* path */, metadata?: UploadMetadata): Promise<UploadTaskSnapshot> {
       return new Promise((resolve, reject) => {
         firebaseStorage.uploadFile({
           localFile: data instanceof File ? data : undefined,
           localFullPath: !(data instanceof File) ? data : undefined,
           remoteFullPath: this.path,
-          onProgress: progress => console.log(`Upload progress: ${progress.percentageCompleted}% completed`)
+          onProgress: progress => console.log(`Upload progress: ${progress.percentageCompleted}% completed`),
+          metadata
         }).then((result: UploadFileResult) => {
           this.getDownloadURL()
               .then(url => {

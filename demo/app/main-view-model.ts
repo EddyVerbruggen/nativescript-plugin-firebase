@@ -1,34 +1,23 @@
-import * as firebase from "nativescript-plugin-firebase";
-import {
-  AddEventListenerResult,
-  admob as firebaseAdMob,
-  crashlytics as firebaseCrashlytics,
-  IdTokenResult,
-  GetRemoteConfigResult,
-  LogComplexEventTypeParameter,
-  performance as firebasePerformance,
-  storage as firebaseStorage,
-  User
-} from "nativescript-plugin-firebase";
-import { RewardedVideoAdReward } from "nativescript-plugin-firebase/admob/admob";
-import { FirebaseTrace } from "nativescript-plugin-firebase/performance/performance";
-import { Observable } from "tns-core-modules/data/observable";
-import * as fs from "tns-core-modules/file-system";
-import { isAndroid, isIOS } from "tns-core-modules/platform";
-import { alert, prompt } from "tns-core-modules/ui/dialogs";
+import { alert, File, isAndroid, isIOS, knownFolders, Observable, prompt } from "@nativescript/core";
+import { firebase } from "@nativescript/firebase";
+import { admob as firebaseAdmob } from "@nativescript/firebase/admob";
+import { RewardedVideoAdReward } from "@nativescript/firebase/admob/admob";
+import { analytics as firebaseAnalytics } from "@nativescript/firebase/analytics";
+import { crashlytics as firebaseCrashlytics } from "@nativescript/firebase/crashlytics";
+import { firebaseFunctions } from "@nativescript/firebase/functions";
+import { performance as firebasePerformance } from "@nativescript/firebase/performance";
+import { FirebaseTrace } from "@nativescript/firebase/performance/performance";
+import { storage as firebaseStorage } from "@nativescript/firebase/storage";
+import { UploadMetadata } from "@nativescript/firebase/storage/storage";
 import { MessagingViewModel } from "./messaging-view-model";
 
-const firebaseWebApi = require("nativescript-plugin-firebase/app");
-
-
-declare const Crashlytics: any;
+const firebaseWebApi = require("@nativescript/firebase/app");
 
 export class HelloWorldModel extends Observable {
-
   public messaging = new MessagingViewModel();
   public userEmailOrPhone: string;
-  private userListenerWrapper: AddEventListenerResult;
-  private companiesListenerWrapper: AddEventListenerResult;
+  private userListenerWrapper: firebase.AddEventListenerResult;
+  private companiesListenerWrapper: firebase.AddEventListenerResult;
   private onAuthStateChangedHandlerSet = false;
   private firebaseTrace: FirebaseTrace;
 
@@ -39,7 +28,7 @@ export class HelloWorldModel extends Observable {
   private ensureWebOnAuthChangedHandler(): void {
     if (!this.onAuthStateChangedHandlerSet) {
       this.onAuthStateChangedHandlerSet = true;
-      firebaseWebApi.auth().onAuthStateChanged((user?: User) => {
+      firebaseWebApi.auth().onAuthStateChanged((user?: firebase.User) => {
         console.log(">> auth state changed: " + user);
         if (user) {
           this.set("userEmailOrPhone", user.email ? user.email : (user.phoneNumber ? user.phoneNumber : "N/A"));
@@ -147,7 +136,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebCreateUser(): void {
     firebaseWebApi.auth().createUserWithEmailAndPassword('eddyverbruggen+firebasewebapi@gmail.com', 'firebase')
-        .then((user: User) => {
+        .then((user: firebase.User) => {
           console.log("User created: " + JSON.stringify(user));
           this.set("userEmailOrPhone", user.email);
           alert({
@@ -189,7 +178,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebCallableFunction(): void {
     // see the implementation of this function @ https://github.com/EddyVerbruggen/nativescript-plugin-firebase/blob/ff95c77c7b09acf66654f53c52e8ae0c8d7b1c78/demo/firebasefunctions/functions/src/index.ts#L15-L19
-    const fn = firebase.functions.httpsCallable("helloName");
+    const fn = firebaseFunctions.httpsCallable("helloName");
 
     fn("Nativescript-Plugin-Firebase!")
         .then((dataCue: any) => {
@@ -302,7 +291,7 @@ export class HelloWorldModel extends Observable {
 
   public doWebStoreCompanyByFirstCreatingKey(): void {
     const path = "companies",
-        companyRef = firebaseWebApi.database().ref().child(path),
+        companyRef = firebaseWebApi.database().ref(path),
         newCompanyKey = companyRef.push().key,
         storeAtPath = `/${path}/${newCompanyKey}`,
         value = {
@@ -319,13 +308,22 @@ export class HelloWorldModel extends Observable {
 
   public doWebUploadFile(): void {
     // let's first create a File object using the tns file module
-    const appPath = fs.knownFolders.currentApp().path;
+    const appPath = knownFolders.currentApp().path;
     const logoPath = appPath + "/images/telerik-logo.png";
 
     const storageRef = firebaseWebApi.storage().ref();
     const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
-    childRef.put(fs.File.fromPath(logoPath)).then(
+    const metadata: UploadMetadata = {
+      contentType: "demo/test",
+      contentLanguage: "fr",
+      customMetadata: {
+        "foo": "bar",
+        "foo2": "bar2"
+      }
+    };
+
+    childRef.put(File.fromPath(logoPath), metadata).then(
         uploadedFile => {
           console.log("Uploaded! " + JSON.stringify(uploadedFile));
           this.set("storageFeedback", "Uploaded!");
@@ -342,7 +340,7 @@ export class HelloWorldModel extends Observable {
     const childRef = storageRef.child("uploads/images/telerik-logo-uploaded.png");
 
     // let's first determine where we'll create the file using the 'file-system' module
-    const documents = fs.knownFolders.documents();
+    const documents = knownFolders.documents();
     const logoPath = documents.path + "/telerik-logo-downloaded.png";
 
     childRef.download(logoPath)
@@ -385,6 +383,29 @@ export class HelloWorldModel extends Observable {
         });
   }
 
+  public doWebListAll(): void {
+    firebaseWebApi.storage().ref()
+        .child("uploads/images")
+        .listAll()
+        .then(result => {
+          console.log(JSON.stringify(result));
+
+          // dump all items
+          result.items.forEach(item => {
+            item.listAll()
+                .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+
+          // dump all prefixes
+          result.prefixes.forEach(prefix => {
+            prefix.listAll()
+                .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+        })
+        .catch(err => console.log(err));
+  }
 
   /***********************************************
    * Native API usage examples
@@ -398,6 +419,7 @@ export class HelloWorldModel extends Observable {
       analyticsCollectionEnabled: false, // default true
       onAuthStateChanged: data => { // optional
         console.log((data.loggedIn ? "Logged in to firebase" : "Logged out from firebase") + " (init's onAuthStateChanged callback)");
+        console.log(JSON.stringify(data));
         if (data.loggedIn) {
           this.set("userEmailOrPhone", data.user.email ? data.user.email : (data.user.phoneNumber ? data.user.phoneNumber : "N/A"));
         }
@@ -445,7 +467,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doEnableAnalytics(): void {
-    firebase.analytics.setAnalyticsCollectionEnabled(true);
+    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
     alert({
       title: "Analytics collection",
       message: "ENABLED",
@@ -454,7 +476,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doDisableAnalytics(): void {
-    firebase.analytics.setAnalyticsCollectionEnabled(false);
+    firebaseAnalytics.setAnalyticsCollectionEnabled(false);
     alert({
       title: "Analytics collection",
       message: "DISABLED",
@@ -463,7 +485,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doLogAnalyticsEvents(): void {
-    firebase.analytics.logEvent({
+    firebaseAnalytics.logEvent({
       // see https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html
       key: "add_to_cart",
       parameters: [
@@ -495,7 +517,7 @@ export class HelloWorldModel extends Observable {
      * Same thing as logEvent but can add an array or specific types not just string (LogComplexEventTypeParameter.BOOLEAN, LogComplexEventTypeParameter.STRING,
      * LogComplexEventTypeParameter.DOUBLE, LogComplexEventTypeParameter.FLOAT, LogComplexEventTypeParameter.INT, LogComplexEventTypeParameter.ARRAY)
      */
-    firebase.analytics.logComplexEvent({
+    firebaseAnalytics.logComplexEvent({
       key: "view_item_list",
       parameters: [{
         key: "item1",
@@ -503,26 +525,26 @@ export class HelloWorldModel extends Observable {
         value: [
           {
             parameters: [
-              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
-              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
-              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
-              {key: "index", value: 1, type: LogComplexEventTypeParameter.INT}
+              {key: "item_id", value: "id of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1, type: firebase.LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 1, type: firebase.LogComplexEventTypeParameter.INT}
             ]
           },
           {
             parameters: [
-              {key: "item_id", value: "id of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_name", value: "name of item", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_category", value: "category", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_variant", value: "variant", type: LogComplexEventTypeParameter.STRING},
-              {key: "item_brand", value: "name of item brand", type: LogComplexEventTypeParameter.STRING},
-              {key: "price", value: 1, type: LogComplexEventTypeParameter.DOUBLE},
-              {key: "item_list", value: "name of list", type: LogComplexEventTypeParameter.STRING},
-              {key: "index", value: 2, type: LogComplexEventTypeParameter.INT}
+              {key: "item_id", value: "id of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_name", value: "name of item", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_category", value: "category", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_variant", value: "variant", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "item_brand", value: "name of item brand", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "price", value: 1, type: firebase.LogComplexEventTypeParameter.DOUBLE},
+              {key: "item_list", value: "name of list", type: firebase.LogComplexEventTypeParameter.STRING},
+              {key: "index", value: 2, type: firebase.LogComplexEventTypeParameter.INT}
             ]
           }
         ]
@@ -532,7 +554,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doSetAnalyticsUserProperty(): void {
-    firebase.analytics.setUserProperty({
+    firebaseAnalytics.setUserProperty({
       key: "origin", // note that this needs to be preregistered, see https://support.google.com/firebase/answer/6317519?hl=en&ref_topic=6317489#create-property
       value: "demoapp"
     }).then(
@@ -561,7 +583,7 @@ export class HelloWorldModel extends Observable {
   }
 
   private setScreenName(screenName): void {
-    firebase.analytics.setScreenName({
+    firebaseAnalytics.setScreenName({
       screenName
     }).then(
         () => {
@@ -581,8 +603,8 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowAdMobBanner(): void {
-    firebaseAdMob.showBanner({
-      size: firebaseAdMob.AD_SIZE.SMART_BANNER,
+    firebaseAdmob.showBanner({
+      size: firebaseAdmob.AD_SIZE.SMART_BANNER,
       margins: {
         bottom: isIOS ? 50 : 0
       },
@@ -594,7 +616,11 @@ export class HelloWorldModel extends Observable {
         "fee4cf319a242eab4701543e4c16db89c722731f",  // Eddy's iPad Pro
         "a4cbb499e279054b55c206528f8510ff7fbf20c8",  // Eddy's iPhone X
       ],
-      keywords: ["keyword1", "keyword2"] // add keywords for ad targeting
+      keywords: ["keyword1", "keyword2"], // add keywords for ad targeting
+      onClicked: () => console.log("Ad clicked"),
+      onLeftApplication: () => console.log("Ad left application (opened a browser, likely)"),
+      onOpened: () => console.log("Ad opened"),
+      onClosed: () => console.log("Ad closed")
     }).then(
         () => {
           alert({
@@ -614,7 +640,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowAdMobInterstitial(): void {
-    firebase.admob.showInterstitial({
+    firebaseAdmob.showInterstitial({
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
       androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
       testing: true,
@@ -622,8 +648,7 @@ export class HelloWorldModel extends Observable {
       iosTestDeviceIds: [
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
-      ],
-      onAdClosed: () => console.log("Interstitial closed")
+      ]
     }).then(
         () => {
           console.log("AdMob interstitial showing");
@@ -639,7 +664,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doPreloadAdMobInterstitial(): void {
-    firebaseAdMob.preloadInterstitial({
+    firebaseAdmob.preloadInterstitial({
       iosInterstitialId: "ca-app-pub-9517346003011652/6938836122",
       androidInterstitialId: "ca-app-pub-9517346003011652/9225834529",
       testing: true,
@@ -648,7 +673,10 @@ export class HelloWorldModel extends Observable {
         "45d77bf513dfabc2949ba053da83c0c7b7e87715", // Eddy's iPhone 6s
         "fee4cf319a242eab4701543e4c16db89c722731f"  // Eddy's iPad Pro
       ],
-      onAdClosed: () => console.log("Interstitial closed")
+      onClosed: () => console.log("Interstitial closed"),
+      onClicked: () => console.log("Interstitial clicked"),
+      onLeftApplication: () => console.log("Interstitial left application (opened a browser, likely)"),
+      onOpened: () => console.log("Interstitial opened")
     }).then(
         () => console.log("AdMob interstitial preloaded"),
         errorMessage => {
@@ -662,7 +690,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doShowPreloadedAdMobInterstitial(): void {
-    firebaseAdMob.showInterstitial().then(
+    firebaseAdmob.showInterstitial().then(
         () => console.log("AdMob interstitial showing"),
         errorMessage => {
           alert({
@@ -675,7 +703,7 @@ export class HelloWorldModel extends Observable {
   }
 
   public doPreloadRewardedVideoAd(): void {
-    firebaseAdMob.preloadRewardedVideoAd({
+    firebaseAdmob.preloadRewardedVideoAd({
       iosAdPlacementId: "ca-app-pub-9517346003011652/8586553377",
       androidAdPlacementId: "ca-app-pub-9517346003011652/2819097664",
       testing: true,
@@ -702,7 +730,7 @@ export class HelloWorldModel extends Observable {
 
   public doShowPreloadedRewardedVideoAd(): void {
     let reward: RewardedVideoAdReward;
-    firebaseAdMob.showRewardedVideoAd({
+    firebaseAdmob.showRewardedVideoAd({
       onRewarded: receivedReward => {
         reward = receivedReward;
         console.log("Rewarded video ad: rewarded. Details: " + JSON.stringify(reward));
@@ -742,7 +770,7 @@ export class HelloWorldModel extends Observable {
    * so there's no function to do it programmatically.
    */
   public doHideAdMobBanner(): void {
-    firebase.admob.hideBanner().then(
+    firebaseAdmob.hideBanner().then(
         () => {
           console.log("AdMob banner hidden");
         },
@@ -789,7 +817,7 @@ export class HelloWorldModel extends Observable {
           "default": 11
         }]
     }).then(
-        (result: GetRemoteConfigResult) => {
+        (result: firebase.GetRemoteConfigResult) => {
           console.log("remote config fetched: " + JSON.stringify(result.properties));
           alert({
             title: `Fetched at ${result.lastFetch} ${result.throttled ? '(throttled)' : ''}`,
@@ -906,7 +934,7 @@ export class HelloWorldModel extends Observable {
       email: 'eddyverbruggen+firebasetest@gmail.com',
       password: 'firebase'
     }).then(
-        (user: User) => {
+        (user: firebase.User) => {
           console.log("User created: " + JSON.stringify(user));
           this.set("userEmailOrPhone", user.email);
           alert({
@@ -967,7 +995,7 @@ export class HelloWorldModel extends Observable {
               {
                 forceRefresh: false
               })
-              .then((result: IdTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
+              .then((result: firebase.IdTokenResult) => console.log("Auth token retrieved: " + JSON.stringify(result)))
               .catch(errorMessage => console.log("Auth token retrieval error: " + errorMessage));
         },
         errorMessage => {
@@ -1083,6 +1111,26 @@ export class HelloWorldModel extends Observable {
     );
   }
 
+  public doSignInWithApple(): void {
+    firebase.login({
+      // note that you need to enable "Sign in with Apple" in your firebase instance
+      type: firebase.LoginType.APPLE,
+      appleOptions: {
+        locale: "nl",
+        scopes: ["email"]
+      }
+    }).then(
+        result => console.log("Apple login OK: " + JSON.stringify(result)),
+        errorMessage => {
+          alert({
+            title: "Login error",
+            message: errorMessage,
+            okButtonText: "OK, pity"
+          });
+        }
+    );
+  }
+
   public doLoginByGoogle(): void {
     firebase.login({
       // note that you need to enable Google auth in your firebase instance
@@ -1095,7 +1143,8 @@ export class HelloWorldModel extends Observable {
       }
     }).then(
         result => {
-          console.log("Google login OK: " + JSON.stringify(result));
+          console.log("Google login OK: " + JSON.stringify(result.additionalUserInfo));
+          console.log("Google login OK, photoURL: " + result.photoURL);
           alert({
             title: "Login OK",
             message: JSON.stringify(result),
@@ -1107,6 +1156,25 @@ export class HelloWorldModel extends Observable {
             title: "Login error",
             message: errorMessage,
             okButtonText: "OK, pity"
+          });
+        }
+    );
+  }
+
+  public doReloadUser(): void {
+    firebase.reloadUser().then(
+        () => {
+          alert({
+            title: "User reloaded",
+            message: "You can use 'get current user' to inspect the reloaded data",
+            okButtonText: "OK"
+          });
+        },
+        errorMessage => {
+          alert({
+            title: "Reload error",
+            message: errorMessage,
+            okButtonText: "OK, shame"
           });
         }
     );
@@ -1570,18 +1638,53 @@ export class HelloWorldModel extends Observable {
     );
   }
 
+  public doListAll(): void {
+    firebaseStorage.listAll(
+        {
+          remoteFullPath: "uploads/images"
+        })
+        .then(result => {
+          console.log(JSON.stringify(result));
+
+          // dump all items
+          result.items.forEach(item => {
+            item.listAll()
+                .then(result2 => console.log(`Inner result for ITEM ${item.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+
+          // dump all prefixes
+          result.prefixes.forEach(prefix => {
+            prefix.listAll()
+                .then(result2 => console.log(`Inner result for PREFIX ${prefix.name}: ${JSON.stringify(result2)}`))
+                .catch(err => console.log(err));
+          });
+        })
+        .catch(err => console.log(err));
+  }
+
   public doUploadFile(): void {
     // let's first create a File object using the tns file module
-    const appPath = fs.knownFolders.currentApp().path;
+    const appPath = knownFolders.currentApp().path;
     const logoPath = appPath + "/images/telerik-logo.png";
+
+    const metadata: UploadMetadata = {
+      contentType: "demo/test2",
+      contentLanguage: "de",
+      customMetadata: {
+        "first": "first!",
+        "second": "second!"
+      }
+    };
 
     firebaseStorage.uploadFile({
       remoteFullPath: 'uploads/images/telerik-logo-uploaded.png',
-      localFile: fs.File.fromPath(logoPath), // use this (a file-system module File object)
+      localFile: File.fromPath(logoPath), // use this (a file-system module File object)
       // localFullPath: logoPath, // or this, a full file path
       onProgress: status => {
         console.log("Uploaded fraction: " + status.fractionCompleted + " (" + status.percentageCompleted + "%)");
-      }
+      },
+      metadata
     }).then(
         uploadedFile => {
           alert({
@@ -1598,7 +1701,7 @@ export class HelloWorldModel extends Observable {
 
   public doDownloadFile(): void {
     // let's first determine where we'll create the file using the 'file-system' module
-    const documents = fs.knownFolders.documents();
+    const documents = knownFolders.documents();
     const logoPath = documents.path + "/telerik-logo-downloaded.png";
 
     // this will create or overwrite a local file in the app's documents folder
@@ -1859,7 +1962,7 @@ export class HelloWorldModel extends Observable {
 
   public doSetUserId(): void {
     // just for fun: showing usage of 'firebase.crashlytics' instead of 'firebaseCrashlytics'
-    firebase.crashlytics.setUserId("user#42");
+    firebaseCrashlytics.setUserId("user#42");
 
     alert({
       title: "User id changed",

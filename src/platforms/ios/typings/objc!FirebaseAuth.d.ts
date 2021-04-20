@@ -5,7 +5,11 @@ declare class FIRActionCodeInfo extends NSObject {
 
 	static new(): FIRActionCodeInfo; // inherited from NSObject
 
+	readonly email: string;
+
 	readonly operation: FIRActionCodeOperation;
+
+	readonly previousEmail: string;
 
 	dataForKey(key: FIRActionDataKey): string;
 }
@@ -20,7 +24,11 @@ declare const enum FIRActionCodeOperation {
 
 	RecoverEmail = 3,
 
-	EmailLink = 4
+	EmailLink = 4,
+
+	VerifyAndChangeEmail = 5,
+
+	RevertSecondFactorAddition = 6
 }
 
 declare class FIRActionCodeSettings extends NSObject {
@@ -46,6 +54,25 @@ declare class FIRActionCodeSettings extends NSObject {
 	setAndroidPackageNameInstallIfNotAvailableMinimumVersion(androidPackageName: string, installIfNotAvailable: boolean, minimumVersion: string): void;
 
 	setIOSBundleID(iOSBundleID: string): void;
+}
+
+declare class FIRActionCodeURL extends NSObject {
+
+	static actionCodeURLWithLink(link: string): FIRActionCodeURL;
+
+	static alloc(): FIRActionCodeURL; // inherited from NSObject
+
+	static new(): FIRActionCodeURL; // inherited from NSObject
+
+	readonly APIKey: string;
+
+	readonly code: string;
+
+	readonly continueURL: NSURL;
+
+	readonly languageCode: string;
+
+	readonly operation: FIRActionCodeOperation;
 }
 
 declare const enum FIRActionDataKey {
@@ -89,6 +116,8 @@ declare class FIRAuth extends NSObject {
 	languageCode: string;
 
 	settings: FIRAuthSettings;
+
+	tenantID: string;
 
 	readonly userAccessGroup: string;
 
@@ -178,6 +207,8 @@ declare class FIRAuthDataResult extends NSObject {
 	static new(): FIRAuthDataResult; // inherited from NSObject
 
 	readonly additionalUserInfo: FIRAdditionalUserInfo;
+
+	readonly credential: FIRAuthCredential;
 
 	readonly user: FIRUser;
 }
@@ -296,11 +327,45 @@ declare const enum FIRAuthErrorCode {
 
 	NullUser = 17067,
 
+	DynamicLinkNotActivated = 17068,
+
 	InvalidProviderID = 17071,
+
+	TenantIDMismatch = 17072,
+
+	UnsupportedTenantOperation = 17073,
 
 	InvalidDynamicLinkDomain = 17074,
 
+	RejectedCredential = 17075,
+
 	GameKitNotLinked = 17076,
+
+	SecondFactorRequired = 17078,
+
+	MissingMultiFactorSession = 17081,
+
+	MissingMultiFactorInfo = 17082,
+
+	InvalidMultiFactorSession = 17083,
+
+	MultiFactorInfoNotFound = 17084,
+
+	AdminRestrictedOperation = 17085,
+
+	UnverifiedEmail = 17086,
+
+	SecondFactorAlreadyEnrolled = 17087,
+
+	MaximumSecondFactorCountExceeded = 17088,
+
+	UnsupportedFirstFactor = 17089,
+
+	EmailChangeNeedsVerification = 17090,
+
+	MissingOrInvalidNonce = 17094,
+
+	MissingClientIdentifier = 17993,
 
 	KeychainError = 17995,
 
@@ -312,6 +377,8 @@ declare const enum FIRAuthErrorCode {
 declare var FIRAuthErrorDomain: string;
 
 declare var FIRAuthErrorUserInfoEmailKey: string;
+
+declare var FIRAuthErrorUserInfoMultiFactorResolverKey: string;
 
 declare var FIRAuthErrorUserInfoNameKey: string;
 
@@ -346,6 +413,8 @@ declare class FIRAuthTokenResult extends NSObject {
 	readonly issuedAtDate: Date;
 
 	readonly signInProvider: string;
+
+	readonly signInSecondFactor: string;
 
 	readonly token: string;
 }
@@ -439,6 +508,69 @@ declare var FIRGoogleAuthProviderID: string;
 
 declare var FIRGoogleAuthSignInMethod: string;
 
+declare class FIRMultiFactor extends NSObject {
+
+	static alloc(): FIRMultiFactor; // inherited from NSObject
+
+	static new(): FIRMultiFactor; // inherited from NSObject
+
+	readonly enrolledFactors: NSArray<FIRMultiFactorInfo>;
+
+	enrollWithAssertionDisplayNameCompletion(assertion: FIRMultiFactorAssertion, displayName: string, completion: (p1: NSError) => void): void;
+
+	getSessionWithCompletion(completion: (p1: FIRMultiFactorSession, p2: NSError) => void): void;
+
+	unenrollWithFactorUIDCompletion(factorUID: string, completion: (p1: NSError) => void): void;
+
+	unenrollWithInfoCompletion(factorInfo: FIRMultiFactorInfo, completion: (p1: NSError) => void): void;
+}
+
+declare class FIRMultiFactorAssertion extends NSObject {
+
+	static alloc(): FIRMultiFactorAssertion; // inherited from NSObject
+
+	static new(): FIRMultiFactorAssertion; // inherited from NSObject
+
+	readonly factorID: string;
+}
+
+declare class FIRMultiFactorInfo extends NSObject {
+
+	static alloc(): FIRMultiFactorInfo; // inherited from NSObject
+
+	static new(): FIRMultiFactorInfo; // inherited from NSObject
+
+	readonly UID: string;
+
+	readonly displayName: string;
+
+	readonly enrollmentDate: Date;
+
+	readonly factorID: string;
+}
+
+declare class FIRMultiFactorResolver extends NSObject {
+
+	static alloc(): FIRMultiFactorResolver; // inherited from NSObject
+
+	static new(): FIRMultiFactorResolver; // inherited from NSObject
+
+	readonly auth: FIRAuth;
+
+	readonly hints: NSArray<FIRMultiFactorInfo>;
+
+	readonly session: FIRMultiFactorSession;
+
+	resolveSignInWithAssertionCompletion(assertion: FIRMultiFactorAssertion, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+}
+
+declare class FIRMultiFactorSession extends NSObject {
+
+	static alloc(): FIRMultiFactorSession; // inherited from NSObject
+
+	static new(): FIRMultiFactorSession; // inherited from NSObject
+}
+
 declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCoding {
 
 	static alloc(): FIROAuthCredential; // inherited from NSObject
@@ -449,13 +581,15 @@ declare class FIROAuthCredential extends FIRAuthCredential implements NSSecureCo
 
 	readonly accessToken: string;
 
+	readonly secret: string;
+
 	static readonly supportsSecureCoding: boolean; // inherited from NSSecureCoding
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvider {
@@ -465,6 +599,10 @@ declare class FIROAuthProvider extends NSObject implements FIRFederatedAuthProvi
 	static credentialWithProviderIDAccessToken(providerID: string, accessToken: string): FIROAuthCredential;
 
 	static credentialWithProviderIDIDTokenAccessToken(providerID: string, IDToken: string, accessToken: string): FIROAuthCredential;
+
+	static credentialWithProviderIDIDTokenRawNonce(providerID: string, IDToken: string, rawNonce: string): FIROAuthCredential;
+
+	static credentialWithProviderIDIDTokenRawNonceAccessToken(providerID: string, IDToken: string, rawNonce: string, accessToken: string): FIROAuthCredential;
 
 	static new(): FIROAuthProvider; // inherited from NSObject
 
@@ -525,9 +663,9 @@ declare class FIRPhoneAuthCredential extends FIRAuthCredential implements NSSecu
 
 	constructor(o: { coder: NSCoder; }); // inherited from NSCoding
 
-	encodeWithCoder(aCoder: NSCoder): void;
+	encodeWithCoder(coder: NSCoder): void;
 
-	initWithCoder(aDecoder: NSCoder): this;
+	initWithCoder(coder: NSCoder): this;
 }
 
 declare class FIRPhoneAuthProvider extends NSObject {
@@ -543,11 +681,42 @@ declare class FIRPhoneAuthProvider extends NSObject {
 	credentialWithVerificationIDVerificationCode(verificationID: string, verificationCode: string): FIRPhoneAuthCredential;
 
 	verifyPhoneNumberUIDelegateCompletion(phoneNumber: string, UIDelegate: FIRAuthUIDelegate, completion: (p1: string, p2: NSError) => void): void;
+
+	verifyPhoneNumberUIDelegateMultiFactorSessionCompletion(phoneNumber: string, UIDelegate: FIRAuthUIDelegate, session: FIRMultiFactorSession, completion: (p1: string, p2: NSError) => void): void;
+
+	verifyPhoneNumberWithMultiFactorInfoUIDelegateMultiFactorSessionCompletion(phoneMultiFactorInfo: FIRPhoneMultiFactorInfo, UIDelegate: FIRAuthUIDelegate, session: FIRMultiFactorSession, completion: (p1: string, p2: NSError) => void): void;
 }
 
 declare var FIRPhoneAuthProviderID: string;
 
 declare var FIRPhoneAuthSignInMethod: string;
+
+declare class FIRPhoneMultiFactorAssertion extends FIRMultiFactorAssertion {
+
+	static alloc(): FIRPhoneMultiFactorAssertion; // inherited from NSObject
+
+	static new(): FIRPhoneMultiFactorAssertion; // inherited from NSObject
+}
+
+declare class FIRPhoneMultiFactorGenerator extends NSObject {
+
+	static alloc(): FIRPhoneMultiFactorGenerator; // inherited from NSObject
+
+	static assertionWithCredential(phoneAuthCredential: FIRPhoneAuthCredential): FIRPhoneMultiFactorAssertion;
+
+	static new(): FIRPhoneMultiFactorGenerator; // inherited from NSObject
+}
+
+declare var FIRPhoneMultiFactorID: string;
+
+declare class FIRPhoneMultiFactorInfo extends FIRMultiFactorInfo {
+
+	static alloc(): FIRPhoneMultiFactorInfo; // inherited from NSObject
+
+	static new(): FIRPhoneMultiFactorInfo; // inherited from NSObject
+
+	readonly phoneNumber: string;
+}
 
 declare class FIRTwitterAuthProvider extends NSObject {
 
@@ -574,9 +743,13 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	readonly metadata: FIRUserMetadata;
 
+	readonly multiFactor: FIRMultiFactor;
+
 	readonly providerData: NSArray<FIRUserInfo>;
 
 	readonly refreshToken: string;
+
+	readonly tenantID: string;
 
 	readonly debugDescription: string; // inherited from NSObjectProtocol
 
@@ -626,6 +799,8 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	linkWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
+	linkWithProviderUIDelegateCompletion(provider: FIRFederatedAuthProvider, UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
 	performSelector(aSelector: string): any;
 
 	performSelectorWithObject(aSelector: string, object: any): any;
@@ -638,6 +813,8 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 
 	reauthenticateWithCredentialCompletion(credential: FIRAuthCredential, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
 
+	reauthenticateWithProviderUIDelegateCompletion(provider: FIRFederatedAuthProvider, UIDelegate: FIRAuthUIDelegate, completion: (p1: FIRAuthDataResult, p2: NSError) => void): void;
+
 	reloadWithCompletion(completion: (p1: NSError) => void): void;
 
 	respondsToSelector(aSelector: string): boolean;
@@ -645,6 +822,10 @@ declare class FIRUser extends NSObject implements FIRUserInfo {
 	retainCount(): number;
 
 	self(): this;
+
+	sendEmailVerificationBeforeUpdatingEmailActionCodeSettingsCompletion(email: string, actionCodeSettings: FIRActionCodeSettings, completion: (p1: NSError) => void): void;
+
+	sendEmailVerificationBeforeUpdatingEmailCompletion(email: string, completion: (p1: NSError) => void): void;
 
 	sendEmailVerificationWithActionCodeSettingsCompletion(actionCodeSettings: FIRActionCodeSettings, completion: (p1: NSError) => void): void;
 

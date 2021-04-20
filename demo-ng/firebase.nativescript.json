@@ -2,6 +2,7 @@
   "external_push_client_only": false,
   "using_ios": true,
   "using_android": true,
+  "analytics": false,
   "firestore": true,
   "realtimedb": false,
   "authentication": true,
@@ -21,7 +22,10 @@
   "ml_kit_barcode_scanning": true,
   "ml_kit_face_detection": true,
   "ml_kit_image_labeling": true,
-  "ml_kit_custom_model": true,
-  "ml_kit_natural_language_identification": true,
-  "ml_kit_natural_language_smartreply": true
+  "ml_kit_object_detection": true,
+  "ml_kit_automl": false,
+  "ml_kit_custom_model": false,
+  "ml_kit_natural_language_identification": false,
+  "ml_kit_natural_language_translation": false,
+  "ml_kit_natural_language_smartreply": false
 }

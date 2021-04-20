@@ -8,12 +8,56 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1052836194035:android:09546560b4505797",
+        "android_client_info": {
+          "package_name": "com.google.firebase.samples.apps.mlkit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1052836194035-mvghp8j5h3eh17c0n1dl0pkaeum8hjii.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSMjaKslCCA-U4MZm_ZFQjkGP_mS0RQKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052836194035-mvghp8j5h3eh17c0n1dl0pkaeum8hjii.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1052836194035-l81fsjai1u40ocnqjcpnoebnnsltt03b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.nativescript.firebasedemo"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1052836194035:android:443e3741d53b6bc3",
         "android_client_info": {
           "package_name": "org.nativescript.firebasedemo"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1052836194035-onnou4qukbes6dcpi9tn8btm02nbbnfu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.nativescript.firebasedemo",
+            "certificate_hash": "2515e2dd22f0cd4988f9e6346f7a2433712fd651"
+          }
+        },
         {
           "client_id": "1052836194035-jtaui0ukukm0o8peubst87stchckm6cu.apps.googleusercontent.com",
           "client_type": 1,
@@ -49,15 +93,20 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1052836194035-mvghp8j5h3eh17c0n1dl0pkaeum8hjii.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1052836194035-l81fsjai1u40ocnqjcpnoebnnsltt03b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.nativescript.firebasedemo"
+              }
+            }
+          ]
         }
       }
     }
