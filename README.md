@@ -88,6 +88,8 @@ You can reconfigure the plugin by going to the `node_modules/nativescript-plugin
 
 You can also change the configuration by deleting the `firebase.nativescript.json` and reinstalling the plugin.
 
+> Be advised. Enabling some features (such as [Admob](docs/ADMOB.md)) in the `firebase.nativescript.json` may require additional configuration. If you are experiencing crashes or bugs after installing this plugin please consult the [documentation](docs) for each of the features you've enabled to ensure that no additioal configuration is required.
+
 #### Using Vue?
 Please update your [NativeScript-Vue](https://github.com/nativescript-vue/vue-cli-template) template to 2.0 because it
 aligns perfectly with this plugin (because that template is now much more similar to a regular NativeScript project).
