@@ -837,16 +837,21 @@ module.exports = function($logger, hookArgs) {
 
         var isReleaseBuild = !!((hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectChangesOptions) || hookArgs.prepareData).release;
         var validProdEnvs = ['prod','production'];
+        var validStagingEnvs = ["dev", "development", "staging"];
+        var isStagingEnv = false;
         var isProdEnv = false; // building with --env.prod or --env.production flag
 
         var env = ((hookArgs.checkForChangesOpts && hookArgs.checkForChangesOpts.projectData && hookArgs.checkForChangesOpts.projectData.$options && hookArgs.checkForChangesOpts.projectData.$options.argv) || hookArgs.prepareData).env;
         if (env) {
             Object.keys(env).forEach((key) => {
                 if (validProdEnvs.indexOf(key)>-1) { isProdEnv=true; }
+                if (validStagingEnvs.indexOf(key) > -1) { isStagingEnv = true; }
             });
+            
+            
         }
 
-        var buildType = isReleaseBuild || isProdEnv ? 'production' : 'development';
+        var buildType = (isReleaseBuild && !isStagingEnv) || isProdEnv ? 'production' : 'development';
 
         /*
             Detect if we have nativescript-plugin-firebase temp file created during after-prepare hook, so we know
