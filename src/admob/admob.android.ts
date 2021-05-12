@@ -199,7 +199,7 @@ export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Prom
           firebase.admob.rewardedAdVideoView.setUserId(settings.userId);
         }
         if (settings.customData) {
-          firebase.admob.rewardedAdVideoView.setUserId(settings.customData);
+          firebase.admob.rewardedAdVideoView.setCustomData(settings.customData);
         }
       }
       rewardedVideoCallbacks.onLoaded = resolve;

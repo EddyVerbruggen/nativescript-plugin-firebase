@@ -224,10 +224,23 @@ export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Prom
 
       firebase.admob.rewardedAdVideoView = GADRewardBasedVideoAd.sharedInstance();
       firebase.admob.rewardedAdVideoView.delegate = _rewardBasedVideoAdDelegate;
+    
 
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
-      const adRequest = GADRequest.request();
+     
 
+      if (firebase.admob.rewardedAdVideoView) {
+        //https://developers.google.com/admob/ios/ssv#ssv_callback_parameters
+        if (settings.userId) {
+          firebase.admob.rewardedAdVideoView.userIdentifier = settings.userId;
+        }
+        if (settings.customData) {
+          firebase.admob.rewardedAdVideoView.customRewardString = settings.customData;
+        }
+      }
+
+      const adRequest = GADRequest.request();
+      
       if (settings.testing) {
         let testDevices: any = [];
         try {
