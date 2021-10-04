@@ -67,6 +67,7 @@ export declare class IosPushSettings {
   badge: boolean;
   sound: boolean;
   alert: boolean;
+  providesAppNotificationSettings: boolean;
   notificationCallback: Function;
   interactiveSettings: IosInteractivePushSettings;
 }

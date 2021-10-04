@@ -313,6 +313,7 @@ export class IosPushSettings {
   badge: boolean;
   sound: boolean;
   alert: boolean;
+  providesAppNotificationSettings: boolean;
   notificationCallback: Function;
   interactiveSettings: IosInteractivePushSettings;
 }
@@ -370,8 +371,12 @@ function _registerForRemoteNotifications(resolve?, reject?) {
   _resolveWhenDidRegisterForNotifications = resolve;
   _rejectWhenDidFailToRegisterForNotifications = reject;
 
-  if (parseInt(Device.osVersion) >= 10) {
-    const authorizationOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge;
+  const osVersionNumber = parseInt(Device.osVersion);
+
+  if (osVersionNumber >= 10) {
+    const os10AuthorizationOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Sound | UNAuthorizationOptions.Badge;
+    const authorizationOptions = osVersionNumber >= 12 ? os10AuthorizationOptions | UNAuthorizationOptions.ProvidesAppNotificationSettings : os10AuthorizationOptions;
+
     UNUserNotificationCenter.currentNotificationCenter().requestAuthorizationWithOptionsCompletionHandler(authorizationOptions, (granted, error) => {
       if (!error) {
         if (app === null) {
