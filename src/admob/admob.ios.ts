@@ -24,7 +24,7 @@ export function showBanner(arg: BannerOptions): Promise<any> {
         firebase.admob.adView = null;
       }
 
-      BANNER_DEFAULTS.view = UIApplication.sharedApplication.keyWindow.rootViewController.view;
+      BANNER_DEFAULTS.view = getVisibleViewController().view;
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
       _bannerOptions = settings;
       const view = settings.view;
@@ -59,7 +59,7 @@ export function showBanner(arg: BannerOptions): Promise<any> {
         adRequest.keywords = settings.keywords;
       }
 
-      firebase.admob.adView.rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
+      firebase.admob.adView.rootViewController = getVisibleViewController();
       // var statusbarFrame = UIApplication.sharedApplication.statusBarFrame;
 
       firebase.admob.adView.loadRequest(adRequest);
@@ -154,7 +154,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
       // if no arg is passed, the interstitial has probably been preloaded
       if (!arg) {
         if (firebase.admob.interstitialView) {
-          firebase.admob.interstitialView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
+          firebase.admob.interstitialView.presentFromRootViewController(getVisibleViewController());
           resolve();
         } else {
           reject("Please call 'preloadInterstitial' first");
@@ -171,7 +171,7 @@ export function showInterstitial(arg?: InterstitialOptions): Promise<any> {
           reject(error.localizedDescription);
         } else {
           // now we can safely show it
-          firebase.admob.interstitialView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
+          firebase.admob.interstitialView.presentFromRootViewController(getVisibleViewController());
           resolve();
         }
         CFRelease(delegate);
@@ -280,7 +280,7 @@ export function showRewardedVideoAd(arg?: ShowRewardedVideoAdOptions): Promise<a
         rewardedVideoCallbacks.onCompleted = arg.onCompleted;
       }
 
-      firebase.admob.rewardedAdVideoView.presentFromRootViewController(UIApplication.sharedApplication.keyWindow.rootViewController);
+      firebase.admob.rewardedAdVideoView.presentFromRootViewController(getVisibleViewController());
       resolve();
 
     } catch (ex) {
@@ -478,4 +478,25 @@ class GADRewardBasedVideoAdDelegateImpl extends NSObject implements GADRewardBas
   rewardBasedVideoAdWillLeaveApplication(rewardBasedVideoAd: GADRewardBasedVideoAd): void {
     rewardedVideoCallbacks.onLeftApplication();
   }
+}
+
+function getVisibleViewController(rootViewController?: UIViewController): UIViewController {
+  if (!rootViewController) {
+    const app = UIApplication.sharedApplication;
+    const window = app.keyWindow || (app.windows.count > 0 && app.windows[0]);
+    rootViewController = window.rootViewController;
+  }
+  if (rootViewController.presentedViewController) {
+    return getVisibleViewController(rootViewController.presentedViewController);
+  }
+
+  if (rootViewController.isKindOfClass(UINavigationController.class())) {
+    return getVisibleViewController((<UINavigationController>rootViewController).visibleViewController);
+  }
+
+  if (rootViewController.isKindOfClass(UITabBarController.class())) {
+    return getVisibleViewController((<UITabBarController>rootViewController).selectedViewController);
+  }
+
+  return rootViewController;
 }
