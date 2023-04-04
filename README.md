@@ -84,6 +84,36 @@ aligns perfectly with this plugin (because that template is now much more simila
 If you want a demo using Vue and Firestore, then [check out this project](https://github.com/EddyVerbruggen/footplr),
 if you want one with Realtime DB, [check out this one](https://github.com/jlooper/mixology-mobile).
 
+### Android SDK conflicts
+Some users experienced build conflicts after installing the plugin. SDK version issues may prevent your app from building and installing on a physical Android device. Here is what you should do.
+
+After starting your NativeScript project, adding and configuring the plugin, registering your app on Firebase Console and adding `google-services.json` to your `App_Resources/Android` directory, try `tns run android` on your device. Gradle may fail and produce various error messages similar to this:
+
+`.../values-v26.xml:9:5-12:13: AAPT: error: resource android:attr/colorError not found.`
+
+This is caused by an Android SDK incompatibility. You can fix it by modifying `platforms/android/app/build.gradle`. Change this part:
+
+```
+defaultConfig {
+    minSdkVersion 17
+    targetSdkVersion computeTargetSdkVersion()
+    ...
+}
+```
+
+to this:
+
+```   
+defaultConfig {
+    minSdkVersion 17
+    targetSdkVersion 26
+    multiDexEnabled true
+    ...
+}
+```
+
+This forces Gradle to use API 26. Lower versions miss a few components required for the build. Of course you can set it even higher if you need a newer API. Multidex is also needed for a successful build. Don't forget to set this again if you update or change the project's Android platform.
+
 ### iOS (Cocoapods)
 The Firebase iOS SDK is installed via Cocoapods, so run `pod repo update` from the command prompt (in any folder) to ensure you have the latest spec.
 
