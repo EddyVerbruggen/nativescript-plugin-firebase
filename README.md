@@ -2,7 +2,7 @@
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
-> For NativeScript 7 compatibility, run `tns plugin add @nativescript/firebase`.
+> I'M NO LONGER ABLE TO MAINTAIN THIS PROJECT - I'm archiving the project for now, but if you want to take over, please don't open an issue, but hit me up on Twitter @eddyverbruggen. Alternatively, please check out this excellent plugin: https://github.com/NativeScript/firebase
 
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
@@ -12,19 +12,6 @@
 [npm-url]:https://npmjs.org/package/@nativescript/firebase
 [downloads-image]:https://img.shields.io/npm/dm/@nativescript/firebase.svg
 [total-downloads-image]:https://img.shields.io/npm/dt/@nativescript/firebase.svg?label=total%20downloads
-
-> For NativeScript 6.1+ compatibility, install polugin version 10: `tns plugin add nativescript-plugin-firebase@10`.
-
-> For NativeScript 6.0 and lower, stick to plugin version < 10.
-
-[![NPM version][npm-image-legacy]][npm-url-legacy]
-[![Downloads][downloads-image-legacy]][npm-url-legacy]
-[![TotalDownloads][total-downloads-image-legacy]][npm-url-legacy]
-
-[npm-image-legacy]:https://img.shields.io/npm/v/nativescript-plugin-firebase.svg
-[npm-url-legacy]:https://npmjs.org/package/nativescript-plugin-firebase
-[downloads-image-legacy]:https://img.shields.io/npm/dm/nativescript-plugin-firebase.svg
-[total-downloads-image-legacy]:https://img.shields.io/npm/dt/nativescript-plugin-firebase.svg?label=total%20downloads
 
 ## Features
 * [AdMob](docs/ADMOB.md)
