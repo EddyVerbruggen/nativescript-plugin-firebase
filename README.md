@@ -2,8 +2,6 @@
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
 
-> I'M NO LONGER ABLE TO MAINTAIN THIS PROJECT - I'm archiving the project for now, but if you want to take over, please don't open an issue, but hit me up on Twitter @eddyverbruggen. Alternatively, please check out this excellent plugin: https://github.com/NativeScript/firebase
-
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
 [![TotalDownloads][total-downloads-image]][npm-url]
@@ -12,6 +10,8 @@
 [npm-url]:https://npmjs.org/package/@nativescript/firebase
 [downloads-image]:https://img.shields.io/npm/dm/@nativescript/firebase.svg
 [total-downloads-image]:https://img.shields.io/npm/dt/@nativescript/firebase.svg?label=total%20downloads
+
+> 🚨🚨🚨 I'M NO LONGER ABLE TO MAINTAIN THIS PROJECT - I'm archiving the project for now, but if you want to take over, please don't open an issue, but hit me up on Twitter @eddyverbruggen. Alternatively, please check out this excellent plugin: https://github.com/NativeScript/firebase
 
 ## Features
 * [AdMob](docs/ADMOB.md)
