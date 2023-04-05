@@ -1,6 +1,7 @@
 # NativeScript Firebase plugin
 
 <img src="docs/images/firebase-logo.png" width="116px" height="32px" alt="Firebase"/><br/>
+> For NativeScript 8 compatibility, visit https://docs.nativescript.org/plugins/firebase-core.html
 
 [![NPM version][npm-image]][npm-url]
 [![Downloads][downloads-image]][npm-url]
