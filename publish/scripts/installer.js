@@ -262,7 +262,7 @@ function promptQuestionsResult(result) {
     writeGoogleServiceGradleHook(result);
     echoAndroidManifestChanges(result);
     activateAndroidPushNotificationsLib(isSelected(result.messaging) || isSelected(result.external_push_client_only));
-    activateAndroidMLKitCustomModelLib(isSelected(result.ml_kit) && isSelected(result.ml_kit_custom_model));
+    activateAndroidMLKitCustomModelLib(isSelected(result.ml_kit) && (isSelected(result.ml_kit_custom_model) || isSelected(result.ml_kit_barcode_scanning)));
   }
 
   console.log('Firebase post install completed. To re-run this script, navigate to the root directory of `nativescript-plugin-firebase` in your `node_modules` folder and run: `npm run config`.');
