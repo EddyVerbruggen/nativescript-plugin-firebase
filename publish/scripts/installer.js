@@ -682,8 +682,17 @@ dependencies {
     ` + (isSelected(result.ml_kit_natural_language_smartreply) ? `` : `//`) + ` implementation "com.google.firebase:firebase-ml-natural-language-smart-reply-model:20.0.7"
 
     // Facebook Authentication
-    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-core:5.4.0"
-    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-login:5.4.0"
+    
+    // IMPORTANT: facebook-login SDK release versions are synced with its dependency package
+    // "facebook-common", which in 12.0.0 introduces a dependency on androidx.fragment:fragment
+    // 1.3.0. This will OVERRIDE @nativescript/android's build.gradle dependency on
+    // androidx.fragment:fragment 1.2.5 (as of @nativescript/android 8.1.1), breaking navigation in
+    // nested frames. We can only bump this once the value of androidXFragmentVersion from
+    // https://github.com/NativeScript/android-runtime/blob/master/test-app/app/build.gradle is
+    // bumped to at least 1.3.0, or there are changes in @nativescript/core around
+    // frames/navigation/fragments that fix nested frame navigation with androidx.fragment 1.3.0+
+
+    ` + (isSelected(result.facebook_auth) ? `` : `//`) + ` implementation "com.facebook.android:facebook-login:11.+"
 
     // Google Sign-In Authentication
     ` + (isSelected(result.google_auth) ? `` : `//`) + ` implementation "com.google.android.gms:play-services-auth:$googlePlayServicesVersion"
