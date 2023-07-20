@@ -132,6 +132,14 @@ export interface InterstitialOptions extends AdLifeCycleEvents {
 
 export interface PreloadRewardedVideoAdOptions {
   /**
+   * for user_id of  https://developers.google.com/admob/ios/ssv#ssv_callback_parameters or https://developers.google.com/admob/android/ssv#ssv_callback_parameters
+   */
+  userId?:string;
+  /**
+   * for custom_data of https://developers.google.com/admob/ios/ssv#ssv_callback_parameters or https://developers.google.com/admob/android/ssv#ssv_callback_parameters
+   */
+  customData?:string;
+  /**
    * When true you'll use googles testing iosAdPlacementId and androidAdPlacementId.
    */
   testing?: boolean;

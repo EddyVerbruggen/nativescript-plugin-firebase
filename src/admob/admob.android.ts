@@ -52,12 +52,12 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       firebase.admob.adView.loadAd(ad);
 
       const density = Utils.layout.getDisplayDensity(),
-          top = settings.margins.top * density,
-          bottom = settings.margins.bottom * density;
+        top = settings.margins.top * density,
+        bottom = settings.margins.bottom * density;
 
       const relativeLayoutParams = new android.widget.RelativeLayout.LayoutParams(
-          android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
-          android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+        android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
+        android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
 
       if (bottom > -1) {
         relativeLayoutParams.bottomMargin = bottom;
@@ -73,8 +73,8 @@ export function showBanner(arg: BannerOptions): Promise<any> {
       adViewLayout.addView(firebase.admob.adView, relativeLayoutParams);
 
       const relativeLayoutParamsOuter = new android.widget.RelativeLayout.LayoutParams(
-          android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
-          android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
+        android.widget.RelativeLayout.LayoutParams.MATCH_PARENT,
+        android.widget.RelativeLayout.LayoutParams.MATCH_PARENT);
 
       // Wrapping it in a timeout makes sure that when this function is loaded from a Page.loaded event 'frame.Frame.topmost()' doesn't resolve to 'undefined'.
       // Also, in NativeScript 4+ it may be undefined anyway.. so using the appModule in that case.
@@ -192,7 +192,16 @@ export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Prom
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
       const activity = Application.android.foregroundActivity || Application.android.startActivity;
       firebase.admob.rewardedAdVideoView = com.google.android.gms.ads.MobileAds.getRewardedVideoAdInstance(activity);
-
+     
+      if (firebase.admob.rewardedAdVideoView) {
+         //https://developers.google.com/admob/android/ssv#ssv_callback_parameters
+        if (settings.userId) {
+          firebase.admob.rewardedAdVideoView.setUserId(settings.userId);
+        }
+        if (settings.customData) {
+          firebase.admob.rewardedAdVideoView.setCustomData(settings.customData);
+        }
+      }
       rewardedVideoCallbacks.onLoaded = resolve;
       rewardedVideoCallbacks.onFailedToLoad = reject;
 

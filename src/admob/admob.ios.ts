@@ -35,9 +35,15 @@ export function showBanner(arg: BannerOptions): Promise<any> {
 
       const originX = (view.frame.size.width - adWidth) / 2;
       const originY = settings.margins.top > -1 ? settings.margins.top : (settings.margins.bottom > -1 ? view.frame.size.height - adHeight - settings.margins.bottom : 0.0);
-      const origin = CGPointMake(originX, originY);
-      firebase.admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
 
+        //Fix for the smart banner size on NS7.0+, due to issue with initWithAdSizeOrigin response "Invalid ad width or height: (0, 0)"
+        if (settings.size === AD_SIZE.SMART_BANNER) {
+            const adFrameRec = CGRectMake(originX, originY, adWidth, Math.max(adHeight, 50)); // minimum height should be 50 for a ad banner
+            firebase.admob.adView = GADBannerView.alloc().initWithFrame(adFrameRec)
+        } else {
+            const origin = CGPointMake(originX, originY);
+            firebase.admob.adView = GADBannerView.alloc().initWithAdSizeOrigin(bannerType, origin);
+        }
       firebase.admob.adView.adUnitID = settings.iosBannerId;
 
       const adRequest = GADRequest.request();
@@ -218,10 +224,23 @@ export function preloadRewardedVideoAd(arg: PreloadRewardedVideoAdOptions): Prom
 
       firebase.admob.rewardedAdVideoView = GADRewardBasedVideoAd.sharedInstance();
       firebase.admob.rewardedAdVideoView.delegate = _rewardBasedVideoAdDelegate;
+    
 
       const settings = firebase.merge(arg, BANNER_DEFAULTS);
-      const adRequest = GADRequest.request();
+     
 
+      if (firebase.admob.rewardedAdVideoView) {
+        //https://developers.google.com/admob/ios/ssv#ssv_callback_parameters
+        if (settings.userId) {
+          firebase.admob.rewardedAdVideoView.userIdentifier = settings.userId;
+        }
+        if (settings.customData) {
+          firebase.admob.rewardedAdVideoView.customRewardString = settings.customData;
+        }
+      }
+
+      const adRequest = GADRequest.request();
+      
       if (settings.testing) {
         let testDevices: any = [];
         try {
